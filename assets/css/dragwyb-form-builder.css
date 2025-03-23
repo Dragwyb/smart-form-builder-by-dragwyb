@@ -1,0 +1,180 @@
+/* Form Builder Layout */
+.dragwyb-form-builder-wrapper {
+    display: flex;
+    margin: 20px 0;
+    min-height: 600px;
+    background: #f1f1f1;
+    border: 1px solid #ddd;
+}
+
+/* Sidebar Styles */
+.dragwyb-form-builder-sidebar {
+    width: 300px;
+    background: #fff;
+    border-right: 1px solid #ddd;
+    padding: 15px;
+}
+
+.dragwyb-field-group {
+    margin-bottom: 20px;
+}
+
+.dragwyb-field-group h4 {
+    margin: 0 0 10px;
+    padding: 10px;
+    background: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+}
+
+.dragwyb-field-buttons {
+    display: grid;
+    gap: 8px;
+}
+
+.dragwyb-add-field {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background: #fff;
+    border: 1px solid #ddd;
+    cursor: move;
+    transition: all 0.2s;
+}
+
+.dragwyb-add-field:hover {
+    background: #f8f8f8;
+    border-color: #999;
+}
+
+.dragwyb-add-field .dashicons {
+    margin-right: 8px;
+}
+
+/* Form Preview Area */
+.dragwyb-form-builder-content {
+    flex: 1;
+    padding: 20px;
+    background: #fff;
+}
+
+.dragwyb-form-fields {
+    min-height: 400px;
+    padding: 15px;
+    border: 2px dashed #ddd;
+}
+
+.dragwyb-form-fields.dragwyb-drag-active {
+    border-color: #2271b1;
+    background: #f0f6fc;
+}
+
+/* Field Styles */
+.dragwyb-field {
+    margin-bottom: 15px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.dragwyb-field-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+    cursor: move;
+}
+
+.dragwyb-field-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.dragwyb-field-actions button {
+    padding: 4px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #666;
+}
+
+.dragwyb-field-actions button:hover {
+    color: #2271b1;
+}
+
+.dragwyb-field-settings-panel {
+    padding: 15px;
+    background: #fff;
+}
+
+.dragwyb-field-setting {
+    margin-bottom: 12px;
+}
+
+.dragwyb-field-setting label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.dragwyb-field-setting input[type="text"],
+.dragwyb-field-setting textarea {
+    width: 100%;
+}
+
+/* Modal Styles */
+.dragwyb-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 159900;
+}
+
+.dragwyb-modal-content {
+    position: relative;
+    width: 90%;
+    max-width: 800px;
+    margin: 30px auto;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.dragwyb-modal-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dragwyb-modal-body {
+    padding: 20px;
+}
+
+#dragwyb-preview-frame {
+    width: 100%;
+    height: 600px;
+    border: 1px solid #ddd;
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+/* Drag and Drop States */
+.dragwyb-dragging {
+    opacity: 0.5;
+}
+
+.dragwyb-drag-placeholder {
+    border: 2px dashed #2271b1;
+    margin: 10px 0;
+    height: 50px;
+    background: #f0f6fc;
+} 

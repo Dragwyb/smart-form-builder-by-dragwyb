@@ -1,0 +1,112 @@
+.dragwyb-conditional-rules {
+    margin: 20px 0;
+}
+
+.dragwyb-rule-group {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    padding: 15px;
+}
+
+.group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.group-title {
+    font-weight: bold;
+    color: #495057;
+}
+
+.dragwyb-rule {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+}
+
+.rule-field,
+.rule-operator {
+    min-width: 150px;
+}
+
+.rule-value-container {
+    flex: 1;
+}
+
+.rule-value,
+.rule-value-min,
+.rule-value-max {
+    width: 100%;
+}
+
+.rule-value-range {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.range-separator {
+    color: #6c757d;
+}
+
+.group-operator {
+    text-align: center;
+    margin: 10px 0;
+    font-weight: bold;
+    color: #6c757d;
+}
+
+.remove-group,
+.remove-rule {
+    color: #dc3545;
+    border: 1px solid #dc3545;
+    background: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.remove-group:hover,
+.remove-rule:hover {
+    background: #dc3545;
+    color: #fff;
+}
+
+.add-rule {
+    background: #28a745;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add-rule:hover {
+    background: #218838;
+}
+
+.dragwyb-field-hidden {
+    display: none !important;
+}
+
+/* Drag and drop styles */
+.ui-sortable-helper {
+    background: #fff !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.ui-sortable-placeholder {
+    visibility: visible !important;
+    background: #f1f3f5;
+    border: 2px dashed #dee2e6;
+    margin-bottom: 10px;
+} 

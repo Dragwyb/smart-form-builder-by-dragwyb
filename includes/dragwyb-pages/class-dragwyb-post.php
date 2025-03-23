@@ -1,0 +1,205 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Dragwyb\Form_Builder\Includes\Dragwyb_Pages;
+
+class Dragwyb_Post
+{
+    /**
+     * Post type name
+     */
+    const POST_TYPE = DRAGWYB_PREFIX . '-forms';
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        add_action('init', [$this, 'register_post_type']);
+        add_filter('manage_' . self::POST_TYPE . '_posts_columns', [$this, 'set_custom_columns']);
+        add_action('manage_' . self::POST_TYPE . '_posts_custom_column', [$this, 'render_custom_columns'], 10, 2);
+
+        // Add form type meta box
+        add_action('add_meta_boxes', [$this, 'add_form_type_meta_box']);
+        add_action('save_post', [$this, 'save_form_type_meta']);
+
+        // Add editor integration
+        add_action('load-post.php', [$this, 'redirect_to_custom_editor']);
+        add_action('load-post-new.php', [$this, 'redirect_to_custom_editor']);
+    }
+
+    /**
+     * Register the custom post type
+     */
+    public function register_post_type(): void
+    {
+        $args = [
+            'label'               => 'Dragwyb Form',
+            'public'              => false,
+            'exclude_from_search' => true,
+            'show_ui'             => false,
+            'show_in_admin_bar'   => false,
+            'rewrite'             => false,
+            'query_var'           => false,
+            'can_export'          => false,
+            'supports'            => ['title', 'author', 'revisions'],
+            'capability_type'     => 'manage_options', // Not using 'capability_type' anywhere. It just has to be custom for security reasons.
+            'map_meta_cap'        => false, // Don't 
+        ];
+
+        register_post_type(self::POST_TYPE, $args);
+    }
+
+    /**
+     * Set custom columns for the forms list
+     */
+    public function set_custom_columns($columns): array
+    {
+        $new_columns = [
+            'cb'        => $columns['cb'],
+            'title'     => __('Form Name', 'dragwyb-form-builder'),
+            'type'      => __('Form Type', 'dragwyb-form-builder'),
+            'shortcode' => __('Shortcode', 'dragwyb-form-builder'),
+            'entries'   => __('Entries', 'dragwyb-form-builder'),
+            'date'      => $columns['date'],
+        ];
+        return $new_columns;
+    }
+
+    /**
+     * Render custom column content
+     */
+    public function render_custom_columns($column, $post_id): void
+    {
+        switch ($column) {
+            case 'type':
+                $form_type = get_post_meta($post_id, '_Dragwyb_Page_type', true);
+                echo esc_html(ucfirst($form_type ?: 'Standard'));
+                break;
+
+            case 'shortcode':
+                echo '<input type="text" readonly class="regular-text code" value="[Dragwyb_Page id=&quot;' . esc_attr($post_id) . '&quot;]" onclick="this.select()">';
+                break;
+
+            case 'entries':
+                $entries_count = $this->get_form_entries_count($post_id);
+                echo esc_html($entries_count);
+                break;
+        }
+    }
+
+    /**
+     * Add meta box for form type selection
+     */
+    public function add_form_type_meta_box(): void
+    {
+        add_meta_box(
+            'Dragwyb_Page_type',
+            __('Form Type', 'dragwyb-form-builder'),
+            [$this, 'render_form_type_meta_box'],
+            self::POST_TYPE,
+            'side',
+            'high'
+        );
+    }
+
+    /**
+     * Render form type meta box
+     */
+    public function render_form_type_meta_box($post): void
+    {
+        // Add nonce for security
+        wp_nonce_field('Dragwyb_Page_type_meta_box', 'Dragwyb_Page_type_nonce');
+
+        $form_type = get_post_meta($post->ID, '_Dragwyb_Page_type', true);
+?>
+        <select name="Dragwyb_Page_type" id="Dragwyb_Page_type">
+            <option value="standard" <?php selected($form_type, 'standard'); ?>>
+                <?php esc_html_e('Standard Form', 'dragwyb-form-builder'); ?>
+            </option>
+            <option value="quiz" <?php selected($form_type, 'quiz'); ?>>
+                <?php esc_html_e('Quiz', 'dragwyb-form-builder'); ?>
+            </option>
+            <option value="poll" <?php selected($form_type, 'poll'); ?>>
+                <?php esc_html_e('Poll', 'dragwyb-form-builder'); ?>
+            </option>
+            <option value="survey" <?php selected($form_type, 'survey'); ?>>
+                <?php esc_html_e('Survey', 'dragwyb-form-builder'); ?>
+            </option>
+        </select>
+<?php
+    }
+
+    /**
+     * Save form type meta
+     */
+    public function save_form_type_meta($post_id): void
+    {
+        // Check if nonce is set and valid
+        if (
+            !isset($_POST['Dragwyb_Page_type_nonce']) ||
+            !wp_verify_nonce($_POST['Dragwyb_Page_type_nonce'], 'Dragwyb_Page_type_meta_box')
+        ) {
+            return;
+        }
+
+        // Check if this is an autosave
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+            return;
+        }
+
+        // Check user permissions
+        if (!current_user_can('edit_post', $post_id)) {
+            return;
+        }
+
+        // Save form type
+        if (isset($_POST['Dragwyb_Page_type'])) {
+            $form_type = sanitize_text_field($_POST['Dragwyb_Page_type']);
+            update_post_meta($post_id, '_Dragwyb_Page_type', $form_type);
+        }
+    }
+
+    /**
+     * Get form entries count
+     */
+    private function get_form_entries_count($form_id): int
+    {
+        // This will be implemented when we add form submissions functionality
+        return 0;
+    }
+
+    /**
+     * Redirect to custom editor
+     */
+    public function redirect_to_custom_editor(): void
+    {
+        global $post_type;
+
+        if ($post_type !== self::POST_TYPE) {
+            return;
+        }
+
+        $form_id = isset($_GET['post']) ? absint($_GET['post']) : 0;
+
+        if ($form_id) {
+            wp_safe_redirect(add_query_arg([
+                'page' => DRAGWYB_PREFIX . '-form-overview',
+                'form_id' => $form_id
+            ], admin_url('admin.php')));
+            exit;
+        }
+    }
+
+    /**
+     * Disable Gutenberg for forms
+     */
+    public function disable_gutenberg(bool $use_block_editor, string $post_type): bool
+    {
+        if ($post_type === self::POST_TYPE) {
+            return false;
+        }
+        return $use_block_editor;
+    }
+}
