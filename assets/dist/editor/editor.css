@@ -1,6 +1,6 @@
-/*!****************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./admin/css/editor.scss ***!
-  \****************************************************************************************************************/
+/*!******************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./assets/sass/editor.scss ***!
+  \******************************************************************************************************************/
 body.dragwyb-form_page_dragwyb-form-builder #adminmenumain, body.dragwyb-form_page_dragwyb-form-builder #wpadminbar {
   display: none !important;
 }

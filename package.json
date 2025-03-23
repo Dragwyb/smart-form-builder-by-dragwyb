@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "Drag & Drop Form Builder",
   "scripts": {
-    "dev": "webpack --mode development --watch",
-    "build": "webpack --mode production"
+    "dev:editor": "webpack --mode development --env folder=editor --watch",
+    "build:editor": "webpack --mode production --env folder=editor",
+    "dev:core": "webpack --mode development --env folder=core --watch",
+    "build:core": "webpack --mode production --env folder=core",
+    "dev:frontend": "webpack --mode development --env folder=frontend --watch",
+    "build:frontend": "webpack --mode production --env folder=frontend"
   },
   "dependencies": {
     "@wordpress/components": "^23.0.0",

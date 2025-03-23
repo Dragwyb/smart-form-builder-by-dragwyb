@@ -3,15 +3,15 @@ import { useDispatch } from 'react-redux';
 import { updateField } from '../../store/actions';
 import { Panel } from '../Common';
 
-const FieldSettings = ({ field, fieldSettings, onClose }) => {
+const FieldSettings = ({ activeField, fieldValue, onClose }) => {
     const dispatch = useDispatch();
-    const fieldType = DragwybEditor.fieldTypes[field.type];
+    const fieldType = DragwybEditor.fieldTypes[activeField.type];
 
     const handleChange = (setting, value) => {
-        dispatch(updateField(field.id, {
-            ...field,
+        dispatch(updateField(activeField.id, {
+            ...fieldValue,
             settings: {
-                ...field.settings,
+                ...fieldValue.settings,
                 [setting]: value
             }
         }));
@@ -31,20 +31,20 @@ const FieldSettings = ({ field, fieldSettings, onClose }) => {
                         {setting.type === 'text' && (
                             <input
                                 type="text"
-                                value={fieldSettings.settings[key] || ''}
+                                value={fieldValue.settings[key] || ''}
                                 onChange={e => handleChange(key, e.target.value)}
                             />
                         )}
                         {setting.type === 'checkbox' && (
                             <input
                                 type="checkbox"
-                                checked={fieldSettings.settings[key] || false}
+                                checked={fieldValue.settings[key] || false}
                                 onChange={e => handleChange(key, e.target.checked)}
                             />
                         )}
                         {setting.type === 'select' && (
                             <select
-                                value={fieldSettings.settings[key] || ''}
+                                value={fieldValue.settings[key] || ''}
                                 onChange={e => handleChange(key, e.target.value)}
                             >
                                 {setting.options.map(option => (

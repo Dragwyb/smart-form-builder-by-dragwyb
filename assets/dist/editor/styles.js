@@ -10,13 +10,13 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./admin/css/editor.scss":
-/*!*******************************!*\
-  !*** ./admin/css/editor.scss ***!
-  \*******************************/
+/***/ "./assets/sass/editor.scss":
+/*!*********************************!*\
+  !*** ./assets/sass/editor.scss ***!
+  \*********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n\n//# sourceURL=webpack://dragwyb-form-builder/./admin/css/editor.scss?");
+eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n\n//# sourceURL=webpack://dragwyb-form-builder/./assets/sass/editor.scss?");
 
 /***/ })
 
@@ -43,7 +43,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extr
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module can't be inlined because the eval devtool is used.
 /******/ 	var __webpack_exports__ = {};
-/******/ 	__webpack_modules__["./admin/css/editor.scss"](0, __webpack_exports__, __webpack_require__);
+/******/ 	__webpack_modules__["./assets/sass/editor.scss"](0, __webpack_exports__, __webpack_require__);
 /******/ 	
 /******/ })()
 ;

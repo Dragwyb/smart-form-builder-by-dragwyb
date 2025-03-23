@@ -78,7 +78,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             // Enqueue React and dependencies
             wp_enqueue_script(
                 'dragwyb-form-editor',
-                DRAGWYB_FORM_BUILDER_URL . 'admin/js/dist/editor.js',
+                DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editor/editor.js',
                 ['wp-element', 'wp-components', 'wp-i18n'],
                 DRAGWYB_FORM_BUILDER_VERSION,
                 true
@@ -86,7 +86,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
 
             wp_enqueue_style(
                 'dragwyb-form-editor',
-                DRAGWYB_FORM_BUILDER_URL . 'admin/css/editor.css',
+                DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editor/editor.css',
                 ['wp-components'],
                 DRAGWYB_FORM_BUILDER_VERSION
             );

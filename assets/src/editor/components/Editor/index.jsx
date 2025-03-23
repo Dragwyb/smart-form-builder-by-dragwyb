@@ -125,8 +125,8 @@ const Editor = () => {
                         {selectedField && (
                             <div className="dragwyb-editor__settings">
                                 <FieldSettings
-                                    field={selectedField}
-                                    fieldSettings={selectedFieldSetting()}
+                                    activeField={selectedField}
+                                    fieldValue={selectedFieldSetting()}
                                     onClose={() => setSelectedField(null)}
                                 />
                             </div>

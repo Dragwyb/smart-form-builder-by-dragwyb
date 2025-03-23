@@ -1,15 +1,7 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-module.exports = {
-    entry: {
-        editor: './admin/js/src/index.js',
-        styles: './admin/css/editor.scss'
-    },
-    output: {
-        filename: '[name].js',
-        path: path.resolve(__dirname, 'admin/js/dist')
-    },
+const config = {
     module: {
         rules: [
             {
@@ -35,11 +27,6 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.jsx']
     },
-    plugins: [
-        new MiniCssExtractPlugin({
-            filename: '../css/[name].css'
-        })
-    ],
     externals: {
         react: 'React',
         'react-dom': 'ReactDOM',
@@ -47,4 +34,29 @@ module.exports = {
         '@wordpress/components': 'wp.components',
         '@wordpress/i18n': 'wp.i18n'
     }
+};
+
+module.exports = (env, argv) => {
+    if (argv.env.folder) {
+
+        const folder=argv.env.folder;
+
+        return {
+            ...config,
+            entry: {
+                editor: `./assets/src/${folder}/index.js`,
+                styles: `./assets/sass/${folder}.scss`
+            },
+            output: {
+                filename: `[name].js`,
+                path: path.resolve(__dirname, `assets/dist/${folder}`)
+            },
+            plugins: [
+                new MiniCssExtractPlugin({
+                    filename: `../${folder}/${folder}.css`
+                })
+            ],
+        }
+    }
+
 }; 
