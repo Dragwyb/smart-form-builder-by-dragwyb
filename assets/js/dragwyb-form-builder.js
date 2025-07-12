@@ -91,7 +91,7 @@
             const formData = this.getFormData();
             
             $.ajax({
-                url: dragwybFormBuilder.ajaxUrl,
+                url: c.ajaxUrl,
                 type: 'POST',
                 data: {
                     action: 'dragwyb_save_form',

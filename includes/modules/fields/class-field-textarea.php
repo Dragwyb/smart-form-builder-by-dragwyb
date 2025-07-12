@@ -6,6 +6,23 @@ namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Base;
 
 class Field_Textarea extends Field_Base {
+    protected function register_scripts(){
+
+        wp_register_script('dragwyb_editor_fields', DRAGWYB_FORM_BUILDER_URL. 'assets/dist/editorFields/editorFields.js', array(), DRAGWYB_FORM_BUILDER_VERSION, true);
+
+        $scripts=array();   
+
+        if(defined('DRAGWYB_EDITOR')){
+            $scripts=array('dragwyb_editor_fields');
+        }
+
+        return $scripts;
+    }
+    
+    protected function register_style(){
+        return array();
+    }
+
     protected function init(): void {
         $this->type = 'textarea';
         $this->name = __('Paragraph Field', 'dragwyb-form-builder');

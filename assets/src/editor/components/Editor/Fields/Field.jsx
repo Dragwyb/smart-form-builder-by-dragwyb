@@ -48,6 +48,8 @@ const Field = ({ field, value, onChange, errors = [], disabled = false }) => {
         }
     };
 
+    let Html=DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/fieldRender/'+field.type, renderField(), field.type, field.id, field);
+
     return (
         <div className={`dragwyb-field dragwyb-field--${field.type} ${field.className || ''}`}>
             {field.label && field.type !== 'hidden' && (
@@ -60,7 +62,7 @@ const Field = ({ field, value, onChange, errors = [], disabled = false }) => {
                 <div className="dragwyb-field__description">{field.description}</div>
             )}
             <div className="dragwyb-field__input">
-                {renderField()}
+                {Html}
             </div>
             {errors.length > 0 && (
                 <div className="dragwyb-field__errors">

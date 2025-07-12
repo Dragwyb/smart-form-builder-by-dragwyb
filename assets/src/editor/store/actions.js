@@ -49,7 +49,7 @@ export const hideNotice = (id) => ({
 export const saveForm = (formData) => async(dispatch) => {
     try {
         await api.saveForm(formData);
-        dispatch(showNotice(DragwybBuilder.i18n.saveSuccess));
+        dispatch(showNotice(DragwybBuilder.i18n.save));
     } catch (error) {
         dispatch(showNotice(error.message, 'error'));
         throw error;

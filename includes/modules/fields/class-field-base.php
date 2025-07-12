@@ -13,8 +13,29 @@ abstract class Field_Base
     private ?string $current_section = null;
     private ?string $current_tabs = null;
     private ?string $current_tab = null;
+    private ?array $display_settings=array();
 
     protected array $controls;
+
+    abstract protected function register_scripts();
+    abstract protected function register_style();
+
+    public function enqueue_assets()
+    {
+        $scripts=$this->register_scripts();
+        $styles=$this->register_style();
+
+        foreach($scripts as $script){
+            if(!wp_script_is($script, 'enqueued')){
+                wp_enqueue_script($script);
+            }
+        }
+        foreach($styles as $style){
+            if(!wp_style_is($style, 'enqueued')){
+                wp_enqueue_style($style);
+            }
+        }
+    }
 
     public function __construct()
     {
@@ -41,6 +62,16 @@ abstract class Field_Base
     public function get_settings(): array
     {
         return $this->settings;
+    }
+
+    protected function set_display_setting(array $setting)
+    {
+        $this->display_settings=$setting;
+    }
+
+    protected function get_display_setting(array $setting): array
+    {
+        return $this->display_settings;
     }
 
     protected function start_section(): void

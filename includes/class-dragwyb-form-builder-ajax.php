@@ -22,34 +22,42 @@ class Dragwyb_Form_Builder_Ajax {
      * Save form data
      */
     public function save_form(): void {
-        // Verify nonce
-        if (!check_ajax_referer('dragwyb_editor', 'nonce', false)) {
-            wp_send_json_error(['message' => 'Invalid nonce']);
+        try {
+            check_ajax_referer('dragwyb_editor');
+
+            if (!current_user_can('edit_posts')) {
+                throw new \Exception(__('Permission denied', 'dragwyb-form-builder'));
+            }
+
+            $form_id = absint($_POST['form_id'] ?? 0);
+            $form_data = json_decode(stripslashes($_POST['form_data'] ?? ''), true);
+
+            if (!$form_id || !is_array($form_data)) {
+                throw new \Exception(__('Invalid form data', 'dragwyb-form-builder'));
+            }
+
+            // Update form
+            wp_update_post([
+                'ID' => $form_id,
+                'post_title' => sanitize_text_field($form_data['title'])
+            ]);
+
+            // Update form meta
+            update_post_meta($form_id, '_dragwyb_form_type', $form_data['type']);
+            update_post_meta($form_id, '_form_fields', $form_data['fields']);
+            update_post_meta($form_id, '_form_settings', $form_data['settings']);
+            update_post_meta($form_id, '_form_styles', $form_data['styles']);
+            update_post_meta($form_id, '_form_notifications', $form_data['notifications']);
+            update_post_meta($form_id, '_form_confirmations', $form_data['confirmations']);
+
+            wp_send_json_success([
+                'message' => __('Form saved successfully', 'dragwyb-form-builder')
+            ]);
+        } catch (\Exception $e) {
+            wp_send_json_error([
+                'message' => $e->getMessage()
+            ]);
         }
-
-        // Check permissions
-        if (!current_user_can('edit_posts')) {
-            wp_send_json_error(['message' => 'Permission denied']);
-        }
-
-        $form_id = intval($_POST['form_id'] ?? 0);
-        if (!$form_id) {
-            wp_send_json_error(['message' => 'Invalid post ID']);
-        }
-
-        // Validate and sanitize form data
-        $form_data = json_decode(stripslashes($_POST['form_data'] ?? ''), true);
-        if (!$form_data) {
-            wp_send_json_error(['message' => 'Invalid form data']);
-        }
-
-        // Sanitize form fields
-        $form_data = $this->sanitize_form_data($form_data);
-
-        // Save form data
-        update_post_meta($form_id, '_dragwyb_form_data', wp_json_encode($form_data));
-
-        wp_send_json_success(['message' => 'Form saved successfully']);
     }
 
     /**

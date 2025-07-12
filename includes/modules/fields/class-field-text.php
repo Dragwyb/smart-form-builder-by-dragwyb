@@ -6,6 +6,15 @@ namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Base;
 
 class Field_Text extends Field_Base {
+    
+    protected function register_scripts(){
+        return array();
+    }
+    
+    protected function register_style(){
+        return array();
+    }
+
     protected function init(): void {
         $this->type = 'text';
         $this->name = __('Text Field', 'dragwyb-form-builder');

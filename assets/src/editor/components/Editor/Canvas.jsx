@@ -19,7 +19,6 @@ const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors
 
     return (
         <div className="dragwyb-canvas">
-            <Preview fields={fields} values={values} onChange={onChange} errors={errors} />
             <DragDropContext onDragEnd={handleDragEnd}>
                 <Droppable droppableId="form-fields">
                     {(provided) => (

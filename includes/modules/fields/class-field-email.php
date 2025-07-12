@@ -6,6 +6,14 @@ namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Base;
 
 class Field_Email extends Field_Base {
+    protected function register_scripts(){
+        return array();
+    }
+    
+    protected function register_style(){
+        return array();
+    }
+    
     protected function init(): void {
         $this->type = 'email';
         $this->name = __('Email Field', 'dragwyb-form-builder');

@@ -1,7 +1,8 @@
 import Hooks from "./hooks";
 
 const DragwybCore = () => {
-    DragwybBuilder.Hooks = Hooks;
+    DragwybBuilder.Hooks = new Hooks();
+
     jQuery(document).trigger('Dragwyb:init');
 }
 

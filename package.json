@@ -8,7 +8,9 @@
         "dev:core": "webpack --mode development --env folder=core --watch",
         "build:core": "webpack --mode production --env folder=core",
         "dev:frontend": "webpack --mode development --env folder=frontend --watch",
-        "build:frontend": "webpack --mode production --env folder=frontend"
+        "build:frontend": "webpack --mode production --env folder=frontend",
+        "dev:editorFields": "webpack --mode development --env folder=editorFields --watch",
+        "build:editorFields": "webpack --mode production --env folder=editorFields"
     },
     "dependencies": {
         "@wordpress/components": "^23.0.0",

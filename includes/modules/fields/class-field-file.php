@@ -6,6 +6,14 @@ namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Base;
 
 class Field_File extends Field_Base {
+    protected function register_scripts(){
+        return array();
+    }
+    
+    protected function register_style(){
+        return array();
+    }
+    
     protected function init(): void {
         $this->type = 'file';
         $this->name = __('File Upload', 'dragwyb-form-builder');

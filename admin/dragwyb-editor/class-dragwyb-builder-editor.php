@@ -131,8 +131,8 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 setup_postdata( $post );
             }
 
+            !defined("DRAGWYB_EDITOR") && define('DRAGWYB_EDITOR', true);
 
-            // if (!is_wp_error($post_id)) {
             Dragwyb_Init::core_script();
 
             wp_enqueue_script('dragwyb-form-core');
@@ -203,9 +203,12 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             $fields = [];
 
             foreach ($fields_data as $key => $field) {
+                $field->enqueue_assets();
+
                 $setting = $field->get_settings();
 
                 $name = $field->get_name();
+
 
                 $fields[$key] = ['label' => esc_html($name)];
                 $fields[$key]['settings'] = $setting;
