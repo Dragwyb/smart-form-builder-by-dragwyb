@@ -25,6 +25,8 @@ class Dragwyb_Form_Builder_Admin {
             return;
         }
 
+        global $post;
+
         // Enqueue jQuery UI for drag and drop
         wp_enqueue_script('jquery-ui-sortable');
         wp_enqueue_script('jquery-ui-draggable');
@@ -51,6 +53,7 @@ class Dragwyb_Form_Builder_Admin {
         wp_localize_script('dragwyb-form-builder', 'dragwybFormBuilder', [
             'ajaxUrl' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('dragwyb_form_builder'),
+            'formId'=>$post->id,
             'strings' => [
                 'confirmDelete' => __('Are you sure you want to delete this field?', 'dragwyb-form-builder'),
                 'savingForm' => __('Saving form...', 'dragwyb-form-builder'),

@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Dragwyb\Form_Builder\Includes\Dragwyb_Editor;
+namespace Dragwyb\Form_Builder\Admin\Dragwyb_Editor;
 
-use Dragwyb\Form_Builder\Includes\Dragwyb_Pages\Dragwyb_Pages;
+use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Pages;
+use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
 use Dragwyb\Form_Builder\Includes\Modules\Module;
+use Dragwyb\Form_Builder\Includes\Dragwyb_Init;
 
 if (!defined("ABSPATH")) {
     die("You can't access this page");
@@ -15,6 +17,7 @@ if (!defined("ABSPATH")) {
 if (!class_exists('Dragwyb_Builder_Editor')) {
     class Dragwyb_Builder_Editor
     {
+        private static $form_id = null;
         private const Current_Page = DRAGWYB_PREFIX . '-form-builder';
         private static ?self $instance = null;
 
@@ -31,6 +34,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             add_filter('Dragwyb_allowed_pages', [$this, 'allowed_page']);
             add_filter('Dragwyb_Admin_Pages', [$this, 'allowed_page']);
             add_action('Dragwyb_Current_Screen', [$this, 'init'], 1);
+            add_filter('Dragwyb_i18n', [$this, 'localize_i18n_strings']);
         }
 
         public function init($screen)
@@ -57,7 +61,16 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
 
         public function builder_output()
         {
-            echo '<div id="' . esc_attr(self::Current_Page) . '-editor-wrapper" ><div id="' . esc_attr(self::Current_Page) . '-editor-container" ></div></div>';
+           if(isset(self::$form_id) && self::$form_id){
+               echo '<div id="' . esc_attr(self::Current_Page) . '-editor-wrapper" ><div id="' . esc_attr(self::Current_Page) . '-editor-container" ></div></div>';
+           }else{
+            $post_type=Dragwyb_Post::post_type();
+
+            printf(
+                '<h1>%s</h1>',
+                sprintf(__('Failed to create the %s.', 'dragwyb-form-builder'), esc_html($post_type))
+            );
+           }
         }
 
         public function remove_default_wp_content()
@@ -75,11 +88,62 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
 
         public function enqueue_editor_assets()
         {
+            $builder_page = DRAGWYB_PREFIX . '-form-builder';
+            $screen_id = DRAGWYB_PREFIX . '-form_page_' . DRAGWYB_PREFIX . '-form-builder';
+            $current_screen = get_current_screen();
+            
+            if (!isset($current_screen) && $current_screen->id !== $screen_id && !isset($_GET['page']) || $_GET['page'] !== $builder_page) {
+                return;
+            }
+
+            $form_id = isset($_GET['form_id']) ? absint($_GET['form_id']) : 0;
+
+            $post_type=Dragwyb_Post::post_type();
+
+            if(!isset($form_id) || !$form_id){
+                $post_id = wp_insert_post([
+                    'post_title'   => 'New Form',
+                    'post_status'  => 'draft',
+                    'post_type'    => $post_type,
+                    'post_author'  => get_current_user_id(),
+                ]);
+
+                self::$form_id=$post_id;
+            }else{
+                $form=get_post((int) $form_id);
+
+                if(!isset($form) || !isset($form->post_type)){
+                    self::$form_id=false;
+                }else if($form->post_type !== $post_type){
+                    self::$form_id=false;
+                }else{
+                    self::$form_id=(int) $form_id;
+                }
+            }
+
+            if(!isset(self::$form_id) || !self::$form_id){
+                return;
+            }else{
+                global $post;
+
+                $post = get_post( (int) self::$form_id );
+
+                setup_postdata( $post );
+            }
+
+
+            // if (!is_wp_error($post_id)) {
+            Dragwyb_Init::core_script();
+
+            wp_enqueue_script('dragwyb-form-core');
+
+            $dependencies = array('dragwyb-form-core');
+
             // Enqueue React and dependencies
             wp_enqueue_script(
                 'dragwyb-form-editor',
                 DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editor/editor.js',
-                ['wp-element', 'wp-components', 'wp-i18n'],
+                array_merge($dependencies, ['wp-element', 'wp-components', 'wp-i18n']),
                 DRAGWYB_FORM_BUILDER_VERSION,
                 true
             );
@@ -91,22 +155,21 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 DRAGWYB_FORM_BUILDER_VERSION
             );
 
-            global $post;
-            $form_id = $post->ID ?? 0;
-
-            // Localize data
-            wp_localize_script('dragwyb-form-editor', 'DragwybEditor', [
+            $localize_data = [
                 'ajaxUrl' => admin_url('admin-ajax.php'),
                 'nonce' => wp_create_nonce('dragwyb_editor'),
-                'formId' => $form_id,
+                'formId' => (int) self::$form_id,
                 'editorContainer' => esc_html(self::Current_Page) . '-editor-container',
-                'formData' => $this->get_form_data($form_id),
+                'formData' => $this->get_form_data((int) self::$form_id),
                 'fieldTypes' => $this->get_field_types(),
                 'formTypes' => $this->get_form_types(),
                 'settings' => $this->get_form_advance_settings(),
                 'adminUrl' => admin_url('edit.php?post_type=dragwyb_form'),
-                'i18n' => $this->get_translations()
-            ]);
+            ];
+
+            $localize_data = apply_filters('dragwy_form_editor_localize', $localize_data);
+            // Localize data
+            wp_localize_script('dragwyb-form-editor', 'DragwybEditor', $localize_data);
         }
 
         /**
@@ -193,19 +256,15 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             return $form_setting;
         }
 
-        /**
-         * Get translations
-         */
-        private function get_translations(): array
+        public function localize_i18n_strings($strings): array
         {
-            return [
+            $localize_strings = [
                 'addField' => __('Add Field', 'dragwyb-form-builder'),
                 'fieldSettings' => __('Field Settings', 'dragwyb-form-builder'),
                 'formSettings' => __('Form Settings', 'dragwyb-form-builder'),
                 'save' => __('Save Form', 'dragwyb-form-builder'),
                 'preview' => __('Preview Form', 'dragwyb-form-builder'),
                 'formTitle' => __('Form Title', 'dragwyb-form-builder'),
-                'cancel' => __('Cancel', 'dragwyb-form-builder'),
                 'settings' => __('Settings', 'dragwyb-form-builder'),
                 'general' => __('General', 'dragwyb-form-builder'),
                 'advanced' => __('Advanced', 'dragwyb-form-builder'),
@@ -218,6 +277,8 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 'confirmation_subject' => __('Confirmation Subject', 'dragwyb-form-builder'),
                 'confirmation_message' => __('Confirmation Message', 'dragwyb-form-builder'),
             ];
+
+            return array_merge($localize_strings, $strings);
         }
     }
 }

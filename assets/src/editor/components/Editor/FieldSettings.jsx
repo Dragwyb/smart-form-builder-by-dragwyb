@@ -21,7 +21,7 @@ const FieldSettings = ({ activeField, fieldValue, onClose }) => {
 
     return (
         <Panel
-            title={`${fieldType.label} ${DragwybEditor.i18n.settings}`}
+            title={`${fieldType.label} ${DragwybBuilder.i18n.settings}`}
             onClose={onClose}
         >
             <div className="field-settings">

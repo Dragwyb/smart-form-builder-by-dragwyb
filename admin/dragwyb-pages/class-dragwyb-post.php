@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dragwyb\Form_Builder\Includes\Dragwyb_Pages;
+namespace Dragwyb\Form_Builder\Admin\Dragwyb_Pages;
 
 class Dragwyb_Post
 {
@@ -10,6 +10,10 @@ class Dragwyb_Post
      * Post type name
      */
     const POST_TYPE = DRAGWYB_PREFIX . '-forms';
+
+    public static function post_type(){
+        return self::POST_TYPE; 
+    }
 
     /**
      * Constructor

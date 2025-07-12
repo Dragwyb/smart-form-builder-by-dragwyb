@@ -59,7 +59,7 @@ const Editor = () => {
                             type: 'UPDATE_FORM_TITLE',
                             payload: e.target.value
                         })}
-                        placeholder={DragwybEditor.i18n.formTitle}
+                        placeholder={DragwybBuilder.i18n.formTitle}
                     />
                 </div>
                 <div className="dragwyb-editor__tabs">
@@ -70,7 +70,7 @@ const Editor = () => {
                             setPreviewMode(false);
                         }}
                     >
-                        {DragwybEditor.i18n.addField}
+                        {DragwybBuilder.i18n.addField}
                     </Button>
                     <Button
                         isActive={activeTab === 'settings' && !previewMode}
@@ -79,21 +79,21 @@ const Editor = () => {
                             setPreviewMode(false);
                         }}
                     >
-                        {DragwybEditor.i18n.formSettings}
+                        {DragwybBuilder.i18n.formSettings}
                     </Button>
                     <Button
                         isActive={previewMode}
                         onClick={() => setPreviewMode(!previewMode)}
                     >
-                        {DragwybEditor.i18n.preview}
+                        {DragwybBuilder.i18n.preview}
                     </Button>
                 </div>
                 <div className="dragwyb-editor__actions">
                     <Button onClick={handleExit}>
-                        {DragwybEditor.i18n.cancel}
+                        {DragwybBuilder.i18n.cancel}
                     </Button>
                     <Button isPrimary onClick={handleSave}>
-                        {DragwybEditor.i18n.save}
+                        {DragwybBuilder.i18n.save}
                     </Button>
                 </div>
             </div>

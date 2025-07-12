@@ -16,11 +16,7 @@ if (!defined('ABSPATH')) {
 
 use Dragwyb\Form_Builder\Dragwyb_Form_Builder_Autoload;
 use Dragwyb\Form_Builder\Includes\Dragwyb_Form;
-use Dragwyb\Form_Builder\Includes\Dragwyb_Form_Builder_Ajax;
-use Dragwyb\Form_Builder\Includes\Dragwyb_Form_Builder_Editor;
-use Dragwyb\Form_Builder\Includes\Dragwyb_Pages\Dragwyb_Post;
-use Dragwyb\Form_Builder\Includes\Dragwyb_Pages\Dragwyb_Pages;
-use Dragwyb\Form_Builder\Includes\Dragwyb_Editor\Dragwyb_Builder_Editor;
+use Dragwyb\Form_Builder\Includes\Dragwyb_Init;
 
 final class Dragwyb_Form_Builder
 {
@@ -90,19 +86,8 @@ final class Dragwyb_Form_Builder
     public function init_plugin(): void
     {
 
-        // Initialize admin
-        if (is_admin()) {
-            // new Dragwyb_Form_Builder_Admin();
-            new Dragwyb_Builder_Editor();
-            // new Dragwyb_Form_Builder_Editor();
-            new Dragwyb_Pages();
-        }
-
-        // Initialize post type
-        new Dragwyb_Post();
-
-        // Initialize AJAX handler
-        new Dragwyb_Form_Builder_Ajax();
+       $dragwyb=Dragwyb_Init::instance();
+       $dragwyb->init();
     }
 
     /**

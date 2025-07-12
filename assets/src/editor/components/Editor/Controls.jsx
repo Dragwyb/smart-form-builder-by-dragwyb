@@ -20,7 +20,7 @@ const Controls = ({ onFieldSelect }) => {
     return (
         <div className="dragwyb-controls">
             <div className="dragwyb-controls__header">
-                <h2>{DragwybEditor.i18n.addField}</h2>
+                <h2>{DragwybBuilder.i18n.addField}</h2>
             </div>
             <div className="dragwyb-controls__fields">
                 {Object.entries(fieldTypes).map(([type, config]) => (

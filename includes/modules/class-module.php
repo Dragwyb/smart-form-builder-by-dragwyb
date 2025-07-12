@@ -33,14 +33,6 @@ class Module
 
     private function load_fields(): void
     {
-        // Autoload all field classes
-        $fields_dir = DRAGWYB_FORM_BUILDER_PATH . 'includes/modules/fields/';
-        $field_files = glob($fields_dir . 'class-dragwyb-field-*.php');
-
-        foreach ($field_files as $file) {
-            require_once $file;
-        }
-
         // Register field types
         $this->register_default_fields();
     }

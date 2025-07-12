@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dragwyb\Form_Builder\Includes\Dragwyb_Pages;
+namespace Dragwyb\Form_Builder\Admin\Dragwyb_Pages;
 
 class Dragwyb_Pages
 {

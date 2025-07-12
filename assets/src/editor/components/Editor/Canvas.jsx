@@ -87,7 +87,7 @@ const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors
             </DragDropContext>
             {fields.length === 0 && (
                 <div className="dragwyb-canvas__empty">
-                    <p>{DragwybEditor.i18n.emptyForm}</p>
+                    <p>{DragwybBuilder.i18n.emptyForm}</p>
                 </div>
             )}
         </div>

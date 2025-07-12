@@ -1,5 +1,6 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const fs = require('fs');
 
 const config = {
     module: {
@@ -20,7 +21,7 @@ const config = {
                     MiniCssExtractPlugin.loader,
                     'css-loader',
                     'sass-loader'
-                ]
+                ],
             }
         ]
     },
@@ -39,13 +40,12 @@ const config = {
 module.exports = (env, argv) => {
     if (argv.env.folder) {
 
-        const folder=argv.env.folder;
+        const folder = argv.env.folder;
 
         return {
             ...config,
-            entry: {
-                editor: `./assets/src/${folder}/index.js`,
-                styles: `./assets/sass/${folder}.scss`
+            entry:{
+                [folder]:`./assets/src/${folder}/index.js`
             },
             output: {
                 filename: `[name].js`,

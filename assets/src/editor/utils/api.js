@@ -2,9 +2,9 @@ import { __ } from '@wordpress/i18n';
 
 class FormBuilderAPI {
     constructor() {
-        this.nonce = window.dragwybFormBuilder?.nonce || '';
-        this.ajaxUrl = window.dragwybFormBuilder?.ajaxUrl || '/wp-admin/admin-ajax.php';
-        this.formId = window.dragwybFormBuilder?.formId || null;
+        this.nonce = window.DragwybEditor?.nonce || '';
+        this.ajaxUrl = window.DragwybEditor?.ajaxUrl || '/wp-admin/admin-ajax.php';
+        this.formId = window.DragwybBuilder?.formId || null;
     }
 
     /**

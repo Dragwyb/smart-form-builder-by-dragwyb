@@ -46,10 +46,10 @@ export const hideNotice = (id) => ({
     payload: id
 });
 
-export const saveForm = (formData) => async (dispatch) => {
+export const saveForm = (formData) => async(dispatch) => {
     try {
         await api.saveForm(formData);
-        dispatch(showNotice(DragwybEditor.i18n.saveSuccess));
+        dispatch(showNotice(DragwybBuilder.i18n.saveSuccess));
     } catch (error) {
         dispatch(showNotice(error.message, 'error'));
         throw error;
@@ -62,11 +62,11 @@ export const addError = (message) => ({
 });
 
 // Example usage in a component
-const handleSave = async () => {
+const handleSave = async() => {
     try {
         await api.saveForm(formData);
         // Handle success
     } catch (error) {
         // Handle error
     }
-}; 
+};
