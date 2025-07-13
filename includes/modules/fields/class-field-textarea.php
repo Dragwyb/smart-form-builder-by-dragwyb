@@ -23,6 +23,8 @@ class Field_Textarea extends Field_Base {
         return array();
     }
 
+    protected function register_controls(): void{}
+
     protected function init(): void {
         $this->type = 'textarea';
         $this->name = __('Paragraph Field', 'dragwyb-form-builder');

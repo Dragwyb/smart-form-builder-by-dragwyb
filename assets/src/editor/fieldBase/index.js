@@ -9,7 +9,7 @@ class  DragwybFieldBase {
         if(!this.fieldName){
             return;
         }
-        DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/fieldRender/'+this.fieldName,(args)=>{return this.renderComponent(args)});
+        DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/FieldRender/'+this.fieldName,(args)=>{return this.renderComponent(args)});
     }
 
     renderComponent(args){

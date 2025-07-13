@@ -16,5 +16,5 @@ jQuery(document).on('Dragwyb:editorInit', () => {
         return new textField();
     }
 
-    DragwybBuilder.Hooks.addAction('Dragwyb/Editor/fieldBase',text);
+    DragwybBuilder.Hooks.addAction('Dragwyb/Editor/FieldBase',text);
 });

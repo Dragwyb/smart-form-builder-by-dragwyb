@@ -128,6 +128,7 @@ const Editor = () => {
                                     activeField={selectedField}
                                     fieldValue={selectedFieldSetting()}
                                     onClose={() => setSelectedField(null)}
+                                    key={selectedField.id}
                                 />
                             </div>
                         )}

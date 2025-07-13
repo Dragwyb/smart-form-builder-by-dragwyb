@@ -2,7 +2,7 @@ import React from 'react';
 
 const RadioField = ({ field, value, onChange, disabled }) => (
     <div className="dragwyb-radio-group">
-        {field.options.map((option, index) => (
+        {field.options && field.options.map((option, index) => (
             <label key={index} className="dragwyb-radio">
                 <input
                     type="radio"

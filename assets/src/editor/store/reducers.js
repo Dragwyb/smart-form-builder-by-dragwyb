@@ -5,6 +5,7 @@ import {
     UPDATE_FIELD_ORDER,
     UPDATE_FIELD_VALUES,
     UPDATE_FORM_SETTINGS,
+    UPDATE_TEMP_SETTINGS,
     SHOW_NOTICE,
     HIDE_NOTICE,
     ERROR_NOTICE
@@ -18,6 +19,9 @@ const initialState = {
         styles: {},
         notifications: [],
         confirmations: []
+    },
+    tempSettings:{
+
     },
     notices: []
 };
@@ -85,6 +89,15 @@ export default function reducer(state = initialState, action) {
                 form: {
                     ...state.form,
                     settings: action.payload
+                }
+            };
+
+        case UPDATE_TEMP_SETTINGS:
+            return {
+                ...state,
+                tempSettings: {
+                    ...state.tempSettings,
+                    [action.payload.fieldId]:action.payload.field 
                 }
             };
 

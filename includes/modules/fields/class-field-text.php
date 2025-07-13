@@ -1,21 +1,26 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
 use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Base;
 
-class Field_Text extends Field_Base {
-    
-    protected function register_scripts(){
-        return array();
-    }
-    
-    protected function register_style(){
+class Field_Text extends Field_Base
+{
+
+    protected function register_scripts()
+    {
         return array();
     }
 
-    protected function init(): void {
+    protected function register_style()
+    {
+        return array();
+    }
+
+    protected function init(): void
+    {
         $this->type = 'text';
         $this->name = __('Text Field', 'dragwyb-form-builder');
         $this->icon = 'dashicons-text';
@@ -36,25 +41,93 @@ class Field_Text extends Field_Base {
         );
     }
 
-    public function render_admin(): string {
+    protected function register_controls(): void
+    {
+        $this->start_section('text_form_settings', [
+            'label' => 'Form Settings',
+            'tab' => 'content'
+        ]);
+
+        $this->start_tabs('text_tabs');
+
+        $this->start_tab('text_normal', [
+            'label' => 'Normal',
+        ]);
+        
+        $this->add_control('text_color', [
+            'type' => 'Color',
+            'label' => __('Field Label Color', 'dragwyb-form-builder'),
+            'default' => '',
+        ]);
+
+        $this->end_tab();
+
+        $this->start_tab('text_hover', [
+            'label' => 'Hover',
+        ]);
+
+        $this->add_control('text_hover_color', [
+            'type' => 'Color',
+            'label' => __('Field Label Color', 'dragwyb-form-builder'),
+            'default' => '',
+        ]);
+
+        $this->end_tab();
+
+        $this->end_tabs();
+
+        $this->add_control('text_label', [
+            'type' => 'text',
+            'label' => __('Field Label', 'dragwyb-form-builder'),
+            'default' => '',
+        ]);
+        $this->add_control('text_placeholder', [
+            'type' => 'text',
+            'label' => __('Placeholder', 'dragwyb-form-builder'),
+            'default' => '',
+        ]);
+        $this->add_control('text_required', [
+            'type' => 'checkbox',
+            'label' => __('Required', 'dragwyb-form-builder'),
+            'default' => false,
+        ]);
+        $this->add_control('text_css_class', [
+            'type' => 'text',
+            'label' => __('CSS Class', 'dragwyb-form-builder'),
+            'default' => '',
+        ]);
+        
+        $this->end_section();
+
+        $this->start_section('text_form_style', [
+            'label' => 'Form Style',
+            'tab' => 'content'
+        ]);
+
+        $this->end_section();
+    }
+
+    public function render_admin(): string
+    {
         ob_start();
-        ?>
+?>
         <div class="dragwyb-field" data-type="<?php echo esc_attr($this->type); ?>">
             <div class="dragwyb-field-preview">
                 <span class="dragwyb-field-icon dashicons <?php echo esc_attr($this->icon); ?>"></span>
                 <span class="dragwyb-field-label"><?php echo esc_html($this->name); ?></span>
             </div>
         </div>
-        <?php
+    <?php
         return ob_get_clean();
     }
 
-    public function render_frontend(array $field_data): string {
+    public function render_frontend(array $field_data): string
+    {
         $id = 'field_' . uniqid();
         $required = !empty($field_data['required']);
-        
+
         ob_start();
-        ?>
+    ?>
         <div class="dragwyb-field-wrapper <?php echo esc_attr($field_data['css_class'] ?? ''); ?>">
             <label for="<?php echo esc_attr($id); ?>">
                 <?php echo esc_html($field_data['label']); ?>
@@ -63,24 +136,24 @@ class Field_Text extends Field_Base {
                 <?php endif; ?>
             </label>
             <input type="text"
-                   id="<?php echo esc_attr($id); ?>"
-                   name="<?php echo esc_attr($id); ?>"
-                   value="<?php echo esc_attr($field_data['default_value'] ?? ''); ?>"
-                   placeholder="<?php echo esc_attr($field_data['placeholder'] ?? ''); ?>"
-                   <?php echo $required ? 'required' : ''; ?>
-                   <?php if (!empty($field_data['min_length'])): ?>
-                   minlength="<?php echo esc_attr($field_data['min_length']); ?>"
-                   <?php endif; ?>
-                   <?php if (!empty($field_data['max_length'])): ?>
-                   maxlength="<?php echo esc_attr($field_data['max_length']); ?>"
-                   <?php endif; ?>
-            >
+                id="<?php echo esc_attr($id); ?>"
+                name="<?php echo esc_attr($id); ?>"
+                value="<?php echo esc_attr($field_data['default_value'] ?? ''); ?>"
+                placeholder="<?php echo esc_attr($field_data['placeholder'] ?? ''); ?>"
+                <?php echo $required ? 'required' : ''; ?>
+                <?php if (!empty($field_data['min_length'])): ?>
+                minlength="<?php echo esc_attr($field_data['min_length']); ?>"
+                <?php endif; ?>
+                <?php if (!empty($field_data['max_length'])): ?>
+                maxlength="<?php echo esc_attr($field_data['max_length']); ?>"
+                <?php endif; ?>>
         </div>
-        <?php
+<?php
         return ob_get_clean();
     }
 
-    public function validate($value): bool {
+    public function validate($value): bool
+    {
         if (empty($value) && !empty($this->settings['required']['value'])) {
             return false;
         }
@@ -99,7 +172,8 @@ class Field_Text extends Field_Base {
         return true;
     }
 
-    public function sanitize($value) {
+    public function sanitize($value)
+    {
         return sanitize_text_field($value);
     }
-} 
+}

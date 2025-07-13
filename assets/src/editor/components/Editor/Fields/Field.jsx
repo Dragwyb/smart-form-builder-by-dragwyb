@@ -29,26 +29,12 @@ const Field = ({ field, value, onChange, errors = [], disabled = false }) => {
                 return <RadioField field={field} value={value} onChange={onChange} disabled={disabled} />;
             case 'file':
                 return <FileUpload field={field} value={value} onChange={onChange} disabled={disabled} />;
-            // case 'date':
-            //     return <DateField field={field} value={value} onChange={onChange} disabled={disabled} />;
-            // case 'email':
-            //     return <EmailField field={field} value={value} onChange={onChange} disabled={disabled} />;
-            // case 'phone':
-            //     return <PhoneField field={field} value={value} onChange={onChange} disabled={disabled} />;
-            // case 'number':
-            //     return <NumberField field={field} value={value} onChange={onChange} disabled={disabled} />;
-            // case 'hidden':
-            //     return <HiddenField field={field} value={value} onChange={onChange} />;
-            // case 'signature':
-            //     return <SignatureField field={field} value={value} onChange={onChange} disabled={disabled} />;
-            // case 'rating':
-            //     return <RatingField field={field} value={value} onChange={onChange} disabled={disabled} />;
             default:
                 return <div>Unsupported field type: {field.type}</div>;
         }
     };
 
-    let Html=DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/fieldRender/'+field.type, renderField(), field.type, field.id, field);
+    let Html=DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/FieldRender/'+field.type, renderField(), field.type, field.id, field);
 
     return (
         <div className={`dragwyb-field dragwyb-field--${field.type} ${field.className || ''}`}>

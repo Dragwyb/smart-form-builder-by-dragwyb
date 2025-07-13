@@ -13,6 +13,8 @@ class Field_Radio extends Field_Base {
     protected function register_style(){
         return array();
     }
+
+    protected function register_controls(): void{}
     
     protected function init(): void {
         $this->type = 'radio';
