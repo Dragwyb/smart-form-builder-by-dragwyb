@@ -5,8 +5,9 @@ import Controls from './Controls';
 import FieldSettings from './FieldSettings';
 import FormSettings from './FormSettings';
 import Preview from './Preview';
-import { saveForm } from '../../store/actions';
+import { saveForm, resetSectionSettings } from '../../store/actions';
 import { Button } from '../Common';
+
 
 const Editor = () => {
     const [activeTab, setActiveTab] = useState('fields');
@@ -19,6 +20,7 @@ const Editor = () => {
         return acc;
     }, {})); // Assuming values are stored in Redux
     const errors = useSelector(state => state.errors); // Assuming errors are stored in Redux
+    const sectionSettings=useSelector(state => state.sectionSettings);
     const dispatch = useDispatch();
 
     const handleSave = async () => {
@@ -28,6 +30,12 @@ const Editor = () => {
             console.error('Save failed:', error);
         }
     };
+
+    useEffect(()=>{
+        if(sectionSettings){
+            dispatch(resetSectionSettings());
+        }
+    },[selectedField])
 
     const handleExit = () => {
         window.location.href = DragwybEditor.adminUrl;
@@ -129,6 +137,7 @@ const Editor = () => {
                                     fieldValue={selectedFieldSetting()}
                                     onClose={() => setSelectedField(null)}
                                     key={selectedField.id}
+                                    sectionSettings={sectionSettings}
                                 />
                             </div>
                         )}

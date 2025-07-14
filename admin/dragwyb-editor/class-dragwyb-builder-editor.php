@@ -187,6 +187,13 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 DRAGWYB_FORM_BUILDER_VERSION,
                 true
             );
+
+            wp_enqueue_style(
+                'dragwyb-editor-controls',
+                DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editorControls/editorControls.css',
+                [],
+                DRAGWYB_FORM_BUILDER_VERSION,
+            );
         }
 
         /**

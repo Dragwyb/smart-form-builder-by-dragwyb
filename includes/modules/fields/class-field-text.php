@@ -45,7 +45,7 @@ class Field_Text extends Field_Base
     {
         $this->start_section('text_form_settings', [
             'label' => 'Form Settings',
-            'tab' => 'content'
+            'tab' => self::ContentTab
         ]);
 
         $this->start_tabs('text_tabs');
@@ -55,7 +55,7 @@ class Field_Text extends Field_Base
         ]);
         
         $this->add_control('text_color', [
-            'type' => 'Color',
+            'type' => 'color',
             'label' => __('Field Label Color', 'dragwyb-form-builder'),
             'default' => '',
         ]);
@@ -67,7 +67,7 @@ class Field_Text extends Field_Base
         ]);
 
         $this->add_control('text_hover_color', [
-            'type' => 'Color',
+            'type' => 'color',
             'label' => __('Field Label Color', 'dragwyb-form-builder'),
             'default' => '',
         ]);
@@ -101,9 +101,34 @@ class Field_Text extends Field_Base
 
         $this->start_section('text_form_style', [
             'label' => 'Form Style',
-            'tab' => 'content'
+            'tab' => self::ContentTab
         ]);
+        $this->add_control('text_style', [
+            'type' => 'text',
+            'label' => __('CSS Class', 'dragwyb-form-builder'),
+            'default' => '',
+        ]);
+        $this->end_section();
 
+        $this->start_section('text_form_style_tab', [
+            'label' => 'Form Style',
+            'tab' => self::StyleTab
+        ]);
+        $this->add_control('text_style_tab', [
+            'type' => 'text',
+            'label' => __('CSS Class', 'dragwyb-form-builder'),
+            'default' => '',
+        ]);
+        $this->end_section();
+        $this->start_section('text_form_style_tab_two', [
+            'label' => 'Form Style',
+            'tab' => self::StyleTab
+        ]);
+        $this->add_control('text_style_tab_two', [
+            'type' => 'text',
+            'label' => __('CSS Class', 'dragwyb-form-builder'),
+            'default' => '',
+        ]);
         $this->end_section();
     }
 

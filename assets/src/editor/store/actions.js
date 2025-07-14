@@ -6,7 +6,9 @@ export const UPDATE_FIELD = 'UPDATE_FIELD';
 export const DELETE_FIELD = 'DELETE_FIELD';
 export const UPDATE_FIELD_ORDER = 'UPDATE_FIELD_ORDER';
 export const UPDATE_FORM_SETTINGS = 'UPDATE_FORM_SETTINGS';
-export const UPDATE_TEMP_SETTINGS ='UPDATE_TEMP_SETTINGS';
+export const UPDATE_FORM_TITLE = 'UPDATE_FORM_TITLE';
+export const UPDATE_SECTION_SETTINGS ='UPDATE_SECTION_SETTINGS';
+export const RESET_SECTION_SETTINGS ='RESET_SECTION_SETTINGS';
 export const SHOW_NOTICE = 'SHOW_NOTICE';
 export const HIDE_NOTICE = 'HIDE_NOTICE';
 export const UPDATE_FIELD_VALUES = 'UPDATE_FIELD_VALUES';
@@ -22,9 +24,13 @@ export const updateField = (fieldId, field) => ({
     payload: { fieldId, field }
 });
 
-export const updateTempField = (fieldId, field) => ({
-    type: UPDATE_TEMP_SETTINGS,
-    payload: {fieldId, field}
+export const updateSectionSettings = (Id, value) => ({
+    type: UPDATE_SECTION_SETTINGS,
+    payload: {Id, value}
+})
+
+export const resetSectionSettings = () => ({
+    type: RESET_SECTION_SETTINGS
 })
 
 export const deleteField = (fieldId) => ({

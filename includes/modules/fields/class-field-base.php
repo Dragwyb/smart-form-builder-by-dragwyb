@@ -19,6 +19,10 @@ abstract class Field_Base
     private ?array $current_tabs_stack = array();
     private ?array $current_control_stack = array();
 
+    const ContentTab = 'content_tab';
+    const StyleTab = 'style_tab';
+    const AdvanceTab = 'advance_tab';
+
 
     protected array $controls;
 
@@ -93,8 +97,10 @@ abstract class Field_Base
 
         $conditions = isset($data['conditions']) ? $data['conditions'] : array();
 
-        if (isset($data['tab']) && !empty($data['tab'])) {
+        if ((isset($data['tab']) && !empty($data['tab']))) {
             $conditions['header_controls'] = $data['tab'];
+        } else if (!isset($data['tab']) || empty($data['tab'])) {
+            $conditions['header_controls'] = self::ContentTab;
         }
 
         $this->settings_arr[$this->current_section] = array_merge($data, array('type' => 'section', 'conditions' => $conditions));
@@ -233,13 +239,13 @@ abstract class Field_Base
     private function render_header_controls()
     {
         $tabs = array(
-            'content' => array(
+            self::ContentTab => array(
                 'label' => 'Content'
             ),
-            'style' => array(
+            self::StyleTab => array(
                 'label' => 'Style'
             ),
-            'advance' => array(
+            self::AdvanceTab => array(
                 'label' => 'Advance'
             ),
         );

@@ -1,5 +1,3 @@
-import controlSettings from './conrolsSettings';
-
 class DragwybControlBase {
     #updateValue = () => { }
 

@@ -1,4 +1,6 @@
 
+import '../../sass/editorControls.scss';
+
 class sectionControl extends DragwybEditor.ControlBase {
     controlName() {
         return 'section';
@@ -6,9 +8,14 @@ class sectionControl extends DragwybEditor.ControlBase {
 
     bind ({id, settings, value}) {
         if (!this.shouldRender()) return <></>;
+        let sectionCls = 'section-control';
+
+        if(id === value){
+            sectionCls += ' section-active';
+        }
 
         return (
-            <div id={id} className="section-control" onClick={()=>{this.updateControls('section',id)}}>
+            <div id={id} className={sectionCls} onClick={()=>{this.updateControls(id,true)}}>
                 {settings.label}
             </div>
         );
@@ -131,7 +138,7 @@ class radioControl extends DragwybEditor.ControlBase {
                 <label>{settings.label}</label>
                 <div id={id}>
                     {(settings.options || []).map((opt) => (
-                        <label key={opt.value} style={{ marginRight: '1em' }}>
+                        <label key={opt.value}>
                             <input
                                 type="radio"
                                 name={id}
@@ -247,7 +254,7 @@ class tabsControl extends DragwybEditor.ControlBase {
 
         return (
             <div id={id} className="tabs-control">
-                <div className="tab-buttons" style={{ display: 'flex', gap: '0.5rem' }}>
+                <div className="tab-buttons">
                     {Object.keys(options).map((key) => (
                         <button
                             key={key}

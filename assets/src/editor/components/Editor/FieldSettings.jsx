@@ -1,25 +1,49 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { updateField, updateTempField } from '../../store/actions';
+import { updateField, updateSectionSettings, resetSectionSettings } from '../../store/actions';
 import { Panel } from '../Common';
 import shouldRenderField from './shouldRenderField';
 
-const FieldSettings = ({ activeField, fieldValue, onClose }) => {
+const FieldSettings = ({ activeField, fieldValue, sectionSettings, onClose }) => {
     const dispatch = useDispatch();
+    let activeSection=false;
     const fieldType = DragwybEditor.fieldTypes[activeField.type];
+
+    const defautlActiveSection = (key) => {
+        if ((sectionSettings && sectionSettings.section) || activeSection) {
+            return;
+        }
+
+        activeSection=true;
+
+        handleChange(key, true);
+    }
+
+    const defautlActiveTab = (key, settings) => {
+        if (sectionSettings && sectionSettings[key]) {
+            return;
+        }
+
+        handleChange(key, Object.keys(settings.tabs)[0])
+    }
 
 
     const handleChange = (key, value) => {
-        const type=fieldType.controls[key];
+        const type = fieldType.controls[key].type;
 
-        if(['section','tab'].includes(type)){
-            dispatch(updateField(activeField.id, {
-                ...fieldValue,
-                settings: {
-                    ...fieldValue.settings,
-                    [key]: value
-                }
-            }));
+        if ('tabs' === type) {
+            if ('header_controls' === key) {
+                dispatch(resetSectionSettings());
+                dispatch(updateSectionSettings(key, value));
+                return;
+            }
+
+            dispatch(updateSectionSettings(key, value));
+            return;
+        }
+
+        if ('section' === type) {
+            dispatch(updateSectionSettings('section', key));
             return;
         }
 
@@ -33,47 +57,65 @@ const FieldSettings = ({ activeField, fieldValue, onClose }) => {
     };
 
     const renderControls = ({ key, settings }) => {
+
         if (!settings.type) {
             return;
         }
 
-        const shouldRender=shouldRenderField(settings, fieldValue.settings);
+        const selectedSettings={ ...fieldValue.settings, ...sectionSettings };
+        const shouldRender = shouldRenderField(settings, selectedSettings);
 
-        if(!shouldRender){
+        if (!shouldRender) {
             return;
         }
 
-        const getHtml=(type)=>{
+        if (settings.type === 'section' && settings.conditions) {
+            defautlActiveSection(key, settings, settings.conditions);
+        }
+
+        if (settings.type === 'tabs') {
+            defautlActiveTab(key, settings)
+        }
+
+        const getHtml = (type) => {
             switch (type) {
                 case 'text':
                     return <input
-                    type="text"
-                    value={fieldValue.settings[key] || ''}
-                    onChange={e => handleChange(key, e.target.value)}
-                />;
+                        type="text"
+                        value={fieldValue.settings[key] || ''}
+                        onChange={e => handleChange(key, e.target.value)}
+                    />;
                 case 'checkbox':
-                    return  <input
-                    type="checkbox"
-                    checked={fieldValue.settings[key] || false}
-                    onChange={e => handleChange(key, e.target.checked)}
-                />;
+                    return <input
+                        type="checkbox"
+                        checked={fieldValue.settings[key] || false}
+                        onChange={e => handleChange(key, e.target.checked)}
+                    />;
                 case 'select':
-                    return  <select
-                    value={fieldValue.settings[key] || ''}
-                    onChange={e => handleChange(key, e.target.value)}
-                >
-                    {settings.options && settings.options.map(option => (
-                        <option key={option.value} value={option.value}>
-                            {option.label}
-                        </option>
-                    ))}
-                </select>;
+                    return <select
+                        value={fieldValue.settings[key] || ''}
+                        onChange={e => handleChange(key, e.target.value)}
+                    >
+                        {settings.options && settings.options.map(option => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
+                    </select>;
                 default:
                     return <div>Unsupported Controller type: {settings.type}</div>;
             }
         }
 
-        return DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/ControlRender/'+settings.type, getHtml(settings.type), key, settings, fieldValue.settings[key], handleChange);
+        let fieldVal=selectedSettings[key];
+
+        if(settings.type === 'section' && !fieldVal){
+            fieldVal=selectedSettings['section'];
+        }
+
+        let html = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/ControlRender/' + settings.type, getHtml(settings.type), key, settings, fieldVal, handleChange);
+
+        return <div key={key} className="setting-row" dataType={settings.type}>{html}</div>;
     };
 
     return (
@@ -83,9 +125,9 @@ const FieldSettings = ({ activeField, fieldValue, onClose }) => {
         >
             <div className="field-settings">
                 {Object.keys(fieldType.controls).map(key => (
-                    <div key={key} className="setting-row">
+                    <>
                         {renderControls({ key, settings: fieldType.controls[key] })}
-                    </div>
+                    </>
                 ))}
             </div>
         </Panel>
