@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Admin\Dragwyb_Pages;
 
+use Dragwyb\Form_Builder\Admin\Form_Overview\Form_Overview;
+
 class Dragwyb_Pages
 {
     /**
@@ -20,6 +22,8 @@ class Dragwyb_Pages
      */
     public function __construct()
     {
+        // Overview Page
+        Form_Overview::instance();
 
         $this->form_admin_page();
         $this->init_admin_pages();

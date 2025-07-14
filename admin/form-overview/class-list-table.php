@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Dragwyb\Form_Builder\Includes\Form_Overview;
+namespace Dragwyb\Form_Builder\Admin\Form_Overview;
 
 use WP_List_Table;
 use WP_Post;
 use WP_Screen;
-use Dragwyb\Form_Builder\Includes\Dragwyb_Pages\Dragwyb_Post;
+use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
 
 /**
  * Generate the table on the plugin overview page.
@@ -209,8 +209,8 @@ class List_Table extends WP_List_Table
     protected function get_column_name_row_actions($form)
     {
         $actions = [];
-        $actions['edit'] = '<a href="?' . esc_url(get_edit_post_link($form->ID)) . '">Edit</a>';
-        $actions['view'] = '<a href="?' . esc_url(get_permalink($form->ID)) . '" target="_blank">View</a>';
+        $actions['edit'] = '<a href="?page=dragwyb-form-builder&form_id='.(int) esc_attr($form->ID).'">Edit</a>';
+        $actions['delete'] = '<a href="?' . esc_url(get_permalink($form->ID)) . '" target="_blank">Delete</a>';
 
         // Add more actions if necessary, such as delete, etc.
 
@@ -265,9 +265,11 @@ class List_Table extends WP_List_Table
             'nopaging'       => false,
             'posts_per_page' => $per_page,
             'paged'          => $page,
-            'post_status'    => 'publish',
+            'post_status'    => array('publish','draft'),
             'post_type'      => Dragwyb_Post::POST_TYPE
         ];
+
+        var_dump($args);
 
         // Get the posts (forms)
         $this->items = get_posts($args);

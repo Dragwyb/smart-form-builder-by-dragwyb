@@ -39,7 +39,8 @@ class Dragwyb_Form_Builder_Ajax {
             // Update form
             wp_update_post([
                 'ID' => $form_id,
-                'post_title' => sanitize_text_field($form_data['title'])
+                'post_title' => sanitize_text_field($form_data['title']),
+                'post_status' => 'publish'
             ]);
 
             // Update form meta
