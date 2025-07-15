@@ -10,7 +10,7 @@ const FieldSettings = ({ activeField, fieldValue, sectionSettings, onClose }) =>
     const fieldType = DragwybEditor.fieldTypes[activeField.type];
 
     const defautlActiveSection = (key) => {
-        if ((sectionSettings && sectionSettings.section) || activeSection) {
+        if (((sectionSettings && sectionSettings.section) || activeSection) || (sectionSettings && sectionSettings.section === '')) {
             return;
         }
 
@@ -43,7 +43,7 @@ const FieldSettings = ({ activeField, fieldValue, sectionSettings, onClose }) =>
         }
 
         if ('section' === type) {
-            dispatch(updateSectionSettings('section', key));
+            dispatch(updateSectionSettings('section', value ? key : ''));
             return;
         }
 
@@ -77,34 +77,8 @@ const FieldSettings = ({ activeField, fieldValue, sectionSettings, onClose }) =>
             defautlActiveTab(key, settings)
         }
 
-        const getHtml = (type) => {
-            switch (type) {
-                case 'text':
-                    return <input
-                        type="text"
-                        value={fieldValue.settings[key] || ''}
-                        onChange={e => handleChange(key, e.target.value)}
-                    />;
-                case 'checkbox':
-                    return <input
-                        type="checkbox"
-                        checked={fieldValue.settings[key] || false}
-                        onChange={e => handleChange(key, e.target.checked)}
-                    />;
-                case 'select':
-                    return <select
-                        value={fieldValue.settings[key] || ''}
-                        onChange={e => handleChange(key, e.target.value)}
-                    >
-                        {settings.options && settings.options.map(option => (
-                            <option key={option.value} value={option.value}>
-                                {option.label}
-                            </option>
-                        ))}
-                    </select>;
-                default:
-                    return <div>Unsupported Controller type: {settings.type}</div>;
-            }
+        const getHtml = () => {
+            return <div>Unsupported Controller type: {settings.type}</div>;
         }
 
         let fieldVal=selectedSettings[key];
@@ -113,7 +87,7 @@ const FieldSettings = ({ activeField, fieldValue, sectionSettings, onClose }) =>
             fieldVal=selectedSettings['section'];
         }
 
-        let html = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/ControlRender/' + settings.type, getHtml(settings.type), key, settings, fieldVal, handleChange);
+        let html = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/ControlRender/' + settings.type, getHtml(), key, settings, fieldVal, handleChange);
 
         return <div key={key} className="setting-row" dataType={settings.type}>{html}</div>;
     };

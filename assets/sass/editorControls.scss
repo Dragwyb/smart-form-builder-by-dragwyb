@@ -1,106 +1,136 @@
-/* === Global Control Wrapper === */
-.section-control,
-.tabs-control,
-input,
-textarea,
-select,
-label {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  box-sizing: border-box;
+/* === Panel Container === */
+.dragwyb-panel__content {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  padding: 20px;
+  background-color: #f9f9fb;
 }
 
-/* === Section Control === */
+/* === Settings Container === */
+.field-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* === Setting Row === */
+.setting-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* === Section Control (Accordion-style like Elementor/Divi) === */
 .section-control {
+  position: relative;
   padding: 12px 16px;
-  background: #f4f4f4;
-  border: 1px solid #ccc;
-  border-left: 4px solid transparent;
+  background: #fff;
+  border: 1px solid #dcdfe3;
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-bottom: 8px;
-  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.section-control::after {
+  content: '\25BC'; /* Down arrow */
+  font-size: 12px;
+  transition: transform 0.3s ease;
+  color: #666;
 }
 
 .section-control.section-active {
-  border-left-color: #007cba;
-  background-color: #e6f2fb;
-  color: #007cba;
+  background: #eaf5fd;
+  border-color: #2271b1;
+  color: #2271b1;
 }
 
-/* === Label Styling === */
-label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: 600;
-  color: #333;
+.section-control.section-active::after {
+  transform: rotate(180deg); /* Up arrow when active */
+  color: #2271b1;
 }
 
-/* === Input, Select, Textarea === */
-input[type="text"],
-input[type="number"],
-input[type="range"],
-input[type="color"],
-textarea,
-select {
-  width: 100%;
-  padding: 8px 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-  transition: border-color 0.2s;
-  margin-bottom: 16px;
-  background-color: #fff;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  border-color: #007cba;
-  outline: none;
-}
-
-/* === Checkbox and Radio === */
-input[type="checkbox"],
-input[type="radio"] {
-  margin-right: 8px;
-}
-
-/* === Tab Control === */
+/* === Tabs Control === */
 .tabs-control {
-  margin-bottom: 20px;
+  margin-top: 4px;
 }
 
 .tab-buttons {
   display: flex;
   gap: 8px;
-  flex-wrap: wrap;
 }
 
 .tab-buttons button {
-  background: #f9f9f9;
-  border: 1px solid #ccc;
   padding: 6px 12px;
+  border: 1px solid #ccd0d4;
+  background-color: #f2f4f5;
+  color: #333;
+  font-size: 13px;
   border-radius: 3px;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
-}
-
-.tab-buttons button:hover {
-  background: #eee;
+  transition: all 0.2s ease;
 }
 
 .tab-buttons button.active {
-  background: #007cba;
+  background-color: #2271b1;
   color: white;
-  border-color: #007cba;
+  border-color: #2271b1;
+}
+
+.tab-buttons button:hover {
+  background-color: #e2e2e2;
+}
+
+/* === Label and Input === */
+.setting-row label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1d2327;
+}
+
+.setting-row span {
+  font-size: 11px;
+  color: #666;
+}
+
+.setting-row input[type="text"],
+.setting-row input[type="color"],
+.setting-row input[type="number"],
+.setting-row textarea,
+.setting-row select {
+  padding: 8px;
+  font-size: 13px;
+  border: 1px solid #ccd0d4;
+  border-radius: 4px;
+  background: #fff;
+  width: 100%;
+  transition: border-color 0.2s ease;
+}
+
+.setting-row input:focus,
+.setting-row textarea:focus,
+.setting-row select:focus {
+  border-color: #2271b1;
+  outline: none;
+}
+
+/* === Checkbox === */
+.setting-row input[type="checkbox"] {
+  margin-right: 6px;
+  vertical-align: middle;
 }
 
 /* === Responsive === */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .tab-buttons {
     flex-direction: column;
   }
+
   .section-control {
-    font-size: 14px;
+    font-size: 13px;
   }
 }

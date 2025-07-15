@@ -15,7 +15,7 @@ class sectionControl extends DragwybEditor.ControlBase {
         }
 
         return (
-            <div id={id} className={sectionCls} onClick={()=>{this.updateControls(id,true)}}>
+            <div id={id} className={sectionCls} onClick={()=>{this.updateControls(id, !(id===value))}}>
                 {settings.label}
             </div>
         );

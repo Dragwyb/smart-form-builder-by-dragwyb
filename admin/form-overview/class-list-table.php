@@ -209,9 +209,18 @@ class List_Table extends WP_List_Table
     protected function get_column_name_row_actions($form)
     {
         $actions = [];
-        $actions['edit'] = '<a href="?page=dragwyb-form-builder&form_id='.(int) esc_attr($form->ID).'">Edit</a>';
-        $actions['delete'] = '<a href="?' . esc_url(get_permalink($form->ID)) . '" target="_blank">Delete</a>';
 
+        $show_confirmation =  " onclick='return showNotice.warn();'";
+
+        $actions['edit'] = '<a href="?page=dragwyb-form-builder&form_id='.(int) esc_attr($form->ID).'">Edit</a>';
+        $actions['delete'] = sprintf(
+            '<a href="%s" class="submitdelete aria-button-if-js"%s aria-label="%s">%s</a>',
+            esc_url( wp_nonce_url( "post.php?action=trash&amp;post=$form->ID", 'trash-post_' . $form->ID ) ),
+            $show_confirmation,
+            /* translators: %s: Attachment title. */
+            esc_attr( sprintf( __( 'Delete &#8220;%s&#8221; permanently' ), $att_title ) ),
+            __( 'Delete Permanently' )
+        );
         // Add more actions if necessary, such as delete, etc.
 
         return $this->row_actions($actions);
@@ -268,8 +277,6 @@ class List_Table extends WP_List_Table
             'post_status'    => array('publish','draft'),
             'post_type'      => Dragwyb_Post::POST_TYPE
         ];
-
-        var_dump($args);
 
         // Get the posts (forms)
         $this->items = get_posts($args);
