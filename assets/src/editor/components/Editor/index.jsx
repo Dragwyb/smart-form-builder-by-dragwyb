@@ -45,6 +45,11 @@ const Editor = () => {
         dispatch(updateFieldValues(fieldId, value));
     };
 
+    const setSelectedFieldHandler=(field)=>{
+        setSelectedField(field);
+        setActiveTab(null === field ? 'fields' : null);
+    }
+
     const selectedFieldSetting=()=>{
         let value=null;
         Object.values(fields).forEach(field=>{
@@ -75,6 +80,7 @@ const Editor = () => {
                         isActive={activeTab === 'fields' && !previewMode}
                         onClick={() => {
                             setActiveTab('fields');
+                            setSelectedField(null)
                             setPreviewMode(false);
                         }}
                     >
@@ -84,6 +90,7 @@ const Editor = () => {
                         isActive={activeTab === 'settings' && !previewMode}
                         onClick={() => {
                             setActiveTab('settings');
+                            setSelectedField(null)
                             setPreviewMode(false);
                         }}
                     >
@@ -111,16 +118,24 @@ const Editor = () => {
                 ) : (
                     <>
                         <div className="dragwyb-editor__sidebar">
-                            {activeTab === 'fields' ? (
-                                <Controls onFieldSelect={setSelectedField} />
-                            ) : (
-                                <FormSettings />
+                            {activeTab === 'fields' && (<Controls onFieldSelect={setSelectedFieldHandler} />)}
+                            {activeTab === 'settings' && (<FormSettings />)}
+                            {selectedField && (
+                                <div className="dragwyb-editor__settings">
+                                    <FieldSettings
+                                        activeField={selectedField}
+                                        fieldValue={selectedFieldSetting()}
+                                        onClose={() => setSelectedFieldHandler(null)}
+                                        key={selectedField.id}
+                                        sectionSettings={sectionSettings}
+                                    />
+                                </div>
                             )}
                         </div>
                         <div className="dragwyb-editor__main">
                             <Canvas
                                 selectedField={selectedField}
-                                onFieldSelect={setSelectedField}
+                                onFieldSelect={setSelectedFieldHandler}
                                 fields={fields}
                                 values={values}
                                 onChange={(name, value) => dispatch({
@@ -130,17 +145,6 @@ const Editor = () => {
                                 errors={errors}
                             />
                         </div>
-                        {selectedField && (
-                            <div className="dragwyb-editor__settings">
-                                <FieldSettings
-                                    activeField={selectedField}
-                                    fieldValue={selectedFieldSetting()}
-                                    onClose={() => setSelectedField(null)}
-                                    key={selectedField.id}
-                                    sectionSettings={sectionSettings}
-                                />
-                            </div>
-                        )}
                     </>
                 )}
             </div>

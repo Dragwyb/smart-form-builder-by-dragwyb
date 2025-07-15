@@ -1,24 +1,3 @@
-/* === Panel Container === */
-.dragwyb-panel__content {
-  font-family: 'Segoe UI', Tahoma, sans-serif;
-  padding: 20px;
-  background-color: #f9f9fb;
-}
-
-/* === Settings Container === */
-.field-settings {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-/* === Setting Row === */
-.setting-row {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
 /* === Section Control (Accordion-style like Elementor/Divi) === */
 .section-control {
   position: relative;
@@ -90,11 +69,6 @@
   font-size: 13px;
   font-weight: 600;
   color: #1d2327;
-}
-
-.setting-row span {
-  font-size: 11px;
-  color: #666;
 }
 
 .setting-row input[type="text"],

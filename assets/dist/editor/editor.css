@@ -45,18 +45,18 @@ body.dragwyb-form_page_dragwyb-form-builder #adminmenumain, body.dragwyb-form_pa
   width: 300px;
   background: #fff;
   border-right: 1px solid #ddd;
-  overflow-y: auto;
+  box-sizing: border-box;
+  height: 100%;
 }
 .dragwyb-editor__main {
   flex: 1;
-  overflow-y: auto;
   padding: 20px;
 }
 .dragwyb-editor__settings {
   width: 300px;
   background: #fff;
   border-left: 1px solid #ddd;
-  overflow-y: auto;
+  height: 100%;
 }
 
 .dragwyb-canvas {
@@ -164,6 +164,9 @@ body.dragwyb-form_page_dragwyb-form-builder #adminmenumain, body.dragwyb-form_pa
   padding: 20px;
 }
 
+.dragwyb-panel {
+  height: 100%;
+}
 .dragwyb-panel__header {
   padding: 15px;
   border-bottom: 1px solid #ddd;
@@ -186,7 +189,23 @@ body.dragwyb-form_page_dragwyb-form-builder #adminmenumain, body.dragwyb-form_pa
   color: #d63638;
 }
 .dragwyb-panel__content {
-  padding: 15px;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  padding: 20px;
+  background-color: #f9f9fb;
+  overflow-y: auto;
+  height: calc(100% - 100px);
+  /* === Settings Container === */
+  /* === Setting Row === */
+}
+.dragwyb-panel__content .field-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.dragwyb-panel__content .setting-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .setting-row {
