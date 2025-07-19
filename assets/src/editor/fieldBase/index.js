@@ -1,15 +1,18 @@
 class  DragwybFieldBase {
-    constructor(){
+    #updateValue = () => { }
+
+    constructor(args){
         this.fieldName=this.fieldName();
-        this.#addFilter();
+        return this.#renderContent(args);
     }
 
-    #addFilter(){
+    #renderContent(args){
 
         if(!this.fieldName){
             return;
         }
-        DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/FieldRender/'+this.fieldName,(args)=>{return this.renderComponent(args)});
+
+        return this.renderComponent(args)
     }
 
     renderComponent(args){
@@ -22,6 +25,22 @@ class  DragwybFieldBase {
         this.type=args[1];
         this.id=args[2];
         this.settings=args[3];
+        this.#updateValue = args[4];
+    }
+
+    updateField(key, value) {
+        this.#triggerOnChange(key, value)
+    }
+
+    #triggerOnChange(key, value) {
+        this.#updateValue(key, value);
+    }
+
+    /**
+     * ✅ Shared method: Check if this control should render based on settings.type
+     */
+    shouldRender() {
+        return this.settings?.type === this.fieldName;
     }
 }
 

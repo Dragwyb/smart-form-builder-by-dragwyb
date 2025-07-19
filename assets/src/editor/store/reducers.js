@@ -1,5 +1,6 @@
 import {
     ADD_FIELD,
+    DUPLICATE_FIELD,
     UPDATE_FIELD,
     DELETE_FIELD,
     UPDATE_FIELD_ORDER,
@@ -34,6 +35,29 @@ export default function reducer(state = initialState, action) {
                 form: {
                     ...state.form,
                     fields: [...state.form.fields, action.payload]
+                }
+            };
+
+        case DUPLICATE_FIELD:
+            const referenceField = state.form.fields.find(
+                field => field.id === action.payload.ReferenceField
+            );
+
+            if (!referenceField) return state;
+
+            const { id, ...rest } = referenceField;
+
+            const duplicatedField = {
+                id: action.payload.activeField, // New unique ID
+                ...rest
+            };
+
+
+            return {
+                ...state,
+                form: {
+                    ...state.form,
+                    fields: [...state.form.fields, duplicatedField]
                 }
             };
 

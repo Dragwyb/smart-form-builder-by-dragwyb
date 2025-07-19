@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { __ } from '@wordpress/i18n';
 import TextInput from './TextInput';
 import TextArea from './TextArea';
@@ -18,23 +19,23 @@ const Field = ({ field, value, onChange, errors = [], disabled = false }) => {
     const renderField = () => {
         switch (field.type) {
             case 'text':
-                return <TextInput field={field} value={value} onChange={onChange} disabled={disabled} />;
+                return <TextInput field={field} value={value} onChange={(e)=>{onChange(field.id, e.target.value)}} disabled={disabled} />;
             case 'textarea':
-                return <TextArea field={field} value={value} onChange={onChange} disabled={disabled} />;
+                return <TextArea field={field} value={value} onChange={(e)=>{onChange(field.id, e.target.value)}} disabled={disabled} />;
             case 'select':
-                return <SelectField field={field} value={value} onChange={onChange} disabled={disabled} />;
+                return <SelectField field={field} value={value} onChange={(e)=>{onChange(field.id, e.target.value)}} disabled={disabled} />;
             case 'checkbox':
-                return <CheckboxField field={field} value={value} onChange={onChange} disabled={disabled} />;
+                return <CheckboxField field={field} value={value} onChange={(e)=>{onChange(field.id, e.target.value)}} disabled={disabled} />;
             case 'radio':
-                return <RadioField field={field} value={value} onChange={onChange} disabled={disabled} />;
+                return <RadioField field={field} value={value} onChange={(e)=>{onChange(field.id, e.target.value)}} disabled={disabled} />;
             case 'file':
-                return <FileUpload field={field} value={value} onChange={onChange} disabled={disabled} />;
+                return <FileUpload field={field} value={value} onChange={(e)=>{onChange(field.id, e.target.value)}} disabled={disabled} />;
             default:
                 return <div>Unsupported field type: {field.type}</div>;
         }
     };
 
-    let Html=DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/FieldRender/'+field.type, renderField(), field.type, field.id, field);
+    let Html=DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/FieldRender/'+field.type, renderField(), field.type, field.id, field, onChange);
 
     return (
         <div className={`dragwyb-field dragwyb-field--${field.type} ${field.className || ''}`}>

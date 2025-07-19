@@ -5,16 +5,22 @@ class textField extends DragwybEditor.FieldBase {
     }
 
     bind(){
-        const settings=this.settings;
+        if (!this.shouldRender()) return <></>;
 
-        return <div>Testing Completed</div>;
+        return <input type={this.fieldName} onChange={(e)=>this.updateField(this.id, e.target.value)}/>;
     }
 }
 
-jQuery(document).on('Dragwyb:editorInit', () => {   
-    const text=()=>{
-        return new textField();
+const initializeFields=()=>{
+    const defaultFields={
+        'text': (args)=>new textField(args),
     }
 
-    DragwybBuilder.Hooks.addAction('Dragwyb/Editor/FieldBase',text);
+    Object.keys(defaultFields).map(key => DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/FieldRender/'+key,(args)=>{return defaultFields[key](args)}))
+}
+
+
+jQuery(document).on('Dragwyb:editorInit', () => {   
+
+    DragwybBuilder.Hooks.addAction('Dragwyb/Editor/FieldBase',initializeFields);
 });

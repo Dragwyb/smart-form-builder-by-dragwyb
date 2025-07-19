@@ -5,7 +5,8 @@ import Controls from './Controls';
 import FieldSettings from './FieldSettings';
 import FormSettings from './FormSettings';
 import Preview from './Preview';
-import { saveForm, resetSectionSettings } from '../../store/actions';
+import { saveForm, resetSectionSettings, updateFieldValues } from '../../store/actions';
+
 import { Button } from '../Common';
 
 
@@ -15,10 +16,12 @@ const Editor = () => {
     const [previewMode, setPreviewMode] = useState(false);
     const formData = useSelector(state => state.form);
     const fields = useSelector(state => state.form.fields); // Assuming fields are stored in Redux
+
     const values = useSelector(state => state.form.fields.reduce((acc, field) => {
         acc[field.id] = field.values;
         return acc;
     }, {})); // Assuming values are stored in Redux
+
     const errors = useSelector(state => state.errors); // Assuming errors are stored in Redux
     const sectionSettings=useSelector(state => state.sectionSettings);
     const dispatch = useDispatch();
@@ -41,10 +44,6 @@ const Editor = () => {
         window.location.href = DragwybEditor.adminUrl;
     };
 
-    const handleChange = (fieldId, value) => {
-        dispatch(updateFieldValues(fieldId, value));
-    };
-
     const setSelectedFieldHandler=(field)=>{
         setSelectedField(field);
         setActiveTab(null === field ? 'fields' : null);
@@ -61,6 +60,10 @@ const Editor = () => {
         return value;
     }
 
+    const fieldValueHandler = (fieldId, value) => {
+        dispatch(updateFieldValues(fieldId, value));
+    };
+    
     return (
         <div className="dragwyb-editor">
             <div className="dragwyb-editor__header">
@@ -114,7 +117,7 @@ const Editor = () => {
             </div>
             <div className="dragwyb-editor__body">
                 {previewMode ? (
-                    <Preview fields={fields} values={values} errors={errors} onChange={handleChange}/>
+                    <Preview fields={fields} values={values} errors={errors} onChange={fieldValueHandler}/>
                 ) : (
                     <>
                         <div className="dragwyb-editor__sidebar">

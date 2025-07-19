@@ -5,6 +5,7 @@ import { Panel } from '../Common';
 import shouldRenderField from './shouldRenderField';
 
 const FieldSettings = ({ activeField, fieldValue, sectionSettings, onClose }) => {
+    
     const dispatch = useDispatch();
     let activeSection=false;
     const fieldType = DragwybEditor.fieldTypes[activeField.type];

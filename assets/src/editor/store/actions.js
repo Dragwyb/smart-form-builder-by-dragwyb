@@ -13,11 +13,17 @@ export const SHOW_NOTICE = 'SHOW_NOTICE';
 export const HIDE_NOTICE = 'HIDE_NOTICE';
 export const UPDATE_FIELD_VALUES = 'UPDATE_FIELD_VALUES';
 export const ERROR_NOTICE = 'ERROR_NOTICE';
+export const DUPLICATE_FIELD = 'DUPLICATE_FIELD';
 
 export const addField = (field) => ({
     type: ADD_FIELD,
     payload: field
 });
+
+export const duplicateField = (activeField, ReferenceField) => ({
+    type: DUPLICATE_FIELD,
+    payload: {activeField, ReferenceField}
+})
 
 export const updateField = (fieldId, field) => ({
     type: UPDATE_FIELD,

@@ -1,11 +1,11 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import * as Fields from './Fields';
-import { updateFieldOrder } from '../../store/actions';
-import Preview from './Preview';
+import { updateFieldOrder, duplicateField } from '../../store/actions';
 
 const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors }) => {
+    
     const dispatch = useDispatch();
 
     const handleDragEnd = (result) => {
@@ -15,6 +15,16 @@ const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors
             result.source.index,
             result.destination.index
         ));
+    };
+
+    const handleDuplicateField = (field) => {
+        const deepClone={...field}
+        const id = `field_${Date.now()}`;
+        dispatch(duplicateField(id, deepClone.id));
+
+        deepClone.id = id;
+
+        onFieldSelect(deepClone);
     };
 
     return (
@@ -54,10 +64,7 @@ const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors
                                                     className="duplicate"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        dispatch({
-                                                            type: 'DUPLICATE_FIELD',
-                                                            payload: field.id
-                                                        });
+                                                        handleDuplicateField(field);
                                                     }}
                                                 >
                                                     <span className="dashicons dashicons-admin-page"></span>
@@ -66,6 +73,7 @@ const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors
                                                     className="delete"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
+                                                        onFieldSelect(null)
                                                         dispatch({
                                                             type: 'DELETE_FIELD',
                                                             payload: field.id
