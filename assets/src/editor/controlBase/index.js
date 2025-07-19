@@ -1,23 +1,22 @@
 class DragwybControlBase {
     #updateValue = () => { }
 
-    constructor() {
+    constructor(args) {
         this.controlName = this.controlName();
-        this.#addFilter();
+        return this.#renderContent(args);
     }
 
-    #addFilter() {
+    #renderContent(args) {
 
-        if (!this.controlName) {
+        if(!this.controlName){
             return;
         }
-        DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/ControlRender/' + this.controlName, (args) => { return this.renderComponent(args) });
+
+        return this.renderComponent(args)
     }
 
     renderComponent(args) {
-
         this.#setDisplaySetting(args);
-
         return this.bind({ id: this.id, html: this.html, settings: this.settings, value: this.value });
     }
 

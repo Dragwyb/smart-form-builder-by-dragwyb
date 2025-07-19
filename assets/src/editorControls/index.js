@@ -6,8 +6,11 @@ class sectionControl extends DragwybEditor.ControlBase {
         return 'section';
     }
 
-    bind ({id, settings, value}) {
+    bind () {
         if (!this.shouldRender()) return <></>;
+        
+        const { settings, id, value } = this;
+
         let sectionCls = 'section-control';
 
         if(id === value){
@@ -28,12 +31,9 @@ class textControl extends DragwybEditor.ControlBase {
     }
 
     bind(){
-        const settings=this.settings;
-        const id=this.id;
-        const events=this.events;
-        const value=this.value;
-
         if (!this.shouldRender()) return <></>;
+        
+        const { settings, id, value } = this;
         
         return <>
             <label for={id}>{settings.label}</label>
@@ -48,9 +48,9 @@ class selectControl extends DragwybEditor.ControlBase {
     }
 
     bind() {
-        const { settings, id, events, value } = this;
-
         if (!this.shouldRender()) return <></>;
+        
+        const { settings, id, value } = this;
 
         return (
             <>
@@ -78,9 +78,9 @@ class textareaControl extends DragwybEditor.ControlBase {
     }
 
     bind() {
-        const { settings, id, events, value } = this;
-
         if (!this.shouldRender()) return <></>;
+        
+        const { settings, id, value } = this;
 
         return (
             <>
@@ -102,9 +102,9 @@ class checkboxControl extends DragwybEditor.ControlBase {
     }
 
     bind() {
-        const { settings, id, events, value } = this;
-
         if (!this.shouldRender()) return <></>;
+        
+        const { settings, id, value } = this;
 
         return (
             <>
@@ -129,8 +129,9 @@ class radioControl extends DragwybEditor.ControlBase {
     }
 
     bind() {
-        const { settings, id, events, value } = this;
         if (!this.shouldRender()) return <></>;
+        
+        const { settings, id, value } = this;
 
         return (
             <>
@@ -160,9 +161,9 @@ class sliderControl extends DragwybEditor.ControlBase {
     }
 
     bind() {
-        const { settings, id, events, value } = this;
-        
         if (!this.shouldRender()) return <></>;
+        
+        const { settings, id, value } = this;
 
         const min = settings.min ?? 0;
         const max = settings.max ?? 100;
@@ -192,8 +193,9 @@ class numberControl extends DragwybEditor.ControlBase {
     }
 
     bind() {
-        const { settings, id, events, value } = this;
         if (!this.shouldRender()) return <></>;
+
+        const { settings, id, value } = this;
 
         const min = settings.min ?? 0;
         const max = settings.max ?? 100;
@@ -223,8 +225,9 @@ class colorControl extends DragwybEditor.ControlBase {
     }
 
     bind() {
-        const { settings, id, events, value } = this;
         if (!this.shouldRender()) return <></>;
+
+        const { settings, id, value } = this;
 
         return (
             <>
@@ -246,8 +249,10 @@ class tabsControl extends DragwybEditor.ControlBase {
         return 'tabs';
     }
 
-    bind ({id, settings, value}) {
+    bind () {
         if (!this.shouldRender()) return <></>;
+
+        const { settings, id, value } = this;
 
         const options = settings.tabs || [];
 
@@ -270,23 +275,24 @@ class tabsControl extends DragwybEditor.ControlBase {
     }
 }
 
-
-jQuery(document).on('Dragwyb:editorInit', () => {   
+const initializeControls=()=>{
     const defaultControls={
-        'text': ()=>new textControl(),
-        'select': ()=>new selectControl(),
-        'textarea': ()=>new textareaControl(),
-        'checkbox': ()=>new checkboxControl(),
-        'radio': ()=>new radioControl(),
-        'slider': ()=>new sliderControl(),
-        'number': ()=>new numberControl(),
-        'color': ()=>new colorControl(),
-        'tabs': ()=>new tabsControl(),
-        'section': ()=>new sectionControl(),
-    }
-    const registerControls=()=>{
-        Object.keys(defaultControls).map(key=>{return defaultControls[key]()});
+        'text': (args)=>new textControl(args),
+        'select': (args)=>new selectControl(args),
+        'textarea': (args)=>new textareaControl(args),
+        'checkbox': (args)=>new checkboxControl(args),
+        'radio': (args)=>new radioControl(args),
+        'slider': (args)=>new sliderControl(args),
+        'number': (args)=>new numberControl(args),
+        'color': (args)=>new colorControl(args),
+        'tabs': (args)=>new tabsControl(args),
+        'section': (args)=>new sectionControl(args),
     }
 
-    DragwybBuilder.Hooks.addAction('Dragwyb/Editor/ControlBase',registerControls);
+    Object.keys(defaultControls).map(key => DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/ControlRender/'+key,(args)=>{return defaultControls[key](args)}))
+
+}
+
+jQuery(document).on('Dragwyb:editorInit', () => {
+    DragwybBuilder.Hooks.addAction('Dragwyb/Editor/ControlBase',initializeControls);
 });
