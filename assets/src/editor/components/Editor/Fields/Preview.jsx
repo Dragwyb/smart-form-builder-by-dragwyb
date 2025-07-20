@@ -10,8 +10,8 @@ const Preview = ({ fields, values, onChange, errors }) => {
                 <Field
                     key={field.id}
                     field={field}
-                    value={values[field.name]}
-                    onChange={(value) => onChange(field.name, value)}
+                    value={values[field.id]}
+                    onChange={({fieldId=field.id, value}) => onChange({fieldId, value})}
                     errors={errors[field.name] || []}
                 />
                 </>

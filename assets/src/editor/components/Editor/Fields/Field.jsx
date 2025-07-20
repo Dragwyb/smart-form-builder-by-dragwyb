@@ -15,27 +15,12 @@ import FileUpload from './FileUpload';
 // import SignatureField from './SignatureField';
 // import RatingField from './RatingField';
 
-const Field = ({ field, value, onChange, errors = [], disabled = false }) => {
-    const renderField = () => {
-        switch (field.type) {
-            case 'text':
-                return <TextInput field={field} value={value} onChange={(e)=>{onChange(field.id, e.target.value)}} disabled={disabled} />;
-            case 'textarea':
-                return <TextArea field={field} value={value} onChange={(e)=>{onChange(field.id, e.target.value)}} disabled={disabled} />;
-            case 'select':
-                return <SelectField field={field} value={value} onChange={(e)=>{onChange(field.id, e.target.value)}} disabled={disabled} />;
-            case 'checkbox':
-                return <CheckboxField field={field} value={value} onChange={(e)=>{onChange(field.id, e.target.value)}} disabled={disabled} />;
-            case 'radio':
-                return <RadioField field={field} value={value} onChange={(e)=>{onChange(field.id, e.target.value)}} disabled={disabled} />;
-            case 'file':
-                return <FileUpload field={field} value={value} onChange={(e)=>{onChange(field.id, e.target.value)}} disabled={disabled} />;
-            default:
-                return <div>Unsupported field type: {field.type}</div>;
-        }
+const Field = ({ field, value = '', onChange, errors = [], disabled = false }) => {
+    const getHtml = () => {
+        return <div>Unsupported field type: {field.type}</div>;
     };
 
-    let Html=DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/FieldRender/'+field.type, renderField(), field.type, field.id, field, onChange);
+    let Html = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/FieldRender/' + field.type, getHtml(), field.type, field.id, value, field, onChange);
 
     return (
         <div className={`dragwyb-field dragwyb-field--${field.type} ${field.className || ''}`}>

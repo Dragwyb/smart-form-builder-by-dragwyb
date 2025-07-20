@@ -17,10 +17,7 @@ const Editor = () => {
     const formData = useSelector(state => state.form);
     const fields = useSelector(state => state.form.fields); // Assuming fields are stored in Redux
 
-    const values = useSelector(state => state.form.fields.reduce((acc, field) => {
-        acc[field.id] = field.values;
-        return acc;
-    }, {})); // Assuming values are stored in Redux
+    const values = useSelector(state => state.values); // Assuming values are stored in Redux
 
     const errors = useSelector(state => state.errors); // Assuming errors are stored in Redux
     const sectionSettings=useSelector(state => state.sectionSettings);
@@ -60,7 +57,7 @@ const Editor = () => {
         return value;
     }
 
-    const fieldValueHandler = (fieldId, value) => {
+    const fieldValueHandler = ({fieldId, value}) => {
         dispatch(updateFieldValues(fieldId, value));
     };
     
@@ -141,10 +138,7 @@ const Editor = () => {
                                 onFieldSelect={setSelectedFieldHandler}
                                 fields={fields}
                                 values={values}
-                                onChange={(name, value) => dispatch({
-                                    type: 'UPDATE_FIELD_VALUE',
-                                    payload: { name, value }
-                                })}
+                                onChange={({fieldId, value}) => fieldValueHandler({fieldId, value})}
                                 errors={errors}
                             />
                         </div>

@@ -101,9 +101,9 @@ export default function reducer(state = initialState, action) {
         case UPDATE_FIELD_VALUES:
             return {
                 ...state,
-                form: {
-                    ...state.form,
-                    fields: state.form.fields.map(field => field.id === action.payload.fieldId ? { ...field, values: action.payload.values } : field)
+                values: {
+                    ...state.values || {},
+                    [action.payload.fieldId]: action.payload.value
                 }
             };
 

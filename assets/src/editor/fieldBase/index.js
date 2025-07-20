@@ -24,8 +24,9 @@ class  DragwybFieldBase {
         this.html=args[0];
         this.type=args[1];
         this.id=args[2];
-        this.settings=args[3];
-        this.#updateValue = args[4];
+        this.value=args[3];
+        this.settings=args[4];
+        this.#updateValue = args[5];
     }
 
     updateField(key, value) {
@@ -33,7 +34,7 @@ class  DragwybFieldBase {
     }
 
     #triggerOnChange(key, value) {
-        this.#updateValue(key, value);
+        this.#updateValue({fieldId: key, value});
     }
 
     /**

@@ -49,9 +49,9 @@ export const updateFieldOrder = (oldIndex, newIndex) => ({
     payload: { oldIndex, newIndex }
 });
 
-export const updateFieldValues = (fieldId, values) => ({
+export const updateFieldValues = (fieldId, value) => ({
     type: UPDATE_FIELD_VALUES,
-    payload: { fieldId, values }
+    payload: { fieldId, value }
 });
 
 export const showNotice = (message, type = 'success') => ({
