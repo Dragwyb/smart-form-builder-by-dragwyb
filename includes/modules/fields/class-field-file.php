@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
-use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Base;
-
 class Field_File extends Field_Base {
     protected function register_scripts(){
         return array();
@@ -20,27 +18,6 @@ class Field_File extends Field_Base {
         $this->type = 'file';
         $this->name = __('File Upload', 'dragwyb-form-builder');
         $this->icon = 'dashicons-upload';
-        $this->settings = array_merge(
-            $this->get_default_settings(),
-            [
-                'allowed_types' => [
-                    'type' => 'text',
-                    'label' => __('Allowed File Types', 'dragwyb-form-builder'),
-                    'default' => 'jpg,jpeg,png,pdf',
-                    'description' => __('Comma-separated list of file extensions', 'dragwyb-form-builder'),
-                ],
-                'max_size' => [
-                    'type' => 'number',
-                    'label' => __('Maximum File Size (MB)', 'dragwyb-form-builder'),
-                    'default' => 2,
-                ],
-                'multiple' => [
-                    'type' => 'checkbox',
-                    'label' => __('Allow Multiple Files', 'dragwyb-form-builder'),
-                    'default' => false,
-                ],
-            ]
-        );
     }
 
     public function render_frontend(array $field_data): string {

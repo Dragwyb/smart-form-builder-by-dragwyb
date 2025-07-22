@@ -23,9 +23,6 @@ abstract class Field_Base
     const StyleTab = 'style_tab';
     const AdvanceTab = 'advance_tab';
 
-
-    protected array $controls;
-
     abstract protected function register_scripts();
     abstract protected function register_style();
 
@@ -70,7 +67,7 @@ abstract class Field_Base
 
     public function get_settings(): array
     {
-        return $this->settings;
+        return $this->settings_arr;
     }
 
     protected function set_display_setting(array $setting)
@@ -220,10 +217,8 @@ abstract class Field_Base
         $this->current_control_stack[$id] = array_merge($data, array('conditions' => $conditions));
     }
 
-    // abstract public function render_admin(): string;
     abstract public function render_frontend(array $field_data): string;
     abstract public function validate($value): bool;
-    abstract public function sanitize($value);
     abstract protected function register_controls(): void;
 
     public function render_controls()
@@ -233,7 +228,22 @@ abstract class Field_Base
 
         $this->register_controls();
 
-        return $this->settings_arr;
+        return $this->get_settings();
+    }
+
+    public function get_control($id)
+    {
+        return $this->get_control_by_id($id);
+    }
+
+    private function get_control_by_id($id){
+        $controls=$this->get_settings();
+
+        if($controls && isset($controls[$id])){
+            return $controls[$id];
+        }
+
+        return false;
     }
 
     private function render_header_controls()
@@ -258,88 +268,5 @@ abstract class Field_Base
         );
 
         $this->settings_arr = $header_tab;
-    }
-
-    protected function get_default_settings(): array
-    {
-        return [
-            'label' => [
-                'type' => 'text',
-                'label' => __('Field Label', 'dragwyb-form-builder'),
-                'default' => '',
-            ],
-            'placeholder' => [
-                'type' => 'text',
-                'label' => __('Placeholder', 'dragwyb-form-builder'),
-                'default' => '',
-            ],
-            'required' => [
-                'type' => 'checkbox',
-                'label' => __('Required', 'dragwyb-form-builder'),
-                'default' => false,
-            ],
-            'css_class' => [
-                'type' => 'text',
-                'label' => __('CSS Class', 'dragwyb-form-builder'),
-                'default' => '',
-            ],
-        ];
-    }
-
-    protected function get_conditional_logic_settings(): array
-    {
-        return [
-            'enable_conditional' => [
-                'type' => 'checkbox',
-                'label' => __('Enable Conditional Logic', 'dragwyb-form-builder'),
-                'default' => false,
-            ],
-            'conditional_rules' => [
-                'type' => 'repeater',
-                'label' => __('Rules', 'dragwyb-form-builder'),
-                'default' => [],
-                'fields' => [
-                    'field' => [
-                        'type' => 'select',
-                        'label' => __('Field', 'dragwyb-form-builder'),
-                        'dynamic_options' => true, // Will be populated with form fields
-                    ],
-                    'operator' => [
-                        'type' => 'select',
-                        'label' => __('Operator', 'dragwyb-form-builder'),
-                        'options' => [
-                            'equals' => __('Equals', 'dragwyb-form-builder'),
-                            'not_equals' => __('Not Equals', 'dragwyb-form-builder'),
-                            'contains' => __('Contains', 'dragwyb-form-builder'),
-                            'not_contains' => __('Not Contains', 'dragwyb-form-builder'),
-                            'greater_than' => __('Greater Than', 'dragwyb-form-builder'),
-                            'less_than' => __('Less Than', 'dragwyb-form-builder'),
-                        ],
-                    ],
-                    'value' => [
-                        'type' => 'text',
-                        'label' => __('Value', 'dragwyb-form-builder'),
-                    ],
-                ],
-            ],
-            'conditional_action' => [
-                'type' => 'select',
-                'label' => __('Action', 'dragwyb-form-builder'),
-                'default' => 'show',
-                'options' => [
-                    'show' => __('Show', 'dragwyb-form-builder'),
-                    'hide' => __('Hide', 'dragwyb-form-builder'),
-                ],
-            ],
-            'conditional_logic' => [
-                'type' => 'select',
-                'label' => __('Logic', 'dragwyb-form-builder'),
-                'default' => 'all',
-                'options' => [
-                    'all' => __('All rules must match', 'dragwyb-form-builder'),
-                    'any' => __('Any rule must match', 'dragwyb-form-builder'),
-                ],
-            ],
-        ];
     }
 }

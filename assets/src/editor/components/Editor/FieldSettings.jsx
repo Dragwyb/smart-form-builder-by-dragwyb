@@ -88,6 +88,13 @@ const FieldSettings = ({ activeField, fieldValue, sectionSettings, onClose }) =>
             fieldVal=selectedSettings['section'];
         }
 
+
+        console.log()
+
+        if(!DragwybEditor.controlTypes[settings.type]){
+            // return <></>;
+        }
+
         let html = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/ControlRender/' + settings.type, getHtml(), key, settings, fieldVal, handleChange);
 
         return <div key={key} className="setting-row" dataType={settings.type}>{html}</div>;

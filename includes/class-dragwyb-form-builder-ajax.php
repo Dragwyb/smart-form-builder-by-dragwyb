@@ -1,15 +1,20 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes;
 
+use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Modules\Module;
+use Dragwyb\Form_Builder\Includes\Modules\Sanitize_Fields_Data\Sanitize_Fields_Data;
 
-class Dragwyb_Form_Builder_Ajax {
+class Dragwyb_Form_Builder_Ajax
+{
     /**
      * Constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         add_action('wp_ajax_dragwyb_save_form', [$this, 'save_form']);
         add_action('wp_ajax_dragwyb_preview_form', [$this, 'preview_form']);
         add_action('wp_ajax_dragwyb_get_field_settings', [$this, 'get_field_settings']);
@@ -21,7 +26,8 @@ class Dragwyb_Form_Builder_Ajax {
     /**
      * Save form data
      */
-    public function save_form(): void {
+    public function save_form(): void
+    {
         try {
             check_ajax_referer('dragwyb_editor');
 
@@ -45,7 +51,7 @@ class Dragwyb_Form_Builder_Ajax {
 
             // Update form meta
             update_post_meta($form_id, '_dragwyb_form_type', $form_data['type']);
-            update_post_meta($form_id, '_form_fields', $form_data['fields']);
+            update_post_meta($form_id, '_form_fields', $this->sanitize_form_data($form_data));
             update_post_meta($form_id, '_form_settings', $form_data['settings']);
             update_post_meta($form_id, '_form_styles', $form_data['styles']);
             update_post_meta($form_id, '_form_notifications', $form_data['notifications']);
@@ -64,7 +70,8 @@ class Dragwyb_Form_Builder_Ajax {
     /**
      * Generate form preview
      */
-    public function preview_form(): void {
+    public function preview_form(): void
+    {
         // Verify nonce
         if (!check_ajax_referer('dragwyb_form_builder', 'nonce', false)) {
             wp_send_json_error(['message' => 'Invalid nonce']);
@@ -93,31 +100,25 @@ class Dragwyb_Form_Builder_Ajax {
     /**
      * Sanitize form data
      */
-    private function sanitize_form_data(array $data): array {
+    private function sanitize_form_data(array $data): array
+    {
+
         if (!isset($data['fields']) || !is_array($data['fields'])) {
-            return ['fields' => []];
+            return [];
         }
 
-        foreach ($data['fields'] as &$field) {
-            $field = array_merge([
-                'type' => '',
-                'label' => '',
-                'required' => false,
-                'placeholder' => '',
-                'options' => ''
-            ], $field);
+        $sanitize_form_data = Sanitize_Fields_Data::instance($data['fields']);
+        $fields = $sanitize_form_data->get_data();
 
-            $field['type'] = sanitize_key($field['type']);
-            $field['label'] = sanitize_text_field($field['label']);
-            $field['required'] = (bool) $field['required'];
-            $field['placeholder'] = sanitize_text_field($field['placeholder']);
-            $field['options'] = sanitize_textarea_field($field['options']);
+        if ($fields && is_array($fields) && count($fields) > 0) {
+            return $fields;
         }
 
-        return $data;
+        return [];
     }
 
-    public function get_field_settings(): void {
+    public function get_field_settings(): void
+    {
         // Verify nonce
         if (!check_ajax_referer('dragwyb_form_builder', 'nonce', false)) {
             wp_send_json_error(['message' => 'Invalid nonce']);
@@ -143,7 +144,8 @@ class Dragwyb_Form_Builder_Ajax {
         ]);
     }
 
-    public function get_preset(): void {
+    public function get_preset(): void
+    {
         check_ajax_referer('dragwyb_form_builder', 'nonce');
 
         if (!current_user_can('edit_posts')) {
@@ -163,7 +165,8 @@ class Dragwyb_Form_Builder_Ajax {
         ]);
     }
 
-    public function save_preset(): void {
+    public function save_preset(): void
+    {
         check_ajax_referer('dragwyb_form_builder', 'nonce');
 
         if (!current_user_can('edit_posts')) {
@@ -191,7 +194,8 @@ class Dragwyb_Form_Builder_Ajax {
         }
     }
 
-    public function save_error_template(): void {
+    public function save_error_template(): void
+    {
         // Verify nonce
         check_ajax_referer('dragwyb_admin', 'nonce');
 
@@ -214,4 +218,4 @@ class Dragwyb_Form_Builder_Ajax {
             wp_send_json_error(['message' => __('Failed to save template', 'dragwyb-form-builder')]);
         }
     }
-} 
+}

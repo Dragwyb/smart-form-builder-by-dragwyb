@@ -1,0 +1,111 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Dragwyb\Form_Builder\Includes\Modules\Sanitize_Fields_Data;
+
+use Dragwyb\Form_Builder\Includes\Controls\Controls;
+use Dragwyb\Form_Builder\Includes\Modules\Module;
+
+if (!class_exists('Sanitize_Fields_Data')) {
+    class Sanitize_Fields_Data
+    {
+        private static $filtered_data = false;
+
+        private static $form_fields = null;
+
+        private static $field_module = null;
+
+        private static $instance = null;
+
+        private static $control = null;
+        private static $module = null;
+
+        public static function instance(array $control_data): self
+        {
+            if (null === self::$instance) {
+                self::$instance = new self($control_data);
+            }
+            return self::$instance;
+        }
+
+        public function __construct($data)
+        {
+            self::$form_fields = $data;
+
+            $this->set_control();
+            $this->set_module();
+            $this->field_loop();
+        }
+
+        private function set_control(): void
+        {
+            self::$control =  new Controls();
+        }
+
+        private function set_module(): void
+        {
+            self::$module =  new Module();
+        }
+
+        private function field_loop(): void
+        {
+            foreach (self::$form_fields as $index => $field) {
+                if (!isset($field['id']) || !$field['type']) {
+                    continue;
+                }
+
+                self::$filtered_data[$index]['id'] = $field['id'];
+                self::$filtered_data[$index]['type'] = $field['type'];
+
+                if (isset($field['type']))
+
+                    if (isset($field['type']) && is_array($field['settings']) && count($field['settings']) > 0) {
+                        $type = $field['type'];
+                        $settings = $field['settings'];
+
+                        if (!isset(self::$field_module[$type])) {
+                            $field_module = self::$module->get_field($type);
+                            $field_module->render_controls();
+                            self::$field_module[$type] = $field_module;
+                        }
+
+                        $this->settings_loop($settings, $type, $index);
+                    }
+            }
+        }
+
+        private function settings_loop($settings, $type, $index): void
+        {
+            foreach ($settings as $setting => $value) {
+                if ($field_control = self::$field_module[$type]->get_control($setting)) {
+                    if (isset($field_control['type'])) {
+                        $control_type = $field_control['type'];
+                        $control_obj = self::$control->get_control($control_type);
+                        $control_obj->set_value($value);
+                        $filtered_value = $control_obj->get_value();
+
+                        if (isset($filtered_value) && $filtered_value) {
+                            self::$filtered_data[$index]['settings'][$setting] = $filtered_value;
+                        }
+                    }
+                }
+            }
+        }
+
+        public function get_data(): array|bool
+        {
+            return self::$filtered_data;
+        }
+
+
+        public function __destruct()
+        {
+            self::$filtered_data = false;
+            self::$form_fields = null;
+            self::$field_module = null;
+            self::$control = null;
+            self::$module = null;
+        }
+    }
+}

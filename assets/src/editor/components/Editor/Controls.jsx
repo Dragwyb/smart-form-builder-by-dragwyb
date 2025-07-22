@@ -13,7 +13,6 @@ const Controls = ({ onFieldSelect }) => {
             settings: {}
         };
         dispatch(addField(field));
-        dispatch(updateFieldValues(field.id, {}));
         onFieldSelect(field);
     };
 

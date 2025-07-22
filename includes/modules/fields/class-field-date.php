@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
-use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Base;
-
 class Field_Date extends Field_Base {
     protected function register_scripts(){
         return array();
@@ -20,31 +18,6 @@ class Field_Date extends Field_Base {
         $this->type = 'date';
         $this->name = __('Date Field', 'dragwyb-form-builder');
         $this->icon = 'dashicons-calendar-alt';
-        $this->settings = array_merge(
-            $this->get_default_settings(),
-            [
-                'min_date' => [
-                    'type' => 'date',
-                    'label' => __('Minimum Date', 'dragwyb-form-builder'),
-                    'default' => '',
-                ],
-                'max_date' => [
-                    'type' => 'date',
-                    'label' => __('Maximum Date', 'dragwyb-form-builder'),
-                    'default' => '',
-                ],
-                'date_format' => [
-                    'type' => 'select',
-                    'label' => __('Date Format', 'dragwyb-form-builder'),
-                    'default' => 'Y-m-d',
-                    'options' => [
-                        'Y-m-d' => __('YYYY-MM-DD', 'dragwyb-form-builder'),
-                        'd/m/Y' => __('DD/MM/YYYY', 'dragwyb-form-builder'),
-                        'm/d/Y' => __('MM/DD/YYYY', 'dragwyb-form-builder'),
-                    ],
-                ],
-            ]
-        );
     }
 
     public function render_frontend(array $field_data): string {

@@ -5,12 +5,6 @@ declare(strict_types=1);
 namespace Dragwyb\Form_Builder\Includes\Modules\Register;
 
 use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Base;
-use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Date;
-use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Email;
-use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_File;
-use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Radio;
-use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Text;
-use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Textarea;
 
 class Register_Fields
 {

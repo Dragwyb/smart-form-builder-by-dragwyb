@@ -7,11 +7,14 @@ class textField extends DragwybEditor.FieldBase {
         if (!this.shouldRender()) return <></>;
 
         return (
+            <label for={this.id}>
+            {this.field?.settings?.text_label && this.field.settings.text_label}
             <input
                 type={this.fieldName}
                 value={this.value}
-                onChange={(e) => this.updateField(this.id, e.target.value)}
-            />
+                id={this.id}
+                onChange={(e) => this.updateField(this.id, e.target.value)} />
+            </label>
         );
     }
 }

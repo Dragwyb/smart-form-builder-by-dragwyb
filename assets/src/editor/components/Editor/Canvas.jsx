@@ -5,7 +5,6 @@ import * as Fields from './Fields';
 import { updateFieldOrder, duplicateField } from '../../store/actions';
 
 const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors }) => {
-    
     const dispatch = useDispatch();
 
     const handleDragEnd = (result) => {

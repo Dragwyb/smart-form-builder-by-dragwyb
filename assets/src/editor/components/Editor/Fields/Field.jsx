@@ -1,12 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import { __ } from '@wordpress/i18n';
-import TextInput from './TextInput';
-import TextArea from './TextArea';
-import SelectField from './SelectField';
-import CheckboxField from './CheckboxField';
-import RadioField from './RadioField';
-import FileUpload from './FileUpload';
 // import DateField from './DateField';
 // import EmailField from './EmailField';
 // import PhoneField from './PhoneField';
@@ -24,15 +17,6 @@ const Field = ({ field, value = '', onChange, errors = [], disabled = false }) =
 
     return (
         <div className={`dragwyb-field dragwyb-field--${field.type} ${field.className || ''}`}>
-            {field.label && field.type !== 'hidden' && (
-                <label className="dragwyb-field__label" htmlFor={field.id}>
-                    {field.label}
-                    {field.required && <span className="dragwyb-field__required">*</span>}
-                </label>
-            )}
-            {field.description && (
-                <div className="dragwyb-field__description">{field.description}</div>
-            )}
             <div className="dragwyb-field__input">
                 {Html}
             </div>

@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
-use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Base;
-
 class Field_Email extends Field_Base {
     protected function register_scripts(){
         return array();
@@ -20,29 +18,6 @@ class Field_Email extends Field_Base {
         $this->type = 'email';
         $this->name = __('Email Field', 'dragwyb-form-builder');
         $this->icon = 'dashicons-email';
-        $this->settings = array_merge(
-            $this->get_default_settings(),
-            [
-                'confirmation' => [
-                    'type' => 'checkbox',
-                    'label' => __('Require Confirmation', 'dragwyb-form-builder'),
-                    'default' => false,
-                ],
-            ]
-        );
-    }
-
-    public function render_admin(): string {
-        ob_start();
-        ?>
-        <div class="dragwyb-field" data-type="<?php echo esc_attr($this->type); ?>">
-            <div class="dragwyb-field-preview">
-                <span class="dragwyb-field-icon dashicons <?php echo esc_attr($this->icon); ?>"></span>
-                <span class="dragwyb-field-label"><?php echo esc_html($this->name); ?></span>
-            </div>
-        </div>
-        <?php
-        return ob_get_clean();
     }
 
     public function render_frontend(array $field_data): string {

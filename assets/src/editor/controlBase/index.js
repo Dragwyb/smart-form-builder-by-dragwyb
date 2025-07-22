@@ -37,10 +37,10 @@ class DragwybControlBase {
     }
 
     /**
-     * ✅ Shared method: Check if this control should render based on settings.type
+     * ✅ Shared method: Check if this control should renfder based on settings.type
      */
     shouldRender() {
-        return this.settings?.type === this.controlName;
+        return this.settings?.type === this.controlName && DragwybEditor.controlTypes[this.settings.type];
     }
 }
 

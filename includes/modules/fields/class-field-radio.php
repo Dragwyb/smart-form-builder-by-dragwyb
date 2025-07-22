@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
-use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Base;
-
 class Field_Radio extends Field_Base {
     protected function register_scripts(){
         return array();
@@ -20,31 +18,6 @@ class Field_Radio extends Field_Base {
         $this->type = 'radio';
         $this->name = __('Radio Buttons', 'dragwyb-form-builder');
         $this->icon = 'dashicons-marker';
-        $this->settings = array_merge(
-            $this->get_default_settings(),
-            [
-                'options' => [
-                    'type' => 'repeater',
-                    'label' => __('Options', 'dragwyb-form-builder'),
-                    'default' => [],
-                    'fields' => [
-                        'label' => [
-                            'type' => 'text',
-                            'label' => __('Option Label', 'dragwyb-form-builder'),
-                        ],
-                        'value' => [
-                            'type' => 'text',
-                            'label' => __('Option Value', 'dragwyb-form-builder'),
-                        ],
-                    ],
-                ],
-                'inline' => [
-                    'type' => 'checkbox',
-                    'label' => __('Display Inline', 'dragwyb-form-builder'),
-                    'default' => false,
-                ],
-            ]
-        );
     }
 
     public function render_frontend(array $field_data): string {

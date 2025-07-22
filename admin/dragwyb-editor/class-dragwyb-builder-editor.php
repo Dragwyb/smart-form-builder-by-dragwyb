@@ -7,6 +7,7 @@ namespace Dragwyb\Form_Builder\Admin\Dragwyb_Editor;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Pages;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
 use Dragwyb\Form_Builder\Includes\Modules\Module;
+use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Dragwyb_Init;
 
 if (!defined("ABSPATH")) {
@@ -166,6 +167,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 'editorContainer' => esc_html(self::Current_Page) . '-editor-container',
                 'formData' => $this->get_form_data((int) self::$form_id),
                 'fieldTypes' => $this->get_field_types(),
+                'controlTypes' => $this->get_control_types(),
                 'formTypes' => $this->get_form_types(),
                 'settings' => $this->get_form_advance_settings(),
                 'adminUrl' => admin_url('edit.php?post_type=dragwyb_form'),
@@ -228,19 +230,38 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
 
             foreach ($fields_data as $key => $field) {
                 $field->enqueue_assets();
-
-                $setting = $field->get_settings();
-
+                
                 $name = $field->get_name();
 
                 $conrols = $field->render_controls();
 
-                $fields[$key] = ['label' => esc_html($name)];
-                $fields[$key]['settings'] = $setting;
+                $fields[$key]['label'] = esc_html($name);
                 $fields[$key]['controls'] = $conrols;
             }
 
             return $fields;
+        }
+
+        /**
+         * Get field types configuration
+         */
+        private function get_control_types(): array
+        {
+            $controls = new Controls();
+
+            $controls_data = $controls->get_controls();
+
+            $controls = [];
+
+            foreach ($controls_data as $key => $control) {
+                $control->enqueue_assets();
+
+                $name = $control->get_name();
+
+                $controls[$key] = ['label' => esc_html($name)];
+            }
+
+            return $controls;
         }
 
         /**

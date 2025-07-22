@@ -1,7 +1,6 @@
 import Accordion from './Accordion';
 import Button from './Button';
 import ConfirmDialog from './ConfirmDialog';
-import FormField from './FormField';
 import Modal from './Modal';
 import Notice from './Notice';
 import Panel from './Panel';
@@ -15,7 +14,6 @@ export {
     Accordion,
     Button,
     ConfirmDialog,
-    FormField,
     Modal,
     Notice,
     Panel,

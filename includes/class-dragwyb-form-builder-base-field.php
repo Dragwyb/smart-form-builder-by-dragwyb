@@ -39,11 +39,6 @@ abstract class Dragwyb_Form_Builder_Base_Field {
     }
 
     /**
-     * Render field in admin
-     */
-    abstract public function render_admin(): string;
-
-    /**
      * Render field in frontend
      */
     abstract public function render_frontend(): string;

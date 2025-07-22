@@ -3,23 +3,14 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
-use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Base;
-
 class Field_Textarea extends Field_Base {
-    protected function register_scripts(){
-
-        wp_register_script('dragwyb_editor_fields', DRAGWYB_FORM_BUILDER_URL. 'assets/dist/editorFields/editorFields.js', array(), DRAGWYB_FORM_BUILDER_VERSION, true);
-
-        $scripts=array();   
-
-        if(defined('DRAGWYB_EDITOR')){
-            $scripts=array('dragwyb_editor_fields');
-        }
-
-        return $scripts;
+    protected function register_scripts()
+    {
+        return array();
     }
-    
-    protected function register_style(){
+
+    protected function register_style()
+    {
         return array();
     }
 
@@ -29,21 +20,6 @@ class Field_Textarea extends Field_Base {
         $this->type = 'textarea';
         $this->name = __('Paragraph Field', 'dragwyb-form-builder');
         $this->icon = 'dashicons-editor-paragraph';
-        $this->settings = array_merge(
-            $this->get_default_settings(),
-            [
-                'rows' => [
-                    'type' => 'number',
-                    'label' => __('Rows', 'dragwyb-form-builder'),
-                    'default' => 4,
-                ],
-                'max_length' => [
-                    'type' => 'number',
-                    'label' => __('Maximum Length', 'dragwyb-form-builder'),
-                    'default' => 0,
-                ],
-            ]
-        );
     }
 
     public function render_frontend(array $field_data): string {
@@ -85,9 +61,5 @@ class Field_Textarea extends Field_Base {
         }
 
         return true;
-    }
-
-    public function sanitize($value) {
-        return sanitize_textarea_field($value);
     }
 } 

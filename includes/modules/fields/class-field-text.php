@@ -4,19 +4,29 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
-use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Base;
+use Dragwyb\Form_Builder\Includes\Controls\Controls;
 
 class Field_Text extends Field_Base
 {
 
-    protected function register_scripts()
-    {
+    protected function register_scripts(){
+        $scripts=array();   
+
+        if(defined('DRAGWYB_EDITOR')){
+            $scripts=array('dragwyb_editor_fields');
+        }
+
+        return $scripts;
+    }
+    
+    protected function register_style(){
         return array();
     }
 
-    protected function register_style()
+    public function __construct()
     {
-        return array();
+        parent::__construct();
+        wp_register_script('dragwyb_editor_fields', DRAGWYB_FORM_BUILDER_URL. 'assets/dist/editorFields/editorFields.js', array(), DRAGWYB_FORM_BUILDER_VERSION, true);
     }
 
     protected function init(): void
@@ -24,21 +34,6 @@ class Field_Text extends Field_Base
         $this->type = 'text';
         $this->name = __('Text Field', 'dragwyb-form-builder');
         $this->icon = 'dashicons-text';
-        $this->settings = array_merge(
-            $this->get_default_settings(),
-            [
-                'min_length' => [
-                    'type' => 'number',
-                    'label' => __('Minimum Length', 'dragwyb-form-builder'),
-                    'default' => 0,
-                ],
-                'max_length' => [
-                    'type' => 'number',
-                    'label' => __('Maximum Length', 'dragwyb-form-builder'),
-                    'default' => 0,
-                ],
-            ]
-        );
     }
 
     protected function register_controls(): void
@@ -77,12 +72,12 @@ class Field_Text extends Field_Base
         $this->end_tabs();
 
         $this->add_control('text_label', [
-            'type' => 'text',
+            'type' => Controls::TEXT,
             'label' => __('Field Label', 'dragwyb-form-builder'),
             'default' => '',
         ]);
         $this->add_control('text_placeholder', [
-            'type' => 'text',
+            'type' => Controls::TEXT,
             'label' => __('Placeholder', 'dragwyb-form-builder'),
             'default' => '',
         ]);
@@ -92,7 +87,7 @@ class Field_Text extends Field_Base
             'default' => false,
         ]);
         $this->add_control('text_css_class', [
-            'type' => 'text',
+            'type' => Controls::TEXT,
             'label' => __('CSS Class', 'dragwyb-form-builder'),
             'default' => '',
         ]);
@@ -104,7 +99,7 @@ class Field_Text extends Field_Base
             'tab' => self::ContentTab
         ]);
         $this->add_control('text_style', [
-            'type' => 'text',
+            'type' => Controls::TEXT,
             'label' => __('CSS Class', 'dragwyb-form-builder'),
             'default' => '',
         ]);
@@ -115,7 +110,7 @@ class Field_Text extends Field_Base
             'tab' => self::StyleTab
         ]);
         $this->add_control('text_style_tab', [
-            'type' => 'text',
+            'type' => Controls::TEXT,
             'label' => __('CSS Class', 'dragwyb-form-builder'),
             'default' => '',
         ]);
@@ -125,25 +120,11 @@ class Field_Text extends Field_Base
             'tab' => self::StyleTab
         ]);
         $this->add_control('text_style_tab_two', [
-            'type' => 'text',
+            'type' => Controls::TEXT,
             'label' => __('CSS Class', 'dragwyb-form-builder'),
             'default' => '',
         ]);
         $this->end_section();
-    }
-
-    public function render_admin(): string
-    {
-        ob_start();
-?>
-        <div class="dragwyb-field" data-type="<?php echo esc_attr($this->type); ?>">
-            <div class="dragwyb-field-preview">
-                <span class="dragwyb-field-icon dashicons <?php echo esc_attr($this->icon); ?>"></span>
-                <span class="dragwyb-field-label"><?php echo esc_html($this->name); ?></span>
-            </div>
-        </div>
-    <?php
-        return ob_get_clean();
     }
 
     public function render_frontend(array $field_data): string

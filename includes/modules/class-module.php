@@ -34,10 +34,10 @@ class Module
     private function load_fields(): void
     {
         // Register field types
-        $this->register_default_fields();
+        $this->register_fields();
     }
 
-    private function register_default_fields(): void
+    private function register_fields(): void
     {
         // Load field registrations
         $register = Register_Fields::instance();

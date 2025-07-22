@@ -25,7 +25,7 @@ class  DragwybFieldBase {
         this.type=args[1];
         this.id=args[2];
         this.value=args[3];
-        this.settings=args[4];
+        this.field=args[4];
         this.#updateValue = args[5];
     }
 
@@ -41,7 +41,7 @@ class  DragwybFieldBase {
      * ✅ Shared method: Check if this control should render based on settings.type
      */
     shouldRender() {
-        return this.settings?.type === this.fieldName;
+        return this.field?.type === this.fieldName;
     }
 }
 
