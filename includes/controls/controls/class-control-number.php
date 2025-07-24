@@ -18,6 +18,18 @@ class Control_Number extends Control_Base
         return array();
     }
 
+    protected function register_settings()
+    {
+        return array(
+            'name' => 'string',
+            'label' => 'string',
+            'default' => 'number',
+            'min' => 'number',
+            'max' => 'number',
+            'conditions' => 'conditions'
+        );
+    }
+
     protected function init(): void
     {
         $this->type = 'number';

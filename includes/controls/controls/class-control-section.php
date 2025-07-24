@@ -18,6 +18,15 @@ class Control_Section extends Control_Base
         return array();
     }
 
+    protected function register_settings()
+    {
+        return array(
+            'name' => 'string',
+            'label' => 'string',
+            'conditions' => 'conditions',
+        );
+    }
+
     protected function init(): void
     {
         $this->type = 'section';

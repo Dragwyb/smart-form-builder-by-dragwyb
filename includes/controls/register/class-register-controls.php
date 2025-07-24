@@ -14,7 +14,7 @@ class Register_Controls
 
     private array $controls = [];
 
-    private array $default_controls = [Controls::CHECKBOX,Controls::COLOR,Controls::NUMBER,Controls::RADIO,Controls::REPEATER,Controls::SECTION,Controls::SELECT,Controls::SLIDER,Controls::TABS,Controls::TEXT,Controls::TEXTAREA];
+    private array $default_controls = [Controls::CHECKBOX,Controls::COLOR,Controls::NUMBER,Controls::RADIO,Controls::REPEATER,Controls::SECTION,Controls::SELECT,Controls::SLIDER,Controls::TABS,Controls::TAB,Controls::TEXT,Controls::TEXTAREA];
 
     public static function instance(): self
     {

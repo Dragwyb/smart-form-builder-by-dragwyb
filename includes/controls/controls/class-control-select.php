@@ -18,6 +18,18 @@ class Control_Select extends Control_Base
         return array();
     }
 
+
+    protected function register_settings()
+    {
+        return array(
+            'name' => 'string',
+            'label' => 'string',
+            'default' => 'string',
+            'conditions' => 'conditions',
+            'options' => 'custom'
+        );
+    }
+
     protected function init(): void
     {
         $this->type = 'select';
@@ -27,5 +39,10 @@ class Control_Select extends Control_Base
     protected function sanitize_control($value)
     {
         return sanitize_text_field($value);
+    }
+
+    protected function options_setting_sanitize($value)
+    {
+        return $value;
     }
 }

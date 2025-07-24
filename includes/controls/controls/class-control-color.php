@@ -18,6 +18,16 @@ class Control_Color extends Control_Base
         return array();
     }
 
+    protected function register_settings()
+    {
+        return array(
+            'name' => 'string',
+            'label' => 'string',
+            'default' => 'string',
+            'conditions' => 'conditions'
+        );
+    }
+
     protected function init(): void
     {
         $this->type = 'color';

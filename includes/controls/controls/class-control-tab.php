@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Controls\Controls;
 
-class Control_Checkbox extends Control_Base
+class Control_Tab extends Control_Base
 {
 
     protected function register_scripts()
@@ -13,25 +13,24 @@ class Control_Checkbox extends Control_Base
     }
 
 
-    protected function register_style()
-    {
-        return array();
-    }
-
     protected function register_settings()
     {
         return array(
             'name' => 'string',
             'label' => 'string',
-            'default' => 'string',
-            'conditions' => 'conditions'
         );
+    }
+
+
+    protected function register_style()
+    {
+        return array();
     }
 
     protected function init(): void
     {
-        $this->type = 'checkbox';
-        $this->name = __('Checkbox', 'dragwyb-form-builder');
+        $this->type = 'tab';
+        $this->name = __('Tab', 'dragwyb-form-builder');
     }
 
     protected function sanitize_control($value)

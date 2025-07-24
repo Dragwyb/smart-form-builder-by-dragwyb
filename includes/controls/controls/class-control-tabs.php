@@ -13,6 +13,18 @@ class Control_Tabs extends Control_Base
     }
 
 
+    protected function register_settings()
+    {
+        return array(
+            'name' => 'string',
+            'label' => 'string',
+            'active_tab' => 'string',
+            'conditions' => 'conditions',
+            'tabs' => 'custom'
+        );
+    }
+
+
     protected function register_style()
     {
         return array();
@@ -27,5 +39,9 @@ class Control_Tabs extends Control_Base
     protected function sanitize_control($value)
     {
         return sanitize_text_field($value);
+    }
+
+    protected function tabs_setting_sanitize($value){
+        return $value;
     }
 }

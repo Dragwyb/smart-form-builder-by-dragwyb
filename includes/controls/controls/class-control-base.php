@@ -8,18 +8,20 @@ abstract class Control_Base
 {
     protected string $type;
     protected string $name;
-    private $value=null;
+    private $value = null;
+    private $settings = array();
 
     abstract protected function register_scripts();
     abstract protected function register_style();
     abstract protected function init(): void;
     abstract protected function sanitize_control($value);
+    abstract protected function register_settings();
 
     public function __construct()
     {
         $this->init();
     }
-    
+
     public function enqueue_assets()
     {
         $scripts = $this->register_scripts();
@@ -47,6 +49,32 @@ abstract class Control_Base
         return $this->name;
     }
 
+    public function set_settings(array $data): void
+    {
+        $control_settings = $this->register_settings();
+
+        if (!isset($control_settings['type'])) {
+            $control_settings['type'] = 'string';
+        }
+
+        foreach ($data as $setting => $value) {
+            if (!array_key_exists($setting, $control_settings)) {
+                continue;
+            }
+
+            $sanitize_setting = $this->filter_setting_data($control_settings[$setting], $value, $setting);
+
+            if ($sanitize_setting) {
+                $this->settings[$setting] = $value;
+            }
+        }
+    }
+
+    public function get_settings(): array
+    {
+        return $this->settings;
+    }
+
     public function set_value($data): void
     {
         $this->set_filter_value($data);
@@ -54,11 +82,70 @@ abstract class Control_Base
 
     private function set_filter_value($data): void
     {
-        $this->value=$this->sanitize_control($data);
+        $this->value = $this->sanitize_control($data);
     }
 
     public function get_value()
     {
         return $this->value;
+    }
+
+    private function filter_setting_data($type, $value, $key)
+    {
+
+        if (!$value || !isset($value) || empty($value) || (is_array($value) && count($value) <= 0)) {
+            return false;
+        }
+
+        if ($type === 'custom') {
+            $sanitize_setting = $key . '_setting_sanitize';
+
+            if (!method_exists($this, $sanitize_setting)) {
+                return false;
+            }
+
+            return $this->$sanitize_setting($value);
+        }
+
+        $sanitize_setting = $type . '_setting_sanitize';
+
+
+        if (!method_exists($this, $sanitize_setting)) {
+            return false;
+        }
+
+        return $this->$sanitize_setting($value);
+    }
+
+    private function string_setting_sanitize(string $value)
+    {
+        return sanitize_text_field($value);
+    }
+
+    private function boolean_setting_sanitize(boolean $value)
+    {
+        return (bool) $value;
+    }
+    private function number_setting_sanitize(int $value)
+    {
+        return (int) $value;
+    }
+    private function conditions_setting_sanitize(array $conditions)
+    {
+        $condition = [];
+
+        foreach ($conditions as $key => $value) {
+            $condition[sanitize_text_field(esc_html($key))] = sanitize_text_field(esc_html($value));
+        }
+
+        return $condition;
+    }
+
+    public function __destruct()
+    {
+        $this->type = '';
+        $this->name = '';
+        $this->value = null;
+        $this->settings = null;
     }
 }

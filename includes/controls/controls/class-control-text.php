@@ -12,6 +12,16 @@ class Control_Text extends Control_Base
         return array('dragwyb-editor-controls');
     }
 
+    protected function register_settings()
+    {
+        return array(
+            'name' => 'string',
+            'label' => 'string',
+            'default' => 'string',
+            'conditions' => 'conditions'
+        );
+    }
+
 
     protected function register_style()
     {
