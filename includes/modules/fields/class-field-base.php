@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
+use Dragwyb\Form_Builder\Includes\Controls\Controls;
+use Dragwyb\Form_Builder\Includes\Controls\Controls\Control_Base;
+use PSpell\Config;
+
 abstract class Field_Base
 {
     protected string $type;
@@ -18,6 +22,7 @@ abstract class Field_Base
     private ?array $current_section_stack = array();
     private ?array $current_tabs_stack = array();
     private ?array $current_control_stack = array();
+    private ?object $control_base;
 
     const ContentTab = 'content_tab';
     const StyleTab = 'style_tab';
@@ -46,6 +51,7 @@ abstract class Field_Base
     public function __construct()
     {
         $this->init();
+        $this->control_base = Controls::instance();
     }
 
     abstract protected function init(): void;
@@ -100,7 +106,7 @@ abstract class Field_Base
             $conditions['header_controls'] = self::ContentTab;
         }
 
-        $this->settings_arr[$this->current_section] = array_merge($data, array('type' => 'section', 'conditions' => $conditions));
+        $this->settings_arr[$this->current_section] = $this->controller_settings(array_merge($data, array('type' => 'section', 'conditions' => $conditions)));
     }
 
     protected function end_section(): void
@@ -145,7 +151,7 @@ abstract class Field_Base
             $conditions = array_merge($conditions, $this->settings_arr[$this->current_section]['conditions']);
         }
 
-        $this->current_section_stack[$this->current_tabs] = array_merge($data, array('type' => 'tabs', 'conditions' => $conditions));
+        $this->current_section_stack[$this->current_tabs] = $this->controller_settings(array_merge($data, array('type' => 'tabs', 'conditions' => $conditions)));
     }
 
     protected function end_tabs(): void
@@ -182,7 +188,7 @@ abstract class Field_Base
         }
         $this->current_tab = $id; // Assuming type is the tabs identifier
 
-        $this->current_tabs_stack[$id] = array_merge(array('type' => 'tab'), $data);
+        $this->current_tabs_stack[$id] = $this->controller_settings(array_merge(array('type' => 'tab'), $data));
     }
 
     protected function end_tab(): void
@@ -214,7 +220,31 @@ abstract class Field_Base
             $conditions['section'] = $this->current_section;
         }
 
-        $this->current_control_stack[$id] = array_merge($data, array('conditions' => $conditions));
+        $this->current_control_stack[$id] = $this->controller_settings(array_merge($data, array('conditions' => $conditions)));
+    }
+
+    private function controller_settings(array $data): array
+    {
+        $controls_class = Controls::class;
+        $controls_base_class = Control_Base::class;
+
+        if (!isset($data['type']) || !($this->control_base instanceof $controls_class)) {
+            return array();
+        }
+
+        $type = $data['type'];
+
+        $control_object = $this->control_base->get_control($type);
+
+        if (!$control_object || !($control_object instanceof $controls_base_class)) {
+            return array();
+        }
+
+        $control_object->set_settings($data);
+
+        $value = $control_object->get_settings();
+
+        return $value;
     }
 
     abstract public function render_frontend(array $field_data): string;
@@ -236,10 +266,11 @@ abstract class Field_Base
         return $this->get_control_by_id($id);
     }
 
-    private function get_control_by_id($id){
-        $controls=$this->get_settings();
+    private function get_control_by_id($id)
+    {
+        $controls = $this->get_settings();
 
-        if($controls && isset($controls[$id])){
+        if ($controls && isset($controls[$id])) {
             return $controls[$id];
         }
 

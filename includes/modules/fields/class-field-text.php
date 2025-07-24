@@ -9,24 +9,26 @@ use Dragwyb\Form_Builder\Includes\Controls\Controls;
 class Field_Text extends Field_Base
 {
 
-    protected function register_scripts(){
-        $scripts=array();   
+    protected function register_scripts()
+    {
+        $scripts = array();
 
-        if(defined('DRAGWYB_EDITOR')){
-            $scripts=array('dragwyb_editor_fields');
+        if (defined('DRAGWYB_EDITOR')) {
+            $scripts = array('dragwyb_editor_fields');
         }
 
         return $scripts;
     }
-    
-    protected function register_style(){
+
+    protected function register_style()
+    {
         return array();
     }
 
     public function __construct()
     {
         parent::__construct();
-        wp_register_script('dragwyb_editor_fields', DRAGWYB_FORM_BUILDER_URL. 'assets/dist/editorFields/editorFields.js', array(), DRAGWYB_FORM_BUILDER_VERSION, true);
+        wp_register_script('dragwyb_editor_fields', DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editorFields/editorFields.js', array(), DRAGWYB_FORM_BUILDER_VERSION, true);
     }
 
     protected function init(): void
@@ -48,9 +50,9 @@ class Field_Text extends Field_Base
         $this->start_tab('text_normal', [
             'label' => 'Normal',
         ]);
-        
+
         $this->add_control('text_color', [
-            'type' => 'color',
+            'type' => Controls::COLOR,
             'label' => __('Field Label Color', 'dragwyb-form-builder'),
             'default' => '',
         ]);
@@ -62,7 +64,7 @@ class Field_Text extends Field_Base
         ]);
 
         $this->add_control('text_hover_color', [
-            'type' => 'color',
+            'type' => Controls::COLOR,
             'label' => __('Field Label Color', 'dragwyb-form-builder'),
             'default' => '',
         ]);
@@ -80,9 +82,12 @@ class Field_Text extends Field_Base
             'type' => Controls::TEXT,
             'label' => __('Placeholder', 'dragwyb-form-builder'),
             'default' => '',
+            'conditions' => [
+                'text_label' => 'aniket',
+            ]
         ]);
         $this->add_control('text_required', [
-            'type' => 'checkbox',
+            'type' => Controls::CHECKBOX,
             'label' => __('Required', 'dragwyb-form-builder'),
             'default' => false,
         ]);
@@ -91,7 +96,7 @@ class Field_Text extends Field_Base
             'label' => __('CSS Class', 'dragwyb-form-builder'),
             'default' => '',
         ]);
-        
+
         $this->end_section();
 
         $this->start_section('text_form_style', [
@@ -133,7 +138,7 @@ class Field_Text extends Field_Base
         $required = !empty($field_data['required']);
 
         ob_start();
-    ?>
+?>
         <div class="dragwyb-field-wrapper <?php echo esc_attr($field_data['css_class'] ?? ''); ?>">
             <label for="<?php echo esc_attr($id); ?>">
                 <?php echo esc_html($field_data['label']); ?>
