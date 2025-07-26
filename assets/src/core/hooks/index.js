@@ -17,7 +17,7 @@ class Hooks {
 
         this.#addUserCallback(handle, callback, this.Action);
     }
-    
+
     addFilter = (handle = false, callback = () => { }) => {
         if (!handle) {
             new Error('Do not call addFilter without handle name');
@@ -57,7 +57,7 @@ class Hooks {
 
         const data = this.#usercallBack(handle, this.Filters, args);
 
-        if(!data){
+        if (!data) {
             return args[0];
         }
 
@@ -110,13 +110,9 @@ class Hooks {
 
         if (callbacks.length > 0) {
             data = true;
-            
-            callbacks.forEach((callback, index) => {
-                if (callback.length === (index + 1)) {
-                    data = callback(args);
-                } else {
-                    callback(args)
-                }
+
+            callbacks.forEach((callback) => {
+                data = callback(...args)
             });
         }
 
