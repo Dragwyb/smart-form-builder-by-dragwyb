@@ -7,9 +7,9 @@ const Preview = ({ fields, values, onChange, errors }) => {
             <h2 className="dragwyb-preview__title">Form Preview</h2>
             {fields.map((field) => (
                 <Field
-                    key={field.id}
+                    key={field._id}
                     field={field}
-                    value={values[field.id]}
+                    value={values[field._id]}
                     errors={errors[field.name] || []}
                     onChange={onChange}
                 />

@@ -7,7 +7,6 @@ class DragwybControlBase {
     }
 
     #renderContent(args) {
-
         if(!this.controlName){
             return;
         }
@@ -26,6 +25,7 @@ class DragwybControlBase {
         this.settings = args[2];
         this.value = args[3];
         this.#updateValue = args[4];
+        this.utils=args[5];
     }
 
     updateControls(key, value) {
@@ -33,7 +33,7 @@ class DragwybControlBase {
     }
 
     #triggerOnChange(key, value) {
-        this.#updateValue(key, value);
+        this.#updateValue(key, value, this.settings.type);
     }
 
     /**

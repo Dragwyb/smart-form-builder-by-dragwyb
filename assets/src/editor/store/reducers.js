@@ -9,10 +9,18 @@ import {
     UPDATE_FORM_TITLE,
     UPDATE_SECTION_SETTINGS,
     RESET_SECTION_SETTINGS,
+    UPDATE_FIELD_IDS,
+    UPDATE_FIELD_ID,
+    DELETE_FIELD_ID,
     SHOW_NOTICE,
     HIDE_NOTICE,
     ERROR_NOTICE
 } from './actions';
+
+import Helper from '../components/Utils'
+
+import { useDispatch } from 'react-redux';
+import { act } from 'react';
 
 const initialState = {
     form: {
@@ -23,8 +31,10 @@ const initialState = {
         notifications: [],
         confirmations: []
     },
-    sectionSettings:{},
-    notices: []
+    sectionSettings: {},
+    notices: [],
+    fieldIds:[]
+
 };
 
 export default function reducer(state = initialState, action) {
@@ -40,18 +50,17 @@ export default function reducer(state = initialState, action) {
 
         case DUPLICATE_FIELD:
             const referenceField = state.form.fields.find(
-                field => field.id === action.payload.ReferenceField
+                field => field._id === action.payload.ReferenceField
             );
 
             if (!referenceField) return state;
 
-            const { id, ...rest } = referenceField;
+            const { _id, ...rest } = referenceField;            
 
             const duplicatedField = {
-                id: action.payload.activeField, // New unique ID
+                _id: action.payload.activeField, // New unique ID
                 ...rest
             };
-
 
             return {
                 ...state,
@@ -67,7 +76,7 @@ export default function reducer(state = initialState, action) {
                 form: {
                     ...state.form,
                     fields: state.form.fields.map(field =>
-                        field.id === action.payload.fieldId
+                        field._id === action.payload.fieldId
                             ? action.payload.field
                             : field
                     )
@@ -80,7 +89,7 @@ export default function reducer(state = initialState, action) {
                 form: {
                     ...state.form,
                     fields: state.form.fields.filter(
-                        field => field.id !== action.payload
+                        field => field._id !== action.payload
                     )
                 }
             };
@@ -121,14 +130,14 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 sectionSettings: {
                     ...state.sectionSettings,
-                    [action.payload.Id]:action.payload.value 
+                    [action.payload.Id]: action.payload.value
                 }
             };
 
         case UPDATE_FORM_TITLE:
             return {
                 ...state,
-                form:{
+                form: {
                     ...state.form,
                     title: action.payload
                 }
@@ -139,6 +148,24 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 sectionSettings: {}
             };
+
+        case UPDATE_FIELD_IDS:
+            return {
+                ...state,
+                fieldIds: [...state.fieldIds, ...[action.payload.ids]]
+            }
+
+        case UPDATE_FIELD_ID:
+            return {
+                ...state,
+                fieldIds: [...state.fieldIds, action.payload.id]
+            }
+            
+        case DELETE_FIELD_ID:
+            return {
+                ...state,
+                fieldIds: state.fieldIds.filter(id => id !== action.payload.id)
+            }
 
         case SHOW_NOTICE:
             return {

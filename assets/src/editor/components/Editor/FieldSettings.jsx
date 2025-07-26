@@ -1,14 +1,19 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateField, updateSectionSettings, resetSectionSettings } from '../../store/actions';
 import { Panel } from '../Common';
 import shouldRenderField from './shouldRenderField';
+import Helper from '../Utils';
 
 const FieldSettings = ({ activeField, fieldValue, sectionSettings, onClose }) => {
     
     const dispatch = useDispatch();
     let activeSection=false;
     const fieldType = DragwybEditor.fieldTypes[activeField.type];
+
+    const state=useSelector(state => state);
+    const Utils=Helper(state, dispatch);
+
 
     const defautlActiveSection = (key) => {
         if (((sectionSettings && sectionSettings.section) || activeSection) || (sectionSettings && sectionSettings.section === '')) {
@@ -17,7 +22,7 @@ const FieldSettings = ({ activeField, fieldValue, sectionSettings, onClose }) =>
 
         activeSection=true;
 
-        handleChange(key, true);
+        handleChange(key, true, 'section');
     }
 
     const defautlActiveTab = (key, settings) => {
@@ -25,13 +30,11 @@ const FieldSettings = ({ activeField, fieldValue, sectionSettings, onClose }) =>
             return;
         }
 
-        handleChange(key, Object.keys(settings.tabs)[0])
+        handleChange(key, Object.keys(settings.tabs)[0], 'tabs')
     }
 
 
-    const handleChange = (key, value) => {
-        const type = fieldType.controls[key].type;
-
+    const handleChange = (key, value, type=null) => {
         if ('tabs' === type) {
             if ('header_controls' === key) {
                 dispatch(resetSectionSettings());
@@ -48,7 +51,11 @@ const FieldSettings = ({ activeField, fieldValue, sectionSettings, onClose }) =>
             return;
         }
 
-        dispatch(updateField(activeField.id, {
+        if(!fieldType.controls[key].type){
+            return;
+        }
+
+        dispatch(updateField(activeField._id, {
             ...fieldValue,
             settings: {
                 ...fieldValue.settings,
@@ -61,6 +68,10 @@ const FieldSettings = ({ activeField, fieldValue, sectionSettings, onClose }) =>
 
         if (!settings.type) {
             return;
+        }
+
+        if(!DragwybEditor.controlTypes[settings.type]){
+            return <></>;
         }
 
         const selectedSettings={ ...fieldValue.settings, ...sectionSettings };
@@ -88,14 +99,7 @@ const FieldSettings = ({ activeField, fieldValue, sectionSettings, onClose }) =>
             fieldVal=selectedSettings['section'];
         }
 
-
-        console.log()
-
-        if(!DragwybEditor.controlTypes[settings.type]){
-            // return <></>;
-        }
-
-        let html = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/ControlRender/' + settings.type, getHtml(), key, settings, fieldVal, handleChange);
+        let html = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/ControlRender/' + settings.type, getHtml(), key, settings, fieldVal, handleChange, Utils);
 
         return <div key={key} className="setting-row" dataType={settings.type}>{html}</div>;
     };

@@ -134,7 +134,7 @@ const initializeFields = () => {
     Object.keys(defaultFields).forEach(key =>
         DragwybBuilder.Hooks.addFilter(
             'Dragwyb/Editor/FieldRender/' + key,
-            (args) => defaultFields[key](args)
+            (...args) => defaultFields[key](args)
         )
     );
 };

@@ -8,10 +8,10 @@ const Preview = ({ fields, values, onChange, errors }) => {
                 <>
                 {field && field.settings && field.settings.label && <label>{field.settings.label}</label>}
                 <Field
-                    key={field.id}
+                    key={field._id}
                     field={field}
-                    value={values[field.id] || ''}
-                    onChange={({fieldId=field.id, value}) => onChange({fieldId, value})}
+                    value={values[field._id] || ''}
+                    onChange={({fieldId=field._id, value}) => onChange({fieldId, value})}
                     errors={errors[field.name] || []}
                 />
                 </>

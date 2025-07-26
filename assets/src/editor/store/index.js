@@ -6,7 +6,8 @@ const initialState = {
     form: DragwybEditor.formData,
     notices: [],
     errors: [],
-    values: {}
+    values: {},
+    fieldIds:[]
 };
 
 const store = createStore(reducer, initialState, applyMiddleware(thunk));

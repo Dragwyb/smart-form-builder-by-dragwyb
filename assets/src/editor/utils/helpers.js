@@ -1,9 +1,34 @@
+import { updateFieldIds } from "../store/actions";
+
+
 /**
  * Generates a unique ID
  * @returns {string}
  */
-export const generateId = () => {
-    return 'field_' + Math.random().toString(36).substr(2, 9);
+export const generateId = (state, dispatch) => {
+    
+    const existIds=state?.fieldIds || [];
+        
+    const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    
+    const createId = () => {
+        let id = '';
+        for (let i = 0; i < 9; i++) {
+            id += letters.charAt(Math.floor(Math.random() * letters.length));
+        }
+        return id;
+    };
+
+    let id;
+
+    id=createId();
+    do {
+        id = createId();
+    } while (existIds.includes(id));
+
+    dispatch(updateFieldIds(id));
+
+    return id;
 };
 
 /**

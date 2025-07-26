@@ -6,9 +6,7 @@ import FieldSettings from './FieldSettings';
 import FormSettings from './FormSettings';
 import Preview from './Preview';
 import { saveForm, resetSectionSettings, updateFieldValues } from '../../store/actions';
-
 import { Button } from '../Common';
-
 
 const Editor = () => {
     const [activeTab, setActiveTab] = useState('fields');
@@ -18,9 +16,10 @@ const Editor = () => {
     const fields = useSelector(state => state.form.fields); // Assuming fields are stored in Redux
 
     const values = useSelector(state => state.values); // Assuming values are stored in Redux
-
+    
     const errors = useSelector(state => state.errors); // Assuming errors are stored in Redux
-    const sectionSettings=useSelector(state => state.sectionSettings);
+    const sectionSettings = useSelector(state => state.sectionSettings);
+
     const dispatch = useDispatch();
 
     const handleSave = async () => {
@@ -31,36 +30,36 @@ const Editor = () => {
         }
     };
 
-    useEffect(()=>{
-        if(sectionSettings){
+    useEffect(() => {
+        if (sectionSettings) {
             dispatch(resetSectionSettings());
         }
-    },[selectedField])
+    }, [selectedField])
 
     const handleExit = () => {
         window.location.href = DragwybEditor.adminUrl;
     };
 
-    const setSelectedFieldHandler=(field)=>{
+    const setSelectedFieldHandler = (field) => {
         setSelectedField(field);
         setActiveTab(null === field ? 'fields' : null);
     }
 
-    const selectedFieldSetting=()=>{
-        let value=null;
-        Object.values(fields).forEach(field=>{
-            if(field.id === selectedField.id){
-                value=field;
+    const selectedFieldSetting = () => {
+        let value = null;
+        Object.values(fields).forEach(field => {
+            if (field._id === selectedField._id) {
+                value = field;
             }
         })
 
         return value;
     }
 
-    const fieldValueHandler = ({fieldId, value}) => {
+    const fieldValueHandler = ({ fieldId, value }) => {
         dispatch(updateFieldValues(fieldId, value));
     };
-    
+
     return (
         <div className="dragwyb-editor">
             <div className="dragwyb-editor__header">
@@ -114,7 +113,7 @@ const Editor = () => {
             </div>
             <div className="dragwyb-editor__body">
                 {previewMode ? (
-                    <Preview fields={fields} values={values} errors={errors} onChange={fieldValueHandler}/>
+                    <Preview fields={fields} values={values} errors={errors} onChange={fieldValueHandler} />
                 ) : (
                     <>
                         <div className="dragwyb-editor__sidebar">
@@ -138,7 +137,7 @@ const Editor = () => {
                                 onFieldSelect={setSelectedFieldHandler}
                                 fields={fields}
                                 values={values}
-                                onChange={({fieldId, value}) => fieldValueHandler({fieldId, value})}
+                                onChange={({ fieldId, value }) => fieldValueHandler({ fieldId, value })}
                                 errors={errors}
                             />
                         </div>

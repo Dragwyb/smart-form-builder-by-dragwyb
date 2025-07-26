@@ -13,7 +13,7 @@ const Field = ({ field, value = '', onChange, errors = [], disabled = false }) =
         return <div>Unsupported field type: {field.type}</div>;
     };
 
-    let Html = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/FieldRender/' + field.type, getHtml(), field.type, field.id, value, field, onChange);
+    let Html = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/FieldRender/' + field.type, getHtml(), field.type, field._id, value, field, onChange);
 
     return (
         <div className={`dragwyb-field dragwyb-field--${field.type} ${field.className || ''}`}>

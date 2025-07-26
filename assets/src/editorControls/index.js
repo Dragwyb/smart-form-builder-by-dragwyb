@@ -1,5 +1,6 @@
 
 import '../../sass/editorControls.scss';
+import repeaterControl from './repater';
 
 class sectionControl extends DragwybEditor.ControlBase {
     controlName() {
@@ -287,9 +288,10 @@ const initializeControls=()=>{
         'color': (args)=>new colorControl(args),
         'tabs': (args)=>new tabsControl(args),
         'section': (args)=>new sectionControl(args),
+        'repeater': (args) => new repeaterControl(args),
     }
 
-    Object.keys(defaultControls).map(key => DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/ControlRender/'+key,(args)=>{return defaultControls[key](args)}))
+    Object.keys(defaultControls).map(key => DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/ControlRender/'+key,(...args)=>{return defaultControls[key](args)}))
 
 }
 

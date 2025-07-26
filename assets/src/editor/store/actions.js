@@ -14,15 +14,18 @@ export const HIDE_NOTICE = 'HIDE_NOTICE';
 export const UPDATE_FIELD_VALUES = 'UPDATE_FIELD_VALUES';
 export const ERROR_NOTICE = 'ERROR_NOTICE';
 export const DUPLICATE_FIELD = 'DUPLICATE_FIELD';
+export const UPDATE_FIELD_IDS = 'UPDATE_FIELD_IDS';
+export const UPDATE_FIELD_ID = 'UPDATE_FIELD_ID';
+export const DELETE_FIELD_ID = 'DELETE_FIELD_ID';
 
 export const addField = (field) => ({
     type: ADD_FIELD,
     payload: field
 });
 
-export const duplicateField = (activeField, ReferenceField) => ({
+export const duplicateField = (activeField, ReferenceField, dispatch) => ({
     type: DUPLICATE_FIELD,
-    payload: {activeField, ReferenceField}
+    payload: {activeField, ReferenceField, dispatch}
 })
 
 export const updateField = (fieldId, field) => ({
@@ -53,6 +56,21 @@ export const updateFieldValues = (fieldId, value) => ({
     type: UPDATE_FIELD_VALUES,
     payload: { fieldId, value }
 });
+
+export const updateFieldIds=(ids)=>({
+    type: UPDATE_FIELD_IDS,
+    payload: {ids}
+})
+
+export const updateFieldId=(id)=>({
+    type: UPDATE_FIELD_ID,
+    payload: {id}
+})
+
+export const deleteFieldIds=(id)=>({
+    type: DELETE_FIELD_ID,
+    payload: {id}
+})
 
 export const showNotice = (message, type = 'success') => ({
     type: SHOW_NOTICE,
