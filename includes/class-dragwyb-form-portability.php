@@ -110,7 +110,7 @@ class Dragwyb_Form_Portability {
             $forms[] = [
                 'title' => $form->post_title,
                 'settings' => get_post_meta($form_id, '_form_settings', true),
-                'fields' => get_post_meta($form_id, '_form_fields', true),
+                'fields' => get_post_meta($form_id, '_dragwyb_form_fields', true),
                 'styles' => get_post_meta($form_id, '_form_styles', true),
                 'conditional_logic' => get_post_meta($form_id, '_form_conditional_logic', true),
                 'validation_rules' => get_post_meta($form_id, '_form_validation_rules', true),
@@ -188,7 +188,7 @@ class Dragwyb_Form_Portability {
 
             // Import form meta data
             update_post_meta($form_id, '_form_settings', $form_data['settings']);
-            update_post_meta($form_id, '_form_fields', $form_data['fields']);
+            update_post_meta($form_id, '_dragwyb_form_fields', $form_data['fields']);
             update_post_meta($form_id, '_form_styles', $form_data['styles']);
             update_post_meta($form_id, '_form_conditional_logic', $form_data['conditional_logic']);
             update_post_meta($form_id, '_form_validation_rules', $form_data['validation_rules']);

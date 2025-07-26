@@ -51,7 +51,7 @@ class Dragwyb_Form_Builder_Ajax
 
             // Update form meta
             update_post_meta($form_id, '_dragwyb_form_type', $form_data['type']);
-            update_post_meta($form_id, '_form_fields', $this->sanitize_form_data($form_data));
+            update_post_meta($form_id, '_dragwyb_form_fields', $this->sanitize_form_data($form_data));
             update_post_meta($form_id, '_form_settings', $form_data['settings']);
             update_post_meta($form_id, '_form_styles', $form_data['styles']);
             update_post_meta($form_id, '_form_notifications', $form_data['notifications']);

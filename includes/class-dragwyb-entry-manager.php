@@ -355,7 +355,7 @@ class Dragwyb_Entry_Manager {
         $form_id = get_post_meta($entry_id, '_form_id', true);
         
         // Get field labels from form configuration
-        $form_fields = get_post_meta($form_id, '_form_fields', true) ?: [];
+        $form_fields = get_post_meta($form_id, '_dragwyb_form_fields', true) ?: [];
         $field_labels = [];
         
         foreach ($form_fields as $field) {

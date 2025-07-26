@@ -209,7 +209,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 'id' => $form_id,
                 'title' => $form ? $form->post_title : '',
                 'type' => get_post_meta($form_id, '_dragwyb_form_type', true) ?: 'standard',
-                'fields' => get_post_meta($form_id, '_form_fields', true) ?: [],
+                'fields' => get_post_meta($form_id, '_dragwyb_form_fields', true) ?: [],
                 'settings' => get_post_meta($form_id, '_form_settings', true) ?: [],
                 'styles' => get_post_meta($form_id, '_form_styles', true) ?: [],
                 'notifications' => get_post_meta($form_id, '_form_notifications', true) ?: [],

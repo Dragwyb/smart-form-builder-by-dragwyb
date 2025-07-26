@@ -121,7 +121,7 @@ class Dragwyb_Form_Builder_Editor
             'id' => $form_id,
             'title' => $form ? $form->post_title : '',
             'type' => get_post_meta($form_id, '_dragwyb_form_type', true) ?: 'standard',
-            'fields' => get_post_meta($form_id, '_form_fields', true) ?: [],
+            'fields' => get_post_meta($form_id, '_dragwyb_form_fields', true) ?: [],
             'settings' => get_post_meta($form_id, '_form_settings', true) ?: [],
             'styles' => get_post_meta($form_id, '_form_styles', true) ?: [],
             'notifications' => get_post_meta($form_id, '_form_notifications', true) ?: [],
@@ -233,7 +233,7 @@ class Dragwyb_Form_Builder_Editor
 
             // Update form meta
             update_post_meta($form_id, '_dragwyb_form_type', $form_data['type']);
-            update_post_meta($form_id, '_form_fields', $form_data['fields']);
+            update_post_meta($form_id, '_dragwyb_form_fields', $form_data['fields']);
             update_post_meta($form_id, '_form_settings', $form_data['settings']);
             update_post_meta($form_id, '_form_styles', $form_data['styles']);
             update_post_meta($form_id, '_form_notifications', $form_data['notifications']);
