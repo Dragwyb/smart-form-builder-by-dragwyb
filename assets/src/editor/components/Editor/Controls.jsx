@@ -1,17 +1,36 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { addField, updateFieldValues } from '../../store/actions';
+import { useSelector } from 'react-redux';
+import Helper  from '../Utils';
 
 const Controls = ({ onFieldSelect }) => {
-    const dispatch = useDispatch();
     const fieldTypes = DragwybEditor.fieldTypes;
+    const dispatch=useDispatch();
+    const state=useSelector(state => state);
+
+    const Utils=Helper(state, dispatch);
 
     const handleAddField = (type) => {
         const field = {
-            id: `field_${Date.now()}`,
+            _id: `${Date.now()}`,
             type,
-            settings: {}
         };
+
+        if(DragwybEditor.fieldTypes[type] && DragwybEditor.fieldTypes[type].controls){
+            const fieldControls=DragwybEditor.fieldTypes[type].controls;
+            field.settings={};
+            Object.keys(fieldControls).forEach(id=>{
+                if(!['tabs','tab','section'].includes(fieldControls[id].type)){
+
+                    let defaultValue=fieldControls[id].default ? fieldControls[id].default : '';
+                        
+                    defaultValue=DragwybBuilder.Hooks.applyFilter(`Dragwyb/Editor/AddControl/${fieldControls[id].type}.defaultValue`, defaultValue, Utils);
+                    field.settings[id]=defaultValue;
+                }
+            })
+        }
+
         dispatch(addField(field));
         onFieldSelect(field);
     };

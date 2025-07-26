@@ -1,11 +1,14 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import * as Fields from './Fields';
 import { updateFieldOrder, duplicateField } from '../../store/actions';
+import Helper from '../Utils';
 
 const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors }) => {
     const dispatch = useDispatch();
+    const state=useSelector(state => state);
+    const Utils=Helper(state, dispatch);
 
     const handleDragEnd = (result) => {
         if (!result.destination) return;
@@ -18,10 +21,22 @@ const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors
 
     const handleDuplicateField = (field) => {
         const deepClone={...field}
-        const id = `field_${Date.now()}`;
-        dispatch(duplicateField(id, deepClone.id));
+        const id = `${Date.now()}`;
+        dispatch(duplicateField(id, deepClone._id, dispatch));
+        
+        deepClone._id = id;
+        
+        const fieldControls = DragwybEditor.fieldTypes[deepClone.type].controls;
 
-        deepClone.id = id;
+        if (deepClone.settings && Object.keys(deepClone.settings).length > 0) {
+            Object.keys(deepClone.settings).map(id => {
+                if (!['tabs', 'tab', 'section'].includes(fieldControls[id].type)) {
+                    let duplicateValue = deepClone.settings[id];
+                    duplicateValue = DragwybBuilder.Hooks.applyFilter(`Dragwyb/Editor/DuplicateControl/${fieldControls[id].type}.duplicateValue`, duplicateValue, Utils);
+                    deepClone.settings[id] = duplicateValue;
+                }
+            })
+        }
 
         onFieldSelect(deepClone);
     };
@@ -38,8 +53,8 @@ const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors
                         >
                             {fields.map((field, index) => (
                                 <Draggable
-                                    key={field.id}
-                                    draggableId={field.id}
+                                    key={field._id}
+                                    draggableId={field._id}
                                     index={index}
                                 >
                                     {(provided, snapshot) => (
@@ -48,7 +63,7 @@ const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
                                             className={`field-wrapper ${
-                                                selectedField?.id === field.id ? 'selected' : ''
+                                                selectedField?._id === field._id ? 'selected' : ''
                                             } ${snapshot.isDragging ? 'dragging' : ''}`}
                                             onClick={() => onFieldSelect(field)}
                                         >
@@ -75,7 +90,7 @@ const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors
                                                         onFieldSelect(null)
                                                         dispatch({
                                                             type: 'DELETE_FIELD',
-                                                            payload: field.id
+                                                            payload: field._id
                                                         });
                                                     }}
                                                 >
