@@ -51,11 +51,11 @@ if (!class_exists('Sanitize_Fields_Data')) {
         private function field_loop(): void
         {
             foreach (self::$form_fields as $index => $field) {
-                if (!isset($field['id']) || !$field['type']) {
+                if (!isset($field['_id']) || !$field['type']) {
                     continue;
                 }
 
-                self::$filtered_data[$index]['id'] = $field['id'];
+                self::$filtered_data[$index]['_id'] = $field['_id'];
                 self::$filtered_data[$index]['type'] = $field['type'];
 
                 if (isset($field['type']))
@@ -81,8 +81,16 @@ if (!class_exists('Sanitize_Fields_Data')) {
                 if ($field_control = self::$field_module[$type]->get_control($setting)) {
                     if (isset($field_control['type'])) {
                         $control_type = $field_control['type'];
+
                         $control_obj = self::$control->get_control($control_type);
-                        $control_obj->set_value($value);
+
+                        if (!$control_obj) {
+                            continue;
+                        }
+
+                        $control_obj = $control_obj::newInstance();
+
+                        $control_obj->set_value($value, $type, $setting);
                         $filtered_value = $control_obj->get_value();
 
                         if (isset($filtered_value) && $filtered_value) {

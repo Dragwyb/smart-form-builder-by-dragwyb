@@ -18,6 +18,7 @@ class Controls
     const SELECT='select';
     const SLIDER='slider';
     const TABS='tabs';
+    const TAB='tab';
     const TEXT='text';
     const TEXTAREA='textarea';
     

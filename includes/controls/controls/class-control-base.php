@@ -10,12 +10,19 @@ abstract class Control_Base
     protected string $name;
     private $value = null;
     private $settings = array();
+    protected $field_type = null;
+    protected $control_id = null;
 
     abstract protected function register_scripts();
     abstract protected function register_style();
     abstract protected function init(): void;
     abstract protected function sanitize_control($value);
     abstract protected function register_settings();
+
+    protected function default_setting(): array
+    {
+        return array();
+    }
 
     public function __construct()
     {
@@ -53,8 +60,18 @@ abstract class Control_Base
     {
         $control_settings = $this->register_settings();
 
+
         if (!isset($control_settings['type'])) {
             $control_settings['type'] = 'string';
+        }
+
+        // Default value always set in last index.
+        if (isset($data['default'])) {
+            $default = $data['default'];
+
+            unset($data['default']);
+
+            $data['default'] = $default;
         }
 
         foreach ($data as $setting => $value) {
@@ -65,7 +82,20 @@ abstract class Control_Base
             $sanitize_setting = $this->filter_setting_data($control_settings[$setting], $value, $setting);
 
             if ($sanitize_setting) {
-                $this->settings[$setting] = $value;
+                $this->settings[$setting] = $sanitize_setting;
+            }
+        }
+
+        $default_setting = $this->default_setting();
+
+        foreach ($default_setting as $key => $value) {
+
+            if (!array_key_exists($key, $data)) {
+                $sanitize_setting = $this->filter_setting_data($control_settings[$key], $value, $key);
+
+                if ($sanitize_setting) {
+                    $this->settings[$key] = $sanitize_setting;
+                }
             }
         }
     }
@@ -75,8 +105,11 @@ abstract class Control_Base
         return $this->settings;
     }
 
-    public function set_value($data): void
+    public function set_value($data, string $field_name, string $control_id): void
     {
+        $this->field_type = sanitize_text_field($field_name);
+        $this->control_id = sanitize_text_field($control_id);
+
         $this->set_filter_value($data);
     }
 
@@ -147,5 +180,10 @@ abstract class Control_Base
         $this->name = '';
         $this->value = null;
         $this->settings = null;
+    }
+
+    public static function newInstance(): static
+    {
+        return new static(); // ✅ Late static binding
     }
 }

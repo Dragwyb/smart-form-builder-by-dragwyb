@@ -240,6 +240,8 @@ abstract class Field_Base
             return array();
         }
 
+        $control_object = $control_object->newInstance();
+
         $control_object->set_settings($data);
 
         $value = $control_object->get_settings();
