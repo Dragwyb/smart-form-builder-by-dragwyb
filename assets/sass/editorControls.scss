@@ -1,4 +1,4 @@
-/* === Section Control (Accordion-style like Elementor/Divi) === */
+// === Section Control (Accordion-style like Elementor/Divi) ===
 .section-control {
   position: relative;
   padding: 12px 16px;
@@ -8,100 +8,194 @@
   font-size: 14px;
   border-radius: 4px;
   cursor: pointer;
-  transition: all 0.3s ease;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: all 0.3s ease;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+
+  &::after {
+    content: '\25BC'; // Down arrow
+    font-size: 12px;
+    color: #666;
+    transition: transform 0.3s ease;
+  }
+
+  &.section-active {
+    background: #eaf5fd;
+    border-color: #2271b1;
+    color: #2271b1;
+
+    &::after {
+      transform: rotate(180deg); // Up arrow
+      color: #2271b1;
+    }
+  }
 }
 
-.section-control::after {
-  content: '\25BC'; /* Down arrow */
-  font-size: 12px;
-  transition: transform 0.3s ease;
-  color: #666;
-}
-
-.section-control.section-active {
-  background: #eaf5fd;
-  border-color: #2271b1;
-  color: #2271b1;
-}
-
-.section-control.section-active::after {
-  transform: rotate(180deg); /* Up arrow when active */
-  color: #2271b1;
-}
-
-/* === Tabs Control === */
+// === Tabs Control ===
 .tabs-control {
   margin-top: 4px;
-}
 
-.tab-buttons {
-  display: flex;
-  gap: 8px;
-}
-
-.tab-buttons button {
-  padding: 6px 12px;
-  border: 1px solid #ccd0d4;
-  background-color: #f2f4f5;
-  color: #333;
-  font-size: 13px;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.tab-buttons button.active {
-  background-color: #2271b1;
-  color: white;
-  border-color: #2271b1;
-}
-
-.tab-buttons button:hover {
-  background-color: #e2e2e2;
-}
-
-/* === Label and Input === */
-.setting-row label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #1d2327;
-}
-
-.setting-row input[type="text"],
-.setting-row input[type="color"],
-.setting-row input[type="number"],
-.setting-row textarea,
-.setting-row select {
-  padding: 8px;
-  font-size: 13px;
-  border: 1px solid #ccd0d4;
-  border-radius: 4px;
-  background: #fff;
-  width: 100%;
-  transition: border-color 0.2s ease;
-}
-
-.setting-row input:focus,
-.setting-row textarea:focus,
-.setting-row select:focus {
-  border-color: #2271b1;
-  outline: none;
-}
-
-/* === Checkbox === */
-.setting-row input[type="checkbox"] {
-  margin-right: 6px;
-  vertical-align: middle;
-}
-
-/* === Responsive === */
-@media (max-width: 768px) {
   .tab-buttons {
-    flex-direction: column;
+    display: flex;
+    gap: 8px;
+
+    button {
+      padding: 6px 12px;
+      border: 1px solid #ccd0d4;
+      background-color: #f2f4f5;
+      color: #333;
+      font-size: 13px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &.active {
+        background-color: #2271b1;
+        color: #fff;
+        border-color: #2271b1;
+      }
+
+      &:hover {
+        background-color: #e2e2e2;
+      }
+    }
+  }
+}
+
+// === Setting Row Inputs ===
+.setting-row {
+  margin-bottom: 14px;
+
+  label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d2327;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  input[type="text"],
+  input[type="color"],
+  input[type="number"],
+  textarea,
+  select {
+    padding: 8px;
+    font-size: 13px;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    background: #fff;
+    width: 100%;
+    transition: border-color 0.2s ease;
+
+    &:focus {
+      border-color: #2271b1;
+      outline: none;
+    }
+  }
+
+  input[type="checkbox"] {
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+}
+
+// === Repeater Field Styling (Improved Builder UI Style) ===
+.dragwyb-repeater-field {
+  max-width: 700px;
+  margin: 20px auto;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f9f9f9;
+  border: 1px solid #dcdfe3;
+  padding: 16px;
+  border-radius: 6px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+
+  .dragwyb-repeater-item {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    margin-bottom: 15px;
+    overflow: hidden;
+
+    .dragwyb-repeater-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: #f7f7f7;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+
+      .repeater-title {
+        flex-grow: 1;
+        color: #333;
+      }
+
+      .repeater-controls {
+        display: flex;
+        gap: 10px;
+
+        .drag-icon {
+          font-size: 18px;
+          cursor: move;
+          color: #999;
+        }
+
+        button {
+          background: none;
+          border: none;
+          font-size: 16px;
+          cursor: pointer;
+          color: #666;
+          transition: color 0.2s ease;
+
+          &:hover {
+            color: #000;
+          }
+        }
+      }
+    }
+
+    .dragwyb-repeater-body {
+      padding: 16px;
+      background: #fff;
+    }
+  }
+
+  .add-repeater-btn {
+    text-align: center;
+
+    button {
+      padding: 10px 20px;
+      border: 1px dashed #007cba;
+      border-radius: 6px;
+      background: #f0f8ff;
+      color: #007cba;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 14px;
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: #dceefb;
+      }
+    }
+  }
+}
+
+// === Responsive ===
+@media (max-width: 768px) {
+  .tabs-control {
+    .tab-buttons {
+      flex-direction: column;
+    }
   }
 
   .section-control {
