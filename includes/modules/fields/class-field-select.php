@@ -30,11 +30,14 @@ class Field_Select extends Field_Base
         $this->add_control('select_label', [
             'type' => Controls::TEXT,
             'label' => __('Field Label', 'dragwyb-form-builder'),
-            'default' => '',
+            'default' => 'Label',
         ]);
+
         $this->add_control('select_options', [
             'type' => Controls::REPEATER,
             'label' => __('Required', 'dragwyb-form-builder'),
+            'add_item' => __('Add Options', 'dragwyb-form-builder'),
+            'item_label' => 'repeater_text',
             'default' => [
                 [
                     'repeater_text' => 'Aniket Dogra',
@@ -45,24 +48,25 @@ class Field_Select extends Field_Base
                     'repeater_text_two' => 'Aniket Hello World Two',
                 ]
             ],
-            'fields' => [
+            'items' => [
                 [
                     'name' => 'repeater_text',
                     'type' => Controls::TEXT,
                     'label' => __('Text One', 'dragwyb-form-builder'),
-                    'default' => '',
+                    'default' => __('Enter Text One', 'dragwyb-form-builder'),
                 ],
                 [
                     'name' => 'repeater_text_two',
                     'type' => Controls::TEXT,
                     'label' => __('Text Two', 'dragwyb-form-builder'),
-                    'default' => '',
+                    'default' => __('Enter Text Two', 'dragwyb-form-builder'),
+                    'conditions' => array('repeater_text' => 'dogra')
                 ],
                 [
                     'name' => 'repeater_text_three',
                     'type' => Controls::TEXT,
                     'label' => __('Text Three', 'dragwyb-form-builder'),
-                    'default' => '',
+                    'default' => __('Enter Text Three', 'dragwyb-form-builder'),
                 ]
             ]
         ]);

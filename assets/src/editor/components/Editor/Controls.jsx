@@ -13,20 +13,20 @@ const Controls = ({ onFieldSelect }) => {
 
     const handleAddField = (type) => {
         const field = {
-            _id: `${Date.now()}`,
+            _id: Utils.generateId(),
             type,
         };
 
         if(DragwybEditor.fieldTypes[type] && DragwybEditor.fieldTypes[type].controls){
             const fieldControls=DragwybEditor.fieldTypes[type].controls;
-            field.settings={};
+            field.attributes={};
             Object.keys(fieldControls).forEach(id=>{
                 if(!['tabs','tab','section'].includes(fieldControls[id].type)){
 
                     let defaultValue=fieldControls[id].default ? fieldControls[id].default : '';
                         
                     defaultValue=DragwybBuilder.Hooks.applyFilter(`Dragwyb/Editor/AddControl/${fieldControls[id].type}.defaultValue`, defaultValue, Utils);
-                    field.settings[id]=defaultValue;
+                    field.attributes[id]=defaultValue;
                 }
             })
         }

@@ -12,7 +12,7 @@ const Field = ({ field, value = '', onChange, errors = [], disabled = false }) =
     const getHtml = () => {
         return <div>Unsupported field type: {field.type}</div>;
     };
-
+    
     let Html = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/FieldRender/' + field.type, getHtml(), field.type, field._id, value, field, onChange);
 
     return (

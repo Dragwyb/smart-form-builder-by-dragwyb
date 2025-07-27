@@ -26,6 +26,7 @@ class  DragwybFieldBase {
         this.id=args[2];
         this.value=args[3];
         this.field=args[4];
+        this.attributes=this.field.attributes
         this.#updateValue = args[5];
     }
 

@@ -1,111 +1,155 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import {
+    DndContext,
+    closestCenter,
+    PointerSensor,
+    useSensor,
+    useSensors,
+    DragOverlay
+} from '@dnd-kit/core';
+import {
+    arrayMove,
+    SortableContext,
+    useSortable,
+    verticalListSortingStrategy
+} from '@dnd-kit/sortable';
+import {restrictToParentElement, createSnapModifier} from '@dnd-kit/modifiers';
+
+import { CSS } from '@dnd-kit/utilities';
 import * as Fields from './Fields';
 import { updateFieldOrder, duplicateField } from '../../store/actions';
 import Helper from '../Utils';
 
-const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors }) => {
-    const dispatch = useDispatch();
-    const state=useSelector(state => state);
-    const Utils=Helper(state, dispatch);
+const SortableItem = ({ field, selectedField, onFieldSelect, values, onChange, errors, index, onDuplicate, onDelete }) => {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+    } = useSortable({ id: field._id });
 
-    const handleDragEnd = (result) => {
-        if (!result.destination) return;
-
-        dispatch(updateFieldOrder(
-            result.source.index,
-            result.destination.index
-        ));
-    };
-
-    const handleDuplicateField = (field) => {
-        const deepClone={...field}
-        const id = `${Date.now()}`;
-        dispatch(duplicateField(id, deepClone._id, dispatch));
-        
-        deepClone._id = id;
-        
-        const fieldControls = DragwybEditor.fieldTypes[deepClone.type].controls;
-
-        if (deepClone.settings && Object.keys(deepClone.settings).length > 0) {
-            Object.keys(deepClone.settings).map(id => {
-                if (!['tabs', 'tab', 'section'].includes(fieldControls[id].type)) {
-                    let duplicateValue = deepClone.settings[id];
-                    duplicateValue = DragwybBuilder.Hooks.applyFilter(`Dragwyb/Editor/DuplicateControl/${fieldControls[id].type}.duplicateValue`, duplicateValue, Utils);
-                    deepClone.settings[id] = duplicateValue;
-                }
-            })
-        }
-
-        onFieldSelect(deepClone);
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition
     };
 
     return (
+        <div
+            ref={setNodeRef}
+            style={style}
+            {...attributes}
+            {...listeners}
+            className={`field-wrapper ${selectedField?._id === field._id ? 'selected' : ''}`}
+            onClick={() => onFieldSelect(field)}
+        >
+            <Fields.Preview
+                fields={[field]}
+                values={values}
+                onChange={onChange}
+                errors={errors}
+            />
+            <div className="field-actions">
+                <button
+                    className="duplicate"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onDuplicate(field);
+                    }}
+                >
+                    <span className="dashicons dashicons-admin-page"></span>
+                </button>
+                <button
+                    className="delete"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete(field._id);
+                    }}
+                >
+                    <span className="dashicons dashicons-trash"></span>
+                </button>
+            </div>
+        </div>
+    );
+};
+
+const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors }) => {
+    const dispatch = useDispatch();
+    const state = useSelector(state => state);
+    const Utils = Helper(state, dispatch);
+
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 5,
+            },
+        })
+    );
+
+    const handleDragEnd = (event) => {
+        const { active, over } = event;
+
+        if (active.id !== over?.id) {
+            const oldIndex = fields.findIndex(f => f._id === active.id);
+            const newIndex = fields.findIndex(f => f._id === over.id);
+            dispatch(updateFieldOrder(oldIndex, newIndex));
+        }
+    };
+
+    const handleDuplicateField = (field, index) => {
+        const deepClone = JSON.parse(JSON.stringify(field));
+        const id = Utils.generateId();
+        deepClone._id = id;
+
+        const fieldControls = DragwybEditor.fieldTypes[deepClone.type]?.controls || {};
+
+        Object.keys(deepClone.settings || {}).forEach(id => {
+            if (!['tabs', 'tab', 'section'].includes(fieldControls[id]?.type)) {
+                let value = deepClone.settings[id];
+                value = DragwybBuilder.Hooks.applyFilter(
+                    `Dragwyb/Editor/DuplicateControl/${fieldControls[id].type}.duplicateValue`,
+                    value,
+                    Utils
+                );
+                deepClone.settings[id] = value;
+            }
+        });
+
+        dispatch(duplicateField(id, field._id, index + 1, dispatch));
+        onFieldSelect(deepClone);
+    };
+
+    const handleDeleteField = (id) => {
+        onFieldSelect(null);
+        dispatch({ type: 'DELETE_FIELD', payload: id });
+    };
+
+    const gridSize = 20; // pixels
+    const snapToGridModifier = createSnapModifier(gridSize);
+
+    return (
         <div className="dragwyb-canvas">
-            <DragDropContext onDragEnd={handleDragEnd}>
-                <Droppable droppableId="form-fields">
-                    {(provided) => (
-                        <div
-                            ref={provided.innerRef}
-                            {...provided.droppableProps}
-                            className="dragwyb-canvas__fields"
-                        >
-                            {fields.map((field, index) => (
-                                <Draggable
-                                    key={field._id}
-                                    draggableId={field._id}
-                                    index={index}
-                                >
-                                    {(provided, snapshot) => (
-                                        <div
-                                            ref={provided.innerRef}
-                                            {...provided.draggableProps}
-                                            {...provided.dragHandleProps}
-                                            className={`field-wrapper ${
-                                                selectedField?._id === field._id ? 'selected' : ''
-                                            } ${snapshot.isDragging ? 'dragging' : ''}`}
-                                            onClick={() => onFieldSelect(field)}
-                                        >
-                                            <Fields.Preview
-                                                fields={[field]}
-                                                values={values}
-                                                onChange={onChange}
-                                                errors={errors}
-                                            />
-                                            <div className="field-actions">
-                                                <button
-                                                    className="duplicate"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        handleDuplicateField(field);
-                                                    }}
-                                                >
-                                                    <span className="dashicons dashicons-admin-page"></span>
-                                                </button>
-                                                <button
-                                                    className="delete"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        onFieldSelect(null)
-                                                        dispatch({
-                                                            type: 'DELETE_FIELD',
-                                                            payload: field._id
-                                                        });
-                                                    }}
-                                                >
-                                                    <span className="dashicons dashicons-trash"></span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    )}
-                                </Draggable>
-                            ))}
-                            {provided.placeholder}
-                        </div>
-                    )}
-                </Droppable>
-            </DragDropContext>
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd} modifiers={[restrictToParentElement, snapToGridModifier]}>
+                <SortableContext items={fields.map(f => f._id)} strategy={verticalListSortingStrategy}>
+                    <div className="dragwyb-canvas__fields">
+                        {fields.map((field, index) => (
+                            <SortableItem
+                                key={field._id}
+                                field={field}
+                                index={index}
+                                selectedField={selectedField}
+                                onFieldSelect={onFieldSelect}
+                                values={values}
+                                onChange={onChange}
+                                errors={errors}
+                                onDuplicate={(field)=>handleDuplicateField(field, index)}
+                                onDelete={handleDeleteField}
+                            />
+                        ))}
+                    </div>
+                </SortableContext>
+            </DndContext>
             {fields.length === 0 && (
                 <div className="dragwyb-canvas__empty">
                     <p>{DragwybBuilder.i18n.emptyForm}</p>
@@ -115,4 +159,4 @@ const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors
     );
 };
 
-export default Canvas; 
+export default Canvas;

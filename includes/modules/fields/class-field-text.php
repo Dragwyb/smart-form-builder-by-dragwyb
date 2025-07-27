@@ -76,8 +76,9 @@ class Field_Text extends Field_Base
         $this->add_control('text_label', [
             'type' => Controls::TEXT,
             'label' => __('Field Label', 'dragwyb-form-builder'),
-            'default' => '',
+            'default' => 'Enter Your Label',
         ]);
+        
         $this->add_control('text_placeholder', [
             'type' => Controls::TEXT,
             'label' => __('Placeholder', 'dragwyb-form-builder'),

@@ -59,10 +59,9 @@ if (!class_exists('Sanitize_Fields_Data')) {
                 self::$filtered_data[$index]['type'] = $field['type'];
 
                 if (isset($field['type']))
-
-                    if (isset($field['type']) && is_array($field['settings']) && count($field['settings']) > 0) {
+                    if (isset($field['type']) && is_array($field['attributes']) && count($field['attributes']) > 0) {
                         $type = $field['type'];
-                        $settings = $field['settings'];
+                        $attributes = $field['attributes'];
 
                         if (!isset(self::$field_module[$type])) {
                             $field_module = self::$module->get_field($type);
@@ -70,15 +69,15 @@ if (!class_exists('Sanitize_Fields_Data')) {
                             self::$field_module[$type] = $field_module;
                         }
 
-                        $this->settings_loop($settings, $type, $index);
+                        $this->attributes_loop($attributes, $type, $index);
                     }
             }
         }
 
-        private function settings_loop($settings, $type, $index): void
+        private function attributes_loop($attributes, $type, $index): void
         {
-            foreach ($settings as $setting => $value) {
-                if ($field_control = self::$field_module[$type]->get_control($setting)) {
+            foreach ($attributes as $attribute => $value) {
+                if ($field_control = self::$field_module[$type]->get_control($attribute)) {
                     if (isset($field_control['type'])) {
                         $control_type = $field_control['type'];
 
@@ -90,11 +89,11 @@ if (!class_exists('Sanitize_Fields_Data')) {
 
                         $control_obj = $control_obj::newInstance();
 
-                        $control_obj->set_value($value, $type, $setting);
+                        $control_obj->set_value($value, $type, $attribute);
                         $filtered_value = $control_obj->get_value();
 
                         if (isset($filtered_value) && $filtered_value) {
-                            self::$filtered_data[$index]['settings'][$setting] = $filtered_value;
+                            self::$filtered_data[$index]['attributes'][$attribute] = $filtered_value;
                         }
                     }
                 }

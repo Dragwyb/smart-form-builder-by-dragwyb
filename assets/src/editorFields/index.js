@@ -8,7 +8,7 @@ class textField extends DragwybEditor.FieldBase {
 
         return (
             <label for={this.id}>
-            {this.field?.settings?.text_label && this.field.settings.text_label}
+            {this.attributes?.text_label && this.attributes.text_label}
             <input
                 type={this.fieldName}
                 value={this.value}

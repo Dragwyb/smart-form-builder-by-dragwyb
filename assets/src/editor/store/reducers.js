@@ -62,11 +62,15 @@ export default function reducer(state = initialState, action) {
                 ...rest
             };
 
+            const updateFields=state.form.fields;
+
+            updateFields.splice(action.payload.index || 0, 0, duplicatedField);
+
             return {
                 ...state,
                 form: {
                     ...state.form,
-                    fields: [...state.form.fields, duplicatedField]
+                    fields: updateFields
                 }
             };
 

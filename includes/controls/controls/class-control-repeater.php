@@ -32,8 +32,10 @@ class Control_Repeater extends Control_Base
             'label' => 'string',
             'default' => 'custom',
             'conditions' => 'conditions',
-            'fields' => 'custom',
-            'add_item' => 'string'
+            'items' => 'custom',
+            'item_label' => 'string',
+            'add_item' => 'string',
+            '_id' => 'string'
         );
     }
 
@@ -50,18 +52,20 @@ class Control_Repeater extends Control_Base
         $this->name = __('Repeater', 'dragwyb-form-builder');
     }
 
-    protected function sanitize_control($fields)
+    protected function sanitize_control($items)
     {
-        if (!is_array($fields) || count($fields) <= 0 || !isset($this->field_type) || !isset($this->control_id)) {
+        if (!is_array($items) || count($items) <= 0 || !isset($this->field_type) || !isset($this->control_id)) {
             return '';
         }
 
         $data = array();
 
-        foreach ($fields as $index => $field) {
-            if (!is_array($field) || count($field) <= 0) {
+        foreach ($items as $index => $item) {
+            if (!isset($item['_id'])) {
                 continue;
             }
+
+            $data[$index] = array('_id' => $item['_id']);
 
             if (!isset($this->module)) {
                 $this->module = new Module();
@@ -73,19 +77,26 @@ class Control_Repeater extends Control_Base
             }
 
             if (!isset($this->field_module_cache[$this->field_type][$this->control_id])) {
-                return '';
+                continue;
             }
 
-            $register_fields = $this->field_module_cache[$this->field_type][$this->control_id]['fields'];
+            $register_fields = $this->field_module_cache[$this->field_type][$this->control_id]['items'];
 
             if (!isset($register_fields) || !is_array($register_fields) || count($register_fields) < 0) {
-                return '';
+                continue;
             }
 
-            $data[$index] = array();
+            if (!isset($item['attribues']) || !is_array($item['attribues']) || count($item['attribues']) <= 0) {
+                continue;
+            }
 
-            foreach ($field as $key => $value) {
-                if (!isset($register_fields[$key]['type'])) {
+            $attribues = $item['attribues'];
+
+            $data[$index]['attribues'] = array();
+
+
+            foreach ($attribues as $field => $value) {
+                if (!isset($register_fields[$field]['type'])) {
                     continue;
                 }
 
@@ -93,7 +104,7 @@ class Control_Repeater extends Control_Base
                     $this->controls = new Controls;;
                 }
 
-                $type = $register_fields[$key]['type'];
+                $type = $register_fields[$field]['type'];
 
                 $control_obj = $this->controls->get_control($type);
 
@@ -103,11 +114,11 @@ class Control_Repeater extends Control_Base
 
                 $control_obj = $control_obj::newInstance();
 
-                $control_obj->set_value($value, $this->type, $key);
+                $control_obj->set_value($value, $this->type, $field);
                 $filtered_value = $control_obj->get_value();
 
                 if (isset($filtered_value) && $filtered_value) {
-                    $data[$index][$key] = $value;
+                    $data[$index]['attribues'][$field] = $value;
                 }
             }
         }
@@ -115,7 +126,7 @@ class Control_Repeater extends Control_Base
         return $data;
     }
 
-    protected function fields_setting_sanitize($fields)
+    protected function items_setting_sanitize($fields)
     {
 
         if (!is_array($fields) || count($fields) < 0) {
@@ -139,11 +150,11 @@ class Control_Repeater extends Control_Base
 
         $fields_settings = $this->get_settings();
 
-        if (!isset($fields_settings['fields']) || !is_array($fields_settings['fields']) || count($fields_settings['fields']) <= 0) {
+        if (!isset($fields_settings['items']) || !is_array($fields_settings['items']) || count($fields_settings['items']) <= 0) {
             return '';
         }
 
-        $repeater_fields = $fields_settings['fields'];
+        $repeater_fields = $fields_settings['items'];
 
         $data = array();
         foreach ($fields as $index => $field) {

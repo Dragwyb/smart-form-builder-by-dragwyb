@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Variables
 $primary-color: #2271b1;
 $secondary-color: #1d2327;
@@ -26,7 +28,7 @@ $error-color: #d63638;
         border-color: $primary-color;
 
         &:hover {
-            background: darken($primary-color, 5%);
+            background: color.adjust($primary-color, $lightness: -5%);
         }
     }
 }

@@ -1,6 +1,6 @@
 
 import '../../sass/editorControls.scss';
-import repeaterControl from './repater';
+import repeaterControl from './Repeater/index';
 
 class sectionControl extends DragwybEditor.ControlBase {
     controlName() {

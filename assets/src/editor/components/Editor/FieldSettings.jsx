@@ -57,8 +57,8 @@ const FieldSettings = ({ activeField, fieldValue, sectionSettings, onClose }) =>
 
         dispatch(updateField(activeField._id, {
             ...fieldValue,
-            settings: {
-                ...fieldValue.settings,
+            attributes: {
+                ...fieldValue.attributes,
                 [key]: value
             }
         }));
@@ -74,7 +74,7 @@ const FieldSettings = ({ activeField, fieldValue, sectionSettings, onClose }) =>
             return <></>;
         }
 
-        const selectedSettings={ ...fieldValue.settings, ...sectionSettings };
+        const selectedSettings={ ...fieldValue.attributes, ...sectionSettings };
         const shouldRender = shouldRenderField(settings, selectedSettings);
 
         if (!shouldRender) {
