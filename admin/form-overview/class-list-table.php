@@ -210,17 +210,14 @@ class List_Table extends WP_List_Table
     {
         $actions = [];
 
-        $show_confirmation =  " onclick='return showNotice.warn();'";
-
         $actions['edit'] = '<a href="?page=dragwyb-form-builder&form_id='.(int) esc_attr($form->ID).'">Edit</a>';
         $actions['delete'] = sprintf(
-            '<a href="%s" class="submitdelete aria-button-if-js"%s aria-label="%s">%s</a>',
-            esc_url( wp_nonce_url( "post.php?action=trash&amp;post=$form->ID", 'trash-post_' . $form->ID ) ),
-            $show_confirmation,
-            /* translators: %s: Attachment title. */
-            esc_attr( sprintf( __( 'Delete &#8220;%s&#8221; permanently' ), $att_title ) ),
+            '<a href="%s" class="submitdelete" onclick="return confirm(\'Are you sure you want to delete %s form?\');">%s</a>',
+            esc_url( wp_nonce_url( "post.php?action=trash&post={$form->ID}", 'trash-post_' . $form->ID ) ),
+            $form->post_title.'('.$form->ID.')',
             __( 'Delete Permanently' )
         );
+        
         // Add more actions if necessary, such as delete, etc.
 
         return $this->row_actions($actions);
@@ -240,6 +237,7 @@ class List_Table extends WP_List_Table
             // Add more bulk actions if needed
         ];
     }
+
 
     /**
      * Fetch and set up the final data for the table.

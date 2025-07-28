@@ -11,8 +11,9 @@ class Dragwyb_Post
      */
     const POST_TYPE = DRAGWYB_PREFIX . '-forms';
 
-    public static function post_type(){
-        return self::POST_TYPE; 
+    public static function post_type()
+    {
+        return self::POST_TYPE;
     }
 
     /**
@@ -31,6 +32,8 @@ class Dragwyb_Post
         // Add editor integration
         add_action('load-post.php', [$this, 'redirect_to_custom_editor']);
         add_action('load-post-new.php', [$this, 'redirect_to_custom_editor']);
+
+        add_action('init', [$this, 'dragwyb_add_caps_to_admin']);
     }
 
     /**
@@ -48,11 +51,41 @@ class Dragwyb_Post
             'query_var'           => false,
             'can_export'          => false,
             'supports'            => ['title', 'author', 'revisions'],
-            'capability_type'     => 'manage_options', // Not using 'capability_type' anywhere. It just has to be custom for security reasons.
-            'map_meta_cap'        => false, // Don't 
+            'capability_type'     => sanitize_text_field(DRAGWYB_PREFIX) . '_forms', // Not using 'capability_type' anywhere. It just has to be custom for security reasons.
+            'capabilities'        => $this->capabilties(),
+            'map_meta_cap'        => true, // Don't 
         ];
 
         register_post_type(self::POST_TYPE, $args);
+    }
+
+    public function capabilties()
+    {
+        $caps = [
+            'delete_post'            => 'delete_' . sanitize_text_field(DRAGWYB_PREFIX) . '_forms',
+            'delete_posts'           => 'delete_' . sanitize_text_field(DRAGWYB_PREFIX) . '_forms',
+        ];
+
+        $caps = apply_filters('Dragwyb/Forms/Capablitlies', $caps);
+
+        return $caps;
+    }
+
+    function dragwyb_add_caps_to_admin()
+    {
+        $role = get_role('administrator');
+        if (!$role) return;
+
+        $caps = $this->capabilties();
+
+        if (is_array($caps) && count($caps) > 0) {
+
+            $caps = array_unique(array_values($caps));
+
+            foreach ($caps as $cap) {
+                $role->add_cap($cap);
+            }
+        }
     }
 
     /**
