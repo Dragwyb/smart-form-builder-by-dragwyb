@@ -30,8 +30,8 @@ class List_Table extends WP_List_Table
     {
         parent::__construct(
             [
-                'singular' => 'form',
-                'plural'   => 'forms',
+                'singular' => 'dragwyb-form',
+                'plural'   => 'dragwyb-forms',
                 'ajax'     => false,
             ]
         );
@@ -65,6 +65,7 @@ class List_Table extends WP_List_Table
     public function get_columns()
     {
         $columns = array(
+            'cb'       => '<input type="checkbox" />', // Required for bulk actions
             'name' => 'Name',
             'author' => 'Author',
             'shortcode' => 'Shortcode',
@@ -89,7 +90,10 @@ class List_Table extends WP_List_Table
      */
     public function column_cb($form)
     {
-        return '<input type="checkbox" name="form_id[]" value="' . absint($form->ID) . '" />';
+        return sprintf(
+            '<input type="checkbox" name="post[]" value="%d" />',
+            $form->ID
+        );
     }
 
     /**
@@ -210,14 +214,14 @@ class List_Table extends WP_List_Table
     {
         $actions = [];
 
-        $actions['edit'] = '<a href="?page=dragwyb-form-builder&form_id='.(int) esc_attr($form->ID).'">Edit</a>';
+        $actions['edit'] = '<a href="?page=dragwyb-form-builder&form_id=' . (int) esc_attr($form->ID) . '">Edit</a>';
         $actions['delete'] = sprintf(
             '<a href="%s" class="submitdelete" onclick="return confirm(\'Are you sure you want to delete %s form?\');">%s</a>',
-            esc_url( wp_nonce_url( "post.php?action=trash&post={$form->ID}", 'trash-post_' . $form->ID ) ),
-            $form->post_title.'('.$form->ID.')',
-            __( 'Delete Permanently' )
+            esc_url(wp_nonce_url("post.php?action=trash&post={$form->ID}", 'trash-post_' . $form->ID)),
+            $form->post_title . '(' . $form->ID . ')',
+            __('Delete Permanently')
         );
-        
+
         // Add more actions if necessary, such as delete, etc.
 
         return $this->row_actions($actions);
@@ -232,12 +236,58 @@ class List_Table extends WP_List_Table
      */
     public function get_bulk_actions()
     {
+        if (isset($_REQUEST['post_status']) && $_REQUEST['post_status'] === 'trash') {
+            return [
+                'delete' => 'Delete Permanently',
+                'untrash' => 'Restore',
+            ];
+        }
+
         return [
-            'delete' => 'Delete',
-            // Add more bulk actions if needed
+            'trash' => 'Move to Trash',
         ];
     }
 
+
+    public function get_views()
+    {
+        $statuses = [
+            'all'      => ['label' => 'All'],
+            'publish'  => ['label' => 'Published'],
+            'draft'    => ['label' => 'Draft'],
+            'trash'    => ['label' => 'Trash'],
+        ];
+
+        $views = [];
+        $current = isset($_REQUEST['post_status']) ? sanitize_text_field($_REQUEST['post_status']) : 'all';
+
+        // Get post counts
+        $post_counts = wp_count_posts(Dragwyb_Post::POST_TYPE);
+
+        // Build each view link
+        foreach ($statuses as $key => $val) {
+            // Get the count for the status
+            if ($key === 'all') {
+                $count = ($post_counts->publish ?? 0) + ($post_counts->draft ?? 0);
+                $url = remove_query_arg('post_status');
+            } else {
+                $count = $post_counts->{$key} ?? 0;
+                $url = add_query_arg('post_status', $key);
+            }
+
+            if ($count > 0) {
+                $views[$key] = sprintf(
+                    '<a href="%s"%s>%s <span class="count">(%d)</span></a>',
+                    esc_url($url),
+                    $current === $key ? ' class="current"' : '',
+                    esc_html($val['label']),
+                    $count
+                );
+            }
+        }
+
+        return $views;
+    }
 
     /**
      * Fetch and set up the final data for the table.
@@ -246,61 +296,63 @@ class List_Table extends WP_List_Table
      */
     public function prepare_items()
     {
-        // Set up columns
-        $columns = $this->get_columns();
-        $hidden = get_hidden_columns($this->screen);
+        // 1. Setup columns
+        $columns  = $this->get_columns();
+        $hidden   = get_hidden_columns($this->screen);
         $sortable = [
             'id'      => ['ID', false],
             'name'    => ['title', false],
             'author'  => ['author', false],
             'created' => ['date', false],
         ];
-
-        // Set column headers
         $this->_column_headers = [$columns, $hidden, $sortable];
 
-        // Query arguments
-        $page = $this->get_pagenum();
-        $order = isset($_GET['order']) && $_GET['order'] === 'asc' ? 'ASC' : 'DESC';
-        $orderby = isset($_GET['orderby']) ? sanitize_key($_GET['orderby']) : 'ID';
-        $per_page = $this->get_items_per_page('dragwyb_forms_per_page', $this->per_page);
+        // 2. Setup pagination, sorting, and status filters
+        $current_page = $this->get_pagenum();
+        $per_page     = $this->get_items_per_page('dragwyb_forms_per_page', $this->per_page);
+        $orderby      = sanitize_key($_GET['orderby'] ?? 'ID');
+        $order        = strtoupper($_GET['order'] ?? 'DESC');
+        $order        = in_array($order, ['ASC', 'DESC'], true) ? $order : 'DESC';
 
-        // Modify the query args based on the order and pagination
+        $status = sanitize_key($_GET['post_status'] ?? 'all');
+
+        // 3. Determine post status
+        $post_status = match ($status) {
+            'publish', 'draft', 'trash' => $status,
+            default => ['publish', 'draft'],
+        };
+
+        // 4. Query the forms
         $args = [
+            'post_type'      => Dragwyb_Post::POST_TYPE,
+            'post_status'    => $post_status,
             'orderby'        => $orderby,
             'order'          => $order,
-            'nopaging'       => false,
+            'paged'          => $current_page,
             'posts_per_page' => $per_page,
-            'paged'          => $page,
-            'post_status'    => array('publish','draft'),
-            'post_type'      => Dragwyb_Post::POST_TYPE
+            'no_found_rows'  => false, // needed for pagination
         ];
 
-        // Get the posts (forms)
         $this->items = get_posts($args);
 
-        // Update the form counts (total forms, etc.)
-        $this->update_count($args);
+        $post_counts = wp_count_posts(Dragwyb_Post::POST_TYPE);
 
-        // Pagination
+        $total_items = 0;
+
+        switch ($status) {
+            case 'all':
+                $total_items = ($post_counts->publish ?? 0) + ($post_counts->draft ?? 0);
+                break;
+            default:
+                $total_items = $post_counts->{$status} ?? 0;
+                break;
+        }
+
         $this->set_pagination_args([
-            'total_items' => $this->count['all'] ?? 0,
+            'total_items' => $total_items,
             'per_page'    => $per_page,
-            'total_pages' => ceil($this->count['all'] / $per_page),
+            'total_pages' => ceil($total_items / $per_page),
         ]);
-    }
-
-    /**
-     * Calculate and update form counts.
-     *
-     * @since 1.8.6
-     *
-     * @param array $args Get forms arguments.
-     */
-    private function update_count($args)
-    {
-        $this->count = [];
-        $this->count['all'] = wp_count_posts(Dragwyb_Post::POST_TYPE)->publish;
     }
 
     /**

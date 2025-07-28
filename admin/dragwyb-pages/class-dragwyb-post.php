@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Admin\Dragwyb_Pages;
 
+use Dragwyb\Form_Builder\Admin\Form_Overview\Form_Bulk_Actions_Handler;
+
 class Dragwyb_Post
 {
     /**
@@ -34,6 +36,8 @@ class Dragwyb_Post
         add_action('load-post-new.php', [$this, 'redirect_to_custom_editor']);
 
         add_action('init', [$this, 'dragwyb_add_caps_to_admin']);
+
+        add_action('admin_init', [$this, 'dragwyb_bulk_actions_handler']);
     }
 
     /**
@@ -51,7 +55,7 @@ class Dragwyb_Post
             'query_var'           => false,
             'can_export'          => false,
             'supports'            => ['title', 'author', 'revisions'],
-            'capability_type'     => sanitize_text_field(DRAGWYB_PREFIX) . '_forms', // Not using 'capability_type' anywhere. It just has to be custom for security reasons.
+            'capability_type'     => array(sanitize_text_field(DRAGWYB_PREFIX) . '_forms', sanitize_text_field(DRAGWYB_PREFIX) . '_form'), // Not using 'capability_type' anywhere. It just has to be custom for security reasons.
             'capabilities'        => $this->capabilties(),
             'map_meta_cap'        => true, // Don't 
         ];
@@ -62,8 +66,9 @@ class Dragwyb_Post
     public function capabilties()
     {
         $caps = [
-            'delete_post'            => 'delete_' . sanitize_text_field(DRAGWYB_PREFIX) . '_forms',
+            'delete_post'            => 'delete_' . sanitize_text_field(DRAGWYB_PREFIX) . '_form',
             'delete_posts'           => 'delete_' . sanitize_text_field(DRAGWYB_PREFIX) . '_forms',
+            'delete_published_posts' => 'delete_published_' . sanitize_text_field(DRAGWYB_PREFIX) . '_forms',
         ];
 
         $caps = apply_filters('Dragwyb/Forms/Capablitlies', $caps);
@@ -77,6 +82,7 @@ class Dragwyb_Post
         if (!$role) return;
 
         $caps = $this->capabilties();
+
 
         if (is_array($caps) && count($caps) > 0) {
 
@@ -238,5 +244,17 @@ class Dragwyb_Post
             return false;
         }
         return $use_block_editor;
+    }
+
+    public function dragwyb_bulk_actions_handler()
+    {
+        if (isset($_GET['_wpnonce'])) {
+            $current_post_type = sanitize_text_field(self::POST_TYPE);
+            $nonce = sanitize_text_field(wp_unslash($_REQUEST['_wpnonce']));
+            if (wp_verify_nonce($nonce, "bulk-" . $current_post_type)) {
+                Form_Bulk_Actions_Handler::instance($current_post_type);
+            }
+        }
+        // die();
     }
 }
