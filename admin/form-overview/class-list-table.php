@@ -269,10 +269,11 @@ class List_Table extends WP_List_Table
             // Get the count for the status
             if ($key === 'all') {
                 $count = ($post_counts->publish ?? 0) + ($post_counts->draft ?? 0);
-                $url = remove_query_arg('post_status');
+                $url = remove_query_arg(array('post_status', 'paged', 's'));
             } else {
                 $count = $post_counts->{$key} ?? 0;
                 $url = add_query_arg('post_status', $key);
+                $url = remove_query_arg(array('paged', 's'), $url);
             }
 
             if ($count > 0) {

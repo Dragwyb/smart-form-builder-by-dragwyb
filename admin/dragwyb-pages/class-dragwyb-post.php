@@ -38,6 +38,8 @@ class Dragwyb_Post
         add_action('init', [$this, 'dragwyb_add_caps_to_admin']);
 
         add_action('admin_init', [$this, 'dragwyb_bulk_actions_handler']);
+
+        add_action('admin_notices', [$this, 'bulk_action_notices']);
     }
 
     /**
@@ -252,9 +254,53 @@ class Dragwyb_Post
             $current_post_type = sanitize_text_field(self::POST_TYPE);
             $nonce = sanitize_text_field(wp_unslash($_REQUEST['_wpnonce']));
             if (wp_verify_nonce($nonce, "bulk-" . $current_post_type)) {
-                Form_Bulk_Actions_Handler::instance($current_post_type);
+
+                if (function_exists('wp_get_referer')) {
+                    $referal_url = wp_get_referer();
+
+                    if (str_contains($referal_url, 'page=dragwyb-form-overview')) {
+                        Form_Bulk_Actions_Handler::instance($current_post_type);
+                    }
+                }
             }
         }
-        // die();
+    }
+
+    public function bulk_action_notices()
+    {
+
+        if (!function_exists('get_current_screen') || !property_exists(get_current_screen(), 'id') || !str_contains(get_current_screen()->id, 'dragwyb-form-overview')) {
+            return;
+        }
+
+
+        if (empty($_GET['trashed']) && empty($_GET['deleted']) && empty($_GET['untrashed'])) {
+            return;
+        }
+
+        if (!empty($_GET['trashed'])) {
+            $count = absint($_GET['trashed']);
+            printf(
+                '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
+                sprintf(_n('%s form moved to the Trash.', '%s forms moved to the Trash.', $count, 'your-textdomain'), $count)
+            );
+        }
+
+        if (!empty($_GET['deleted'])) {
+            $count = absint($_GET['deleted']);
+            printf(
+                '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
+                sprintf(_n('%s form permanently deleted.', '%s forms permanently deleted.', $count, 'your-textdomain'), $count)
+            );
+        }
+
+        if (!empty($_GET['untrashed'])) {
+            $count = absint($_GET['untrashed']);
+
+            printf(
+                '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
+                sprintf(_n('%s form restored from Trash.', '%s forms restored from Trash.', $count, 'your-textdomain'), $count)
+            );
+        }
     }
 }
