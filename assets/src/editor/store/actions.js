@@ -23,9 +23,9 @@ export const addField = (field) => ({
     payload: field
 });
 
-export const duplicateField = (activeField, ReferenceField, index, dispatch) => ({
+export const duplicateField = (field, index, dispatch) => ({
     type: DUPLICATE_FIELD,
-    payload: {activeField, ReferenceField, index, dispatch}
+    payload: {field, index, dispatch}
 })
 
 export const updateField = (fieldId, field) => ({

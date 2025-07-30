@@ -49,30 +49,27 @@ export default function reducer(state = initialState, action) {
             };
 
         case DUPLICATE_FIELD:
-            const referenceField = state.form.fields.find(
-                field => field._id === action.payload.ReferenceField
-            );
+            if(!action.payload.field){
+                return state;
+            }
 
-            if (!referenceField) return state;
+            if(!action.payload.field._id || !action.payload.field.type){
+                return;
+            }
 
-            const { _id, ...rest } = referenceField;            
+            const duplicateId=state.form.fields.filter(field => field._id === action.payload.field._id);
 
-            const duplicatedField = {
-                _id: action.payload.activeField, // New unique ID
-                ...rest
-            };
-
-            const updateFields=state.form.fields;
-
-            updateFields.splice(action.payload.index || 0, 0, duplicatedField);
+            if(duplicateId.length > 0){
+                return;
+            }
 
             return {
                 ...state,
                 form: {
                     ...state.form,
-                    fields: updateFields
+                    fields: [...state.form.fields, action.payload.field], 
                 }
-            };
+            }
 
         case UPDATE_FIELD:
             return {
@@ -156,7 +153,7 @@ export default function reducer(state = initialState, action) {
         case UPDATE_FIELD_IDS:
             return {
                 ...state,
-                fieldIds: [...state.fieldIds, ...[action.payload.ids]]
+                fieldIds: [...state.fieldIds, ...action.payload.ids]
             }
 
         case UPDATE_FIELD_ID:

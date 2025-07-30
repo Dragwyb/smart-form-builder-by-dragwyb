@@ -27,10 +27,10 @@ const RepeaterSortable = ({ items, settings, updateControls, controlId, utils })
   };
 
   const updateHandler = (key, value, index) => {
-
     const updatedItems = [...items];
 
-    updatedItems[index].attribues[key] = value;
+    updatedItems[index].attributes[key] = value;
+
     updateControls(controlId, updatedItems);
   };
 
@@ -39,7 +39,7 @@ const RepeaterSortable = ({ items, settings, updateControls, controlId, utils })
   };
 
   const onCopy = (item, index) => {
-    const newItem = {  _id: utils.generateId(), attribues: item };
+    const newItem = {  _id: utils.generateId(), attributes: JSON.parse(JSON.stringify(item)) };
     items.splice(index, 0, newItem);
 
     updateControls(controlId, items);
@@ -57,7 +57,8 @@ const RepeaterSortable = ({ items, settings, updateControls, controlId, utils })
             onCopy={onCopy}
             updateHandler={updateHandler}
             settings={settings}
-            repeaterItem={item.attribues}
+            repeaterItem={item.attributes}
+            repeaterItems={items}
           />
         ))}
       </SortableContext>

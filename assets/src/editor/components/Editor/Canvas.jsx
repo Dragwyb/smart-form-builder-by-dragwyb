@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import {
     DndContext,
     closestCenter,
@@ -76,7 +76,10 @@ const SortableItem = ({ field, selectedField, onFieldSelect, values, onChange, e
 
 const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors }) => {
     const dispatch = useDispatch();
-    const state = useSelector(state => state);
+
+    const store = useStore();
+    const state = store.getState();
+
     const Utils = Helper(state, dispatch);
 
     const sensors = useSensors(
@@ -104,19 +107,19 @@ const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors
 
         const fieldControls = DragwybEditor.fieldTypes[deepClone.type]?.controls || {};
 
-        Object.keys(deepClone.settings || {}).forEach(id => {
+        Object.keys(deepClone.attributes || {}).forEach(id => {
             if (!['tabs', 'tab', 'section'].includes(fieldControls[id]?.type)) {
-                let value = deepClone.settings[id];
+                let value = deepClone.attributes[id];
                 value = DragwybBuilder.Hooks.applyFilter(
                     `Dragwyb/Editor/DuplicateControl/${fieldControls[id].type}.duplicateValue`,
                     value,
                     Utils
                 );
-                deepClone.settings[id] = value;
+                deepClone.attributes[id] = value;
             }
         });
 
-        dispatch(duplicateField(id, field._id, index + 1, dispatch));
+        dispatch(duplicateField(deepClone, index + 1, dispatch));
         onFieldSelect(deepClone);
     };
 

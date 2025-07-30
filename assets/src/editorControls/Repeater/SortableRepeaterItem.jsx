@@ -57,6 +57,7 @@ const SortableRepeaterItem = ({
   updateHandler,
   settings,
   repeaterItem,
+  repeaterItems
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
@@ -79,12 +80,13 @@ const SortableRepeaterItem = ({
 
     return heading;
   };
+
   return (
-    <div style={style} className="dragwyb-repeater-item">
+    <div style={style} className="dragwyb-repeater-item" data-id={id}>
       <div ref={setNodeRef} {...attributes} {...listeners}>
         {repeaterHeading(settings.item_label, index)}
         <span><i class="fa-regular fa-copy" onClick={()=>{onCopy(repeaterItem, index+1)}}>Copy</i></span>
-        <span><i class="fa-solid fa-xmark" onClick={()=>{onDelete(id)}}>Delete</i></span>
+        {repeaterItems.length > 1 && <span><i class="fa-solid fa-xmark" onClick={()=>{onDelete(id)}}>Delete</i></span>}
       </div>
       {Object.values(settings.items).map((data) => {
         return renderControls({

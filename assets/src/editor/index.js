@@ -8,21 +8,21 @@ import * as Helper from './utils/helpers';
 import * as Api from './utils/api';
 
 DragwybEditor.FieldBase = DragwybFieldBase;
-DragwybEditor.ControlBase=DragwybControlBase;
+DragwybEditor.ControlBase = DragwybControlBase;
 
-const formIdExist=()=>{
+const formIdExist = () => {
     const url = new URL(window.location.href);
     const params = url.searchParams;
 
-    if (!params.has('form_id')) {                                                                                                                                    
-        const formId=DragwybBuilder.formId;
+    if (!params.has('form_id')) {
+        const formId = DragwybBuilder.formId;
         params.set('form_id', formId); // Replace '123' with your dynamic value
         url.search = params.toString();
         window.history.replaceState({}, '', url);
     }
 }
 
-jQuery(document).on('Dragwyb:init', () => {   
+jQuery(document).on('Dragwyb:init', () => {
     if (DragwybEditor && DragwybEditor.editorContainer) {
         const container = document.getElementById(DragwybEditor.editorContainer);
         const root = createRoot(container);
@@ -31,7 +31,7 @@ jQuery(document).on('Dragwyb:init', () => {
         formIdExist();
 
         root.render(<App />);
-        
+
         jQuery(document).trigger('Dragwyb:editorInit');
         DragwybBuilder.Hooks.doAction('Dragwyb/Editor/FieldBase');
         DragwybBuilder.Hooks.doAction('Dragwyb/Editor/ControlBase');

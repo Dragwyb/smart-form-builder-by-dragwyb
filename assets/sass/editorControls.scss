@@ -101,92 +101,133 @@
   }
 }
 
-// === Repeater Field Styling (Improved Builder UI Style) ===
+/* === Repeater Wrapper === */
 .dragwyb-repeater-field {
-  margin: auto;
-  font-family: "Segoe UI", sans-serif;
-  background-color: #f9f9f9;
+  background: #f9f9f9;
   border: 1px solid #dcdfe3;
-  padding: 16px;
   border-radius: 6px;
+  padding: 16px;
   margin-top: 10px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
 
-  .dragwyb-repeater-item {
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    margin-bottom: 15px;
-    overflow: hidden;
+/* === Repeater Item Card === */
+.dragwyb-repeater-item {
+  background: #fff;
+  border: 1px solid #e1e1e1;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
 
-    .dragwyb-repeater-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 16px;
-      background: #f7f7f7;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      border-bottom: 1px solid #eee;
+/* === Sortable Header (Title + Actions) === */
+.dragwyb-repeater-item > [role="button"] {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #f5f6f8;
+  font-weight: 600;
+  color: #2c3338;
+  cursor: grab;
+  border-bottom: 1px solid #e4e4e4;
+  font-size: 14px;
+  outline: none;
 
-      .repeater-title {
-        flex-grow: 1;
-        color: #333;
-      }
-
-      .repeater-controls {
-        display: flex;
-        gap: 10px;
-
-        .drag-icon {
-          font-size: 18px;
-          cursor: move;
-          color: #999;
-        }
-
-        button {
-          background: none;
-          border: none;
-          font-size: 16px;
-          cursor: pointer;
-          color: #666;
-          transition: color 0.2s ease;
-
-          &:hover {
-            color: #000;
-          }
-        }
-      }
-    }
-
-    .dragwyb-repeater-body {
-      padding: 16px;
-      background: #fff;
-    }
+  &:hover {
+    background: #eef4fb;
   }
 
-  .add-repeater-btn {
-    text-align: center;
+  span {
+    display: inline-flex;
+    gap: 10px;
 
-    button {
-      padding: 10px 20px;
-      border: 1px dashed #007cba;
-      border-radius: 6px;
-      background: #f0f8ff;
-      color: #007cba;
-      cursor: pointer;
-      font-weight: 500;
+    i {
+      font-style: normal;
       font-size: 14px;
+      padding: 4px 6px;
+      border-radius: 4px;
+      color: #555;
+      cursor: pointer;
       transition: background 0.2s ease;
 
       &:hover {
-        background: #dceefb;
+        background-color: #e4e4e4;
+        color: #000;
       }
     }
   }
+}
+
+/* === Input Fields Layout === */
+.setting-row {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d2327;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 13px;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    background: #fff;
+    transition: border-color 0.2s ease;
+
+    &:focus {
+      border-color: #2271b1;
+      outline: none;
+    }
+  }
+}
+
+/* === Add Option Button === */
+.add-repeater-btn {
+  margin-top: 16px;
+  text-align: center;
+
+  button {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #2271b1;
+    background-color: #eef6fc;
+    border: 1px dashed #2271b1;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #dceefb;
+    }
+  }
+}
+
+/* === Drag Indicator Cursor Feedback === */
+[aria-roledescription="sortable"] {
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+/* === Accessibility Descriptions (Visually Hidden) === */
+#DndDescribedBy-0,
+#DndLiveRegion-0 {
+  display: none !important;
 }
 
 // === Responsive ===

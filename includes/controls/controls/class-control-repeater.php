@@ -86,16 +86,16 @@ class Control_Repeater extends Control_Base
                 continue;
             }
 
-            if (!isset($item['attribues']) || !is_array($item['attribues']) || count($item['attribues']) <= 0) {
+            if (!isset($item['attributes']) || !is_array($item['attributes']) || count($item['attributes']) <= 0) {
                 continue;
             }
 
-            $attribues = $item['attribues'];
+            $attributes = $item['attributes'];
 
-            $data[$index]['attribues'] = array();
+            $data[$index]['attributes'] = array();
 
 
-            foreach ($attribues as $field => $value) {
+            foreach ($attributes as $field => $value) {
                 if (!isset($register_fields[$field]['type'])) {
                     continue;
                 }
@@ -118,7 +118,7 @@ class Control_Repeater extends Control_Base
                 $filtered_value = $control_obj->get_value();
 
                 if (isset($filtered_value) && $filtered_value) {
-                    $data[$index]['attribues'][$field] = $value;
+                    $data[$index]['attributes'][$field] = $value;
                 }
             }
         }

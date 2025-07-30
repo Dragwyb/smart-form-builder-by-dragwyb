@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import { updateField, updateSectionSettings, resetSectionSettings } from '../../store/actions';
 import { Panel } from '../Common';
 import shouldRenderField from './shouldRenderField';
@@ -11,7 +11,9 @@ const FieldSettings = ({ activeField, fieldValue, sectionSettings, onClose }) =>
     let activeSection=false;
     const fieldType = DragwybEditor.fieldTypes[activeField.type];
 
-    const state=useSelector(state => state);
+    const store = useStore();
+    const state = store.getState();
+
     const Utils=Helper(state, dispatch);
 
 

@@ -1,4 +1,4 @@
-import { updateFieldIds } from "../store/actions";
+import { updateFieldId } from "../store/actions";
 
 
 /**
@@ -6,7 +6,6 @@ import { updateFieldIds } from "../store/actions";
  * @returns {string}
  */
 export const generateId = (state, dispatch) => {
-    
     const existIds=state?.fieldIds || [];
         
     const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -26,7 +25,7 @@ export const generateId = (state, dispatch) => {
         id = createId();
     } while (existIds.includes(id));
 
-    dispatch(updateFieldIds(id));
+    dispatch(updateFieldId(id));
 
     return id;
 };

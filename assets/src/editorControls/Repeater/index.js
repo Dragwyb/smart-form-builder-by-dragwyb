@@ -38,13 +38,19 @@ class repeaterControl extends DragwybEditor.ControlBase {
 const intializeRepeater = ([data, utils]) => {
     const defaultValue = [];
     if (!data || data.length <= 0) {
-        return [{ _id: utils.generateId(), attribues: {} }];
+        return [{ _id: utils.generateId(), attributes: {} }];
     }
 
     data.forEach((value, index) => {
         defaultValue[index] = {};
+
         defaultValue[index]._id = utils.generateId();
-        defaultValue[index]['attribues'] = value;
+
+        if (value.attributes) {
+            defaultValue[index].attributes = value.attributes;
+        } else {
+            defaultValue[index].attributes = value;
+        }
     });
 
     return defaultValue;

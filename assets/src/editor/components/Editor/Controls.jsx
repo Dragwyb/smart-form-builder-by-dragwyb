@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useStore } from 'react-redux';
 import { addField, updateFieldValues } from '../../store/actions';
 import { useSelector } from 'react-redux';
 import Helper  from '../Utils';
@@ -7,7 +7,9 @@ import Helper  from '../Utils';
 const Controls = ({ onFieldSelect }) => {
     const fieldTypes = DragwybEditor.fieldTypes;
     const dispatch=useDispatch();
-    const state=useSelector(state => state);
+
+    const store = useStore();
+    const state = store.getState();
 
     const Utils=Helper(state, dispatch);
 
