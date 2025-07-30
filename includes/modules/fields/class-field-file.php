@@ -20,7 +20,7 @@ class Field_File extends Field_Base {
         $this->icon = 'dashicons-upload';
     }
 
-    public function render_frontend(array $field_data): string {
+    protected function render_field(): string {
         $id = 'field_' . uniqid();
         $required = !empty($field_data['required']);
         $multiple = !empty($field_data['multiple']);

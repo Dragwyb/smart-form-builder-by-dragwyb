@@ -249,7 +249,7 @@ abstract class Field_Base
         return $value;
     }
 
-    abstract public function render_frontend(array $field_data): string;
+    abstract protected function render_field(): string;
     abstract public function validate($value): bool;
     abstract protected function register_controls(): void;
 
@@ -261,6 +261,11 @@ abstract class Field_Base
         $this->register_controls();
 
         return $this->get_settings();
+    }
+
+    public function render_frontend_fields()
+    {
+        $this->render_field();
     }
 
     public function get_control($id)

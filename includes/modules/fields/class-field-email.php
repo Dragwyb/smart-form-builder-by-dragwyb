@@ -20,7 +20,7 @@ class Field_Email extends Field_Base {
         $this->icon = 'dashicons-email';
     }
 
-    public function render_frontend(array $field_data): string {
+    protected function render_field(): string {
         $id = 'field_' . uniqid();
         $required = !empty($field_data['required']);
         

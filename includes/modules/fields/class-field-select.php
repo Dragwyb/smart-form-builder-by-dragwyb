@@ -81,7 +81,7 @@ class Field_Select extends Field_Base
         $this->icon = 'dashicons-arrow-down-alt2'; // Choose a different icon if needed
     }
 
-    public function render_frontend(array $field_data): string
+    protected function render_field(): string
     {
         $id = 'field_' . uniqid();
         $required = !empty($field_data['required']);

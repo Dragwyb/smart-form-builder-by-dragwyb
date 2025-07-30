@@ -133,7 +133,7 @@ class Field_Text extends Field_Base
         $this->end_section();
     }
 
-    public function render_frontend(array $field_data): string
+    protected function render_field(): string
     {
         $id = 'field_' . uniqid();
         $required = !empty($field_data['required']);

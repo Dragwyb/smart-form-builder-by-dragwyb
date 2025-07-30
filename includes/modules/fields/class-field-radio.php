@@ -20,7 +20,7 @@ class Field_Radio extends Field_Base {
         $this->icon = 'dashicons-marker';
     }
 
-    public function render_frontend(array $field_data): string {
+    protected function render_field(): string {
         $id = 'field_' . uniqid();
         $required = !empty($field_data['required']);
         $inline = !empty($field_data['inline']);

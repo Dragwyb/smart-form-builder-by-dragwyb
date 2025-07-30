@@ -22,7 +22,7 @@ class Field_Textarea extends Field_Base {
         $this->icon = 'dashicons-editor-paragraph';
     }
 
-    public function render_frontend(array $field_data): string {
+    protected function render_field(): string {
         $id = 'field_' . uniqid();
         $required = !empty($field_data['required']);
         
