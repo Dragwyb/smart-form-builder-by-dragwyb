@@ -23,6 +23,7 @@ abstract class Field_Base
     private ?array $current_tabs_stack = array();
     private ?array $current_control_stack = array();
     private ?object $control_base;
+    private $form_id = 0;
 
     const ContentTab = 'content_tab';
     const StyleTab = 'style_tab';
@@ -71,17 +72,27 @@ abstract class Field_Base
         return $this->icon;
     }
 
+    public function set_the_id(int $id): void
+    {
+        $this->form_id = (int) $id;
+    }
+
+    public function get_the_id(): int
+    {
+        return $this->form_id;
+    }
+
     public function get_settings(): array
     {
         return $this->settings_arr;
     }
 
-    protected function set_display_setting(array $setting)
+    public function set_field_setting(array $setting)
     {
         $this->display_settings = $setting;
     }
 
-    protected function get_display_setting(array $setting): array
+    protected function get_field_setting(): array
     {
         return $this->display_settings;
     }
@@ -249,7 +260,7 @@ abstract class Field_Base
         return $value;
     }
 
-    abstract protected function render_field(): string;
+    abstract protected function render_field();
     abstract public function validate($value): bool;
     abstract protected function register_controls(): void;
 
@@ -263,7 +274,7 @@ abstract class Field_Base
         return $this->get_settings();
     }
 
-    public function render_frontend_fields()
+    public function render()
     {
         $this->render_field();
     }
@@ -282,6 +293,26 @@ abstract class Field_Base
         }
 
         return false;
+    }
+
+    protected function field_key_exist(array $array, string $key, $default = false)
+    {
+        return $this->field_array_key_exist($array, $key, $default);
+    }
+
+    private function field_array_key_exist(array $array, string $key, $default = false)
+    {
+        if (isset($array[$key]) && (is_array($array[$key]) || is_string($array[$key]))) {
+            if (is_array($array[$key]) && count($array[$key]) > 0) {
+                return $array[$key];
+            }
+
+            if (is_string($array[$key]) && !empty($array[$key])) {
+                return $array[$key];
+            }
+        }
+
+        return $default;
     }
 
     private function render_header_controls()
