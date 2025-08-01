@@ -67,6 +67,9 @@ class Field_Text extends Field_Base
             'type' => Controls::COLOR,
             'label' => __('Field Label Color', 'dragwyb-form-builder'),
             'default' => '',
+            'selectoR' => array(
+                '{{WRAPPER}} .form-text input: {color: {{VALUE}}}',
+            )
         ]);
 
         $this->end_tab();
@@ -78,7 +81,7 @@ class Field_Text extends Field_Base
             'label' => __('Field Label', 'dragwyb-form-builder'),
             'default' => 'Enter Your Label',
         ]);
-        
+
         $this->add_control('text_placeholder', [
             'type' => Controls::TEXT,
             'label' => __('Placeholder', 'dragwyb-form-builder'),
@@ -133,16 +136,16 @@ class Field_Text extends Field_Base
         $this->end_section();
     }
 
-    protected function render_field(): string
+    protected function render_field()
     {
-        $id = 'field_' . uniqid();
-        $required = !empty($field_data['required']);
+        $field_data = $this->get_field_setting();
 
-        ob_start();
+        $id = 'field_' . uniqid();
+        $required = !empty($field_data['text_required']);
 ?>
-        <div class="dragwyb-field-wrapper <?php echo esc_attr($field_data['css_class'] ?? ''); ?>">
+        <div class="dragwyb-field-wrapper <?php echo esc_attr($field_data['text_css_class'] ?? ''); ?>">
             <label for="<?php echo esc_attr($id); ?>">
-                <?php echo esc_html($field_data['label']); ?>
+                <?php echo esc_html($field_data['text_label']); ?>
                 <?php if ($required): ?>
                     <span class="required">*</span>
                 <?php endif; ?>
@@ -161,7 +164,6 @@ class Field_Text extends Field_Base
                 <?php endif; ?>>
         </div>
 <?php
-        return ob_get_clean();
     }
 
     public function validate($value): bool

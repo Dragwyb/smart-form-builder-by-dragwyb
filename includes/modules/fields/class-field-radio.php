@@ -1,32 +1,38 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
-class Field_Radio extends Field_Base {
-    protected function register_scripts(){
-        return array();
-    }
-    
-    protected function register_style(){
+class Field_Radio extends Field_Base
+{
+    protected function register_scripts()
+    {
         return array();
     }
 
-    protected function register_controls(): void{}
-    
-    protected function init(): void {
+    protected function register_style()
+    {
+        return array();
+    }
+
+    protected function register_controls(): void {}
+
+    protected function init(): void
+    {
         $this->type = 'radio';
         $this->name = __('Radio Buttons', 'dragwyb-form-builder');
         $this->icon = 'dashicons-marker';
     }
 
-    protected function render_field(): string {
+    protected function render_field()
+    {
+        $field_data = $this->get_field_setting();
+
         $id = 'field_' . uniqid();
         $required = !empty($field_data['required']);
         $inline = !empty($field_data['inline']);
-        
-        ob_start();
-        ?>
+?>
         <div class="dragwyb-field-wrapper">
             <fieldset>
                 <legend>
@@ -39,21 +45,21 @@ class Field_Radio extends Field_Base {
                     <?php foreach ($field_data['options'] as $option): ?>
                         <label class="dragwyb-radio-option">
                             <input type="radio"
-                                   name="<?php echo esc_attr($id); ?>"
-                                   value="<?php echo esc_attr($option['value']); ?>"
-                                   <?php echo $required ? 'required' : ''; ?>
-                                   <?php checked($option['value'], $field_data['default_value'] ?? ''); ?>>
+                                name="<?php echo esc_attr($id); ?>"
+                                value="<?php echo esc_attr($option['value']); ?>"
+                                <?php echo $required ? 'required' : ''; ?>
+                                <?php checked($option['value'], $field_data['default_value'] ?? ''); ?>>
                             <?php echo esc_html($option['label']); ?>
                         </label>
                     <?php endforeach; ?>
                 </div>
             </fieldset>
         </div>
-        <?php
-        return ob_get_clean();
+<?php
     }
 
-    public function validate($value): bool {
+    public function validate($value): bool
+    {
         if (empty($value) && !empty($this->settings['required']['value'])) {
             return false;
         }
@@ -63,7 +69,8 @@ class Field_Radio extends Field_Base {
         return in_array($value, $valid_values, true);
     }
 
-    public function sanitize($value) {
+    public function sanitize($value)
+    {
         return sanitize_text_field($value);
     }
-} 
+}

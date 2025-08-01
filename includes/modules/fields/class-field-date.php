@@ -1,31 +1,37 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
-class Field_Date extends Field_Base {
-    protected function register_scripts(){
-        return array();
-    }
-    
-    protected function register_style(){
+class Field_Date extends Field_Base
+{
+    protected function register_scripts()
+    {
         return array();
     }
 
-    protected function register_controls(): void{}
-    
-    protected function init(): void {
+    protected function register_style()
+    {
+        return array();
+    }
+
+    protected function register_controls(): void {}
+
+    protected function init(): void
+    {
         $this->type = 'date';
         $this->name = __('Date Field', 'dragwyb-form-builder');
         $this->icon = 'dashicons-calendar-alt';
     }
 
-    protected function render_field(): string {
+    protected function render_field()
+    {
+        $field_data = $this->get_field_setting();
+
         $id = 'field_' . uniqid();
         $required = !empty($field_data['required']);
-        
-        ob_start();
-        ?>
+?>
         <div class="dragwyb-field-wrapper">
             <label for="<?php echo esc_attr($id); ?>">
                 <?php echo esc_html($field_data['label']); ?>
@@ -34,22 +40,22 @@ class Field_Date extends Field_Base {
                 <?php endif; ?>
             </label>
             <input type="date"
-                   id="<?php echo esc_attr($id); ?>"
-                   name="<?php echo esc_attr($id); ?>"
-                   value="<?php echo esc_attr($field_data['default_value'] ?? ''); ?>"
-                   <?php if (!empty($field_data['min_date'])): ?>
-                   min="<?php echo esc_attr($field_data['min_date']); ?>"
-                   <?php endif; ?>
-                   <?php if (!empty($field_data['max_date'])): ?>
-                   max="<?php echo esc_attr($field_data['max_date']); ?>"
-                   <?php endif; ?>
-                   <?php echo $required ? 'required' : ''; ?>>
+                id="<?php echo esc_attr($id); ?>"
+                name="<?php echo esc_attr($id); ?>"
+                value="<?php echo esc_attr($field_data['default_value'] ?? ''); ?>"
+                <?php if (!empty($field_data['min_date'])): ?>
+                min="<?php echo esc_attr($field_data['min_date']); ?>"
+                <?php endif; ?>
+                <?php if (!empty($field_data['max_date'])): ?>
+                max="<?php echo esc_attr($field_data['max_date']); ?>"
+                <?php endif; ?>
+                <?php echo $required ? 'required' : ''; ?>>
         </div>
-        <?php
-        return ob_get_clean();
+<?php
     }
 
-    public function validate($value): bool {
+    public function validate($value): bool
+    {
         if (empty($value) && !empty($this->settings['required']['value'])) {
             return false;
         }
@@ -80,7 +86,8 @@ class Field_Date extends Field_Base {
         return true;
     }
 
-    public function sanitize($value) {
+    public function sanitize($value)
+    {
         if (empty($value)) {
             return '';
         }
@@ -88,4 +95,4 @@ class Field_Date extends Field_Base {
         $date = DateTime::createFromFormat('Y-m-d', $value);
         return $date ? $date->format($this->settings['date_format']['value']) : '';
     }
-} 
+}

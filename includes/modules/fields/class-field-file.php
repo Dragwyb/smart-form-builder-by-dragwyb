@@ -1,34 +1,40 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
-class Field_File extends Field_Base {
-    protected function register_scripts(){
-        return array();
-    }
-    
-    protected function register_style(){
+class Field_File extends Field_Base
+{
+    protected function register_scripts()
+    {
         return array();
     }
 
-    protected function register_controls(): void{}
-    
-    protected function init(): void {
+    protected function register_style()
+    {
+        return array();
+    }
+
+    protected function register_controls(): void {}
+
+    protected function init(): void
+    {
         $this->type = 'file';
         $this->name = __('File Upload', 'dragwyb-form-builder');
         $this->icon = 'dashicons-upload';
     }
 
-    protected function render_field(): string {
+    protected function render_field()
+    {
+        $field_data = $this->get_field_setting();
+
         $id = 'field_' . uniqid();
         $required = !empty($field_data['required']);
         $multiple = !empty($field_data['multiple']);
         $allowed_types = array_map('trim', explode(',', $field_data['allowed_types'] ?? ''));
         $accept = '.' . implode(',.', $allowed_types);
-        
-        ob_start();
-        ?>
+?>
         <div class="dragwyb-field-wrapper dragwyb-file-upload">
             <label for="<?php echo esc_attr($id); ?>">
                 <?php echo esc_html($field_data['label']); ?>
@@ -38,12 +44,12 @@ class Field_File extends Field_Base {
             </label>
             <div class="dragwyb-file-upload-wrapper">
                 <input type="file"
-                       id="<?php echo esc_attr($id); ?>"
-                       name="<?php echo esc_attr($id . ($multiple ? '[]' : '')); ?>"
-                       accept="<?php echo esc_attr($accept); ?>"
-                       <?php echo $multiple ? 'multiple' : ''; ?>
-                       <?php echo $required ? 'required' : ''; ?>
-                       data-max-size="<?php echo esc_attr($field_data['max_size'] ?? 2); ?>">
+                    id="<?php echo esc_attr($id); ?>"
+                    name="<?php echo esc_attr($id . ($multiple ? '[]' : '')); ?>"
+                    accept="<?php echo esc_attr($accept); ?>"
+                    <?php echo $multiple ? 'multiple' : ''; ?>
+                    <?php echo $required ? 'required' : ''; ?>
+                    data-max-size="<?php echo esc_attr($field_data['max_size'] ?? 2); ?>">
                 <div class="dragwyb-file-upload-info">
                     <?php
                     printf(
@@ -62,11 +68,11 @@ class Field_File extends Field_Base {
                 <div class="dragwyb-file-preview"></div>
             </div>
         </div>
-        <?php
-        return ob_get_clean();
+<?php
     }
 
-    public function validate($value): bool {
+    public function validate($value): bool
+    {
         if (empty($_FILES)) {
             return !$this->settings['required']['value'];
         }
@@ -94,7 +100,8 @@ class Field_File extends Field_Base {
         return true;
     }
 
-    public function sanitize($value) {
+    public function sanitize($value)
+    {
         $files = $this->get_uploaded_files();
         if (empty($files)) {
             return [];
@@ -111,7 +118,8 @@ class Field_File extends Field_Base {
         return $uploaded_files;
     }
 
-    private function get_uploaded_files(): array {
+    private function get_uploaded_files(): array
+    {
         $files = [];
         $field_name = $this->get_field_name();
 
@@ -138,4 +146,4 @@ class Field_File extends Field_Base {
 
         return $files;
     }
-} 
+}

@@ -1,9 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
-class Field_Textarea extends Field_Base {
+class Field_Textarea extends Field_Base
+{
     protected function register_scripts()
     {
         return array();
@@ -14,20 +16,22 @@ class Field_Textarea extends Field_Base {
         return array();
     }
 
-    protected function register_controls(): void{}
+    protected function register_controls(): void {}
 
-    protected function init(): void {
+    protected function init(): void
+    {
         $this->type = 'textarea';
         $this->name = __('Paragraph Field', 'dragwyb-form-builder');
         $this->icon = 'dashicons-editor-paragraph';
     }
 
-    protected function render_field(): string {
+    protected function render_field()
+    {
+        $field_data = $this->get_field_setting();
+
         $id = 'field_' . uniqid();
         $required = !empty($field_data['required']);
-        
-        ob_start();
-        ?>
+?>
         <div class="dragwyb-field-wrapper">
             <label for="<?php echo esc_attr($id); ?>">
                 <?php echo esc_html($field_data['label']); ?>
@@ -43,14 +47,13 @@ class Field_Textarea extends Field_Base {
                 <?php if (!empty($field_data['max_length'])): ?>
                 maxlength="<?php echo esc_attr($field_data['max_length']); ?>"
                 <?php endif; ?>
-                placeholder="<?php echo esc_attr($field_data['placeholder'] ?? ''); ?>"
-            ><?php echo esc_textarea($field_data['default_value'] ?? ''); ?></textarea>
+                placeholder="<?php echo esc_attr($field_data['placeholder'] ?? ''); ?>"><?php echo esc_textarea($field_data['default_value'] ?? ''); ?></textarea>
         </div>
-        <?php
-        return ob_get_clean();
+<?php
     }
 
-    public function validate($value): bool {
+    public function validate($value): bool
+    {
         if (empty($value) && !empty($this->settings['required']['value'])) {
             return false;
         }
@@ -62,4 +65,4 @@ class Field_Textarea extends Field_Base {
 
         return true;
     }
-} 
+}

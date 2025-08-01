@@ -81,16 +81,17 @@ class Field_Select extends Field_Base
         $this->icon = 'dashicons-arrow-down-alt2'; // Choose a different icon if needed
     }
 
-    protected function render_field(): string
+    protected function render_field()
     {
-        $id = 'field_' . uniqid();
-        $required = !empty($field_data['required']);
+        $field_data = $this->get_field_setting();
 
-        ob_start();
+        $id = 'field_' . uniqid();
+        $required = !empty($this->field_key_exist($field_data, 'required', ''));
+
 ?>
         <div class="dragwyb-field-wrapper">
             <label for="<?php echo esc_attr($id); ?>">
-                <?php echo esc_html($field_data['label']); ?>
+                <?php echo esc_html($field_data['select_label']); ?>
                 <?php if ($required): ?>
                     <span class="required">*</span>
                 <?php endif; ?>
@@ -100,17 +101,18 @@ class Field_Select extends Field_Base
                 name="<?php echo esc_attr($id); ?>"
                 <?php echo $required ? 'required' : ''; ?>
                 class="dragwyb-select-field">
-                <?php foreach ($field_data['options'] as $option): ?>
+                <?php foreach ($field_data['select_options'] as $option):
+                    $item_data = $option['attributes'];
+                ?>
                     <option
-                        value="<?php echo esc_attr($option['value']); ?>"
-                        <?php selected($option['value'], $field_data['default_value'] ?? ''); ?>>
-                        <?php echo esc_html($option['label']); ?>
+                        value="<?php echo esc_attr($item_data['repeater_text']); ?>"
+                        <?php selected($item_data['repeater_text'], $item_data['default_value'] ?? ''); ?>>
+                        <?php echo esc_html($item_data['label'] ?? $item_data['repeater_text']); ?>
                     </option>
                 <?php endforeach; ?>
             </select>
         </div>
 <?php
-        return ob_get_clean();
     }
 
     public function validate($value): bool
