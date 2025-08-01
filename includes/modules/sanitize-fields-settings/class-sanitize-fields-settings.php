@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Dragwyb\Form_Builder\Includes\Modules\Sanitize_Fields_Data;
+namespace Dragwyb\Form_Builder\Includes\Modules\Sanitize_Fields_Settings;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Modules\Module;
 
-if (!class_exists('Sanitize_Fields_Data')) {
-    class Sanitize_Fields_Data
+if (!class_exists('Sanitize_Fields_Settings')) {
+    class Sanitize_Fields_Settings
     {
         private static $filtered_data = false;
 
@@ -58,7 +58,7 @@ if (!class_exists('Sanitize_Fields_Data')) {
                 self::$filtered_data[$index]['_id'] = $field['_id'];
                 self::$filtered_data[$index]['type'] = $field['type'];
 
-                if (isset($field['type']))
+                if (isset($field['type'])){
                     if (isset($field['type']) && is_array($field['attributes']) && count($field['attributes']) > 0) {
                         $type = $field['type'];
                         $attributes = $field['attributes'];
@@ -71,6 +71,8 @@ if (!class_exists('Sanitize_Fields_Data')) {
 
                         $this->attributes_loop($attributes, $type, $index);
                     }
+                }
+                    
             }
         }
 
