@@ -84,9 +84,9 @@ class Frontend_Render
                     if (isset($field['attributes'])) {
                         $attributes = $field['attributes'];
                         $this->attributes_loop($attributes, $type);
-                        self::$field_module_cache[$type]->set_field_setting(self::$Field_Data['attributes']);
+                        self::$field_module_cache[$type]->set_field_settings(self::$Field_Data['attributes']);
                     } else {
-                        self::$field_module_cache[$type]->set_field_setting(array());
+                        self::$field_module_cache[$type]->set_field_settings(array());
                     }
 
                     self::$field_module_cache[$type]->render();

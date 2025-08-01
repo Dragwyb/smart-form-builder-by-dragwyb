@@ -27,7 +27,7 @@ class Field_Email extends Field_Base
 
     protected function render_field()
     {
-        $field_data = $this->get_field_setting();
+        $field_data = $this->get_field_settings();
 
         $id = 'field_' . uniqid();
         $required = $this->field_key_exist($field_data, 'required', false);

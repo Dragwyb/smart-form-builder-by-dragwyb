@@ -87,12 +87,12 @@ abstract class Field_Base
         return $this->settings_arr;
     }
 
-    public function set_field_setting(array $setting)
+    public function set_field_settings(array $setting)
     {
         $this->display_settings = $setting;
     }
 
-    protected function get_field_setting(): array
+    protected function get_field_settings(): array
     {
         return $this->display_settings;
     }

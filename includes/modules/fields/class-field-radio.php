@@ -27,7 +27,7 @@ class Field_Radio extends Field_Base
 
     protected function render_field()
     {
-        $field_data = $this->get_field_setting();
+        $field_data = $this->get_field_settings();
 
         $id = 'field_' . uniqid();
         $required = !empty($field_data['required']);
