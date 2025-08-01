@@ -9,6 +9,7 @@ use Dragwyb\Form_Builder\Includes\Dragwyb_Form_Builder_Editor;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Pages;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Editor\Dragwyb_Builder_Editor;
+use Dragwyb\Form_Builder\Includes\Frontend\Shortcode\Shortcode_Handler;
 
 class Dragwyb_Init
 {
@@ -31,13 +32,15 @@ class Dragwyb_Init
             new Dragwyb_Builder_Editor();
             // new Dragwyb_Form_Builder_Editor();
             new Dragwyb_Pages();
+
+            // Initialize post type
+            new Dragwyb_Post();
+    
+            // Initialize AJAX handler
+            new Dragwyb_Form_Builder_Ajax();
         }
 
-        // Initialize post type
-        new Dragwyb_Post();
-
-        // Initialize AJAX handler
-        new Dragwyb_Form_Builder_Ajax();
+        Shortcode_Handler::instance();
     }
 
     public static function core_script()

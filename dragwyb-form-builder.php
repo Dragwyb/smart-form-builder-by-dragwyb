@@ -55,9 +55,6 @@ final class Dragwyb_Form_Builder
         Dragwyb_Form_Builder_Autoload::instance();
 
         $this->init_hooks();
-
-        // Initialize styling
-        // $this->styling = new Dragwyb_Form_Builder_Styling();
     }
 
     /**
