@@ -6,7 +6,7 @@ namespace Dragwyb\Form_Builder\Includes;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Modules\Module;
-use Dragwyb\Form_Builder\Includes\Modules\Sanitize_Fields_Data\Sanitize_Fields_Data;
+use Dragwyb\Form_Builder\Includes\Modules\Sanitize_Fields_Settings\Sanitize_Fields_Settings;
 
 class Dragwyb_Form_Builder_Ajax
 {
@@ -107,7 +107,7 @@ class Dragwyb_Form_Builder_Ajax
             return [];
         }
 
-        $sanitize_form_data = Sanitize_Fields_Data::instance($data['fields']);
+        $sanitize_form_data = Sanitize_Fields_Settings::instance($data['fields']);
         $fields = $sanitize_form_data->get_data();
 
         if ($fields && is_array($fields) && count($fields) > 0) {

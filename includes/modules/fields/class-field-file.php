@@ -22,7 +22,7 @@ class Field_File extends Field_Base
     {
         $this->type = 'file';
         $this->name = __('File Upload', 'dragwyb-form-builder');
-        $this->icon = 'dashicons-upload';
+        $this->icon = 'fas fa-upload';
     }
 
     protected function render_field()

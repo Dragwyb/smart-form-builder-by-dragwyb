@@ -41,7 +41,7 @@ abstract class Dragwyb_Form_Builder_Base_Field {
     /**
      * Render field in frontend
      */
-    abstract protected function render_field(): string;
+    abstract protected function render_field();
 
     /**
      * Validate field value

@@ -22,7 +22,7 @@ class Field_Radio extends Field_Base
     {
         $this->type = 'radio';
         $this->name = __('Radio Buttons', 'dragwyb-form-builder');
-        $this->icon = 'dashicons-marker';
+        $this->icon = 'fas fa-dot-circle';
     }
 
     protected function render_field()

@@ -78,7 +78,7 @@ class Field_Select extends Field_Base
     {
         $this->type = 'select';
         $this->name = __('Select Dropdown', 'dragwyb-form-builder');
-        $this->icon = 'dashicons-arrow-down-alt2'; // Choose a different icon if needed
+        $this->icon = 'fas fa-caret-down'; // Choose a different icon if needed
     }
 
     protected function render_field()

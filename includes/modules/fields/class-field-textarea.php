@@ -22,7 +22,7 @@ class Field_Textarea extends Field_Base
     {
         $this->type = 'textarea';
         $this->name = __('Paragraph Field', 'dragwyb-form-builder');
-        $this->icon = 'dashicons-editor-paragraph';
+        $this->icon = 'fas fa-align-left';
     }
 
     protected function render_field()

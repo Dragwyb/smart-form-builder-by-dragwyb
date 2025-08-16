@@ -22,7 +22,7 @@ class Field_Date extends Field_Base
     {
         $this->type = 'date';
         $this->name = __('Date Field', 'dragwyb-form-builder');
-        $this->icon = 'dashicons-calendar-alt';
+        $this->icon = 'far fa-calendar';
     }
 
     protected function render_field()

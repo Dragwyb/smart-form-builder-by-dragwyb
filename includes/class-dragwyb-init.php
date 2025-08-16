@@ -81,7 +81,7 @@ class Dragwyb_Init
     private function get_translations()
     {
         $localize_strings = [
-            'cancel' => __('Cancel', 'dragwyb-form-builder'),
+            'exit' => __('Exit', 'dragwyb-form-builder'),
             'submit' => __('Submit', 'dragwyb-form-builder'),
         ];
 

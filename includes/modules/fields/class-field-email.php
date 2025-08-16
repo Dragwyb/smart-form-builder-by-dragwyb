@@ -21,8 +21,9 @@ class Field_Email extends Field_Base
     protected function init(): void
     {
         $this->type = 'email';
+        $this->keywords = array('text');
         $this->name = __('Email Field', 'dragwyb-form-builder');
-        $this->icon = 'dashicons-email';
+        $this->icon = 'fas fa-envelope';
     }
 
     protected function render_field()

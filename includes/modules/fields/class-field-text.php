@@ -35,7 +35,7 @@ class Field_Text extends Field_Base
     {
         $this->type = 'text';
         $this->name = __('Text Field', 'dragwyb-form-builder');
-        $this->icon = 'dashicons-text';
+        $this->icon = 'fas fa-font';
     }
 
     protected function register_controls(): void

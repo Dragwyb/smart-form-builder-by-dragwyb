@@ -14,6 +14,7 @@ abstract class Field_Base
     protected string $name;
     protected string $icon;
     protected array $settings;
+    protected array $keywords;
     private ?string $current_section = null;
     private ?string $current_tabs = null;
     private ?string $current_tab = null;
