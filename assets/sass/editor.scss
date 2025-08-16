@@ -1,41 +1,139 @@
 @use "sass:color";
-
-// Variables
-$primary-color: #2271b1;
-$secondary-color: #1d2327;
-$border-color: #ddd;
-$background-color: #f0f0f1;
-$text-color: #1d2327;
-$success-color: #00a32a;
-$error-color: #d63638;
+.dragwyb-editor{
+    // Variables
+--primary-color: #4f46e5;
+--primary-light-color: #e0e7ff;
+--primary-hover-color: #4338ca;
+--secondary-color: #6b7280;
+--secondary-hover-color: #374151;
+// --primary-color: #2271b1;
+--secondary-color: #1d2327;
+--border-color: #e1e7ef;
+--background-color: #f0f0f1;
+--text-color: #1d2327;
+--success-color: #00a32a;
+--error-color: #d63638;
+}
 
 // Mixins
 @mixin button {
     padding: 8px 12px;
-    border: 1px solid $border-color;
-    border-radius: 4px;
+    border: 1px solid var(--border-color);
     cursor: pointer;
     background: #fff;
     transition: all 0.2s ease;
+    border-radius: 4px;
 
-    &:hover {
-        background: #f0f0f1;
+    &:hover,
+    &.active {
+        background: var(--primary-light-color);
     }
 
     &.primary {
-        background: $primary-color;
+        background: var(--primary-color);
         color: #fff;
-        border-color: $primary-color;
+        border-color: var(--primary-color);
 
         &:hover {
-            background: color.adjust($primary-color, $lightness: -5%);
+            background: var(--primary-hover-color);
+        }
+    }
+
+    &.secondary {
+        color: var(--secondary-hover-color);
+        background: #e5e7eb;
+        border-color: #e5e7eb;
+
+        &:hover {
+            background: #d1d5db;
         }
     }
 }
 
-body.dragwyb-form_page_dragwyb-form-builder{
-    #adminmenumain, #wpadminbar{
-        display: none !important;
+body {
+    &.dragwyb-form_page_dragwyb-form-builder {
+
+        #adminmenumain,
+        #wpadminbar {
+            display: none !important;
+        }
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        line-height: 1;
+    }
+}
+
+.dragwyb-button {
+    @include button;
+    display: inline-block;
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 2.15384615;
+    min-height: 30px;
+    margin: 0;
+    padding: 0 10px;
+    cursor: pointer;
+    border-width: 1px;
+    border-style: solid;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+.dragwyb-search-input {
+    position: relative;
+
+    i {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 10px;
+        cursor: pointer;
+    }
+
+    button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 10px;
+
+        i {
+            transform: unset;
+            position: unset;
+        }
+    }
+
+    input {
+        width: 100%;
+        border-color: var(--primary-light-color);
+        box-shadow: unset;
+        outline-color: var(--primary-light-color);
+        transition: all .3s ease-in-out;
+        padding-inline: 2rem;
+
+        &:focus,
+        &:hover {
+            border-color: var(--primary-color);
+            box-shadow: unset;
+            outline-color: var(--primary-color);
+        }
+
+        &:focus {
+            outline-width: 1px;
+        }
+    }
+
+    button {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        border: unset;
+        outline: unset;
+        box-shadow: unset;
+        background: transparent;
+        transform: translateY(-50%);
     }
 }
 
@@ -46,22 +144,40 @@ body.dragwyb-form_page_dragwyb-form-builder{
     left: 0;
     right: 0;
     bottom: 0;
-    background: $background-color;
+    background: var(--background-color);
     z-index: 999;
     display: flex;
     flex-direction: column;
 
-
     &__header {
         background: #fff;
-        padding: 15px 20px;
-        border-bottom: 1px solid $border-color;
+        border-bottom: 1px solid var(--border-color);
         display: flex;
         justify-content: space-between;
         align-items: center;
+        padding: 15px 20px;
+    }
+
+    &__details {
+        display: flex;
+        align-items: end;
+        justify-content: center;
+
+        h2 {
+            font-size: 20px;
+        }
+
+
     }
 
     &__title {
+        margin: 0 5px 0 1.2rem;
+
+        p {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
         input {
             font-size: 20px;
             padding: 5px 10px;
@@ -70,9 +186,89 @@ body.dragwyb-form_page_dragwyb-form-builder{
             background: transparent;
 
             &:focus {
-                border-color: $primary-color;
+                border-color: var(--primary-color);
+                box-shadow: unset;
+                border: none;
                 outline: none;
                 background: #fff;
+            }
+        }
+    }
+
+    &__status {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+
+            &[data-status="draft"] {
+                background: var(--error-color);
+            }
+
+            &[data-status="publish"] {
+                background: var(--success-color);
+            }
+        }
+    }
+
+    &__tabs {
+        display: flex;
+        gap: 0.7rem;
+
+        button {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        i {
+            margin-right: 0.5rem;
+        }
+    }
+
+    // &__tab{
+    //     padding: .8rem;
+    //     width: 33.3%;
+    //     height: 100%;
+    //     display: flex;
+    //     justify-content: center;
+    //     align-items: center;
+    //     font-size: 1.3rem;
+    //     text-align: center;
+    //     border: 0px solid transparent;
+    //     border-bottom-width: 2px;
+    //     cursor: pointer;
+    //     transition: all .3s ease-in-out;
+
+    //     i{
+    //         margin-right: .5rem;
+    //     }
+    //     &.active{
+    //         border-color: var(--primary-color);
+    //         color: var(--primary-color);
+    //     }
+    // }
+
+    &__actions {
+        display: flex;
+        gap: 0.7rem;
+
+        i {
+            margin-right: .5rem;
+        }
+
+        button {
+            padding: .5rem 1rem;
+            font-size: 1rem;
+            line-height: 1;
+
+            &.dragwyb-preview {
+                min-width: 114px;
             }
         }
     }
@@ -86,7 +282,7 @@ body.dragwyb-form_page_dragwyb-form-builder{
     &__sidebar {
         width: 300px;
         background: #fff;
-        border-right: 1px solid $border-color;
+        border-right: 1px solid var(--border-color);
         box-sizing: border-box;
         height: 100%;
     }
@@ -99,8 +295,7 @@ body.dragwyb-form_page_dragwyb-form-builder{
     &__settings {
         width: 300px;
         background: #fff;
-        border-left: 1px solid #ddd;
-        height: 100%;
+        height: calc(100% - 47px);
     }
 }
 
@@ -117,33 +312,63 @@ body.dragwyb-form_page_dragwyb-form-builder{
         color: #666;
     }
 
+    .dragwyb-editor-indicator {
+        width: 100%;
+        height: 0px;
+        display: block;
+        background-color: var(--primary-light-color);
+        animation: indicatorVisible 150ms ease-out forwards;
+      }
+      
+      @keyframes indicatorVisible {
+        0% {
+          height: 0;
+          transform: scaleX(0.8);
+        }
+        100% {
+          height: 15px;
+          transform: scaleX(1);
+        }
+      }
+      
+
     .field-wrapper {
         position: relative;
         padding: 15px;
         margin: 10px 0;
-        border: 1px solid $border-color;
+        border: 1px solid var(--border-color);
         border-radius: 4px;
         background: #fff;
         transition: all 0.2s ease;
 
+        &.dragwyb-start-drag{
+            height: 0px !important;
+            overflow: hidden !important;
+            border: unset !important;
+            opacity: 0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
         &:hover {
-            border-color: $primary-color;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-color: var(--primary-color);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         &.selected {
-            border-color: $primary-color;
-            box-shadow: 0 0 0 1px $primary-color;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 1px var(--rimary-color);
         }
 
         &.dragging {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .field-actions {
             position: absolute;
             top: 5px;
             right: 5px;
+            z-index: 9999;
             display: none;
 
             button {
@@ -155,7 +380,7 @@ body.dragwyb-form_page_dragwyb-form-builder{
                 color: #666;
 
                 &:hover {
-                    color: $primary-color;
+                    color: var(--primary-color);
                 }
             }
         }
@@ -170,7 +395,7 @@ body.dragwyb-form_page_dragwyb-form-builder{
 .dragwyb-controls {
     &__header {
         padding: 15px;
-        border-bottom: 1px solid $border-color;
+        border-bottom: 1px solid var(--border-color);
 
         h2 {
             margin: 0;
@@ -178,29 +403,43 @@ body.dragwyb-form_page_dragwyb-form-builder{
         }
     }
 
+    &__search {
+        padding: 15px;
+    }
+
     &__fields {
         padding: 15px;
+        display: grid;
+        gap: 0.75rem;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
 
         .field-type {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid $border-color;
-            border-radius: 4px;
-            background: #fff;
-            cursor: pointer;
             transition: all 0.2s ease;
+            cursor: move;
+            text-align: center;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: .5rem;
+            padding-block: 1rem;
 
             &:hover {
-                border-color: $primary-color;
-                background: #f8f9fa;
+                transform: translateY(-2px);
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             }
 
-            .dashicons {
-                margin-right: 10px;
-                color: #666;
+            i {
+                color: var(--primary-color);
+                font-size: 1.5rem;
+            }
+
+            p {
+                color: var(--secondary-hover-color);
+                font-weight: 500;
+                font-size: 1rem;
             }
         }
     }
@@ -210,7 +449,7 @@ body.dragwyb-form_page_dragwyb-form-builder{
 .dragwyb-tabs {
     &__nav {
         display: flex;
-        border-bottom: 1px solid $border-color;
+        border-bottom: 1px solid var(--border-color);
         background: #f8f9fa;
 
         .tab-button {
@@ -222,8 +461,8 @@ body.dragwyb-form_page_dragwyb-form-builder{
             border-bottom: 2px solid transparent;
 
             &.active {
-                color: $primary-color;
-                border-bottom-color: $primary-color;
+                color: var(--primary-color);
+                border-bottom-color: var(--primary-color);
             }
         }
     }
@@ -236,9 +475,10 @@ body.dragwyb-form_page_dragwyb-form-builder{
 // Panel
 .dragwyb-panel {
     height: 100%;
+
     &__header {
         padding: 15px;
-        border-bottom: 1px solid $border-color;
+        border-bottom: 1px solid var(--border-color);
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -256,36 +496,31 @@ body.dragwyb-form_page_dragwyb-form-builder{
             color: #666;
 
             &:hover {
-                color: $error-color;
+                color: var(--error-color);
             }
         }
     }
 
     &__content {
         font-family: "Segoe UI", Tahoma, sans-serif;
-        padding: 20px;
         background-color: #f9f9fb;
         overflow-y: auto;
         height: calc(100% - 100px);
-
-        /* === Settings Container === */
+        
         .field-settings {
             display: flex;
             flex-direction: column;
+            padding: 20px;
             gap: 14px;
-        }
-        
-        /* === Setting Row === */
-        .setting-row {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
         }
     }
 }
 
 // Form Fields
 .setting-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     margin-bottom: 15px;
 
     label {
@@ -296,21 +531,26 @@ body.dragwyb-form_page_dragwyb-form-builder{
 
     input[type="text"],
     input[type="number"],
+    input[type="color"],
     select,
     textarea {
-        width: 100%;
         padding: 8px;
-        border: 1px solid $border-color;
+        font-size: 13px;
+        border: 1px solid #ccd0d4;
         border-radius: 4px;
+        background: #fff;
+        width: 100%;
+        transition: border-color 0.2s ease;
 
         &:focus {
-            border-color: $primary-color;
+            border-color: #2271b1;
             outline: none;
         }
     }
 
     input[type="checkbox"] {
-        margin-right: 8px;
+        margin-right: 6px;
+        vertical-align: middle;
     }
 }
 
@@ -332,11 +572,11 @@ body.dragwyb-form_page_dragwyb-form-builder{
     animation: slideIn 0.3s ease;
 
     &.success {
-        background: $success-color;
+        background: var(--success-color);
     }
 
     &.error {
-        background: $error-color;
+        background: var(--error-color);
     }
 
     .notice-dismiss {
@@ -358,6 +598,7 @@ body.dragwyb-form_page_dragwyb-form-builder{
         transform: translateX(100%);
         opacity: 0;
     }
+
     to {
         transform: translateX(0);
         opacity: 1;
@@ -391,11 +632,11 @@ body.dragwyb-form_page_dragwyb-form-builder{
         select {
             width: 100%;
             padding: 8px;
-            border: 1px solid $border-color;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
 
             &:focus {
-                border-color: $primary-color;
+                border-color: var(--primary-color);
                 outline: none;
             }
         }
@@ -406,11 +647,45 @@ body.dragwyb-form_page_dragwyb-form-builder{
 
             button {
                 @include button;
-                background: $primary-color;
+                background: var(--primary-color);
                 color: #fff;
                 padding: 10px 20px;
                 font-size: 16px;
             }
         }
     }
-} 
+}
+
+// Field overlay for drag
+.canvas-overlay-field{
+    width: 128px !important;
+    height: 128px !important;
+}
+
+.dragwyb-overlay-preview {
+    &.field-type {
+        cursor: move;
+        text-align: center;
+        background-color: #f9fafb;
+        border: 1px solid #e5e7eb;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: .5rem;
+        padding-block: 1rem;
+        opacity: 0.8;
+
+        i {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+
+        p {
+            color: var(--secondary-hover-color);
+            font-weight: 500;
+            font-size: 1rem;
+        }
+    }
+  }
+  
