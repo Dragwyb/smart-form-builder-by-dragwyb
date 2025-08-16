@@ -3,6 +3,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import shouldRenderField from "../../editor/components/Editor/shouldRenderField";
 import { Field } from "../../editor/components/Editor/Fields";
+import { __ } from "@wordpress/i18n";
 
 const renderControls = ({
   key,
@@ -85,8 +86,8 @@ const SortableRepeaterItem = ({
     <div style={style} className="dragwyb-repeater-item" data-id={id}>
       <div ref={setNodeRef} {...attributes} {...listeners}>
         {repeaterHeading(settings.item_label, index)}
-        <span><i class="fa-regular fa-copy" onClick={()=>{onCopy(repeaterItem, index+1)}}>Copy</i></span>
-        {repeaterItems.length > 1 && <span><i class="fa-solid fa-xmark" onClick={()=>{onDelete(id)}}>Delete</i></span>}
+        <span><i class="fa-regular fa-copy" onClick={()=>{onCopy(repeaterItem, index+1)}} title={__('Copy', 'dragwyb-form-builder')}></i></span>
+        {repeaterItems.length > 1 && <span><i class="fa-solid fa-xmark" onClick={()=>{onDelete(id)}}  title={__('Delete', 'dragwyb-form-builder')}></i></span>}
       </div>
       {Object.values(settings.items).map((data) => {
         return renderControls({

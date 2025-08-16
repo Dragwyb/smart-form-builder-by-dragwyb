@@ -23,7 +23,7 @@ class repeaterControl extends DragwybEditor.ControlBase {
                     />
                     <div className="add-repeater-btn">
                         <button onClick={() => {
-                            const updated = [...repeaterItems, { _id: this.utils.generateId(), settings: {} }];
+                            const updated = [...repeaterItems, { _id: this.utils.generateId(), attributes: {} }];
                             this.updateControls(id, updated);
                         }}>
                             {settings.add_item}

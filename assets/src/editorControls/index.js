@@ -259,16 +259,16 @@ class tabsControl extends DragwybEditor.ControlBase {
 
         return (
             <div id={id} className="tabs-control">
-                <div className="tab-buttons">
+                <div className="tabs">
                     {Object.keys(options).map((key) => (
-                        <button
+                        <div
                             key={key}
-                            type="button"
-                            className={key === value ? 'active' : ''}
+                            type="tab"
+                            className={`tab${key === value ? ' active' : ''}`}
                             onClick={()=>this.updateControls(id, key)}
                         >
                             {options[key].label}
-                        </button>
+                        </div>
                     ))}
                 </div>
             </div>
