@@ -1,57 +1,65 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { useDispatch, useStore } from 'react-redux';
 import { addField, updateFieldValues } from '../../store/actions';
 import { useSelector } from 'react-redux';
-import Helper  from '../Utils';
+import {Utils as Helper, AddField as CreateNewField} from '../Utils';
+import { SearchInput } from '../../components/Common'
+import { useDraggable, DragOverlay } from '@dnd-kit/core';
 
-const Controls = ({ onFieldSelect }) => {
+const SidebarField = ({ type, label, icon, handleAddField }) => {
+    const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+        id: `sidebar-${type}`,
+        data: {
+            fromSidebar: true,
+            type,
+        },
+    });
+
+    return (
+        <div
+        ref={setNodeRef}
+            {...listeners}
+            {...attributes}
+            onClick={()=>{handleAddField(type)}}
+            className={`field-type ${isDragging ? 'dragging' : ''}`}
+        >
+            <i className={icon}></i>
+            <p>{label}</p>
+        </div>
+    );
+};
+
+const Controls = ({ onFieldSelect, Utils }) => {
     const fieldTypes = DragwybEditor.fieldTypes;
-    const dispatch=useDispatch();
-
-    const store = useStore();
-    const state = store.getState();
-
-    const Utils=Helper(state, dispatch);
+    const [searchField, setSearchField] = useState('');
+    const dispatch = useDispatch();
 
     const handleAddField = (type) => {
-        const field = {
-            _id: Utils.generateId(),
-            type,
-        };
-
-        if(DragwybEditor.fieldTypes[type] && DragwybEditor.fieldTypes[type].controls){
-            const fieldControls=DragwybEditor.fieldTypes[type].controls;
-            field.attributes={};
-            Object.keys(fieldControls).forEach(id=>{
-                if(!['tabs','tab','section'].includes(fieldControls[id].type)){
-
-                    let defaultValue=fieldControls[id].default ? fieldControls[id].default : '';
-                        
-                    defaultValue=DragwybBuilder.Hooks.applyFilter(`Dragwyb/Editor/AddControl/${fieldControls[id].type}.defaultValue`, defaultValue, Utils);
-                    field.attributes[id]=defaultValue;
-                }
-            })
-        }
-
-        dispatch(addField(field));
+        const field=CreateNewField(type, dispatch, Utils)
         onFieldSelect(field);
     };
 
+    const searchFieldHandler = (value) => {
+        setSearchField(value);
+    }
+
     return (
         <div className="dragwyb-controls">
-            <div className="dragwyb-controls__header">
-                <h2>{DragwybBuilder.i18n.addField}</h2>
+            <div className="dragwyb-controls__search">
+                <SearchInput
+                    value={searchField}
+                    onChange={searchFieldHandler}
+                    placeholder='Search fields...'
+                />
             </div>
             <div className="dragwyb-controls__fields">
                 {Object.entries(fieldTypes).map(([type, config]) => (
-                    <button
-                        key={type}
-                        className="field-type"
-                        onClick={() => handleAddField(type)}
-                    >
-                        <span className={`dashicons dashicons-${config.icon}`} />
-                        <span>{config.label}</span>
-                    </button>
+                    <SidebarField
+                        handleAddField={handleAddField}
+                        type={type}
+                        icon={config.icon}
+                        label={config.label}
+                    />
                 ))}
             </div>
         </div>

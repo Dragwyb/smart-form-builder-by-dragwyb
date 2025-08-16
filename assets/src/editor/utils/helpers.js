@@ -1,3 +1,5 @@
+
+import React,{ useRef, useEffect } from "react";
 import { updateFieldId } from "../store/actions";
 
 
@@ -85,6 +87,27 @@ export const debounce = (func, wait) => {
         };
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
+    };
+};
+
+export const useDebouncedCallback = (callback, delay = 300) => {
+    const timeoutRef = useRef(null);
+
+    useEffect(() => {
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
+    }, []);
+
+    return (...args) => {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+        timeoutRef.current = setTimeout(() => {
+            callback(...args);
+        }, delay);
     };
 };
 

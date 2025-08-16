@@ -1,48 +1,63 @@
 import React from 'react';
-import { useDispatch, useSelector, useStore } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
-    DndContext,
-    closestCenter,
-    PointerSensor,
-    useSensor,
-    useSensors,
-    DragOverlay
+    useDroppable,
+    useDraggable
 } from '@dnd-kit/core';
 import {
-    arrayMove,
     SortableContext,
     useSortable,
     verticalListSortingStrategy
 } from '@dnd-kit/sortable';
-import {restrictToParentElement, createSnapModifier} from '@dnd-kit/modifiers';
 
 import { CSS } from '@dnd-kit/utilities';
 import * as Fields from './Fields';
-import { updateFieldOrder, duplicateField } from '../../store/actions';
-import Helper from '../Utils';
+import { duplicateField } from '../../store/actions';
 
-const SortableItem = ({ field, selectedField, onFieldSelect, values, onChange, errors, index, onDuplicate, onDelete }) => {
-    const {
-        attributes,
-        listeners,
-        setNodeRef,
-        transform,
-        transition,
-    } = useSortable({ id: field._id });
+const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, onChange, onFieldSelect, onDuplicate, onDelete, errors, selectedField }) => {
+    const { setNodeRef: dropRef, isOver } = useDroppable(
+        {
+            id: `canvas-drop-${field._id}`,
+            data: {
+                canvasDrop: true,
+                currentIndex: index
+            }
+        }
+    );
 
-    const style = {
-        transform: CSS.Transform.toString(transform),
-        transition
+    const { attributes, listeners, setNodeRef: dragRef, isDragging } = useDraggable({
+        id: `canvas-drag-${field._id}`,
+        data: {
+            canvasDrag: true,
+            currentIndex: index,
+        },
+    });
+
+    const setNodeRef = (Node) => {
+        if (!Node) return;
+        dropRef(Node)
+        dragRef(Node)
     };
 
-    return (
+    let wrapperClass = 'field-wrapper';
+
+    if (selectedField?._id === field._id) {
+        wrapperClass += ' selected';
+    }
+
+    if (isDragging) {
+        wrapperClass += ' dragwyb-start-drag'
+    }
+
+    return <>
+        {dropIndex === index && 'bottom' !== dropIndicatorPosition && <span className='dragwyb-editor-indicator'></span>}
         <div
             ref={setNodeRef}
-            style={style}
-            {...attributes}
-            {...listeners}
-            className={`field-wrapper ${selectedField?._id === field._id ? 'selected' : ''}`}
+            className={wrapperClass}
             onClick={() => onFieldSelect(field)}
+            {...listeners}
+            {...attributes}
+            id={`field-wrapp-${field._id}`}
         >
             <Fields.Preview
                 fields={[field]}
@@ -71,34 +86,12 @@ const SortableItem = ({ field, selectedField, onFieldSelect, values, onChange, e
                 </button>
             </div>
         </div>
-    );
-};
+        {dropIndex === index && 'bottom' === dropIndicatorPosition && <span className='dragwyb-editor-indicator'></span>}
+    </>
+}
 
-const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors }) => {
+const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors, Utils, dropIndex, dropIndicatorPosition }) => {
     const dispatch = useDispatch();
-
-    const store = useStore();
-    const state = store.getState();
-
-    const Utils = Helper(state, dispatch);
-
-    const sensors = useSensors(
-        useSensor(PointerSensor, {
-            activationConstraint: {
-                distance: 5,
-            },
-        })
-    );
-
-    const handleDragEnd = (event) => {
-        const { active, over } = event;
-
-        if (active.id !== over?.id) {
-            const oldIndex = fields.findIndex(f => f._id === active.id);
-            const newIndex = fields.findIndex(f => f._id === over.id);
-            dispatch(updateFieldOrder(oldIndex, newIndex));
-        }
-    };
 
     const handleDuplicateField = (field, index) => {
         const deepClone = JSON.parse(JSON.stringify(field));
@@ -128,31 +121,23 @@ const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors
         dispatch({ type: 'DELETE_FIELD', payload: id });
     };
 
-    const gridSize = 20; // pixels
-    const snapToGridModifier = createSnapModifier(gridSize);
-
     return (
         <div className="dragwyb-canvas">
-            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd} modifiers={[restrictToParentElement, snapToGridModifier]}>
-                <SortableContext items={fields.map(f => f._id)} strategy={verticalListSortingStrategy}>
-                    <div className="dragwyb-canvas__fields">
-                        {fields.map((field, index) => (
-                            <SortableItem
-                                key={field._id}
-                                field={field}
-                                index={index}
-                                selectedField={selectedField}
-                                onFieldSelect={onFieldSelect}
-                                values={values}
-                                onChange={onChange}
-                                errors={errors}
-                                onDuplicate={(field)=>handleDuplicateField(field, index)}
-                                onDelete={handleDeleteField}
-                            />
-                        ))}
-                    </div>
-                </SortableContext>
-            </DndContext>
+            {fields.map((field, index) =>
+                <RenderItem
+                    field={field}
+                    selectedField={selectedField}
+                    values={values}
+                    onChange={onChange}
+                    onFieldSelect={onFieldSelect}
+                    onDuplicate={(field) => handleDuplicateField(field, index)}
+                    onDelete={handleDeleteField}
+                    errors={errors}
+                    index={index}
+                    dropIndex={dropIndex}
+                    dropIndicatorPosition={dropIndicatorPosition}
+                />
+            )}
             {fields.length === 0 && (
                 <div className="dragwyb-canvas__empty">
                     <p>{DragwybBuilder.i18n.emptyForm}</p>

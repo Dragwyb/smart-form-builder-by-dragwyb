@@ -18,9 +18,9 @@ export const UPDATE_FIELD_IDS = 'UPDATE_FIELD_IDS';
 export const UPDATE_FIELD_ID = 'UPDATE_FIELD_ID';
 export const DELETE_FIELD_ID = 'DELETE_FIELD_ID';
 
-export const addField = (field) => ({
+export const addField = ({field, index=null}) => ({
     type: ADD_FIELD,
-    payload: field
+    payload: {field: field, fieldIndex: index}
 });
 
 export const duplicateField = (field, index, dispatch) => ({

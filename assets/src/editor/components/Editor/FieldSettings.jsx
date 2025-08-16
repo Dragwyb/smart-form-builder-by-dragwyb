@@ -3,7 +3,7 @@ import { useDispatch, useSelector, useStore } from 'react-redux';
 import { updateField, updateSectionSettings, resetSectionSettings } from '../../store/actions';
 import { Panel } from '../Common';
 import shouldRenderField from './shouldRenderField';
-import Helper from '../Utils';
+import {Utils as Helper} from '../Utils';
 
 const FieldSettings = ({ activeField, fieldValue, sectionSettings, onClose }) => {
     
@@ -111,10 +111,15 @@ const FieldSettings = ({ activeField, fieldValue, sectionSettings, onClose }) =>
             title={`${fieldType.label} ${DragwybBuilder.i18n.settings}`}
             onClose={onClose}
         >
+            {fieldType?.controls?.header_controls && 
+            <div className='field-header_controls'>
+                {renderControls({ key: 'header_controls', settings: fieldType.controls.header_controls })}
+            </div>
+            }
             <div className="field-settings">
                 {Object.keys(fieldType.controls).map(key => (
                     <>
-                        {renderControls({ key, settings: fieldType.controls[key] })}
+                        {key === 'header_controls' ? null : renderControls({ key, settings: fieldType.controls[key] })}
                     </>
                 ))}
             </div>

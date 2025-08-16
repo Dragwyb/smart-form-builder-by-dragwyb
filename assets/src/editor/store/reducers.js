@@ -33,18 +33,26 @@ const initialState = {
     },
     sectionSettings: {},
     notices: [],
-    fieldIds:[]
-
+    fieldIds:[],
+    formStatus:DragwybEditor?.formData?.status ?? 'draft'
 };
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
         case ADD_FIELD:
+            const { field, fieldIndex = null } = action.payload;
+
+            const index= null === fieldIndex ? state.form.fields.length : fieldIndex;
+
             return {
                 ...state,
                 form: {
                     ...state.form,
-                    fields: [...state.form.fields, action.payload]
+                    fields: [
+                        ...state.form.fields.slice(0, index),
+                        field,
+                        ...state.form.fields.slice(index)
+                    ]
                 }
             };
 

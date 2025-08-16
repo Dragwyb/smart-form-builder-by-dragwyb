@@ -21,24 +21,18 @@ const FormSettings = () => {
 
     return (
         <div className="form-settings">
-            <Tabs>
-                {Object.entries(DragwybEditor.settings).map(([key, section]) => (
-                    <Tabs.Tab key={key} title={section.label}>
-                        <Panel>
-                            {Object.entries(section.settings).map(([settingKey, setting]) => (
-                                <div key={settingKey} className="setting-row">
-                                    <label>{setting.label}</label>
-                                    <input
-                                        type={setting.type}
-                                        value={settings[key]?.[settingKey] || ''}
-                                        onChange={e => handleChange(key, settingKey, e.target.value)}
-                                    />
-                                </div>
-                            ))}
-                        </Panel>
-                    </Tabs.Tab>
-                ))}
-            </Tabs>
+            {Object.entries(DragwybEditor.settings).map(([key, section]) => (
+                (Object.entries(section.settings).map(([settingKey, setting]) => (
+                    <div key={settingKey} className="setting-row">
+                        <label>{setting.label}</label>
+                        <input
+                            type={setting.type}
+                            value={settings[key]?.[settingKey] || ''}
+                            onChange={e => handleChange(key, settingKey, e.target.value)}
+                        />
+                    </div>
+                )))
+            ))}
         </div>
     );
 };

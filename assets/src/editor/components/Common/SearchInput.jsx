@@ -1,42 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Dashicon } from '@wordpress/components';
-import { debounce } from '../../utils/helpers';
+import { useDebouncedCallback } from '../../utils/helpers';
 
 const SearchInput = ({
     value,
     onChange,
     placeholder = 'Search...',
-    debounceTime = 300,
-    className = ''
+    debounceTime = 100,
+    className = '',
+    id = Math.random(99999)
 }) => {
-    const debouncedOnChange = React.useMemo(
-        () => debounce(onChange, debounceTime),
-        [onChange, debounceTime]
-    );
+    const [searchValue, setSearchValue] = useState(value);
+    const debouncedSearch = useDebouncedCallback((val) => {
+        onChange(val);
+    }, debounceTime);
+
+    const onChangeHandler = (value) => {
+        const newValue = value;
+        setSearchValue(newValue);
+        debouncedSearch(newValue);
+    }
 
     return (
         <div className={`dragwyb-search-input ${className}`}>
-            <Dashicon icon="search" />
+            <label for={id}>
+                <i className='fa-solid fa-magnifying-glass' />
+            </label>
             <input
+                id={id}
                 type="text"
-                value={value}
-                onChange={(e) => {
-                    const newValue = e.target.value;
-                    onChange(newValue); // Immediate update for controlled input
-                    debouncedOnChange(newValue); // Debounced callback
-                }}
+                value={searchValue}
+                onChange={(e)=>{onChangeHandler(e.target.value)}}
                 placeholder={placeholder}
             />
-            {value && (
+            {searchValue && (
                 <button
                     className="dragwyb-search-input__clear"
-                    onClick={() => onChange('')}
+                    onClick={() => {onChangeHandler('')}}
+                    type="button"
                 >
-                    <Dashicon icon="no-alt" />
+                    <i className='fa-solid fa-xmark' />
                 </button>
             )}
         </div>
     );
 };
 
-export default SearchInput; 
+export default SearchInput;

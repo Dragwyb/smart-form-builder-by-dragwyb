@@ -10,14 +10,15 @@ const Tabs = ({ children, defaultTab = 0, onChange }) => {
         }
     };
 
+    
     return (
         <div className="dragwyb-tabs">
             <div className="dragwyb-tabs__nav">
                 {React.Children.map(children, (child, index) => (
                     <button
-                        key={index}
-                        className={`dragwyb-tabs__nav-item ${activeTab === index ? 'active' : ''}`}
-                        onClick={() => handleTabChange(index)}
+                    key={index}
+                    className={`dragwyb-tabs__nav-item ${activeTab === index ? 'active' : ''}`}
+                    onClick={() => handleTabChange(index)}
                     >
                         {child.props.label}
                     </button>

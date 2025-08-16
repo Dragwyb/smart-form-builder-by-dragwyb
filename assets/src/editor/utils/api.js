@@ -31,7 +31,7 @@ class FormBuilderAPI {
             const result = await response.json();
 
             if (!result.success) {
-                throw new Error(result.data?.message || __('An error occurred', 'dragwyb'));
+                throw new Error(result.data?.message || __('An error occurred', 'dragwyb-form-builder'));
             }
 
             return result.data;
@@ -59,7 +59,7 @@ class FormBuilderAPI {
      */
     async loadForm() {
         if (!this.formId) {
-            throw new Error(__('No form ID provided', 'dragwyb'));
+            throw new Error(__('No form ID provided', 'dragwyb-form-builder'));
         }
 
         return this.request('load_form', {
@@ -123,7 +123,7 @@ class FormBuilderAPI {
             const result = await response.json();
 
             if (!result.success) {
-                throw new Error(result.data?.message || __('Upload failed', 'dragwyb'));
+                throw new Error(result.data?.message || __('Upload failed', 'dragwyb-form-builder'));
             }
 
             return result.data;
