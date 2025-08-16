@@ -160,6 +160,19 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 DRAGWYB_FORM_BUILDER_VERSION
             );
 
+            wp_enqueue_style(
+                'dragwyb-font-awesome',
+                DRAGWYB_FORM_BUILDER_URL . 'assets/font-awesome/v6/all.min.css',
+                [],
+                '6.7.2'
+            );
+            // wp_enqueue_style(
+            //     'dragwyb-font-awesome',
+            //     DRAGWYB_FORM_BUILDER_URL . 'assets/font-awesome/v5/all.min.css',
+            //     [],
+            //     '5.15.4'
+            // );
+
             $localize_data = [
                 'ajaxUrl' => admin_url('admin-ajax.php'),
                 'nonce' => wp_create_nonce('dragwyb_editor'),
@@ -170,7 +183,8 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 'controlTypes' => $this->get_control_types(),
                 'formTypes' => $this->get_form_types(),
                 'settings' => $this->get_form_advance_settings(),
-                'adminUrl' => admin_url('edit.php?post_type=dragwyb_form'),
+                'generalSettings' => $this->get_form_general_settings(),
+                'adminUrl' => admin_url('admin.php?page=dragwyb-form-overview'),
             ];
 
             $localize_data = apply_filters('dragwy_form_editor_localize', $localize_data);
@@ -208,6 +222,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             return [
                 'id' => $form_id,
                 'title' => $form ? $form->post_title : '',
+                'status' => $form ? $form->post_status : '',
                 'type' => get_post_meta($form_id, '_dragwyb_form_type', true) ?: 'standard',
                 'fields' => get_post_meta($form_id, '_dragwyb_form_fields', true) ?: [],
                 'settings' => get_post_meta($form_id, '_form_settings', true) ?: [],
@@ -230,12 +245,15 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
 
             foreach ($fields_data as $key => $field) {
                 $field->enqueue_assets();
-                
+
                 $name = $field->get_name();
 
                 $conrols = $field->render_controls();
 
+                $icon = $field->get_icon();
+
                 $fields[$key]['label'] = esc_html($name);
+                $fields[$key]['icon'] = esc_attr($icon);
                 $fields[$key]['controls'] = $conrols;
             }
 
@@ -279,6 +297,18 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             return apply_filters('dragwyb_form_types', $default_types);
         }
 
+        private function get_form_general_settings(): array
+        {
+            $styles = [
+                'default' => __('Default', 'dragwyb-form-builder'),
+                'custom' => __('Custom', 'dragwyb-form-builder')
+            ];
+
+            $styles = apply_filters('dragwyb_form_styles', $styles);
+
+            return $styles;
+        }
+
         /**
          * Get form settings configuration
          */
@@ -309,15 +339,16 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
         public function localize_i18n_strings($strings): array
         {
             $localize_strings = [
-                'addField' => __('Add Field', 'dragwyb-form-builder'),
+                'fields' => __('Fields', 'dragwyb-form-builder'),
                 'fieldSettings' => __('Field Settings', 'dragwyb-form-builder'),
                 'formSettings' => __('Form Settings', 'dragwyb-form-builder'),
                 'save' => __('Save Form', 'dragwyb-form-builder'),
-                'preview' => __('Preview Form', 'dragwyb-form-builder'),
+                'preview' => __('Preview', 'dragwyb-form-builder'),
                 'formTitle' => __('Form Title', 'dragwyb-form-builder'),
                 'settings' => __('Settings', 'dragwyb-form-builder'),
                 'general' => __('General', 'dragwyb-form-builder'),
-                'advanced' => __('Advanced', 'dragwyb-form-builder'),
+                'style' => __('Style', 'dragwyb-form-builder'),
+                'advance' => __('Advance', 'dragwyb-form-builder'),
                 'display' => __('Display', 'dragwyb-form-builder'),
                 'validation' => __('Validation', 'dragwyb-form-builder'),
                 'notifications' => __('Notifications', 'dragwyb-form-builder'),
