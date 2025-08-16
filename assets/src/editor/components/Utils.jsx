@@ -6,34 +6,8 @@ export const Utils=(state, dispatch)=>{
     const Utils={};
 
     HelperFunctions.forEach(funName=>{
-        Utils[funName]=()=>{return Helpers[funName](state, dispatch)};
+        Utils[funName]=(args = {})=>{return Helpers[funName]({state, dispatch, ...args})};
     })
 
-    return Utils;
+    return Object.freeze(Utils);
 }
-
-export const AddField = ({type, dispatch, Utils, index=null} ) => {
-    const field = {
-        _id: Utils.generateId(),
-        type,
-    };
-
-    if (DragwybEditor.fieldTypes[type] && DragwybEditor.fieldTypes[type].controls) {
-        const fieldControls = DragwybEditor.fieldTypes[type].controls;
-        field.attributes = {};
-        Object.keys(fieldControls).forEach(id => {
-            if (!['tabs', 'tab', 'section'].includes(fieldControls[id].type)) {
-
-                let defaultValue = fieldControls[id].default ? fieldControls[id].default : '';
-
-                defaultValue = DragwybBuilder.Hooks.applyFilter(`Dragwyb/Editor/AddControl/${fieldControls[id].type}.defaultValue`, defaultValue, Utils);
-                
-                field.attributes[id] = defaultValue;
-            }
-        })
-    }
-
-    dispatch(addField({field, index}));
-
-    return field;
-};

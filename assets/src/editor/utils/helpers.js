@@ -1,17 +1,17 @@
 
-import React,{ useRef, useEffect } from "react";
-import { updateFieldId } from "../store/actions";
-
+import React, { useRef, useEffect } from "react";
+import { updateFieldId, addField, updateSelectedField, updateActiveToolbar, updatePreviewMode } from "../store/actions";
+import PropTypes from "prop-types";
 
 /**
  * Generates a unique ID
  * @returns {string}
  */
-export const generateId = (state, dispatch) => {
-    const existIds=state?.fieldIds || [];
-        
+export const generateId = ({ state, dispatch }) => {
+    const existIds = state?.fieldIds || [];
+
     const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    
+
     const createId = () => {
         let id = '';
         for (let i = 0; i < 9; i++) {
@@ -22,7 +22,7 @@ export const generateId = (state, dispatch) => {
 
     let id;
 
-    id=createId();
+    id = createId();
     do {
         id = createId();
     } while (existIds.includes(id));
@@ -31,6 +31,78 @@ export const generateId = (state, dispatch) => {
 
     return id;
 };
+
+export const AddField = ({ type, dispatch, Utils, index = null }) => {
+    const field = {
+        _id: Utils.generateId(),
+        type,
+    };
+
+    if (DragwybEditor.fieldTypes[type] && DragwybEditor.fieldTypes[type].controls) {
+        const fieldControls = DragwybEditor.fieldTypes[type].controls;
+        field.attributes = {};
+        Object.keys(fieldControls).forEach(id => {
+            if (!['tabs', 'tab', 'section'].includes(fieldControls[id].type)) {
+
+                let defaultValue = fieldControls[id].default ? fieldControls[id].default : '';
+
+                defaultValue = DragwybBuilder.Hooks.applyFilter(`Dragwyb/Editor/AddControl/${fieldControls[id].type}.defaultValue`, defaultValue, Utils);
+
+                field.attributes[id] = defaultValue;
+            }
+        })
+    }
+
+    dispatch(addField({ field, index }));
+
+    return field;
+};
+
+export const setSelectedField = ({ dispatch, value }) => {
+    try {
+        const validator=validateProp({
+            key: "value",
+            value: value, // invalid
+            types: ["bool", "object"],
+            required: true,
+            functionName: "setSelectedField"
+        });
+        dispatch(updateSelectedField(value))
+    } catch (e) {
+        console.error("Validation failed:", e.message);
+    }
+}
+
+export const setActiveTab = ({ dispatch, value }) => {
+      try {
+        validateProp({
+            key: "value",
+            value: value, // invalid
+            types: ["bool", "string"],
+            required: true,
+            functionName: "setActiveTab"
+        });
+
+        dispatch(updateActiveToolbar(value))
+    } catch (e) {
+        console.error("Validation failed:", e.message);
+    }
+}
+export const setPreviewMode = ({ dispatch, value }) => {
+      try {
+        validateProp({
+            key: "value",
+            value: value, // invalid
+            types: ["bool"],
+            required: true,
+            functionName: "setPreviewMode"
+        });
+
+        dispatch(updatePreviewMode(value))
+    } catch (e) {
+        console.error("Validation failed:", e.message);
+    }
+}
 
 /**
  * Deep clones an object
@@ -191,4 +263,39 @@ export const validateField = (field, value) => {
         default:
             return true;
     }
-}; 
+};
+
+export const validateProp = ({
+    key,
+    value,
+    types = [],
+    required = false,
+    functionName = "AnonymousFunction"
+}) => {
+    const typeMap = {
+        string: PropTypes.string,
+        bool: PropTypes.bool,
+        object: PropTypes.object,
+        number: PropTypes.number,
+        array: PropTypes.array,
+        func: PropTypes.func,
+        node: PropTypes.node,
+        element: PropTypes.element,
+        any: PropTypes.any
+    };
+
+    let validator = PropTypes.oneOfType(types.map(t => typeMap[t] || PropTypes.any));
+    if (required) validator = validator.isRequired;
+
+    const props = { [key]: value };
+
+    // 🚀 Direct validator call (avoids caching)
+    const error = validator(props, key, functionName, "prop", null, "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED");
+
+    if (error) {
+        throw error; // always throws if invalid
+    }
+
+    return true;
+};
+

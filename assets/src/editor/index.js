@@ -4,8 +4,6 @@ import App from './App';
 import DragwybControlBase from './controlBase';
 import '../../sass/editor.scss';
 import DragwybFieldBase from './fieldBase';
-import * as Helper from './utils/helpers';
-import * as Api from './utils/api';
 
 DragwybEditor.FieldBase = DragwybFieldBase;
 DragwybEditor.ControlBase = DragwybControlBase;

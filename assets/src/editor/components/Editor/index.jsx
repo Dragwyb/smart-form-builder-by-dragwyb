@@ -1,7 +1,6 @@
 import React, { useState, useEffect, act } from 'react';
 import { useSelector, useDispatch, useStore } from 'react-redux';
 import Canvas from './Canvas';
-import Controls from './Controls';
 import FieldSettings from './FieldSettings';
 import FormSettings from './FormSettings';
 import Preview from './Preview';
@@ -13,11 +12,16 @@ import { DndContext, useSensor, useSensors, PointerSensor, MouseSensor, TouchSen
 import { restrictToParentElement, createSnapModifier } from '@dnd-kit/modifiers';
 import SidebarFieldOverlay from '../SidebarFieldOverlay';
 import { Utils as Helper, AddField } from '../Utils';
+import ToolBar from '../Toolbar/Toolbar';
+import ToolbarSettings from '../Toolbar/ToolbarSettings';
 
 const Editor = () => {
-    const [activeTab, setActiveTab] = useState('fields');
-    const [selectedField, setSelectedField] = useState(null);
-    const [previewMode, setPreviewMode] = useState(false);
+    // const [activeTab, setActiveTab] = useState('fields');
+    // const [selectedField, setSelectedField] = useState(null);
+    // const [previewMode, setPreviewMode] = useState(false);
+    const activeTab=useSelector(state=>state.activeToolbar);
+    const selectedField=useSelector(state=>state.selectedField);
+    const previewMode=useSelector(state=>state.previewMode);
     const formData = useSelector(state => state.form);
     const fields = useSelector(state => state.form.fields); // Assuming fields are stored in Redux
     const formStatus = useSelector(state => state.formStatus || 'draft');
@@ -58,8 +62,22 @@ const Editor = () => {
     };
 
     const setSelectedFieldHandler = (field) => {
-        setSelectedField(field);
-        setActiveTab(null === field ? 'fields' : null);
+        Utils.setSelectedField({value: field});
+        Utils.setActiveTab({value: false === field ? 'fields' : false});
+        // setSelectedField(field);
+        // setActiveTab(null === field ? 'fields' : null);
+    }
+
+    const setActiveTabHandler=(value)=>{
+        Utils.setSelectedField({value: false});
+        Utils.setActiveTab({value: value});
+        // setSelectedField(null);
+        // setActiveTab(value);
+    }
+
+    const setPreviewModeHandler = (value) =>{
+        Utils.setPreviewMode({value: value});
+        // setPreviewMode(value);
     }
 
     const selectedFieldSetting = () => {
@@ -125,6 +143,7 @@ const Editor = () => {
                 false !== dropIndicatorPosition && setDropIndicatorPosition(false)
                 return;
             };
+
             // Skip if we’re hovering over ourselves
             if (activeId === overId) {
                 return;
@@ -185,7 +204,8 @@ const Editor = () => {
 
         if (isFromSidebar) {
             const type = active.data.current.type;
-            const newField = AddField({ type, dispatch, Utils, index: index + 1 });
+
+            const newField = Utils.AddField({ type, Utils, index: index });
 
             dispatch({ type: 'ADD_FIELD_AT_INDEX', payload: { field: newField, index: fields.length } });
             setSelectedFieldHandler(newField);
@@ -208,7 +228,7 @@ const Editor = () => {
         general:
         {
             iconCls: 'fas fa-paint-brush mr-2 text-sm',
-            settingName: 'fields'
+            settingName: 'general'
         },
         advance:
         {
@@ -260,7 +280,7 @@ const Editor = () => {
                     })}
                 </div>
                 <div className="dragwyb-editor__actions">
-                    <Button onClick={() => setPreviewMode(!previewMode)} className='dragwyb-preview'>
+                    <Button onClick={() => Utils.setPreviewMode(!previewMode)} className='dragwyb-preview'>
                         <i className={`far fa-eye${previewMode ? '-slash' : ''}`} />
                         {previewMode ? __('Disable', 'dragwyb-form-builder') : __('Enable', 'dragwyb-form-builder')}
                     </Button>
@@ -288,7 +308,7 @@ const Editor = () => {
                         // modifiers={[restrictToParentElement, snapToGridModifier]}
                         >
                             <div className="dragwyb-editor__sidebar">
-                                {activeTab === 'fields' && (<Controls onFieldSelect={setSelectedFieldHandler} Utils={Utils} />)}
+                                {/* {activeTab === 'fields' && (<Controls onFieldSelect={setSelectedFieldHandler} Utils={Utils} />)}
                                 {activeTab === 'settings' && (<FormSettings />)}
                                 {selectedField && (
                                     <div className="dragwyb-editor__settings">
@@ -296,6 +316,18 @@ const Editor = () => {
                                             activeField={selectedField}
                                             fieldValue={selectedFieldSetting()}
                                             onClose={() => setSelectedFieldHandler(null)}
+                                            key={selectedField.id}
+                                            sectionSettings={sectionSettings}
+                                        />
+                                    </div>
+                                )} */}
+                                {activeTab && <ToolbarSettings setting={activeTab} Utils={Utils}/>}
+                                {selectedField && (
+                                    <div className="dragwyb-editor__settings">
+                                        <FieldSettings
+                                            activeField={selectedField}
+                                            fieldValue={selectedFieldSetting()}
+                                            onClose={() => setSelectedFieldHandler(false)}
                                             key={selectedField.id}
                                             sectionSettings={sectionSettings}
                                         />
@@ -316,6 +348,7 @@ const Editor = () => {
                                     dropIndicatorPosition={dropIndicatorPosition}
                                 />
                             </div>
+                            <ToolBar toolbars={mainTabs} activeTab={activeTab} setActiveTab={setActiveTabHandler} setPreviewMode={setPreviewModeHandler}/>
                             {activeDrag && <SidebarFieldOverlay data={activeDrag} fields={fields} />}
                         </DndContext>
                     </>

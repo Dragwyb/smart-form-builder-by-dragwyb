@@ -15,7 +15,10 @@ const initialState = {
     errors: [],
     values: {},
     fieldIds,
-    formStatus:DragwybEditor?.formData?.status ?? 'draft'
+    formStatus:DragwybEditor?.formData?.status ?? 'draft',
+    selectedField: null,
+    activeToolbar: 'fields',
+    previewMode: false,
 };
 
 const store = createStore(reducer, initialState, applyMiddleware(thunk));

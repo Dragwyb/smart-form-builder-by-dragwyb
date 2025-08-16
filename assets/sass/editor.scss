@@ -10,23 +10,30 @@
 --secondary-color: #1d2327;
 --border-color: #e1e7ef;
 --background-color: #f0f0f1;
---text-color: #1d2327;
 --success-color: #00a32a;
 --error-color: #d63638;
+
+--topbar-bg-color: #0a2131;
+--sidebar-bg-color: #052033;
+--canvas-bg-color: #081726;
+--canvas-inner-clor: #fff;
 }
 
 // Mixins
 @mixin button {
     padding: 8px 12px;
-    border: 1px solid var(--border-color);
+    border: 1px solid #fff;
     cursor: pointer;
-    background: #fff;
+    background: transparent;
     transition: all 0.2s ease;
     border-radius: 4px;
+    color: white;
 
     &:hover,
     &.active {
         background: var(--primary-light-color);
+        color: var(--primary-color);
+        border-color: var(--primary-color);
     }
 
     &.primary {
@@ -52,7 +59,6 @@
 
 body {
     &.dragwyb-form_page_dragwyb-form-builder {
-
         #adminmenumain,
         #wpadminbar {
             display: none !important;
@@ -150,20 +156,22 @@ body {
     flex-direction: column;
 
     &__header {
-        background: #fff;
+        background: var(--topbar-bg-color);
         border-bottom: 1px solid var(--border-color);
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 15px 20px;
+        color: #fff;
     }
 
     &__details {
         display: flex;
         align-items: end;
         justify-content: center;
-
+        
         h2 {
+            color: #fff;
             font-size: 20px;
         }
 
@@ -281,7 +289,7 @@ body {
 
     &__sidebar {
         width: 300px;
-        background: #fff;
+        background: var(--sidebar-bg-color);
         border-right: 1px solid var(--border-color);
         box-sizing: border-box;
         height: 100%;
@@ -290,6 +298,7 @@ body {
     &__main {
         flex: 1;
         padding: 20px;
+        background: var(--canvas-bg-color);
     }
 
     &__settings {
@@ -297,12 +306,45 @@ body {
         background: #fff;
         height: calc(100% - 47px);
     }
+
+    &__toolbar_settings{
+        h1.toolbar-not-found{
+            color: #fff;
+            padding: 1rem;
+        }
+    }
+
+    &__toolbar{
+        background: var(--sidebar-bg-color);
+        border-left: 1px solid var(--border-color);
+
+        &-item{
+            display: grid;
+            text-align: center;
+            gap: 1rem;
+            padding: .8rem 1.3rem;
+            border-bottom: 1px solid var(--border-color);
+            color: #fff;
+            transition: all .3s ease-in-out;
+            cursor: pointer;
+
+            &:hover,
+            &.active{
+                background: var(--primary-light-color);
+                color: var(--primary-color);
+            }
+
+            i{
+                font-size: 1.5rem;
+            }
+        }
+    }
 }
 
 // Canvas
 .dragwyb-canvas {
     min-height: 400px;
-    background: #fff;
+    background: var(--canvas-inner-clor);
     border-radius: 4px;
     padding: 20px;
 
@@ -608,7 +650,6 @@ body {
 // Preview
 .dragwyb-preview {
     padding: 20px;
-    background: #fff;
     border-radius: 4px;
 
     &__form {
