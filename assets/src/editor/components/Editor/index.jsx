@@ -16,12 +16,9 @@ import ToolBar from '../Toolbar/Toolbar';
 import ToolbarSettings from '../Toolbar/ToolbarSettings';
 
 const Editor = () => {
-    // const [activeTab, setActiveTab] = useState('fields');
-    // const [selectedField, setSelectedField] = useState(null);
-    // const [previewMode, setPreviewMode] = useState(false);
-    const activeTab=useSelector(state=>state.activeToolbar);
-    const selectedField=useSelector(state=>state.selectedField);
-    const previewMode=useSelector(state=>state.previewMode);
+    const activeTab = useSelector(state => state.activeToolbar);
+    const selectedField = useSelector(state => state.selectedField);
+    const previewMode = useSelector(state => state.previewMode);
     const formData = useSelector(state => state.form);
     const fields = useSelector(state => state.form.fields); // Assuming fields are stored in Redux
     const formStatus = useSelector(state => state.formStatus || 'draft');
@@ -45,7 +42,7 @@ const Editor = () => {
 
     const handleSave = async () => {
         try {
-            await dispatch(saveForm(formData));
+            dispatch(saveForm(formData));
         } catch (error) {
             console.error('Save failed:', error);
         }
@@ -62,22 +59,19 @@ const Editor = () => {
     };
 
     const setSelectedFieldHandler = (field) => {
-        Utils.setSelectedField({value: field});
-        Utils.setActiveTab({value: false === field ? 'fields' : false});
-        // setSelectedField(field);
-        // setActiveTab(null === field ? 'fields' : null);
+        Utils.setSelectedField({ value: field });
+        const defaultToolbar = DragwybEditor?.EditorToolbars?.Default ?? false;
+        Utils.setActiveTab({ value: false === field ? defaultToolbar : false });
     }
 
-    const setActiveTabHandler=(value)=>{
-        Utils.setSelectedField({value: false});
-        Utils.setActiveTab({value: value});
-        // setSelectedField(null);
-        // setActiveTab(value);
+    const setActiveTabHandler = (value) => {
+        Utils.setSelectedField({ value: false });
+        Utils.setActiveTab({ value: value });
     }
 
-    const setPreviewModeHandler = (value) =>{
-        Utils.setPreviewMode({value: value});
-        // setPreviewMode(value);
+    const setPreviewModeHandler = (value) => {
+        console.log(value);
+        Utils.setPreviewMode({ value: value });
     }
 
     const selectedFieldSetting = () => {
@@ -280,7 +274,7 @@ const Editor = () => {
                     })}
                 </div>
                 <div className="dragwyb-editor__actions">
-                    <Button onClick={() => Utils.setPreviewMode(!previewMode)} className='dragwyb-preview'>
+                    <Button onClick={() => Utils.setPreviewMode({ value: !previewMode })} className='dragwyb-preview'>
                         <i className={`far fa-eye${previewMode ? '-slash' : ''}`} />
                         {previewMode ? __('Disable', 'dragwyb-form-builder') : __('Enable', 'dragwyb-form-builder')}
                     </Button>
@@ -321,7 +315,7 @@ const Editor = () => {
                                         />
                                     </div>
                                 )} */}
-                                {activeTab && <ToolbarSettings setting={activeTab} Utils={Utils}/>}
+                                {activeTab && <ToolbarSettings setting={activeTab} Utils={Utils} />}
                                 {selectedField && (
                                     <div className="dragwyb-editor__settings">
                                         <FieldSettings
@@ -348,7 +342,7 @@ const Editor = () => {
                                     dropIndicatorPosition={dropIndicatorPosition}
                                 />
                             </div>
-                            <ToolBar toolbars={mainTabs} activeTab={activeTab} setActiveTab={setActiveTabHandler} setPreviewMode={setPreviewModeHandler}/>
+                            <ToolBar toolbars={mainTabs} activeTab={activeTab} setActiveTab={setActiveTabHandler} setPreviewMode={setPreviewModeHandler} />
                             {activeDrag && <SidebarFieldOverlay data={activeDrag} fields={fields} />}
                         </DndContext>
                     </>

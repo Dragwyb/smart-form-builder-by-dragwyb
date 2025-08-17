@@ -10,14 +10,14 @@ if(DragwybEditor?.formData?.fields){
 }
 
 const initialState = {
-    form: DragwybEditor.formData,
+    form: DragwybEditor.formData || [],
     notices: [],
     errors: [],
     values: {},
     fieldIds,
     formStatus:DragwybEditor?.formData?.status ?? 'draft',
     selectedField: null,
-    activeToolbar: 'fields',
+    activeToolbar: DragwybEditor?.EditorToolbars?.Default ?? false,
     previewMode: false,
 };
 

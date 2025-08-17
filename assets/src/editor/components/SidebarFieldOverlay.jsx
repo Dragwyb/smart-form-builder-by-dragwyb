@@ -25,7 +25,7 @@ const SidebarFieldOverlay = ({ data, fields }) => {
 
     if(!type) return null;
 
-    const fieldTypes = DragwybEditor.fieldTypes;
+    const fieldTypes = DragwybEditor.fields;
 
     const config = fieldTypes[type];
 

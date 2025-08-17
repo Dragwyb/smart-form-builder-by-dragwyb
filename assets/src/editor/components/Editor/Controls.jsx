@@ -30,7 +30,7 @@ const Controls = () => {
     DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/Toolbar_Render/fields', (html, Utils)=>{return renderFields({html, Utils})});
 
     const renderFields = ({html, Utils}) =>{
-       const fieldTypes = DragwybEditor.fieldTypes;
+       const fieldTypes = DragwybEditor.fields;
         const [searchField, setSearchField] = useState('');
         // const dispatch = useDispatch();
     

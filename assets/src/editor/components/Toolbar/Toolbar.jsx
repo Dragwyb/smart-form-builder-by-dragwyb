@@ -1,18 +1,24 @@
 import { Button } from "../Common";
 
-const ToolBar = ({ toolbars, activeTab, setActiveTab, setPreviewMode }) => {
+const ToolBar = ({ toolbarss, activeTab, setActiveTab, setPreviewMode }) => {
+    const toolbars=DragwybEditor.EditorToolbars.toolbars;
+
+    if(!toolbars || Object.keys(toolbars).length < 1){
+        return <></>;
+    }
+
     return <div className='dragwyb-editor__toolbar'>
         {Object.keys(toolbars).map(tab => {
-            return <div className={`dragwyb-editor__toolbar-item ${activeTab === toolbars[tab].settingName ? ' active' : ''}`}
+            return <div className={`dragwyb-editor__toolbar-item ${activeTab === tab ? ' active' : ''}`}
                 onClick={() => {
-                    setActiveTab(toolbars[tab].settingName);
+                    setActiveTab(tab);
                     setPreviewMode(false);
                 }}
-                title={DragwybBuilder.i18n[tab]}
-                data-tab={toolbars[tab].settingName}
+                title={toolbars[tab].name}
+                data-tab={tab}
             >
-                <i className={toolbars[tab].iconCls} />
-                {DragwybBuilder.i18n[tab]}
+                <i className={toolbars[tab].icon} />
+                {toolbars[tab].name}
             </div>
         })}
     </div>

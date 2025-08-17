@@ -9,7 +9,7 @@ const FieldSettings = ({ activeField, fieldValue, sectionSettings, onClose }) =>
     
     const dispatch = useDispatch();
     let activeSection=false;
-    const fieldType = DragwybEditor.fieldTypes[activeField.type];
+    const fieldType = DragwybEditor.fields[activeField.type];
 
     const store = useStore();
     const state = store.getState();

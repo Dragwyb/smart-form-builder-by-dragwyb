@@ -98,7 +98,7 @@ const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors
         const id = Utils.generateId();
         deepClone._id = id;
 
-        const fieldControls = DragwybEditor.fieldTypes[deepClone.type]?.controls || {};
+        const fieldControls = DragwybEditor.fields[deepClone.type]?.controls || {};
 
         Object.keys(deepClone.attributes || {}).forEach(id => {
             if (!['tabs', 'tab', 'section'].includes(fieldControls[id]?.type)) {
@@ -123,7 +123,7 @@ const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors
 
     return (
         <div className="dragwyb-canvas">
-            {fields.map((field, index) =>
+            {fields && fields.length > 0 && fields.map((field, index) =>
                 <RenderItem
                     field={field}
                     selectedField={selectedField}
@@ -138,7 +138,7 @@ const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors
                     dropIndicatorPosition={dropIndicatorPosition}
                 />
             )}
-            {fields.length === 0 && (
+            {!fields || fields.length === 0 && (
                 <div className="dragwyb-canvas__empty">
                     <p>{DragwybBuilder.i18n.emptyForm}</p>
                 </div>
