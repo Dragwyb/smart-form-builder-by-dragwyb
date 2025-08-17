@@ -63,7 +63,7 @@ export const setSelectedField = ({ dispatch, value }) => {
         const validator=validateProp({
             key: "value",
             value: value, // invalid
-            types: ["bool", "object"],
+            types: ["bool", "string"],
             required: true,
             functionName: "setSelectedField"
         });

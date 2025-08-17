@@ -1,6 +1,6 @@
 import { Button } from "../Common";
 
-const ToolBar = ({ toolbarss, activeTab, setActiveTab, setPreviewMode }) => {
+const ToolBar = ({ activeTab, setActiveTab, setPreviewMode }) => {
     const toolbars=DragwybEditor.EditorToolbars.toolbars;
 
     if(!toolbars || Object.keys(toolbars).length < 1){

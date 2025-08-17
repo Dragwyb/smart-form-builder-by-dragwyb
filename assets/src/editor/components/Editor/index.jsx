@@ -61,7 +61,7 @@ const Editor = () => {
     const setSelectedFieldHandler = (field) => {
         Utils.setSelectedField({ value: field });
         const defaultToolbar = DragwybEditor?.EditorToolbars?.Default ?? false;
-        Utils.setActiveTab({ value: false === field ? defaultToolbar : false });
+        Utils.setActiveTab({ value: false === field ? defaultToolbar : 'fields' });
     }
 
     const setActiveTabHandler = (value) => {
@@ -70,7 +70,6 @@ const Editor = () => {
     }
 
     const setPreviewModeHandler = (value) => {
-        console.log(value);
         Utils.setPreviewMode({ value: value });
     }
 
@@ -160,8 +159,6 @@ const Editor = () => {
             const movingPosiont = event.activatorEvent.clientY + delta.y;
             const overRect = over.rect.top + over.rect.height / 2 + extraTop;
 
-            let indicatorPos = 'top';
-
             if (active?.data?.current?.canvasDrag && newdropIndex > activeIndex) {
                 newdropIndex--;
                 dropIndicatorPosition !== 'bottom' && setDropIndicatorPosition('bottom');
@@ -202,7 +199,7 @@ const Editor = () => {
             const newField = Utils.AddField({ type, Utils, index: index });
 
             dispatch({ type: 'ADD_FIELD_AT_INDEX', payload: { field: newField, index: fields.length } });
-            setSelectedFieldHandler(newField);
+            setSelectedFieldHandler(newField._id);
             return;
         } else if (isCanvasDrag) {
             const oldIndex = active?.data?.current?.currentIndex;
@@ -315,8 +312,13 @@ const Editor = () => {
                                         />
                                     </div>
                                 )} */}
-                                {activeTab && <ToolbarSettings setting={activeTab} Utils={Utils} />}
-                                {selectedField && (
+                                {activeTab && <ToolbarSettings
+                                    setting={activeTab}
+                                    Utils={Utils}
+                                    selectedToolbar={selectedField}
+                                    toolbarData={selectedField && formData[activeTab]}
+                                />}
+                                {/* {selectedField && (
                                     <div className="dragwyb-editor__settings">
                                         <FieldSettings
                                             activeField={selectedField}
@@ -326,7 +328,7 @@ const Editor = () => {
                                             sectionSettings={sectionSettings}
                                         />
                                     </div>
-                                )}
+                                )} */}
                             </div>
                             <div className="dragwyb-editor__main">
                                 <Canvas

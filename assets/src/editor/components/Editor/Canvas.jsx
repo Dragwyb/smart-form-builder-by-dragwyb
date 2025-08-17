@@ -54,7 +54,7 @@ const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, on
         <div
             ref={setNodeRef}
             className={wrapperClass}
-            onClick={() => onFieldSelect(field)}
+            onClick={() => onFieldSelect(field._id)}
             {...listeners}
             {...attributes}
             id={`field-wrapp-${field._id}`}
@@ -113,7 +113,7 @@ const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors
         });
 
         dispatch(duplicateField(deepClone, index + 1, dispatch));
-        onFieldSelect(deepClone);
+        onFieldSelect(deepClone._id);
     };
 
     const handleDeleteField = (id) => {

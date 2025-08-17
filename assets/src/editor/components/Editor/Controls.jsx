@@ -13,10 +13,10 @@ const SidebarField = ({ type, label, icon, handleAddField }) => {
 
     return (
         <div
-        ref={setNodeRef}
+            ref={setNodeRef}
             {...listeners}
             {...attributes}
-            onClick={()=>{handleAddField(type)}}
+            onClick={() => { handleAddField(type) }}
             className={`field-type ${isDragging ? 'dragging' : ''}`}
         >
             <i className={icon}></i>
@@ -26,24 +26,56 @@ const SidebarField = ({ type, label, icon, handleAddField }) => {
 };
 
 const Controls = () => {
-    
-    DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/Toolbar_Render/fields', (html, Utils)=>{return renderFields({html, Utils})});
 
-    const renderFields = ({html, Utils}) =>{
-       const fieldTypes = DragwybEditor.fields;
+    DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/Sidebar/Render/fields', (html, toolbarData, Utils) => { return renderFields({ html, Utils, toolbarData }) });
+    DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/Sidebar/Values/fields', (data, key) => { return fieldValues({ data, key }) });
+    DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/Sidebar/Settings/fields', (data, key, setting) => { return fieldSettings({ setting, data, key }) });
+
+    const getSelectedField = (data, key) => {
+        let value = null;
+
+        Object.values(data).forEach(field => {
+            if (field._id === key) {
+                value = field;
+            }
+        })
+
+        return value;
+    }
+
+    const fieldValues = ({ data, key }) => { 
+        const selectedField=getSelectedField(data, key);
+
+        return selectedField ? selectedField : data;
+    }
+    
+    const fieldSettings = ({ setting, data, key }) => { 
+        const selectedField=getSelectedField(data, key);
+
+        if(setting && selectedField.type && setting[selectedField.type] ){
+            return setting[selectedField.type];
+        }
+
+        return setting;
+    }
+
+    const renderFields = ({ html, Utils, toolbarData }) => {
         const [searchField, setSearchField] = useState('');
-        // const dispatch = useDispatch();
-    
+
+        if (toolbarData && toolbarData.length > 0) {
+            return false;
+        }
+
+        const fieldTypes = DragwybEditor.fields;
+
         const handleAddField = (type) => {
-            // const field=CreateNewField(type, dispatch, Utils)
             Utils.AddField({ type, Utils });
-            // onFieldSelect(field);
         };
-    
+
         const searchFieldHandler = (value) => {
             setSearchField(value);
         }
-    
+
         return (
             <div className="dragwyb-controls">
                 <div className="dragwyb-controls__search">
