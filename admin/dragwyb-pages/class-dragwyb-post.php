@@ -27,13 +27,9 @@ class Dragwyb_Post
         add_filter('manage_' . self::POST_TYPE . '_posts_columns', [$this, 'set_custom_columns']);
         add_action('manage_' . self::POST_TYPE . '_posts_custom_column', [$this, 'render_custom_columns'], 10, 2);
 
-        // Add form type meta box
-        add_action('add_meta_boxes', [$this, 'add_form_type_meta_box']);
-        add_action('save_post', [$this, 'save_form_type_meta']);
-
         // Add editor integration
-        add_action('load-post.php', [$this, 'redirect_to_custom_editor']);
-        add_action('load-post-new.php', [$this, 'redirect_to_custom_editor']);
+        // add_action('load-post.php', [$this, 'redirect_to_custom_editor']);
+        // add_action('load-post-new.php', [$this, 'redirect_to_custom_editor']);
 
         add_action('init', [$this, 'dragwyb_add_caps_to_admin']);
 
@@ -131,78 +127,6 @@ class Dragwyb_Post
                 $entries_count = $this->get_form_entries_count($post_id);
                 echo esc_html($entries_count);
                 break;
-        }
-    }
-
-    /**
-     * Add meta box for form type selection
-     */
-    public function add_form_type_meta_box(): void
-    {
-        add_meta_box(
-            'Dragwyb_Page_type',
-            __('Form Type', 'dragwyb-form-builder'),
-            [$this, 'render_form_type_meta_box'],
-            self::POST_TYPE,
-            'side',
-            'high'
-        );
-    }
-
-    /**
-     * Render form type meta box
-     */
-    public function render_form_type_meta_box($post): void
-    {
-        // Add nonce for security
-        wp_nonce_field('Dragwyb_Page_type_meta_box', 'Dragwyb_Page_type_nonce');
-
-        $form_type = get_post_meta($post->ID, '_Dragwyb_Page_type', true);
-?>
-        <select name="Dragwyb_Page_type" id="Dragwyb_Page_type">
-            <option value="standard" <?php selected($form_type, 'standard'); ?>>
-                <?php esc_html_e('Standard Form', 'dragwyb-form-builder'); ?>
-            </option>
-            <option value="quiz" <?php selected($form_type, 'quiz'); ?>>
-                <?php esc_html_e('Quiz', 'dragwyb-form-builder'); ?>
-            </option>
-            <option value="poll" <?php selected($form_type, 'poll'); ?>>
-                <?php esc_html_e('Poll', 'dragwyb-form-builder'); ?>
-            </option>
-            <option value="survey" <?php selected($form_type, 'survey'); ?>>
-                <?php esc_html_e('Survey', 'dragwyb-form-builder'); ?>
-            </option>
-        </select>
-<?php
-    }
-
-    /**
-     * Save form type meta
-     */
-    public function save_form_type_meta($post_id): void
-    {
-        // Check if nonce is set and valid
-        if (
-            !isset($_POST['Dragwyb_Page_type_nonce']) ||
-            !wp_verify_nonce($_POST['Dragwyb_Page_type_nonce'], 'Dragwyb_Page_type_meta_box')
-        ) {
-            return;
-        }
-
-        // Check if this is an autosave
-        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-            return;
-        }
-
-        // Check user permissions
-        if (!current_user_can('edit_post', $post_id)) {
-            return;
-        }
-
-        // Save form type
-        if (isset($_POST['Dragwyb_Page_type'])) {
-            $form_type = sanitize_text_field($_POST['Dragwyb_Page_type']);
-            update_post_meta($post_id, '_Dragwyb_Page_type', $form_type);
         }
     }
 
