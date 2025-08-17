@@ -57,11 +57,11 @@ class Hooks {
 
         const data = this.#usercallBack(handle, this.Filters, args);
 
-        if (!data) {
+        if (!data.status) {
             return args[0];
         }
 
-        return data;
+        return data.found;
     }
 
     #addUserCallback = (handle = '', callback = () => { }, object) => {
@@ -106,13 +106,14 @@ class Hooks {
             }
         }
 
-        let data = false;
+        let data = {status: false};
 
         if (callbacks.length > 0) {
-            data = true;
+            data.status=true;
+            data.found = true;
 
             callbacks.forEach((callback) => {
-                data = callback(...args)
+                data.found = callback(...args)
             });
         }
 
