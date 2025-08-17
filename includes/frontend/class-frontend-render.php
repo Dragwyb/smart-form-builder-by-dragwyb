@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Dragwyb\Form_Builder\Includes\Frontend;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
-use Dragwyb\Form_Builder\Includes\Modules\Module;
+use Dragwyb\Form_Builder\Includes\Modules\Modules;
 use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Controls\Control_Base;
 
@@ -36,7 +36,7 @@ class Frontend_Render
 
     private function set_module(): void
     {
-        self::$module =  new Module();
+        self::$module =  new Modules();
     }
 
     private function set_control(): void

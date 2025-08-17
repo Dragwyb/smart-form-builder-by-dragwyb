@@ -6,9 +6,11 @@ namespace Dragwyb\Form_Builder\Admin\Dragwyb_Editor;
 
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Pages;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
-use Dragwyb\Form_Builder\Includes\Modules\Module;
+use Dragwyb\Form_Builder\Includes\Modules\Modules;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Dragwyb_Init;
+use Dragwyb\Form_Builder\Includes\Toolbars\Toolbars;
+use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
 
 if (!defined("ABSPATH")) {
     die("You can't access this page");
@@ -37,6 +39,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             add_action('Dragwyb_Current_Screen', [$this, 'init'], 1);
             add_filter('Dragwyb_i18n', [$this, 'localize_i18n_strings']);
             add_action('Dragwyb/after_enqueue/editor_scripts', [$this, 'editor_controls_scripts']);
+            add_filter('Dragwyb/Editor/Localize_Settings', [$this, 'editor_toolbars_localize']);
         }
 
         public function init($screen)
@@ -179,15 +182,12 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 'formId' => (int) self::$form_id,
                 'editorContainer' => esc_html(self::Current_Page) . '-editor-container',
                 'formData' => $this->get_form_data((int) self::$form_id),
-                'fieldTypes' => $this->get_field_types(),
                 'controlTypes' => $this->get_control_types(),
                 'formTypes' => $this->get_form_types(),
-                'settings' => $this->get_form_advance_settings(),
-                'generalSettings' => $this->get_form_general_settings(),
                 'adminUrl' => admin_url('admin.php?page=dragwyb-form-overview'),
             ];
 
-            $localize_data = apply_filters('dragwy_form_editor_localize', $localize_data);
+            $localize_data = apply_filters('Dragwyb/Editor/Localize_Settings', $localize_data);
             // Localize data
             wp_localize_script('dragwyb-form-editor', 'DragwybEditor', $localize_data);
 
@@ -223,13 +223,62 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 'id' => $form_id,
                 'title' => $form ? $form->post_title : '',
                 'status' => $form ? $form->post_status : '',
-                'type' => get_post_meta($form_id, '_dragwyb_form_type', true) ?: 'standard',
-                'fields' => get_post_meta($form_id, '_dragwyb_form_fields', true) ?: [],
-                'settings' => get_post_meta($form_id, '_form_settings', true) ?: [],
-                'styles' => get_post_meta($form_id, '_form_styles', true) ?: [],
-                'notifications' => get_post_meta($form_id, '_form_notifications', true) ?: [],
-                'confirmations' => get_post_meta($form_id, '_form_confirmations', true) ?: [],
             ];
+        }
+
+        public function editor_toolbars_localize($data): array
+        {
+            $toolbar_data = array();
+
+            $toolbar_obj=new Toolbars();
+            $default_toolbar=$toolbar_obj->defaultToolbar();
+            $toolbars=$toolbar_obj->get_toolbars();
+            $form_data=[];
+
+            if(isset($data['formId'])){
+                $form_data=get_post_meta($data['formId'], '_dragwyb_form_data', true);
+
+                if(!empty($form_data) && !isset($data['formData'])){
+                    $data['formData']=array();
+                }
+            }
+
+            if(count($toolbars) < 1){
+                return array();
+            }
+
+            foreach($toolbars as $key => $toolbar){
+                if($toolbar instanceof Toolbar_Base){
+                    $settings=$toolbar->get_toolbar_settings();
+                    $name=$toolbar->get_toolbar_name();
+                    $icon=$toolbar->get_toolbar_icon();
+
+
+                    if($settings){
+                        if(!isset($data[$key]))
+                        $data[$key]=$settings;
+
+                        $toolbar_data[$key]=array('name'=>$name, 'icon'=>$icon);
+                    }
+
+                    if(isset($form_data[$key])){
+                        $toolbar->set_toolbar_data($form_data[$key]);
+                        $sanitize_toolbar_data=$toolbar->get_toolbar_data();
+
+                        $data['formData'][$key]=$sanitize_toolbar_data;
+                    }
+                }
+            }   
+
+            $toolbar_data=array('toolbars'=>$toolbar_data);
+
+            if(isset($toolbar_data['toolbars'][$default_toolbar])){
+                $toolbar_data['Default']=sanitize_text_field($default_toolbar);
+            }
+
+            $data=array_merge($data, array('EditorToolbars'=>$toolbar_data));
+            
+            return $data;
         }
 
         /**
@@ -237,7 +286,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
          */
         private function get_field_types(): array
         {
-            $module = new Module();
+            $module = new Modules();
 
             $fields_data = $module->get_fields();
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes;
 
-use Dragwyb\Form_Builder\Includes\Modules\Module;
+use Dragwyb\Form_Builder\Includes\Modules\Modules;
 
 class Dragwyb_Form_Builder_Editor
 {
@@ -134,7 +134,7 @@ class Dragwyb_Form_Builder_Editor
      */
     private function get_field_types(): array
     {
-        $module = new Module();
+        $module = new Modules();
 
         $fields_data = $module->get_fields();
 

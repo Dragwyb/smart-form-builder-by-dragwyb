@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Dragwyb\Form_Builder\Includes\Controls\Controls;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
-use Dragwyb\Form_Builder\Includes\Modules\Module;
+use Dragwyb\Form_Builder\Includes\Modules\Modules;
 
 class Control_Repeater extends Control_Base
 {
@@ -68,7 +68,7 @@ class Control_Repeater extends Control_Base
             $data[$index] = array('_id' => $item['_id']);
 
             if (!isset($this->module)) {
-                $this->module = new Module();
+                $this->module = new Modules();
             }
 
             if (!isset($this->field_module_cache[$this->field_type])) {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Dragwyb\Form_Builder\Includes\Modules\Sanitize_Fields_Settings;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
-use Dragwyb\Form_Builder\Includes\Modules\Module;
+use Dragwyb\Form_Builder\Includes\Modules\Modules;
 
 if (!class_exists('Sanitize_Fields_Settings')) {
     class Sanitize_Fields_Settings
@@ -45,7 +45,7 @@ if (!class_exists('Sanitize_Fields_Settings')) {
 
         private function set_module(): void
         {
-            self::$module =  new Module();
+            self::$module =  new Modules();
         }
 
         private function field_loop(): void

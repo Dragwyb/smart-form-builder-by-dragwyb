@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Dragwyb\Form_Builder\Includes;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
-use Dragwyb\Form_Builder\Includes\Modules\Module;
+use Dragwyb\Form_Builder\Includes\Modules\Modules;
 use Dragwyb\Form_Builder\Includes\Modules\Sanitize_Fields_Settings\Sanitize_Fields_Settings;
+use Dragwyb\Form_Builder\Includes\Toolbars\Toolbars;
+use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
 
 class Dragwyb_Form_Builder_Ajax
 {
@@ -28,6 +30,7 @@ class Dragwyb_Form_Builder_Ajax
      */
     public function save_form(): void
     {
+        
         try {
             check_ajax_referer('dragwyb_editor');
 
@@ -42,20 +45,8 @@ class Dragwyb_Form_Builder_Ajax
                 throw new \Exception(__('Invalid form data', 'dragwyb-form-builder'));
             }
 
-            // Update form
-            wp_update_post([
-                'ID' => $form_id,
-                'post_title' => sanitize_text_field($form_data['title']),
-                'post_status' => 'publish'
-            ]);
-
             // Update form meta
-            update_post_meta($form_id, '_dragwyb_form_type', $form_data['type']);
-            update_post_meta($form_id, '_dragwyb_form_fields', $this->sanitize_form_data($form_data));
-            update_post_meta($form_id, '_form_settings', $form_data['settings']);
-            update_post_meta($form_id, '_form_styles', $form_data['styles']);
-            update_post_meta($form_id, '_form_notifications', $form_data['notifications']);
-            update_post_meta($form_id, '_form_confirmations', $form_data['confirmations']);
+            update_post_meta($form_id, '_dragwyb_form_data', $this->sanitize_form_data($form_data));
 
             wp_send_json_success([
                 'message' => __('Form saved successfully', 'dragwyb-form-builder')
@@ -103,18 +94,27 @@ class Dragwyb_Form_Builder_Ajax
     private function sanitize_form_data(array $data): array
     {
 
-        if (!isset($data['fields']) || !is_array($data['fields'])) {
-            return [];
+        $sanitize_data=array();
+        $toolbar_obj=new Toolbars();
+        $toolbars=$toolbar_obj->get_toolbars();
+
+        foreach($data as $key=>$value){
+            if($key === 'id'){
+                continue;
+            }
+
+            if(count($toolbars) > 0 && isset($toolbars[$key]) && $toolbars[$key] instanceof Toolbar_Base){
+                $toolbar=$toolbars[$key];
+                $toolbar->set_toolbar_data($value);
+                $toolbar_data=$toolbar->get_toolbar_data();
+
+                if($toolbar_data){
+                    $sanitize_data[$key]=$toolbar_data;
+                }
+            }
         }
 
-        $sanitize_form_data = Sanitize_Fields_Settings::instance($data['fields']);
-        $fields = $sanitize_form_data->get_data();
-
-        if ($fields && is_array($fields) && count($fields) > 0) {
-            return $fields;
-        }
-
-        return [];
+        return $sanitize_data;
     }
 
     public function get_field_settings(): void

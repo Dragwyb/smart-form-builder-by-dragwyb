@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use Dragwyb\Form_Builder\Includes\Modules\Module;
+use Dragwyb\Form_Builder\Includes\Modules\Modules;
 
 class Dragwyb_Form_Builder_Submission {
     private const SUBMISSION_POST_TYPE = 'dragwyb_submission';
