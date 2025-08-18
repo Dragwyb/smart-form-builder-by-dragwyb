@@ -27,7 +27,7 @@ const SidebarField = ({ type, label, icon, handleAddField }) => {
 
 const Controls = () => {
 
-    DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/Sidebar/Render/fields', (html, toolbarData, Utils) => { return renderFields({ html, Utils, toolbarData }) });
+    DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/Sidebar/Render/fields', (html, toolbarData, Utils) => { return <RenderFields Utils={Utils} toolbarData={toolbarData} />; });
     DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/Sidebar/Values/fields', (data, key) => { return fieldValues({ data, key }) });
     DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/Sidebar/Settings/fields', (data, key, setting) => { return fieldSettings({ setting, data, key }) });
 
@@ -59,7 +59,8 @@ const Controls = () => {
         return setting;
     }
 
-    const renderFields = ({ html, Utils, toolbarData }) => {
+    const RenderFields = ({ html, Utils, toolbarData }) => {
+
         const [searchField, setSearchField] = useState('');
 
         if (toolbarData && toolbarData.length > 0) {

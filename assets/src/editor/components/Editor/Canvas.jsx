@@ -90,7 +90,8 @@ const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, on
     </>
 }
 
-const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors, Utils, dropIndex, dropIndicatorPosition }) => {
+const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors, Utils, dropIndex, dropIndicatorPosition, activeTab }) => {
+
     const dispatch = useDispatch();
 
     const handleDuplicateField = (field, index) => {
@@ -121,8 +122,14 @@ const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors
         dispatch({ type: 'DELETE_FIELD', payload: id });
     };
 
+    let canvasCls = "dragwyb-canvas";
+
+    if (!fields || fields.length === 0) {
+        canvasCls += " canvas-empty";
+    }
+
     return (
-        <div className="dragwyb-canvas">
+        <div className={canvasCls}>
             {fields && fields.length > 0 && fields.map((field, index) =>
                 <RenderItem
                     field={field}
@@ -138,9 +145,17 @@ const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors
                     dropIndicatorPosition={dropIndicatorPosition}
                 />
             )}
-            {!fields || fields.length === 0 && (
+            {(!fields || fields.length === 0) && (
                 <div className="dragwyb-canvas__empty">
-                    <p>{DragwybBuilder.i18n.emptyForm}</p>
+                    <div className='dragwyb-canvas__empty-wrapper'>
+                        {activeTab !== fields ?
+                            <>
+                                <i className='fas fa-plus'></i>
+                                <p>{DragwybBuilder.i18n.emptyForm}</p>
+                            </> :
+                            <p></p>
+                        }
+                    </div>
                 </div>
             )}
         </div>

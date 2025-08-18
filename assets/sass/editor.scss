@@ -299,6 +299,8 @@ body {
         flex: 1;
         padding: 20px;
         background: var(--canvas-bg-color);
+        overflow: auto;
+        max-height: calc(100% - 40px);
     }
 
     &__settings {
@@ -348,11 +350,51 @@ body {
     background: var(--canvas-inner-clor);
     border-radius: 4px;
     padding: 20px;
+    height: 100%;
+    max-height: calc(100% - 40px);
+
+    &.canvas-empty{
+        padding: 0px;
+        max-height: unset;
+    }
 
     &__empty {
-        text-align: center;
-        padding: 40px;
-        color: #666;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+
+        &-wrapper{
+            padding: 40px;
+            text-align: center;
+            font-size: 1.5rem;
+            background-color: var(--primary-light-color);
+            color: var(--primary-color);
+            border: 1px dashed var(--primary-color);
+            width: calc(100% - 80px);
+            height: calc(100% - 120px);
+            margin: 20px;
+
+            P{
+                margin-top: 1rem;
+                font-size: 1.5rem;
+            }
+
+            i{
+                padding: 1rem;
+                border: 1px dashed var(--primary-color);
+                cursor: pointer;
+                transition: all .3s ease-in-out;
+
+                &:hover{
+                    background: var(--primary-color);
+                    color: var(--primary-light-color);
+                    transform: scale(1.2);
+                    border-color: var(--primary-light-color);
+                }
+            }
+        }
     }
 
     .dragwyb-editor-indicator {

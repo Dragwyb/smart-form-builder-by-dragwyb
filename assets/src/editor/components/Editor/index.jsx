@@ -256,9 +256,9 @@ const Editor = () => {
                     {Object.keys(mainTabs).map(tab => {
                         return <div className="dragwyb-editor__tab"
                             onClick={() => {
-                                setActiveTab(mainTabs[tab].settingName);
-                                setSelectedField(null)
-                                setPreviewMode(false);
+                                Utils.setActiveTab({value: mainTabs[tab].settingName});
+                                Utils.setSelectedField({value: false})
+                                Utils.setPreviewMode({value: false});
                             }}
                             title={DragwybBuilder.i18n[tab]}
                             data-tab={mainTabs[tab].settingName}
@@ -342,6 +342,7 @@ const Editor = () => {
                                     sidebarDrag={sidebarDrag}
                                     dropIndex={dropIndex}
                                     dropIndicatorPosition={dropIndicatorPosition}
+                                    activeTab={activeTab}
                                 />
                             </div>
                             <ToolBar toolbars={mainTabs} activeTab={activeTab} setActiveTab={setActiveTabHandler} setPreviewMode={setPreviewModeHandler} />
