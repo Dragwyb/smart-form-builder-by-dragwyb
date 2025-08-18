@@ -10,7 +10,7 @@ use Dragwyb\Form_Builder\Includes\Modules\Modules;
 if (!class_exists('Sanitize_Fields_Settings')) {
     class Sanitize_Fields_Settings
     {
-        private static $filtered_data = false;
+        private static $filtered_data = [];
 
         private static $form_fields = null;
 
@@ -58,7 +58,7 @@ if (!class_exists('Sanitize_Fields_Settings')) {
                 self::$filtered_data[$index]['_id'] = $field['_id'];
                 self::$filtered_data[$index]['type'] = $field['type'];
 
-                if (isset($field['type'])){
+                if (isset($field['type']) && isset($field['attributes'])){
                     if (isset($field['type']) && is_array($field['attributes']) && count($field['attributes']) > 0) {
                         $type = $field['type'];
                         $attributes = $field['attributes'];
@@ -104,13 +104,13 @@ if (!class_exists('Sanitize_Fields_Settings')) {
 
         public function get_data(): array|bool
         {
-            return self::$filtered_data;
+            return count(self::$filtered_data) > 0 ? self::$filtered_data : false;
         }
 
 
         public function __destruct()
         {
-            self::$filtered_data = false;
+            self::$filtered_data = [];
             self::$form_fields = null;
             self::$field_module = null;
             self::$control = null;
