@@ -13,6 +13,8 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import * as Fields from './Fields';
 import { duplicateField } from '../../store/actions';
+import { Button } from '../Common';
+import { __ } from '@wordpress/i18n';
 
 const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, onChange, onFieldSelect, onDuplicate, onDelete, errors, selectedField }) => {
     const { setNodeRef: dropRef, isOver } = useDroppable(
@@ -90,9 +92,19 @@ const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, on
     </>
 }
 
-const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors, Utils, dropIndex, dropIndicatorPosition, activeTab }) => {
+const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors, Utils, dropIndex, dropIndicatorPosition, activeTab, setActiveTab }) => {
 
     const dispatch = useDispatch();
+
+    const { setNodeRef, isOver } = useDroppable(
+        {
+            id: `canvas-add-field`,
+            data: {
+                addField: true,
+                currentIndex: 0
+            }
+        }
+    );
 
     const handleDuplicateField = (field, index) => {
         const deepClone = JSON.parse(JSON.stringify(field));
@@ -146,14 +158,17 @@ const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors
                 />
             )}
             {(!fields || fields.length === 0) && (
-                <div className="dragwyb-canvas__empty">
-                    <div className='dragwyb-canvas__empty-wrapper'>
-                        {activeTab !== fields ?
+                <div className="dragwyb-canvas__empty" ref={setNodeRef}>
+                    <div className={`dragwyb-canvas__empty-wrapper ${isOver ? ' drag-active': ''}`}>
+                        {activeTab !== 'fields' ?
                             <>
-                                <i className='fas fa-plus'></i>
-                                <p>{DragwybBuilder.i18n.emptyForm}</p>
+                                <Button onClick={() => setActiveTab('fields')} className='add-field'>
+                                    <i className='fas fa-plus' />
+                                    {__('Add Field.', 'dragwyb-form-builder')}
+                                </Button>
+                                <p>{__('Click on a Add Field to add it to your form.', 'dragwyb-form-builder')}</p>
                             </> :
-                            <p></p>
+                            <p>{DragwybBuilder.i18n.emptyForm}</p>
                         }
                     </div>
                 </div>

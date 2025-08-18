@@ -343,6 +343,7 @@ const Editor = () => {
                                     dropIndex={dropIndex}
                                     dropIndicatorPosition={dropIndicatorPosition}
                                     activeTab={activeTab}
+                                    setActiveTab={setActiveTabHandler}
                                 />
                             </div>
                             <ToolBar toolbars={mainTabs} activeTab={activeTab} setActiveTab={setActiveTabHandler} setPreviewMode={setPreviewModeHandler} />
