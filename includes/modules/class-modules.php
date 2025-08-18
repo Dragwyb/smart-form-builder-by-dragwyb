@@ -7,7 +7,7 @@ namespace Dragwyb\Form_Builder\Includes\Modules;
 use Dragwyb\Form_Builder\Includes\Modules\Register\Register_Fields;
 use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Base;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
-use Dragwyb\Form_Builder\Includes\Modules\Sanitize_Fields_Settings\Sanitize_Fields_Settings;
+use Dragwyb\Form_Builder\Includes\Modules\Sanitize_Module_Settings\Sanitize_Module_Settings;
 
 class Modules extends Toolbar_Base
 {
@@ -39,7 +39,7 @@ class Modules extends Toolbar_Base
 
     protected function sanitize_data(array $data): array
     {
-        $sanitize_module_data = Sanitize_Fields_Settings::instance($data);
+        $sanitize_module_data = Sanitize_Module_Settings::instance($data);
         $sanitize_data = $sanitize_module_data->get_data();
 
         if ($sanitize_data && is_array($sanitize_data) && count($sanitize_data) > 0) {

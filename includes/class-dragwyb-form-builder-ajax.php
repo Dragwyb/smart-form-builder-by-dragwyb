@@ -6,7 +6,7 @@ namespace Dragwyb\Form_Builder\Includes;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Modules\Modules;
-use Dragwyb\Form_Builder\Includes\Modules\Sanitize_Fields_Settings\Sanitize_Fields_Settings;
+use Dragwyb\Form_Builder\Includes\Modules\Sanitize_Module_Settings\Sanitize_Module_Settings;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbars;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
 
