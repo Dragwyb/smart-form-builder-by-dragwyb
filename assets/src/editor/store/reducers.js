@@ -47,6 +47,9 @@ export default function reducer(state = initialState, action) {
     switch (action.type) {
         case ADD_FIELD:
             const { field, fieldIndex = null } = action.payload;
+            if(!state?.form?.fields){
+                state.form.fields=[];
+            }
 
             const index= null === fieldIndex ? state.form.fields.length : fieldIndex;
 
