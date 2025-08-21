@@ -17,7 +17,7 @@ import { Button } from '../Common';
 import { __ } from '@wordpress/i18n';
 
 const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, onChange, onFieldSelect, onDuplicate, onDelete, errors, selectedField }) => {
-    
+
     const { setNodeRef: dropRef, isOver } = useDroppable(
         {
             id: `canvas-drop-${field._id}`,
@@ -89,11 +89,11 @@ const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, on
                 </button>
             </div>
         </div>
-        {dropIndex === index && 'bottom' === dropIndicatorPosition && <span className='dragwyb-editor-indicator'></span>}
+        {(dropIndex === index && 'bottom' === dropIndicatorPosition) && <span className='dragwyb-editor-indicator'></span>}
     </>
 }
 
-const EmptyCanvas = ({activeTab, setActiveTab}) => {
+const EmptyCanvas = ({ activeTab, setActiveTab }) => {
 
     const { setNodeRef, isOver } = useDroppable(
         {
@@ -133,7 +133,6 @@ const Canvas = ({ selectedField, onFieldSelect, values, onChange, errors, Utils,
 
     const fields = useSelector(state => state.form.fields); // Assuming fields are stored in Redux
 
-
     const dispatch = useDispatch();
 
     const handleDuplicateField = (field, index) => {
@@ -171,25 +170,32 @@ const Canvas = ({ selectedField, onFieldSelect, values, onChange, errors, Utils,
     }
 
     return (
-        <div className={canvasCls}>
-            {fields && fields.length > 0 && fields.map((field, index) =>
-                <RenderItem
-                    field={field}
-                    selectedField={selectedField}
-                    values={values}
-                    onChange={onChange}
-                    onFieldSelect={onFieldSelect}
-                    onDuplicate={(field) => handleDuplicateField(field, index)}
-                    onDelete={handleDeleteField}
-                    errors={errors}
-                    index={index}
-                    dropIndex={dropIndex}
-                    dropIndicatorPosition={dropIndicatorPosition}
-                />
-            )}
+        <div className="dragwyb-canvas-wrapper">
+            <div className={canvasCls}>
+            {fields && fields.length > 0 &&
+                <>
+                    {fields.map((field, index) =>
+                        <RenderItem
+                            field={field}
+                            selectedField={selectedField}
+                            values={values}
+                            onChange={onChange}
+                            onFieldSelect={onFieldSelect}
+                            onDuplicate={(field) => handleDuplicateField(field, index)}
+                            onDelete={handleDeleteField}
+                            errors={errors}
+                            index={index}
+                            dropIndex={dropIndex}
+                            dropIndicatorPosition={dropIndicatorPosition}
+                        />
+                    )}
+                    {dropIndex && dropIndex === fields.length ? <span className='dragwyb-editor-indicator'></span> : ''}
+                </>
+            }
             {(!fields || fields.length === 0) && (
-                <EmptyCanvas activeTab={activeTab} setActiveTab={setActiveTab}/>
+                <EmptyCanvas activeTab={activeTab} setActiveTab={setActiveTab} />
             )}
+            </div>
         </div>
     );
 };

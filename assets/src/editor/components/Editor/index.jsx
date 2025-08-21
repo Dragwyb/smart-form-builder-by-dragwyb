@@ -5,7 +5,7 @@ import FieldSettings from './FieldSettings';
 import FormSettings from './FormSettings';
 import Preview from './Preview';
 import { saveForm, resetSectionSettings, updateFieldValues, updateFieldOrder } from '../../store/actions';
-import { Button , SaveBtn} from '../Common';
+import { Button, SaveBtn } from '../Common';
 import { Dashicon } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { DndContext, useSensor, useSensors, PointerSensor, MouseSensor, TouchSensor } from '@dnd-kit/core';
@@ -19,8 +19,8 @@ const Editor = () => {
     const activeTab = useSelector(state => state.activeToolbar);
     const selectedField = useSelector(state => state.selectedField);
     const previewMode = useSelector(state => state.previewMode);
-    const formData={};
-    const fields={};
+    const formData = {};
+    const fields = {};
     const formStatus = useSelector(state => state.formStatus || 'draft');
     const [activeDrag, setActiveDrag] = useState(null);
     const [sidebarDrag, setSidebarDrag] = useState(null);
@@ -119,13 +119,16 @@ const Editor = () => {
 
             // Skip if we’re hovering over ourselves
             if (activeId === overId) {
+                false !== dropIndex && setDropIndex(false);
+                false !== dropIndicatorPosition && setDropIndicatorPosition(false)
                 return;
             }
 
             let newdropIndex = over.data.current.currentIndex;
 
-            if(over.data.current.addInitialField && dropIndex !== newdropIndex){
+            if (over.data.current.addInitialField && dropIndex !== newdropIndex) {
                 setDropIndex(newdropIndex);
+                false !== dropIndicatorPosition && setDropIndicatorPosition(false)
                 return;
             }
 
@@ -157,6 +160,9 @@ const Editor = () => {
             if (dropIndex !== newdropIndex) {
                 setDropIndex(newdropIndex);
             }
+        } else {
+            false !== dropIndex && setDropIndex(false);
+            false !== dropIndicatorPosition && setDropIndicatorPosition(false)
         }
     }
 
@@ -171,21 +177,19 @@ const Editor = () => {
 
         if (!over) return;
         if (!over.id.startsWith('canvas-drop-')) return;
-        console.log(over.data.current.canvasDrop)
         if (!over.data.current || over.data.current.canvasDrop === null || over.data.current.canvasDrop === undefined) return;
 
         const isFromSidebar = active?.data?.current?.fromSidebar;
         const isCanvasDrag = active?.data?.current?.canvasDrag;
         const index = dropIndex;
 
-        
+
         if (isFromSidebar) {
             const type = active.data.current.type;
-            
-            console.log(dropIndex)
             const newField = Utils.AddField({ type, Utils, index: index });
 
             setSelectedFieldHandler(newField._id);
+
             return;
         } else if (isCanvasDrag) {
             const oldIndex = active?.data?.current?.currentIndex;
@@ -242,9 +246,9 @@ const Editor = () => {
                     {Object.keys(mainTabs).map(tab => {
                         return <div className="dragwyb-editor__tab"
                             onClick={() => {
-                                Utils.setActiveTab({value: mainTabs[tab].settingName});
-                                Utils.setSelectedField({value: false})
-                                Utils.setPreviewMode({value: false});
+                                Utils.setActiveTab({ value: mainTabs[tab].settingName });
+                                Utils.setSelectedField({ value: false })
+                                Utils.setPreviewMode({ value: false });
                             }}
                             title={DragwybBuilder.i18n[tab]}
                             data-tab={mainTabs[tab].settingName}
@@ -264,7 +268,7 @@ const Editor = () => {
                     <Button onClick={handleExit} className=''>
                         {DragwybBuilder.i18n.exit}
                     </Button>
-                    <SaveBtn/>
+                    <SaveBtn />
                 </div>
             </div>
             <div className="dragwyb-editor__body">
@@ -303,8 +307,8 @@ const Editor = () => {
                                     setActiveTab={setActiveTabHandler}
                                 />
                             </div>
-                            <ToolBar activeTab={activeTab} setActiveTab={setActiveTabHandler}/>
-                            {activeDrag && <SidebarFieldOverlay data={activeDrag}/>}
+                            <ToolBar activeTab={activeTab} setActiveTab={setActiveTabHandler} />
+                            {activeDrag && <SidebarFieldOverlay data={activeDrag} />}
                         </DndContext>
                     </>
                 )}
