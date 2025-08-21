@@ -33,7 +33,7 @@ class DragwybControlBase {
     }
 
     #triggerOnChange(key, value) {
-        this.#updateValue(key, value, this.settings.type);
+        this.#updateValue(key, value, this.settings.type, this);
     }
 
     /**

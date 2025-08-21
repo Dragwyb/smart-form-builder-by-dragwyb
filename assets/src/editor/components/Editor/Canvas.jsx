@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
     useDroppable,
     useDraggable
@@ -17,6 +17,7 @@ import { Button } from '../Common';
 import { __ } from '@wordpress/i18n';
 
 const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, onChange, onFieldSelect, onDuplicate, onDelete, errors, selectedField }) => {
+    
     const { setNodeRef: dropRef, isOver } = useDroppable(
         {
             id: `canvas-drop-${field._id}`,
@@ -92,19 +93,48 @@ const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, on
     </>
 }
 
-const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors, Utils, dropIndex, dropIndicatorPosition, activeTab, setActiveTab }) => {
-
-    const dispatch = useDispatch();
+const EmptyCanvas = ({activeTab, setActiveTab}) => {
 
     const { setNodeRef, isOver } = useDroppable(
         {
-            id: `canvas-add-field`,
+            id: `canvas-drop-add-field`,
             data: {
-                addField: true,
+                addInitialField: true,
+                canvasDrop: true,
                 currentIndex: 0
             }
         }
     );
+
+    let emptyMessage = __('Begin creating your form by dragging fields from the sidebar, or simply click a field to add it.', 'dragwyb-form-builder');
+
+    if (activeTab !== 'fields') {
+        emptyMessage = __('Click “Add Field” to open the field tab and start building your form.', 'dragwyb-form-builder');
+    }
+
+    if (isOver) {
+        emptyMessage = __('Release the mouse or lift your finger to drop the field into your form.', 'dragwyb-form-builder');
+    }
+
+    return <div className="dragwyb-canvas__empty" ref={setNodeRef}>
+        <div className={`dragwyb-canvas__empty-wrapper ${isOver ? ' drag-active' : ''}`}>
+            {activeTab !== 'fields' &&
+                <Button onClick={() => setActiveTab('fields')} className='add-field'>
+                    <i className='fas fa-plus' />
+                    {__('Add Field', 'dragwyb-form-builder')}
+                </Button>
+            }
+            <p>{emptyMessage}</p>
+        </div>
+    </div>
+}
+
+const Canvas = ({ selectedField, onFieldSelect, values, onChange, errors, Utils, dropIndex, dropIndicatorPosition, activeTab, setActiveTab }) => {
+
+    const fields = useSelector(state => state.form.fields); // Assuming fields are stored in Redux
+
+
+    const dispatch = useDispatch();
 
     const handleDuplicateField = (field, index) => {
         const deepClone = JSON.parse(JSON.stringify(field));
@@ -158,20 +188,7 @@ const Canvas = ({ selectedField, onFieldSelect, fields, values, onChange, errors
                 />
             )}
             {(!fields || fields.length === 0) && (
-                <div className="dragwyb-canvas__empty" ref={setNodeRef}>
-                    <div className={`dragwyb-canvas__empty-wrapper ${isOver ? ' drag-active': ''}`}>
-                        {activeTab !== 'fields' ?
-                            <>
-                                <Button onClick={() => setActiveTab('fields')} className='add-field'>
-                                    <i className='fas fa-plus' />
-                                    {__('Add Field.', 'dragwyb-form-builder')}
-                                </Button>
-                                <p>{__('Click on a Add Field to add it to your form.', 'dragwyb-form-builder')}</p>
-                            </> :
-                            <p>{DragwybBuilder.i18n.emptyForm}</p>
-                        }
-                    </div>
-                </div>
+                <EmptyCanvas activeTab={activeTab} setActiveTab={setActiveTab}/>
             )}
         </div>
     );

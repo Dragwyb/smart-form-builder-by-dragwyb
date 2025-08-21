@@ -8,6 +8,7 @@ import SearchInput from './SearchInput';
 import Spinner from './Spinner';
 import Tabs from './Tabs';
 import Tooltip from './Tooltip';
+import SaveBtn from './saveBtn';
 
 
 export {
@@ -21,4 +22,5 @@ export {
     Spinner,
     Tabs,
     Tooltip,
+    SaveBtn
 };

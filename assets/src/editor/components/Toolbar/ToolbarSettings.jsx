@@ -3,7 +3,12 @@ import PropTypes from "prop-types";
 import { useSelector } from 'react-redux';
 import FieldSettings from "../Editor/FieldSettings";
 
-const ToolbarSettings = ({ setting, Utils, toolbarData, selectedToolbar = false }) => {
+const ToolbarSettings = ({ setting, Utils, selectedToolbar = false, setActiveTab }) => {
+
+    const formData=useSelector(state => state.form);
+    const toolbarData = selectedToolbar && formData[setting];
+
+
     const sectionSettings = useSelector(state => state.sectionSettings);
     const getSetting = () => {
         let Html = <h1 className="toolbar-not-found">{sprintf(__('Selected (%s) Data Not Found', 'dragwyb-form-builder'), setting)}</h1>;
@@ -14,7 +19,6 @@ const ToolbarSettings = ({ setting, Utils, toolbarData, selectedToolbar = false 
     }
 
     const selectedToolbarValues = () => {
-        // console.log('Dragwyb/Editor/Sidebar_Values'+ setting);
         const toolbarValues = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/Sidebar/Values/' + setting, toolbarData, selectedToolbar);
 
         return toolbarValues;
@@ -35,7 +39,7 @@ const ToolbarSettings = ({ setting, Utils, toolbarData, selectedToolbar = false 
                 activeFieldID={!selectedToolbar ? setting : selectedToolbar}
                 fieldValue={selectedToolbarValues()}
                 fieldSettings={selectedToolbarSettings()}
-                onClose={() => setSelectedFieldHandler(false)}
+                onClose={() => setActiveTab(setting)}
                 sectionSettings={sectionSettings}
             />
         </div>}

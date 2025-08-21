@@ -8,6 +8,8 @@ import DragwybFieldBase from './fieldBase';
 DragwybEditor.FieldBase = DragwybFieldBase;
 DragwybEditor.ControlBase = DragwybControlBase;
 
+Object.freeze(DragwybEditor);
+
 const formIdExist = () => {
     const url = new URL(window.location.href);
     const params = url.searchParams;

@@ -1,7 +1,10 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { DragOverlay } from '@dnd-kit/core';
 
-const SidebarFieldOverlay = ({ data, fields }) => {
+const SidebarFieldOverlay = ({ data }) => {
+    const fields = useSelector(state => state.form.fields); // Assuming fields are stored in Redux
+
     let type=false;
     let wrapperCls='';
     const{activeDrag, extraData}=data;

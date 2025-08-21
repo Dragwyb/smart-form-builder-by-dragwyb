@@ -20,7 +20,14 @@ const config = {
                 use: [
                     MiniCssExtractPlugin.loader,
                     'css-loader',
-                    'sass-loader'
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                          // Explicitly tell sass-loader to use Dart Sass
+                          implementation: require('sass'),
+                          api: 'modern', // <— This ensures modern API usage
+                        }
+                      }
                 ],
             }
         ]

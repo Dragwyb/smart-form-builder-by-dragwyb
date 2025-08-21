@@ -1,6 +1,6 @@
 import { Button } from "../Common";
 
-const ToolBar = ({ activeTab, setActiveTab, setPreviewMode }) => {
+const ToolBar = ({ activeTab, setActiveTab }) => {
     const toolbars=DragwybEditor.EditorToolbars.toolbars;
 
     if(!toolbars || Object.keys(toolbars).length < 1){
@@ -12,7 +12,6 @@ const ToolBar = ({ activeTab, setActiveTab, setPreviewMode }) => {
             return <div className={`dragwyb-editor__toolbar-item ${activeTab === tab ? ' active' : ''}`}
                 onClick={() => {
                     setActiveTab(tab);
-                    setPreviewMode(false);
                 }}
                 title={toolbars[tab].name}
                 data-tab={tab}

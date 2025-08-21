@@ -1,7 +1,10 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import Field from './Fields/Field';
 
-const Preview = ({ fields, values, onChange, errors }) => {
+const Preview = ({ values, onChange, errors }) => {
+    const fields = useSelector(state => state.form.fields); // Assuming fields are stored in Redux
+
     return (
         <div className="dragwyb-preview">
             <h2 className="dragwyb-preview__title">Form Preview</h2>

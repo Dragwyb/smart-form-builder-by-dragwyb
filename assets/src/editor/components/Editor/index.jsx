@@ -5,7 +5,7 @@ import FieldSettings from './FieldSettings';
 import FormSettings from './FormSettings';
 import Preview from './Preview';
 import { saveForm, resetSectionSettings, updateFieldValues, updateFieldOrder } from '../../store/actions';
-import { Button } from '../Common';
+import { Button , SaveBtn} from '../Common';
 import { Dashicon } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { DndContext, useSensor, useSensors, PointerSensor, MouseSensor, TouchSensor } from '@dnd-kit/core';
@@ -19,8 +19,8 @@ const Editor = () => {
     const activeTab = useSelector(state => state.activeToolbar);
     const selectedField = useSelector(state => state.selectedField);
     const previewMode = useSelector(state => state.previewMode);
-    const formData = useSelector(state => state.form);
-    const fields = useSelector(state => state.form.fields); // Assuming fields are stored in Redux
+    const formData={};
+    const fields={};
     const formStatus = useSelector(state => state.formStatus || 'draft');
     const [activeDrag, setActiveDrag] = useState(null);
     const [sidebarDrag, setSidebarDrag] = useState(null);
@@ -40,13 +40,7 @@ const Editor = () => {
 
     const Utils = Helper(state, dispatch);
 
-    const handleSave = async () => {
-        try {
-            dispatch(saveForm(formData));
-        } catch (error) {
-            console.error('Save failed:', error);
-        }
-    };
+    console.log('testing world')
 
     useEffect(() => {
         if (sectionSettings) {
@@ -67,21 +61,7 @@ const Editor = () => {
     const setActiveTabHandler = (value) => {
         Utils.setSelectedField({ value: false });
         Utils.setActiveTab({ value: value });
-    }
-
-    const setPreviewModeHandler = (value) => {
-        Utils.setPreviewMode({ value: value });
-    }
-
-    const selectedFieldSetting = () => {
-        let value = null;
-        Object.values(fields).forEach(field => {
-            if (field._id === selectedField._id) {
-                value = field;
-            }
-        })
-
-        return value;
+        Utils.setPreviewMode({ value: false });
     }
 
     const fieldValueHandler = ({ fieldId, value }) => {
@@ -142,11 +122,15 @@ const Editor = () => {
                 return;
             }
 
-            let extraTop = 0;
-
-
             let newdropIndex = over.data.current.currentIndex;
+
+            if(over.data.current.addInitialField && dropIndex !== newdropIndex){
+                setDropIndex(newdropIndex);
+                return;
+            }
+
             let activeIndex = active?.data?.current?.currentIndex;
+            let extraTop = 0;
 
             if (newdropIndex === dropIndex) {
                 extraTop += 15;
@@ -187,18 +171,20 @@ const Editor = () => {
 
         if (!over) return;
         if (!over.id.startsWith('canvas-drop-')) return;
+        console.log(over.data.current.canvasDrop)
         if (!over.data.current || over.data.current.canvasDrop === null || over.data.current.canvasDrop === undefined) return;
 
         const isFromSidebar = active?.data?.current?.fromSidebar;
         const isCanvasDrag = active?.data?.current?.canvasDrag;
         const index = dropIndex;
 
+        
         if (isFromSidebar) {
             const type = active.data.current.type;
-
+            
+            console.log(dropIndex)
             const newField = Utils.AddField({ type, Utils, index: index });
 
-            dispatch({ type: 'ADD_FIELD_AT_INDEX', payload: { field: newField, index: fields.length } });
             setSelectedFieldHandler(newField._id);
             return;
         } else if (isCanvasDrag) {
@@ -278,15 +264,12 @@ const Editor = () => {
                     <Button onClick={handleExit} className=''>
                         {DragwybBuilder.i18n.exit}
                     </Button>
-                    <Button onClick={handleSave} className='primary'>
-                        <i className="fas fa-save mr-2" />
-                        {DragwybBuilder.i18n.save}
-                    </Button>
+                    <SaveBtn/>
                 </div>
             </div>
             <div className="dragwyb-editor__body">
                 {previewMode ? (
-                    <Preview fields={fields} values={values} errors={errors} onChange={fieldValueHandler} />
+                    <Preview values={values} errors={errors} onChange={fieldValueHandler} />
                 ) : (
                     <>
                         <DndContext
@@ -296,45 +279,19 @@ const Editor = () => {
                                 setActiveDrag(null);
                             }}
                             onDragMove={handleDragMove}
-                        // modifiers={[restrictToParentElement, snapToGridModifier]}
                         >
                             <div className="dragwyb-editor__sidebar">
-                                {/* {activeTab === 'fields' && (<Controls onFieldSelect={setSelectedFieldHandler} Utils={Utils} />)}
-                                {activeTab === 'settings' && (<FormSettings />)}
-                                {selectedField && (
-                                    <div className="dragwyb-editor__settings">
-                                        <FieldSettings
-                                            activeField={selectedField}
-                                            fieldValue={selectedFieldSetting()}
-                                            onClose={() => setSelectedFieldHandler(null)}
-                                            key={selectedField.id}
-                                            sectionSettings={sectionSettings}
-                                        />
-                                    </div>
-                                )} */}
                                 {activeTab && <ToolbarSettings
                                     setting={activeTab}
                                     Utils={Utils}
                                     selectedToolbar={selectedField}
-                                    toolbarData={selectedField && formData[activeTab]}
+                                    setActiveTab={setActiveTabHandler}
                                 />}
-                                {/* {selectedField && (
-                                    <div className="dragwyb-editor__settings">
-                                        <FieldSettings
-                                            activeField={selectedField}
-                                            fieldValue={selectedFieldSetting()}
-                                            onClose={() => setSelectedFieldHandler(false)}
-                                            key={selectedField.id}
-                                            sectionSettings={sectionSettings}
-                                        />
-                                    </div>
-                                )} */}
                             </div>
                             <div className="dragwyb-editor__main">
                                 <Canvas
                                     selectedField={selectedField}
                                     onFieldSelect={setSelectedFieldHandler}
-                                    fields={fields}
                                     values={values}
                                     onChange={({ fieldId, value }) => fieldValueHandler({ fieldId, value })}
                                     errors={errors}
@@ -346,8 +303,8 @@ const Editor = () => {
                                     setActiveTab={setActiveTabHandler}
                                 />
                             </div>
-                            <ToolBar toolbars={mainTabs} activeTab={activeTab} setActiveTab={setActiveTabHandler} setPreviewMode={setPreviewModeHandler} />
-                            {activeDrag && <SidebarFieldOverlay data={activeDrag} fields={fields} />}
+                            <ToolBar activeTab={activeTab} setActiveTab={setActiveTabHandler}/>
+                            {activeDrag && <SidebarFieldOverlay data={activeDrag}/>}
                         </DndContext>
                     </>
                 )}

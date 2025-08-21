@@ -35,7 +35,7 @@ class  DragwybFieldBase {
     }
 
     #triggerOnChange(key, value) {
-        this.#updateValue({fieldId: key, value});
+        this.#updateValue({fieldId: key, value, type});
     }
 
     /**
