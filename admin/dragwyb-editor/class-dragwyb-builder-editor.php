@@ -253,7 +253,6 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                     $name=$toolbar->get_toolbar_name();
                     $icon=$toolbar->get_toolbar_icon();
 
-
                     if($settings){
                         if(!isset($data[$key]))
                         $data[$key]=$settings;
@@ -406,6 +405,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 'confirmation_message' => __('Confirmation Message', 'dragwyb-form-builder'),
                 'confirmation_subject' => __('Confirmation Subject', 'dragwyb-form-builder'),
                 'confirmation_message' => __('Confirmation Message', 'dragwyb-form-builder'),
+                'emptyForm' => __("Start building your form by dragging fields from the sidebar or simply click to add them.", 'dragwyb-form-builder')
             ];
 
             return array_merge($localize_strings, $strings);
