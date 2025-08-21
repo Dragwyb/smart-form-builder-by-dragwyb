@@ -13,7 +13,8 @@ class Register_Toolbar {
     private array $toolbars = [];
 
     private array $default_toolbars = [
-        'modules'
+        'modules',
+        'advance_settings'
     ];
 
     public static function instance(): self {
