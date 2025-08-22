@@ -362,6 +362,7 @@ body {
     &.canvas-empty{
         padding: 0px;
         max-height: unset;
+        height: 100%;
     }
 
     &__empty {
@@ -392,7 +393,7 @@ body {
             P{
                 margin-top: 1rem;
                 font-size: 2rem;
-                font-weight: 700;
+                font-weight: 600;
                 max-width: 800px;
                 line-height: 1.4;
             }

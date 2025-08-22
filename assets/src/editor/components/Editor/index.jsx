@@ -40,8 +40,6 @@ const Editor = () => {
 
     const Utils = Helper(state, dispatch);
 
-    console.log('testing world')
-
     useEffect(() => {
         if (sectionSettings) {
             dispatch(resetSectionSettings());
@@ -126,8 +124,13 @@ const Editor = () => {
 
             let newdropIndex = over.data.current.currentIndex;
 
-            if (over.data.current.addInitialField && dropIndex !== newdropIndex) {
+            if ((over.data.current.addInitialField || over.data.current.canvasFieldDrop) && dropIndex !== newdropIndex) {
                 setDropIndex(newdropIndex);
+                false !== dropIndicatorPosition && setDropIndicatorPosition(false)
+                return;
+            }
+
+            if ((over.data.current.addInitialField || over.data.current.canvasFieldDrop) && dropIndex === newdropIndex) {
                 false !== dropIndicatorPosition && setDropIndicatorPosition(false)
                 return;
             }
@@ -166,19 +169,17 @@ const Editor = () => {
         }
     }
 
-    const handleDragEnd = (event) => {
-
+    const handleDragEnd = (event) => {        
         setActiveDrag(null);
         setSidebarDrag(null);
         setDropIndex(false)
         setDropIndicatorPosition(false)
-
+        
         const { active, over } = event;
-
+        
         if (!over) return;
         if (!over.id.startsWith('canvas-drop-')) return;
         if (!over.data.current || over.data.current.canvasDrop === null || over.data.current.canvasDrop === undefined) return;
-
         const isFromSidebar = active?.data?.current?.fromSidebar;
         const isCanvasDrag = active?.data?.current?.canvasDrag;
         const index = dropIndex;

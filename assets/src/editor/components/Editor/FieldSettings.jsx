@@ -33,9 +33,7 @@ const FieldSettings = ({ activeFieldID, fieldValue, fieldSettings, sectionSettin
         handleChange(key, Object.keys(settings.tabs)[0], 'tabs')
     }
 
-
     const handleChange = (key, value, type = null, from) => {
-        console.log(from)
         if ('tabs' === type) {
             if ('header_controls' === key) {
                 dispatch(resetSectionSettings());

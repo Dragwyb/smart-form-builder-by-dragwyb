@@ -20,7 +20,7 @@ const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, on
 
     const { setNodeRef: dropRef, isOver } = useDroppable(
         {
-            id: `canvas-drop-${field._id}`,
+            id: `canvas-drop-field-${field._id}`,
             data: {
                 canvasDrop: true,
                 currentIndex: index
@@ -29,7 +29,7 @@ const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, on
     );
 
     const { attributes, listeners, setNodeRef: dragRef, isDragging } = useDraggable({
-        id: `canvas-drag-${field._id}`,
+        id: `canvas-drag-field-${field._id}`,
         data: {
             canvasDrag: true,
             currentIndex: index,
@@ -133,6 +133,17 @@ const Canvas = ({ selectedField, onFieldSelect, values, onChange, errors, Utils,
 
     const fields = useSelector(state => state.form.fields); // Assuming fields are stored in Redux
 
+    const { setNodeRef, isOver } = useDroppable(
+        {
+            id: `canvas-drop-wrapper`,
+            data: {
+                canvasFieldDrop: true,
+                canvasDrop: true,
+                currentIndex: fields ? fields.length || 0 : 0
+            }
+        }
+    );
+
     const dispatch = useDispatch();
 
     const handleDuplicateField = (field, index) => {
@@ -170,7 +181,7 @@ const Canvas = ({ selectedField, onFieldSelect, values, onChange, errors, Utils,
     }
 
     return (
-        <div className="dragwyb-canvas-wrapper">
+        <div className="dragwyb-canvas-wrapper" ref={setNodeRef}>
             <div className={canvasCls}>
             {fields && fields.length > 0 &&
                 <>
