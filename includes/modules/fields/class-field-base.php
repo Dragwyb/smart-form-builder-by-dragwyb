@@ -73,9 +73,15 @@ abstract class Field_Base extends Register_Controls_Base
         return $this->form_id;
     }
 
-    protected function tab_condition($data): array
+    protected function tab_condition(&$conditions, $data): array
     {
-        return array();
+        if ((isset($data['tab']) && !empty($data['tab']))) {
+            $conditions['header_controls'] = $data['tab'];
+        } else if (!isset($data['tab']) || empty($data['tab'])) {
+            $conditions['header_controls'] = self::ContentTab;
+        }
+
+        return $conditions;
     }
 
     public function set_field_settings(array $setting)

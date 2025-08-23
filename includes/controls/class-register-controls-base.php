@@ -22,9 +22,9 @@ abstract class Register_Controls_Base
         $this->control_base = Controls::instance();
     }
 
-    protected function tab_condition($data)
+    protected function tab_condition(&$conditions, $data)
     {
-        return $data;
+        return $conditions;
     }
 
     protected function header_controls(): array
@@ -51,7 +51,7 @@ abstract class Register_Controls_Base
 
         $conditions = isset($data['conditions']) ? $data['conditions'] : array();
 
-        $conditions = $this->tab_condition($data);
+        $conditions = $this->tab_condition($conditions, $data);
 
         $this->settings_arr[$this->current_section] = $this->controller_settings(array_merge($data, array('type' => 'section', 'conditions' => $conditions)));
     }
