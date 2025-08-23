@@ -65,6 +65,11 @@ if (!class_exists('Sanitize_Module_Settings')) {
 
                         if (!isset(self::$field_module[$type])) {
                             $field_module = self::$module->get_field($type);
+
+                            if(!$field_module){
+                                continue;
+                            }
+
                             $field_module->render_controls();
                             self::$field_module[$type] = $field_module;
                         }
