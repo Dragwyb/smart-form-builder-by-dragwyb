@@ -1,4 +1,4 @@
-class  DragwybFieldBase {
+class DragwybFieldBase {
     #updateValue = () => { }
 
     constructor(args){
@@ -35,7 +35,8 @@ class  DragwybFieldBase {
     }
 
     #triggerOnChange(key, value) {
-        this.#updateValue({fieldId: key, value, type});
+        this.value=value;
+        this.#updateValue({fieldObject: this});
     }
 
     /**

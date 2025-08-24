@@ -9,7 +9,8 @@ import Spinner from './Spinner';
 import Tabs from './Tabs';
 import Tooltip from './Tooltip';
 import SaveBtn from './saveBtn';
-
+import useDraggable from './DndDraggable';
+import useDroppable from './DndDroppable';
 
 export {
     Accordion,
@@ -22,5 +23,7 @@ export {
     Spinner,
     Tabs,
     Tooltip,
-    SaveBtn
+    SaveBtn,
+    useDraggable,
+    useDroppable
 };

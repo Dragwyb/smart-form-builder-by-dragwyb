@@ -2,7 +2,7 @@
 import '../../sass/editorControls.scss';
 import repeaterControl from './Repeater/index';
 
-class sectionControl extends DragwybEditor.ControlBase {
+class sectionControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
         return 'section';
     }
@@ -26,7 +26,7 @@ class sectionControl extends DragwybEditor.ControlBase {
     }
 }
 
-class textControl extends DragwybEditor.ControlBase {
+class textControl extends DragwybEditor.editor.extends.ControlBase {
     controlName (){
         return 'text';
     }
@@ -43,7 +43,7 @@ class textControl extends DragwybEditor.ControlBase {
     }
 }
 
-class selectControl extends DragwybEditor.ControlBase {
+class selectControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
         return 'select';
     }
@@ -73,7 +73,7 @@ class selectControl extends DragwybEditor.ControlBase {
     }
 }
 
-class textareaControl extends DragwybEditor.ControlBase {
+class textareaControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
         return 'textarea';
     }
@@ -97,7 +97,7 @@ class textareaControl extends DragwybEditor.ControlBase {
     }
 }
 
-class checkboxControl extends DragwybEditor.ControlBase {
+class checkboxControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
         return 'checkbox';
     }
@@ -124,7 +124,7 @@ class checkboxControl extends DragwybEditor.ControlBase {
     }
 }
 
-class radioControl extends DragwybEditor.ControlBase {
+class radioControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
         return 'radio';
     }
@@ -156,7 +156,7 @@ class radioControl extends DragwybEditor.ControlBase {
     }
 }
 
-class sliderControl extends DragwybEditor.ControlBase {
+class sliderControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
         return 'slider';
     }
@@ -188,7 +188,7 @@ class sliderControl extends DragwybEditor.ControlBase {
     }
 }
 
-class numberControl extends DragwybEditor.ControlBase {
+class numberControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
         return 'number';
     }
@@ -220,7 +220,7 @@ class numberControl extends DragwybEditor.ControlBase {
     }
 }
 
-class colorControl extends DragwybEditor.ControlBase {
+class colorControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
         return 'color';
     }
@@ -245,7 +245,7 @@ class colorControl extends DragwybEditor.ControlBase {
     }
 }
 
-class tabsControl extends DragwybEditor.ControlBase {
+class tabsControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
         return 'tabs';
     }
@@ -296,5 +296,5 @@ const initializeControls=()=>{
 }
 
 jQuery(document).on('Dragwyb:editorInit', () => {
-    DragwybBuilder.Hooks.addAction('Dragwyb/Editor/ControlBase',initializeControls);
+    initializeControls();
 });

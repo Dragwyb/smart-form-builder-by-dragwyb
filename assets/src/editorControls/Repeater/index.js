@@ -1,6 +1,6 @@
 import RepeaterSortable from "./RepeaterSortable.jsx";
 
-class repeaterControl extends DragwybEditor.ControlBase {
+class repeaterControl extends DragwybEditor.editor.extends.ControlBase {
 
     controlName() {
         return 'repeater';
@@ -19,11 +19,11 @@ class repeaterControl extends DragwybEditor.ControlBase {
                         settings={settings}
                         updateControls={this.updateControls.bind(this)}
                         controlId={id}
-                        utils={this.utils}
+                        utils={this.Utils}
                     />
                     <div className="add-repeater-btn">
                         <button onClick={() => {
-                            const updated = [...repeaterItems, { _id: this.utils.generateId(), attributes: {} }];
+                            const updated = [...repeaterItems, { _id: this.Utils.generateId(), attributes: {} }];
                             this.updateControls(id, updated);
                         }}>
                             {settings.add_item}

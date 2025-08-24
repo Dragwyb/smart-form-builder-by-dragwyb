@@ -1,12 +1,5 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-// import DateField from './DateField';
-// import EmailField from './EmailField';
-// import PhoneField from './PhoneField';
-// import NumberField from './NumberField';
-// import HiddenField from './HiddenField';
-// import SignatureField from './SignatureField';
-// import RatingField from './RatingField';
 
 const Field = ({ field, value = '', onChange, errors = [], disabled = false }) => {
     const getHtml = () => {

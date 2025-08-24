@@ -2,11 +2,21 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import DragwybControlBase from './controlBase';
-import '../../sass/editor.scss';
 import DragwybFieldBase from './fieldBase';
+import DragwybToolbarBase from './toolbarBase';
+import '../../sass/editor.scss';
 
-DragwybEditor.FieldBase = DragwybFieldBase;
-DragwybEditor.ControlBase = DragwybControlBase;
+if(!DragwybEditor.editor){
+    DragwybEditor.editor={};
+}
+
+if(!DragwybEditor.editor.extends){
+    DragwybEditor.editor.extends={};
+}
+
+DragwybEditor.editor.extends.FieldBase = DragwybFieldBase;
+DragwybEditor.editor.extends.ControlBase = DragwybControlBase;
+DragwybEditor.editor.extends.ToolbarBase = DragwybToolbarBase;
 
 Object.freeze(DragwybEditor);
 
@@ -33,7 +43,5 @@ jQuery(document).on('Dragwyb:init', () => {
         root.render(<App />);
 
         jQuery(document).trigger('Dragwyb:editorInit');
-        DragwybBuilder.Hooks.doAction('Dragwyb/Editor/FieldBase');
-        DragwybBuilder.Hooks.doAction('Dragwyb/Editor/ControlBase');
     }
 })

@@ -1,4 +1,4 @@
-class textField extends DragwybEditor.FieldBase {
+class textField extends DragwybEditor.editor.extends.FieldBase {
     fieldName() {
         return 'text';
     }
@@ -19,7 +19,7 @@ class textField extends DragwybEditor.FieldBase {
     }
 }
 
-class textAreaField extends DragwybEditor.FieldBase {
+class textAreaField extends DragwybEditor.editor.extends.FieldBase {
     fieldName() {
         return 'textarea';
     }
@@ -36,7 +36,7 @@ class textAreaField extends DragwybEditor.FieldBase {
     }
 }
 
-class selectField extends DragwybEditor.FieldBase {
+class selectField extends DragwybEditor.editor.extends.FieldBase {
     fieldName() {
         return 'select';
     }
@@ -59,7 +59,7 @@ class selectField extends DragwybEditor.FieldBase {
     }
 }
 
-class radioField extends DragwybEditor.FieldBase {
+class radioField extends DragwybEditor.editor.extends.FieldBase {
     fieldName() {
         return 'radio';
     }
@@ -86,7 +86,7 @@ class radioField extends DragwybEditor.FieldBase {
     }
 }
 
-class fileField extends DragwybEditor.FieldBase {
+class fileField extends DragwybEditor.editor.extends.FieldBase {
     fieldName() {
         return 'file';
     }
@@ -103,7 +103,7 @@ class fileField extends DragwybEditor.FieldBase {
     }
 }
 
-class emailField extends DragwybEditor.FieldBase {
+class emailField extends DragwybEditor.editor.extends.FieldBase {
     fieldName() {
         return 'email';
     }
@@ -140,5 +140,5 @@ const initializeFields = () => {
 };
 
 jQuery(document).on('Dragwyb:editorInit', () => {   
-    DragwybBuilder.Hooks.addAction('Dragwyb/Editor/FieldBase',initializeFields);
+    initializeFields();
 });

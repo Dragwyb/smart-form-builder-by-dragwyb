@@ -346,18 +346,16 @@ body {
 
 // Canvas
 .dragwyb-canvas {
+    border-radius: 4px;
+    padding: 20px;
+    max-height: calc(100% - 40px);
+
     &-wrapper{
         width: 100%;
         height: 100%;
         min-height: 400px;
         background: var(--canvas-inner-clor);
     }
-
-    border-radius: 4px;
-    padding: 20px;
-    max-height: calc(100% - 40px);
-
-
 
     &.canvas-empty{
         padding: 0px;
@@ -374,9 +372,7 @@ body {
             padding: 40px;
             text-align: center;
             font-size: 1.5rem;
-            // background-color: var(--primary-light-color);
             color: var(--primary-color);
-            // border: 1px dashed var(--primary-color);
             width: calc(100% - 80px);
             height: calc(100% - 80px);
             display: flex;

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, act } from 'react';
 import { useSelector, useDispatch, useStore } from 'react-redux';
 import Canvas from './Canvas';
-import FieldSettings from './FieldSettings';
 import FormSettings from './FormSettings';
 import Preview from './Preview';
 import { saveForm, resetSectionSettings, updateFieldValues, updateFieldOrder } from '../../store/actions';
@@ -13,14 +12,14 @@ import { restrictToParentElement, createSnapModifier } from '@dnd-kit/modifiers'
 import SidebarFieldOverlay from '../SidebarFieldOverlay';
 import { Utils as Helper, AddField } from '../Utils';
 import ToolBar from '../Toolbar/Toolbar';
+// import ToolbarSettings from '../Toolbar/ToolbarSettingsold';
 import ToolbarSettings from '../Toolbar/ToolbarSettings';
 
 const Editor = () => {
     const activeTab = useSelector(state => state.activeToolbar);
-    const selectedField = useSelector(state => state.selectedField);
+    const selectedSettingId = useSelector(state => state.selectedSettingId);
     const previewMode = useSelector(state => state.previewMode);
     const formData = {};
-    const fields = {};
     const formStatus = useSelector(state => state.formStatus || 'draft');
     const [activeDrag, setActiveDrag] = useState(null);
     const [sidebarDrag, setSidebarDrag] = useState(null);
@@ -44,27 +43,24 @@ const Editor = () => {
         if (sectionSettings) {
             dispatch(resetSectionSettings());
         }
-    }, [selectedField])
+    }, [selectedSettingId])
 
     const handleExit = () => {
         window.location.href = DragwybEditor.adminUrl;
     };
 
-    const setSelectedFieldHandler = (field) => {
-        Utils.setSelectedField({ value: field });
+    const setSelectedSettingId = ({id, tab= 'fields'}) => {
+        Utils.setSelectedSettingId({ value: id });
         const defaultToolbar = DragwybEditor?.EditorToolbars?.Default ?? false;
-        Utils.setActiveTab({ value: false === field ? defaultToolbar : 'fields' });
+
+        Utils.setActiveTab({ value: false === id ? defaultToolbar : tab });
     }
 
     const setActiveTabHandler = (value) => {
-        Utils.setSelectedField({ value: false });
+        Utils.setSelectedSettingId({ value: false });
         Utils.setActiveTab({ value: value });
         Utils.setPreviewMode({ value: false });
     }
-
-    const fieldValueHandler = ({ fieldId, value }) => {
-        dispatch(updateFieldValues(fieldId, value));
-    };
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -89,6 +85,7 @@ const Editor = () => {
     const snapToGridModifier = createSnapModifier(gridSize);
 
     const handleDragMove = (event) => {
+        console.log("hello World");
         const { active, over, delta, activatorEvent } = event;
 
         if (activeDrag === null) {
@@ -189,7 +186,7 @@ const Editor = () => {
             const type = active.data.current.type;
             const newField = Utils.AddField({ type, Utils, index: index });
 
-            setSelectedFieldHandler(newField._id);
+            setSelectedSettingId({id: newField._id});
 
             return;
         } else if (isCanvasDrag) {
@@ -248,7 +245,7 @@ const Editor = () => {
                         return <div className="dragwyb-editor__tab"
                             onClick={() => {
                                 Utils.setActiveTab({ value: mainTabs[tab].settingName });
-                                Utils.setSelectedField({ value: false })
+                                Utils.setSelectedSettingId({ value: false })
                                 Utils.setPreviewMode({ value: false });
                             }}
                             title={DragwybBuilder.i18n[tab]}
@@ -274,7 +271,7 @@ const Editor = () => {
             </div>
             <div className="dragwyb-editor__body">
                 {previewMode ? (
-                    <Preview values={values} errors={errors} onChange={fieldValueHandler} />
+                    <Preview values={values} errors={errors}/>
                 ) : (
                     <>
                         <DndContext
@@ -288,17 +285,15 @@ const Editor = () => {
                             <div className="dragwyb-editor__sidebar">
                                 {activeTab && <ToolbarSettings
                                     setting={activeTab}
-                                    Utils={Utils}
-                                    selectedToolbar={selectedField}
+                                    selectedToolbar={selectedSettingId}
                                     setActiveTab={setActiveTabHandler}
                                 />}
                             </div>
                             <div className="dragwyb-editor__main">
                                 <Canvas
-                                    selectedField={selectedField}
-                                    onFieldSelect={setSelectedFieldHandler}
+                                    selectedSettingId={selectedSettingId}
+                                    onFieldSelect={setSelectedSettingId}
                                     values={values}
-                                    onChange={({ fieldId, value }) => fieldValueHandler({ fieldId, value })}
                                     errors={errors}
                                     Utils={Utils}
                                     sidebarDrag={sidebarDrag}
@@ -308,7 +303,7 @@ const Editor = () => {
                                     setActiveTab={setActiveTabHandler}
                                 />
                             </div>
-                            <ToolBar activeTab={activeTab} setActiveTab={setActiveTabHandler} />
+                            <ToolBar activeTab={activeTab} setActiveTab={setActiveTabHandler} setSettingId={setSelectedSettingId}/>
                             {activeDrag && <SidebarFieldOverlay data={activeDrag} />}
                         </DndContext>
                     </>

@@ -9,7 +9,7 @@ import {
     UPDATE_FORM_TITLE,
     UPDATE_SECTION_SETTINGS,
     RESET_SECTION_SETTINGS,
-    UPDATE_SELECTED_FIELD,
+    UPDATE_SELECTED_SETTING_ID,
     UPDATE_ACTIVE_TOOLBAR,
     UPDATE_PREVIEW_MODE,
     UPDATE_FIELD_IDS,
@@ -38,7 +38,7 @@ const initialState = {
     notices: [],
     fieldIds:[],
     formStatus:DragwybEditor?.formData?.status ?? 'draft',
-    selectedField: false,
+    selectedSettingId: false,
     activeToolbar: DragwybEditor?.EditorToolbars?.Default ?? false,
     previewMode: false,
 };
@@ -167,10 +167,10 @@ export default function reducer(state = initialState, action) {
                 sectionSettings: {}
             };
 
-        case UPDATE_SELECTED_FIELD:
+        case UPDATE_SELECTED_SETTING_ID:
             return {
                 ...state,
-                selectedField: action.payload
+                selectedSettingId: action.payload
             }
 
         case UPDATE_ACTIVE_TOOLBAR:

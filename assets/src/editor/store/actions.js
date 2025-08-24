@@ -14,7 +14,7 @@ export const HIDE_NOTICE = 'HIDE_NOTICE';
 export const UPDATE_FIELD_VALUES = 'UPDATE_FIELD_VALUES';
 export const ERROR_NOTICE = 'ERROR_NOTICE';
 export const DUPLICATE_FIELD = 'DUPLICATE_FIELD';
-export const UPDATE_SELECTED_FIELD='UPDATE_SELECTED_FIELD';
+export const UPDATE_SELECTED_SETTING_ID='UPDATE_SELECTED_SETTING_ID';
 export const UPDATE_ACTIVE_TOOLBAR='UPDATE_ACTIVE_TOOLBAR';
 export const UPDATE_PREVIEW_MODE='UPDATE_PREVIEW_MODE';
 export const UPDATE_FIELD_IDS = 'UPDATE_FIELD_IDS';
@@ -60,8 +60,8 @@ export const updateFieldValues = (fieldId, value) => ({
     payload: { fieldId, value }
 });
 
-export const updateSelectedField=(value)=>({
-    type: 'UPDATE_SELECTED_FIELD',
+export const updateSelectedSettingId=(value)=>({
+    type: 'UPDATE_SELECTED_SETTING_ID',
     payload: value
 })
 export const updateActiveToolbar=(value)=>({

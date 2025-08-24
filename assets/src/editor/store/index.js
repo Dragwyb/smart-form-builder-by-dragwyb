@@ -16,7 +16,7 @@ const initialState = {
     values: {},
     fieldIds,
     formStatus:DragwybEditor?.formData?.status ?? 'draft',
-    selectedField: null,
+    selectedSettingId: null,
     activeToolbar: DragwybEditor?.EditorToolbars?.Default ?? false,
     previewMode: false,
 };

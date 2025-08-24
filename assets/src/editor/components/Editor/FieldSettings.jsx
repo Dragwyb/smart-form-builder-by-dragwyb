@@ -4,6 +4,7 @@ import { updateField, updateSectionSettings, resetSectionSettings } from '../../
 import { Panel } from '../Common';
 import shouldRenderField from './shouldRenderField';
 import { Utils as Helper } from '../Utils';
+import DragwybControlBase from '../../controlBase'
 
 const FieldSettings = ({ activeFieldID, fieldValue, fieldSettings, sectionSettings, onClose }) => {
 
@@ -22,7 +23,7 @@ const FieldSettings = ({ activeFieldID, fieldValue, fieldSettings, sectionSettin
 
         activeSection = true;
 
-        handleChange(key, true, 'section');
+        sectionUpdateHandler(key, true);
     }
 
     const defautlActiveTab = (key, settings) => {
@@ -30,23 +31,37 @@ const FieldSettings = ({ activeFieldID, fieldValue, fieldSettings, sectionSettin
             return;
         }
 
-        handleChange(key, Object.keys(settings.tabs)[0], 'tabs')
+        tabsUpdateHandler(key, Object.keys(settings.tabs)[0]);
     }
 
-    const handleChange = (key, value, type = null, from) => {
-        if ('tabs' === type) {
-            if ('header_controls' === key) {
-                dispatch(resetSectionSettings());
-                dispatch(updateSectionSettings(key, value));
-                return;
-            }
+    const tabsUpdateHandler=(key,value)=>{
+        if(sectionSettings && sectionSettings[key] && sectionSettings[key] === value){
+            return;
+        }
 
+        if ('header_controls' === key) {
+            dispatch(resetSectionSettings());
             dispatch(updateSectionSettings(key, value));
             return;
         }
 
+        dispatch(updateSectionSettings(key, value));
+    }
+
+    const sectionUpdateHandler=(key,value)=>{
+        dispatch(updateSectionSettings('section', value ? key : ''));
+    }
+
+    const handleChange = (key, value, type = null, from) => {
+        if(!(from instanceof DragwybControlBase || from instanceof DragwybEditor.editor.extends.ControlBase)) return;
+
+        if ('tabs' === type) {
+            tabsUpdateHandler(key, value)
+            return;
+        }
+
         if ('section' === type) {
-            dispatch(updateSectionSettings('section', value ? key : ''));
+            sectionUpdateHandler(key, value)
             return;
         }
 
@@ -57,7 +72,7 @@ const FieldSettings = ({ activeFieldID, fieldValue, fieldSettings, sectionSettin
         dispatch(updateField(activeFieldID, {
             ...fieldValue,
             attributes: {
-                ...fieldValue.attributes,
+                ...fieldValue?.attributes,
                 [key]: value
             }
         }));
@@ -73,7 +88,7 @@ const FieldSettings = ({ activeFieldID, fieldValue, fieldSettings, sectionSettin
             return <></>;
         }
 
-        const selectedSettings = { ...fieldValue.attributes, ...sectionSettings };
+        const selectedSettings = { ...fieldValue?.attributes, ...sectionSettings };
         const shouldRender = shouldRenderField(settings, selectedSettings);
 
         if (!shouldRender) {

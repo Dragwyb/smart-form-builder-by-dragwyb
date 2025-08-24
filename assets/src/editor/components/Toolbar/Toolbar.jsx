@@ -1,6 +1,6 @@
 import { Button } from "../Common";
 
-const ToolBar = ({ activeTab, setActiveTab }) => {
+const ToolBar = ({ activeTab, setActiveTab, setSettingId }) => {
     const toolbars=DragwybEditor.EditorToolbars.toolbars;
 
     if(!toolbars || Object.keys(toolbars).length < 1){
@@ -12,6 +12,7 @@ const ToolBar = ({ activeTab, setActiveTab }) => {
             return <div className={`dragwyb-editor__toolbar-item ${activeTab === tab ? ' active' : ''}`}
                 onClick={() => {
                     setActiveTab(tab);
+                    setSettingId({id:tab,tab: tab });
                 }}
                 title={toolbars[tab].name}
                 data-tab={tab}

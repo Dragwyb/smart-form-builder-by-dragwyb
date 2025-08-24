@@ -1,14 +1,11 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    useDroppable,
-    useDraggable
-} from '@dnd-kit/core';
-import {
     SortableContext,
     useSortable,
     verticalListSortingStrategy
 } from '@dnd-kit/sortable';
+import { useDraggable, useDroppable } from '../Common';
 
 import { CSS } from '@dnd-kit/utilities';
 import * as Fields from './Fields';
@@ -16,7 +13,7 @@ import { duplicateField } from '../../store/actions';
 import { Button } from '../Common';
 import { __ } from '@wordpress/i18n';
 
-const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, onChange, onFieldSelect, onDuplicate, onDelete, errors, selectedField }) => {
+const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, onFieldSelect, onDuplicate, onDelete, errors, selectedField }) => {
 
     const { setNodeRef: dropRef, isOver } = useDroppable(
         {
@@ -57,7 +54,7 @@ const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, on
         <div
             ref={setNodeRef}
             className={wrapperClass}
-            onClick={() => onFieldSelect(field._id)}
+            onClick={() => onFieldSelect({id: field._id})}
             {...listeners}
             {...attributes}
             id={`field-wrapp-${field._id}`}
@@ -65,7 +62,6 @@ const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, on
             <Fields.Preview
                 fields={[field]}
                 values={values}
-                onChange={onChange}
                 errors={errors}
             />
             <div className="field-actions">
@@ -129,7 +125,7 @@ const EmptyCanvas = ({ activeTab, setActiveTab }) => {
     </div>
 }
 
-const Canvas = ({ selectedField, onFieldSelect, values, onChange, errors, Utils, dropIndex, dropIndicatorPosition, activeTab, setActiveTab }) => {
+const Canvas = ({ selectedField, onFieldSelect, values, errors, Utils, dropIndex, dropIndicatorPosition, activeTab, setActiveTab }) => {
 
     const fields = useSelector(state => state.form.fields); // Assuming fields are stored in Redux
 
@@ -166,11 +162,11 @@ const Canvas = ({ selectedField, onFieldSelect, values, onChange, errors, Utils,
         });
 
         dispatch(duplicateField(deepClone, index + 1, dispatch));
-        onFieldSelect(deepClone._id);
+        onFieldSelect({id: deepClone._id});
     };
 
     const handleDeleteField = (id) => {
-        onFieldSelect(null);
+        onFieldSelect({id: false});
         dispatch({ type: 'DELETE_FIELD', payload: id });
     };
 
@@ -190,7 +186,6 @@ const Canvas = ({ selectedField, onFieldSelect, values, onChange, errors, Utils,
                             field={field}
                             selectedField={selectedField}
                             values={values}
-                            onChange={onChange}
                             onFieldSelect={onFieldSelect}
                             onDuplicate={(field) => handleDuplicateField(field, index)}
                             onDelete={handleDeleteField}

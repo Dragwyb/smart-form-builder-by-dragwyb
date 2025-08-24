@@ -1,6 +1,6 @@
 
 import React, { useRef, useEffect } from "react";
-import { updateFieldId, addField, updateSelectedField, updateActiveToolbar, updatePreviewMode } from "../store/actions";
+import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updatePreviewMode, updateFieldValues } from "../store/actions";
 import PropTypes from "prop-types";
 
 /**
@@ -58,7 +58,29 @@ export const AddField = ({ type, dispatch, Utils, index = null }) => {
     return field;
 };
 
-export const setSelectedField = ({ dispatch, value }) => {
+export const updateFieldValue=({dispatch, id, value})=>{
+    try {
+        const validatorId=validateProp({
+            key: "id",
+            value: id, // invalid
+            types: ["string"],
+            required: true,
+            functionName: "updateFieldValue"
+        });
+        const validatorValue=validateProp({
+            key: "value",
+            value: value, // invalid
+            types: ["any"],
+            required: true,
+            functionName: "updateFieldValue"
+        });
+        dispatch(updateFieldValues(id, value));
+    } catch (e) {
+        console.error("Validation failed:", e.message);
+    }
+}
+
+export const setSelectedSettingId = ({ dispatch, value }) => {
     try {
         const validator=validateProp({
             key: "value",
@@ -67,7 +89,7 @@ export const setSelectedField = ({ dispatch, value }) => {
             required: true,
             functionName: "setSelectedField"
         });
-        dispatch(updateSelectedField(value))
+        dispatch(updateSelectedSettingId(value))
     } catch (e) {
         console.error("Validation failed:", e.message);
     }

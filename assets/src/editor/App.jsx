@@ -3,12 +3,10 @@ import { Provider } from 'react-redux';
 import store from './store';
 import Editor from './components/Editor';
 import Notice from './components/Common/Notice';
-import Controls from './components/Editor/Controls'
 
 const App = () => {
     return (
         <>
-        <Controls />
         <Provider store={store}>
             <Editor />
             <Notice />

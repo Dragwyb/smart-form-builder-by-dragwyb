@@ -25,7 +25,7 @@ class DragwybControlBase {
         this.settings = args[2];
         this.value = args[3];
         this.#updateValue = args[4];
-        this.utils=args[5];
+        this.Utils=args[5];
     }
 
     updateControls(key, value) {
