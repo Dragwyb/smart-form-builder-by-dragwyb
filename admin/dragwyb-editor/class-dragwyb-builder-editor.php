@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Admin\Dragwyb_Editor;
 
-use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Pages;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
 use Dragwyb\Form_Builder\Includes\Modules\Modules;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
@@ -38,7 +37,6 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             add_filter('Dragwyb_Admin_Pages', [$this, 'allowed_page']);
             add_action('Dragwyb_Current_Screen', [$this, 'init'], 1);
             add_filter('Dragwyb_i18n', [$this, 'localize_i18n_strings']);
-            add_action('Dragwyb/after_enqueue/editor_scripts', [$this, 'editor_controls_scripts']);
             add_filter('Dragwyb/Editor/Localize_Settings', [$this, 'editor_toolbars_localize']);
         }
 
@@ -194,24 +192,6 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             do_action('Dragwyb/after_enqueue/editor_scripts');
         }
 
-        public function editor_controls_scripts()
-        {
-            wp_enqueue_script(
-                'dragwyb-editor-controls',
-                DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editorControls/editorControls.js',
-                ['dragwyb-form-editor'],
-                DRAGWYB_FORM_BUILDER_VERSION,
-                true
-            );
-
-            wp_enqueue_style(
-                'dragwyb-editor-controls',
-                DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editorControls/editorControls.css',
-                [],
-                DRAGWYB_FORM_BUILDER_VERSION,
-            );
-        }
-
         /**
          * Get form data
          */
@@ -252,6 +232,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                     $settings=$toolbar->get_toolbar_settings();
                     $name=$toolbar->get_toolbar_name();
                     $icon=$toolbar->get_toolbar_icon();
+                    $toolbar->enqueue_assets();
 
                     if($settings){
                         if(!isset($data[$key]))
@@ -270,7 +251,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             }   
 
             $toolbar_data=array('toolbars'=>$toolbar_data);
-
+            
             if(isset($toolbar_data['toolbars'][$default_toolbar])){
                 $toolbar_data['Default']=sanitize_text_field($default_toolbar);
             }
@@ -278,34 +259,6 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             $data=array_merge($data, array('EditorToolbars'=>$toolbar_data));
             
             return $data;
-        }
-
-        /**
-         * Get field types configuration
-         */
-        private function get_field_types(): array
-        {
-            $module = new Modules();
-
-            $fields_data = $module->get_fields();
-
-            $fields = [];
-
-            foreach ($fields_data as $key => $field) {
-                $field->enqueue_assets();
-
-                $name = $field->get_name();
-
-                $conrols = $field->render_controls();
-
-                $icon = $field->get_icon();
-
-                $fields[$key]['label'] = esc_html($name);
-                $fields[$key]['icon'] = esc_attr($icon);
-                $fields[$key]['controls'] = $conrols;
-            }
-
-            return $fields;
         }
 
         /**
@@ -343,45 +296,6 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             ];
 
             return apply_filters('dragwyb_form_types', $default_types);
-        }
-
-        private function get_form_general_settings(): array
-        {
-            $styles = [
-                'default' => __('Default', 'dragwyb-form-builder'),
-                'custom' => __('Custom', 'dragwyb-form-builder')
-            ];
-
-            $styles = apply_filters('dragwyb_form_styles', $styles);
-
-            return $styles;
-        }
-
-        /**
-         * Get form settings configuration
-         */
-        private function get_form_advance_settings(): array
-        {
-            $form_settings = [
-                'general' => [
-                    'label' => __('General', 'dragwyb-form-builder'),
-                    'icon' => 'admin-generic',
-                    'settings' => [
-                        'form_class' => [
-                            'type' => 'text',
-                            'label' => __('Form CSS Class', 'dragwyb-form-builder')
-                        ],
-                        'submit_text' => [
-                            'type' => 'text',
-                            'label' => __('Submit Button Text', 'dragwyb-form-builder')
-                        ]
-                    ]
-                ],
-            ];
-
-            $form_setting = apply_filters('Dragwy_advance_settings', $form_settings);
-
-            return $form_setting;
         }
 
         public function localize_i18n_strings($strings): array

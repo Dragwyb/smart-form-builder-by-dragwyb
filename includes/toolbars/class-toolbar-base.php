@@ -18,6 +18,21 @@ abstract class Toolbar_Base
         $this->icon = $this->get_icon();
     }
 
+    public function enqueue_assets()
+    {
+        wp_register_script(
+            'dragwyb-editor-toolbars',
+            DRAGWYB_FORM_BUILDER_URL . 'assets/dist/toolbars/toolbars.js',
+            ['dragwyb-form-editor'],
+            DRAGWYB_FORM_BUILDER_VERSION,
+            true
+        );
+
+        if (!wp_script_is('dragwyb-editor-toolbars', 'enqueued')) {
+            wp_enqueue_script('dragwyb-editor-toolbars');
+        }
+    }
+
     /**
      * Each toolbar must define its unique ID
      */
