@@ -53,21 +53,23 @@ class Advance_Settings extends Toolbar_Base
 
     private function init(): void
     {
-        $this->advance_settings=new Settings();
+        $this->advance_settings = new Settings();
     }
 
     protected function get_settings(): array
     {
-       $settings=$this->advance_settings;
+        $settings = $this->advance_settings;
+        $data = array();
 
-       if($settings instanceof Settings){
+        if ($settings instanceof Settings) {
             $conrols = $settings->render_controls();
+            $data['label'] = sprintf(esc_html__('%s Settings'), sanitize_text_field($this->get_name()));
 
-            if($conrols && count($conrols) > 0){
-                return $conrols;
+            if ($conrols && count($conrols) > 0) {
+                $data['controls'] = $conrols;
             }
         }
 
-        return array();
+        return $data;
     }
 }
