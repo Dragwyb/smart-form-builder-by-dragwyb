@@ -53,6 +53,7 @@ abstract class Register_Controls_Base
 
         $conditions = $this->tab_condition($conditions, $data);
 
+        
         $this->settings_arr[$this->current_section] = $this->controller_settings(array_merge($data, array('type' => 'section', 'conditions' => $conditions)));
     }
 
@@ -165,6 +166,8 @@ abstract class Register_Controls_Base
         } else if (isset($this->settings_arr[$this->current_section]['conditions'])) {
             $conditions = array_merge($conditions, $this->settings_arr[$this->current_section]['conditions']);
             $conditions['section'] = $this->current_section;
+        }else{
+            $conditions=array_merge($conditions, array('section'=>$this->current_section));
         }
 
         $this->current_control_stack[$id] = $this->controller_settings(array_merge($data, array('conditions' => $conditions)));
