@@ -3,18 +3,10 @@
     "version": "1.0.0",
     "description": "Drag & Drop Form Builder",
     "scripts": {
-        "dev:editor": "webpack --mode development --env folder=editor --watch",
-        "build:editor": "webpack --mode production --env folder=editor",
-        "dev:core": "webpack --mode development --env folder=core --watch",
-        "build:core": "webpack --mode production --env folder=core",
-        "dev:frontend": "webpack --mode development --env folder=frontend --watch",
-        "build:frontend": "webpack --mode production --env folder=frontend",
-        "dev:editorFields": "webpack --mode development --env folder=editorFields --watch",
-        "build:editorFields": "webpack --mode production --env folder=editorFields",
-        "dev:editorControls": "webpack --mode development --env folder=editorControls --watch",
-        "build:editorControls": "webpack --mode production --env folder=editorControls",
-        "dev:toolbars": "webpack --mode development --env folder=toolbars --watch",
-        "build:toolbars": "webpack --mode production --env folder=toolbars"
+        "dev:editor": "webpack --mode development --env type=editor --watch",
+        "build:editor": "webpack --mode production --env type=editor",
+        "dev:frontend": "webpack --mode development --env type=frontend --watch",
+        "build:frontend": "webpack --mode production --env type=frontend"
     },
     "dependencies": {
         "@dnd-kit/core": "^6.3.1",

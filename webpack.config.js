@@ -2,7 +2,19 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const fs = require('fs');
 
-const config = {
+const makeConfig = (folder) => ({
+    entry: {
+        [folder]: `./assets/src/${folder}/index.js`
+    },
+    output: {
+        filename: `[name].js`,
+        path: path.resolve(__dirname, `assets/dist/${folder}`)
+    },
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: `../${folder}/${folder}.css`
+        })
+    ],
     module: {
         rules: [
             {
@@ -23,11 +35,10 @@ const config = {
                     {
                         loader: 'sass-loader',
                         options: {
-                          // Explicitly tell sass-loader to use Dart Sass
-                          implementation: require('sass'),
-                          api: 'modern', // <— This ensures modern API usage
+                            implementation: require('sass'),
+                            api: 'modern',
                         }
-                      }
+                    }
                 ],
             }
         ]
@@ -42,28 +53,48 @@ const config = {
         '@wordpress/components': 'wp.components',
         '@wordpress/i18n': 'wp.i18n'
     }
-};
+});
 
-module.exports = (env, argv) => {
-    if (argv.env.folder) {
-
-        const folder = argv.env.folder;
-
-        return {
-            ...config,
-            entry:{
-                [folder]:`./assets/src/${folder}/index.js`
-            },
-            output: {
-                filename: `[name].js`,
-                path: path.resolve(__dirname, `assets/dist/${folder}`)
-            },
-            plugins: [
-                new MiniCssExtractPlugin({
-                    filename: `../${folder}/${folder}.css`
-                })
-            ],
-        }
+const validFoldersFilter=(folders)=>{
+    if(folders.length > 0){
+       return folders.filter(folder =>
+            fs.existsSync(path.resolve(__dirname, `assets/src/${folder}/index.js`))
+        );
     }
 
-}; 
+    console.warn("⚠️ empty folders");
+    return 
+}
+
+module.exports = (env, argv) => {
+    let validFolders=[];
+
+    const editorFolders = [
+        'editor',
+        'core',
+        'editorFields',
+        'editorControls',
+        'toolbars',
+    ];
+
+    const frontendFolders=[
+        'frontend'
+    ];
+
+    if(env && env.type === 'editor'){
+        validFolders = validFoldersFilter(editorFolders);
+    }else if(env && env.type === 'frontend'){
+        validFolders = validFoldersFilter(frontendFolders);
+    }else{
+        console.warn("⚠️ Comman not valid");
+        return {};
+    }
+    
+    if (validFolders.length === 0) {
+        console.warn("⚠️  No valid folders found with index.js");
+        return {};
+    }
+
+    // Return multiple configs (Webpack will build each)
+    return validFolders.map(folder => makeConfig(folder));
+};
