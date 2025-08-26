@@ -51,11 +51,6 @@ abstract class Toolbar_Base
     /**
      * Each toolbar must handle its own data sanitization
      */
-    abstract protected function sanitize_data(array $data): array;
-
-    /**
-     * Each toolbar must handle its own data sanitization
-     */
     abstract protected function get_settings(): array;
 
     /**
@@ -75,8 +70,9 @@ abstract class Toolbar_Base
     {
         return esc_attr($this->icon);
     }
-    
-    public function get_toolbar_settings(): array{
+
+    public function get_toolbar_settings(): array
+    {
         return $this->get_settings();
     }
 
@@ -88,9 +84,24 @@ abstract class Toolbar_Base
     /**
      * Update the toolbar data with sanitization
      */
-    public function set_toolbar_data (array $data): void
+    public function set_toolbar_data(array $data): void
     {
         $this->data = $this->sanitize_data($data);
+    }
+
+    /**
+     * Each toolbar must handle its own data sanitization
+     */
+    protected function sanitize_data(array $data): array {
+        $settings=$this->get_settings();;
+        $sanitize_data = new Sanitize_Data($data, $settings['controls']);
+        $sanitize_data = $sanitize_data->get_data();
+        
+        if ($sanitize_data && is_array($sanitize_data) && count($sanitize_data) > 0) {
+            return $sanitize_data;
+        }
+
+        return array();
     }
 
     /**

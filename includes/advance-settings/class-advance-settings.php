@@ -35,16 +35,6 @@ class Advance_Settings extends Toolbar_Base
         return 'fas fa-cog';
     }
 
-    protected function sanitize_data(array $data): array
-    {
-        // $sanitize_module_data = Sanitize_Module_Settings::instance($data);
-
-        // if ($sanitize_data && is_array($sanitize_data) && count($sanitize_data) > 0) {
-        //     return $sanitize_data;
-        // }
-        return array();
-    }
-
     public function __construct()
     {
         parent::__construct();

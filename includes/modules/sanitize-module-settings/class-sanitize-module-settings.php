@@ -99,7 +99,7 @@ if (!class_exists('Sanitize_Module_Settings')) {
                         $control_obj->set_value($value, $type, $attribute);
                         $filtered_value = $control_obj->get_value();
 
-                        if (isset($filtered_value) && $filtered_value) {
+                        if ($filtered_value) {
                             self::$filtered_data[$index]['attributes'][$attribute] = $filtered_value;
                         }
                     }
