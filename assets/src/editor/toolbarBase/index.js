@@ -35,7 +35,7 @@ class DragwybToolbarBase extends Component {
         this.html = args[0];
         this.id = args[1];
         this.settingId = args[2];
-        this.toolbarData = args[3];
+        this.toolbarData = args[3] || {};
         this.settings = args[4];
         this.#updateValue = args[5];
         this.Utils=args[6];
@@ -50,15 +50,20 @@ class DragwybToolbarBase extends Component {
     }
 
     getToolbarValue(){
-        return this.data;
+        return this.toolbarData;
     }
 
-    updateToolbar(key, value) {
-        this.#triggerOnChange(key, value)
+    updateToolbarHandler=(key, value)=> {
+        this.toolbarData[key]=value;
+        this.updateToolbar();
     }
 
-    #triggerOnChange(key, value) {
-        this.#updateValue(key, value, this.settings.type, this);
+    updateToolbar=()=>{
+        this.#triggerOnChange();
+    }
+
+    #triggerOnChange() {
+        this.#updateValue({key: this.id, value: this.toolbarData, toolbarObj: this});
     }
 
     /**
