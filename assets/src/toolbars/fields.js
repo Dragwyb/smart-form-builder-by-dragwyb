@@ -98,10 +98,11 @@ class Fields extends DragwybEditor.editor.extends.ToolbarBase {
     const key = this.settingId;
     const data = this.toolbarData;
 
+    
     if (key === 'fields' || !key) return false;
     const selectedField = this.getSelectedField(data, key);
-
-    return selectedField ? selectedField : data;
+    
+    return selectedField && selectedField.attributes ? selectedField.attributes : data;
   }
 
   getSelectedField(data, key) {
@@ -114,6 +115,23 @@ class Fields extends DragwybEditor.editor.extends.ToolbarBase {
     })
 
     return value;
+  }
+
+  updateToolbarHandler = (key, value) => {
+
+    if (this.toolbarData) {
+      let valueUpdate=false;
+      this.toolbarData.map(field => {
+        if (field._id === this.settingId && field.attributes) {
+          valueUpdate=true;
+          field.attributes[key]=value;
+        }
+      })
+
+      if(valueUpdate){
+        this.updateToolbar();
+      }
+    }
   }
 
   handleAddField = (type, Utils) => {
