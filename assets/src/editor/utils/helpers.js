@@ -1,6 +1,6 @@
 
 import React, { useRef, useEffect } from "react";
-import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updatePreviewMode, updateFieldValues } from "../store/actions";
+import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updatePreviewMode, updateFieldValues,updateToolbarSettings } from "../store/actions";
 import PropTypes from "prop-types";
 
 /**
@@ -80,6 +80,33 @@ export const updateFieldValue=({dispatch, id, value})=>{
     }
 }
 
+export const updateToolbarSetting=({id, value, dispatch})=>{
+
+    if(!DragwybEditor.EditorToolbars || !DragwybEditor.EditorToolbars.toolbars || !DragwybEditor.EditorToolbars.toolbars[id]){
+        return;
+    }
+
+    try {
+        const validatorId=validateProp({
+            key: "id",
+            value: id, // invalid
+            types: ["string"],
+            required: true,
+            functionName: "updateFieldValue"
+        });
+        const validatorValue=validateProp({
+            key: "value",
+            value: value, // invalid
+            types: ["any"],
+            required: true,
+            functionName: "updateFieldValue"
+        });
+        dispatch(updateToolbarSettings(id, value))
+    } catch (e) {
+        console.error("Validation failed:", e.message);
+    }
+}
+
 export const setSelectedSettingId = ({ dispatch, value }) => {
     try {
         const validator=validateProp({
@@ -87,7 +114,7 @@ export const setSelectedSettingId = ({ dispatch, value }) => {
             value: value, // invalid
             types: ["bool", "string"],
             required: true,
-            functionName: "setSelectedField"
+            functionName: "setSelectedSettingId"
         });
         dispatch(updateSelectedSettingId(value))
     } catch (e) {
