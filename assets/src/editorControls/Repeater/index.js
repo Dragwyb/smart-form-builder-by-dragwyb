@@ -14,16 +14,18 @@ class repeaterControl extends DragwybEditor.editor.extends.ControlBase {
             <>
                 <label>{settings.label}</label>
                 <div className="dragwyb-repeater-field">
-                    <RepeaterSortable
-                        items={repeaterItems}
-                        settings={settings}
-                        updateControls={this.updateControls.bind(this)}
-                        controlId={id}
-                        utils={this.Utils}
-                    />
+                    {repeaterItems && repeaterItems.length > 0 &&
+                        <RepeaterSortable
+                            items={repeaterItems}
+                            settings={settings}
+                            updateControls={this.updateControls.bind(this)}
+                            controlId={id}
+                            utils={this.Utils}
+                        />
+                    }
                     <div className="add-repeater-btn">
                         <button onClick={() => {
-                            const updated = [...repeaterItems, { _id: this.Utils.generateId(), attributes: {} }];
+                            const updated = [...repeaterItems || [], { _id: this.Utils.generateId(), attributes: {} }];
                             this.updateControls(id, updated);
                         }}>
                             {settings.add_item}
