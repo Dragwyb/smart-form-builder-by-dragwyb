@@ -55,19 +55,38 @@ const makeConfig = (folder) => ({
     }
 });
 
-const validFoldersFilter=(folders)=>{
-    if(folders.length > 0){
-       return folders.filter(folder =>
-            fs.existsSync(path.resolve(__dirname, `assets/src/${folder}/index.js`))
-        );
+// 🔹 Default fallback config (safe dummy build)
+const defaultConfig = {
+    entry: {},
+    output: {
+        filename: '[name].js',
+        path: path.resolve(__dirname, 'assets/dist')
+    },
+    plugins: [],
+    module: { rules: [] },
+};
+
+const validFoldersFilter = (folders) => {
+    if (!folders || folders.length === 0) {
+        console.warn("⚠️ No folders were provided to Webpack.");
+        return [];
     }
 
-    console.warn("⚠️ empty folders");
-    return 
-}
+    const valid = folders.filter(folder =>
+        fs.existsSync(path.resolve(__dirname, `assets/src/${folder}/index.js`))
+    );
+
+    if (valid.length === 0) {
+        console.warn(`⚠️ No valid folders found with an index.js file in: [${folders.join(', ')}]`);
+    } else {
+        console.log(`✅ Building configs for: [${valid.join(', ')}]`);
+    }
+
+    return valid;
+};
 
 module.exports = (env, argv) => {
-    let validFolders=[];
+    let validFolders = [];
 
     const editorFolders = [
         'editor',
@@ -77,24 +96,26 @@ module.exports = (env, argv) => {
         'toolbars',
     ];
 
-    const frontendFolders=[
+    const frontendFolders = [
         'frontend'
     ];
 
-    if(env && env.type === 'editor'){
+    if (env && env.type === 'editor') {
+        console.log("ℹ️  Running Webpack in *editor* mode...");
         validFolders = validFoldersFilter(editorFolders);
-    }else if(env && env.type === 'frontend'){
+    } else if (env && env.type === 'frontend') {
+        console.log("ℹ️  Running Webpack in *frontend* mode...");
         validFolders = validFoldersFilter(frontendFolders);
-    }else{
-        console.warn("⚠️ Comman not valid");
-        return {};
-    }
-    
-    if (validFolders.length === 0) {
-        console.warn("⚠️  No valid folders found with index.js");
-        return {};
+    } else {
+        console.warn("⚠️ Invalid build type provided. Use `--env type=editor` or `--env type=frontend`.");
+        return defaultConfig;
     }
 
-    // Return multiple configs (Webpack will build each)
+    if (validFolders.length === 0) {
+        console.warn("⚠️ Falling back to default Webpack config (no builds generated).");
+        return defaultConfig;
+    }
+
+    // ✅ Return multiple configs (Webpack multi-compiler mode)
     return validFolders.map(folder => makeConfig(folder));
 };
