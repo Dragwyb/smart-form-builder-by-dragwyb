@@ -5,7 +5,7 @@ import {
     DELETE_FIELD,
     UPDATE_FIELD_ORDER,
     UPDATE_FIELD_VALUES,
-    UPDATE_FORM_SETTINGS,
+    UPDATE_TOOLBAR_SETTINGS,
     UPDATE_FORM_TITLE,
     UPDATE_SECTION_SETTINGS,
     RESET_SECTION_SETTINGS,
@@ -71,13 +71,13 @@ export default function reducer(state = initialState, action) {
             }
 
             if(!action.payload.field._id || !action.payload.field.type){
-                return;
+                return state;
             }
 
             const duplicateId=state.form.fields.filter(field => field._id === action.payload.field._id);
 
             if(duplicateId.length > 0){
-                return;
+                return state;
             }
 
             return {
@@ -134,12 +134,18 @@ export default function reducer(state = initialState, action) {
                 }
             };
 
-        case UPDATE_FORM_SETTINGS:
+        case UPDATE_TOOLBAR_SETTINGS:
+            const toolbarId=action.payload.id;
+
+            if(!DragwybEditor.EditorToolbars || !DragwybEditor.EditorToolbars.toolbars || !DragwybEditor.EditorToolbars.toolbars[toolbarId]){
+                return state;
+            }
+            
             return {
                 ...state,
                 form: {
                     ...state.form,
-                    settings: action.payload
+                    [toolbarId]: action.payload.value
                 }
             };
 

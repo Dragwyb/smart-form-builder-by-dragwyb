@@ -5,7 +5,7 @@ export const ADD_FIELD = 'ADD_FIELD';
 export const UPDATE_FIELD = 'UPDATE_FIELD';
 export const DELETE_FIELD = 'DELETE_FIELD';
 export const UPDATE_FIELD_ORDER = 'UPDATE_FIELD_ORDER';
-export const UPDATE_FORM_SETTINGS = 'UPDATE_FORM_SETTINGS';
+export const UPDATE_TOOLBAR_SETTINGS = 'UPDATE_TOOLBAR_SETTINGS';
 export const UPDATE_FORM_TITLE = 'UPDATE_FORM_TITLE';
 export const UPDATE_SECTION_SETTINGS ='UPDATE_SECTION_SETTINGS';
 export const RESET_SECTION_SETTINGS ='RESET_SECTION_SETTINGS';
@@ -58,6 +58,11 @@ export const updateFieldOrder = (oldIndex, newIndex) => ({
 export const updateFieldValues = (fieldId, value) => ({
     type: UPDATE_FIELD_VALUES,
     payload: { fieldId, value }
+});
+
+export const updateToolbarSettings=(id, value)=>({
+    type: UPDATE_TOOLBAR_SETTINGS,
+    payload: {id, value}
 });
 
 export const updateSelectedSettingId=(value)=>({
