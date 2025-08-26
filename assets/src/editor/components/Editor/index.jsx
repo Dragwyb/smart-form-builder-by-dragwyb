@@ -1,7 +1,6 @@
 import React, { useState, useEffect, act } from 'react';
 import { useSelector, useDispatch, useStore } from 'react-redux';
 import Canvas from './Canvas';
-import FormSettings from './FormSettings';
 import Preview from './Preview';
 import { saveForm, resetSectionSettings, updateFieldValues, updateFieldOrder } from '../../store/actions';
 import { Button, SaveBtn } from '../Common';
@@ -85,7 +84,6 @@ const Editor = () => {
     const snapToGridModifier = createSnapModifier(gridSize);
 
     const handleDragMove = (event) => {
-        console.log("hello World");
         const { active, over, delta, activatorEvent } = event;
 
         if (activeDrag === null) {
