@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Advance_Settings;
@@ -6,10 +7,12 @@ namespace Dragwyb\Form_Builder\Includes\Advance_Settings;
 use Dragwyb\Form_Builder\Includes\Controls\Register_Controls_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 
-class Settings extends Register_Controls_Base {
+class Settings extends Register_Controls_Base
+{
     private static $instance = null;
 
-    public static function instance(): self {
+    public static function instance(): self
+    {
         if (null === self::$instance) {
             self::$instance = new self();
         }
@@ -18,7 +21,12 @@ class Settings extends Register_Controls_Base {
 
     protected function init(): void {}
 
-    protected function register_controls(): void {
+    protected function register_controls(): void
+    {
+        $form_id = absint($this->get_form_id());
+        $form_title = sanitize_text_field(get_the_title($form_id));
+        $form_status = sanitize_text_field(get_post_status($form_id));
+
         // 🔹 Form Identity
         $this->start_section('form_identity', [
             'label' => __('Form Identity', 'dragwyb-form-builder'),
@@ -27,13 +35,13 @@ class Settings extends Register_Controls_Base {
         $this->add_control('form_name', [
             'type'    => Controls::TEXT,
             'label'   => __('Form Name', 'dragwyb-form-builder'),
-            'default' => __('Untitled Form', 'dragwyb-form-builder'),
+            'default' => sanitize_text_field($form_title),
         ]);
 
         $this->add_control('form_id', [
             'type'    => Controls::TEXT,
             'label'   => __('Form ID', 'dragwyb-form-builder'),
-            'default' => uniqid('form_'),
+            'default' => sanitize_text_field($form_id),
             'description' => __('Unique identifier (auto-generated). Change only if required.', 'dragwyb-form-builder'),
         ]);
 
@@ -45,7 +53,7 @@ class Settings extends Register_Controls_Base {
                 'public'  => __('Public', 'dragwyb-form-builder'),
                 'private' => __('Private', 'dragwyb-form-builder'),
             ],
-            'default' => 'draft',
+            'default' => sanitize_text_field($form_status),
         ]);
 
         $this->end_section();
