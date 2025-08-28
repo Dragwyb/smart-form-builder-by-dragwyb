@@ -97,6 +97,7 @@ class Dragwyb_Form_Builder_Ajax
         $sanitize_data=array();
         $toolbar_obj=new Toolbars();
         $toolbars=$toolbar_obj->get_toolbars();
+        $toolbars_cache=array();
 
         foreach($data as $key=>$value){
             if($key === 'id'){
@@ -110,7 +111,14 @@ class Dragwyb_Form_Builder_Ajax
 
                 if($toolbar_data){
                     $sanitize_data[$key]=$toolbar_data;
+                    $toolbars_cache[$key]=$toolbar;
                 }
+            }
+        }
+
+        if(count($toolbars_cache) > 0){
+            foreach($toolbars_cache as $toolbar){
+                $toolbar->settings_updated();
             }
         }
 

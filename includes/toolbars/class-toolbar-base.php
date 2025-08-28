@@ -54,6 +54,15 @@ abstract class Toolbar_Base
     abstract protected function get_settings(): array;
 
     /**
+     * Update toolbar call update settings
+     */
+    protected function update_toolbar(): void{}
+
+    final public function settings_updated(): void{
+        $this->update_toolbar();
+    }
+
+    /**
      * Quick accessors
      */
     public function get_toolbar_id(): string
