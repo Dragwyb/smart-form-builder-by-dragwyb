@@ -38,7 +38,7 @@ class textControl extends DragwybEditor.editor.extends.ControlBase {
         
         return <>
             <label for={id}>{settings.label}</label>
-            <input type={this.controlName} id={id} name={id} onChange={e => this.updateControls(id, e.target.value)} value={value}/>
+            <input type={this.controlName} id={id} name={id} onChange={e => this.updateControls(id, e.target.value)} value={value || settings.default}/>
         </>
     }
 }
