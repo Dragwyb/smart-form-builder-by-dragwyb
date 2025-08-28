@@ -174,32 +174,13 @@ body {
             color: #fff;
             font-size: 20px;
         }
-
-
     }
 
     &__title {
         margin: 0 5px 0 1.2rem;
 
-        p {
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        input {
-            font-size: 20px;
-            padding: 5px 10px;
-            width: 300px;
-            border: 1px solid transparent;
-            background: transparent;
-
-            &:focus {
-                border-color: var(--primary-color);
-                box-shadow: unset;
-                border: none;
-                outline: none;
-                background: #fff;
-            }
+        h2 {
+            color: #fff;
         }
     }
 
@@ -207,6 +188,7 @@ body {
         display: flex;
         align-items: center;
         gap: 5px;
+        margin-left: 5px;
 
         span {
             width: 8px;
@@ -218,7 +200,7 @@ body {
                 background: var(--error-color);
             }
 
-            &[data-status="publish"] {
+            &[data-status="public"] {
                 background: var(--success-color);
             }
         }
