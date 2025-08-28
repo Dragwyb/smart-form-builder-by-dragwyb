@@ -1,10 +1,10 @@
 import React from 'react';
 import { useDispatch, useSelector, useStore } from 'react-redux';
-import { updateSectionSettings, resetSectionSettings } from '../../store/actions';
-import { Panel } from '../Common';
+import { updateSectionSettings, resetSectionSettings } from '../store/actions';
+import { Panel } from '../components/Common';
 import shouldRenderField from './shouldRenderField';
-import { Utils as Helper } from '../Utils';
-import DragwybControlBase from '../../controlBase'
+import { Utils as Helper } from '../components/Utils';
+import DragwybControlBase from '../controlBase'
 
 const FieldSettings = ({ activeFieldID, fieldValue, fieldSettings, sectionSettings, onSettingChange, onClose }) => {
 

@@ -1,4 +1,4 @@
-import { Button } from "../Common";
+import { Button } from "../components/Common";
 
 const ToolBar = ({ activeTab, setActiveTab, setSettingId }) => {
     const toolbars=DragwybEditor.EditorToolbars.toolbars;

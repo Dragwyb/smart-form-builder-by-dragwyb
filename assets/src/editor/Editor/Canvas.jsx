@@ -5,12 +5,12 @@ import {
     useSortable,
     verticalListSortingStrategy
 } from '@dnd-kit/sortable';
-import { useDraggable, useDroppable } from '../Common';
+import { useDraggable, useDroppable } from '../components/Common';
 
 import { CSS } from '@dnd-kit/utilities';
 import * as Fields from './Fields';
-import { duplicateField } from '../../store/actions';
-import { Button } from '../Common';
+import { duplicateField } from '../store/actions';
+import { Button } from '../components/Common';
 import { __ } from '@wordpress/i18n';
 
 const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, onFieldSelect, onDuplicate, onDelete, errors, selectedField }) => {

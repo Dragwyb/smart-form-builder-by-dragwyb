@@ -1,8 +1,8 @@
 import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import shouldRenderField from "../../editor/components/Editor/shouldRenderField";
-import { Field } from "../../editor/components/Editor/Fields";
+import shouldRenderField from "../../editor/Editor/shouldRenderField";
+import { Field } from "../../editor/Editor/Fields";
 import { __ } from "@wordpress/i18n";
 
 const renderControls = ({

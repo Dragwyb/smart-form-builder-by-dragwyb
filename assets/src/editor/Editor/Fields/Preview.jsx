@@ -1,8 +1,8 @@
 import React from 'react';
 import Field from './Field';
 import { useDispatch } from 'react-redux';
-import {updateFieldValue} from '../../../utils/helpers'
-import DragwybFieldBase from '../../../fieldBase';
+import {updateFieldValue} from '../../utils/helpers'
+import DragwybFieldBase from '../../fieldBase';
 
 const Preview = ({ fields, values, errors }) => {
     const dispatch=useDispatch();

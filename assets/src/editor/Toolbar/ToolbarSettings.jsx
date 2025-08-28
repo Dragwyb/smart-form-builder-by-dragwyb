@@ -4,9 +4,9 @@ import { useStore, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import { useSelector } from 'react-redux';
 import FieldSettings from "../Editor/FieldSettings";
-import DragwybToolbarBase from "../../toolbarBase"
-import { Utils as Helper, AddField } from '../Utils';
-import { useDraggable, useDroppable } from "../Common";
+import DragwybToolbarBase from "../toolbarBase"
+import { Utils as Helper, AddField } from '../components/Utils';
+import { useDraggable, useDroppable } from "../components/Common";
 
 const ToolbarSettings = ({ setting, selectedToolbar = false, setActiveTab }) => {
 
