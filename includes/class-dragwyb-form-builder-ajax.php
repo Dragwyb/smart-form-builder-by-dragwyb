@@ -46,7 +46,7 @@ class Dragwyb_Form_Builder_Ajax
             }
 
             // Update form meta
-            update_post_meta($form_id, '_dragwyb_form_data', $this->sanitize_form_data($form_data));
+            update_post_meta($form_id, '_dragwyb_form_data', $this->sanitize_form_data($form_data, $form_id));
 
             wp_send_json_success([
                 'message' => __('Form saved successfully', 'dragwyb-form-builder')
@@ -91,7 +91,7 @@ class Dragwyb_Form_Builder_Ajax
     /**
      * Sanitize form data
      */
-    private function sanitize_form_data(array $data): array
+    private function sanitize_form_data(array $data, int $form_id): array
     {
 
         $sanitize_data=array();
@@ -106,9 +106,10 @@ class Dragwyb_Form_Builder_Ajax
 
             if(count($toolbars) > 0 && isset($toolbars[$key]) && $toolbars[$key] instanceof Toolbar_Base){
                 $toolbar=$toolbars[$key];
+                $toolbar->set_form_id($form_id);
                 $toolbar->set_toolbar_data($value);
                 $toolbar_data=$toolbar->get_toolbar_data();
-
+                
                 if($toolbar_data){
                     $sanitize_data[$key]=$toolbar_data;
                     $toolbars_cache[$key]=$toolbar;

@@ -10,12 +10,25 @@ abstract class Toolbar_Base
     private string $name;
     private string $icon;
     private array $data = [];
+    private static int $form_id = 0;
 
     public function __construct()
     {
         $this->id   = $this->get_id();
         $this->name = $this->get_name();
         $this->icon = $this->get_icon();
+    }
+
+
+    final public function set_form_id(int $id = 0): void
+    {
+        $form_id = absint(sanitize_text_field($id));
+        self::$form_id = $form_id;
+    }
+
+    protected function get_form_id(): int
+    {
+        return self::$form_id;
     }
 
     public function enqueue_assets()
@@ -56,9 +69,10 @@ abstract class Toolbar_Base
     /**
      * Update toolbar call update settings
      */
-    protected function update_toolbar(): void{}
+    protected function update_toolbar(): void {}
 
-    final public function settings_updated(): void{
+    final public function settings_updated(): void
+    {
         $this->update_toolbar();
     }
 
@@ -101,11 +115,12 @@ abstract class Toolbar_Base
     /**
      * Each toolbar must handle its own data sanitization
      */
-    protected function sanitize_data(array $data): array {
-        $settings=$this->get_settings();;
+    protected function sanitize_data(array $data): array
+    {
+        $settings = $this->get_settings();;
         $sanitize_data = new Sanitize_Data($data, $settings['controls']);
         $sanitize_data = $sanitize_data->get_data();
-        
+
         if ($sanitize_data && is_array($sanitize_data) && count($sanitize_data) > 0) {
             return $sanitize_data;
         }

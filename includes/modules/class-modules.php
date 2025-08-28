@@ -86,10 +86,11 @@ class Modules extends Toolbar_Base
     protected function get_settings(): array
     {
         $fields_data = $this->get_fields();
-
+        $form_id = absint($this->get_form_id());
         $fields = [];
 
         foreach ($fields_data as $key => $field) {
+            $field->set_form_id($form_id);
             $field->enqueue_assets();
 
             $name = $field->get_name();

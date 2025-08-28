@@ -16,10 +16,22 @@ abstract class Register_Controls_Base
     private ?array $current_tabs_stack = array();
     private ?array $current_control_stack = array();
     private ?object $control_base;
+    private static ?int $form_id = 0;
 
     public function __construct()
     {
         $this->control_base = Controls::instance();
+    }
+
+    final public function set_form_id(int $id = 0): void
+    {
+        $form_id = absint(sanitize_text_field($id));
+        self::$form_id = $form_id;
+    }
+
+    protected function get_form_id(): int
+    {
+        return self::$form_id;
     }
 
     protected function tab_condition(&$conditions, $data)
@@ -53,7 +65,7 @@ abstract class Register_Controls_Base
 
         $conditions = $this->tab_condition($conditions, $data);
 
-        
+
         $this->settings_arr[$this->current_section] = $this->controller_settings(array_merge($data, array('type' => 'section', 'conditions' => $conditions)));
     }
 
@@ -166,8 +178,8 @@ abstract class Register_Controls_Base
         } else if (isset($this->settings_arr[$this->current_section]['conditions'])) {
             $conditions = array_merge($conditions, $this->settings_arr[$this->current_section]['conditions']);
             $conditions['section'] = $this->current_section;
-        }else{
-            $conditions=array_merge($conditions, array('section'=>$this->current_section));
+        } else {
+            $conditions = array_merge($conditions, array('section' => $this->current_section));
         }
 
         $this->current_control_stack[$id] = $this->controller_settings(array_merge($data, array('conditions' => $conditions)));

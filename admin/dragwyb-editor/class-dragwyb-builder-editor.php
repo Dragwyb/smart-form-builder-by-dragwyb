@@ -210,54 +210,55 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
         {
             $toolbar_data = array();
 
-            $toolbar_obj=new Toolbars();
-            $default_toolbar=$toolbar_obj->defaultToolbar();
-            $toolbars=$toolbar_obj->get_toolbars();
-            $form_data=[];
+            $toolbar_obj = new Toolbars();
+            $default_toolbar = $toolbar_obj->defaultToolbar();
+            $toolbars = $toolbar_obj->get_toolbars();
+            $form_data = [];
 
-            if(isset($data['formId'])){
-                $form_data=get_post_meta($data['formId'], '_dragwyb_form_data', true);
+            if (isset($data['formId'])) {
+                $form_data = get_post_meta($data['formId'], '_dragwyb_form_data', true);
 
-                if(!empty($form_data) && !isset($data['formData'])){
-                    $data['formData']=array();
+                if (!empty($form_data) && !isset($data['formData'])) {
+                    $data['formData'] = array();
                 }
             }
 
-            if(count($toolbars) < 1){
+            if (count($toolbars) < 1) {
                 return array();
             }
 
-            foreach($toolbars as $key => $toolbar){
-                if($toolbar instanceof Toolbar_Base){
-                    $settings=$toolbar->get_toolbar_settings();
-                    $name=$toolbar->get_toolbar_name();
-                    $icon=$toolbar->get_toolbar_icon();
+            foreach ($toolbars as $key => $toolbar) {
+                if ($toolbar instanceof Toolbar_Base) {
+                    $toolbar->set_form_id($data['formId']);
+                    $settings = $toolbar->get_toolbar_settings();
+                    $name = $toolbar->get_toolbar_name();
+                    $icon = $toolbar->get_toolbar_icon();
                     $toolbar->enqueue_assets();
 
-                    if($settings){
-                        if(!isset($data[$key]))
-                        $data[$key]=$settings;
+                    if ($settings) {
+                        if (!isset($data[$key]))
+                            $data[$key] = $settings;
 
-                        $toolbar_data[$key]=array('name'=>$name, 'icon'=>$icon);
+                        $toolbar_data[$key] = array('name' => $name, 'icon' => $icon);
                     }
 
-                    if(isset($form_data[$key])){
+                    if (isset($form_data[$key])) {
                         $toolbar->set_toolbar_data($form_data[$key]);
-                        $sanitize_toolbar_data=$toolbar->get_toolbar_data();
+                        $sanitize_toolbar_data = $toolbar->get_toolbar_data();
 
-                        $data['formData'][$key]=$sanitize_toolbar_data;
+                        $data['formData'][$key] = $sanitize_toolbar_data;
                     }
                 }
-            }   
-
-            $toolbar_data=array('toolbars'=>$toolbar_data);
-            
-            if(isset($toolbar_data['toolbars'][$default_toolbar])){
-                $toolbar_data['Default']=sanitize_text_field($default_toolbar);
             }
 
-            $data=array_merge($data, array('EditorToolbars'=>$toolbar_data));
-            
+            $toolbar_data = array('toolbars' => $toolbar_data);
+
+            if (isset($toolbar_data['toolbars'][$default_toolbar])) {
+                $toolbar_data['Default'] = sanitize_text_field($default_toolbar);
+            }
+
+            $data = array_merge($data, array('EditorToolbars' => $toolbar_data));
+
             return $data;
         }
 

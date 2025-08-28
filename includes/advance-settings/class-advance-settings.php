@@ -50,8 +50,10 @@ class Advance_Settings extends Toolbar_Base
     {
         $settings = $this->advance_settings;
         $data = array();
+        $form_id = absint($this->get_form_id());
 
         if ($settings instanceof Settings) {
+            $settings->set_form_id($form_id);
             $conrols = $settings->render_controls();
             $data['label'] = sprintf(esc_html__('%s Settings'), sanitize_text_field($this->get_name()));
 
@@ -61,5 +63,9 @@ class Advance_Settings extends Toolbar_Base
         }
 
         return $data;
+    }
+
+    protected function update_toolbar(): void
+    {
     }
 }
