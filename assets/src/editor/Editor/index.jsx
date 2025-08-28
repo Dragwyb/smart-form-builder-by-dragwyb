@@ -11,6 +11,7 @@ import { restrictToParentElement, createSnapModifier } from '@dnd-kit/modifiers'
 import SidebarFieldOverlay from '../components/SidebarFieldOverlay';
 import { Utils as Helper, AddField } from '../components/Utils';
 import ToolBar from '../Toolbar/Toolbar';
+import Header from './header'
 // import ToolbarSettings from '../Toolbar/ToolbarSettingsold';
 import ToolbarSettings from '../Toolbar/ToolbarSettings';
 
@@ -18,8 +19,6 @@ const Editor = () => {
     const activeTab = useSelector(state => state.activeToolbar);
     const selectedSettingId = useSelector(state => state.selectedSettingId);
     const previewMode = useSelector(state => state.previewMode);
-    const formData = {};
-    const formStatus = useSelector(state => state.formStatus || 'draft');
     const [activeDrag, setActiveDrag] = useState(null);
     const [sidebarDrag, setSidebarDrag] = useState(null);
     const [dropIndicatorPosition, setDropIndicatorPosition] = useState(false);
@@ -43,10 +42,6 @@ const Editor = () => {
             dispatch(resetSectionSettings());
         }
     }, [selectedSettingId])
-
-    const handleExit = () => {
-        window.location.href = DragwybEditor.adminUrl;
-    };
 
     const setSelectedSettingId = ({id, tab= 'fields'}) => {
         Utils.setSelectedSettingId({ value: id });
@@ -198,39 +193,7 @@ const Editor = () => {
 
     return (
         <div className="dragwyb-editor">
-            <div className="dragwyb-editor__header">
-                <div className="dragwyb-editor__details">
-                    <h2>Dragwyb Form Builder</h2>
-                    <div className="dragwyb-editor__title">
-                        {/* <input
-                            type="text"
-                            value={}
-                            onChange={e => dispatch({
-                                type: 'UPDATE_FORM_TITLE',
-                                payload: e.target.value
-                            })}
-                            placeholder={DragwybBuilder.i18n.formTitle}
-                        /> */}
-                        <p>
-                            {formData.title}
-                        </p>
-                    </div>
-                    <div className="dragwyb-editor__status" data-status={formStatus}>
-                        <span data-status={formStatus}></span>
-                        <p>{formStatus.charAt(0).toUpperCase() + formStatus.slice(1)}</p>
-                    </div>
-                </div>
-                <div className="dragwyb-editor__actions">
-                    <Button onClick={() => Utils.setPreviewMode({ value: !previewMode })} className='dragwyb-preview'>
-                        <i className={`far fa-eye${previewMode ? '-slash' : ''}`} />
-                        {previewMode ? __('Disable', 'dragwyb-form-builder') : __('Enable', 'dragwyb-form-builder')}
-                    </Button>
-                    <Button onClick={handleExit} className=''>
-                        {DragwybBuilder.i18n.exit}
-                    </Button>
-                    <SaveBtn />
-                </div>
-            </div>
+            <Header/>
             <div className="dragwyb-editor__body">
                 {previewMode ? (
                     <Preview values={values} errors={errors}/>

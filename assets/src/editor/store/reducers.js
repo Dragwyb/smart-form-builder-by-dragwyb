@@ -27,7 +27,6 @@ import { act } from 'react';
 
 const initialState = {
     form: {
-        title: '',
         fields: [],
         settings: {},
         styles: {},
@@ -37,7 +36,6 @@ const initialState = {
     sectionSettings: {},
     notices: [],
     fieldIds:[],
-    formStatus:DragwybEditor?.formData?.status ?? 'draft',
     selectedSettingId: false,
     activeToolbar: DragwybEditor?.EditorToolbars?.Default ?? false,
     previewMode: false,
@@ -157,15 +155,6 @@ export default function reducer(state = initialState, action) {
                     [action.payload.Id]: action.payload.value
                 }
             };
-
-        case UPDATE_FORM_TITLE:
-            return {
-                ...state,
-                form: {
-                    ...state.form,
-                    title: action.payload
-                }
-            }
 
         case RESET_SECTION_SETTINGS:
             return {
