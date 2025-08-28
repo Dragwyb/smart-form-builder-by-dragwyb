@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\General_Settings;
+
 use Dragwyb\Form_Builder\Includes\Controls\Register_Controls_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 
@@ -18,100 +19,121 @@ class Settings extends Register_Controls_Base
         return self::$instance;
     }
 
-    protected function init(): void{}
+    protected function init(): void {}
 
-    protected function register_controls(): void {
-        {
-            $this->start_section('texts_form_settings', [
-                'label' => 'Form Settings',
-            ]);
-    
-            $this->start_tabs('text_tabs');
-    
-            $this->start_tab('text_normal', [
-                'label' => 'Normal',
-            ]);
-    
-            $this->add_control('text_color', [
-                'type' => Controls::COLOR,
-                'label' => __('Field Label Color', 'dragwyb-form-builder'),
-                'default' => '',
-            ]);
-    
-            $this->end_tab();
-    
-            $this->start_tab('text_hover', [
-                'label' => 'Hover',
-            ]);
-    
-            $this->add_control('text_hover_color', [
-                'type' => Controls::COLOR,
-                'label' => __('Field Label Color', 'dragwyb-form-builder'),
-                'default' => '',
-                'selectoR' => array(
-                    '{{WRAPPER}} .form-text input: {color: {{VALUE}}}',
-                )
-            ]);
-    
-            $this->end_tab();
-    
-            $this->end_tabs();
-    
-            $this->add_control('text_label', [
-                'type' => Controls::TEXT,
-                'label' => __('Field Label', 'dragwyb-form-builder'),
-                'default' => 'Enter Your Label',
-            ]);
-    
-            $this->add_control('text_placeholder', [
-                'type' => Controls::TEXT,
-                'label' => __('Placeholder', 'dragwyb-form-builder'),
-                'default' => '',
-                'conditions' => [
-                    'text_label' => 'aniket',
-                ]
-            ]);
-            $this->add_control('text_required', [
-                'type' => Controls::CHECKBOX,
-                'label' => __('Required', 'dragwyb-form-builder'),
-                'default' => false,
-            ]);
-            $this->add_control('text_css_class', [
-                'type' => Controls::TEXT,
-                'label' => __('CSS Class', 'dragwyb-form-builder'),
-                'default' => '',
-            ]);
-    
-            $this->end_section();
-    
-            $this->start_section('text_form_style', [
-                'label' => 'Form Style',
-            ]);
-            $this->add_control('text_style', [
-                'type' => Controls::TEXT,
-                'label' => __('CSS Class', 'dragwyb-form-builder'),
-                'default' => '',
-            ]);
-            $this->end_section();
-    
-            $this->start_section('text_form_style_tab', [
-                'label' => 'Form Style',
-            ]);
-            $this->add_control('text_style_tab', [
-                'type' => Controls::TEXT,
-                'label' => __('CSS Class', 'dragwyb-form-builder'),
-                'default' => '',
-            ]);
-            $this->end_section();
-            $this->start_section('text_form_style_tab_two', [
-                'label' => 'Form Style',
-            ]);
-            $this->add_control('text_style_tab_two', [
-                'type' => Controls::TEXT,
-                'label' => __('CSS Class', 'dragwyb-form-builder'),
-                'default' => '',
-            ]);
-            $this->end_section();
-        }
+    protected function register_controls(): void
+    {
+        /**
+         * 🔹 Label Styling
+         */
+        $this->start_section('form_label_style', [
+            'label' => __('Label Style', 'dragwyb-form-builder'),
+        ]);
+
+        $this->add_control('label_color', [
+            'type'    => Controls::COLOR,
+            'label'   => __('Label Color', 'dragwyb-form-builder'),
+            'default' => '#333333',
+            'selector' => [
+                '{{WRAPPER}} label' => 'color: {{VALUE}};',
+            ],
+        ]);
+
+        $this->add_control('label_typography', [
+            'type'  => Controls::TEXT,
+            'label' => __('Label Font (CSS class / font family)', 'dragwyb-form-builder'),
+            'default' => '',
+        ]);
+
+        $this->end_section();
+
+
+        /**
+         * 🔹 Input Styling
+         */
+        $this->start_section('form_input_style', [
+            'label' => __('Input Fields', 'dragwyb-form-builder'),
+        ]);
+
+        $this->add_control('input_text_color', [
+            'type'    => Controls::COLOR,
+            'label'   => __('Text Color', 'dragwyb-form-builder'),
+            'default' => '#000000',
+            'selector' => [
+                '{{WRAPPER}} input, {{WRAPPER}} textarea, {{WRAPPER}} select' => 'color: {{VALUE}};',
+            ],
+        ]);
+
+        $this->add_control('input_bg_color', [
+            'type'    => Controls::COLOR,
+            'label'   => __('Background Color', 'dragwyb-form-builder'),
+            'default' => '#ffffff',
+            'selector' => [
+                '{{WRAPPER}} input, {{WRAPPER}} textarea, {{WRAPPER}} select' => 'background-color: {{VALUE}};',
+            ],
+        ]);
+
+        $this->add_control('input_border_color', [
+            'type'    => Controls::COLOR,
+            'label'   => __('Border Color', 'dragwyb-form-builder'),
+            'default' => '#cccccc',
+            'selector' => [
+                '{{WRAPPER}} input, {{WRAPPER}} textarea, {{WRAPPER}} select' => 'border-color: {{VALUE}};',
+            ],
+        ]);
+
+        $this->end_section();
+
+
+        /**
+         * 🔹 Button Styling
+         */
+        $this->start_section('form_button_style', [
+            'label' => __('Submit Button', 'dragwyb-form-builder'),
+        ]);
+
+        $this->start_tabs('button_tabs');
+
+        $this->start_tab('button_normal', [
+            'label' => __('Normal', 'dragwyb-form-builder'),
+        ]);
+
+        $this->add_control('button_text_color', [
+            'type'    => Controls::COLOR,
+            'label'   => __('Text Color', 'dragwyb-form-builder'),
+            'default' => '#ffffff',
+            'selector' => [
+                '{{WRAPPER}} button' => 'color: {{VALUE}};',
+            ],
+        ]);
+
+        $this->add_control('button_bg_color', [
+            'type'    => Controls::COLOR,
+            'label'   => __('Background Color', 'dragwyb-form-builder'),
+            'default' => '#0073e6',
+            'selector' => [
+                '{{WRAPPER}} button' => 'background-color: {{VALUE}};',
+            ],
+        ]);
+
+        $this->end_tab();
+
+        $this->start_tab('button_hover', [
+            'label' => __('Hover', 'dragwyb-form-builder'),
+        ]);
+
+        $this->add_control('button_hover_bg', [
+            'type'    => Controls::COLOR,
+            'label'   => __('Hover Background', 'dragwyb-form-builder'),
+            'default' => '#005bb5',
+            'selector' => [
+                '{{WRAPPER}} button:hover' => 'background-color: {{VALUE}};',
+            ],
+        ]);
+
+        $this->end_tab();
+
+        $this->end_tabs();
+        $this->end_section();
     }
 }
