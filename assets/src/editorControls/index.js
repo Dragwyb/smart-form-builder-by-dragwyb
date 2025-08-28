@@ -53,6 +53,8 @@ class selectControl extends DragwybEditor.editor.extends.ControlBase {
         
         const { settings, id, value } = this;
 
+        const options=settings.options || {}
+
         return (
             <>
                 <label htmlFor={id}>{settings.label}</label>
@@ -62,9 +64,9 @@ class selectControl extends DragwybEditor.editor.extends.ControlBase {
                     value={value}
                     onChange={(e) => this.updateControls(id, e.target.value)}
                 >
-                    {(settings.options || []).map((opt) => (
-                        <option key={opt.value} value={opt.value}>
-                            {opt.label}
+                    {(Object.keys(options)).map((key) => (
+                        <option key={key} value={key}>
+                            {options[key]}
                         </option>
                     ))}
                 </select>

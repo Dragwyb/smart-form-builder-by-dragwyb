@@ -196,24 +196,6 @@ const Editor = () => {
         }
     };
 
-    const mainTabs = {
-        fields:
-        {
-            iconCls: 'fas fa-plus mr-2 text-sm',
-            settingName: 'fields'
-        },
-        general:
-        {
-            iconCls: 'fas fa-paint-brush mr-2 text-sm',
-            settingName: 'general'
-        },
-        advance:
-        {
-            iconCls: 'fas fa-cog mr-2 text-sm',
-            settingName: 'settings'
-        }
-    }
-
     return (
         <div className="dragwyb-editor">
             <div className="dragwyb-editor__header">
@@ -237,24 +219,6 @@ const Editor = () => {
                         <span data-status={formStatus}></span>
                         <p>{formStatus.charAt(0).toUpperCase() + formStatus.slice(1)}</p>
                     </div>
-                </div>
-                <div className='dragwyb-editor__tabs'>
-                    {Object.keys(mainTabs).map(tab => {
-                        return <div className="dragwyb-editor__tab"
-                            onClick={() => {
-                                Utils.setActiveTab({ value: mainTabs[tab].settingName });
-                                Utils.setSelectedSettingId({ value: false })
-                                Utils.setPreviewMode({ value: false });
-                            }}
-                            title={DragwybBuilder.i18n[tab]}
-                            data-tab={mainTabs[tab].settingName}
-                        >
-                            <Button className={`${activeTab === mainTabs[tab].settingName ? ' active' : ''}`}>
-                                <i className={mainTabs[tab].iconCls} />
-                                {DragwybBuilder.i18n[tab]}
-                            </Button>
-                        </div>
-                    })}
                 </div>
                 <div className="dragwyb-editor__actions">
                     <Button onClick={() => Utils.setPreviewMode({ value: !previewMode })} className='dragwyb-preview'>
