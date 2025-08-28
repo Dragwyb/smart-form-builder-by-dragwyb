@@ -142,7 +142,6 @@ abstract class Control_Base
 
         $sanitize_setting = $type . '_setting_sanitize';
 
-
         if (!method_exists($this, $sanitize_setting)) {
             return false;
         }
@@ -155,7 +154,7 @@ abstract class Control_Base
         return sanitize_text_field($value);
     }
 
-    private function boolean_setting_sanitize(boolean $value)
+    private function boolean_setting_sanitize(bool $value)
     {
         return (bool) $value;
     }

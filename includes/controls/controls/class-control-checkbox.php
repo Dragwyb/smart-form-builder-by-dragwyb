@@ -23,7 +23,7 @@ class Control_Checkbox extends Control_Base
         return array(
             'name' => 'string',
             'label' => 'string',
-            'default' => 'string',
+            'default' => 'boolean',
             'conditions' => 'conditions'
         );
     }
