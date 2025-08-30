@@ -23,6 +23,7 @@ class Field_Textarea extends Field_Base
         $this->type = 'textarea';
         $this->name = __('Paragraph Field', 'dragwyb-form-builder');
         $this->icon = 'fas fa-align-left';
+        $this->keywords = array('text','wyswing');
     }
 
     protected function render_field()
