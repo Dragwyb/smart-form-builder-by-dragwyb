@@ -104,6 +104,10 @@ class Repeater
                 $conditions = array_merge($this->current_section_stack[$this->current_tabs]['conditions'], $conditions);
                 $conditions[$this->current_tabs] = $this->current_tab;
             }
+
+            if(!isset($conditions[$this->current_tabs])){
+                $conditions[$this->current_tabs] = $this->current_tab;
+            }
             $this->current_control_stack[$id] = $this->controller_settings(array_merge($data, array('conditions' => $conditions)));
         } else {
             $this->settings_arr = array_merge($this->settings_arr, array($this->controller_settings(array_merge($data, array('conditions' => $conditions)))));
