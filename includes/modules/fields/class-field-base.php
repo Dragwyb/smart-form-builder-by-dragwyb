@@ -12,7 +12,7 @@ abstract class Field_Base extends Register_Controls_Base
     protected string $name;
     protected string $icon;
     protected array $settings;
-    protected array $keywords;
+    protected array $keywords=array();
     private ?array $display_settings = array();
     private $form_id = 0;
 
@@ -61,6 +61,16 @@ abstract class Field_Base extends Register_Controls_Base
     public function get_icon(): string
     {
         return $this->icon;
+    }
+
+    /**
+     * Get the keywords for this field.
+     *
+     * @return array|false Array of keywords or false if not set.
+     */
+    public function get_keywords(): array|false
+    {
+        return $this->keywords && is_array($this->keywords) && count($this->keywords) > 0 ? $this->keywords : false;
     }
 
     public function set_the_id(int $id): void

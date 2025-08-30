@@ -94,14 +94,17 @@ class Modules extends Toolbar_Base
             $field->enqueue_assets();
 
             $name = $field->get_name();
-
             $conrols = $field->render_controls();
-
             $icon = $field->get_icon();
+            $keywords = $field->get_keywords();
 
             $fields[$key]['label'] = esc_html($name);
             $fields[$key]['icon'] = esc_attr($icon);
             $fields[$key]['controls'] = $conrols;
+
+            if ($keywords && count($keywords) > 0) {
+                $fields[$key]['keywords'] = $keywords;
+            }
         }
 
         return $fields;
