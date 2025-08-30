@@ -1,6 +1,6 @@
 
 import React, { useRef, useEffect } from "react";
-import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updatePreviewMode, updateFieldValues,updateToolbarSettings } from "../store/actions";
+import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updatePreviewMode, updateFieldValues,updateToolbarSettings, updateSectionSettings } from "../store/actions";
 import PropTypes from "prop-types";
 
 /**
@@ -54,6 +54,8 @@ export const AddField = ({ type, dispatch, Utils, index = null }) => {
     }
 
     dispatch(addField({ field, index }));
+    setSelectedSettingId({ dispatch, value: field._id });
+    setActiveTab({ dispatch, value: 'fields' });
 
     return field;
 };
@@ -137,6 +139,29 @@ export const setActiveTab = ({ dispatch, value }) => {
         console.error("Validation failed:", e.message);
     }
 }
+
+export const updateSectionSetting = ({dispatch, key, value})=>{
+    try {
+        const validatorKey=validateProp({
+            key: "key",
+            value: key, // invalid
+            types: ["string"],
+            required: true,
+            functionName: "updateSectionSetting"
+        });
+        const validatorValue=validateProp({
+            key: "value",
+            value: value, // invalid
+            types: ["string"],
+            required: true,
+            functionName: "updateSectionSetting"
+        });
+        dispatch(updateSectionSettings(key, value))
+    } catch (e) {
+        console.error("Validation failed:", e.message);
+    }
+}
+
 export const setPreviewMode = ({ dispatch, value }) => {
       try {
         validateProp({

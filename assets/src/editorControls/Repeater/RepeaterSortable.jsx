@@ -7,7 +7,7 @@ import {
 } from '@dnd-kit/sortable';
 import SortableRepeaterItem from './SortableRepeaterItem.jsx'; // from previous message
 
-const RepeaterSortable = ({ items, settings, updateControls, controlId, utils }) => {
+const RepeaterSortable = ({ items, settings, updateControls, controlId, Utils, updateTabsHandler, tabsSettings }) => {
   const sensors = useSensors(useSensor(PointerSensor, {
     activationConstraint: { distance: 5 },
   }));
@@ -27,6 +27,12 @@ const RepeaterSortable = ({ items, settings, updateControls, controlId, utils })
   };
 
   const updateHandler = (key, value, index) => {
+    
+    if(settings?.items[key] && settings.items[key].type === 'tabs' && value){
+      updateTabsHandler(key, value);
+      return;
+    }
+
     const updatedItems = [...items];
 
     updatedItems[index].attributes[key] = value;
@@ -39,7 +45,7 @@ const RepeaterSortable = ({ items, settings, updateControls, controlId, utils })
   };
 
   const onCopy = (item, index) => {
-    const newItem = {  _id: utils.generateId(), attributes: JSON.parse(JSON.stringify(item)) };
+    const newItem = {  _id: Utils.generateId(), attributes: JSON.parse(JSON.stringify(item)) };
     items.splice(index, 0, newItem);
 
     updateControls(controlId, items);
@@ -57,8 +63,11 @@ const RepeaterSortable = ({ items, settings, updateControls, controlId, utils })
             onCopy={onCopy}
             updateHandler={updateHandler}
             settings={settings}
-            repeaterItem={item.attributes}
+            updateTabsHandler={updateTabsHandler}
+            activeRepeater={tabsSettings.activeRepeaterId || false}
+            repeaterItem={{...item.attributes||{}, ...tabsSettings || {}}}
             repeaterItems={items}
+            Utils={Utils}
           />
         ))}
       </SortableContext>

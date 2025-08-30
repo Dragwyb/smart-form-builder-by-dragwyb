@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import { updateSectionSettings, resetSectionSettings } from '../store/actions';
 import { Panel } from '../components/Common';
@@ -96,21 +96,29 @@ const FieldSettings = ({ activeFieldID, fieldValue, fieldSettings, sectionSettin
         if (settings.type === 'tabs') {
             defautlActiveTab(key, settings)
         }
-
-        const getHtml = () => {
-            return <div>Unsupported Controller type: {settings.type}</div>;
-        }
-
         let fieldVal = selectedSettings[key];
 
         if (settings.type === 'section' && !fieldVal) {
             fieldVal = selectedSettings['section'];
         }
 
-        let html = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/ControlRender/' + settings.type, getHtml(), key, settings, fieldVal, handleChange, Utils);
+        let Control = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/ControlRender/' + settings.type, false);
 
-        return <div key={key} className="setting-row" dataType={settings.type}>{html}</div>;
+        if (!Control || (!Control.prototype instanceof DragwybControlBase || !Control.prototype instanceof DragwybEditor.editor.extends.ControlBase)) {
+            Control = DragwybEditor.editor.extends.ControlBase;
+        }
+        
+        return <div key={key} className="setting-row" dataType={settings.type}><Control
+            key={key}
+            id={key}
+            settings={settings}
+            value={fieldVal}
+            handleChange={handleChange}
+            Utils={Utils}
+        /></div>
     };
+
+    const Control=DragwybEditor.editor.extends.ControlBase;
 
     return (
         <Panel

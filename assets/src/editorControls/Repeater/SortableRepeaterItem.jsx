@@ -2,8 +2,8 @@ import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import shouldRenderField from "../../editor/Editor/shouldRenderField";
-import { Field } from "../../editor/Editor/Fields";
 import { __ } from "@wordpress/i18n";
+import DragwybControlBase from "../../editor/controlBase";
 
 const renderControls = ({
   key,
@@ -11,6 +11,7 @@ const renderControls = ({
   value,
   repeaterValue,
   updateHandler,
+  Utils
 }) => {
   if (!settings.type) {
     return;
@@ -26,28 +27,20 @@ const renderControls = ({
     return;
   }
 
-  // if (settings.type === 'tabs') {
-  //     defautlActiveTab(key, settings)
-  // }
+  let Control = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/ControlRender/' + settings.type, false);
 
-  const getHtml = () => {
-    return <div>Unsupported Controller type: {settings.type}</div>;
-  };
-
-  let html = DragwybBuilder.Hooks.applyFilter(
-    "Dragwyb/Editor/ControlRender/" + settings.type,
-    getHtml(),
-    key,
-    settings,
-    value,
-    updateHandler
-  );
-
-  return (
-    <div key={key} className="setting-row" dataType={settings.type}>
-      {html}
-    </div>
-  );
+  if (!Control || (!Control.prototype instanceof DragwybControlBase || !Control.prototype instanceof DragwybEditor.editor.extends.ControlBase)) {
+    Control = DragwybEditor.editor.extends.ControlBase;
+  }
+  // 
+  return <div key={key} className="setting-row" dataType={settings.type}><Control
+    key={key}
+    id={key}
+    settings={settings}
+    value={value}
+    handleChange={updateHandler}
+    Utils={Utils}
+  /></div>
 };
 
 const SortableRepeaterItem = ({
@@ -58,7 +51,10 @@ const SortableRepeaterItem = ({
   updateHandler,
   settings,
   repeaterItem,
-  repeaterItems
+  repeaterItems,
+  updateTabsHandler,
+  activeRepeater,
+  Utils
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
@@ -67,6 +63,16 @@ const SortableRepeaterItem = ({
     transform: CSS.Transform.toString(transform),
     transition,
   };
+
+  const updateActiveRepeater = (e) => {
+    if(!e || !e.target || !e.target.classList || !e.target.classList.contains('dragwyb-repeater-item__header')){
+      return;
+    }
+
+    const id=e.target.dataset.id;
+
+    updateTabsHandler('activeRepeaterId', id);
+  }
 
   const repeaterHeading = (key, index) => {
     let heading = "";
@@ -83,19 +89,25 @@ const SortableRepeaterItem = ({
   };
 
   return (
-    <div style={style} className="dragwyb-repeater-item" data-id={id}>
-      <div ref={setNodeRef} {...attributes} {...listeners}>
+    <div
+      style={style}
+      className="dragwyb-repeater-item"
+      data-id={id}
+      onClick={updateActiveRepeater}
+    >
+      <div ref={setNodeRef} {...attributes} {...listeners} className="dragwyb-repeater-item__header" data-id={id}>
         {repeaterHeading(settings.item_label, index)}
-        <span><i class="fa-regular fa-copy" onClick={()=>{onCopy(repeaterItem, index+1)}} title={__('Copy', 'dragwyb-form-builder')}></i></span>
-        {repeaterItems.length > 1 && <span><i class="fa-solid fa-xmark" onClick={()=>{onDelete(id)}}  title={__('Delete', 'dragwyb-form-builder')}></i></span>}
+        <span><i class="fa-regular fa-copy" onClick={() => { onCopy(repeaterItem, index + 1) }} title={__('Copy', 'dragwyb-form-builder')}></i></span>
+        {repeaterItems.length > 1 && <span><i class="fa-solid fa-xmark" onClick={() => { onDelete(id) }} title={__('Delete', 'dragwyb-form-builder')}></i></span>}
       </div>
-      {Object.values(settings.items).map((data) => {
+      {(activeRepeater && activeRepeater === id) && Object.values(settings.items).map((data) => {
         return renderControls({
           key: data.name,
           value: repeaterItem[data.name] || "",
           repeaterValue: repeaterItem,
           settings: data,
           updateHandler: (key, value) => updateHandler(key, value, index),
+          Utils: Utils
         });
       })}
     </div>

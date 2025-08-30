@@ -1,31 +1,55 @@
-class DragwybControlBase {
-    #updateValue = () => { }
+import React, {Component} from "react";
 
-    constructor(args) {
-        this.controlName = this.controlName();
-        return this.#renderContent(args);
+class DragwybControlBase extends Component {
+    #updateValue = () => {}
+
+    constructor(props) {
+        super();
+        this.state={
+            settings: props.settings,
+            value: props.value
+        }
+        this.controlName = this.controlName() || props.settings.type;
+        this.#renderContent(props);
+    }
+    
+    controlName=()=>{return null};
+    
+    bind(){
+        return <div>Unsupported Controller type: {this.settings.type}</div>
     }
 
-    #renderContent(args) {
+    componentDidUpdate=(prevProps)=>{
+        if(prevProps.settings !== this.props.settings){
+            this.setState({settings: this.props.settings});
+        }
+
+        if(prevProps.value !== this.props.value){
+            this.setState({value: this.props.value});
+        }
+    }
+
+    #renderContent(props) {
         if(!this.controlName){
             return;
         }
 
-        return this.renderComponent(args)
+        return this.renderComponent(props)
     }
 
-    renderComponent(args) {
-        this.#setDisplaySetting(args);
-        return this.bind({ id: this.id, html: this.html, settings: this.settings, value: this.value });
+    renderComponent(props) {
+        this.#setDisplaySetting(props);
     }
 
-    #setDisplaySetting(args) {
-        this.html = args[0];
-        this.id = args[1];
-        this.settings = args[2];
-        this.value = args[3];
-        this.#updateValue = args[4];
-        this.Utils=args[5];
+    render(){
+        return this.bind();
+    }
+
+    #setDisplaySetting(props) {
+        this.id = props.id;
+        this.settings = props.settings;
+        this.#updateValue = props.handleChange;
+        this.Utils=props.Utils;
     }
 
     updateControls(key, value) {

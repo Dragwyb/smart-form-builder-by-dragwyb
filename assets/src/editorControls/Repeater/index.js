@@ -1,6 +1,6 @@
 import RepeaterSortable from "./RepeaterSortable.jsx";
 
-class repeaterControl extends DragwybEditor.editor.extends.ControlBase {
+class RepeaterControl extends DragwybEditor.editor.extends.ControlBase {
 
     controlName() {
         return 'repeater';
@@ -8,7 +8,24 @@ class repeaterControl extends DragwybEditor.editor.extends.ControlBase {
 
     bind() {
         if (!this.shouldRender()) return <></>;
-        const { settings, id, value: repeaterItems } = this;
+        const { settings, id } = this;
+        const {value: repeaterItems, tabsSettings= {}}=this.state;
+
+        const updateHandler=(id, item)=>{
+            this.updateControls(id, item)
+        }
+
+        const updateTabsSettings=(id, value)=>{
+            const tabsSettings=this?.state?.tabsSettings || {};
+            
+            if(tabsSettings && (!tabsSettings[id] || tabsSettings[id] !== value)){
+                this.setState({tabsSettings: {...tabsSettings, [id]: value}});
+            }
+        }
+
+        const resetTabSettings=(id, value)=>{
+            this.setState({tabsSettings: {}});
+        }
 
         return (
             <>
@@ -18,15 +35,17 @@ class repeaterControl extends DragwybEditor.editor.extends.ControlBase {
                         <RepeaterSortable
                             items={repeaterItems}
                             settings={settings}
-                            updateControls={this.updateControls.bind(this)}
+                            updateControls={updateHandler}
                             controlId={id}
-                            utils={this.Utils}
+                            Utils={this.Utils}
+                            updateTabsHandler={updateTabsSettings}
+                            tabsSettings={tabsSettings}
                         />
                     }
                     <div className="add-repeater-btn">
                         <button onClick={() => {
                             const updated = [...repeaterItems || [], { _id: this.Utils.generateId(), attributes: {} }];
-                            this.updateControls(id, updated);
+                            updateHandler(id, updated);
                         }}>
                             {settings.add_item}
                         </button>
@@ -65,4 +84,4 @@ jQuery(document).on('Dragwyb:editorInit', () => {
 
 
 
-export default repeaterControl;
+export default RepeaterControl;

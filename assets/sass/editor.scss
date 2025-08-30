@@ -190,6 +190,12 @@ body {
         gap: 5px;
         margin-left: 5px;
 
+        label{
+            display: flex;
+            align-items: center;
+            gap: 5px; 
+        }
+
         span {
             width: 8px;
             height: 8px;

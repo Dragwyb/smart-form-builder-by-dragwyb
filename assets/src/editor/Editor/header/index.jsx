@@ -8,6 +8,7 @@ const Header = () => {
     const formTitle = useSelector(state => state?.form?.advance?.form_name || DragwybEditor.formData.title);
     const formStatus = useSelector(state => state?.form?.advance?.form_status || DragwybEditor.formData.status);
     const previewMode = useSelector(state => state.previewMode);
+    const activeTab = useSelector(state => state.activeToolbar);
 
     const dispatch = useDispatch();
 
@@ -21,24 +22,26 @@ const Header = () => {
     };
 
     const setActiveTabHandler = (value) => {
-        Utils.setSelectedSettingId({ value: false });
+        Utils.setSelectedSettingId({ value: value });
         Utils.setActiveTab({ value: value });
         Utils.setPreviewMode({ value: false });
     }
+
+    const statusHtml=<>
+           <span data-status={formStatus}></span>
+           <p>{formStatus.charAt(0).toUpperCase() + formStatus.slice(1)}</p>
+    </>;
 
     return <div className="dragwyb-editor__header">
         <div className="dragwyb-editor__details">
             <h2>Dragwyb Form Builder</h2>
             <div className="dragwyb-editor__status" data-status={formStatus} onClick={()=>setActiveTabHandler('advance')}>
-                <label for="form_status">
-                <span data-status={formStatus}></span>
-                <p>{formStatus.charAt(0).toUpperCase() + formStatus.slice(1)}</p>
-                </label>
+                {activeTab === 'advance' ? <label for="form_status">{statusHtml}</label> : statusHtml}
             </div>
         </div>
         <div className="dragwyb-editor__title" onClick={()=>setActiveTabHandler('advance')}>
             <h2>
-                <label for="form_name">{formTitle}</label>
+                {activeTab === 'advance' ? <label for="form_name">{formTitle}</label> : formTitle}
             </h2>
         </div>
         <div className="dragwyb-editor__actions">

@@ -14,7 +14,6 @@ import { Button } from '../components/Common';
 import { __ } from '@wordpress/i18n';
 
 const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, onFieldSelect, onDuplicate, onDelete, errors, selectedField }) => {
-
     const { setNodeRef: dropRef, isOver } = useDroppable(
         {
             id: `canvas-drop-field-${field._id}`,
@@ -127,7 +126,8 @@ const EmptyCanvas = ({ activeTab, setActiveTab }) => {
 
 const Canvas = ({ selectedField, onFieldSelect, values, errors, Utils, dropIndex, dropIndicatorPosition, activeTab, setActiveTab }) => {
 
-    const fields = useSelector(state => state.form.fields); // Assuming fields are stored in Redux
+    const formData = useSelector(state => state.form); // Assuming fields are stored in Redux
+    const fields = formData.fields; // Assuming fields are stored in Redux
 
     const { setNodeRef, isOver } = useDroppable(
         {

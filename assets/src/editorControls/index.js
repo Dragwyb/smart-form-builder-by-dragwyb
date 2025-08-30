@@ -1,8 +1,8 @@
 
 import '../../sass/editorControls.scss';
-import repeaterControl from './Repeater/index';
+import RepeaterControl from './Repeater/index';
 
-class sectionControl extends DragwybEditor.editor.extends.ControlBase {
+class SectionControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
         return 'section';
     }
@@ -10,7 +10,8 @@ class sectionControl extends DragwybEditor.editor.extends.ControlBase {
     bind () {
         if (!this.shouldRender()) return <></>;
         
-        const { settings, id, value } = this;
+        const { settings, id } = this;
+        const {value}=this.state;
 
         let sectionCls = 'section-control';
 
@@ -26,7 +27,7 @@ class sectionControl extends DragwybEditor.editor.extends.ControlBase {
     }
 }
 
-class textControl extends DragwybEditor.editor.extends.ControlBase {
+class TextControl extends DragwybEditor.editor.extends.ControlBase {
     controlName (){
         return 'text';
     }
@@ -34,7 +35,8 @@ class textControl extends DragwybEditor.editor.extends.ControlBase {
     bind(){
         if (!this.shouldRender()) return <></>;
         
-        const { settings, id, value } = this;
+        const { settings, id } = this;
+        const {value}=this.state;
         
         return <>
             <label for={id}>{settings.label}</label>
@@ -43,7 +45,7 @@ class textControl extends DragwybEditor.editor.extends.ControlBase {
     }
 }
 
-class selectControl extends DragwybEditor.editor.extends.ControlBase {
+class SelectControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
         return 'select';
     }
@@ -51,7 +53,8 @@ class selectControl extends DragwybEditor.editor.extends.ControlBase {
     bind() {
         if (!this.shouldRender()) return <></>;
         
-        const { settings, id, value } = this;
+        const { settings, id } = this;
+        const {value}=this.state;
 
         const options=settings.options || {}
 
@@ -75,7 +78,7 @@ class selectControl extends DragwybEditor.editor.extends.ControlBase {
     }
 }
 
-class textareaControl extends DragwybEditor.editor.extends.ControlBase {
+class TextareaControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
         return 'textarea';
     }
@@ -83,7 +86,8 @@ class textareaControl extends DragwybEditor.editor.extends.ControlBase {
     bind() {
         if (!this.shouldRender()) return <></>;
         
-        const { settings, id, value } = this;
+        const { settings, id } = this;
+        const {value}=this.state;
 
         return (
             <>
@@ -99,7 +103,7 @@ class textareaControl extends DragwybEditor.editor.extends.ControlBase {
     }
 }
 
-class checkboxControl extends DragwybEditor.editor.extends.ControlBase {
+class CheckboxControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
         return 'checkbox';
     }
@@ -107,7 +111,8 @@ class checkboxControl extends DragwybEditor.editor.extends.ControlBase {
     bind() {
         if (!this.shouldRender()) return <></>;
         
-        const { settings, id, value } = this;
+        const { settings, id } = this;
+        const {value}=this.state;
 
         return (
             <>
@@ -126,7 +131,7 @@ class checkboxControl extends DragwybEditor.editor.extends.ControlBase {
     }
 }
 
-class radioControl extends DragwybEditor.editor.extends.ControlBase {
+class RadioControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
         return 'radio';
     }
@@ -134,7 +139,8 @@ class radioControl extends DragwybEditor.editor.extends.ControlBase {
     bind() {
         if (!this.shouldRender()) return <></>;
         
-        const { settings, id, value } = this;
+        const { settings, id } = this;
+        const {value}=this.state;
 
         return (
             <>
@@ -158,7 +164,7 @@ class radioControl extends DragwybEditor.editor.extends.ControlBase {
     }
 }
 
-class sliderControl extends DragwybEditor.editor.extends.ControlBase {
+class SliderControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
         return 'slider';
     }
@@ -166,7 +172,8 @@ class sliderControl extends DragwybEditor.editor.extends.ControlBase {
     bind() {
         if (!this.shouldRender()) return <></>;
         
-        const { settings, id, value } = this;
+        const { settings, id } = this;
+        const {value}=this.state;
 
         const min = settings.min ?? 0;
         const max = settings.max ?? 100;
@@ -190,7 +197,7 @@ class sliderControl extends DragwybEditor.editor.extends.ControlBase {
     }
 }
 
-class numberControl extends DragwybEditor.editor.extends.ControlBase {
+class NumberControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
         return 'number';
     }
@@ -198,7 +205,8 @@ class numberControl extends DragwybEditor.editor.extends.ControlBase {
     bind() {
         if (!this.shouldRender()) return <></>;
 
-        const { settings, id, value } = this;
+        const { settings, id } = this;
+        const {value}=this.state;
 
         const min = settings.min ?? 0;
         const max = settings.max ?? 100;
@@ -222,7 +230,7 @@ class numberControl extends DragwybEditor.editor.extends.ControlBase {
     }
 }
 
-class colorControl extends DragwybEditor.editor.extends.ControlBase {
+class ColorControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
         return 'color';
     }
@@ -230,7 +238,8 @@ class colorControl extends DragwybEditor.editor.extends.ControlBase {
     bind() {
         if (!this.shouldRender()) return <></>;
 
-        const { settings, id, value } = this;
+        const { settings, id } = this;
+        const {value}=this.state;
 
         return (
             <>
@@ -247,7 +256,7 @@ class colorControl extends DragwybEditor.editor.extends.ControlBase {
     }
 }
 
-class tabsControl extends DragwybEditor.editor.extends.ControlBase {
+class TabsControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
         return 'tabs';
     }
@@ -255,10 +264,15 @@ class tabsControl extends DragwybEditor.editor.extends.ControlBase {
     bind () {
         if (!this.shouldRender()) return <></>;
 
-        const { settings, id, value } = this;
+        const { settings, id } = this;
+        const {value}=this.state;
 
         const options = settings.tabs || [];
 
+        if (!value && value === '' && Object.keys(options).length > 0) {
+            this.updateControls(id, Object.keys(options)[0]);
+        }
+    
         return (
             <div id={id} className="tabs-control">
                 <div className="tabs">
@@ -280,20 +294,20 @@ class tabsControl extends DragwybEditor.editor.extends.ControlBase {
 
 const initializeControls=()=>{
     const defaultControls={
-        'text': (args)=>new textControl(args),
-        'select': (args)=>new selectControl(args),
-        'textarea': (args)=>new textareaControl(args),
-        'checkbox': (args)=>new checkboxControl(args),
-        'radio': (args)=>new radioControl(args),
-        'slider': (args)=>new sliderControl(args),
-        'number': (args)=>new numberControl(args),
-        'color': (args)=>new colorControl(args),
-        'tabs': (args)=>new tabsControl(args),
-        'section': (args)=>new sectionControl(args),
-        'repeater': (args) => new repeaterControl(args),
+        'text': TextControl,
+        'select': SelectControl,
+        'textarea': TextareaControl,
+        'checkbox': CheckboxControl,
+        'radio': RadioControl,
+        'slider': SliderControl,
+        'number': NumberControl,
+        'color': ColorControl,
+        'tabs': TabsControl,
+        'section': SectionControl,
+        'repeater': RepeaterControl,
     }
 
-    Object.keys(defaultControls).map(key => DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/ControlRender/'+key,(...args)=>{return defaultControls[key](args)}))
+    Object.keys(defaultControls).map(key => DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/ControlRender/'+key,()=>{return defaultControls[key]}))
 
 }
 
