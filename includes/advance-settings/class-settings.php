@@ -51,7 +51,6 @@ class Settings extends Register_Controls_Base
             'options' => [
                 'draft'   => __('Draft', 'dragwyb-form-builder'),
                 'public'  => __('Public', 'dragwyb-form-builder'),
-                'private' => __('Private', 'dragwyb-form-builder'),
             ],
             'default' => sanitize_text_field($form_status),
         ]);
