@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
+use Dragwyb\Form_Builder\Includes\Repeater\Repeater;
 
 
 class Field_Select extends Field_Base
@@ -21,6 +22,67 @@ class Field_Select extends Field_Base
 
     protected function register_controls(): void
     {
+        $repeater = new Repeater();
+
+        $repeater->add_control(
+            'repeater_text',
+            array(
+                'type'    => Controls::TEXT,
+                'label'   => __('Text One', 'dragwyb-form-builder'),
+                'default' => __('Enter Text One', 'dragwyb-form-builder'),
+            )
+        );
+
+        $repeater->add_control(
+            'repeater_text_two',
+            array(
+                'type'       => Controls::TEXT,
+                'label'      => __('Text Two', 'dragwyb-form-builder'),
+                'default'    => __('Enter Text Two', 'dragwyb-form-builder'),
+                'conditions' => array('repeater_text' => 'dogra'),
+            )
+        );
+
+        $repeater->start_tabs('text_tabs');
+
+        $repeater->start_tab('text_normal', [
+            'label' => 'Normal',
+        ]);
+
+        $repeater->add_control('text_color', [
+            'type' => Controls::COLOR,
+            'label' => __('Field Label Color', 'dragwyb-form-builder'),
+            'default' => '',
+        ]);
+
+        $repeater->end_tab();
+
+        $repeater->start_tab('text_hover', [
+            'label' => 'Hover',
+        ]);
+
+        $repeater->add_control('text_hover_color', [
+            'type' => Controls::COLOR,
+            'label' => __('Field Label Color', 'dragwyb-form-builder'),
+            'default' => '',
+            'selectoR' => array(
+                '{{WRAPPER}} .form-text input: {color: {{VALUE}}}',
+            )
+        ]);
+
+        $repeater->end_tab();
+
+        $repeater->end_tabs();
+
+        $repeater->add_control(
+            'repeater_text_three',
+            array(
+                'type'    => Controls::TEXT,
+                'label'   => __('Text Three', 'dragwyb-form-builder'),
+                'default' => __('Enter Text Three', 'dragwyb-form-builder'),
+            )
+        );
+
         // You can define select field-specific controls in the editor here
         $this->start_section('select_form_settings', [
             'label' => 'Form Settings',
@@ -48,27 +110,7 @@ class Field_Select extends Field_Base
                     'repeater_text_two' => 'Aniket Hello World Two',
                 ]
             ],
-            'items' => [
-                [
-                    'name' => 'repeater_text',
-                    'type' => Controls::TEXT,
-                    'label' => __('Text One', 'dragwyb-form-builder'),
-                    'default' => __('Enter Text One', 'dragwyb-form-builder'),
-                ],
-                [
-                    'name' => 'repeater_text_two',
-                    'type' => Controls::TEXT,
-                    'label' => __('Text Two', 'dragwyb-form-builder'),
-                    'default' => __('Enter Text Two', 'dragwyb-form-builder'),
-                    'conditions' => array('repeater_text' => 'dogra')
-                ],
-                [
-                    'name' => 'repeater_text_three',
-                    'type' => Controls::TEXT,
-                    'label' => __('Text Three', 'dragwyb-form-builder'),
-                    'default' => __('Enter Text Three', 'dragwyb-form-builder'),
-                ]
-            ]
+            'items' => $repeater->get_settings()
         ]);
 
         $this->end_section();
