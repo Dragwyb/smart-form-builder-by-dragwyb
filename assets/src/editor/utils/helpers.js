@@ -46,7 +46,7 @@ export const AddField = ({ type, dispatch, Utils, index = null }) => {
 
                 let defaultValue = fieldControls[id].default ? fieldControls[id].default : '';
 
-                defaultValue = DragwybBuilder.Hooks.applyFilter(`Dragwyb/Editor/AddControl/${fieldControls[id].type}.defaultValue`, defaultValue, Utils);
+                defaultValue = DragwybBuilder.Hooks.applyFilter(`Dragwyb/Editor/AddControl/${fieldControls[id].type}.defaultValue`, defaultValue, fieldControls[id], Utils);
 
                 field.attributes[id] = defaultValue;
             }

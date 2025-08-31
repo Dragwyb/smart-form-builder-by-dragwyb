@@ -6,13 +6,28 @@ const shouldRenderField=(field, fieldValues)=>{
         return true;
     }
 
-    // Check each condition
     for (const key in conditions) {
-        if (
-            !fieldValues.hasOwnProperty(key) ||  // Key missing in fieldValues
-            fieldValues[key] !== conditions[key] // Value doesn't match
-        ) {
-            return false; // 🚫 Early exit on first mismatch
+        const expected = conditions[key];
+    
+        // If key ends with "!" → treat as "not equal"
+        const isNot = key.endsWith("!");
+        const cleanKey = isNot ? key.slice(0, -1) : key;
+    
+        // Missing key in fieldValues → fail immediately
+        if (!fieldValues.hasOwnProperty(cleanKey)) {
+            return false;
+        }
+    
+        const actual = fieldValues[cleanKey];
+    
+        if (isNot) {
+            if (actual === expected) {
+                return false; // 🚫 fail if equal
+            }
+        } else {
+            if (actual !== expected) {
+                return false; // 🚫 fail if not equal
+            }
         }
     }
 

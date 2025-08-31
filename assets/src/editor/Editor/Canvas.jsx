@@ -88,18 +88,7 @@ const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, on
     </>
 }
 
-const EmptyCanvas = ({ activeTab, setActiveTab }) => {
-
-    const { setNodeRef, isOver } = useDroppable(
-        {
-            id: `canvas-drop-add-field`,
-            data: {
-                addInitialField: true,
-                canvasDrop: true,
-                currentIndex: 0
-            }
-        }
-    );
+const EmptyCanvas = ({ activeTab, setActiveTab, isOver }) => {
 
     let emptyMessage = __('Begin creating your form by dragging fields from the sidebar, or simply click a field to add it.', 'dragwyb-form-builder');
 
@@ -111,7 +100,7 @@ const EmptyCanvas = ({ activeTab, setActiveTab }) => {
         emptyMessage = __('Release the mouse or lift your finger to drop the field into your form.', 'dragwyb-form-builder');
     }
 
-    return <div className="dragwyb-canvas__empty" ref={setNodeRef}>
+    return <div className="dragwyb-canvas__empty">
         <div className={`dragwyb-canvas__empty-wrapper ${isOver ? ' drag-active' : ''}`}>
             {activeTab !== 'fields' &&
                 <Button onClick={() => setActiveTab('fields')} className='add-field'>
@@ -199,7 +188,7 @@ const Canvas = ({ selectedField, onFieldSelect, values, errors, Utils, dropIndex
                 </>
             }
             {(!fields || fields.length === 0) && (
-                <EmptyCanvas activeTab={activeTab} setActiveTab={setActiveTab} />
+                <EmptyCanvas activeTab={activeTab} setActiveTab={setActiveTab} isOver={isOver}/>
             )}
             </div>
         </div>

@@ -9,22 +9,43 @@ class RepeaterControl extends DragwybEditor.editor.extends.ControlBase {
     bind() {
         if (!this.shouldRender()) return <></>;
         const { settings, id } = this;
-        const {value: repeaterItems, tabsSettings= {}}=this.state;
+        const { value: repeaterItems, tabsSettings = {} } = this.state;
 
-        const updateHandler=(id, item)=>{
+        const updateHandler = (id, item) => {
             this.updateControls(id, item)
         }
 
-        const updateTabsSettings=(id, value)=>{
-            const tabsSettings=this?.state?.tabsSettings || {};
-            
-            if(tabsSettings && (!tabsSettings[id] || tabsSettings[id] !== value)){
-                this.setState({tabsSettings: {...tabsSettings, [id]: value}});
+        const updateTabsSettings = (id, value) => {
+            const tabsSettings = this?.state?.tabsSettings || {};
+
+            if (tabsSettings && (!tabsSettings[id] || tabsSettings[id] !== value)) {
+                this.setState({ tabsSettings: { ...tabsSettings, [id]: value } });
             }
         }
 
-        const resetTabSettings=(id, value)=>{
-            this.setState({tabsSettings: {}});
+        const resetTabSettings = (id, value) => {
+            this.setState({ tabsSettings: {} });
+        }
+
+        const addItemHandler = () => {
+            let updated = { _id: this.Utils.generateId(), attributes: {} };
+
+            if (settings.items && Object.keys(settings.items).length > 0) {
+                Object.keys(settings.items).forEach(item => {
+                    let defaultValue = settings.items[item]?.default;
+
+                    if (defaultValue) {
+                        defaultValue = DragwybBuilder.Hooks.applyFilter(`Dragwyb/Editor/AddControl/${settings.items[item].type}.defaultValue`, defaultValue, settings, this.Utils);
+
+                        updated.attributes[item] = defaultValue;
+                    }
+
+                });
+            }
+
+            updated = [...repeaterItems || [], ...[updated]];
+            updateHandler(id, updated);
+
         }
 
         return (
@@ -43,10 +64,7 @@ class RepeaterControl extends DragwybEditor.editor.extends.ControlBase {
                         />
                     }
                     <div className="add-repeater-btn">
-                        <button onClick={() => {
-                            const updated = [...repeaterItems || [], { _id: this.Utils.generateId(), attributes: {} }];
-                            updateHandler(id, updated);
-                        }}>
+                        <button onClick={addItemHandler}>
                             {settings.add_item}
                         </button>
                     </div>
@@ -56,10 +74,29 @@ class RepeaterControl extends DragwybEditor.editor.extends.ControlBase {
     }
 }
 
-const intializeRepeater = ([data, utils]) => {
+const defaultValueHandler = (settings, attributes, Utils) => {
+    if (settings.items) {
+        Object.keys(settings.items).map(key => {
+            if (!attributes.hasOwnProperty(key)) {
+                let defaultValue = settings.items[key]?.default;
+
+                if (defaultValue) {
+                    defaultValue = DragwybBuilder.Hooks.applyFilter(`Dragwyb/Editor/AddControl/${settings.items[key].type}.defaultValue`, defaultValue, settings, Utils);
+
+                    attributes[key] = defaultValue;
+                }
+            }
+        })
+    }
+    return attributes;
+}
+
+const intializeRepeater = ([data, settings, utils]) => {
     const defaultValue = [];
     if (!data || data.length <= 0) {
-        return [{ _id: utils.generateId(), attributes: {} }];
+        const newItem = { _id: utils.generateId(), attributes: {} }
+        newItem.attributes = defaultValueHandler(settings, newItem.attributes, utils);
+        return [newItem];
     }
 
     data.forEach((value, index) => {
@@ -72,6 +109,8 @@ const intializeRepeater = ([data, utils]) => {
         } else {
             defaultValue[index].attributes = value;
         }
+
+        defaultValue[index].attributes = defaultValueHandler(settings, defaultValue[index].attributes, utils);
     });
 
     return defaultValue;

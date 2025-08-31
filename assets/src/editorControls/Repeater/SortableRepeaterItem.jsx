@@ -71,7 +71,7 @@ const SortableRepeaterItem = ({
 
     const id=e.target.dataset.id;
 
-    updateTabsHandler('activeRepeaterId', id);
+    updateTabsHandler('activeRepeaterId', activeRepeater !== id ? id : false);
   }
 
   const repeaterHeading = (key, index) => {
