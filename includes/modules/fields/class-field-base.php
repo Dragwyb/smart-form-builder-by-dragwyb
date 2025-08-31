@@ -15,7 +15,7 @@ abstract class Field_Base extends Register_Controls_Base
     protected array $form_settings;
     protected array $keywords = array();
     private ?array $display_settings = array();
-    private $form_id = 0;
+    private $field_id = 0;
 
     const ContentTab = 'content_tab';
     const StyleTab = 'style_tab';
@@ -74,14 +74,15 @@ abstract class Field_Base extends Register_Controls_Base
         return $this->keywords && is_array($this->keywords) && count($this->keywords) > 0 ? $this->keywords : false;
     }
 
-    public function set_the_id(int $id): void
+    public function set_the_id(int $id = 0): void
     {
-        $this->form_id = (int) $id;
+        $field_id = absint(sanitize_text_field($id));
+        $this->field_id = (int) $field_id;
     }
 
     public function get_the_id(): int
     {
-        return $this->form_id;
+        return $this->field_id;
     }
 
     protected function tab_condition(&$conditions, $data): array
