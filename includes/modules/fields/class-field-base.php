@@ -12,7 +12,8 @@ abstract class Field_Base extends Register_Controls_Base
     protected string $name;
     protected string $icon;
     protected array $settings;
-    protected array $keywords=array();
+    protected array $form_settings;
+    protected array $keywords = array();
     private ?array $display_settings = array();
     private $form_id = 0;
 
@@ -102,6 +103,16 @@ abstract class Field_Base extends Register_Controls_Base
     protected function get_field_settings(): array
     {
         return $this->display_settings;
+    }
+
+    public function set_form_settings(array $setting): void
+    {
+        $this->form_settings = $setting;
+    }
+
+    protected function get_form_settings(): array|null
+    {
+        return $this->form_settings;
     }
 
 
