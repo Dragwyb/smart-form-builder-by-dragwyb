@@ -14,7 +14,9 @@ class Register_Toolbar {
 
     private array $default_toolbars = [
         'modules',
-        'advance_settings'
+        'general_settings',
+        'advance_settings',
+        'after_submission'
     ];
 
     public static function instance(): self {
