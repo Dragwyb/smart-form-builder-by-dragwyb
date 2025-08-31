@@ -58,7 +58,7 @@ if (!class_exists('Sanitize_Module_Settings')) {
                 self::$filtered_data[$index]['_id'] = $field['_id'];
                 self::$filtered_data[$index]['type'] = $field['type'];
 
-                if (isset($field['type']) && isset($field['attributes'])){
+                if (isset($field['type']) && isset($field['attributes'])) {
                     if (isset($field['type']) && is_array($field['attributes']) && count($field['attributes']) > 0) {
                         $type = $field['type'];
                         $attributes = $field['attributes'];
@@ -66,7 +66,7 @@ if (!class_exists('Sanitize_Module_Settings')) {
                         if (!isset(self::$field_module[$type])) {
                             $field_module = self::$module->get_field($type);
 
-                            if(!$field_module){
+                            if (!$field_module) {
                                 continue;
                             }
 
@@ -77,7 +77,10 @@ if (!class_exists('Sanitize_Module_Settings')) {
                         $this->attributes_loop($attributes, $type, $index);
                     }
                 }
-                    
+
+                if (self::$filtered_data && isset(self::$filtered_data[$index]) && !isset(self::$filtered_data[$index]['attributes'])) {
+                    self::$filtered_data[$index]['attributes'] = array();
+                }
             }
         }
 
