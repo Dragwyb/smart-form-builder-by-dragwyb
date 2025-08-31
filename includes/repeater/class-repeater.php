@@ -23,8 +23,21 @@ class Repeater
         $this->control_base = Controls::instance();
     }
 
+    public static function validate_id($id, $type)
+    {
+        if (!is_string($id) || !preg_match('/^[A-Za-z0-9_]+$/', $id)) {
+            throw new \Exception(sprintf(__('%s ID must only contain letters, numbers, and underscores.', 'dragwyb-form-builder'), $type));
+
+            return false;
+        }
+
+        return sanitize_text_field($id);
+    }
+
     final public function start_tabs(string $id = '', array $data = array()): void
     {
+        if (!$id = self::validate_id($id, 'Tabs')) return;
+
         if ($this->current_tabs !== null) {
             throw new \Exception(__('Tabs are already started.', 'dragwyb-form-builder'));
         }
@@ -62,6 +75,8 @@ class Repeater
 
     final public function start_tab(string $id = '', array $data = array()): void
     {
+        if (!$id = self::validate_id($id, 'Tab')) return;
+
         if ($this->current_tabs === null) {
             throw new \Exception(__('Tabs must be started before a tab can be opened.', 'dragwyb-form-builder'));
         }
@@ -89,6 +104,8 @@ class Repeater
 
     final public function add_control(string $id = '', array $data = array()): void
     {
+        if (!$id = self::validate_id($id, 'Control')) return;
+
         if (isset($this->settings_arr[$id]) || isset($this->current_control_stack[$id])) {
             throw new \Exception(__('Do not use duplicate control ID use unique Id.', 'dragwyb-form-builder'));
         }

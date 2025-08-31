@@ -49,8 +49,21 @@ abstract class Register_Controls_Base
         return $this->settings_arr;
     }
 
+    public static function validate_id($id, $type)
+    {
+        if (!is_string($id) || !preg_match('/^[A-Za-z0-9_]+$/', $id)) {
+            throw new \Exception(sprintf(__('%s ID must only contain letters, numbers, and underscores.', 'dragwyb-form-builder'), $type));
+
+            return false;
+        }
+
+        return sanitize_text_field($id);
+    }
+
     final protected function start_section(string $id = '', array $data = array()): void
     {
+        if (!$id = self::validate_id($id, 'Section')) return;
+
         if ($this->current_section !== null) {
             throw new \Exception(__('A section is already started.', 'dragwyb-form-builder'));
         }
@@ -86,6 +99,8 @@ abstract class Register_Controls_Base
 
     final protected function start_tabs(string $id = '', array $data = array()): void
     {
+        if (!$id = self::validate_id($id, 'Tabs')) return;
+
         if ($this->current_section === null) {
             throw new \Exception(__('No section is currently open.', 'dragwyb-form-builder'));
         }
@@ -131,6 +146,8 @@ abstract class Register_Controls_Base
 
     final protected function start_tab(string $id = '', array $data = array()): void
     {
+        if (!$id = self::validate_id($id, 'Tab')) return;
+
         if ($this->current_section === null) {
             throw new \Exception(__('No section is currently open.', 'dragwyb-form-builder'));
         }
@@ -162,6 +179,8 @@ abstract class Register_Controls_Base
 
     final protected function add_control(string $id = '', array $data = array()): void
     {
+        if (!$id = self::validate_id($id, 'Control')) return;
+
         if ($this->current_section === null) {
             throw new \Exception(__('No section is currently open to add controls.', 'dragwyb-form-builder'));
         }
