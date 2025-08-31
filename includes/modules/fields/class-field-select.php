@@ -25,61 +25,20 @@ class Field_Select extends Field_Base
         $repeater = new Repeater();
 
         $repeater->add_control(
-            'repeater_text',
+            'option_label',
             array(
                 'type'    => Controls::TEXT,
-                'label'   => __('Text One', 'dragwyb-form-builder'),
+                'label'   => __('Label', 'dragwyb-form-builder'),
                 'default' => __('Enter Text One', 'dragwyb-form-builder'),
             )
         );
 
         $repeater->add_control(
-            'repeater_text_two',
+            'option_value',
             array(
                 'type'       => Controls::TEXT,
                 'label'      => __('Text Two', 'dragwyb-form-builder'),
                 'default'    => __('Enter Text Two', 'dragwyb-form-builder'),
-                'conditions' => array('repeater_text' => 'dogra'),
-            )
-        );
-
-        $repeater->start_tabs('text_tabs');
-
-        $repeater->start_tab('text_normal', [
-            'label' => 'Normal',
-        ]);
-
-        $repeater->add_control('text_color', [
-            'type' => Controls::COLOR,
-            'label' => __('Field Label Color', 'dragwyb-form-builder'),
-            'default' => '',
-        ]);
-
-        $repeater->end_tab();
-
-        $repeater->start_tab('text_hover', [
-            'label' => 'Hover',
-        ]);
-
-        $repeater->add_control('text_hover_color', [
-            'type' => Controls::COLOR,
-            'label' => __('Field Label Color', 'dragwyb-form-builder'),
-            'default' => '',
-            'selectoR' => array(
-                '{{WRAPPER}} .form-text input: {color: {{VALUE}}}',
-            )
-        ]);
-
-        $repeater->end_tab();
-
-        $repeater->end_tabs();
-
-        $repeater->add_control(
-            'repeater_text_three',
-            array(
-                'type'    => Controls::TEXT,
-                'label'   => __('Text Three', 'dragwyb-form-builder'),
-                'default' => __('Enter Text Three', 'dragwyb-form-builder'),
             )
         );
 
@@ -89,25 +48,21 @@ class Field_Select extends Field_Base
             'tab' => self::ContentTab
         ]);
 
-        $this->add_control('select_label', [
+        $this->add_control('label', [
             'type' => Controls::TEXT,
             'label' => __('Field Label', 'dragwyb-form-builder'),
             'default' => 'Label',
         ]);
 
-        $this->add_control('select_options', [
+        $this->add_control('options', [
             'type' => Controls::REPEATER,
             'label' => __('Required', 'dragwyb-form-builder'),
             'add_item' => __('Add Options', 'dragwyb-form-builder'),
             'item_label' => 'repeater_text',
             'default' => [
                 [
-                    'repeater_text' => 'Aniket Dogra',
-                    'repeater_text_two' => 'Aniket Hello World',
-                ],
-                [
-                    'repeater_text' => 'Aniket Dogra Two',
-                    'repeater_text_two' => 'Aniket Hello World Two',
+                    'option_label' => 'Select Default',
+                    'option_value' => 'text',
                 ]
             ],
             'items' => $repeater->get_settings()
@@ -129,31 +84,37 @@ class Field_Select extends Field_Base
 
         $id = 'field_' . uniqid();
         $required = !empty($this->field_key_exist($field_data, 'required', ''));
-
+        $options = $this->field_key_exist($field_data, 'options', []);
 ?>
-        <div class="dragwyb-field-wrapper">
-            <label for="<?php echo esc_attr($id); ?>">
-                <?php echo esc_html($field_data['select_label']); ?>
-                <?php if ($required): ?>
-                    <span class="required">*</span>
-                <?php endif; ?>
-            </label>
-            <select
-                id="<?php echo esc_attr($id); ?>"
-                name="<?php echo esc_attr($id); ?>"
-                <?php echo $required ? 'required' : ''; ?>
-                class="dragwyb-select-field">
-                <?php foreach ($field_data['select_options'] as $option):
-                    $item_data = $option['attributes'];
-                ?>
-                    <option
-                        value="<?php echo esc_attr($item_data['repeater_text']); ?>"
-                        <?php selected($item_data['repeater_text'], $item_data['default_value'] ?? ''); ?>>
-                        <?php echo esc_html($item_data['label'] ?? $item_data['repeater_text']); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+        <div class="dragwyb-field-wrapper dragwyb-select-field">
+            <?php if (!empty($label)) : ?>
+                <label for="<?php echo esc_attr($id); ?>" class="dragwyb-label">
+                    <?php echo esc_html($label); ?>
+                    <?php if ($required): ?><span class="required">*</span><?php endif; ?>
+                </label>
+            <?php endif; ?>
+
+            <div class="dragwyb-input-wrapper">
+                <select id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($id); ?>"
+                    <?php echo $required ? 'required' : ''; ?>
+                    class="dragwyb-input">
+                    <?php if (!empty($options)) : ?>
+                        <?php foreach ($options as $option) :
+                            $attribute = $option['attributes'];
+                            $val = $this->field_key_exist($attribute, 'option_label', '');
+                            $text = $this->field_key_exist($attribute, 'option_value', $val);
+
+                            if ($val && !empty($val)):
+                        ?>
+                                <option value="<?php echo esc_attr($val); ?>"><?php echo esc_html($text); ?></option>
+                        <?php
+                            endif;
+                        endforeach; ?>
+                    <?php endif; ?>
+                </select>
+            </div>
         </div>
+
 <?php
     }
 
