@@ -45,14 +45,14 @@ class Shortcode_Handler
         }
 
         // Load form data from post meta
-        $form_settings = get_post_meta($form_id, '_dragwyb_form_fields', true);
+        $form_settings = get_post_meta($form_id, '_dragwyb_form_data', true);
 
-        if (empty($form_settings) || !is_array($form_settings)) {
+        if (empty($form_settings) || !is_array($form_settings) || !isset($form_settings['fields']) || count($form_settings) < 1) {
             return '<p>' . esc_html__('No fields found in this form.', 'dragwyb-form-builder') . '</p>';
         }
 
         // Generate form HTML
-        $form_html = (new Frontend_Render($form_id, $form_settings))->render();
+        $form_html = (new Frontend_Render($form_id))->render();
 
         return '<div class="dragwyb-form-wrapper" id="dragwyb-form-wrapper-' . esc_attr($form_id) . '">' . wp_kses($form_html, $this->allowed_html_for_form()) . '</div>';
     }

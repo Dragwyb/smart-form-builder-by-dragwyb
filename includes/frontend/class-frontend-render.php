@@ -122,6 +122,7 @@ class Frontend_Render
                     if (!self::$field_module_cache[$type] instanceof Field_Base) return;
 
                     self::$field_module_cache[$type]->set_the_id((int) self::$Field_Data['_id']);
+                    self::$field_module_cache[$type]->set_form_settings(self::$toolbar_data);
 
                     if (isset($field['attributes'])) {
                         $attributes = $field['attributes'];
