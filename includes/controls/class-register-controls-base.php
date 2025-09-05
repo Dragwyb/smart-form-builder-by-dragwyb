@@ -15,6 +15,7 @@ abstract class Register_Controls_Base
     private ?array $current_section_stack = array();
     private ?array $current_tabs_stack = array();
     private ?array $current_control_stack = array();
+    private ?array $current_popover = array();
     private ?object $control_base;
     private static ?int $form_id = 0;
 
@@ -113,10 +114,6 @@ abstract class Register_Controls_Base
             throw new \Exception(__('Do not use duplicate tabs ID use unique Id.', 'dragwyb-form-builder'));
         }
 
-        $this->current_section_stack = array_merge($this->current_section_stack, $this->current_control_stack);
-
-        $this->current_control_stack = array();
-
         $this->current_tabs = $id; // Assuming type is the tabs identifier  
 
         $conditions = isset($data['conditions']) ? $data['conditions'] : array();
@@ -141,7 +138,7 @@ abstract class Register_Controls_Base
 
         $this->current_tabs = null;
         $this->current_tabs_stack = array();
-        $this->current_control_stack = array();
+        unset($this->current_control_stack[$this->current_tabs]);
     }
 
     final protected function start_tab(string $id = '', array $data = array()): void
@@ -177,6 +174,34 @@ abstract class Register_Controls_Base
         $this->current_tab = null;
     }
 
+    final protected function start_popover(): void
+    {
+        if ($this->current_section === null) {
+            throw new \Exception(__('No section is currently open.', 'dragwyb-form-builder'));
+        }
+
+        if (isset($this->current_popover['initialize'])) {
+            throw new \Exception(__('Popover are already started.', 'dragwyb-form-builder'));
+        }
+
+        $this->current_popover['initialize'] = false;
+    }
+
+    final protected function end_popover(): void
+    {
+        if (!isset($this->current_popover['initialize'])) {
+            throw new \Exception(__('No popover are currently open.', 'dragwyb-form-builder'));
+        }
+
+        $last_control = $this->get_last_control();
+
+        if(isset($this->current_control_stack[$last_control['key']])){
+            $this->current_control_stack[$last_control['key']]['popover'] = array('end'=>true);
+        }
+
+        $this->current_popover = array();
+    }
+
     final protected function add_control(string $id = '', array $data = array()): void
     {
         if (!$id = self::validate_id($id, 'Control')) return;
@@ -201,7 +226,26 @@ abstract class Register_Controls_Base
             $conditions = array_merge($conditions, array('section' => $this->current_section));
         }
 
-        $this->current_control_stack[$id] = $this->controller_settings(array_merge($data, array('conditions' => $conditions)));
+        $control_data=$this->controller_settings(array_merge($data, array('conditions' => $conditions)));
+
+        if (isset($this->current_popover['initialize']) && !isset($control_data['popover'])) {
+            $control_data['popover'] = array();
+
+            if (false === $this->current_popover['initialize']) {
+                $control_data['popover']['start'] = true;
+                $this->current_popover['initialize'] = true;
+            }
+        }
+
+        $this->current_control_stack[$id] = $control_data;
+    }
+
+    private function get_last_control(): array
+    {
+        $keys = array_keys($this->current_control_stack);
+        $last_key = end($keys);
+
+        return array("key" => $last_key, "value" => $this->current_control_stack[$last_key]);
     }
 
     private function controller_settings(array $data): array

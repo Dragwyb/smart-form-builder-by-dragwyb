@@ -14,7 +14,7 @@ class Register_Controls
 
     private array $controls = [];
 
-    private array $default_controls = [Controls::CHECKBOX,Controls::COLOR,Controls::NUMBER,Controls::RADIO,Controls::REPEATER,Controls::SECTION,Controls::SELECT,Controls::SLIDER,Controls::TABS,Controls::TAB,Controls::TEXT,Controls::TEXTAREA];
+    private array $default_controls = [Controls::CHECKBOX, Controls::COLOR, Controls::NUMBER, Controls::RADIO, Controls::REPEATER, Controls::SECTION, Controls::SELECT, Controls::SLIDER, Controls::TABS, Controls::TAB, Controls::TEXT, Controls::TEXTAREA, Controls::POPOVER_TOGGLE];
 
     public static function instance(): self
     {
@@ -37,6 +37,7 @@ class Register_Controls
         foreach ($this->default_controls as $control) {
 
             $dir = dirname(__NAMESPACE__);
+            $control = $this->captialize_class_name($control);
             $class = $dir . '\Controls\Control_' . ucfirst(esc_html($control));
 
             if (class_exists($class)) {
@@ -44,6 +45,17 @@ class Register_Controls
             }
         }
         // Register more controls here
+    }
+
+    private function captialize_class_name($string)
+    {
+        // Replace hyphens with underscores
+        $string = str_replace('-', '_', $string);
+
+        // Capitalize first letter and letters after underscores
+        return preg_replace_callback('/(^|_)([a-z])/', function($matches) {
+            return $matches[1] . strtoupper($matches[2]);
+        }, $string);
     }
 
     public function register_control(Control_Base $field): void

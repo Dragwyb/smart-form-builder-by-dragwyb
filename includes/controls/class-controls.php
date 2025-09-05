@@ -21,6 +21,7 @@ class Controls
     const TAB='tab';
     const TEXT='text';
     const TEXTAREA='textarea';
+    const POPOVER_TOGGLE='popover-toggle';
     
     private static $instance = null;
     private $controls = [];
