@@ -9,6 +9,9 @@ export const UPDATE_TOOLBAR_SETTINGS = 'UPDATE_TOOLBAR_SETTINGS';
 export const UPDATE_FORM_TITLE = 'UPDATE_FORM_TITLE';
 export const UPDATE_SECTION_SETTINGS ='UPDATE_SECTION_SETTINGS';
 export const RESET_SECTION_SETTINGS ='RESET_SECTION_SETTINGS';
+export const UPDATE_POPOVER_INITIALIZE ='UPDATE_POPOVER_INITIALIZE';
+export const UPDATE_POPOVER_CONTROLS ='UPDATE_POPOVER_CONTROLS';
+export const RESET_POPOVER_CONTROLS ='RESET_POPOVER_CONTROLS';
 export const SHOW_NOTICE = 'SHOW_NOTICE';
 export const HIDE_NOTICE = 'HIDE_NOTICE';
 export const UPDATE_FIELD_VALUES = 'UPDATE_FIELD_VALUES';
@@ -45,6 +48,21 @@ export const resetSectionSettings = () => ({
     type: RESET_SECTION_SETTINGS
 })
 
+export const updatePopoverInitStatus=(status)=>({
+    type: UPDATE_POPOVER_INITIALIZE,
+    payload: {status}
+})
+
+export const updatePopoverControls=(id, control, status)=>({
+    type: UPDATE_POPOVER_CONTROLS,
+    payload: {id, control, status}
+})
+
+
+export const resetPopoverControls = () => ({
+    type: RESET_POPOVER_CONTROLS
+})
+
 export const deleteField = (fieldId) => ({
     type: DELETE_FIELD,
     payload: fieldId
@@ -69,10 +87,12 @@ export const updateSelectedSettingId=(value)=>({
     type: 'UPDATE_SELECTED_SETTING_ID',
     payload: value
 })
+
 export const updateActiveToolbar=(value)=>({
     type: 'UPDATE_ACTIVE_TOOLBAR',
     payload: value
 })
+
 export const updatePreviewMode=(value)=>({
     type: 'UPDATE_PREVIEW_MODE',
     payload: value

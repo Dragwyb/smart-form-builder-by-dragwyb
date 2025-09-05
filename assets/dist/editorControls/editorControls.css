@@ -1,1 +1,235 @@
-.section-control{position:relative;padding:12px 16px;background:#fff;border:1px solid #dcdfe3;font-weight:600;font-size:14px;border-radius:4px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:all .3s ease;box-shadow:0 1px 2px rgba(0,0,0,.03)}.section-control::after{content:"▼";font-size:12px;color:#666;transition:transform .3s ease}.section-control.section-active{background:#eaf5fd;border-color:#2271b1;color:#2271b1}.section-control.section-active::after{transform:rotate(180deg);color:#2271b1}.tabs-control .tabs{display:flex;border:1px solid #ccd0d4;border-radius:3px}.tabs-control .tabs .tab{padding:6px 12px;border:0px solid #ccd0d4;flex:1 1 0;transition:all .3s ease;cursor:pointer;text-align:center;border-bottom-width:2px;border-bottom-color:rgba(0,0,0,0)}.tabs-control .tabs .tab:not(:first-child){border-left-width:1px}.tabs-control .tabs .tab.active,.tabs-control .tabs .tab:hover{background:var(--primary-light-color)}.dragwyb-repeater-field{background:#f9f9f9;border:1px solid #dcdfe3;border-radius:6px;padding:16px;margin-top:10px;box-shadow:0 2px 6px rgba(0,0,0,.03)}.dragwyb-repeater-item{background:#fff;border:1px solid #e1e1e1;border-radius:6px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden}.dragwyb-repeater-item>[role=button]{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#f5f6f8;font-weight:600;color:#2c3338;cursor:grab;border-bottom:1px solid #e4e4e4;font-size:14px;outline:none}.dragwyb-repeater-item>[role=button]:hover{background:#eef4fb}.dragwyb-repeater-item>[role=button] span{display:inline-flex;gap:10px}.dragwyb-repeater-item>[role=button] span i{font-style:normal;font-size:14px;padding:4px 6px;border-radius:4px;color:#555;cursor:pointer;transition:background .2s ease}.dragwyb-repeater-item>[role=button] span i:hover{background-color:#e4e4e4;color:#000}.add-repeater-btn{margin-top:16px;text-align:center}.add-repeater-btn button{padding:8px 16px;font-size:13px;font-weight:500;color:#2271b1;background-color:#eef6fc;border:1px dashed #2271b1;border-radius:6px;cursor:pointer;transition:background-color .2s ease}.add-repeater-btn button:hover{background-color:#dceefb}[aria-roledescription=sortable]{cursor:grab}[aria-roledescription=sortable]:active{cursor:grabbing}#DndDescribedBy-0,#DndLiveRegion-0{display:none !important}@media(max-width: 768px){.tabs-control .tab-buttons{flex-direction:column}.section-control{font-size:13px}}
+/*!******************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[1].use[2]!./assets/sass/editorControls.scss ***!
+  \******************************************************************************************************************************************************/
+@charset "UTF-8";
+.section-control {
+  position: relative;
+  padding: 12px 16px;
+  background: #fff;
+  border: 1px solid #dcdfe3;
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+.section-control::after {
+  content: "▼";
+  font-size: 12px;
+  color: #666;
+  transition: transform 0.3s ease;
+}
+.section-control.section-active {
+  background: #eaf5fd;
+  border-color: #2271b1;
+  color: #2271b1;
+}
+.section-control.section-active::after {
+  transform: rotate(180deg);
+  color: #2271b1;
+}
+
+.tabs-control .tabs {
+  display: flex;
+  border: 1px solid #ccd0d4;
+  border-radius: 3px;
+}
+.tabs-control .tabs .tab {
+  padding: 6px 12px;
+  border: 0px solid #ccd0d4;
+  flex: 1 1 0;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-align: center;
+  border-bottom-width: 2px;
+  border-bottom-color: transparent;
+}
+.tabs-control .tabs .tab:not(:first-child) {
+  border-left-width: 1px;
+}
+.tabs-control .tabs .tab.active, .tabs-control .tabs .tab:hover {
+  background: var(--primary-light-color);
+}
+
+/* === Repeater Wrapper === */
+.dragwyb-repeater-field {
+  background: #f9f9f9;
+  border: 1px solid #dcdfe3;
+  border-radius: 6px;
+  padding: 16px;
+  margin-top: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+/* === Repeater Item Card === */
+.dragwyb-repeater-item {
+  background: #fff;
+  border: 1px solid #e1e1e1;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+/* === Sortable Header (Title + Actions) === */
+.dragwyb-repeater-item > [role=button] {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #f5f6f8;
+  font-weight: 600;
+  color: #2c3338;
+  cursor: grab;
+  border-bottom: 1px solid #e4e4e4;
+  font-size: 14px;
+  outline: none;
+}
+.dragwyb-repeater-item > [role=button]:hover {
+  background: #eef4fb;
+}
+.dragwyb-repeater-item > [role=button] span {
+  display: inline-flex;
+  gap: 10px;
+}
+.dragwyb-repeater-item > [role=button] span i {
+  font-style: normal;
+  font-size: 14px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  color: #555;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.dragwyb-repeater-item > [role=button] span i:hover {
+  background-color: #e4e4e4;
+  color: #000;
+}
+
+/* === Add Option Button === */
+.add-repeater-btn {
+  margin-top: 16px;
+  text-align: center;
+}
+.add-repeater-btn button {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #2271b1;
+  background-color: #eef6fc;
+  border: 1px dashed #2271b1;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.add-repeater-btn button:hover {
+  background-color: #dceefb;
+}
+
+/* === Popover === */
+.dragwyb-popover {
+  position: absolute;
+  padding: 1rem;
+  width: calc(var(--panel-width) - 40px - 2rem);
+  background: #f9f9f9;
+  border: 1px solid #dcdfe3;
+  border-radius: 6px;
+  box-shadow: 0 6px 11px rgba(0, 0, 0, 0.1607843137);
+}
+.dragwyb-popover::after {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: 22px;
+  width: 12px;
+  height: 12px;
+  background: #f9f9f9;
+  border-left: 1px solid #dcdfe3;
+  border-top: 1px solid #dcdfe3;
+  transform: rotate(45deg);
+  box-shadow: -5px -5px 5px rgba(0, 0, 0, 0.031372549);
+  z-index: 1;
+}
+
+/* === Popover Toggle === */
+.dragwyb-popover-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  font-size: 14px;
+  font-weight: 500;
+  background: #fff;
+  border: 1px solid #dcdfe3;
+  border-radius: 6px;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.dragwyb-popover-toggle__label {
+  flex: 1;
+  text-align: left;
+  user-select: none;
+}
+.dragwyb-popover-toggle__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid #dcdfe3;
+  border-radius: 50%;
+  font-size: 14px;
+  line-height: 1;
+  background: #f9f9f9;
+  transition: all 0.2s ease-in-out;
+}
+.dragwyb-popover-toggle:hover {
+  background: #f3f3f3;
+  border-color: #c2c6cc;
+}
+.dragwyb-popover-toggle:hover .dragwyb-popover-toggle__icon {
+  background: #fff;
+  border-color: #c2c6cc;
+}
+.dragwyb-popover-toggle:active {
+  background: #e9e9e9;
+}
+.dragwyb-popover-toggle.is-active {
+  background: #0073e6;
+  border-color: #0066cc;
+  color: #fff;
+}
+.dragwyb-popover-toggle.is-active .dragwyb-popover-toggle__icon {
+  background: #0066cc;
+  border-color: #005bb5;
+  color: #fff;
+}
+
+/* === Drag Indicator Cursor Feedback === */
+[aria-roledescription=sortable] {
+  cursor: grab;
+}
+[aria-roledescription=sortable]:active {
+  cursor: grabbing;
+}
+
+/* === Accessibility Descriptions (Visually Hidden) === */
+#DndDescribedBy-0,
+#DndLiveRegion-0 {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .tabs-control .tab-buttons {
+    flex-direction: column;
+  }
+  .section-control {
+    font-size: 13px;
+  }
+}

@@ -1,20 +1,14 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector, useStore } from 'react-redux';
+import { useDispatch, useStore } from 'react-redux';
 import { updateSectionSettings, resetSectionSettings } from '../store/actions';
 import { Panel } from '../components/Common';
-import shouldRenderField from './shouldRenderField';
-import { Utils as Helper } from '../components/Utils';
 import DragwybControlBase from '../controlBase'
+import RenderControl from './RenderControls';
 
-const FieldSettings = ({ activeFieldID, fieldValue, fieldSettings, sectionSettings, onSettingChange, onClose }) => {
+const FieldSettings = ({ fieldValue, fieldSettings, sectionSettings, onSettingChange, onClose }) => {
 
     const dispatch = useDispatch();
     let activeSection = false;
-
-    const store = useStore();
-    const state = store.getState();
-
-    const Utils = Helper(state, dispatch);
 
     const defautlActiveSection = (key) => {
         if (((sectionSettings && sectionSettings.section) || activeSection) || (sectionSettings && sectionSettings.section === '')) {
@@ -72,54 +66,6 @@ const FieldSettings = ({ activeFieldID, fieldValue, fieldSettings, sectionSettin
         onSettingChange(key, value);
     };
 
-    const renderControls = ({ key, settings }) => {
-
-        if (!settings.type) {
-            return;
-        }
-
-        if (!DragwybEditor.controlTypes[settings.type]) {
-            return <></>;
-        }
-
-        const selectedSettings = { ...fieldValue, ...sectionSettings };
-        const shouldRender = shouldRenderField(settings, selectedSettings);
-
-        if (!shouldRender) {
-            return;
-        }
-
-        if (settings.type === 'section') {
-            defautlActiveSection(key, settings, settings.conditions);
-        }
-
-        if (settings.type === 'tabs') {
-            defautlActiveTab(key, settings)
-        }
-        let fieldVal = selectedSettings[key];
-
-        if (settings.type === 'section' && !fieldVal) {
-            fieldVal = selectedSettings['section'];
-        }
-
-        let Control = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/ControlRender/' + settings.type, false);
-
-        if (!Control || (!Control.prototype instanceof DragwybControlBase || !Control.prototype instanceof DragwybEditor.editor.extends.ControlBase)) {
-            Control = DragwybEditor.editor.extends.ControlBase;
-        }
-        
-        return <div key={key} className="setting-row" dataType={settings.type}><Control
-            key={key}
-            id={key}
-            settings={settings}
-            value={fieldVal}
-            handleChange={handleChange}
-            Utils={Utils}
-        /></div>
-    };
-
-    const Control=DragwybEditor.editor.extends.ControlBase;
-
     return (
         <Panel
             title={`${fieldSettings.label} ${DragwybBuilder.i18n.settings}`}
@@ -127,13 +73,30 @@ const FieldSettings = ({ activeFieldID, fieldValue, fieldSettings, sectionSettin
         >
             {fieldSettings?.controls?.header_controls &&
                 <div className='field-header_controls'>
-                    {renderControls({ key: 'header_controls', settings: fieldSettings.controls.header_controls })}
+                    <RenderControl
+                        controlKey={'header_controls'}
+                        settings={fieldSettings.controls.header_controls}
+                        fieldValue={fieldValue}
+                        sectionSettings={sectionSettings}
+                        handleChange={handleChange}
+                        defautlActiveSection={defautlActiveSection}
+                        defautlActiveTab={defautlActiveTab}
+                    />
                 </div>
             }
             <div className="field-settings">
                 {Object.keys(fieldSettings.controls).map(key => (
                     <>
-                        {key === 'header_controls' ? null : renderControls({ key, settings: fieldSettings.controls[key] })}
+                        {key === 'header_controls' ? null
+                            : <RenderControl
+                                controlKey={key}
+                                settings={fieldSettings.controls[key]}
+                                fieldValue={fieldValue}
+                                sectionSettings={sectionSettings}
+                                handleChange={handleChange}
+                                defautlActiveSection={defautlActiveSection}
+                                defautlActiveTab={defautlActiveTab}
+                            />}
                     </>
                 ))}
             </div>

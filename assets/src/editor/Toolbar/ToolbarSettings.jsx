@@ -52,7 +52,6 @@ const ToolbarSettings = ({ setting, selectedToolbar = false, setActiveTab }) => 
         <div className="dragwyb-controls" id={`dragwyb-controls__${setting}`}>{toolBarObject.render()}</div>
         {settings && settings.controls && <div className="dragwyb-editor__settings">
             <FieldSettings
-                activeFieldID={!selectedToolbar ? setting : selectedToolbar}
                 fieldValue={toolbarValue}
                 fieldSettings={settings}
                 onClose={() => setActiveTab(setting)}

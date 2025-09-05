@@ -292,6 +292,37 @@ class TabsControl extends DragwybEditor.editor.extends.ControlBase {
     }
 }
 
+class PopoverToggle extends DragwybEditor.editor.extends.ControlBase {
+    controlName() {
+        return "popover-toggle";
+    }
+
+    bind() {
+        if (!this.shouldRender()) return null;
+
+        const { settings, id } = this;
+        const { value } = this.state;
+        const isActive = id === value;
+
+        return (
+            <button
+                id={id}
+                type="button"
+                className={`dragwyb-popover-toggle ${isActive ? "is-active" : ""}`}
+                aria-pressed={isActive}
+                onClick={() => this.updateControls(id, !isActive)}
+            >
+                {settings.label && (
+                    <span className="dragwyb-popover-toggle__label">{settings.label}</span>
+                )}
+                {settings.icon && (
+                    <i className={`dragwyb-popover-toggle__icon ${settings.icon}`} aria-hidden="true" />
+                )}
+            </button>
+        );
+    }
+}
+
 const initializeControls=()=>{
     const defaultControls={
         'text': TextControl,
@@ -305,6 +336,7 @@ const initializeControls=()=>{
         'tabs': TabsControl,
         'section': SectionControl,
         'repeater': RepeaterControl,
+        'popover-toggle': PopoverToggle
     }
 
     Object.keys(defaultControls).map(key => DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/ControlRender/'+key,()=>{return defaultControls[key]}))

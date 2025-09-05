@@ -18,6 +18,8 @@ const initialState = {
     selectedSettingId: null,
     activeToolbar: DragwybEditor?.EditorToolbars?.Default ?? false,
     previewMode: false,
+    popoverInitialize: false,
+    popoverControls: {},
 };
 
 const store = createStore(reducer, initialState, applyMiddleware(thunk));

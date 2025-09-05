@@ -32,6 +32,10 @@ export const generateId = ({ state, dispatch }) => {
     return id;
 };
 
+export const PopoverControls = ({state, dispatch})=>{
+    return state.popoverControls;
+}
+
 export const AddField = ({ type, dispatch, Utils, index = null }) => {
     const field = {
         _id: Utils.generateId(),

@@ -6,9 +6,11 @@ import {
     UPDATE_FIELD_ORDER,
     UPDATE_FIELD_VALUES,
     UPDATE_TOOLBAR_SETTINGS,
-    UPDATE_FORM_TITLE,
     UPDATE_SECTION_SETTINGS,
     RESET_SECTION_SETTINGS,
+    UPDATE_POPOVER_INITIALIZE,
+    UPDATE_POPOVER_CONTROLS,
+    RESET_POPOVER_CONTROLS,
     UPDATE_SELECTED_SETTING_ID,
     UPDATE_ACTIVE_TOOLBAR,
     UPDATE_PREVIEW_MODE,
@@ -20,11 +22,6 @@ import {
     ERROR_NOTICE
 } from './actions';
 
-import Helper from '../components/Utils'
-
-import { useDispatch } from 'react-redux';
-import { act } from 'react';
-
 const initialState = {
     form: {
         fields: [],
@@ -34,8 +31,10 @@ const initialState = {
         confirmations: []
     },
     sectionSettings: {},
+    popoverInitialize: false,
+    popoverControls: {},
     notices: [],
-    fieldIds:[],
+    fieldIds: [],
     selectedSettingId: false,
     activeToolbar: DragwybEditor?.EditorToolbars?.Default ?? false,
     previewMode: false,
@@ -45,11 +44,11 @@ export default function reducer(state = initialState, action) {
     switch (action.type) {
         case ADD_FIELD:
             const { field, fieldIndex = null } = action.payload;
-            if(!state?.form?.fields){
-                state.form.fields=[];
+            if (!state?.form?.fields) {
+                state.form.fields = [];
             }
 
-            const index= null === fieldIndex ? state.form.fields.length : fieldIndex;
+            const index = null === fieldIndex ? state.form.fields.length : fieldIndex;
 
             return {
                 ...state,
@@ -64,17 +63,17 @@ export default function reducer(state = initialState, action) {
             };
 
         case DUPLICATE_FIELD:
-            if(!action.payload.field){
+            if (!action.payload.field) {
                 return state;
             }
 
-            if(!action.payload.field._id || !action.payload.field.type){
+            if (!action.payload.field._id || !action.payload.field.type) {
                 return state;
             }
 
-            const duplicateId=state.form.fields.filter(field => field._id === action.payload.field._id);
+            const duplicateId = state.form.fields.filter(field => field._id === action.payload.field._id);
 
-            if(duplicateId.length > 0){
+            if (duplicateId.length > 0) {
                 return state;
             }
 
@@ -82,7 +81,7 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 form: {
                     ...state.form,
-                    fields: [...state.form.fields, action.payload.field], 
+                    fields: [...state.form.fields, action.payload.field],
                 }
             }
 
@@ -133,12 +132,12 @@ export default function reducer(state = initialState, action) {
             };
 
         case UPDATE_TOOLBAR_SETTINGS:
-            const toolbarId=action.payload.id;
+            const toolbarId = action.payload.id;
 
-            if(!DragwybEditor.EditorToolbars || !DragwybEditor.EditorToolbars.toolbars || !DragwybEditor.EditorToolbars.toolbars[toolbarId]){
+            if (!DragwybEditor.EditorToolbars || !DragwybEditor.EditorToolbars.toolbars || !DragwybEditor.EditorToolbars.toolbars[toolbarId]) {
                 return state;
             }
-            
+
             return {
                 ...state,
                 form: {
@@ -161,6 +160,57 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 sectionSettings: {}
             };
+
+        case UPDATE_POPOVER_INITIALIZE:
+            {
+                return {
+                    ...state,
+                    popoverInitialize: action.payload.status
+                }
+            }
+
+        case UPDATE_POPOVER_CONTROLS:
+            {
+                if (!action.payload.id || !action.payload.control) return state;
+
+                const status = action.payload.status;
+                const popoverInit=state.popoverInitialize;
+                let popoverInitialize=true;
+
+                if (status && true === status.start) {
+                    if(true === popoverInit){
+                        console.error(
+                            `[Popover] Attempt to start a new popover before closing the previous one. Key: ${action.payload.id}`
+                        );
+
+                        return state;
+                    }
+                }
+
+                if (status && true === status.end) {
+                    if(!popoverInit){
+                        console.error(
+                            `[Popover] Attempt to close a popover that was never opened. Key: ${action.payload.id}`
+                        );
+
+                        return state;
+                    }
+                }
+
+                return {
+                    ...state,
+                    popoverInitialize,
+                    popoverControls: { ...state.popoverControls || {}, [action.payload.id]: action.payload.control }
+                }
+            }
+
+        case RESET_POPOVER_CONTROLS:
+            {
+                return {
+                    ...state,
+                    popoverControls: {}
+                }
+            }
 
         case UPDATE_SELECTED_SETTING_ID:
             return {
@@ -191,7 +241,7 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 fieldIds: [...state.fieldIds, action.payload.id]
             }
-            
+
         case DELETE_FIELD_ID:
             return {
                 ...state,
