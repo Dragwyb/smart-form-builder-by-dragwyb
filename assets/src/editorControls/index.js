@@ -20,10 +20,15 @@ class SectionControl extends DragwybEditor.editor.extends.ControlBase {
         }
 
         return (
-            <div id={id} className={sectionCls} onClick={()=>{this.updateControls(id, !(id===value))}}>
+            <div id={id} className={sectionCls} onClick={()=>{this.updateControlHandler(id, !(id===value))}}>
                 {settings.label}
             </div>
         );
+    }
+
+    updateControlHandler(key, value){
+        this.setState({value: value ? key : ''})
+        this.updateControls(key, value);
     }
 }
 
@@ -40,7 +45,7 @@ class TextControl extends DragwybEditor.editor.extends.ControlBase {
 
         return <>
             <label for={id}>{settings.label}</label>
-            <input type={this.controlName} id={id} name={id} onChange={e => this.updateControls(id, e.target.value)} value={value}/>
+            <input type={this.controlName} id={id} name={id} onChange={e => this.updateControlHandler(id, e.target.value)} value={value}/>
         </>
     }
 }
@@ -65,7 +70,7 @@ class SelectControl extends DragwybEditor.editor.extends.ControlBase {
                     id={id}
                     name={id}
                     value={value}
-                    onChange={(e) => this.updateControls(id, e.target.value)}
+                    onChange={(e) => this.updateControlHandler(id, e.target.value)}
                 >
                     {(Object.keys(options)).map((key) => (
                         <option key={key} value={key}>
@@ -96,7 +101,7 @@ class TextareaControl extends DragwybEditor.editor.extends.ControlBase {
                     id={id}
                     name={id}
                     value={value}
-                    onChange={(e) => this.updateControls(id, e.target.value)}
+                    onChange={(e) => this.updateControlHandler(id, e.target.value)}
                 />
             </>
         );
@@ -122,7 +127,7 @@ class CheckboxControl extends DragwybEditor.editor.extends.ControlBase {
                         id={id}
                         name={id}
                         checked={!!value}
-                        onChange={(e) => this.updateControls(id, e.target.checked)}
+                        onChange={(e) => this.updateControlHandler(id, e.target.checked)}
                     />
                     {settings.label}
                 </label>
@@ -153,7 +158,7 @@ class RadioControl extends DragwybEditor.editor.extends.ControlBase {
                                 name={id}
                                 value={opt.value}
                                 checked={value === opt.value}
-                                onChange={(e) => this.updateControls(id, e.target.value)}
+                                onChange={(e) => this.updateControlHandler(id, e.target.value)}
                             />
                             {opt.label}
                         </label>
@@ -190,7 +195,7 @@ class SliderControl extends DragwybEditor.editor.extends.ControlBase {
                     max={max}
                     step={step}
                     value={value}
-                    onChange={(e) => this.updateControls(id, parseFloat(e.target.value))}
+                    onChange={(e) => this.updateControlHandler(id, parseFloat(e.target.value))}
                 />
             </>
         );
@@ -223,7 +228,7 @@ class NumberControl extends DragwybEditor.editor.extends.ControlBase {
                     max={max}
                     step={step}
                     value={value}
-                    onChange={(e) => this.updateControls(id, parseFloat(e.target.value))}
+                    onChange={(e) => this.updateControlHandler(id, parseFloat(e.target.value))}
                 />
             </>
         );
@@ -249,7 +254,7 @@ class ColorControl extends DragwybEditor.editor.extends.ControlBase {
                     id={id}
                     name={id}
                     value={value}
-                    onChange={(e) => this.updateControls(id, e.target.value)}
+                    onChange={(e) => this.updateControlHandler(id, e.target.value)}
                 />
             </>
         );
@@ -270,7 +275,7 @@ class TabsControl extends DragwybEditor.editor.extends.ControlBase {
         const options = settings.tabs || [];
 
         if (!value && value === '' && Object.keys(options).length > 0) {
-            this.updateControls(id, Object.keys(options)[0]);
+            this.updateControlHandler(id, Object.keys(options)[0]);
         }
     
         return (
@@ -281,7 +286,7 @@ class TabsControl extends DragwybEditor.editor.extends.ControlBase {
                             key={key}
                             type="tab"
                             className={`tab${key === value ? ' active' : ''}`}
-                            onClick={()=>this.updateControls(id, key)}
+                            onClick={()=>this.updateControlHandler(id, key)}
                         >
                             {options[key].label}
                         </div>
@@ -304,19 +309,26 @@ class PopoverToggle extends DragwybEditor.editor.extends.ControlBase {
         const { value } = this.state;
         const isActive = id === value;
 
+        const clickHandler = (e)=>{
+            const ele=e.target;
+            const popoverWrp=jQuery(ele).closest('.setting-row').next('.dragwyb-popover');
+        
+            popoverWrp.toggle();
+        }
+
         return (
             <button
                 id={id}
                 type="button"
                 className={`dragwyb-popover-toggle ${isActive ? "is-active" : ""}`}
                 aria-pressed={isActive}
-                onClick={() => this.updateControls(id, !isActive)}
+                onClick={() => this.updateControlHandler(id, !isActive)}
             >
                 {settings.label && (
                     <span className="dragwyb-popover-toggle__label">{settings.label}</span>
                 )}
                 {settings.icon && (
-                    <i className={`dragwyb-popover-toggle__icon ${settings.icon}`} aria-hidden="true" />
+                    <i className={`dragwyb-popover-toggle__icon ${settings.icon}`} aria-hidden="true" onClick={clickHandler}/>
                 )}
             </button>
         );

@@ -1,26 +1,32 @@
-import React, { useEffect } from 'react';
+import React, { act, useEffect, useState } from 'react';
 import { useDispatch, useStore } from 'react-redux';
 import { updateSectionSettings, resetSectionSettings } from '../store/actions';
 import { Panel } from '../components/Common';
 import DragwybControlBase from '../controlBase'
 import RenderControl from './RenderControls';
 
-const FieldSettings = ({ fieldValue, fieldSettings, sectionSettings, onSettingChange, onClose }) => {
+const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, sectionSettings, onSettingChange, onClose }) => {
 
     const dispatch = useDispatch();
-    let activeSection = false;
+
+    const getSectionSettings=()=>{
+        const store=useStore();
+        const state=store.getState();
+
+        return state.sectionSettings;
+    }
 
     const defautlActiveSection = (key) => {
-        if (((sectionSettings && sectionSettings.section) || activeSection) || (sectionSettings && sectionSettings.section === '')) {
+        const sectionSettings=getSectionSettings();
+        if (((sectionSettings && sectionSettings.section)) || (sectionSettings && sectionSettings.section === '')) {
             return;
         }
-
-        activeSection = true;
-
+        
         sectionUpdateHandler(key, true);
     }
 
     const defautlActiveTab = (key, settings) => {
+        const sectionSettings=getSectionSettings();
         if (sectionSettings && sectionSettings[key]) {
             return;
         }
@@ -29,16 +35,13 @@ const FieldSettings = ({ fieldValue, fieldSettings, sectionSettings, onSettingCh
     }
 
     const tabsUpdateHandler = (key, value) => {
-        if (sectionSettings && sectionSettings[key] && sectionSettings[key] === value) {
-            return;
-        }
-
         if ('header_controls' === key) {
             dispatch(resetSectionSettings());
-            dispatch(updateSectionSettings(key, value));
-            return;
         }
 
+        const handle = 'Dragwyb/Editor/' + selectedTab + '/Control_Update/' + key;
+
+        DragwybBuilder.Hooks.doAction(handle);
         dispatch(updateSectionSettings(key, value));
     }
 
@@ -59,7 +62,7 @@ const FieldSettings = ({ fieldValue, fieldSettings, sectionSettings, onSettingCh
             return;
         }
 
-        if (!fieldSettings.controls[key].type) {
+        if (!toolbarSettings.controls[key].type) {
             return;
         }
 
@@ -68,16 +71,16 @@ const FieldSettings = ({ fieldValue, fieldSettings, sectionSettings, onSettingCh
 
     return (
         <Panel
-            title={`${fieldSettings.label} ${DragwybBuilder.i18n.settings}`}
+            title={`${toolbarSettings.label} ${DragwybBuilder.i18n.settings}`}
             onClose={onClose}
         >
-            {fieldSettings?.controls?.header_controls &&
+            {toolbarSettings?.controls?.header_controls &&
                 <div className='field-header_controls'>
                     <RenderControl
+                        selectedTab={selectedTab}
                         controlKey={'header_controls'}
-                        settings={fieldSettings.controls.header_controls}
-                        fieldValue={fieldValue}
-                        sectionSettings={sectionSettings}
+                        settings={toolbarSettings.controls.header_controls}
+                        fieldValue={toolbarValue}
                         handleChange={handleChange}
                         defautlActiveSection={defautlActiveSection}
                         defautlActiveTab={defautlActiveTab}
@@ -85,14 +88,14 @@ const FieldSettings = ({ fieldValue, fieldSettings, sectionSettings, onSettingCh
                 </div>
             }
             <div className="field-settings">
-                {Object.keys(fieldSettings.controls).map(key => (
+                {Object.keys(toolbarSettings.controls).map(key => (
                     <>
                         {key === 'header_controls' ? null
                             : <RenderControl
+                                selectedTab={selectedTab}
                                 controlKey={key}
-                                settings={fieldSettings.controls[key]}
-                                fieldValue={fieldValue}
-                                sectionSettings={sectionSettings}
+                                settings={toolbarSettings.controls[key]}
+                                fieldValue={toolbarValue}
                                 handleChange={handleChange}
                                 defautlActiveSection={defautlActiveSection}
                                 defautlActiveTab={defautlActiveTab}

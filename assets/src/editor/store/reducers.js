@@ -147,6 +147,10 @@ export default function reducer(state = initialState, action) {
             };
 
         case UPDATE_SECTION_SETTINGS:
+            if(state.sectionSettings && state.sectionSettings[action.payload.Id] && state.sectionSettings[action.payload.Id] === action.payload.value){
+                return state;
+            }
+
             return {
                 ...state,
                 sectionSettings: {
@@ -156,6 +160,11 @@ export default function reducer(state = initialState, action) {
             };
 
         case RESET_SECTION_SETTINGS:
+            
+            if(Object.keys(state.sectionSettings || {}).length < 1){
+                return state;
+            }
+
             return {
                 ...state,
                 sectionSettings: {}
@@ -206,6 +215,8 @@ export default function reducer(state = initialState, action) {
 
         case RESET_POPOVER_CONTROLS:
             {
+                if(Object.keys(state.popoverControls).length < 1) return state;
+
                 return {
                     ...state,
                     popoverControls: {}
@@ -213,18 +224,27 @@ export default function reducer(state = initialState, action) {
             }
 
         case UPDATE_SELECTED_SETTING_ID:
+
+            if(state.selectedSettingId === action.payload) return state;
+
             return {
                 ...state,
                 selectedSettingId: action.payload
             }
 
         case UPDATE_ACTIVE_TOOLBAR:
+
+            if(state.activeToolbar === action.payload) return state;
+
             return {
                 ...state,
                 activeToolbar: action.payload
             }
 
         case UPDATE_PREVIEW_MODE:
+
+            if(state.previewMode === action.payload) return state;
+
             return {
                 ...state,
                 previewMode: action.payload

@@ -1,19 +1,14 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-    SortableContext,
-    useSortable,
-    verticalListSortingStrategy
-} from '@dnd-kit/sortable';
 import { useDraggable, useDroppable } from '../components/Common';
-
-import { CSS } from '@dnd-kit/utilities';
 import * as Fields from './Fields';
 import { duplicateField } from '../store/actions';
 import { Button } from '../components/Common';
 import { __ } from '@wordpress/i18n';
 
-const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, onFieldSelect, onDuplicate, onDelete, errors, selectedField }) => {
+const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, onFieldSelect, onDuplicate, onDelete, errors }) => {
+    const selectedField = useSelector(state => state.selectedSettingId);
+    
     const { setNodeRef: dropRef, isOver } = useDroppable(
         {
             id: `canvas-drop-field-${field._id}`,
@@ -40,7 +35,7 @@ const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, on
 
     let wrapperClass = 'field-wrapper';
 
-    if (selectedField?._id === field._id) {
+    if (selectedField && selectedField === field._id) {
         wrapperClass += ' selected';
     }
 
@@ -48,12 +43,18 @@ const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, on
         wrapperClass += ' dragwyb-start-drag'
     }
 
+    const onFieldSelectHandler=(id)=>{
+        if(selectedField !== id){
+            onFieldSelect({id})
+        }
+    }
+
     return <>
         {dropIndex === index && 'bottom' !== dropIndicatorPosition && <span className='dragwyb-editor-indicator'></span>}
         <div
             ref={setNodeRef}
             className={wrapperClass}
-            onClick={() => onFieldSelect({id: field._id})}
+            onClick={() => onFieldSelectHandler(field._id)}
             {...listeners}
             {...attributes}
             id={`field-wrapp-${field._id}`}
@@ -88,7 +89,8 @@ const RenderItem = ({ field, values, index, dropIndex, dropIndicatorPosition, on
     </>
 }
 
-const EmptyCanvas = ({ activeTab, setActiveTab, isOver }) => {
+const EmptyCanvas = ({ setActiveTab, isOver }) => {
+    const activeTab = useSelector(state => state.activeToolbar);
 
     let emptyMessage = __('Begin creating your form by dragging fields from the sidebar, or simply click a field to add it.', 'dragwyb-form-builder');
 
@@ -113,10 +115,11 @@ const EmptyCanvas = ({ activeTab, setActiveTab, isOver }) => {
     </div>
 }
 
-const Canvas = ({ selectedField, onFieldSelect, values, errors, Utils, dropIndex, dropIndicatorPosition, activeTab, setActiveTab }) => {
-
+const Canvas = ({ onFieldSelect, Utils, dropIndex, dropIndicatorPosition, setActiveTab }) => {
+    const values = useSelector(state => state.values); // Assuming values are stored in Redux
     const formData = useSelector(state => state.form); // Assuming fields are stored in Redux
     const fields = formData.fields; // Assuming fields are stored in Redux
+    const errors = useSelector(state => state.errors); // Assuming errors are stored in Redux
 
     const { setNodeRef, isOver } = useDroppable(
         {
@@ -173,7 +176,6 @@ const Canvas = ({ selectedField, onFieldSelect, values, errors, Utils, dropIndex
                     {fields.map((field, index) =>
                         <RenderItem
                             field={field}
-                            selectedField={selectedField}
                             values={values}
                             onFieldSelect={onFieldSelect}
                             onDuplicate={(field) => handleDuplicateField(field, index)}
@@ -188,7 +190,7 @@ const Canvas = ({ selectedField, onFieldSelect, values, errors, Utils, dropIndex
                 </>
             }
             {(!fields || fields.length === 0) && (
-                <EmptyCanvas activeTab={activeTab} setActiveTab={setActiveTab} isOver={isOver}/>
+                <EmptyCanvas setActiveTab={setActiveTab} isOver={isOver}/>
             )}
             </div>
         </div>

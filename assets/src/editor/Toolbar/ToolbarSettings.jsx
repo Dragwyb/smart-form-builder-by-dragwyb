@@ -8,7 +8,13 @@ import DragwybToolbarBase from "../toolbarBase"
 import { Utils as Helper, AddField } from '../components/Utils';
 import { useDraggable, useDroppable } from "../components/Common";
 
-const ToolbarSettings = ({ setting, selectedToolbar = false, setActiveTab }) => {
+const ToolbarSettings = ({ setActiveTab }) => {
+    const setting = useSelector(state => state.activeToolbar);
+    const selectedToolbar = useSelector(state => state.selectedSettingId);
+
+    if(!setting){
+        return null;
+    }
 
     const dispatch = useDispatch();
     const store = useStore();
@@ -22,10 +28,11 @@ const ToolbarSettings = ({ setting, selectedToolbar = false, setActiveTab }) => 
 
     Object.freeze(extensibleUtils);
 
-    const formData = useSelector(state => state.form);
+    const formData = state.form;
     const toolbarData = selectedToolbar && formData[setting];
     const toolbarSettings = DragwybEditor[setting];
-    const sectionSettings = useSelector(state => state.sectionSettings);
+    // const sectionSettings = useSelector(state => state.sectionSettings);
+    const sectionSettings = state.sectionSettings;
 
     const updateToolBar = ({ key, value, toolbarObj }) => {
 
@@ -52,8 +59,9 @@ const ToolbarSettings = ({ setting, selectedToolbar = false, setActiveTab }) => 
         <div className="dragwyb-controls" id={`dragwyb-controls__${setting}`}>{toolBarObject.render()}</div>
         {settings && settings.controls && <div className="dragwyb-editor__settings">
             <FieldSettings
-                fieldValue={toolbarValue}
-                fieldSettings={settings}
+                selectedTab={setting}
+                toolbarValue={toolbarValue}
+                toolbarSettings={settings}
                 onClose={() => setActiveTab(setting)}
                 sectionSettings={sectionSettings}
                 onSettingChange={toolBarObject.updateToolbarHandler}

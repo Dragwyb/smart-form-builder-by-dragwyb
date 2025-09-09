@@ -1,6 +1,8 @@
+import { useSelector } from "react-redux";
 import { Button } from "../components/Common";
 
-const ToolBar = ({ activeTab, setActiveTab, setSettingId }) => {
+const ToolBar = ({ setActiveTab, setSettingId }) => {
+    const activeTab = useSelector(state => state.activeToolbar);
     const toolbars=DragwybEditor.EditorToolbars.toolbars;
 
     if(!toolbars || Object.keys(toolbars).length < 1){

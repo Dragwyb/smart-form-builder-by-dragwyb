@@ -1,6 +1,6 @@
 class Hooks {
     constructor() {
-        this.Action = {};
+        this.Actions = {};
         this.Filters = {};
     }
 
@@ -15,7 +15,7 @@ class Hooks {
             return;
         }
 
-        this.#addUserCallback(handle, callback, this.Action);
+        this.#addUserCallback(handle, callback, this.Actions);
     }
 
     addFilter = (handle = false, callback = () => { }) => {
@@ -42,7 +42,7 @@ class Hooks {
             args = false;
         }
 
-        this.#usercallBack(handle, this.Action, args);
+        this.#usercallBack(handle, this.Actions, args);
     }
 
     applyFilter = (handle = false, ...args) => {
@@ -62,6 +62,45 @@ class Hooks {
         }
 
         return data.found;
+    }
+
+    hasAction=(handle)=>{
+        return this.#handleExists(handle, this.Actions);
+    }
+    
+    hasFilter=(handle)=>{
+        return this.#handleExists(handle, this.Filters);
+    }
+
+    #handleExists=(handle, object)=>{
+        const handleKeys = handle.split('/');
+        const lastKey=handleKeys[handleKeys.length - 1];
+
+        if (handleKeys[0] === 'Dragwyb') {
+            handleKeys.shift();
+        }
+
+        handleKeys.pop();
+
+        let currentObject = object;
+
+        for (const key of handleKeys) {
+            if (currentObject?.[key]) {
+                currentObject = currentObject[key];
+            } else {
+                currentObject = {};
+                break;
+            }
+        }
+
+        return currentObject.hasOwnProperty(lastKey);
+    }
+
+    removeAction=(handle)=>{
+        if(this.Actions && this.Actions[handle]) delete this.Actions[handle];
+    }
+    removeFilter=(handle)=>{
+        if(this.Filters && this.Filters[handle]) delete this.Filters[handle];
     }
 
     #addUserCallback = (handle = '', callback = () => { }, object) => {

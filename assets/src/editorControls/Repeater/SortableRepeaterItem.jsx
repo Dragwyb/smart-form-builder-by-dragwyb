@@ -32,7 +32,7 @@ const renderControls = ({
   if (!Control || (!Control.prototype instanceof DragwybControlBase || !Control.prototype instanceof DragwybEditor.editor.extends.ControlBase)) {
     Control = DragwybEditor.editor.extends.ControlBase;
   }
-  // 
+   
   return <div key={key} className="setting-row" dataType={settings.type}><Control
     key={key}
     id={key}

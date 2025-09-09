@@ -16,18 +16,11 @@ import Header from './header'
 import ToolbarSettings from '../Toolbar/ToolbarSettings';
 
 const Editor = () => {
-    const activeTab = useSelector(state => state.activeToolbar);
-    const selectedSettingId = useSelector(state => state.selectedSettingId);
     const previewMode = useSelector(state => state.previewMode);
     const [activeDrag, setActiveDrag] = useState(null);
     const [sidebarDrag, setSidebarDrag] = useState(null);
     const [dropIndicatorPosition, setDropIndicatorPosition] = useState(false);
     const [dropIndex, setDropIndex] = useState(false);
-
-    const values = useSelector(state => state.values); // Assuming values are stored in Redux
-
-    const errors = useSelector(state => state.errors); // Assuming errors are stored in Redux
-    const sectionSettings = useSelector(state => state.sectionSettings);
 
     const dispatch = useDispatch();
 
@@ -37,21 +30,22 @@ const Editor = () => {
 
     const Utils = Helper(state, dispatch);
 
-    useEffect(() => {
-        if (sectionSettings) {
-            dispatch(resetSectionSettings());
-        }
-    }, [selectedSettingId])
+    const resetSection=()=>{
+        dispatch(resetSectionSettings());
+    };
 
     const setSelectedSettingId = ({id, tab= 'fields'}) => {
         Utils.setSelectedSettingId({ value: id });
-        const defaultToolbar = DragwybEditor?.EditorToolbars?.Default ?? false;
+        resetSection();
 
+        const defaultToolbar = DragwybEditor?.EditorToolbars?.Default ?? false;
         Utils.setActiveTab({ value: false === id ? defaultToolbar : tab });
     }
 
     const setActiveTabHandler = (value) => {
         Utils.setSelectedSettingId({ value: false });
+        resetSection();
+
         Utils.setActiveTab({ value: value });
         Utils.setPreviewMode({ value: false });
     }
@@ -196,7 +190,7 @@ const Editor = () => {
             <Header/>
             <div className="dragwyb-editor__body">
                 {previewMode ? (
-                    <Preview values={values} errors={errors}/>
+                    <Preview/>
                 ) : (
                     <>
                         <DndContext
@@ -208,27 +202,21 @@ const Editor = () => {
                             onDragMove={handleDragMove}
                         >
                             <div className="dragwyb-editor__sidebar">
-                                {activeTab && <ToolbarSettings
-                                    setting={activeTab}
-                                    selectedToolbar={selectedSettingId}
+                                <ToolbarSettings
                                     setActiveTab={setActiveTabHandler}
-                                />}
+                                />
                             </div>
                             <div className="dragwyb-editor__main">
                                 <Canvas
-                                    selectedSettingId={selectedSettingId}
                                     onFieldSelect={setSelectedSettingId}
-                                    values={values}
-                                    errors={errors}
                                     Utils={Utils}
                                     sidebarDrag={sidebarDrag}
                                     dropIndex={dropIndex}
                                     dropIndicatorPosition={dropIndicatorPosition}
-                                    activeTab={activeTab}
                                     setActiveTab={setActiveTabHandler}
                                 />
                             </div>
-                            <ToolBar activeTab={activeTab} setActiveTab={setActiveTabHandler} setSettingId={setSelectedSettingId}/>
+                            <ToolBar setActiveTab={setActiveTabHandler} setSettingId={setSelectedSettingId}/>
                             {activeDrag && <SidebarFieldOverlay data={activeDrag} />}
                         </DndContext>
                     </>

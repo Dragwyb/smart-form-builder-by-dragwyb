@@ -52,6 +52,11 @@ class DragwybControlBase extends Component {
         this.Utils=props.Utils;
     }
 
+    updateControlHandler(key, value){
+        this.setState({value})
+        this.updateControls(key, value);
+    }
+
     updateControls(key, value) {
         this.#triggerOnChange(key, value)
     }
