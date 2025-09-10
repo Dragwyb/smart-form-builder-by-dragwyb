@@ -175,6 +175,7 @@ const Canvas = ({ onFieldSelect, Utils, dropIndex, dropIndicatorPosition, setAct
                 <>
                     {fields.map((field, index) =>
                         <RenderItem
+                            key={field._id}
                             field={field}
                             values={values}
                             onFieldSelect={onFieldSelect}

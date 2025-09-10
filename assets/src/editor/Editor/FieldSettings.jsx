@@ -92,6 +92,7 @@ const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, sectionSett
                     <>
                         {key === 'header_controls' ? null
                             : <RenderControl
+                                key={key}
                                 selectedTab={selectedTab}
                                 controlKey={key}
                                 settings={toolbarSettings.controls[key]}
