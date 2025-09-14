@@ -149,19 +149,37 @@ abstract class Control_Base
         return $this->$sanitize_setting($value);
     }
 
+    protected function string_sanitize(string $value)
+    {
+        return $this->string_setting_sanitize($value);
+    }
+
     private function string_setting_sanitize(string $value)
     {
         return sanitize_text_field($value);
+    }
+
+    protected function boolean_sanitize(bool $value)
+    {
+        return $this->boolean_setting_sanitize($value);
     }
 
     private function boolean_setting_sanitize(bool $value)
     {
         return (bool) $value;
     }
+
+    protected function number_sanitize(int $value)
+    {
+        return $this->number_setting_sanitize($value);
+    }
+
     private function number_setting_sanitize(int $value)
     {
-        return (int) $value;
+        // Keep decimals if float, otherwise cast to int
+        return is_float($value) !== false ? floatval($value) : intval($value);
     }
+
     private function conditions_setting_sanitize(array $conditions)
     {
         $condition = [];
@@ -171,6 +189,28 @@ abstract class Control_Base
         }
 
         return $condition;
+    }
+
+    protected function range_sanitize(array $range)
+    {
+        return $this->range_setting_sanitize($range);
+    }
+
+    private function range_setting_sanitize(array $range): array
+    {
+        $filtered_range = array();
+
+        foreach ($range as $unit => $data) {
+            if (is_array($data) & count($data) > 0) {
+                $filtered_range[$this->string_setting_sanitize($unit)] = array();
+
+                foreach ($data as $key => $value) {
+                    $filtered_range[$this->string_setting_sanitize($unit)][$this->string_setting_sanitize($key)] = $this->number_setting_sanitize($value);
+                }
+            }
+        }
+
+        return $filtered_range;
     }
 
     public function __destruct()

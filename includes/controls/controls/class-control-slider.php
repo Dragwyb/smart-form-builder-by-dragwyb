@@ -18,6 +18,7 @@ class Control_Slider extends Control_Base
         return array(
             'name' => 'string',
             'label' => 'string',
+            'range' => 'range',
             'default' => 'custom',
             'conditions' => 'conditions',
             'units' => 'custom',
@@ -38,16 +39,37 @@ class Control_Slider extends Control_Base
 
     protected function sanitize_control($value)
     {
-        return sanitize_text_field($value);
+        $filtered_value = $value;
+        if (is_array($filtered_value) && count($filtered_value) > 1) {
+            $filtered_array = array();
+            $allowed_key = ['unit', 'size'];
+
+            foreach ($filtered_value as $key => $value) {
+                if (in_array($key, $allowed_key)) {
+                    $filtered_array[$this->string_sanitize($key)] = 'unit' === $key ? $this->string_sanitize($value) : $this->number_sanitize($value);
+                }
+            };
+
+            return $filtered_value;
+        }
+
+        return sanitize_text_field($filtered_value);
     }
 
     protected function default_setting_sanitize($value)
     {
-        return $value;
-    }
+        $filtered_value = array('unit' => 'px', 'size' => 0);
 
-    protected function untis_setting_sanitize($value)
-    {
-        return $value;
+        if (is_array($value)) {
+            foreach ($value as $key => $value) {
+                if ($key === 'unit') {
+                    $filtered_value[$this->string_sanitize($key)] = $this->string_sanitize($value);
+                } else {
+                    $filtered_value[$this->string_sanitize($key)] = $this->number_sanitize($value);
+                }
+            }
+        }
+
+        return $filtered_value;
     }
 }
