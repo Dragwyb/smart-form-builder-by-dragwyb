@@ -14,7 +14,7 @@ class Register_Controls
 
     private array $controls = [];
 
-    private array $default_controls = [Controls::CHECKBOX, Controls::COLOR, Controls::NUMBER, Controls::RADIO, Controls::REPEATER, Controls::SECTION, Controls::SELECT, Controls::SLIDER, Controls::TABS, Controls::TAB, Controls::TEXT, Controls::TEXTAREA, Controls::POPOVER_TOGGLE];
+    private array $default_controls = [Controls::SWITCHER, Controls::COLOR, Controls::NUMBER, Controls::RADIO, Controls::REPEATER, Controls::SECTION, Controls::SELECT, Controls::SLIDER, Controls::TABS, Controls::TAB, Controls::TEXT, Controls::TEXTAREA, Controls::POPOVER_TOGGLE];
 
     public static function instance(): self
     {
@@ -42,6 +42,8 @@ class Register_Controls
 
             if (class_exists($class)) {
                 $this->register_control(new $class());
+            }else{
+                var_dump($class);
             }
         }
         // Register more controls here

@@ -91,9 +91,29 @@ class Field_Text extends Field_Base
             ]
         ]);
         $this->add_control('text_required', [
-            'type' => Controls::CHECKBOX,
+            'type' => Controls::SWITCHER,
             'label' => __('Required', 'dragwyb-form-builder'),
-            'default' => false,
+            'default' => 'no',
+        ]);
+        $this->add_control('text_spacing', [
+            'type' => Controls::SLIDER,
+            'label' => __('Spacing', 'dragwyb-form-builder'),
+            'range' => [
+                'px' => [
+                    'min' => 0,
+                    'max' => 1000,
+                    'step' => 5,
+                ],
+                '%' => [
+                    'min' => 0,
+                    'max' => 100,
+                    'step'=>5
+                ],
+            ],
+            'default' => [
+                'unit' => '%',
+                'size' => 50,
+            ],
         ]);
         $this->add_control('text_css_class', [
             'type' => Controls::TEXT,
@@ -133,6 +153,49 @@ class Field_Text extends Field_Base
             'label' => __('CSS Class', 'dragwyb-form-builder'),
             'default' => '',
         ]);
+
+        $this->add_control('text_style_popover_toggle', [
+            'type' => Controls::POPOVER_TOGGLE,
+            'label' => __('Popover Toggle', 'dragwyb-form-builder'),
+            'icon' => 'fa-solid fa-pen'
+        ]);
+
+        $this->start_popover();
+
+        $this->add_control('text_popover_hover_color', [
+            'type' => Controls::COLOR,
+            'label' => __('Field Label Color', 'dragwyb-form-builder'),
+            'default' => '',
+            'selectoR' => array(
+                '{{WRAPPER}} .form-text input: {color: {{VALUE}}}',
+            )
+        ]);
+        $this->add_control('text_popover_hover_color_one', [
+            'type' => Controls::COLOR,
+            'label' => __('Field Label Color', 'dragwyb-form-builder'),
+            'default' => '',
+            'selectoR' => array(
+                '{{WRAPPER}} .form-text input: {color: {{VALUE}}}',
+            )
+        ]);
+        $this->add_control('text_popover_hover_color_two', [
+            'type' => Controls::COLOR,
+            'label' => __('Field Label Color', 'dragwyb-form-builder'),
+            'default' => '',
+            'selectoR' => array(
+                '{{WRAPPER}} .form-text input: {color: {{VALUE}}}',
+            )
+        ]);
+        $this->add_control('text_popover_hover_color_three', [
+            'type' => Controls::COLOR,
+            'label' => __('Field Label Color', 'dragwyb-form-builder'),
+            'default' => '',
+            'selectoR' => array(
+                '{{WRAPPER}} .form-text input: {color: {{VALUE}}}',
+            )
+        ]);
+
+        $this->end_popover();
         $this->end_section();
     }
 
@@ -140,28 +203,30 @@ class Field_Text extends Field_Base
     {
         $field_data = $this->get_field_settings();
 
-        $id = 'field_' . uniqid();
-        $required = !empty($field_data['text_required']);
+        $id       = 'field_' . uniqid();
+        $required = !empty($this->field_key_exist($field_data, 'required', ''));
+        $icon     = $this->field_key_exist($field_data, 'text_icon', '');
+        $label    = $this->field_key_exist($field_data, 'text_label', '');
+        $placeholder = $this->field_key_exist($field_data, 'text_placeholder', '');
+
 ?>
-        <div class="dragwyb-field-wrapper <?php echo esc_attr($field_data['text_css_class'] ?? ''); ?>">
-            <label for="<?php echo esc_attr($id); ?>">
-                <?php echo esc_html($field_data['text_label']); ?>
-                <?php if ($required): ?>
-                    <span class="required">*</span>
+        <div class="dragwyb-field-wrapper dragwyb-text-field">
+            <?php if (!empty($label)) : ?>
+                <label for="<?php echo esc_attr($id); ?>" class="dragwyb-label">
+                    <?php echo esc_html($label); ?>
+                    <?php if ($required): ?><span class="required">*</span><?php endif; ?>
+                </label>
+            <?php endif; ?>
+
+            <div class="dragwyb-input-wrapper <?php echo !empty($icon) ? 'has-icon' : ''; ?>">
+                <?php if (!empty($icon)): ?>
+                    <span class="dragwyb-input-icon"><i class="<?php echo esc_attr($icon); ?>"></i></span>
                 <?php endif; ?>
-            </label>
-            <input type="text"
-                id="<?php echo esc_attr($id); ?>"
-                name="<?php echo esc_attr($id); ?>"
-                value="<?php echo esc_attr($field_data['default_value'] ?? ''); ?>"
-                placeholder="<?php echo esc_attr($field_data['placeholder'] ?? ''); ?>"
-                <?php echo $required ? 'required' : ''; ?>
-                <?php if (!empty($field_data['min_length'])): ?>
-                minlength="<?php echo esc_attr($field_data['min_length']); ?>"
-                <?php endif; ?>
-                <?php if (!empty($field_data['max_length'])): ?>
-                maxlength="<?php echo esc_attr($field_data['max_length']); ?>"
-                <?php endif; ?>>
+                <input type="text" id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($id); ?>"
+                    placeholder="<?php echo esc_attr($placeholder); ?>"
+                    <?php echo $required ? 'required' : ''; ?>
+                    class="dragwyb-input" />
+            </div>
         </div>
 <?php
     }

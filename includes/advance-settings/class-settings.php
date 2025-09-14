@@ -63,15 +63,15 @@ class Settings extends Register_Controls_Base
         ]);
 
         $this->add_control('enable_popup', [
-            'type'    => Controls::CHECKBOX,
+            'type'    => Controls::SWITCHER,
             'label'   => __('Open in Popup', 'dragwyb-form-builder'),
-            'default' => false,
+            'default' => 'no',
         ]);
 
         $this->add_control('multi_step', [
-            'type'    => Controls::CHECKBOX,
+            'type'    => Controls::SWITCHER,
             'label'   => __('Enable Multi-Step Form', 'dragwyb-form-builder'),
-            'default' => false,
+            'default' => 'no',
         ]);
 
         $this->end_section();
@@ -82,15 +82,15 @@ class Settings extends Register_Controls_Base
         ]);
 
         $this->add_control('ajax_submit', [
-            'type'    => Controls::CHECKBOX,
+            'type'    => Controls::SWITCHER,
             'label'   => __('Enable AJAX Submission', 'dragwyb-form-builder'),
-            'default' => true,
+            'default' => 'no',
         ]);
 
         $this->add_control('save_progress', [
-            'type'    => Controls::CHECKBOX,
+            'type'    => Controls::SWITCHER,
             'label'   => __('Save & Continue Later', 'dragwyb-form-builder'),
-            'default' => false,
+            'default' => 'no',
         ]);
 
         $this->end_section();
@@ -101,21 +101,21 @@ class Settings extends Register_Controls_Base
         ]);
 
         $this->add_control('gdpr_consent', [
-            'type'    => Controls::CHECKBOX,
+            'type'    => Controls::SWITCHER,
             'label'   => __('Enable GDPR Consent Field', 'dragwyb-form-builder'),
             'default' => false,
         ]);
 
         $this->add_control('honeypot', [
-            'type'    => Controls::CHECKBOX,
+            'type'    => Controls::SWITCHER,
             'label'   => __('Enable Honeypot Protection', 'dragwyb-form-builder'),
-            'default' => true,
+            'default' => 'no',
         ]);
 
         $this->add_control('recaptcha', [
-            'type'    => Controls::CHECKBOX,
+            'type'    => Controls::SWITCHER,
             'label'   => __('Enable reCAPTCHA (if configured)', 'dragwyb-form-builder'),
-            'default' => false,
+            'default' => 'no',
         ]);
 
         $this->end_section();
