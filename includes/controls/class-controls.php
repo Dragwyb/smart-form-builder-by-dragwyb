@@ -9,9 +9,10 @@ use Dragwyb\Form_Builder\Includes\Controls\Controls\Control_Base;
 
 class Controls
 {
-    const CHECKBOX='checkbox';
+    const SWITCHER='switcher';
     const COLOR='color';
     const NUMBER='number';
+    const POPOVER_TOGGLE='popover-toggle';
     const RADIO='radio';
     const REPEATER='repeater';
     const SECTION='section';
@@ -21,7 +22,6 @@ class Controls
     const TAB='tab';
     const TEXT='text';
     const TEXTAREA='textarea';
-    const POPOVER_TOGGLE='popover-toggle';
     
     private static $instance = null;
     private $controls = [];
