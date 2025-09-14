@@ -11,7 +11,9 @@ class RepeaterControl extends DragwybEditor.editor.extends.ControlBase {
         const { settings, id } = this;
         const { value: repeaterItems, tabsSettings = {} } = this.state;
 
+        
         const updateHandler = (id, item) => {
+            this.setState({value: item})
             this.updateControls(id, item)
         }
 
