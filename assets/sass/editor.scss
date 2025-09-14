@@ -18,6 +18,8 @@
 --canvas-bg-color: #081726;
 --canvas-inner-clor: #fff;
 --panel-width: 300px;
+
+--cubic-transition: all cubic-bezier(0.4, 0, 0.2, 1) 150ms;
 }
 
 // Mixins
@@ -156,6 +158,15 @@ body {
     display: flex;
     flex-direction: column;
 
+    .ui-resizable-handle{
+        position: absolute;
+        cursor: ew-resize;
+        height: 100%;
+        top: 0;
+        width: 10px;
+        right: -5px;
+    }
+
     &__header {
         background: var(--topbar-bg-color);
         border-bottom: 1px solid var(--border-color);
@@ -282,6 +293,7 @@ body {
         border-right: 1px solid var(--border-color);
         box-sizing: border-box;
         height: 100%;
+        position: relative;
     }
 
     &__main {
@@ -294,7 +306,7 @@ body {
 
     &__settings {
         width: var(--panel-width);
-        background: #fff;
+        background: #f1f5f9;
         height: calc(100% - 47px);
     }
 
@@ -540,33 +552,6 @@ body {
     }
 }
 
-// Tabs
-.dragwyb-tabs {
-    &__nav {
-        display: flex;
-        border-bottom: 1px solid var(--border-color);
-        background: #f8f9fa;
-
-        .tab-button {
-            padding: 12px 20px;
-            border: none;
-            background: none;
-            cursor: pointer;
-            color: #666;
-            border-bottom: 2px solid transparent;
-
-            &.active {
-                color: var(--primary-color);
-                border-bottom-color: var(--primary-color);
-            }
-        }
-    }
-
-    &__content {
-        padding: 20px;
-    }
-}
-
 // Panel
 .dragwyb-panel {
     height: 100%;
@@ -598,7 +583,7 @@ body {
 
     &__content {
         font-family: "Segoe UI", Tahoma, sans-serif;
-        background-color: #f9f9fb;
+        // background-color: #f9f9fb;
         overflow-y: auto;
         height: calc(100% - 100px);
         
@@ -614,12 +599,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    margin-bottom: 25px;
-
-    &:last-child{
-        margin-bottom: 0px;
-    }
-
     
     &[data-type="popover-toggle"]{
         margin-bottom: 10px;

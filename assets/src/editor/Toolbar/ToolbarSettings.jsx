@@ -1,5 +1,5 @@
 import { __, sprintf } from "@wordpress/i18n";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useStore, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import { useSelector } from 'react-redux';
@@ -11,10 +11,12 @@ import { useDraggable, useDroppable } from "../components/Common";
 const ToolbarSettings = ({ setActiveTab }) => {
     const setting = useSelector(state => state.activeToolbar);
     const selectedToolbar = useSelector(state => state.selectedSettingId);
-
-    if(!setting){
+    
+    if (!setting) {
         return null;
     }
+
+    const sidebarRef = useRef(null);
 
     const dispatch = useDispatch();
     const store = useStore();
@@ -31,12 +33,39 @@ const ToolbarSettings = ({ setActiveTab }) => {
     const formData = state.form;
     const toolbarData = selectedToolbar && formData[setting];
     const toolbarSettings = DragwybEditor[setting];
-    // const sectionSettings = useSelector(state => state.sectionSettings);
     const sectionSettings = state.sectionSettings;
+
+    useEffect(() => {
+        const $sidebar = window.jQuery(sidebarRef.current);
+        const rootElement=document.querySelector('.dragwyb-editor');
+        if ($sidebar.length) {
+          $sidebar.resizable({
+            helper: "resizable-helper",
+            minWidth: 200,
+            maxWidth: 600,
+            resize: function (event, ui) {
+              // ✅ Update CSS variable on resize
+              rootElement.style.setProperty(
+                "--panel-width",
+                ui.size.width + "px"
+              );
+            },
+            stop: function (event, ui) {
+              $sidebar[0].style='';
+            },
+          });
+        }
+    
+        return () => {
+          if ($sidebar.length && $sidebar.data("ui-resizable")) {
+            $sidebar.resizable("destroy");
+          }
+        };
+      }, []);
 
     const updateToolBar = ({ key, value, toolbarObj }) => {
 
-        if(!DragwybEditor.EditorToolbars || !DragwybEditor.EditorToolbars.toolbars || !DragwybEditor.EditorToolbars.toolbars[key]){
+        if (!DragwybEditor.EditorToolbars || !DragwybEditor.EditorToolbars.toolbars || !DragwybEditor.EditorToolbars.toolbars[key]) {
             return;
         }
 
@@ -55,7 +84,7 @@ const ToolbarSettings = ({ setActiveTab }) => {
     const toolbarValue = toolBarObject.getToolbarValue();
     const settings = toolBarObject.getToolbarSettings();
 
-    return <>
+    return <div className="dragwyb-editor__sidebar" ref={sidebarRef} >
         <div className="dragwyb-controls" id={`dragwyb-controls__${setting}`}>{toolBarObject.render()}</div>
         {settings && settings.controls && <div className="dragwyb-editor__settings">
             <FieldSettings
@@ -67,7 +96,7 @@ const ToolbarSettings = ({ setActiveTab }) => {
                 onSettingChange={toolBarObject.updateToolbarHandler}
             />
         </div>}
-    </>
+    </div>
 };
 
 ToolbarSettings.propTypes = {

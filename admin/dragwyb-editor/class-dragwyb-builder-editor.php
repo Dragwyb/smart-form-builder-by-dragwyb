@@ -143,13 +143,13 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
 
             wp_enqueue_script('dragwyb-form-core');
 
-            $dependencies = array('dragwyb-form-core');
+            $dependencies = array('jquery', 'dragwyb-form-core', 'jquery-ui-resizable', 'wp-element', 'wp-components', 'wp-i18n');
 
             // Enqueue React and dependencies
             wp_enqueue_script(
                 'dragwyb-form-editor',
                 DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editor/editor.js',
-                array_merge($dependencies, ['wp-element', 'wp-components', 'wp-i18n']),
+                $dependencies,
                 DRAGWYB_FORM_BUILDER_VERSION,
                 true
             );
