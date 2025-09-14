@@ -1,66 +1,411 @@
-// === Section Control (Accordion-style like Elementor/Divi) ===
-.section-control {
-  position: relative;
-  padding: 12px 16px;
-  background: #fff;
-  border: 1px solid #dcdfe3;
-  font-weight: 600;
-  font-size: 14px;
-  border-radius: 4px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+.dragwyb-editor {
 
-  &::after {
-    content: '\25BC'; // Down arrow
-    font-size: 12px;
-    color: #666;
-    transition: transform 0.3s ease;
-  }
+  /* Base control wrapper */
+  .dragwyb-control {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #333;
+    padding-block: 0.75rem;
 
-  &.section-active {
-    background: #eaf5fd;
-    border-color: #2271b1;
-    color: #2271b1;
 
-    &::after {
-      transform: rotate(180deg); // Up arrow
-      color: #2271b1;
+    &__label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #222;
+      margin-bottom: 0.5rem;
     }
   }
-}
 
-// === Tabs Control ===
-.tabs-control {
-  .tabs {
+  /* =========================
+     Text / Number / Textarea
+     ========================= */
+  .dragwyb-control--text,
+  .dragwyb-control--number,
+  .dragwyb-control--textarea {
+
+    .dragwyb-control__input,
+    .dragwyb-control__textarea {
+      width: 100%;
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: border-color 0.2s ease-in-out;
+
+      &:focus {
+        outline: none;
+        border-color: #0073e6;
+        box-shadow: 0 0 0 2px rgba(0, 115, 230, 0.2);
+      }
+    }
+
+    .dragwyb-control__textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+  }
+
+  /* =========================
+     Checkbox / Radio
+     ========================= */
+  .dragwyb-control--switcher {
     display: flex;
-    border: 1px solid #ccd0d4;
-    border-radius: 3px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
 
-    .tab {
-      padding: 6px 12px;
-      border: 0px solid #ccd0d4;
-      flex: 1 1 0;
-      transition: all 0.3s ease;
+    .dragwyb-control__label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #333;
+      margin-right: 10px;
+    }
+
+    .dragwyb-switcher {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+
+      input {
+        display: none;
+      }
+
+      .dragwyb-switcher__slider {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #ccc;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 500;
+        border-radius: 20px;
+        height: 24px;
+        transition: background-color 0.3s ease;
+        white-space: nowrap;
+        line-height: 1;
+        padding-left: 28px;
+        padding-right: 10px;
+
+        // dot/thumb
+        &::before {
+          content: "";
+          position: absolute;
+          left: 3px;
+          top: 3px;
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          background: #fff;
+          transition: transform 0.3s ease;
+        }
+      }
+
+      input:checked+.dragwyb-switcher__slider {
+        background-color: #0073e6;
+        padding-right: 28px;
+        padding-left: 10px;
+
+        &::before {
+          left: auto;
+          right: 3px;
+        }
+      }
+    }
+  }
+
+  /* =========================
+     Select
+     ========================= */
+  .dragwyb-control--select {
+    .dragwyb-control__select {
+      width: 100%;
+      padding: 6px 10px;
+      font-size: 14px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      background: #fff;
+      transition: border-color 0.2s ease-in-out;
+
+      &:focus {
+        outline: none;
+        border-color: #0073e6;
+        box-shadow: 0 0 0 2px rgba(0, 115, 230, 0.2);
+      }
+    }
+  }
+
+  .dragwyb-unit-selector {
+    position: relative;
+    display: inline-block;
+    font-size: 12px;
+    color: #333;
+
+    &__trigger {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 2px 6px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      color: #333;
+      border-radius: 4px;
+
+      &:hover {
+        background: #f0f0f0; // ✅ background only
+      }
+
+      span {
+        min-width: 20px;
+        text-align: center;
+      }
+    }
+
+    &__icon {
+      font-size: 14px;
+      transition: transform 0.2s ease;
+    }
+
+    &.is-open {
+      .dragwyb-unit-selector__icon {
+        transform: rotate(180deg);
+      }
+    }
+
+    &__list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      margin: 4px 0 0;
+      padding: 4px 0;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+      list-style: none;
+      min-width: 50px;
+      z-index: 10;
+    }
+
+    &__item {
+      padding: 4px 8px;
       cursor: pointer;
       text-align: center;
-      border-bottom-width: 2px;
-      border-bottom-color: transparent;
 
-      &:not(:first-child) {
-        border-left-width: 1px;
+      &:hover {
+        background: #f0f0f0;
       }
 
-      &.active,
-      &:hover {
-        background: var(--primary-light-color);
+      &.is-active {
+        font-weight: 600;
+        background: #e6f0ff;
       }
     }
   }
+
+  /* =========================
+     Slider
+     ========================= */
+  .dragwyb-control--slider {
+    margin-bottom: 16px;
+
+    .dragwyb-control__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+
+      .dragwyb-control__label {
+        font-size: 13px;
+        font-weight: 500;
+        color: #333;
+      }
+    }
+
+    .dragwyb-slider__row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .dragwyb-slider__input {
+        flex: 1;
+        appearance: none;
+        height: 4px;
+        background: #ddd;
+        border-radius: 4px;
+        outline: none;
+        cursor: pointer;
+
+        &::-webkit-slider-thumb {
+          appearance: none;
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          background: #0073e6;
+          cursor: pointer;
+        }
+
+        &::-moz-range-thumb {
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          background: #0073e6;
+          cursor: pointer;
+        }
+      }
+
+      .dragwyb-slider__number {
+        width: 60px;
+        padding: 4px 6px;
+        font-size: 13px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: right;
+
+        &:focus {
+          border-color: #0073e6;
+          outline: none;
+        }
+      }
+    }
+  }
+
+  /* =========================
+     Color
+     ========================= */
+  .dragwyb-control--color {
+    .dragwyb-color__wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .dragwyb-control__color {
+        width: 50px;
+        height: 32px;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        background: none;
+      }
+
+      .dragwyb-color__preview {
+        width: 24px;
+        height: 24px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+    }
+  }
+
+  /* =========================
+     Section Control
+     ========================= */
+  .dragwyb-control--section {
+    transition: var(--cubic-transition);
+    padding-block: 0.75rem;
+    display: flex;
+    flex: 1 1 0%;
+    cursor: pointer;
+    justify-content: space-between;
+    position: relative;
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+      transition: var(--cubic-transition);
+      transition-duration: 200ms;
+    }
+
+    &.section-active {
+      svg {
+        transform: rotate(180deg) scaleX(1) scaleY(1);
+      }
+    }
+
+    &:hover::after {
+      content: "";
+      pointer-events: none;
+      position: absolute;
+      inset: 0px;
+      border-radius: inherit;
+      z-index: 999;
+      background-color: rgba(0, 0, 0, .03);
+    }
+
+    .dragwyb-section__title {
+      font-weight: 600;
+      font-size: 15px;
+    }
+  }
+
+  /* =========================
+     Tabs Control
+     ========================= */
+  .dragwyb-control--tabs {
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+
+    .dragwyb-tabs__nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+      align-items: center;
+      justify-content: center;
+      background: #eaf0f6;
+      padding: 4px;
+
+      .dragwyb-tabs__nav-item {
+        padding: 0.38rem 0.75rem;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        border: unset;
+        background: transparent;
+        transition: var(--cubic-transition);
+
+        &.is-active {
+          background: #f8fafc;
+          box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        }
+      }
+    }
+  }
+
+
+  /* =========================
+     Popover Toggle
+     ========================= */
+  .dragwyb-control--popover-toggle {
+    .dragwyb-popover__trigger {
+      padding: 6px 12px;
+      background: #f1f1f1;
+      border-radius: 4px;
+      cursor: pointer;
+      border: none;
+      font-size: 14px;
+      transition: all 0.2s;
+
+      &.is-active {
+        background: #0073e6;
+        color: #fff;
+      }
+    }
+
+    .dragwyb-popover__content {
+      margin-top: 6px;
+      padding: 8px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+  }
 }
+
+
 
 /* === Repeater Wrapper === */
 .dragwyb-repeater-field {
@@ -140,123 +485,5 @@
     &:hover {
       background-color: #dceefb;
     }
-  }
-}
-
-/* === Popover === */
-.dragwyb-popover {
-  position: absolute;
-  padding: 1rem;
-  width: calc(var(--panel-width) - 40px - 2rem);
-  background: #f9f9f9;
-  border: 1px solid #dcdfe3;
-  border-radius: 6px;
-  box-shadow: 0 6px 11px #00000029;
-
-  // 🔽 Arrow connector
-  &::after {
-    content: "";
-    position: absolute;
-    top: -6px;
-    right: 22px;
-    width: 12px;
-    height: 12px;
-    background: #f9f9f9;
-    border-left: 1px solid #dcdfe3;
-    border-top: 1px solid #dcdfe3;
-    transform: rotate(45deg);
-    box-shadow: -5px -5px 5px #00000008;
-    z-index: 1;
-  }
-}
-
-/* === Popover Toggle === */
-.dragwyb-popover-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.5rem 1rem;
-  font-size: 14px;
-  font-weight: 500;
-  background: #fff;
-  border: 1px solid #dcdfe3;
-  border-radius: 6px;
-  color: #333;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-
-  &__label {
-    flex: 1;
-    text-align: left;
-    user-select: none;
-  }
-
-  &__icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    border: 1px solid #dcdfe3;
-    border-radius: 50%;
-    font-size: 14px;
-    line-height: 1;
-    background: #f9f9f9;
-    transition: all 0.2s ease-in-out;
-  }
-
-  &:hover {
-    background: #f3f3f3;
-    border-color: #c2c6cc;
-
-    .dragwyb-popover-toggle__icon {
-      background: #fff;
-      border-color: #c2c6cc;
-    }
-  }
-
-  &:active {
-    background: #e9e9e9;
-  }
-
-  &.is-active {
-    background: #0073e6;
-    border-color: #0066cc;
-    color: #fff;
-
-    .dragwyb-popover-toggle__icon {
-      background: #0066cc;
-      border-color: #005bb5;
-      color: #fff;
-    }
-  }
-}
-
-/* === Drag Indicator Cursor Feedback === */
-[aria-roledescription="sortable"] {
-  cursor: grab;
-
-  &:active {
-    cursor: grabbing;
-  }
-}
-
-/* === Accessibility Descriptions (Visually Hidden) === */
-#DndDescribedBy-0,
-#DndLiveRegion-0 {
-  display: none !important;
-}
-
-// === Responsive ===
-@media (max-width: 768px) {
-  .tabs-control {
-    .tab-buttons {
-      flex-direction: column;
-    }
-  }
-
-  .section-control {
-    font-size: 13px;
   }
 }

@@ -6,7 +6,6 @@ class DragwybControlBase extends Component {
     constructor(props) {
         super();
         this.state={
-            settings: props.settings,
             value: props.value
         }
         this.controlName = this.controlName() || props.settings.type;
@@ -16,7 +15,7 @@ class DragwybControlBase extends Component {
     controlName=()=>{return null};
     
     bind(){
-        return <div>Unsupported Controller type: {this.settings.type}</div>
+        return <div>Unsupported control type: {this.props.settings?.type || 'unknown'}</div>;
     }
 
     componentDidUpdate=(prevProps)=>{
