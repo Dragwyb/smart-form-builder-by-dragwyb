@@ -2,11 +2,10 @@
 
   /* Base control wrapper */
   .dragwyb-control {
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 14px;
     color: #333;
     padding-block: 0.75rem;
-
 
     &__label {
       display: block;
@@ -273,6 +272,168 @@
     }
   }
 
+  .dragwyb-control--dimensions {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+  
+    .dragwyb-dimensions__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+  
+      .dragwyb-control__label {
+        font-size: 13px;
+        font-weight: 500;
+        color: #1e1e1e;
+      }
+  
+      .dragwyb-dimensions__unit select {
+        font-size: 12px;
+        padding: 4px 20px 4px 8px;
+        border: 1px solid #d5d8dc;
+        border-radius: 4px;
+        background: #fff;
+        color: #333;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='10' viewBox='0 0 24 24' width='10' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+        background-repeat: no-repeat;
+        background-position: right 6px center;
+        background-size: 10px;
+        transition: all 0.2s ease;
+  
+        &:hover {
+          background-color: #f8f9fa;
+        }
+  
+        &:focus {
+          outline: none;
+          border-color: #0073aa;
+        }
+      }
+    }
+  
+    .dragwyb-dimensions__row {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+  
+      .dragwyb-dimensions__inputs {
+        display: flex;
+        flex: 1;
+        border: 1px solid #d5d8dc;
+        border-radius: 4px;
+        overflow: hidden;
+  
+        input {
+          flex: 1;
+          border: none;
+          padding: 6px 0;
+          font-size: 12px;
+          text-align: center;
+          background: #fff;
+          color: #333;
+  
+          &:not(:last-child) {
+            border-right: 1px solid #d5d8dc;
+          }
+  
+          &:focus {
+            background: #f0f6ff;
+            outline: none;
+          }
+        }
+      }
+  
+      input[type="number"] {
+        border: 1px solid #d5d8dc;
+        border-radius: 4px;
+        padding: 6px;
+        font-size: 12px;
+        text-align: center;
+        min-width: 0;
+        transition: all 0.2s ease;
+  
+        &:focus {
+          border-color: #0073aa;
+          background: #f0f6ff;
+          outline: none;
+        }
+      }
+  
+      .dragwyb-dimensions__link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 8px;
+        margin-left: 6px;
+        border: 1px solid #d5d8dc;
+        border-radius: 4px;
+        background: #fafafa;
+        color: #555;
+        cursor: pointer;
+        transition: all 0.2s ease;
+  
+        svg {
+          font-size: 14px;
+        }
+  
+        &.is-linked,
+        &:hover {
+          color: #0073aa;
+          background: #f0f6ff;
+          border-color: #0073aa;
+        }
+      }
+  
+      .dragwyb-dimensions__unit {
+        margin-left: 6px;
+  
+        select {
+          font-size: 12px;
+          padding: 4px 20px 4px 8px;
+          border: 1px solid #d5d8dc;
+          border-radius: 4px;
+          background: #fff;
+          color: #333;
+          cursor: pointer;
+          appearance: none;
+          background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='10' viewBox='0 0 24 24' width='10' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+          background-repeat: no-repeat;
+          background-position: right 6px center;
+          background-size: 10px;
+          transition: all 0.2s ease;
+  
+          &:hover {
+            background-color: #f8f9fa;
+          }
+  
+          &:focus {
+            outline: none;
+            border-color: #0073aa;
+          }
+        }
+      }
+    }
+  
+    // 🔹 Linked state: single input full width
+    .is-linked {
+      input[type="number"] {
+        flex: 1;
+      }
+    }
+  
+    // 🔹 Unlinked state: 4 inputs wrapped together
+    .is-unlinked {
+      .dragwyb-dimensions__inputs {
+        flex: 1;
+      }
+    }
+  }
+  
+
   /* =========================
      Color
      ========================= */
@@ -332,7 +493,7 @@
       inset: 0px;
       border-radius: inherit;
       z-index: 999;
-      background-color: rgba(0, 0, 0, .03);
+      background-color: rgba(0, 0, 0, 0.03);
     }
 
     .dragwyb-section__title {
@@ -374,7 +535,6 @@
     }
   }
 
-
   /* =========================
      Popover Toggle
      ========================= */
@@ -404,8 +564,6 @@
     }
   }
 }
-
-
 
 /* === Repeater Wrapper === */
 .dragwyb-repeater-field {

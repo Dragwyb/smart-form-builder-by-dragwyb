@@ -1,7 +1,7 @@
 
 import '../../sass/editorControls.scss';
 import RepeaterControl from './Repeater/index';
-import { RiArrowDownSLine } from "react-icons/ri";
+import { RiArrowDownSLine, RiLink, RiLinkUnlink } from "react-icons/ri";
 import UnitSelector from './common/UnitSelector';
 
 class SectionControl extends DragwybEditor.editor.extends.ControlBase {
@@ -233,14 +233,14 @@ class SliderControl extends DragwybEditor.editor.extends.ControlBase {
         // Fallback to default value if no value is set
         const currentValue = value || defaultValue || { unit: "px", size: 0 };
 
-        const units = Object.keys(range);
+        const units = settings.units;
 
         const updateUnit = (newUnit) => {
             const newValue = { ...currentValue, unit: newUnit };
 
             // Ensure size is valid for new unit
             if (range[newUnit]) {
-                const { min = 0, max = 100, step = 1 } = range[newUnit];
+                const { min = 0, max = 100, step = 1 } = range && range[newUnit] ? range[newUnit] : { min: 0, max: 100, step: 1 };
                 if (newValue.size < min) newValue.size = min;
                 if (newValue.size > max) newValue.size = max;
                 if (step && newValue.size % step !== 0) {
@@ -256,7 +256,7 @@ class SliderControl extends DragwybEditor.editor.extends.ControlBase {
             this.updateControlHandler(id, newValue);
         };
 
-        const unitRange = range[currentValue.unit] || { min: 0, max: 100, step: 1 };
+        const unitRange = range && range[currentValue.unit] ? range[currentValue.unit] : { min: 0, max: 100, step: 1 };
 
         return (
             <div
@@ -299,6 +299,149 @@ class SliderControl extends DragwybEditor.editor.extends.ControlBase {
                         step={unitRange.step || 1}
                         onChange={(e) => updateSize(e.target.value)}
                     />
+                </div>
+            </div>
+        );
+    }
+}
+
+class DimensionsControl extends DragwybEditor.editor.extends.ControlBase {
+    controlName() {
+        return "dimensions";
+    }
+
+    bind() {
+        if (!this.shouldRender()) return <></>;
+
+        const { settings, id } = this;
+        const { label, units = ["px", "%", "em", "rem"], default: defaultValue } = settings;
+        const { value } = this.state;
+
+        // fallback
+        const currentValue =
+            value || defaultValue || { top: "", right: "", bottom: "", left: "", unit: "px", isLinked: true };
+
+        const updateValue = (key, val) => {
+            let newValue = { ...currentValue };
+
+            if (currentValue.isLinked && ["top", "right", "bottom", "left"].includes(key)) {
+                newValue.top = newValue.right = newValue.bottom = newValue.left = val;
+            } else {
+                newValue[key] = val;
+            }
+
+            this.updateControlHandler(id, newValue);
+        };
+
+        const updateUnit = (newUnit) => {
+            let newValue = { ...currentValue, unit: newUnit };
+            this.updateControlHandler(id, newValue);
+        };
+
+        const toggleLink = () => {
+            let newValue = { ...currentValue, isLinked: !currentValue.isLinked };
+            this.updateControlHandler(id, newValue);
+        };
+
+        return (
+            <div
+                className="dragwyb-control dragwyb-control--dimensions"
+                data-control="dimensions"
+                id={`control-${id}`}
+            >
+                {/* Header */}
+                <div className="dragwyb-dimensions__header">
+                    {label && (
+                        <label className="dragwyb-control__label" htmlFor={id}>
+                            {label}
+                        </label>
+                    )}
+                    {currentValue.isLinked && (
+                        <div className="dragwyb-dimensions__unit">
+                            <select value={currentValue.unit} onChange={(e) => updateUnit(e.target.value)}>
+                                {units.map((u) => (
+                                    <option key={u} value={u}>
+                                        {u}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
+                </div>
+
+                {/* Fields */}
+                <div
+                    className={`dragwyb-dimensions__row ${
+                        currentValue.isLinked ? "is-linked" : "is-unlinked"
+                    }`}
+                >
+                    {currentValue.isLinked ? (
+                        <>
+                            <input
+                                type="number"
+                                value={currentValue.top}
+                                placeholder="All"
+                                onChange={(e) => updateValue("top", e.target.value)}
+                            />
+                            <button
+                                type="button"
+                                className={`dragwyb-dimensions__link ${
+                                    currentValue.isLinked ? "is-linked" : ""
+                                }`}
+                                onClick={toggleLink}
+                            >
+                                <RiLink />
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <div className="dragwyb-dimensions__inputs">
+                                <input
+                                    type="number"
+                                    placeholder="T"
+                                    value={currentValue.top}
+                                    onChange={(e) => updateValue("top", e.target.value)}
+                                />
+                                <input
+                                    type="number"
+                                    placeholder="R"
+                                    value={currentValue.right}
+                                    onChange={(e) => updateValue("right", e.target.value)}
+                                />
+                                <input
+                                    type="number"
+                                    placeholder="B"
+                                    value={currentValue.bottom}
+                                    onChange={(e) => updateValue("bottom", e.target.value)}
+                                />
+                                <input
+                                    type="number"
+                                    placeholder="L"
+                                    value={currentValue.left}
+                                    onChange={(e) => updateValue("left", e.target.value)}
+                                />
+                            </div>
+                            <button
+                                type="button"
+                                className="dragwyb-dimensions__link"
+                                onClick={toggleLink}
+                            >
+                                <RiLinkUnlink />
+                            </button>
+                            <div className="dragwyb-dimensions__unit">
+                                <select
+                                    value={currentValue.unit}
+                                    onChange={(e) => updateUnit(e.target.value)}
+                                >
+                                    {units.map((u) => (
+                                        <option key={u} value={u}>
+                                            {u}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
         );
@@ -461,6 +604,7 @@ const initializeControls = () => {
         'select': SelectControl,
         'textarea': TextareaControl,
         'switcher': SwitcherControl,
+        'dimensions': DimensionsControl,
         'radio': RadioControl,
         'slider': SliderControl,
         'number': NumberControl,
