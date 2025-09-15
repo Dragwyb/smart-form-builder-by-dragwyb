@@ -14,7 +14,7 @@ class Register_Controls
 
     private array $controls = [];
 
-    private array $default_controls = [Controls::SWITCHER, Controls::COLOR, Controls::NUMBER, Controls::RADIO, Controls::REPEATER, Controls::SECTION, Controls::SELECT, Controls::SLIDER, Controls::TABS, Controls::TAB, Controls::TEXT, Controls::TEXTAREA, Controls::POPOVER_TOGGLE];
+    private array $default_controls = [Controls::COLOR, Controls::DIMENSIONS, Controls::NUMBER, Controls::RADIO, Controls::REPEATER, Controls::SECTION, Controls::SELECT, Controls::SLIDER, Controls::SWITCHER, Controls::TABS, Controls::TAB, Controls::TEXT, Controls::TEXTAREA, Controls::POPOVER_TOGGLE];
 
     public static function instance(): self
     {
@@ -42,8 +42,6 @@ class Register_Controls
 
             if (class_exists($class)) {
                 $this->register_control(new $class());
-            }else{
-                var_dump($class);
             }
         }
         // Register more controls here
@@ -55,7 +53,7 @@ class Register_Controls
         $string = str_replace('-', '_', $string);
 
         // Capitalize first letter and letters after underscores
-        return preg_replace_callback('/(^|_)([a-z])/', function($matches) {
+        return preg_replace_callback('/(^|_)([a-z])/', function ($matches) {
             return $matches[1] . strtoupper($matches[2]);
         }, $string);
     }

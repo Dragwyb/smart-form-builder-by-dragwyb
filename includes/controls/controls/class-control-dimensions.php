@@ -1,0 +1,142 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Dragwyb\Form_Builder\Includes\Controls\Controls;
+
+class Control_Dimensions extends Control_Base
+{
+    protected function register_scripts()
+    {
+        return array();
+    }
+
+    protected function register_settings()
+    {
+        return array(
+            'name'       => 'string',
+            'label'      => 'string',
+            'default'    => 'custom',
+            'conditions' => 'conditions',
+            'units'      => 'custom',
+        );
+    }
+
+    protected function default_setting(): array
+    {
+        return array(
+            'units'      => ['px'],
+            'show_label' => true,
+            'linked' => false
+        );
+    }
+
+    protected function register_style()
+    {
+        return array();
+    }
+
+    protected function init(): void
+    {
+        $this->type = 'dimensions';
+        $this->name = __('Dimensions', 'dragwyb-form-builder');
+    }
+
+    /**
+     * Sanitize control value
+     *
+     * Expected structure:
+     * [
+     *   'top'    => int,
+     *   'right'  => int,
+     *   'bottom' => int,
+     *   'left'   => int,
+     *   'linked' => bool,
+     *   'unit'   => string
+     * ]
+     */
+    protected function sanitize_control($value)
+    {
+        $defaults   = $this->default_setting_sanitize(array());
+        $allowed    = ['top', 'right', 'bottom', 'left', 'linked', 'unit'];
+        $sanitized  = $defaults;
+
+        if (!is_array($value)) {
+            return $defaults;
+        }
+
+        foreach ($allowed as $key) {
+            if (!array_key_exists($key, $value)) {
+                continue;
+            }
+
+            switch ($key) {
+                case 'linked':
+                    $sanitized['linked'] = (bool) $value['linked'];
+                    break;
+                case 'unit':
+                    $sanitized['unit'] = $this->string_sanitize($value['unit']);
+                    break;
+                default:
+                    $sanitized[$key] = $this->number_sanitize($value[$key]);
+                    break;
+            }
+        }
+
+        return $sanitized;
+    }
+
+    /**
+     * Default structure for this control
+     */
+    protected function default_setting_sanitize($value)
+    {
+        $default = [
+            'top'    => 0,
+            'right'  => 0,
+            'bottom' => 0,
+            'left'   => 0,
+            'linked' => true,
+            'unit'   => 'px',
+        ];
+
+        if (!is_array($value)) {
+            return $default;
+        }
+
+        foreach ($default as $key => $fallback) {
+            if (!array_key_exists($key, $value)) {
+                continue;
+            }
+
+            if ($key === 'unit') {
+                $default['unit'] = $this->string_sanitize($value[$key]);
+            } elseif ($key === 'linked') {
+                $default['linked'] = (bool) $value[$key];
+            } else {
+                $default[$key] = $this->number_sanitize($value[$key]);
+            }
+        }
+
+        return $default;
+    }
+
+    /**
+     * Sanitize allowed units
+     */
+    protected function units_setting_sanitize($value): array
+    {
+        $filtered_units = ['px'];
+
+        if (is_array($value) && count($value) > 0) {
+            foreach ($value as $unit) {
+                $unit = $this->string_sanitize($unit);
+                if (!in_array($unit, $filtered_units, true)) {
+                    $filtered_units[] = $unit;
+                }
+            }
+        }
+
+        return $filtered_units;
+    }
+}

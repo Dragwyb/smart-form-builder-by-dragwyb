@@ -98,6 +98,7 @@ class Field_Text extends Field_Base
         $this->add_control('text_spacing', [
             'type' => Controls::SLIDER,
             'label' => __('Spacing', 'dragwyb-form-builder'),
+            'units' => ['px', '%'],
             'range' => [
                 'px' => [
                     'min' => 0,
@@ -107,13 +108,25 @@ class Field_Text extends Field_Base
                 '%' => [
                     'min' => 0,
                     'max' => 100,
-                    'step'=>5
+                    'step' => 5
                 ],
             ],
             'default' => [
                 'unit' => '%',
                 'size' => 50,
             ],
+        ]);
+        $this->add_control('text_spacing_without_unit', [
+            'type' => Controls::SLIDER,
+            'label' => __('Spacing', 'dragwyb-form-builder'),
+            'default' => [
+                'unit' => '%',
+                'size' => 50,
+            ],
+        ]);
+        $this->add_control('text_spacing_unit', [
+            'type' => Controls::DIMENSIONS,
+            'label' => __('Spacing', 'dragwyb-form-builder'),
         ]);
         $this->add_control('text_css_class', [
             'type' => Controls::TEXT,

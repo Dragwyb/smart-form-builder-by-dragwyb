@@ -9,20 +9,21 @@ use Dragwyb\Form_Builder\Includes\Controls\Controls\Control_Base;
 
 class Controls
 {
-    const SWITCHER='switcher';
-    const COLOR='color';
-    const NUMBER='number';
-    const POPOVER_TOGGLE='popover-toggle';
-    const RADIO='radio';
-    const REPEATER='repeater';
-    const SECTION='section';
-    const SELECT='select';
-    const SLIDER='slider';
-    const TABS='tabs';
-    const TAB='tab';
-    const TEXT='text';
-    const TEXTAREA='textarea';
-    
+    const COLOR = 'color';
+    const DIMENSIONS = 'dimensions';
+    const NUMBER = 'number';
+    const POPOVER_TOGGLE = 'popover-toggle';
+    const RADIO = 'radio';
+    const REPEATER = 'repeater';
+    const SECTION = 'section';
+    const SELECT = 'select';
+    const SLIDER = 'slider';
+    const SWITCHER = 'switcher';
+    const TABS = 'tabs';
+    const TAB = 'tab';
+    const TEXT = 'text';
+    const TEXTAREA = 'textarea';
+
     private static $instance = null;
     private $controls = [];
 

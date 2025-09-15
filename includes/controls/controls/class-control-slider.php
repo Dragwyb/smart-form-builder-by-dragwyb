@@ -25,6 +25,14 @@ class Control_Slider extends Control_Base
         );
     }
 
+    protected function default_setting(): array
+    {
+        return array(
+            'units' => ['px'],
+            'show_label' => true
+        );
+    }
+
 
     protected function register_style()
     {
@@ -71,5 +79,20 @@ class Control_Slider extends Control_Base
         }
 
         return $filtered_value;
+    }
+
+    protected function units_setting_sanitize($value): array
+    {
+        $filtered_units = ['px'];
+        
+        if (is_array($value) && count($value) > 0) {
+            foreach ($value as $unit) {
+                if (!in_array($unit, $filtered_units)) {
+                    $filtered_units[] = $this->string_sanitize($unit);
+                }
+            }
+        }
+
+        return $filtered_units;
     }
 }
