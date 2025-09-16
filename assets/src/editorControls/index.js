@@ -356,17 +356,15 @@ class DimensionsControl extends DragwybEditor.editor.extends.ControlBase {
                             {label}
                         </label>
                     )}
-                    {currentValue.isLinked && (
-                        <div className="dragwyb-dimensions__unit">
-                            <select value={currentValue.unit} onChange={(e) => updateUnit(e.target.value)}>
-                                {units.map((u) => (
-                                    <option key={u} value={u}>
-                                        {u}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    )}
+                    <div className="dragwyb-dimensions__unit">
+                        <select value={currentValue.unit} onChange={(e) => updateUnit(e.target.value)}>
+                            {units.map((u) => (
+                                <option key={u} value={u}>
+                                    {u}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                 </div>
 
                 {/* Fields */}
@@ -379,8 +377,7 @@ class DimensionsControl extends DragwybEditor.editor.extends.ControlBase {
                         <>
                             <input
                                 type="number"
-                                value={currentValue.top}
-                                placeholder="All"
+                                value={currentValue.top || 0}
                                 onChange={(e) => updateValue("top", e.target.value)}
                             />
                             <button
@@ -398,26 +395,22 @@ class DimensionsControl extends DragwybEditor.editor.extends.ControlBase {
                             <div className="dragwyb-dimensions__inputs">
                                 <input
                                     type="number"
-                                    placeholder="T"
-                                    value={currentValue.top}
+                                    value={currentValue.top || 0}
                                     onChange={(e) => updateValue("top", e.target.value)}
                                 />
                                 <input
                                     type="number"
-                                    placeholder="R"
-                                    value={currentValue.right}
+                                    value={currentValue.right || 0}
                                     onChange={(e) => updateValue("right", e.target.value)}
                                 />
                                 <input
                                     type="number"
-                                    placeholder="B"
-                                    value={currentValue.bottom}
+                                    value={currentValue.bottom || 0}
                                     onChange={(e) => updateValue("bottom", e.target.value)}
                                 />
                                 <input
                                     type="number"
-                                    placeholder="L"
-                                    value={currentValue.left}
+                                    value={currentValue.left || 0}
                                     onChange={(e) => updateValue("left", e.target.value)}
                                 />
                             </div>
@@ -428,18 +421,6 @@ class DimensionsControl extends DragwybEditor.editor.extends.ControlBase {
                             >
                                 <RiLinkUnlink />
                             </button>
-                            <div className="dragwyb-dimensions__unit">
-                                <select
-                                    value={currentValue.unit}
-                                    onChange={(e) => updateUnit(e.target.value)}
-                                >
-                                    {units.map((u) => (
-                                        <option key={u} value={u}>
-                                            {u}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
                         </>
                     )}
                 </div>
