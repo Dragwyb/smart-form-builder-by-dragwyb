@@ -1,4 +1,11 @@
 @use "sass:color";
+
+body *{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
 .dragwyb-editor{
     // Variables
 --primary-color: #4f46e5;
@@ -301,13 +308,13 @@ body {
         padding: 20px;
         background: var(--canvas-bg-color);
         overflow: auto;
-        max-height: calc(100% - 40px);
+        max-height: 100%;
     }
 
     &__settings {
         width: var(--panel-width);
         background: #f1f5f9;
-        height: calc(100% - 47px);
+        height: 100%;
     }
 
     &__toolbar_settings{
@@ -349,7 +356,7 @@ body {
 .dragwyb-canvas {
     border-radius: 4px;
     padding: 20px;
-    max-height: calc(100% - 40px);
+    max-height: 100%;
 
     &-wrapper{
         width: 100%;
@@ -365,8 +372,8 @@ body {
     }
 
     &__empty {
-        width: calc(100% - 40px);
-        height: calc(100% - 40px);
+        width: 100%;
+        height: 100%;
         padding: 20px;
 
         &-wrapper{
@@ -374,8 +381,8 @@ body {
             text-align: center;
             font-size: 1.5rem;
             color: var(--primary-color);
-            width: calc(100% - 80px);
-            height: calc(100% - 80px);
+            width: 100%;
+            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -584,12 +591,13 @@ body {
     &__content {
         font-family: "Segoe UI", Tahoma, sans-serif;
         // background-color: #f9f9fb;
-        overflow-y: auto;
-        height: calc(100% - 100px);
+        height: calc(100% - 51px);
         
         .field-settings {
+            overflow-y: auto;
+            height: calc(100% - 58px);
             padding: 20px;
-            width: calc(var(--panel-width) - 40px);
+            width: var(--panel-width);
         }
     }
 }
@@ -615,7 +623,7 @@ body {
     input[type="color"],
     select,
     textarea {
-        padding: 8px;
+        padding: 6px;
         font-size: 13px;
         border: 1px solid #ccd0d4;
         border-radius: 4px;

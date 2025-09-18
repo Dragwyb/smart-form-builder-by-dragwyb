@@ -213,12 +213,13 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 6px;
+      margin-bottom: 10px;
 
       .dragwyb-control__label {
         font-size: 13px;
         font-weight: 500;
         color: #333;
+        margin-bottom: 0px;
       }
     }
 
@@ -279,12 +280,13 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 6px;
+      margin-bottom: 10px;
   
       .dragwyb-control__label {
         font-size: 13px;
         font-weight: 500;
         color: #1e1e1e;
+        margin-bottom: 0px;
       }
   
       .dragwyb-dimensions__unit select {

@@ -319,16 +319,18 @@ class DimensionsControl extends DragwybEditor.editor.extends.ControlBase {
 
         // fallback
         const currentValue =
-            value || defaultValue || { top: "", right: "", bottom: "", left: "", unit: "px", isLinked: true };
+            value || defaultValue || { top: "", right: "", bottom: "", left: "", unit: "px", linked: true };
 
         const updateValue = (key, val) => {
+            val = val && val !== '' ? Number(val) : val;
             let newValue = { ...currentValue };
 
-            if (currentValue.isLinked && ["top", "right", "bottom", "left"].includes(key)) {
+            if (currentValue.linked && ["top", "right", "bottom", "left"].includes(key)) {
                 newValue.top = newValue.right = newValue.bottom = newValue.left = val;
             } else {
                 newValue[key] = val;
             }
+
 
             this.updateControlHandler(id, newValue);
         };
@@ -339,7 +341,7 @@ class DimensionsControl extends DragwybEditor.editor.extends.ControlBase {
         };
 
         const toggleLink = () => {
-            let newValue = { ...currentValue, isLinked: !currentValue.isLinked };
+            let newValue = { ...currentValue, linked: !currentValue.linked };
             this.updateControlHandler(id, newValue);
         };
 
@@ -356,34 +358,32 @@ class DimensionsControl extends DragwybEditor.editor.extends.ControlBase {
                             {label}
                         </label>
                     )}
-                    <div className="dragwyb-dimensions__unit">
-                        <select value={currentValue.unit} onChange={(e) => updateUnit(e.target.value)}>
-                            {units.map((u) => (
-                                <option key={u} value={u}>
-                                    {u}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+                    {units && Object.keys(units).length > 1 &&
+                        <UnitSelector
+                            units={units}
+                            value={currentValue.unit}
+                            onChange={updateUnit}
+                        />
+                    }
                 </div>
 
                 {/* Fields */}
                 <div
                     className={`dragwyb-dimensions__row ${
-                        currentValue.isLinked ? "is-linked" : "is-unlinked"
+                        currentValue.linked ? "is-linked" : "is-unlinked"
                     }`}
                 >
-                    {currentValue.isLinked ? (
+                    {currentValue.linked ? (
                         <>
                             <input
                                 type="number"
-                                value={currentValue.top || 0}
+                                value={currentValue.top}
                                 onChange={(e) => updateValue("top", e.target.value)}
                             />
                             <button
                                 type="button"
                                 className={`dragwyb-dimensions__link ${
-                                    currentValue.isLinked ? "is-linked" : ""
+                                    currentValue.linked ? "is-linked" : ""
                                 }`}
                                 onClick={toggleLink}
                             >
@@ -395,22 +395,22 @@ class DimensionsControl extends DragwybEditor.editor.extends.ControlBase {
                             <div className="dragwyb-dimensions__inputs">
                                 <input
                                     type="number"
-                                    value={currentValue.top || 0}
+                                    value={currentValue.top}
                                     onChange={(e) => updateValue("top", e.target.value)}
                                 />
                                 <input
                                     type="number"
-                                    value={currentValue.right || 0}
+                                    value={currentValue.right}
                                     onChange={(e) => updateValue("right", e.target.value)}
                                 />
                                 <input
                                     type="number"
-                                    value={currentValue.bottom || 0}
+                                    value={currentValue.bottom}
                                     onChange={(e) => updateValue("bottom", e.target.value)}
                                 />
                                 <input
                                     type="number"
-                                    value={currentValue.left || 0}
+                                    value={currentValue.left}
                                     onChange={(e) => updateValue("left", e.target.value)}
                                 />
                             </div>
