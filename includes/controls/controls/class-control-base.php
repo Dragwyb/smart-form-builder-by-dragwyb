@@ -221,8 +221,13 @@ abstract class Control_Base
         $this->settings = null;
     }
 
-    public static function newInstance(): static
+    /**
+     * Create a new instance of the called class.
+     *
+     * @return static
+     */
+    public static function newInstance()
     {
-        return new static(); // ✅ Late static binding
+        return new static();
     }
 }
