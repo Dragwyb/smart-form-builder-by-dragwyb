@@ -129,9 +129,11 @@ abstract class Toolbar_Base
     }
 
     /**
-     * Static constructor (like Control_Base::newInstance)
+     * Create a new instance of the called class.
+     *
+     * @return static
      */
-    public static function newInstance(): static
+    public static function newInstance()
     {
         return new static();
     }

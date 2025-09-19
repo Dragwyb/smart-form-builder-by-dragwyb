@@ -110,11 +110,17 @@ if (!class_exists('Sanitize_Module_Settings')) {
             }
         }
 
-        public function get_data(): array|bool
+        /**
+         * Get the filtered data.
+         *
+         * @return array|false Array of data or false if no data.
+         */
+        public function get_data()
         {
-            return count(self::$filtered_data) > 0 ? self::$filtered_data : false;
+            return (is_array(self::$filtered_data) && count(self::$filtered_data) > 0)
+                ? self::$filtered_data
+                : false;
         }
-
 
         public function __destruct()
         {

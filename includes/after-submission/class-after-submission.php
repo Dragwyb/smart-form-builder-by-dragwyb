@@ -63,6 +63,6 @@ class After_SUbmission extends Toolbar_Base
     }
 
     protected function update_toolbar(): void{
-        var_dump($this->get_toolbar_data());
+        // var_dump($this->get_toolbar_data());
     }
 }

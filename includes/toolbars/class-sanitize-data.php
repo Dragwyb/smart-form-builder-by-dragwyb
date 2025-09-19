@@ -18,17 +18,16 @@ if (!class_exists('Sanitize_Data')) {
 
         private static $control = null;
 
-        public function __construct($data=null, $controls=null)
+        public function __construct($data = null, $controls = null)
         {
             self::$filtered_data = [];
             self::$toolbar_data = $data;
-            self::$toolbar_controls=$controls;
+            self::$toolbar_controls = $controls;
 
-            if(self::$toolbar_data && is_array(self::$toolbar_data) && self::$toolbar_controls && is_array(self::$toolbar_controls)){
+            if (self::$toolbar_data && is_array(self::$toolbar_data) && self::$toolbar_controls && is_array(self::$toolbar_controls)) {
                 $this->set_control();
                 $this->toolbar_data_loop();
             }
-
         }
 
         private function set_control(): void
@@ -40,7 +39,7 @@ if (!class_exists('Sanitize_Data')) {
         private function toolbar_data_loop(): void
         {
             foreach (self::$toolbar_data as $id => $value) {
-                if(!isset(self::$toolbar_controls[$id]) || !self::$toolbar_controls[$id]['type']){
+                if (!isset(self::$toolbar_controls[$id]) || !self::$toolbar_controls[$id]['type']) {
                     continue;
                 }
 
@@ -57,15 +56,22 @@ if (!class_exists('Sanitize_Data')) {
                 $control_obj->set_value($value, '', $id);
                 $filtered_value = $control_obj->get_value();
 
-                if($filtered_value && !isset(self::$filtered_data[$id])){
-                    self::$filtered_data[$id]=$filtered_value;
+                if ($filtered_value && !isset(self::$filtered_data[$id])) {
+                    self::$filtered_data[$id] = $filtered_value;
                 }
             }
         }
 
-        public function get_data(): array|bool
+        /**
+         * Get the filtered data.
+         *
+         * @return array|false Array of data or false if no data exists.
+         */
+        public function get_data()
         {
-            return count(self::$filtered_data) > 0 ? self::$filtered_data : false;
+            return (!empty(self::$filtered_data) && is_array(self::$filtered_data))
+                ? self::$filtered_data
+                : false;
         }
     }
 }

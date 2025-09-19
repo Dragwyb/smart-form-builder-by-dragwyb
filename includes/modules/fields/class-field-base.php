@@ -69,10 +69,13 @@ abstract class Field_Base extends Register_Controls_Base
      *
      * @return array|false Array of keywords or false if not set.
      */
-    public function get_keywords(): array|false
+    public function get_keywords()
     {
-        return $this->keywords && is_array($this->keywords) && count($this->keywords) > 0 ? $this->keywords : false;
+        return (!empty($this->keywords) && is_array($this->keywords))
+            ? $this->keywords
+            : false;
     }
+
 
     public function set_the_id(int $id = 0): void
     {
@@ -111,11 +114,15 @@ abstract class Field_Base extends Register_Controls_Base
         $this->form_settings = $setting;
     }
 
-    protected function get_form_settings(): array|null
+    /**
+     * Get the form settings.
+     *
+     * @return array|null Array of settings or null if not set.
+     */
+    protected function get_form_settings()
     {
         return $this->form_settings;
     }
-
 
     abstract protected function render_field();
     abstract public function validate($value): bool;

@@ -317,11 +317,17 @@ class List_Table extends WP_List_Table
 
         $status = sanitize_key($_GET['post_status'] ?? 'all');
 
-        // 3. Determine post status
-        $post_status = match ($status) {
-            'publish', 'draft', 'trash' => $status,
-            default => ['publish', 'draft'],
-        };
+        switch ($status) {
+            case 'publish':
+            case 'draft':
+            case 'trash':
+                $post_status = $status;
+                break;
+        
+            default:
+                $post_status = array('publish', 'draft'); // ✅ Compatible syntax for all versions
+                break;
+        }
 
         // 4. Query the forms
         $args = [
