@@ -555,6 +555,32 @@
     }
   }
 
+  /* === Popover === */
+.dragwyb-popover {
+  position: absolute;
+  padding: 0 1rem 1rem;
+  width: calc(var(--panel-width) - 40px);
+  background: hsl(var(--dragwyb-popover) / var(--dragwyb-bg-opacity, 1));
+  border: 1px solid hsl(var(--dragwyb-border) / var(--dragwyb-border-opacity, 1));
+  box-shadow: var(--dragwyb-ring-offset-shadow, 0 0 #0000), var(--dragwyb-ring-shadow, 0 0 #0000), var(--dragwyb-shadow);
+
+  // 🔽 Arrow connector
+  &::after {
+    content: "";
+    position: absolute;
+    top: -6px;
+    right: 22px;
+    width: 12px;
+    height: 12px;
+    background: hsl(var(--dragwyb-popover) / var(--dragwyb-bg-opacity, 1));
+    border-left: 1px solid hsl(var(--dragwyb-border) / var(--dragwyb-border-opacity, 1));
+    border-top: 1px solid hsl(var(--dragwyb-border) / var(--dragwyb-border-opacity, 1));
+    transform: rotate(45deg);
+    box-shadow: -5px -5px 5px #00000008;
+    z-index: 1;
+  }
+}
+
   /* =========================
      Popover Toggle
      ========================= */
@@ -567,6 +593,9 @@
       border: none;
       font-size: 14px;
       transition: all 0.2s;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
 
       &.is-active {
         background: #0073e6;
