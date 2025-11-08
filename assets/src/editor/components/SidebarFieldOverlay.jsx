@@ -45,7 +45,7 @@ const SidebarFieldOverlay = ({ data }) => {
             adjustScale={false} // optional: avoid scale distortion
             className={wrapperCls}
         >
-            <div className="dragwyb-overlay-preview field-type" style={fieldStyle}>
+            <div className="dragwyb-overlay-preview" style={fieldStyle}>
                 {config.icon && <i className={config.icon}></i>}
                 <p>{config.label}</p>
             </div>

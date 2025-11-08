@@ -46,6 +46,7 @@ class DragwybToolbarBase extends Component {
     }
 
     getToolbarSettings(){
+        this.settings.panelHeading=this.settings.label ?? this.toolBarName;
         return this.settings;
     }
 

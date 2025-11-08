@@ -41,8 +41,8 @@ const ToolbarSettings = ({ setActiveTab }) => {
         if ($sidebar.length) {
           $sidebar.resizable({
             helper: "resizable-helper",
-            minWidth: 200,
-            maxWidth: 600,
+            minWidth: 315,
+            maxWidth: 700,
             resize: function (event, ui) {
               // ✅ Update CSS variable on resize
               rootElement.style.setProperty(
@@ -92,7 +92,6 @@ const ToolbarSettings = ({ setActiveTab }) => {
                 toolbarValue={toolbarValue}
                 toolbarSettings={settings}
                 onClose={() => setActiveTab(setting)}
-                sectionSettings={sectionSettings}
                 onSettingChange={toolBarObject.updateToolbarHandler}
             />
         </div>}

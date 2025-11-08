@@ -5,7 +5,7 @@ import { Panel } from '../components/Common';
 import DragwybControlBase from '../controlBase'
 import RenderControl from './RenderControls';
 
-const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, sectionSettings, onSettingChange, onClose }) => {
+const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingChange, onClose }) => {
 
     const dispatch = useDispatch();
 
@@ -71,7 +71,7 @@ const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, sectionSett
 
     return (
         <Panel
-            title={`${toolbarSettings.label} ${DragwybBuilder.i18n.settings}`}
+            title={toolbarSettings.panelHeading}
             onClose={onClose}
         >
             {toolbarSettings?.controls?.header_controls &&

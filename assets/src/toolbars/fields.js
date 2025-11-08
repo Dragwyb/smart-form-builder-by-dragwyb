@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import { SearchInput } from '../editor/components/Common';
+import { __ } from '@wordpress/i18n';
 
 const SidebarField = (props) => {
   const { type, label, icon, addFieldHandler, useDraggable } = props;
@@ -101,15 +102,18 @@ class Fields extends DragwybEditor.editor.extends.ToolbarBase {
     const key = this.settingId;
     const data = this.toolbarData;
     const setting = this.settings;
+    let selectedFieldSettings=setting;
+    selectedFieldSettings.panelHeading=setting.label ?? this.toolBarName;
 
     if (key === 'fields' || !key) return false;
     const selectedField = this.getSelectedField(data, key);
 
     if (setting && selectedField.type && setting[selectedField.type]) {
-      return setting[selectedField.type];
+      selectedFieldSettings=setting[selectedField.type];
+      selectedFieldSettings.panelHeading=<>{__('Field Settings', 'dragwyb-form-builder')} <span>{selectedFieldSettings.label}</span></>;
     }
 
-    return setting;
+    return selectedFieldSettings;
   }
 
   getToolbarValue() {

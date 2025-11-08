@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Panel = ({ children, title, onClose }) => {
+const Panel = ({ children, title, bage = false, onClose }) => {
     return (
         <div className="dragwyb-panel">
             <div className="dragwyb-panel__header">

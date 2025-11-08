@@ -8,7 +8,6 @@ const Header = () => {
     const formTitle = useSelector(state => state?.form?.advance?.form_name || DragwybEditor.formData.title);
     const formStatus = useSelector(state => state?.form?.advance?.form_status || DragwybEditor.formData.status);
     const previewMode = useSelector(state => state.previewMode);
-    const activeTab = useSelector(state => state.activeToolbar);
 
     const dispatch = useDispatch();
 
@@ -36,12 +35,12 @@ const Header = () => {
         <div className="dragwyb-editor__details">
             <h2>Dragwyb Form Builder</h2>
             <div className="dragwyb-editor__status" data-status={formStatus} onClick={()=>setActiveTabHandler('advance')}>
-                {activeTab === 'advance' ? <label for="form_status">{statusHtml}</label> : statusHtml}
+                {statusHtml}
             </div>
         </div>
         <div className="dragwyb-editor__title" onClick={()=>setActiveTabHandler('advance')}>
             <h2>
-                {activeTab === 'advance' ? <label for="form_name">{formTitle}</label> : formTitle}
+                {formTitle}
             </h2>
         </div>
         <div className="dragwyb-editor__actions">

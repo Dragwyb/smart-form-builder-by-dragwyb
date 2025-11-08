@@ -1,20 +1,52 @@
 .dragwyb-editor {
 
-  /* Base control wrapper */
-  .dragwyb-control {
-    font-family: "Inter", sans-serif;
-    font-size: 14px;
-    color: #333;
-    padding-block: 0.75rem;
+  // Form Fields
+.setting-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: hsl(var(--dragwyb-card-foreground) / var(--dragwyb-text-opacity, 1));
+  margin-top: 16px;
 
-    &__label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: #222;
-      margin-bottom: 0.5rem;
-    }
+  &[data-type="popover-toggle"] {
+      margin-bottom: 10px;
   }
+
+  label {
+      display: block;
+      margin-bottom: 0;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 20px;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="color"],
+  select,
+  textarea {
+      padding: .5rem;
+      font-size: 14px;
+      border: 1px solid hsl(var(--dragwyb-input) / var(--dragwyb-border-opacity, 1));
+      border-radius: 4px;
+      background: hsl(var(--dragwyb-background) / var(--dragwyb-bg-opacity, 1));
+      width: 100%;
+      transition: border-color 0.2s ease;
+      height: 2.5rem;
+      line-height: 1.25rem;
+      color: inherit;
+
+      &:focus {
+          border-color: #2271b1;
+          outline: none;
+      }
+  }
+
+  input[type="checkbox"] {
+      margin-right: 6px;
+      vertical-align: middle;
+  }
+}
 
   /* =========================
      Text / Number / Textarea
@@ -52,12 +84,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 15px;
 
     .dragwyb-control__label {
-      font-size: 13px;
-      font-weight: 500;
-      color: #333;
       margin-right: 10px;
     }
 
@@ -75,8 +103,8 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        background-color: #ccc;
-        color: #fff;
+        background-color: hsl(var(--dragwyb-input) / var(--dragwyb-bg-opacity, 1));
+        color: hsl(var(--dragwyb-sidebar-foreground)/var(--dragwyb-text-opacity, 1));
         font-size: 12px;
         font-weight: 500;
         border-radius: 20px;
@@ -98,13 +126,16 @@
           border-radius: 50%;
           background: #fff;
           transition: transform 0.3s ease;
+          box-shadow: 0 0 0px var(--dragwyb-ring-offset-color), 0 0 0 0px rgb(59 130 246 / 0.5)
+          , var(--tw-shadow, 0 0 #0000);
         }
       }
 
       input:checked+.dragwyb-switcher__slider {
-        background-color: #0073e6;
+        background-color: hsl(var(--dragwyb-primary) / var(--dragwyb-bg-opacity, 1));
         padding-right: 28px;
         padding-left: 10px;
+        color: #fff;
 
         &::before {
           left: auto;
@@ -207,8 +238,6 @@
      Slider
      ========================= */
   .dragwyb-control--slider {
-    margin-bottom: 16px;
-
     .dragwyb-control__header {
       display: flex;
       justify-content: space-between;
@@ -216,9 +245,6 @@
       margin-bottom: 10px;
 
       .dragwyb-control__label {
-        font-size: 13px;
-        font-weight: 500;
-        color: #333;
         margin-bottom: 0px;
       }
     }
@@ -283,9 +309,6 @@
       margin-bottom: 10px;
   
       .dragwyb-control__label {
-        font-size: 13px;
-        font-weight: 500;
-        color: #1e1e1e;
         margin-bottom: 0px;
       }
   
@@ -330,16 +353,8 @@
         input {
           flex: 1;
           border: none;
-          padding: 6px 0;
-          font-size: 12px;
+          padding-inline: 0;
           text-align: center;
-          background: #fff;
-          color: #333;
-
-          &:focus {
-            background: #f0f6ff;
-            outline: none;
-          }
         }
       }
   
@@ -516,7 +531,9 @@
       grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
       align-items: center;
       justify-content: center;
-      background: #eaf0f6;
+      background: hsl(var(--dragwyb-muted) / 0.5);
+      border: 1px solid hsl(var(--dragwyb-border) / var(--dragwyb-border-opacity, 1));
+      color: hsl(var(--dragwyb-muted-foreground) / var(--dragwyb-text-opacity, 1));
       padding: 4px;
 
       .dragwyb-tabs__nav-item {
@@ -527,10 +544,12 @@
         border: unset;
         background: transparent;
         transition: var(--cubic-transition);
+        color: inherit;
 
         &.is-active {
-          background: #f8fafc;
-          box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgb(0 0 0 / 0.05);
+          background: hsl(var(--dragwyb-background) / var(--dragwyb-bg-opacity, 1));
+          box-shadow: var(--dragwyb-ring-offset-shadow, 0 0 #0000), var(--dragwyb-ring-shadow, 0 0 #0000), var(--dragwyb-sm-shadow);
+          color: hsl(var(--dragwyb-foreground) / var(--dragwyb-text-opacity, 1));
         }
       }
     }

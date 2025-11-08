@@ -60,7 +60,7 @@
 
         getDefaultLabel: function(type) {
             const labels = {
-                text: 'Text Field',
+                text: 'Text',
                 textarea: 'Paragraph Field',
                 email: 'Email Field',
                 number: 'Number Field',
