@@ -21,7 +21,7 @@ class Field_Radio extends Field_Base
     protected function init(): void
     {
         $this->type = 'radio';
-        $this->name = __('Radio Buttons', 'dragwyb-form-builder');
+        $this->name = __('Radio Button', 'dragwyb-form-builder');
         $this->icon = 'fas fa-dot-circle';
     }
 
@@ -32,28 +32,30 @@ class Field_Radio extends Field_Base
         $id = 'field_' . uniqid();
         $required = !empty($field_data['required']);
         $inline = !empty($field_data['inline']);
+        $options = $this->field_key_exist($field_data, 'options', []);
+        $label = $this->field_key_exist($field_data, 'label', "");
+
 ?>
-        <div class="dragwyb-field-wrapper">
-            <fieldset>
-                <legend>
-                    <?php echo esc_html($field_data['label']); ?>
-                    <?php if ($required): ?>
-                        <span class="required">*</span>
-                    <?php endif; ?>
-                </legend>
-                <div class="dragwyb-radio-options <?php echo $inline ? 'dragwyb-inline-options' : ''; ?>">
-                    <?php foreach ($field_data['options'] as $option): ?>
+        <div class="dragwyb-field-wrapper dragwyb-radio-field">
+            <?php if (!empty($label)) : ?>
+                <span class="dragwyb-label">
+                    <?php echo esc_html($label); ?>
+                    <?php if ($required): ?><span class="required">*</span><?php endif; ?>
+                </span>
+            <?php endif; ?>
+
+            <div class="dragwyb-radio-options">
+                <?php if (!empty($field_data['options'])) : ?>
+                    <?php foreach ($field_data['options'] as $val => $text) : ?>
                         <label class="dragwyb-radio-option">
-                            <input type="radio"
-                                name="<?php echo esc_attr($id); ?>"
-                                value="<?php echo esc_attr($option['value']); ?>"
-                                <?php echo $required ? 'required' : ''; ?>
-                                <?php checked($option['value'], $field_data['default_value'] ?? ''); ?>>
-                            <?php echo esc_html($option['label']); ?>
+                            <input type="radio" name="<?php echo esc_attr($id); ?>"
+                                value="<?php echo esc_attr($val); ?>"
+                                <?php echo $required ? 'required' : ''; ?> />
+                            <span><?php echo esc_html($text); ?></span>
                         </label>
                     <?php endforeach; ?>
-                </div>
-            </fieldset>
+                <?php endif; ?>
+            </div>
         </div>
 <?php
     }

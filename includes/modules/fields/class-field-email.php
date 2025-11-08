@@ -33,33 +33,25 @@ class Field_Email extends Field_Base
         $id = 'field_' . uniqid();
         $required = $this->field_key_exist($field_data, 'required', false);
 ?>
-        <div class="dragwyb-field-wrapper <?php echo esc_attr($this->field_key_exist($field_data, 'css_class', '')); ?>">
-            <label for="<?php echo esc_attr($id); ?>">
-                <?php echo esc_html($this->field_key_exist($field_data, 'label', '')); ?>
-                <?php if ($required): ?>
-                    <span class="required">*</span>
-                <?php endif; ?>
-            </label>
-            <input type="email"
-                id="<?php echo esc_attr($id); ?>"
-                name="<?php echo esc_attr($id); ?>"
-                value="<?php echo esc_attr($this->field_key_exist($field_data, 'default_value', '')); ?>"
-                placeholder="<?php echo esc_attr($this->field_key_exist($field_data, 'placeholder', '')); ?>"
-                <?php echo $required ? 'required' : ''; ?>>
-            <?php if (!empty($this->field_key_exist($field_data, 'confirmation', ''))): ?>
-                <label for="<?php echo esc_attr($id . '_confirm'); ?>">
-                    <?php echo esc_html__('Confirm Email', 'dragwyb-form-builder'); ?>
-                    <?php if ($required): ?>
-                        <span class="required">*</span>
-                    <?php endif; ?>
+        <div class="dragwyb-field-wrapper dragwyb-email-field">
+            <?php if (!empty($label)) : ?>
+                <label for="<?php echo esc_attr($id); ?>" class="dragwyb-label">
+                    <?php echo esc_html($label); ?>
+                    <?php if ($required): ?><span class="required">*</span><?php endif; ?>
                 </label>
-                <input type="email"
-                    id="<?php echo esc_attr($id . '_confirm'); ?>"
-                    name="<?php echo esc_attr($id . '_confirm'); ?>"
-                    placeholder="<?php echo esc_attr__('Confirm your email', 'dragwyb-form-builder'); ?>"
-                    <?php echo $required ? 'required' : ''; ?>>
             <?php endif; ?>
+
+            <div class="dragwyb-input-wrapper <?php echo !empty($icon) ? 'has-icon' : ''; ?>">
+                <?php if (!empty($icon)): ?>
+                    <span class="dragwyb-input-icon"><i class="<?php echo esc_attr($icon); ?>"></i></span>
+                <?php endif; ?>
+                <input type="email" id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($id); ?>"
+                    placeholder="<?php echo esc_attr($placeholder); ?>"
+                    <?php echo $required ? 'required' : ''; ?>
+                    class="dragwyb-input" />
+            </div>
         </div>
+
 <?php
     }
 

@@ -34,7 +34,7 @@ class Field_Text extends Field_Base
     protected function init(): void
     {
         $this->type = 'text';
-        $this->name = __('Text Field', 'dragwyb-form-builder');
+        $this->name = __('Text', 'dragwyb-form-builder');
         $this->icon = 'fas fa-font';
     }
 
@@ -127,6 +127,7 @@ class Field_Text extends Field_Base
         $this->add_control('text_spacing_unit', [
             'type' => Controls::DIMENSIONS,
             'label' => __('Spacing', 'dragwyb-form-builder'),
+            'units' => ['px', '%'],
         ]);
         $this->add_control('text_css_class', [
             'type' => Controls::TEXT,

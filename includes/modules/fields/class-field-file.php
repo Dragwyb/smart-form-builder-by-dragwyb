@@ -35,37 +35,18 @@ class Field_File extends Field_Base
         $allowed_types = array_map('trim', explode(',', $field_data['allowed_types'] ?? ''));
         $accept = '.' . implode(',.', $allowed_types);
 ?>
-        <div class="dragwyb-field-wrapper dragwyb-file-upload">
-            <label for="<?php echo esc_attr($id); ?>">
-                <?php echo esc_html($field_data['label']); ?>
-                <?php if ($required): ?>
-                    <span class="required">*</span>
-                <?php endif; ?>
-            </label>
-            <div class="dragwyb-file-upload-wrapper">
-                <input type="file"
-                    id="<?php echo esc_attr($id); ?>"
-                    name="<?php echo esc_attr($id . ($multiple ? '[]' : '')); ?>"
-                    accept="<?php echo esc_attr($accept); ?>"
-                    <?php echo $multiple ? 'multiple' : ''; ?>
+        <div class="dragwyb-field-wrapper dragwyb-file-field">
+            <?php if (!empty($label)) : ?>
+                <label for="<?php echo esc_attr($id); ?>" class="dragwyb-label">
+                    <?php echo esc_html($label); ?>
+                    <?php if ($required): ?><span class="required">*</span><?php endif; ?>
+                </label>
+            <?php endif; ?>
+
+            <div class="dragwyb-input-wrapper">
+                <input type="file" id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($id); ?>"
                     <?php echo $required ? 'required' : ''; ?>
-                    data-max-size="<?php echo esc_attr($field_data['max_size'] ?? 2); ?>">
-                <div class="dragwyb-file-upload-info">
-                    <?php
-                    printf(
-                        __('Maximum file size: %s MB', 'dragwyb-form-builder'),
-                        esc_html($field_data['max_size'] ?? 2)
-                    );
-                    ?>
-                    <br>
-                    <?php
-                    printf(
-                        __('Allowed types: %s', 'dragwyb-form-builder'),
-                        esc_html(implode(', ', $allowed_types))
-                    );
-                    ?>
-                </div>
-                <div class="dragwyb-file-preview"></div>
+                    class="dragwyb-input" />
             </div>
         </div>
 <?php

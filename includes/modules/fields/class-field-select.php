@@ -58,7 +58,7 @@ class Field_Select extends Field_Base
             'type' => Controls::REPEATER,
             'label' => __('Required', 'dragwyb-form-builder'),
             'add_item' => __('Add Options', 'dragwyb-form-builder'),
-            'item_label' => 'repeater_text',
+            'item_label' => 'option_label',
             'default' => [
                 [
                     'option_label' => 'Select Default',

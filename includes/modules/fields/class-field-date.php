@@ -32,25 +32,22 @@ class Field_Date extends Field_Base
         $id = 'field_' . uniqid();
         $required = !empty($field_data['required']);
 ?>
-        <div class="dragwyb-field-wrapper">
-            <label for="<?php echo esc_attr($id); ?>">
-                <?php echo esc_html($field_data['label']); ?>
-                <?php if ($required): ?>
-                    <span class="required">*</span>
-                <?php endif; ?>
-            </label>
-            <input type="date"
-                id="<?php echo esc_attr($id); ?>"
-                name="<?php echo esc_attr($id); ?>"
-                value="<?php echo esc_attr($field_data['default_value'] ?? ''); ?>"
-                <?php if (!empty($field_data['min_date'])): ?>
-                min="<?php echo esc_attr($field_data['min_date']); ?>"
-                <?php endif; ?>
-                <?php if (!empty($field_data['max_date'])): ?>
-                max="<?php echo esc_attr($field_data['max_date']); ?>"
-                <?php endif; ?>
-                <?php echo $required ? 'required' : ''; ?>>
+        <div class="dragwyb-field-wrapper dragwyb-date-field">
+            <?php if (!empty($label)) : ?>
+                <label for="<?php echo esc_attr($id); ?>" class="dragwyb-label">
+                    <?php echo esc_html($label); ?>
+                    <?php if ($required): ?><span class="required">*</span><?php endif; ?>
+                </label>
+            <?php endif; ?>
+
+            <div class="dragwyb-input-wrapper">
+                <input type="date" id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($id); ?>"
+                    placeholder="<?php echo esc_attr($placeholder); ?>"
+                    <?php echo $required ? 'required' : ''; ?>
+                    class="dragwyb-input" />
+            </div>
         </div>
+
 <?php
     }
 

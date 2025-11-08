@@ -21,9 +21,9 @@ class Field_Textarea extends Field_Base
     protected function init(): void
     {
         $this->type = 'textarea';
-        $this->name = __('Paragraph Field', 'dragwyb-form-builder');
+        $this->name = __('Textarea', 'dragwyb-form-builder');
         $this->icon = 'fas fa-align-left';
-        $this->keywords = array('text','wyswing');
+        $this->keywords = array('text', 'wyswing');
     }
 
     protected function render_field()
@@ -33,22 +33,20 @@ class Field_Textarea extends Field_Base
         $id = 'field_' . uniqid();
         $required = !empty($field_data['required']);
 ?>
-        <div class="dragwyb-field-wrapper">
-            <label for="<?php echo esc_attr($id); ?>">
-                <?php echo esc_html($field_data['label']); ?>
-                <?php if ($required): ?>
-                    <span class="required">*</span>
-                <?php endif; ?>
-            </label>
-            <textarea
-                id="<?php echo esc_attr($id); ?>"
-                name="<?php echo esc_attr($id); ?>"
-                rows="<?php echo esc_attr($field_data['rows'] ?? 4); ?>"
-                <?php echo $required ? 'required' : ''; ?>
-                <?php if (!empty($field_data['max_length'])): ?>
-                maxlength="<?php echo esc_attr($field_data['max_length']); ?>"
-                <?php endif; ?>
-                placeholder="<?php echo esc_attr($field_data['placeholder'] ?? ''); ?>"><?php echo esc_textarea($field_data['default_value'] ?? ''); ?></textarea>
+        <div class="dragwyb-field-wrapper dragwyb-textarea-field">
+            <?php if (!empty($label)) : ?>
+                <label for="<?php echo esc_attr($id); ?>" class="dragwyb-label">
+                    <?php echo esc_html($label); ?>
+                    <?php if ($required): ?><span class="required">*</span><?php endif; ?>
+                </label>
+            <?php endif; ?>
+
+            <div class="dragwyb-input-wrapper">
+                <textarea id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($id); ?>"
+                    placeholder="<?php echo esc_attr($placeholder); ?>"
+                    <?php echo $required ? 'required' : ''; ?>
+                    class="dragwyb-input"></textarea>
+            </div>
         </div>
 <?php
     }
