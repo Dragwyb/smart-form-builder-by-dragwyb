@@ -77,6 +77,7 @@ const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingCh
             {toolbarSettings?.controls?.header_controls &&
                 <div className='field-header_controls'>
                     <RenderControl
+                        key={toolbarSettings.id}
                         selectedTab={selectedTab}
                         controlKey={'header_controls'}
                         settings={toolbarSettings.controls.header_controls}

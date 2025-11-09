@@ -104,15 +104,16 @@ class Fields extends DragwybEditor.editor.extends.ToolbarBase {
     const setting = this.settings;
     let selectedFieldSettings=setting;
     selectedFieldSettings.panelHeading=setting.label ?? this.toolBarName;
-
+    
     if (key === 'fields' || !key) return false;
     const selectedField = this.getSelectedField(data, key);
-
+    
     if (setting && selectedField.type && setting[selectedField.type]) {
       selectedFieldSettings=setting[selectedField.type];
       selectedFieldSettings.panelHeading=<>{__('Field Settings', 'dragwyb-form-builder')} <span>{selectedFieldSettings.label}</span></>;
     }
-
+    
+    selectedFieldSettings.id=key;
     return selectedFieldSettings;
   }
 

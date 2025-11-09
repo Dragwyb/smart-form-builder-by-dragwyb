@@ -55,7 +55,6 @@ const RenderControl = ({
 
 
     if (!shouldRender) {
-        // console.info(`[RenderControl] Skipping render for "${controlKey}" (conditions not met)`);
         return <ControlsConditions
         controlKey={controlKey}
         conditions={settings.conditions}
