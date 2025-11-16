@@ -25,7 +25,7 @@ class Frontend_Render
 
     private static $field_module_cache = null;
 
-    private static $Field_Data = null;
+    private static $field_data = null;
     private static $form_data = null;
     private static $toolbar_data = array();
 
@@ -105,8 +105,8 @@ class Frontend_Render
                 continue;
             }
 
-            self::$Field_Data['_id'] = $field['_id'];
-            self::$Field_Data['type'] = $field['type'];
+            self::$field_data['_id'] = $field['_id'];
+            self::$field_data['type'] = $field['type'];
 
             if (isset($field['type'])) {
                 if (isset($field['type'])) {
@@ -121,13 +121,13 @@ class Frontend_Render
 
                     if (!self::$field_module_cache[$type] instanceof Field_Base) return;
 
-                    self::$field_module_cache[$type]->set_the_id((int) self::$Field_Data['_id']);
+                    self::$field_module_cache[$type]->set_the_id((int) self::$field_data['_id']);
                     self::$field_module_cache[$type]->set_form_settings(self::$toolbar_data);
 
-                    if (isset($field['attributes'])) {
+                    if (isset($field['attributes']) && !empty($field['attributes'])) {
                         $attributes = $field['attributes'];
                         $this->attributes_loop($attributes, $type);
-                        self::$field_module_cache[$type]->set_field_settings(self::$Field_Data['attributes']);
+                        self::$field_module_cache[$type]->set_field_settings(self::$field_data['attributes']);
                     } else {
                         self::$field_module_cache[$type]->set_field_settings(array());
                     }
@@ -136,7 +136,7 @@ class Frontend_Render
                 }
             }
 
-            self::$Field_Data = null;
+            self::$field_data = null;
         }
 
         return ob_get_clean();
@@ -164,7 +164,7 @@ class Frontend_Render
                     $filtered_value = $control_obj->get_value();
 
                     if (isset($filtered_value) && $filtered_value) {
-                        self::$Field_Data['attributes'][$attribute] = $filtered_value;
+                        self::$field_data['attributes'][$attribute] = $filtered_value;
                     }
                 }
             }
