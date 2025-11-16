@@ -32,6 +32,7 @@ class Field_Email extends Field_Base
 
         $id = 'field_' . uniqid();
         $required = $this->field_key_exist($field_data, 'required', false);
+        $placeholder = $this->field_key_exist($field_data, 'placeholder', "");
 ?>
         <div class="dragwyb-field-wrapper dragwyb-email-field">
             <?php if (!empty($label)) : ?>

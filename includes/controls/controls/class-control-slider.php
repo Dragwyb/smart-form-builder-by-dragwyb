@@ -21,6 +21,7 @@ class Control_Slider extends Control_Base
             'range' => 'range',
             'default' => 'custom',
             'conditions' => 'conditions',
+            'show_label' => 'boolean',
             'units' => 'custom',
         );
     }
