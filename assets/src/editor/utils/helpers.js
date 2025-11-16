@@ -42,8 +42,8 @@ export const AddField = ({ type, dispatch, Utils, index = null }) => {
         type,
     };
 
-    if (DragwybEditor.fields[type] && DragwybEditor.fields[type].controls) {
-        const fieldControls = DragwybEditor.fields[type].controls;
+    if (DragwybEditor.fields.fields[type] && DragwybEditor.fields.fields[type].controls) {
+        const fieldControls = DragwybEditor.fields.fields[type].controls;
         field.attributes = {};
         Object.keys(fieldControls).forEach(id => {
             if (!['tabs', 'tab', 'section'].includes(fieldControls[id].type)) {

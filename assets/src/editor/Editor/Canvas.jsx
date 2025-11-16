@@ -172,7 +172,7 @@ const Canvas = ({
         const id = Utils.generateId();
         deepClone._id = id;
 
-        const fieldControls = DragwybEditor.fields[deepClone.type]?.controls || {};
+        const fieldControls = DragwybEditor.fields.fields[deepClone.type]?.controls || {};
 
         Object.keys(deepClone.attributes || {}).forEach((id) => {
             if (!["tabs", "tab", "section"].includes(fieldControls[id]?.type)) {

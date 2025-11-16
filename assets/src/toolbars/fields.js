@@ -19,7 +19,7 @@ const SidebarField = (props) => {
       {...listeners}
       {...attributes}
       onClick={() => addFieldHandler(type)}
-      className={`field-type ${isDragging ? 'dragging' : ''}`}
+      className={`field-type ${type} ${isDragging ? 'dragging' : ''}`}
     >
       <i className={icon}></i>
       <p>{label}</p>
@@ -93,7 +93,7 @@ class Fields extends DragwybEditor.editor.extends.ToolbarBase {
       return false;
     }
 
-    const fieldTypes = DragwybEditor.fields;
+    const fieldTypes = DragwybEditor.fields.fields;
 
     return <Sidebar fieldTypes={fieldTypes} Utils={Utils} addFieldHandler={this.addFieldHandler}/>;
   }
@@ -108,8 +108,8 @@ class Fields extends DragwybEditor.editor.extends.ToolbarBase {
     if (key === 'fields' || !key) return false;
     const selectedField = this.getSelectedField(data, key);
     
-    if (setting && selectedField.type && setting[selectedField.type]) {
-      selectedFieldSettings=setting[selectedField.type];
+    if (setting.fields && selectedField.type && setting.fields[selectedField.type]) {
+      selectedFieldSettings=setting.fields[selectedField.type];
       selectedFieldSettings.panelHeading=<>{__('Field Settings', 'dragwyb-form-builder')} <span>{selectedFieldSettings.label}</span></>;
     }
     
