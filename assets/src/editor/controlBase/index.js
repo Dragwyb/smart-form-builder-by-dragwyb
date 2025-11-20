@@ -28,6 +28,10 @@ class DragwybControlBase extends Component {
         }
     }
 
+    componentWillUnmount=()=>{
+        this.onDestroy();
+    }
+
     #renderContent(props) {
         if(!this.controlName){
             return;
@@ -41,6 +45,7 @@ class DragwybControlBase extends Component {
     }
 
     render(){
+        this.onRender();
         return this.bind();
     }
 
@@ -62,6 +67,7 @@ class DragwybControlBase extends Component {
 
     #triggerOnChange(key, value) {
         this.#updateValue(key, value, this.settings.type, this);
+        this.onUpdate(key, value);
     }
 
     /**
@@ -70,6 +76,12 @@ class DragwybControlBase extends Component {
     shouldRender() {
         return this.settings?.type === this.controlName && DragwybEditor.controlTypes[this.settings.type];
     }
+
+    onRender(){}
+
+    onDestroy(){}
+    
+    onUpdate(){}
 }
 
 export default DragwybControlBase;
