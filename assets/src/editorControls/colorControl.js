@@ -90,7 +90,7 @@ export default class ColorControl extends DragwybEditor.editor.extends.ControlBa
                     <span
                         className="dragwyb-color__preview"
                         data-id={id}
-                        style={{ backgroundColor: value }}
+                        style={{ '--pcr-color': value }}
                         onClick={() => this.initPickr()}
                     />
                 </div>
