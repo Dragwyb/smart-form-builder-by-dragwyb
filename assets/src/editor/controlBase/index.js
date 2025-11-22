@@ -9,6 +9,7 @@ class DragwybControlBase extends Component {
             value: props.value
         }
         this.controlName = this.controlName() || props.settings.type;
+        this.onInit();
         this.#renderContent(props);
     }
     
@@ -76,6 +77,8 @@ class DragwybControlBase extends Component {
     shouldRender() {
         return this.settings?.type === this.controlName && DragwybEditor.controlTypes[this.settings.type];
     }
+
+    onInit(){}
 
     onRender(){}
 

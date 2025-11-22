@@ -173,13 +173,15 @@ const Canvas = ({
         deepClone._id = id;
 
         const fieldControls = DragwybEditor.fields.fields[deepClone.type]?.controls || {};
-
+        
         Object.keys(deepClone.attributes || {}).forEach((id) => {
             if (!["tabs", "tab", "section"].includes(fieldControls[id]?.type)) {
                 let value = deepClone.attributes[id];
+                const settings=fieldControls[id];
                 value = DragwybBuilder.Hooks.applyFilter(
                     `Dragwyb/Editor/DuplicateControl/${fieldControls[id].type}.duplicateValue`,
                     value,
+                    settings,
                     Utils
                 );
                 deepClone.attributes[id] = value;

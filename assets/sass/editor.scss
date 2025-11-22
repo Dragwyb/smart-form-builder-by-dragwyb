@@ -40,7 +40,7 @@
     --dragwyb-sidebar-border: 210 12% 90%;
     --dragwyb-sidebar-primary: 220 100% 45%;
     --dragwyb-sidebar-primary-foreground: 220 20% 98%;
-    --dragwyb-sidebar-accent: 210 15% 90%;
+    --dragwyb-sidebar-accent: 214 9% 85%;
     --dragwyb-sidebar-accent-foreground: 210 15% 25%;
     --dragwyb-sidebar-ring: 220 100% 45%;
   
@@ -136,7 +136,7 @@
     --dragwyb-sidebar-border: 210 5% 16%;
     --dragwyb-sidebar-primary: 220 100% 45%;
     --dragwyb-sidebar-primary-foreground: 220 20% 98%;
-    --dragwyb-sidebar-accent: 210 5% 16%;
+    --dragwyb-sidebar-accent: 215 9% 27%;
     --dragwyb-sidebar-accent-foreground: 210 5% 85%;
     --dragwyb-sidebar-ring: 220 100% 45%;
   
@@ -820,8 +820,8 @@ body {
         height: calc(100% - 61px);
         overflow-y: auto;
 
-        .field-settings {
-            padding: 0 16px;
+        &::-webkit-scrollbar {
+            width: 10px;    
         }
     }
 }
