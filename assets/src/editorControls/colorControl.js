@@ -28,7 +28,8 @@ export default class ColorControl extends DragwybEditor.editor.extends.ControlBa
             theme: 'monolith',
             default: value || '#000000',
             comparison: false,
-
+            appClass: 'dragwyb-color__pickr',
+            
             components: {
                 preview: false,
                 opacity: true,
@@ -65,7 +66,6 @@ export default class ColorControl extends DragwybEditor.editor.extends.ControlBa
 
         const { id, settings } = this;
         const { value } = this.state;
-        console.log(value);
 
         return (
             <div className="dragwyb-control dragwyb-control--color" data-control="color" id={`control-${id}`}>

@@ -5,6 +5,12 @@ export default class SectionControl extends DragwybEditor.editor.extends.Control
         return 'section';
     }
 
+    onRender(){
+        if(!this.controlName){
+            return;
+        }
+    }
+
     bind() {
         if (!this.shouldRender()) return <></>;
 
@@ -15,6 +21,9 @@ export default class SectionControl extends DragwybEditor.editor.extends.Control
 
         if (id === value) {
             sectionCls += ' section-active';
+            
+            DragwybBuilder.Hooks.removeFilter("Dragwyb/Editor/ControlSectionUpdate");
+            DragwybBuilder.Hooks.addFilter("Dragwyb/Editor/ControlSectionUpdate", this.controlRenderKey.bind(this));
         }
 
         return (
@@ -25,8 +34,20 @@ export default class SectionControl extends DragwybEditor.editor.extends.Control
         );
     }
 
+    controlRenderKey(type,key, value){
+        if(type !== this.controlName || key === this.id || value !== true){
+            return;
+        }
+
+        this.setState({value: ''});
+    }
+
     updateControlHandler(key, value) {
         this.setState({ value: value ? key : '' })
         this.updateControls(key, value);
+
+        if(this.id && value === true){
+            DragwybBuilder.Hooks.applyFilter("Dragwyb/Editor/ControlSectionUpdate", this.controlName, key, value);
+        }
     }
 };
