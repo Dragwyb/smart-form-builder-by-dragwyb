@@ -29,7 +29,7 @@ class Field_Date extends Field_Base
     {
         $field_data = $this->get_field_settings();
 
-        $id = 'field_' . uniqid();
+        $id = 'field_' . $this->get_the_id();
         $required = !empty($field_data['required']);
 ?>
         <div class="dragwyb-field-wrapper dragwyb-date-field">

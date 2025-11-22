@@ -29,7 +29,7 @@ class Field_Radio extends Field_Base
     {
         $field_data = $this->get_field_settings();
 
-        $id = 'field_' . uniqid();
+        $id = 'field_' . $this->get_the_id();
         $required = !empty($field_data['required']);
         $inline = !empty($field_data['inline']);
         $options = $this->field_key_exist($field_data, 'options', []);

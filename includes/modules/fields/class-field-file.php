@@ -29,7 +29,7 @@ class Field_File extends Field_Base
     {
         $field_data = $this->get_field_settings();
 
-        $id = 'field_' . uniqid();
+        $id = 'field_' . $this->get_the_id();
         $required = !empty($field_data['required']);
         $multiple = !empty($field_data['multiple']);
         $allowed_types = array_map('trim', explode(',', $field_data['allowed_types'] ?? ''));

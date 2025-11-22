@@ -82,7 +82,7 @@ class Field_Select extends Field_Base
     {
         $field_data = $this->get_field_settings();
 
-        $id = 'field_' . uniqid();
+        $id = 'field_' . $this->get_the_id();
         $required = !empty($this->field_key_exist($field_data, 'required', ''));
         $options = $this->field_key_exist($field_data, 'options', []);
 ?>
