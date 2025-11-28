@@ -434,6 +434,17 @@ body {
         }
     }
 
+    &__theme-toggle{
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        font-size: 18px;
+        background: hsl(var(--dragwyb-secondary)/var(--dragwyb-bg-opacity, 1));
+        padding: 0.36rem 0.65rem;
+        border-radius: 8px;
+        font-size: 12px;
+    }
+
     &__tabs {
         display: flex;
         gap: 0.7rem;
@@ -822,6 +833,319 @@ body {
 
         &::-webkit-scrollbar {
             width: 10px;    
+        }
+    }
+}
+
+
+$c-border: #ddd;
+$c-bg-light: #fff;
+$c-accent: #2271b1;
+$c-text: #585858;
+$c-highlight: #f0f6fc;
+
+// Variables
+$select-border-color: #ccc;
+$select-bg-color: #fff;
+$select-highlight-color: #2271b1;
+$select-text-color: #3c434a;
+$select-placeholder-color: #757575;
+$select-group-bg: #f9f9f9;
+$dropdown-max-height: 250px;
+
+.dragwyb-select {
+  position: relative;
+  width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  box-sizing: border-box;
+
+  * { box-sizing: border-box; }
+
+  // --- TRIGGER ---
+  &-trigger {
+    border: 1px solid $select-border-color;
+    padding: 8px 12px;
+    border-radius: 4px;
+    background: $select-bg-color;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+    min-height: 36px;
+    position: relative;
+    z-index: 101; // Ensure trigger stays above if needed
+
+    &:hover {
+      border-color: darken($select-border-color, 15%);
+    }
+  }
+
+  // --- OPEN STATE: BOTTOM (Default) ---
+  &.is-open.position-bottom {
+    .dragwyb-select-trigger {
+      border-color: $select-highlight-color;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border-bottom-color: transparent; // Seamless connection
+    }
+  }
+
+  // --- OPEN STATE: TOP ---
+  &.is-open.position-top {
+    .dragwyb-select-trigger {
+      border-color: $select-highlight-color;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      border-top-color: transparent; // Seamless connection
+    }
+  }
+
+  // --- DROPDOWN BASE ---
+  &-dropdown {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    background: $select-bg-color;
+    border: 1px solid $select-highlight-color;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    max-height: $dropdown-max-height; // Use variable
+    display: flex;
+    flex-direction: column;
+
+    // Position: BOTTOM
+    &.position-bottom {
+      top: 100%;
+      border-top: none;
+      border-radius: 0 0 4px 4px;
+      margin-top: -1px; // Overlap trigger border
+    }
+
+    // Position: TOP
+    &.position-top {
+      bottom: 100%; // Push upwards
+      top: auto;
+      border-bottom: none;
+      border-radius: 4px 4px 0 0;
+      margin-bottom: -1px; // Overlap trigger border
+      box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1); // Shadow upwards
+      
+      // Since flex-direction is column, search is at top.
+      // For top-opening menus, it's often nicer to have search at the bottom 
+      // (closest to trigger), but keeping it at top is standard for search logic.
+    }
+  }
+
+  // --- SEARCH ---
+  &-search {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+    flex-shrink: 0; // Don't shrink search box
+    
+    // If opening upwards, maybe border needs to be at top if we flipped order?
+    // Keeping simple for now.
+    
+    input {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid $select-border-color;
+      border-radius: 3px;
+      outline: none;
+      font-size: 13px;
+
+      &:focus {
+        border-color: $select-highlight-color;
+        box-shadow: 0 0 0 1px lighten($select-highlight-color, 30%);
+      }
+    }
+  }
+
+  // --- OPTIONS ---
+  &-options {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+    flex-grow: 1; // Take remaining height
+
+    &::-webkit-scrollbar { width: 6px; }
+    &::-webkit-scrollbar-track { background: #f1f1f1; }
+    &::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+  }
+
+  // --- ITEMS ---
+  .dragwyb-group-label {
+    padding: 8px 10px;
+    background-color: $select-group-bg;
+    font-weight: 700;
+    font-size: 11px;
+    color: #646970;
+    text-transform: uppercase;
+    pointer-events: none;
+    border-bottom: 1px solid #eee;
+    position: sticky; // Keep group header visible while scrolling options
+    top: 0;
+    z-index: 1;
+  }
+
+  .dragwyb-option {
+    padding: 8px 12px 8px 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: $select-text-color;
+
+    &:hover, &.highlighted {
+      background-color: $select-highlight-color;
+      color: #fff;
+      .dashicons { color: #fff; }
+    }
+
+    &.selected {
+      background-color: #f0f0f1;
+      font-weight: 600;
+      color: #000;
+      
+      &.highlighted {
+         background-color: $select-highlight-color;
+         color: #fff;
+      }
+    }
+  }
+
+  .dragwyb-no-results {
+    padding: 15px;
+    text-align: center;
+    color: $select-placeholder-color;
+    font-style: italic;
+    font-size: 13px;
+  }
+}
+
+.dragwyb-custom-select {
+    position: relative;
+    width: 100%;
+    font-size: 13px;
+    font-family: Roboto, sans-serif;
+
+    * { box-sizing: border-box; }
+
+    // --- The Trigger Box ---
+    .dragwyb-select-trigger {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: $c-bg-light;
+        border: 1px solid $c-border;
+        border-radius: 4px;
+        padding: 6px 10px;
+        min-height: 32px;
+        cursor: pointer;
+        user-select: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+
+        &:hover {
+            border-color: #bbb;
+        }
+
+        .dragwyb-select-value {
+            color: $c-text;
+            
+            &.is-placeholder {
+                color: #999;
+            }
+        }
+        
+        i {
+            font-size: 12px;
+            color: #777;
+        }
+    }
+
+    // Active state
+    &.is-open .dragwyb-select-trigger {
+        border-color: $c-accent;
+        box-shadow: 0 0 0 1px $c-accent;
+    }
+
+    // --- The Dropdown Menu ---
+    .dragwyb-select-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        margin-top: 4px;
+        background: #fff;
+        border: 1px solid $c-border;
+        border-radius: 4px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        z-index: 1000;
+        overflow: hidden;
+    }
+
+    // --- Search Input ---
+    .dragwyb-select-search {
+        padding: 8px;
+        border-bottom: 1px solid #eee;
+        background: #f9f9f9;
+
+        input {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 13px;
+            outline: none;
+
+            &:focus {
+                border-color: $c-accent;
+            }
+        }
+    }
+
+    // --- Options List ---
+    .dragwyb-select-options {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        max-height: 200px; // Scrollable height
+        overflow-y: auto;
+
+        .dragwyb-option {
+            padding: 8px 12px;
+            cursor: pointer;
+            color: $c-text;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.1s;
+
+            // Highlighted via Arrow Keys or Hover
+            &.highlighted {
+                background-color: $c-highlight;
+                color: $c-accent;
+            }
+
+            // Selected State
+            &.selected {
+                background-color: #f7f7f7;
+                font-weight: 600;
+            }
+
+            i {
+                font-size: 14px;
+                color: $c-accent;
+            }
+        }
+
+        .dragwyb-no-results {
+            padding: 10px;
+            text-align: center;
+            color: #999;
+            font-style: italic;
         }
     }
 }

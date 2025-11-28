@@ -37,6 +37,16 @@ jQuery(document).on('Dragwyb:init', () => {
         const container = document.getElementById(DragwybEditor.editorContainer);
         const root = createRoot(container);
 
+        const theme = localStorage.getItem("DragwybEditorTheme") || 'light';
+        const oldClass = theme === 'light' ? 'dark' : 'light';
+        const bodyEleCls=document.body.classList;
+
+        if(oldClass === 'dark'){
+            bodyEleCls.remove(oldClass)
+        }else{
+            bodyEleCls.add(theme);
+        }
+
         // Check form id exists or not in URL if not then appen it using js for prevent page reload id not removed.
         formIdExist();
 

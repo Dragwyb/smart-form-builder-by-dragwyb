@@ -13,6 +13,7 @@ import TabsControl from './tabsControl';
 import SectionControl from './sectionControl';
 import RepeaterControl from './repeaterControl/index';
 import PopoverToggleControl from './popoverToogleControl';
+import FontsControl from './fontsControl';
 
 const initializeControls = () => {
     const defaultControls = {
@@ -28,7 +29,8 @@ const initializeControls = () => {
         'tabs': TabsControl,
         'section': SectionControl,
         'repeater': RepeaterControl,
-        'popover-toggle': PopoverToggleControl
+        'popover-toggle': PopoverToggleControl,
+        'fonts': FontsControl
     }
 
     Object.keys(defaultControls).map(key => DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/ControlRender/' + key, () => { return defaultControls[key] }))
