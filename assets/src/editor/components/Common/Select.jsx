@@ -111,20 +111,21 @@ class CustomSelect extends Component {
                 e.preventDefault();
                 const nextIndex =
                     highlightedIndex === filteredOptions.length - 1 ? 0 : highlightedIndex + 1;
-                this.setState({ highlightedIndex: nextIndex }, this.scrollToHighlighted);
+                this.setState({ highlightedIndex: nextIndex }, this.scrollToHighlighted(nextIndex === 0 ? -1 : nextIndex));
                 break;
 
             case "ArrowUp":
                 e.preventDefault();
                 const prevIndex =
                     highlightedIndex === 0 ? filteredOptions.length - 1 : highlightedIndex - 1;
-                this.setState({ highlightedIndex: prevIndex }, this.scrollToHighlighted);
+                this.setState({ highlightedIndex: prevIndex }, this.scrollToHighlighted(prevIndex === 0 ? -1 : prevIndex));
                 break;
 
             case "Enter":
                 e.preventDefault();
-                if (filteredOptions[highlightedIndex]) {
-                    this.handleSelect(filteredOptions[highlightedIndex]);
+                const optionKeys = Object.keys(filteredOptions);
+                if (optionKeys[highlightedIndex]) {
+                    this.handleSelect(optionKeys[highlightedIndex]);
                 }
                 break;
 
@@ -142,9 +143,22 @@ class CustomSelect extends Component {
     };
 
     // Logic to ensure the highlighted item stays visible in the scrollable UL
-    scrollToHighlighted = () => {
+    scrollToHighlighted = (index) => {
         const list = this.listRef.current;
-        const highlightedItem = list.children[this.state.highlightedIndex];
+        const highlightedItem = list.children[index];
+
+        if (index === -1) {
+            const highlightedItem = list.children[0];
+
+            if (highlightedItem) {
+                const dropdownWrapper = highlightedItem.closest('.dragwyb-select-options')
+
+                if (dropdownWrapper) {
+                    dropdownWrapper.scrollTop = 0;
+                    return;
+                }
+            }
+        }
 
         if (highlightedItem && list) {
             const itemTop = highlightedItem.offsetTop;
@@ -161,7 +175,7 @@ class CustomSelect extends Component {
     };
 
     handleSelect = (option) => {
-        this.props.onChange(option.value);
+        this.props.onChange(option);
         this.setState({ isOpen: false, searchQuery: "" });
     };
 
@@ -172,7 +186,7 @@ class CustomSelect extends Component {
         const filteredOptions = this.getFilteredOptions();
         const filteredOptionsCount = Object.keys(filteredOptions).length;
 
-        const selectedOption = Object.keys(options).find((opt) => options[opt] === value);
+        const selectedOption = Object.keys(options).find((opt) => opt === value);
 
         return (
             <div
@@ -183,7 +197,7 @@ class CustomSelect extends Component {
                 {/* 1. The Trigger Box */}
                 <div className="dragwyb-select-trigger" onClick={this.toggleDropdown}>
                     <span className={`dragwyb-select-value ${!selectedOption ? 'is-placeholder' : ''}`}>
-                        {selectedOption ? selectedOption.label : (placeholder || "Select...")}
+                        {selectedOption ? options[selectedOption] : (placeholder || "Select...")}
                     </span>
                     <i className="dashicons dashicons-arrow-down-alt2"></i>
                 </div>
@@ -215,7 +229,7 @@ class CustomSelect extends Component {
                                             key={key}
                                             className={`dragwyb-option ${isSelected ? "selected" : ""} ${isHighlighted ? "highlighted" : ""}`}
                                             onClick={() => this.handleSelect(filteredOptions[key])}
-                                            onMouseEnter={() => this.setState({ highlightedIndex: index })}
+                                            onMouseMove={() => this.setState({ highlightedIndex: index })}
                                         >
                                             {filteredOptions[key]}
                                             {isSelected && <i className="dashicons dashicons-yes"></i>}

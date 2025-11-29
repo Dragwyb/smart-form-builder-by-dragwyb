@@ -84,6 +84,20 @@ const SelectGroup = ({
 
     const scrollToHighlighted = (index) => {
         const item = itemRefs.current.get(index);
+
+        if (index === -1) {
+            const item = itemRefs.current.get(0);
+
+            if (item) {
+                const dropdownWrapper = item.closest('.dragwyb-select-options')
+
+                if (dropdownWrapper) {
+                    dropdownWrapper.scrollTop = 0;
+                    return;
+                }
+            }
+        }
+
         if (item) {
             item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
@@ -103,13 +117,13 @@ const SelectGroup = ({
                 e.preventDefault();
                 const nextIndex = highlightedIndex < flatVisibleOptions.length - 1 ? highlightedIndex + 1 : 0;
                 setHighlightedIndex(nextIndex);
-                scrollToHighlighted(nextIndex);
+                scrollToHighlighted(nextIndex === 0 ? -1 : nextIndex);
                 break;
             case "ArrowUp":
                 e.preventDefault();
                 const prevIndex = highlightedIndex > 0 ? highlightedIndex - 1 : flatVisibleOptions.length - 1;
                 setHighlightedIndex(prevIndex);
-                scrollToHighlighted(prevIndex);
+                scrollToHighlighted(highlightedIndex > prevIndex ? (prevIndex - 1) : prevIndex);
                 break;
             case "Enter":
                 e.preventDefault();
@@ -175,7 +189,7 @@ const SelectGroup = ({
                                                 ref={(el) => itemRefs.current.set(flatIndex, el)}
                                                 className={`dragwyb-option ${isSelected ? "selected" : ""} ${isHighlighted ? "highlighted" : ""}`}
                                                 onClick={() => handleSelect(option)}
-                                                onMouseEnter={() => setHighlightedIndex(flatIndex)}
+                                                onMouseMove={() => setHighlightedIndex(flatIndex)}
                                             >
                                                 {option.label}
                                                 {isSelected && <span className="dashicons dashicons-yes"></span>}

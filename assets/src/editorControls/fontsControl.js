@@ -48,7 +48,7 @@ export default class FontsControl extends DragwybEditor.editor.extends.ControlBa
                 <SelectGroup
                     options={optionsByGroups(options)}
                     value={currentValue}
-                    onChange={(e) => this.setState({ value: e.target.value })}
+                    onChange={(e) => this.setState({ value: e.value })}
                 />
             </div>
         );
