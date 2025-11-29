@@ -30,13 +30,13 @@ const SearchInput = ({
                 id={id}
                 type="text"
                 value={searchValue}
-                onChange={(e)=>{onChangeHandler(e.target.value)}}
+                onChange={(e) => { onChangeHandler(e.target.value) }}
                 placeholder={placeholder}
             />
             {searchValue && (
                 <button
                     className="dragwyb-search-input__clear"
-                    onClick={() => {onChangeHandler('')}}
+                    onClick={() => { onChangeHandler('') }}
                     type="button"
                 >
                     <i className='fa-solid fa-xmark' />

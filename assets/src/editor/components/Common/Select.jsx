@@ -1,6 +1,6 @@
 import React, { Component, createRef } from "react";
 
-class CustomSelect extends Component {
+class Select extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -12,7 +12,7 @@ class CustomSelect extends Component {
 
         this.containerRef = createRef();
         this.listRef = createRef();
-        this.searchInputRef = createRef();
+        if (this.props.searchInput) this.searchInputRef = createRef();
         this.optionsRef = []; // Array of refs for individual options
     }
 
@@ -26,7 +26,7 @@ class CustomSelect extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         // When opening, focus the search input and reset highlight
-        if (this.state.isOpen && !prevState.isOpen) {
+        if (this.state.isOpen && !prevState.isOpen && this.props.searchInput) {
             if (this.searchInputRef.current) {
                 this.searchInputRef.current.focus();
             }
@@ -69,7 +69,7 @@ class CustomSelect extends Component {
     getFilteredOptions = () => {
         const { options } = this.props;
         const { searchQuery } = this.state;
-        if (!searchQuery) return options;
+        if (!searchQuery || !this.props.searchInput) return options;
 
         const filterOptions = {};
 
@@ -180,7 +180,7 @@ class CustomSelect extends Component {
     };
 
     render() {
-        const { options, value, placeholder } = this.props;
+        const { options, value, placeholder, searchInput = false } = this.props;
         const { isOpen, searchQuery, highlightedIndex, dropdownPosition } = this.state;
 
         const filteredOptions = this.getFilteredOptions();
@@ -206,7 +206,7 @@ class CustomSelect extends Component {
                 {isOpen && (
                     <div className={`dragwyb-select-dropdown position-${dropdownPosition}`}>
                         {/* Search Input */}
-                        <div className="dragwyb-select-search">
+                        {searchInput && <div className="dragwyb-select-search">
                             <input
                                 ref={this.searchInputRef}
                                 type="text"
@@ -215,7 +215,7 @@ class CustomSelect extends Component {
                                 placeholder="Search..."
                                 onClick={(e) => e.stopPropagation()} // Prevent triggering close
                             />
-                        </div>
+                        </div>}
 
                         {/* Options List */}
                         <ul className="dragwyb-select-options" ref={this.listRef}>
@@ -247,4 +247,4 @@ class CustomSelect extends Component {
     }
 }
 
-export default CustomSelect;
+export default Select;

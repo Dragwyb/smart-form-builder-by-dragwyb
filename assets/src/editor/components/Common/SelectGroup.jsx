@@ -4,7 +4,8 @@ const SelectGroup = ({
     options,
     value,
     onChange,
-    placeholder = "Select..."
+    placeholder = "Select...",
+    searchInput = false
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [dropdownPosition, setDropdownPosition] = useState("bottom"); // 'top' or 'bottom'
@@ -18,7 +19,7 @@ const SelectGroup = ({
 
     // --- 1. Filter Logic (Same as before) ---
     const filteredGroups = useMemo(() => {
-        if (!searchQuery) return options;
+        if (!searchQuery || !searchInput) return options;
         return options.map(group => {
             const matchingOptions = group.options.filter(opt =>
                 opt.label.toLowerCase().includes(searchQuery.toLowerCase())
@@ -160,20 +161,21 @@ const SelectGroup = ({
 
             {isOpen && (
                 <div className={`dragwyb-select-dropdown position-${dropdownPosition}`}>
-                    <div className="dragwyb-select-search">
-                        <input
-                            ref={inputRef}
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => {
-                                setSearchQuery(e.target.value);
-                                setHighlightedIndex(0);
-                            }}
-                            placeholder="Search..."
-                            onClick={(e) => e.stopPropagation()}
-                        />
-                    </div>
-
+                    {searchInput && (
+                        <div className="dragwyb-select-search">
+                            <input
+                                ref={inputRef}
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => {
+                                    setSearchQuery(e.target.value);
+                                    setHighlightedIndex(0);
+                                }}
+                                placeholder="Search..."
+                                onClick={(e) => e.stopPropagation()}
+                            />
+                        </div>
+                    )}
                     <ul className="dragwyb-select-options" ref={listRef}>
                         {filteredGroups.length > 0 ? (
                             filteredGroups.map((group, groupIndex) => (
