@@ -6,13 +6,6 @@ namespace Dragwyb\Form_Builder\Includes\Controls\Controls;
 
 class Control_Slider extends Control_Base
 {
-
-    protected function register_scripts()
-    {
-        return array();
-    }
-
-
     protected function register_settings()
     {
         return array(
@@ -33,13 +26,7 @@ class Control_Slider extends Control_Base
             'show_label' => true
         );
     }
-
-
-    protected function register_style()
-    {
-        return array();
-    }
-
+    
     protected function init(): void
     {
         $this->type = 'slider';

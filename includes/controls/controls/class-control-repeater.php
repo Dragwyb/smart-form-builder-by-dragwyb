@@ -13,18 +13,7 @@ class Control_Repeater extends Control_Base
     private $field_module_cache = array();
     private $module = null;
     private $controls = null;
-
-    protected function register_scripts()
-    {
-        return array();
-    }
-
-
-    protected function register_style()
-    {
-        return array();
-    }
-
+    
     protected function register_settings()
     {
         return array(

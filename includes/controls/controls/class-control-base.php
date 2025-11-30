@@ -13,8 +13,14 @@ abstract class Control_Base
     protected $field_type = null;
     protected $control_id = null;
 
-    abstract protected function register_scripts();
-    abstract protected function register_style();
+    protected function register_scripts(): array
+    {
+        return array();
+    }
+    protected function register_style(): array
+    {
+        return array();
+    }
     abstract protected function init(): void;
     abstract protected function sanitize_control($value);
     abstract protected function register_settings();
@@ -60,7 +66,6 @@ abstract class Control_Base
     {
         $control_settings = $this->register_settings();
 
-
         if (!isset($control_settings['type'])) {
             $control_settings['type'] = 'string';
         }
@@ -74,10 +79,16 @@ abstract class Control_Base
             $data['default'] = $default;
         }
 
-        foreach ($data as $setting => $value) {
-            if (!array_key_exists($setting, $control_settings)) {
+        $matched_keys = array_intersect_key($control_settings, $data);
+
+        
+        foreach ($matched_keys as $key => $key_type) {
+            if (!array_key_exists($key, $control_settings) || !array_key_exists($key, $data)) {
                 continue;
             }
+
+            $setting = $key;
+            $value = isset($data[$key]) ? $data[$key] : '';
 
             $sanitize_setting = $this->filter_setting_data($control_settings[$setting], $value, $setting);
 

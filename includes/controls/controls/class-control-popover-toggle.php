@@ -6,18 +6,6 @@ namespace Dragwyb\Form_Builder\Includes\Controls\Controls;
 
 class Control_Popover_Toggle extends Control_Base
 {
-
-    protected function register_scripts()
-    {
-        return array();
-    }
-
-
-    protected function register_style()
-    {
-        return array();
-    }
-
     protected function register_settings()
     {
         return array(

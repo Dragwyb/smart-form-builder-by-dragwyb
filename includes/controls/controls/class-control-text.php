@@ -7,7 +7,7 @@ namespace Dragwyb\Form_Builder\Includes\Controls\Controls;
 class Control_Text extends Control_Base
 {
 
-    protected function register_scripts()
+    protected function register_scripts(): array
     {
         return array('dragwyb-editor-controls');
     }
@@ -23,7 +23,7 @@ class Control_Text extends Control_Base
     }
 
 
-    protected function register_style()
+    protected function register_style(): array
     {
         return array('dragwyb-editor-controls');
     }
