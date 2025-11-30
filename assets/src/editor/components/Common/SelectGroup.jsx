@@ -1,23 +1,28 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
 
-const SelectGroup = ({
+const GroupedSelect = ({
     options,
     value,
     onChange,
     placeholder = "Select...",
-    searchInput = false
+    searchInput = false,
+    renderOption,
+    listRef,
+    className
 }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [dropdownPosition, setDropdownPosition] = useState("bottom"); // 'top' or 'bottom'
+    const [dropdownPosition, setDropdownPosition] = useState("bottom");
     const [searchQuery, setSearchQuery] = useState("");
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
     const containerRef = useRef(null);
     const inputRef = useRef(null);
-    const listRef = useRef(null);
+    const internalListRef = useRef(null); // Fallback if no external listRef provided
     const itemRefs = useRef(new Map());
 
-    // --- 1. Filter Logic (Same as before) ---
+    // Use external ref if provided, otherwise internal
+    const activeListRef = listRef || internalListRef;
+
     const filteredGroups = useMemo(() => {
         if (!searchQuery || !searchInput) return options;
         return options.map(group => {
@@ -32,7 +37,6 @@ const SelectGroup = ({
         return filteredGroups.flatMap(group => group.options);
     }, [filteredGroups]);
 
-    // --- 2. Positioning Logic ---
     const toggleDropdown = () => {
         if (isOpen) {
             setIsOpen(false);
@@ -55,14 +59,12 @@ const SelectGroup = ({
         setIsOpen(true);
     };
 
-    // --- 3. Effects ---
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (containerRef.current && !containerRef.current.contains(event.target)) {
                 setIsOpen(false);
             }
         };
-        // Use 'mousedown' or 'click' depending on preference
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
@@ -77,7 +79,6 @@ const SelectGroup = ({
         }
     }, [isOpen]);
 
-    // --- 4. Handlers ---
     const handleSelect = (option) => {
         onChange(option);
         setIsOpen(false);
@@ -105,6 +106,7 @@ const SelectGroup = ({
     };
 
     const handleKeyDown = (e) => {
+        console.log(e);
         if (!isOpen) {
             if (e.key === "Enter" || e.key === "ArrowDown") {
                 e.preventDefault();
@@ -144,14 +146,10 @@ const SelectGroup = ({
             if (found) return found.label;
         }
         return value;
-    };
+    }
 
     return (
-        <div
-            className={`dragwyb-select ${isOpen ? "is-open" : ""} position-${dropdownPosition}`}
-            ref={containerRef}
-            onKeyDown={handleKeyDown}
-        >
+        <div className={`dragwyb-select dragwyb-select-group${isOpen ? " is-open" : ""} position-${dropdownPosition}${className ? " " + className : ""}`} ref={containerRef} onKeyDown={handleKeyDown}>
             <div className="dragwyb-select-trigger" onClick={toggleDropdown}>
                 <span className={`dragwyb-select-value ${!value ? 'is-placeholder' : ''}`}>
                     {getDisplayLabel()}
@@ -159,6 +157,7 @@ const SelectGroup = ({
                 <i className="dashicons dashicons-arrow-down-alt2"></i>
             </div>
 
+            {/* Dropdown */}
             {isOpen && (
                 <div className={`dragwyb-select-dropdown position-${dropdownPosition}`}>
                     {searchInput && (
@@ -173,26 +172,46 @@ const SelectGroup = ({
                                 }}
                                 placeholder="Search..."
                                 onClick={(e) => e.stopPropagation()}
+                                autoFocus
                             />
                         </div>
                     )}
-                    <ul className="dragwyb-select-options" ref={listRef}>
+
+                    {/* We pass the ref here so Parent can observe scrolling */}
+                    <ul className="dragwyb-select-options" ref={activeListRef}>
                         {filteredGroups.length > 0 ? (
                             filteredGroups.map((group, groupIndex) => (
                                 <React.Fragment key={group.label || groupIndex}>
                                     <li className="dragwyb-group-label">{group.label}</li>
+
                                     {group.options.map((option) => {
                                         const flatIndex = flatVisibleOptions.indexOf(option);
                                         const isHighlighted = flatIndex === highlightedIndex;
                                         const isSelected = value === option.value;
+
+                                        // Common props for the option
+                                        const optionProps = {
+                                            key: option.value,
+                                            className: `dragwyb-option ${isSelected ? "selected" : ""} ${isHighlighted ? "highlighted" : ""}`,
+                                            onClick: () => handleSelect(option),
+                                            onMouseMove: () => setHighlightedIndex(flatIndex),
+                                            // Pass the ref function so we can scroll to item
+                                            ref: (el) => itemRefs.current.set(flatIndex, el)
+                                        };
+
+                                        // 1. If Parent provided a custom renderer, use it!
+                                        if (renderOption) {
+                                            return renderOption({
+                                                option,
+                                                ...optionProps,
+                                                isSelected,
+                                                isHighlighted
+                                            });
+                                        }
+
+                                        // 2. Otherwise, render default LI
                                         return (
-                                            <li
-                                                key={option.value}
-                                                ref={(el) => itemRefs.current.set(flatIndex, el)}
-                                                className={`dragwyb-option ${isSelected ? "selected" : ""} ${isHighlighted ? "highlighted" : ""}`}
-                                                onClick={() => handleSelect(option)}
-                                                onMouseMove={() => setHighlightedIndex(flatIndex)}
-                                            >
+                                            <li {...optionProps}>
                                                 {option.label}
                                                 {isSelected && <span className="dashicons dashicons-yes"></span>}
                                             </li>
@@ -210,4 +229,4 @@ const SelectGroup = ({
     );
 };
 
-export default SelectGroup;
+export default GroupedSelect;

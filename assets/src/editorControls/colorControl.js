@@ -1,3 +1,5 @@
+import { IoColorPaletteOutline } from "react-icons/io5";
+
 export default class ColorControl extends DragwybEditor.editor.extends.ControlBase {
     pickr = null;
 
@@ -29,7 +31,7 @@ export default class ColorControl extends DragwybEditor.editor.extends.ControlBa
             default: value || '#000000',
             comparison: false,
             appClass: 'dragwyb-color__pickr',
-            
+
             components: {
                 preview: false,
                 opacity: true,
@@ -76,7 +78,7 @@ export default class ColorControl extends DragwybEditor.editor.extends.ControlBa
                     </label>
                 )}
 
-                <div className="dragwyb-color__wrapper">
+                <div className="dragwyb-color__wrapper" onClick={() => this.initPickr()}>
 
                     {/* Hidden input so your PHP receives value */}
                     <input
@@ -91,8 +93,11 @@ export default class ColorControl extends DragwybEditor.editor.extends.ControlBa
                         className="dragwyb-color__preview"
                         data-id={id}
                         style={{ '--pcr-color': value }}
-                        onClick={() => this.initPickr()}
                     />
+
+                    <span className="dragwyb-color__code" data-id={id}>{value}</span>
+
+                    <IoColorPaletteOutline size="1.3rem" />
                 </div>
             </div>
         );

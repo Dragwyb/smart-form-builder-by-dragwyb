@@ -22,11 +22,11 @@ const Header = () => {
     const toggleTheme = () => {
         const newTheme = theme === 'light' ? 'dark' : 'light';
         const oldClass = newTheme === 'light' ? 'dark' : 'light';
-        const bodyEleCls=document.body.classList;
+        const bodyEleCls = document.body.classList;
 
-        if(oldClass === 'dark'){
+        if (oldClass === 'dark') {
             bodyEleCls.remove(oldClass)
-        }else{
+        } else {
             bodyEleCls.add(newTheme);
         }
 
@@ -68,7 +68,9 @@ const Header = () => {
                     className="dragwyb-editor__theme-toggle"
                     onClick={toggleTheme}
                     title={theme === 'light' ? __('Switch to Dark Mode', 'dragwyb-form-builder') : __('Switch to Light Mode', 'dragwyb-form-builder')}                >
-                    {theme === 'light' ? <FaMoon /> : <FaSun color="#f39c12" />}
+                    <div>
+                        {theme === 'light' ? <FaMoon color='black' /> : <FaSun color="#f39c12" />}
+                    </div>
                 </div>
                 {/* -------------------------------- */}
 

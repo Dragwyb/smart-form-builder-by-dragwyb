@@ -389,6 +389,11 @@ body {
             color: hsl(var(--dragwyb-foreground) / var(--dragwyb-text-opacity, 1));
             font-size: 20px;
         }
+
+        &>div:not(:nth-of-type(1)){
+            border-left: 1px solid hsl(var(--dragwyb-border) / var(--dragwyb-border-opacity, 1));
+            padding-left: 0.75rem;
+        }
     }
 
     &__title {
@@ -434,15 +439,18 @@ body {
         }
     }
 
-    &__theme-toggle{
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        font-size: 18px;
-        background: hsl(var(--dragwyb-secondary)/var(--dragwyb-bg-opacity, 1));
-        padding: 0.36rem 0.65rem;
-        border-radius: 8px;
-        font-size: 12px;
+    &__theme-toggle{        
+        div{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            border-radius: 8px;
+            padding: 5.8px;
+            background: hsl(var(--dragwyb-secondary)/var(--dragwyb-bg-opacity, 1));
+            color: black;
+            cursor: pointer;
+        }
     }
 
     &__tabs {
@@ -907,6 +915,7 @@ $dropdown-max-height: 250px;
 
   // --- DROPDOWN BASE ---
   &-dropdown {
+    width: 100%;
     position: absolute;
     left: 0;
     background: $select-bg-color;
@@ -916,22 +925,21 @@ $dropdown-max-height: 250px;
     max-height: $dropdown-max-height; // Use variable
     display: inline-flex;
     flex-direction: column;
+    overflow: hidden;
 
     // Position: BOTTOM
     &.position-bottom {
       top: 100%;
-      border-top: none;
       border-radius: 0 0 4px 4px;
-      margin-top: -1px; // Overlap trigger border
+      margin-top: 2px; // Overlap trigger border
     }
 
     // Position: TOP
     &.position-top {
       bottom: 100%; // Push upwards
       top: auto;
-      border-bottom: none;
       border-radius: 4px 4px 0 0;
-      margin-bottom: -1px; // Overlap trigger border
+      margin-bottom: 2px; // Overlap trigger border
       box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1); // Shadow upwards
       
       // Since flex-direction is column, search is at top.
@@ -993,13 +1001,14 @@ $dropdown-max-height: 250px;
   }
 
   .dragwyb-option {
-    padding: 8px 12px 8px 20px;
+    padding: 8px 10px 8px 10px;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 13px;
     color: $select-text-color;
+    margin: 0;
 
     &.highlighted {
       background-color: $select-highlight-color;

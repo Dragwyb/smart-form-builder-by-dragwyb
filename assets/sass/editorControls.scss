@@ -184,13 +184,8 @@
     }
   }
 
-  .dragwyb-unit-selector {
-    position: relative;
-    display: inline-block;
-    font-size: 12px;
-    color: #333;
-
-    &__trigger {
+  .dragwyb-unit-selector.dragwyb-select{
+    .dragwyb-select-trigger{
       display: flex;
       align-items: center;
       gap: 2px;
@@ -204,54 +199,16 @@
       border-radius: 4px;
       background: white;
       border-radius: 15px;
+      min-height: unset;
 
-      span {
-        min-width: 20px;
-        text-align: center;
-      }
-    }
-
-    &__icon {
-      font-size: 14px;
-      transition: transform 0.2s ease;
-    }
-
-    &.is-open {
-      .dragwyb-unit-selector__icon {
-        transform: rotate(180deg);
-      }
-    }
-
-    &__list {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      margin: 4px 0 0;
-      padding: 4px 0;
-      background: #fff;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      border-radius: 4px;
-      list-style: none;
-      min-width: 50px;
-      z-index: 10;
-    }
-
-    &__item {
-      padding: 4px 8px;
-      cursor: pointer;
-      text-align: center;
-
-      &:hover {
-        background: #f0f0f0;
-      }
-
-      &.is-active {
-        font-weight: 600;
-        background: #e6f0ff;
+      i{
+        font-size: 14px;
+        width: unset;
+        height: unset;
       }
     }
   }
-
+  
   /* =========================
      Slider
      ========================= */
@@ -473,17 +430,18 @@
      Color
      ========================= */
   .dragwyb-control--color {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     margin-block: .5rem;
-
-    label{
-      margin-bottom: 0;
-    }
 
     .dragwyb-color__wrapper{
       display: flex;
+      gap: 1rem;
+      border: 1px solid hsl(var(--dragwyb-border)/var(--dragwyb-border-opacity, 1));
+      border-radius: 6px;
+      font-size: .8rem;
+      align-items: center;
+      justify-content: center;  
+      padding: .5rem;
+      cursor: pointer;
     }
 
     .dragwyb-color__preview {
@@ -515,6 +473,10 @@
         background: var(--pcr-color);
         border-radius: .15em;
       }
+    }
+
+    .dragwyb-color__code{
+      margin-right: auto;
     }
   }
 
@@ -629,7 +591,6 @@
   .dragwyb-control--popover-toggle {
     .dragwyb-popover__trigger {
       padding: 6px 12px;
-      background: #f1f1f1;
       border-radius: 4px;
       cursor: pointer;
       border: none;
@@ -638,6 +599,11 @@
       display: flex;
       justify-content: space-between;
       width: 100%;
+      align-items: center;
+
+      label{
+        margin-bottom: 0px;
+      }
 
       &.is-active {
         background: #0073e6;
