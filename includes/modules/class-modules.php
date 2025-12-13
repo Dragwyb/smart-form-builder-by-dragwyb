@@ -39,7 +39,7 @@ class Modules extends Toolbar_Base
 
     protected function sanitize_data(array $data): array
     {
-        $sanitize_module_data = Sanitize_Module_Settings::instance($data);
+        $sanitize_module_data = new Sanitize_Module_Settings($data);
         $sanitize_data = $sanitize_module_data->get_data();
 
         if ($sanitize_data && is_array($sanitize_data) && count($sanitize_data) > 0) {
@@ -87,7 +87,7 @@ class Modules extends Toolbar_Base
     {
         $fields_data = $this->get_fields();
         $form_id = absint($this->get_form_id());
-        $data=array();
+        $data = array();
         $data['label'] = sprintf(esc_html__('%s Settings'), sanitize_text_field($this->get_name()));
         $fields = [];
 
@@ -109,7 +109,7 @@ class Modules extends Toolbar_Base
             }
         }
 
-        $data['fields']=$fields;
+        $data['fields'] = $fields;
 
         return $data;
     }
