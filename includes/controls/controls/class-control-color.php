@@ -12,7 +12,8 @@ class Control_Color extends Control_Base
             'name' => 'string',
             'label' => 'string',
             'default' => 'string',
-            'conditions' => 'conditions'
+            'conditions' => 'conditions',
+            'label_inline' => 'boolean',
         );
     }
 

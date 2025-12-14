@@ -13,7 +13,8 @@ class Control_Radio extends Control_Base
             'label' => 'string',
             'default' => 'string',
             'conditions' => 'conditions',
-            'options' => 'custom'
+            'options' => 'custom',
+            'label_inline' => 'boolean',
         );
     }
 

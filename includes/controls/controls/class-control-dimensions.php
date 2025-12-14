@@ -15,7 +15,7 @@ class Control_Dimensions extends Control_Base
             'conditions' => 'conditions',
             'show_label'      => 'boolean',
             'linked'      => 'boolean',
-            'units'      => 'custom',
+            'units'      => 'custom'
         );
     }
 

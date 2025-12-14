@@ -16,7 +16,8 @@ class Control_Switcher extends Control_Base
             'off_label' => 'string',
             'return_value' => 'string',
             'show_label' => 'boolean',
-            'conditions' => 'conditions'
+            'conditions' => 'conditions',
+            'label_inline' => 'boolean',
         );
     }
 

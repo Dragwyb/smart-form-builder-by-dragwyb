@@ -27,6 +27,7 @@ class Control_Fonts extends Control_Base
             'exclude_fonts' => 'custom',
             'groups' => 'custom',
             'options' => 'custom', // Allow passing specific font groups if needed
+            'label_inline' => 'boolean',
         ];
     }
 
@@ -35,6 +36,7 @@ class Control_Fonts extends Control_Base
         return [
             'value' => 'Roboto', // Default Font
             'options' => $this->get_fonts_list(),
+            'label_inline' => true,
         ];
     }
 

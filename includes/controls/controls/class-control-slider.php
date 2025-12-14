@@ -26,7 +26,7 @@ class Control_Slider extends Control_Base
             'show_label' => true
         );
     }
-    
+
     protected function init(): void
     {
         $this->type = 'slider';
@@ -72,7 +72,7 @@ class Control_Slider extends Control_Base
     protected function units_setting_sanitize($value): array
     {
         $filtered_units = ['px'];
-        
+
         if (is_array($value) && count($value) > 0) {
             foreach ($value as $unit) {
                 if (!in_array($unit, $filtered_units)) {

@@ -14,7 +14,8 @@ class Control_Number extends Control_Base
             'default' => 'number',
             'min' => 'number',
             'max' => 'number',
-            'conditions' => 'conditions'
+            'conditions' => 'conditions',
+            'label_inline' => 'boolean',
         );
     }
 

@@ -6,6 +6,12 @@ namespace Dragwyb\Form_Builder\Includes\Controls\Controls;
 
 class Control_Popover_Toggle extends Control_Base
 {
+    protected function init(): void
+    {
+        $this->type = 'popover-toggle';
+        $this->name = __('Popover Toogle', 'dragwyb-form-builder');
+    }
+
     protected function register_settings()
     {
         return array(
@@ -17,10 +23,11 @@ class Control_Popover_Toggle extends Control_Base
         );
     }
 
-    protected function init(): void
+    protected function default_setting(): array
     {
-        $this->type = 'popover-toggle';
-        $this->name = __('Popover Toogle', 'dragwyb-form-builder');
+        return [
+            'label_inline' => true,
+        ];
     }
 
     protected function sanitize_control($value)
