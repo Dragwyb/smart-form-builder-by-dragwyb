@@ -4,7 +4,8 @@
  * Plugin Name: Dragwyb Form Builder
  * Description: Drag and drop form builder for WordPress
  * Version: 1.0.0
- * Author: Your Name
+ * Author: Dragwyb
+ * Author URI:  dragwyb.com
  * Text Domain: dragwyb-form-builder
  */
 
@@ -83,8 +84,8 @@ final class Dragwyb_Form_Builder
     public function init_plugin(): void
     {
 
-       $dragwyb=Dragwyb_Init::instance();
-       $dragwyb->init();
+        $dragwyb = Dragwyb_Init::instance();
+        $dragwyb->init();
     }
 
     /**
