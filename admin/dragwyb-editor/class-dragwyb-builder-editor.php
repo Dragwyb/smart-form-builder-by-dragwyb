@@ -10,6 +10,7 @@ use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Dragwyb_Init;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbars;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
+use Dragwyb\Form_Builder\Includes\Controls\Icons\Icons_Helper;
 
 if (!defined("ABSPATH")) {
     die("You can't access this page");
@@ -144,9 +145,9 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
 
             wp_enqueue_script('dragwyb-form-core');
 
-            $js_dependencies = apply_filters('Dragwyb/Editor/scripts/dependencies',array('jquery', 'dragwyb-form-core', 'jquery-ui-resizable', 'wp-element', 'wp-components', 'wp-i18n'));
+            $js_dependencies = apply_filters('Dragwyb/Editor/scripts/dependencies', array('jquery', 'dragwyb-form-core', 'jquery-ui-resizable', 'wp-element', 'wp-components', 'wp-i18n'));
 
-            $style_dependencies = apply_filters('Dragwyb/Editor/style/dependencies',array('wp-components'));
+            $style_dependencies = apply_filters('Dragwyb/Editor/style/dependencies', array('wp-components'));
 
             // Enqueue React and dependencies
             wp_enqueue_script(
@@ -173,6 +174,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 'controlTypes' => $this->get_control_types(),
                 'formTypes' => $this->get_form_types(),
                 'adminUrl' => admin_url('admin.php?page=dragwyb-form-overview'),
+                'faIconsList' => $this->get_fa_icons_list(),
             ];
 
             $localize_data = apply_filters('Dragwyb/Editor/Localize_Settings', $localize_data);
@@ -182,14 +184,22 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             do_action('Dragwyb/after_enqueue/editor_scripts');
         }
 
-        private function external_libs(): void{
+        private function get_fa_icons_list(): array
+        {
+            $icons = Icons_Helper::get_icons_list_group();
+
+            return $icons;
+        }
+
+        private function external_libs(): void
+        {
             wp_enqueue_style(
                 'dragwyb-font-awesome',
-                DRAGWYB_FORM_BUILDER_URL . 'assets/font-awesome/v6/all.min.css',
+                DRAGWYB_FORM_BUILDER_URL . 'assets/font-awesome/v5/all.min.css',
                 [],
                 '6.7.2'
             );
-            
+
             // @simonwep/pickr@1.9.1 style
             wp_enqueue_style(
                 'dragwyb-pickr',
@@ -207,14 +217,14 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 true
             );
 
-            add_filter('Dragwyb/Editor/scripts/dependencies',function ($dependencies){
-                $dependencies[]='dragwyb-pickr';
+            add_filter('Dragwyb/Editor/scripts/dependencies', function ($dependencies) {
+                $dependencies[] = 'dragwyb-pickr';
 
                 return $dependencies;
             });
 
-            add_filter('Dragwyb/Editor/style/dependencies',function ($dependencies){
-                $dependencies[]='dragwyb-pickr';
+            add_filter('Dragwyb/Editor/style/dependencies', function ($dependencies) {
+                $dependencies[] = 'dragwyb-pickr';
 
                 return $dependencies;
             });

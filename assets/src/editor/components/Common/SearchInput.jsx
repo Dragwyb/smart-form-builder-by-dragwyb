@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Dashicon } from '@wordpress/components';
 import { useDebouncedCallback } from '../../utils/helpers';
+import { FaMagnifyingGlass, FaXmark } from "react-icons/fa6";
+import { __ } from '@wordpress/i18n';
 
 const SearchInput = ({
     value,
@@ -23,8 +25,10 @@ const SearchInput = ({
 
     return (
         <div className={`dragwyb-search-input ${className}`}>
-            <label for={id}>
-                <i className='fa-solid fa-magnifying-glass' />
+            <label for={id} title={__('Search', 'dragwyb-form-builder')}>
+                <span className="search-icon">
+                    <FaMagnifyingGlass />
+                </span>
             </label>
             <input
                 id={id}
@@ -38,8 +42,9 @@ const SearchInput = ({
                     className="dragwyb-search-input__clear"
                     onClick={() => { onChangeHandler('') }}
                     type="button"
+                    title={__('Clear', 'dragwyb-form-builder')}
                 >
-                    <i className='fa-solid fa-xmark' />
+                    <span><FaXmark /></span>
                 </button>
             )}
         </div>

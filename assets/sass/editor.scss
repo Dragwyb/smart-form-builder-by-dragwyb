@@ -295,13 +295,18 @@ body {
 .dragwyb-search-input {
     position: relative;
     color: hsl(var(--dragwyb-card-foreground) / var(--dragwyb-text-opacity, 1));
+    font-size: 12px;
 
-    i {
+    span.search-icon {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
         left: 10px;
         cursor: pointer;
+        font-size: 12px;
+        line-height: 1;
+        display: flex;
+        color: #646970;
     }
 
     button {
@@ -310,9 +315,12 @@ body {
         transform: translateY(-50%);
         right: 10px;
 
-        i {
-            transform: unset;
-            position: unset;
+        span {
+            display: flex;
+            line-height: 1;
+            font-size: 12px;
+            cursor: pointer;
+            color: #646970;
         }
     }
 
@@ -322,9 +330,10 @@ body {
         box-shadow: unset;
         outline-color: var(--primary-light-color);
         transition: all .3s ease-in-out;
-        padding-inline: 2rem;
+        padding-inline: 1.8rem 2rem;
         background-color: hsl(var(--dragwyb-background) / var(--dragwyb-bg-opacity, 1));
         color: inherit;
+        font-size: inherit;
 
         &:focus,
         &:hover {
@@ -557,21 +566,20 @@ body {
             display: grid;
             text-align: center;
             gap: .5rem;
-            padding: 0.8rem 1.3rem;
-            border-bottom: 1px solid hsl(var(--dragwyb-muted-foreground)/var(--dragwyb-text-opacity, 1));
+            padding: .5rem;
+            border-bottom: 1px solid hsl(var(--dragwyb-sidebar-accent)/var(--dragwyb-bg-opacity, 1));
             color: hsl(var(--dragwyb-card-foreground)/var(--dragwyb-text-opacity, 1));
             transition: all 0.3s ease-in-out;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 13px;
 
             &:hover,
             &.active {
-                background: var(--primary-light-color);
-                color: hsl(var(--dragwyb-primary) / var(--dragwyb-text-opacity, 1));
+                background: hsl(var(--dragwyb-sidebar-accent)/0.6);
             }
 
             i {
-                font-size: 1.5rem;
+                font-size: 1rem;
             }
         }
     }

@@ -27,6 +27,7 @@ class Control_Popover_Toggle extends Control_Base
     {
         return [
             'label_inline' => true,
+            'icon' => 'fas fa-pen'
         ];
     }
 

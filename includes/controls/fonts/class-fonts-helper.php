@@ -1,6 +1,6 @@
 <?php
 
-namespace Dragwyb\Form_Builder\Includes\Controls;
+namespace Dragwyb\Form_Builder\Includes\Controls\Fonts;
 
 if (! defined('ABSPATH')) {
 	exit; // Exit if accessed directly.

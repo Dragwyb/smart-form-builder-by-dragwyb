@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Controls\Controls;
 
-use Dragwyb\Form_Builder\Includes\Controls\Fonts_Helper;
+use Dragwyb\Form_Builder\Includes\Controls\Fonts\Fonts_Helper;
 
 class Control_Fonts extends Control_Base
 {

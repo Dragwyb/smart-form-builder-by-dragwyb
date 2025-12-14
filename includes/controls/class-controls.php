@@ -13,6 +13,8 @@ class Controls
     const COLOR = 'color';
     const DIMENSIONS = 'dimensions';
     const FONTS = 'fonts';
+    const GALLERY = 'gallery';
+    const ICON = 'icon';
     const NUMBER = 'number';
     const POPOVER_TOGGLE = 'popover-toggle';
     const RADIO = 'radio';
@@ -25,6 +27,7 @@ class Controls
     const TAB = 'tab';
     const TEXT = 'text';
     const TEXTAREA = 'textarea';
+    const URL = 'url';
 
     const GROUP_TYPOGRAPHY = 'typography';
 

@@ -6,17 +6,24 @@ namespace Dragwyb\Form_Builder\Includes\Controls\Group\Typography;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls\Control_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
-use Dragwyb\Form_Builder\Includes\Controls\Fonts_Helper;
+use Dragwyb\Form_Builder\Includes\Controls\Fonts\Fonts_Helper;
 
 class Control_Typography extends Control_Base
 {
     private string $id = '';
     private array $data = [];
+    private string $icon = '';
 
     protected function init(): void
     {
         $this->type = 'typography';
         $this->name = __('Typography', 'dragwyb-form-builder');
+        $this->icon = 'fas fa-pen';
+    }
+
+    public function get_icon(): string
+    {
+        return $this->icon;
     }
 
     protected function register_settings(): array

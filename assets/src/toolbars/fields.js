@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { SearchInput } from '../editor/components/Common';
 import { __ } from '@wordpress/i18n';
 
@@ -27,25 +27,25 @@ const SidebarField = (props) => {
   );
 }
 
-const Sidebar = ({fieldTypes, Utils, addFieldHandler}) => {
-  const [renderFields, setRenderFields]=useState(fieldTypes);
+const Sidebar = ({ fieldTypes, Utils, addFieldHandler }) => {
+  const [renderFields, setRenderFields] = useState(fieldTypes);
 
-  const searchFieldHandler=(value)=>{
-    if(value === ''){
+  const searchFieldHandler = (value) => {
+    if (value === '') {
       setRenderFields(fieldTypes);
       return;
     }
-    const searchFields={};
+    const searchFields = {};
 
     Object.keys(fieldTypes).forEach(key => {
-      if(key.startsWith(value)){
-        searchFields[key]=fieldTypes[key];
-      }else if(fieldTypes[key] && fieldTypes[key].keywords && fieldTypes[key].keywords.length > 0){
-        const keywords=fieldTypes[key].keywords;
-        const keywordsExist=keywords.filter(key=>key.startsWith(value));
+      if (key.startsWith(value)) {
+        searchFields[key] = fieldTypes[key];
+      } else if (fieldTypes[key] && fieldTypes[key].keywords && fieldTypes[key].keywords.length > 0) {
+        const keywords = fieldTypes[key].keywords;
+        const keywordsExist = keywords.filter(key => key.startsWith(value));
 
-        if(keywordsExist && keywordsExist.length > 0){
-          searchFields[key]=fieldTypes[key];
+        if (keywordsExist && keywordsExist.length > 0) {
+          searchFields[key] = fieldTypes[key];
         }
       }
     });
@@ -57,6 +57,7 @@ const Sidebar = ({fieldTypes, Utils, addFieldHandler}) => {
       <SearchInput
         onChange={searchFieldHandler}
         placeholder="Search fields..."
+        id="dragwyb-controls__search"
       />
     </div>
     <div className="dragwyb-controls__fields">
@@ -95,25 +96,25 @@ class Fields extends DragwybEditor.editor.extends.ToolbarBase {
 
     const fieldTypes = DragwybEditor.fields.fields;
 
-    return <Sidebar fieldTypes={fieldTypes} Utils={Utils} addFieldHandler={this.addFieldHandler}/>;
+    return <Sidebar fieldTypes={fieldTypes} Utils={Utils} addFieldHandler={this.addFieldHandler} />;
   }
 
   getToolbarSettings() {
     const key = this.settingId;
     const data = this.toolbarData;
     const setting = this.settings;
-    let selectedFieldSettings=setting;
-    selectedFieldSettings.panelHeading=setting.label ?? this.toolBarName;
-    
+    let selectedFieldSettings = setting;
+    selectedFieldSettings.panelHeading = setting.label ?? this.toolBarName;
+
     if (key === 'fields' || !key) return false;
     const selectedField = this.getSelectedField(data, key);
-    
+
     if (setting.fields && selectedField.type && setting.fields[selectedField.type]) {
-      selectedFieldSettings=setting.fields[selectedField.type];
-      selectedFieldSettings.panelHeading=<>{__('Field Settings', 'dragwyb-form-builder')} <span>{selectedFieldSettings.label}</span></>;
+      selectedFieldSettings = setting.fields[selectedField.type];
+      selectedFieldSettings.panelHeading = <>{__('Field Settings', 'dragwyb-form-builder')} <span>{selectedFieldSettings.label}</span></>;
     }
-    
-    selectedFieldSettings.id=key;
+
+    selectedFieldSettings.id = key;
     return selectedFieldSettings;
   }
 
