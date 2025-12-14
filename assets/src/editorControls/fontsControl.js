@@ -73,6 +73,7 @@ export default class FontsControl extends DragwybEditor.editor.extends.ControlBa
         // Disconnect existing observer if any
         if (this.observer) this.observer.disconnect();
 
+
         this.observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
@@ -87,6 +88,9 @@ export default class FontsControl extends DragwybEditor.editor.extends.ControlBa
             root: listNode, // Watch scroll inside the dropdown UL
             rootMargin: "100px 0px" // Load fonts 100px before they become visible
         });
+
+        const items = listNode.querySelectorAll('[data-font-family]');
+        items.forEach((item) => this.observer.observe(item));
     };
 
     // --- 3. Observe Individual Items ---
@@ -101,7 +105,7 @@ export default class FontsControl extends DragwybEditor.editor.extends.ControlBa
 
         const { settings, id } = this;
         const { value, loadedFonts } = this.state; // Get loadedFonts from state
-        const { label, options } = settings;
+        const { label, options, label_inline = false } = settings;
 
         // Transform options to Group format
         // Note: Logic moved here as requested, but ideally memoized
@@ -121,23 +125,24 @@ export default class FontsControl extends DragwybEditor.editor.extends.ControlBa
 
         const currentValue = value || "Default";
 
+        let wrapperCls = "dragwyb-control dragwyb-control--fonts";
+        if (label_inline) {
+            wrapperCls += " dragwyb-label-inline";
+        }
+
         return (
             <div
-                className="dragwyb-control dragwyb-control--dimensions"
+                className={wrapperCls}
                 data-control="fonts"
                 id={`control-${id}`}
             >
                 {/* Header */}
-                <div className="dragwyb-dimensions__header">
+                <div className="dragwyb-fonts__header">
                     {label && (
                         <label className="dragwyb-control__label" htmlFor={id}>
                             {label}
                         </label>
                     )}
-                    {/* Current Font Preview (Optional) */}
-                    <div style={{ fontFamily: loadedFonts.has(currentValue) ? currentValue : 'inherit', marginLeft: 'auto', fontSize: '12px', opacity: 0.7 }}>
-                        Aa
-                    </div>
                 </div>
 
                 {/* Fields */}
@@ -146,7 +151,7 @@ export default class FontsControl extends DragwybEditor.editor.extends.ControlBa
                     value={currentValue}
                     onChange={(option) => this.setState({ value: option.value || option })} // Handle object or string return
                     searchInput={true}
-
+                    style={{ fontFamily: loadedFonts.has(currentValue) ? currentValue : 'inherit' }}
                     // 1. Pass the Observer Ref Setup
                     listRef={this.initObserver}
 

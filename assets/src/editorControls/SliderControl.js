@@ -1,4 +1,5 @@
 import UnitSelector from './common/UnitSelector';
+import Slider from '../editor/components/Common/Slider';
 
 export default class SliderControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
@@ -47,7 +48,7 @@ export default class SliderControl extends DragwybEditor.editor.extends.ControlB
                 id={`control-${id}`}
             >
                 {label && (
-                    <div className="dragwyb-control__header">
+                    <div className="dragwyb-control__header dragwyb-label-inline">
                         <label className="dragwyb-control__label" htmlFor={id}>
                             {label}
                         </label>
@@ -62,24 +63,12 @@ export default class SliderControl extends DragwybEditor.editor.extends.ControlB
                 )}
 
                 <div className="dragwyb-slider__row">
-                    <input
-                        type="range"
-                        id={id}
-                        min={unitRange.min}
-                        max={unitRange.max}
-                        step={unitRange.step || currentValue.unit === 'px' ? 1 : 0.1}
-                        value={currentValue.size}
-                        onChange={(e) => updateSize(e.target.value)}
-                        className="dragwyb-slider__input"
-                    />
-                    <input
-                        type="number"
-                        className="dragwyb-slider__number"
+                    <Slider
                         value={currentValue.size}
                         min={unitRange.min}
                         max={unitRange.max}
                         step={unitRange.step || 1}
-                        onChange={(e) => updateSize(e.target.value)}
+                        onChange={(value) => updateSize(value)}
                     />
                 </div>
             </div>

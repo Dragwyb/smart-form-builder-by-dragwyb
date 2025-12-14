@@ -9,24 +9,24 @@ const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingCh
 
     const dispatch = useDispatch();
 
-    const getSectionSettings=()=>{
-        const store=useStore();
-        const state=store.getState();
+    const getSectionSettings = () => {
+        const store = useStore();
+        const state = store.getState();
 
         return state.sectionSettings;
     }
 
     const defautlActiveSection = (key) => {
-        const sectionSettings=getSectionSettings();
+        const sectionSettings = getSectionSettings();
         if (((sectionSettings && sectionSettings.section)) || (sectionSettings && sectionSettings.section === '')) {
             return;
         }
-        
+
         sectionUpdateHandler(key, true);
     }
 
     const defautlActiveTab = (key, settings) => {
-        const sectionSettings=getSectionSettings();
+        const sectionSettings = getSectionSettings();
         if (sectionSettings && sectionSettings[key]) {
             return;
         }
@@ -88,7 +88,7 @@ const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingCh
                     />
                 </div>
             }
-            <div className="field-settings">
+            <div className="dragwyb-panel__settings">
                 {Object.keys(toolbarSettings.controls).map(key => (
                     <>
                         {key === 'header_controls' ? null

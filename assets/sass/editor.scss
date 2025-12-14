@@ -1,7 +1,7 @@
 @use "sass:color";
 /* LIGHT MODE */
 
-*{
+* {
     box-sizing: border-box;
 }
 
@@ -16,25 +16,26 @@
     --dragwyb-sm-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --dragwyb-ring-offset-color: #fff;
 
-    --dragwyb-button-outline: rgba(0,0,0, .10);
-    --dragwyb-badge-outline: rgba(0,0,0, .05);
-  
+    --dragwyb-button-outline: rgba(0, 0, 0, .10);
+    --dragwyb-badge-outline: rgba(0, 0, 0, .05);
+
     /* Automatic computation of border around primary / danger buttons */
-    --dragwyb-opaque-button-border-intensity: -8; /* In terms of percentages */
-  
+    --dragwyb-opaque-button-border-intensity: -8;
+    /* In terms of percentages */
+
     /* Backgrounds applied on top of other backgrounds when hovered/active */
-    --dragwyb-elevate-1: rgba(0,0,0, .03);
-    --dragwyb-elevate-2: rgba(0,0,0, .08);
-  
+    --dragwyb-elevate-1: rgba(0, 0, 0, .03);
+    --dragwyb-elevate-2: rgba(0, 0, 0, .08);
+
     --dragwyb-background: 210 20% 98%;
     --dragwyb-foreground: 210 15% 15%;
-  
+
     --dragwyb-border: 210 12% 88%;
-  
+
     --dragwyb-card: 210 15% 96%;
     --dragwyb-card-foreground: 210 15% 15%;
     --dragwyb-card-border: 210 12% 92%;
-  
+
     --dragwyb-sidebar: 210 15% 94%;
     --dragwyb-sidebar-foreground: 210 15% 15%;
     --dragwyb-sidebar-border: 210 12% 90%;
@@ -43,41 +44,42 @@
     --dragwyb-sidebar-accent: 214 9% 85%;
     --dragwyb-sidebar-accent-foreground: 210 15% 25%;
     --dragwyb-sidebar-ring: 220 100% 45%;
-  
+
     --dragwyb-popover: 210 15% 92%;
     --dragwyb-popover-foreground: 210 15% 15%;
     --dragwyb-popover-border: 210 12% 88%;
-  
+
     --dragwyb-primary: 243 75% 59%;
     --dragwyb-primary-foreground: 220 20% 98%;
-  
+
     --dragwyb-secondary: 210 15% 88%;
     --dragwyb-secondary-foreground: 210 15% 25%;
-  
+
     --dragwyb-muted: 210 12% 90%;
     --dragwyb-muted-foreground: 210 12% 45%;
-  
+
     --dragwyb-accent: 260 85% 65%;
     --dragwyb-accent-foreground: 260 20% 15%;
-  
+
     --dragwyb-destructive: 0 84% 60%;
     --dragwyb-destructive-foreground: 0 20% 98%;
-  
+
     --dragwyb-input: 210 15% 75%;
     --dragwyb-ring: 220 100% 45%;
-  
+
     --dragwyb-chart-1: 220 100% 35%;
     --dragwyb-chart-2: 25 85% 45%;
     --dragwyb-chart-3: 145 70% 35%;
     --dragwyb-chart-4: 260 85% 55%;
     --dragwyb-chart-5: 200 90% 40%;
-  
+
     --dragwyb-font-sans: Open Sans, sans-serif;
     --dragwyb-font-serif: Georgia, serif;
     --dragwyb-font-mono: Menlo, monospace;
-  
-    --dragwyb-radius: .5rem; /* 8px */
-  
+
+    --dragwyb-radius: .5rem;
+    /* 8px */
+
     --dragwyb-shadow-2xs: 0px 1px 2px 0px hsl(210 12% 8% / 0.05);
     --dragwyb-shadow-xs: 0px 1px 3px 0px hsl(210 12% 8% / 0.1);
     --dragwyb-shadow-sm: 0px 1px 2px 0px hsl(210 12% 8% / 0.05), 0px 2px 4px -1px hsl(210 12% 8% / 0.1);
@@ -86,51 +88,52 @@
     --dragwyb-shadow-lg: 0px 10px 15px -3px hsl(210 12% 8% / 0.1), 0px 4px 6px -4px hsl(210 12% 8% / 0.1);
     --dragwyb-shadow-xl: 0px 20px 25px -5px hsl(210 12% 8% / 0.1), 0px 8px 10px -6px hsl(210 12% 8% / 0.1);
     --dragwyb-shadow-2xl: 0px 25px 50px -12px hsl(210 12% 8% / 0.25);
-  
+
     --dragwyb-tracking-normal: 0em;
     --dragwyb-spacing: 0.25rem;
-  
+
     /* Automatically computed borders */
     --dragwyb-sidebar-primary-border: hsl(var(--dragwyb-sidebar-primary));
     --dragwyb-sidebar-primary-border: hsl(from hsl(var(--dragwyb-sidebar-primary)) h s calc(l + var(--dragwyb-opaque-button-border-intensity)) / alpha);
-  
+
     --dragwyb-sidebar-accent-border: hsl(var(--dragwyb-sidebar-accent));
     --dragwyb-sidebar-accent-border: hsl(from hsl(var(--dragwyb-sidebar-accent)) h s calc(l + var(--dragwyb-opaque-button-border-intensity)) / alpha);
-  
+
     --dragwyb-primary-border: hsl(var(--dragwyb-primary));
     --dragwyb-primary-border: hsl(from hsl(var(--dragwyb-primary)) h s calc(l + var(--dragwyb-opaque-button-border-intensity)) / alpha);
-  
+
     --dragwyb-secondary-border: hsl(var(--dragwyb-secondary));
     --dragwyb-secondary-border: hsl(from hsl(var(--dragwyb-secondary)) h s calc(l + var(--dragwyb-opaque-button-border-intensity)) / alpha);
-  
+
     --dragwyb-muted-border: hsl(var(--dragwyb-muted));
     --dragwyb-muted-border: hsl(from hsl(var(--dragwyb-muted)) h s calc(l + var(--dragwyb-opaque-button-border-intensity)) / alpha);
-  
+
     --dragwyb-accent-border: hsl(var(--dragwyb-accent));
     --dragwyb-accent-border: hsl(from hsl(var(--dragwyb-accent)) h s calc(l + var(--dragwyb-opaque-button-border-intensity)) / alpha);
-  
+
     --dragwyb-destructive-border: hsl(var(--dragwyb-destructive));
     --dragwyb-destructive-border: hsl(from hsl(var(--dragwyb-destructive)) h s calc(l + var(--dragwyb-opaque-button-border-intensity)) / alpha);
-  }
-  
-  .dark {
-    --dragwyb-button-outline: rgba(255,255,255, .10);
-    --dragwyb-badge-outline: rgba(255,255,255, .05);
-  
-    --dragwyb-opaque-button-border-intensity: 9;  /* In terms of percentages */
-  
-    --dragwyb-elevate-1: rgba(255,255,255, .04);
-    --dragwyb-elevate-2: rgba(255,255,255, .09);
-  
+}
+
+.dark {
+    --dragwyb-button-outline: rgba(255, 255, 255, .10);
+    --dragwyb-badge-outline: rgba(255, 255, 255, .05);
+
+    --dragwyb-opaque-button-border-intensity: 9;
+    /* In terms of percentages */
+
+    --dragwyb-elevate-1: rgba(255, 255, 255, .04);
+    --dragwyb-elevate-2: rgba(255, 255, 255, .09);
+
     --dragwyb-background: 210 5% 8%;
     --dragwyb-foreground: 210 5% 90%;
-  
+
     --dragwyb-border: 210 5% 18%;
-  
+
     --dragwyb-card: 210 5% 12%;
     --dragwyb-card-foreground: 210 5% 90%;
     --dragwyb-card-border: 210 5% 20%;
-  
+
     --dragwyb-sidebar: 210 5% 10%;
     --dragwyb-sidebar-foreground: 210 5% 90%;
     --dragwyb-sidebar-border: 210 5% 16%;
@@ -139,32 +142,32 @@
     --dragwyb-sidebar-accent: 215 9% 27%;
     --dragwyb-sidebar-accent-foreground: 210 5% 85%;
     --dragwyb-sidebar-ring: 220 100% 45%;
-  
+
     --dragwyb-popover: 210 5% 14%;
     --dragwyb-popover-foreground: 210 5% 90%;
     --dragwyb-popover-border: 210 5% 22%;
-  
+
     --dragwyb-secondary: 210 5% 20%;
     --dragwyb-secondary-foreground: 210 5% 85%;
-  
+
     --dragwyb-muted: 210 5% 16%;
     --dragwyb-muted-foreground: 210 5% 65%;
-  
+
     --dragwyb-accent: 260 85% 65%;
     --dragwyb-accent-foreground: 260 20% 95%;
-  
+
     --dragwyb-destructive: 0 84% 60%;
     --dragwyb-destructive-foreground: 0 20% 98%;
-  
+
     --dragwyb-input: 210 5% 30%;
     --dragwyb-ring: 220 100% 45%;
-  
+
     --dragwyb-chart-1: 220 100% 65%;
     --dragwyb-chart-2: 25 85% 65%;
     --dragwyb-chart-3: 145 70% 65%;
     --dragwyb-chart-4: 260 85% 75%;
     --dragwyb-chart-5: 200 90% 70%;
-  
+
     --dragwyb-shadow-2xs: 0px 1px 2px 0px hsl(210 5% 2% / 0.3);
     --dragwyb-shadow-xs: 0px 1px 3px 0px hsl(210 5% 2% / 0.4);
     --dragwyb-shadow-sm: 0px 1px 2px 0px hsl(210 5% 2% / 0.3), 0px 2px 4px -1px hsl(210 5% 2% / 0.4);
@@ -173,7 +176,7 @@
     --dragwyb-shadow-lg: 0px 10px 15px -3px hsl(210 5% 2% / 0.4), 0px 4px 6px -4px hsl(210 5% 2% / 0.4);
     --dragwyb-shadow-xl: 0px 20px 25px -5px hsl(210 5% 2% / 0.4), 0px 8px 10px -6px hsl(210 5% 2% / 0.4);
     --dragwyb-shadow-2xl: 0px 25px 50px -12px hsl(210 5% 2% / 0.5);
-  }
+}
 
 
 .dragwyb-editor {
@@ -390,7 +393,7 @@ body {
             font-size: 20px;
         }
 
-        &>div:not(:nth-of-type(1)){
+        &>div:not(:nth-of-type(1)) {
             border-left: 1px solid hsl(var(--dragwyb-border) / var(--dragwyb-border-opacity, 1));
             padding-left: 0.75rem;
         }
@@ -439,8 +442,8 @@ body {
         }
     }
 
-    &__theme-toggle{        
-        div{
+    &__theme-toggle {
+        div {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -719,7 +722,7 @@ body {
                 color: #666;
 
                 &:hover {
-                    color: hsl(var(--dragwyb-primary) / var(--dragwyb-text-opacity, 1));;
+                    color: hsl(var(--dragwyb-primary) / var(--dragwyb-text-opacity, 1));
                 }
             }
         }
@@ -750,7 +753,7 @@ body {
         padding: 15px;
         display: grid;
         gap: 0.75rem;
-        grid-template-columns: repeat(auto-fill,minmax(min(135px,50% - 5px),1fr));
+        grid-template-columns: repeat(auto-fill, minmax(min(135px, 50% - 5px), 1fr));
 
         .field-type {
             transition: all 0.2s ease;
@@ -840,8 +843,25 @@ body {
         overflow-y: auto;
 
         &::-webkit-scrollbar {
-            width: 10px;    
+            width: 8px;
+            padding: 0px !important;
+            margin: 0px !important;
+            border-radius: 20px;
         }
+
+        &::-webkit-scrollbar-track {
+            background: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
+            border-radius: 20px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: hsl(var(--dragwyb-secondary)/var(--dragwyb-bg-opacity, 1));
+            border-radius: 20px;
+        }
+    }
+
+    &__settings {
+        position: relative;
     }
 }
 
@@ -861,180 +881,298 @@ $select-placeholder-color: #757575;
 $select-group-bg: #f9f9f9;
 $dropdown-max-height: 250px;
 
+/* =========================
+   Select Control
+   ========================= */
 .dragwyb-select {
-  position: relative;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-  box-sizing: border-box;
-  display: inline-block;
-
-  * { box-sizing: border-box; }
-
-  // --- TRIGGER ---
-  &-trigger {
-    border: 1px solid $select-border-color;
-    padding: 8px 12px;
-    border-radius: 4px;
-    background: $select-bg-color;
-    cursor: pointer;
-    display: inline-flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: all 0.2s ease;
-    min-height: 36px;
     position: relative;
-    z-index: 101; // Ensure trigger stays above if needed
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    box-sizing: border-box;
+    display: inline-block;
+    width: 115px;
 
-    i{
-        margin-left: 10px;
+    * {
+        box-sizing: border-box;
     }
 
-    &:hover {
-      border-color: darken($select-border-color, 15%);
-    }
-  }
+    // --- TRIGGER ---
+    &-trigger {
+        border: 1px solid hsl(var(--dragwyb-input)/var(--dragwyb-border-opacity, 1));
+        padding: 3px 12px;
+        border-radius: 4px;
+        background: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
+        cursor: pointer;
+        display: inline-flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.2s ease;
+        min-height: 29px;
+        position: relative;
+        width: 100%;
 
-  // --- OPEN STATE: BOTTOM (Default) ---
-  &.is-open.position-bottom {
-    .dragwyb-select-trigger {
-      border-color: $select-highlight-color;
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-      border-bottom-color: transparent; // Seamless connection
-    }
-  }
+        span.dragwyb-select-value {
+            white-space: nowrap;
+            overflow-x: clip;
+            width: calc(100% - 14px);
+            overflow-clip-margin: 0px;
+        }
 
-  // --- OPEN STATE: TOP ---
-  &.is-open.position-top {
-    .dragwyb-select-trigger {
-      border-color: $select-highlight-color;
-      border-top-left-radius: 0;
-      border-top-right-radius: 0;
-      border-top-color: transparent; // Seamless connection
-    }
-  }
-
-  // --- DROPDOWN BASE ---
-  &-dropdown {
-    width: 100%;
-    position: absolute;
-    left: 0;
-    background: $select-bg-color;
-    border: 1px solid $select-highlight-color;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 100;
-    max-height: $dropdown-max-height; // Use variable
-    display: inline-flex;
-    flex-direction: column;
-    overflow: hidden;
-
-    // Position: BOTTOM
-    &.position-bottom {
-      top: 100%;
-      border-radius: 0 0 4px 4px;
-      margin-top: 2px; // Overlap trigger border
+        &:hover {
+            border-color: darken($select-border-color, 15%);
+        }
     }
 
-    // Position: TOP
-    &.position-top {
-      bottom: 100%; // Push upwards
-      top: auto;
-      border-radius: 4px 4px 0 0;
-      margin-bottom: 2px; // Overlap trigger border
-      box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1); // Shadow upwards
-      
-      // Since flex-direction is column, search is at top.
-      // For top-opening menus, it's often nicer to have search at the bottom 
-      // (closest to trigger), but keeping it at top is standard for search logic.
+    // --- OPEN STATE: BOTTOM (Default) ---
+    &.is-open.position-bottom {
+        .dragwyb-select-trigger {
+            border-color: $select-highlight-color;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            border-bottom-color: transparent; // Seamless connection
+        }
     }
-  }
 
-  // --- SEARCH ---
-  &-search {
-    padding: 8px;
-    border-bottom: 1px solid #eee;
-    flex-shrink: 0; // Don't shrink search box
-    
-    // If opening upwards, maybe border needs to be at top if we flipped order?
-    // Keeping simple for now.
-    
-    input {
-      width: unset !important;
-      padding: 6px 8px;
-      border: 1px solid $select-border-color;
-      border-radius: 3px;
-      outline: none;
-      font-size: 13px;
-
-      &:focus {
-        border-color: $select-highlight-color;
-        box-shadow: 0 0 0 1px lighten($select-highlight-color, 30%);
-      }
+    // --- OPEN STATE: TOP ---
+    &.is-open.position-top {
+        .dragwyb-select-trigger {
+            border-color: $select-highlight-color;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            border-top-color: transparent; // Seamless connection
+        }
     }
-  }
 
-  // --- OPTIONS ---
-  &-options {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    overflow-y: auto;
-    flex-grow: 1; // Take remaining height
+    // --- DROPDOWN BASE ---
+    &-dropdown {
+        position: absolute;
+        right: 0;
+        background: hsl(var(--dragwyb-popover)/var(--dragwyb-bg-opacity, 1));
+        border: 1px solid hsl(var(--dragwyb-border)/var(--dragwyb-border-opacity, 1));
+        box-shadow: var(--dragwyb-ring-offset-shadow, 0 0 rgba(0, 0, 0, 0)), var(--dragwyb-ring-shadow, 0 0 rgba(0, 0, 0, 0)), var(--dragwyb-shadow);
+        z-index: 100;
+        max-height: $dropdown-max-height; // Use variable
+        display: inline-flex;
+        flex-direction: column;
+        overflow: hidden;
+        width: 100%;
 
-    &::-webkit-scrollbar { width: 6px; }
-    &::-webkit-scrollbar-track { background: #f1f1f1; }
-    &::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
-  }
+        // Position: BOTTOM
+        &.position-bottom {
+            top: 100%;
+            border-radius: 0 0 4px 4px;
+        }
 
-  // --- ITEMS ---
-  .dragwyb-group-label {
-    padding: 8px 10px;
-    background-color: $select-group-bg;
-    font-weight: 700;
-    font-size: 11px;
-    color: #646970;
-    text-transform: uppercase;
-    pointer-events: none;
-    border-bottom: 1px solid #eee;
-    position: sticky; // Keep group header visible while scrolling options
-    top: 0;
-    z-index: 1;
-  }
+        // Position: TOP
+        &.position-top {
+            bottom: 100%; // Push upwards
+            top: auto;
+            border-radius: 4px 4px 0 0;
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1); // Shadow upwards
+        }
+    }
 
-  .dragwyb-option {
-    padding: 8px 10px 8px 10px;
-    cursor: pointer;
+    // --- SEARCH ---
+    &-search {
+        padding: 8px;
+        border-bottom: 1px solid #eee;
+        flex-shrink: 0; // Don't shrink search box
+
+        // If opening upwards, maybe border needs to be at top if we flipped order?
+        // Keeping simple for now.
+
+        input {
+            //   width: unset !important;
+            padding: 6px 8px;
+            border: 1px solid $select-border-color;
+            border-radius: 3px;
+            outline: none;
+            font-size: 13px;
+
+            &:focus {
+                border-color: $select-highlight-color;
+                box-shadow: 0 0 0 1px lighten($select-highlight-color, 30%);
+            }
+        }
+    }
+
+    // --- OPTIONS ---
+    &-options {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        overflow-y: auto;
+        flex-grow: 1; // Take remaining height
+    }
+
+    // --- ITEMS ---
+    .dragwyb-group-label {
+        padding: 8px 10px;
+        background-color: hsl(var(--dragwyb-card)/var(--dragwyb-bg-opacity, 1));
+        font-weight: 700;
+        font-size: 11px;
+        color: hsl(var(--dragwyb-card-foreground)/var(--dragwyb-text-opacity, 1));
+        text-transform: uppercase;
+        pointer-events: none;
+        border-bottom: 1px solid #eee;
+        position: sticky; // Keep group header visible while scrolling options
+        top: 0;
+        z-index: 1;
+    }
+
+    .dragwyb-option {
+        padding: 8px 10px 8px 10px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        color: hsl(var(--dragwyb-card-foreground)/var(--dragwyb-text-opacity, 1));
+        margin: 0;
+
+        &.highlighted {
+            background-color: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
+            color: hsl(var(--dragwyb-card-foreground)/var(--dragwyb-text-opacity, 1));
+
+            .dashicons {
+                color: #fff;
+            }
+        }
+
+        &.selected {
+            background-color: #f0f0f1;
+            font-weight: 600;
+            color: #000;
+
+            &.highlighted {
+                background-color: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
+                color: hsl(var(--dragwyb-card-foreground)/var(--dragwyb-text-opacity, 1));
+            }
+        }
+    }
+
+    .dragwyb-no-results {
+        padding: 15px;
+        text-align: center;
+        color: hsl(var(--dragwyb-card-foreground)/var(--dragwyb-text-opacity, 1));
+        font-style: italic;
+        font-size: 13px;
+    }
+}
+
+/* =========================
+   Slider Control
+   ========================= */
+.dragwyb-slider {
+    // --- Configuration ---
+
+    --track-height: 0.5rem;
+    --thumb-size: 1.25rem;
+
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    font-size: 13px;
-    color: $select-text-color;
-    margin: 0;
+    gap: 12px;
+    width: 100%;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-    &.highlighted {
-      background-color: $select-highlight-color;
-      color: #fff;
-      .dashicons { color: #fff; }
+    * {
+        box-sizing: border-box;
     }
 
-    &.selected {
-      background-color: #f0f0f1;
-      font-weight: 600;
-      color: #000;
-      
-      &.highlighted {
-         background-color: $select-highlight-color;
-         color: #fff;
-      }
-    }
-  }
+    // --- 1. Track Area (The Clickable Zone) ---
+    &__track-area {
+        flex-grow: 1;
+        position: relative;
+        height: 20px;
+        /* Invisible hit area is taller for easier clicking */
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        touch-action: none; // Prevent scrolling on mobile while dragging
 
-  .dragwyb-no-results {
-    padding: 15px;
-    text-align: center;
-    color: $select-placeholder-color;
-    font-style: italic;
-    font-size: 13px;
-  }
+        &:hover {
+            .dragwyb-slider__thumb {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+
+        // While clicking/dragging
+        &.is-dragging {
+            .dragwyb-slider__thumb {
+                transform: translate(-50%, -50%) scale(1.1);
+                cursor: grabbing;
+            }
+        }
+    }
+
+    // --- 2. The Rail (Background Line) ---
+    &__rail {
+        position: absolute;
+        width: 100%;
+        height: var(--track-height);
+        background-color: hsl(var(--dragwyb-secondary) / var(--dragwyb-bg-opacity, 1));
+        border-radius: 4px;
+        left: 0;
+    }
+
+    // --- 3. The Fill (Colored Progress) ---
+    &__fill {
+        position: absolute;
+        height: var(--track-height);
+        background-color: hsl(var(--dragwyb-primary) / var(--dragwyb-bg-opacity, 1));
+        border-radius: 4px;
+        left: 0;
+        pointer-events: none; // Let clicks pass through to track
+    }
+
+    // --- 4. The Thumb (Handle) ---
+    &__thumb {
+        position: absolute;
+        top: 50%;
+        /* Center vertically */
+        width: var(--thumb-size);
+        height: var(--thumb-size);
+        background-color: hsl(var(--dragwyb-background) / var(--dragwyb-bg-opacity, 1));
+        border: 1px solid hsl(var(--dragwyb-primary) / var(--dragwyb-border-opacity, 1));
+        border-radius: 50%;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        transform: translate(-50%, -50%);
+        /* Center horizontally on the point */
+        transition: transform 0.1s ease, background-color 0.2s, border-color 0.2s;
+        outline: none;
+        z-index: 2;
+    }
+
+    // --- 5. Number Input Area ---
+    &__input-area {
+        width: 50px;
+        flex-shrink: 0;
+    }
+
+    &__number {
+        width: 100%;
+        height: 30px;
+        padding: 0 4px;
+        text-align: center;
+        font-size: 13px;
+        border: 1px solid var(--dragwyb-border);
+        border-radius: 4px;
+        color: var(--dragwyb-text);
+        -moz-appearance: textfield;
+
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            //   -webkit-appearance: none;
+            margin: 0;
+        }
+
+        &:focus {
+            border-color: var(--dragwyb-primary);
+            box-shadow: 0 0 0 1px var(--dragwyb-primary);
+            outline: none;
+        }
+    }
 }
 
 // Notices
@@ -1118,7 +1256,7 @@ $dropdown-max-height: 250px;
             border-radius: 4px;
 
             &:focus {
-                border-color: hsl(var(--dragwyb-primary) / var(--dragwyb-border-opacity, 1));;
+                border-color: hsl(var(--dragwyb-primary) / var(--dragwyb-border-opacity, 1));
                 outline: none;
             }
         }
@@ -1129,7 +1267,7 @@ $dropdown-max-height: 250px;
 
             button {
                 @include button;
-                background: hsl(var(--dragwyb-primary) / var(--dragwyb-bg-opacity, 1));;
+                background: hsl(var(--dragwyb-primary) / var(--dragwyb-bg-opacity, 1));
                 color: #fff;
                 padding: 10px 20px;
                 font-size: 16px;
@@ -1159,7 +1297,7 @@ $dropdown-max-height: 250px;
         opacity: 0.8;
 
         i {
-            color: hsl(var(--dragwyb-primary) / var(--dragwyb-text-opacity, 1));;
+            color: hsl(var(--dragwyb-primary) / var(--dragwyb-text-opacity, 1));
             font-size: 1.5rem;
         }
 

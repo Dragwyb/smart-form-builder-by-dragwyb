@@ -32,8 +32,8 @@ const renderControls = ({
   if (!Control || (!Control.prototype instanceof DragwybControlBase || !Control.prototype instanceof DragwybEditor.editor.extends.ControlBase)) {
     Control = DragwybEditor.editor.extends.ControlBase;
   }
-   
-  return <div key={key} className="setting-row" dataType={settings.type}><Control
+
+  return <div key={key} className="dragwyb-setting-row" dataType={settings.type}><Control
     key={key}
     id={key}
     settings={settings}
@@ -65,11 +65,11 @@ const SortableRepeaterItem = ({
   };
 
   const updateActiveRepeater = (e) => {
-    if(!e || !e.target || !e.target.classList || !e.target.classList.contains('dragwyb-repeater-item__header')){
+    if (!e || !e.target || !e.target.classList || !e.target.classList.contains('dragwyb-repeater-item__header')) {
       return;
     }
 
-    const id=e.target.dataset.id;
+    const id = e.target.dataset.id;
 
     updateTabsHandler('activeRepeaterId', activeRepeater !== id ? id : false);
   }
@@ -98,7 +98,7 @@ const SortableRepeaterItem = ({
       <div ref={setNodeRef} {...attributes} {...listeners} className="dragwyb-repeater-item__header" data-id={id}>
         {repeaterHeading(settings.item_label, index)}
         <span><i class="fa-regular fa-copy" onClick={() => { onCopy(repeaterItem, index + 1) }} title={__('Copy', 'dragwyb-form-builder')}></i></span>
-        {repeaterItems.length > 1 && <span><i class="fa-solid fa-xmark" onClick={() => { onDelete(id) }} title={__('Delete', 'dragwyb-form-builder')}></i></span>}
+        {repeaterItems.length > 1 && <span><i class="fa-regular fa-trash-can" onClick={() => { onDelete(id) }} title={__('Delete', 'dragwyb-form-builder')}></i></span>}
       </div>
       {(activeRepeater && activeRepeater === id) && Object.values(settings.items).map((data) => {
         return renderControls({

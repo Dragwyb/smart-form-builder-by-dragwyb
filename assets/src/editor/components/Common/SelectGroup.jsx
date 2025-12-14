@@ -8,7 +8,8 @@ const GroupedSelect = ({
     searchInput = false,
     renderOption,
     listRef,
-    className
+    className,
+    style = {}
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [dropdownPosition, setDropdownPosition] = useState("bottom");
@@ -106,7 +107,6 @@ const GroupedSelect = ({
     };
 
     const handleKeyDown = (e) => {
-        console.log(e);
         if (!isOpen) {
             if (e.key === "Enter" || e.key === "ArrowDown") {
                 e.preventDefault();
@@ -151,7 +151,7 @@ const GroupedSelect = ({
     return (
         <div className={`dragwyb-select dragwyb-select-group${isOpen ? " is-open" : ""} position-${dropdownPosition}${className ? " " + className : ""}`} ref={containerRef} onKeyDown={handleKeyDown}>
             <div className="dragwyb-select-trigger" onClick={toggleDropdown}>
-                <span className={`dragwyb-select-value ${!value ? 'is-placeholder' : ''}`}>
+                <span className={`dragwyb-select-value ${!value ? 'is-placeholder' : ''}`} style={style}>
                     {getDisplayLabel()}
                 </span>
                 <i className="dashicons dashicons-arrow-down-alt2"></i>

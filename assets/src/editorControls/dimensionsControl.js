@@ -48,7 +48,7 @@ export default class DimensionsControl extends DragwybEditor.editor.extends.Cont
                 id={`control-${id}`}
             >
                 {/* Header */}
-                <div className="dragwyb-dimensions__header">
+                <div className="dragwyb-dimensions__header dragwyb-label-inline">
                     {label && (
                         <label className="dragwyb-control__label" htmlFor={id}>
                             {label}
@@ -65,9 +65,8 @@ export default class DimensionsControl extends DragwybEditor.editor.extends.Cont
 
                 {/* Fields */}
                 <div
-                    className={`dragwyb-dimensions__row ${
-                        currentValue.linked ? "is-linked" : "is-unlinked"
-                    }`}
+                    className={`dragwyb-dimensions__row ${currentValue.linked ? "is-linked" : "is-unlinked"
+                        }`}
                 >
                     {currentValue.linked ? (
                         <>
@@ -78,9 +77,8 @@ export default class DimensionsControl extends DragwybEditor.editor.extends.Cont
                             />
                             <button
                                 type="button"
-                                className={`dragwyb-dimensions__link ${
-                                    currentValue.linked ? "is-linked" : ""
-                                }`}
+                                className={`dragwyb-dimensions__link ${currentValue.linked ? "is-linked" : ""
+                                    }`}
                                 onClick={toggleLink}
                             >
                                 <RiLink />

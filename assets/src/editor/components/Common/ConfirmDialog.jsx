@@ -17,8 +17,8 @@ const ConfirmDialog = ({
             <Button onClick={onClose}>
                 {cancelText}
             </Button>
-            <Button 
-                variant={variant} 
+            <Button
+                variant={variant}
                 onClick={() => {
                     onConfirm();
                     onClose();

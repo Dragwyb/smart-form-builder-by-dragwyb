@@ -31,9 +31,9 @@ const RenderControl = ({
         return null;
     }
 
-    const getSectionSettings=()=>{
-        const store=useStore();
-        const state=store.getState();
+    const getSectionSettings = () => {
+        const store = useStore();
+        const state = store.getState();
 
         return state.sectionSettings || {};
     }
@@ -47,8 +47,8 @@ const RenderControl = ({
     const state = store.getState();
     const Utils = Helper(state, dispatch);
 
-    const conditionUpdateHandler=(value)=>{
-        if(shouldRender !== value){
+    const conditionUpdateHandler = (value) => {
+        if (shouldRender !== value) {
             setShouldRender(value);
         }
     }
@@ -56,9 +56,9 @@ const RenderControl = ({
 
     if (!shouldRender) {
         return <ControlsConditions
-        controlKey={controlKey}
-        conditions={settings.conditions}
-        updateHandler={conditionUpdateHandler}
+            controlKey={controlKey}
+            conditions={settings.conditions}
+            updateHandler={conditionUpdateHandler}
         />;
     }
 
@@ -101,21 +101,21 @@ const RenderControl = ({
     // 🔹 Build control element
     let ControlElement = (
         <>
-        <ControlsConditions
-        controlKey={controlKey}
-        conditions={settings.conditions}
-        updateHandler={conditionUpdateHandler}
-        />
-        <div key={controlKey} className="setting-row" data-type={settings.type}>
-            <Control
-                key={controlKey}
-                id={controlKey}
-                settings={settings}
-                value={fieldVal}
-                handleChange={handleChange}
-                Utils={Utils}
+            <ControlsConditions
+                controlKey={controlKey}
+                conditions={settings.conditions}
+                updateHandler={conditionUpdateHandler}
+            />
+            <div key={controlKey} className="dragwyb-setting-row" data-type={settings.type}>
+                <Control
+                    key={controlKey}
+                    id={controlKey}
+                    settings={settings}
+                    value={fieldVal}
+                    handleChange={handleChange}
+                    Utils={Utils}
                 />
-        </div>
+            </div>
         </>
     );
 
