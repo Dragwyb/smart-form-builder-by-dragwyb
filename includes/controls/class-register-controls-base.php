@@ -174,7 +174,7 @@ abstract class Register_Controls_Base
         $this->current_tab = null;
     }
 
-    final protected function start_popover(): void
+    final protected function start_popover(array $data = array()): void
     {
         if ($this->current_section === null) {
             throw new \Exception(__('No section is currently open.', 'dragwyb-form-builder'));
@@ -185,6 +185,10 @@ abstract class Register_Controls_Base
         }
 
         $this->current_popover['initialize'] = false;
+
+        if (isset($data['title'])) {
+            $this->current_popover['title'] = sanitize_text_field($data['title']);
+        }
     }
 
     final protected function end_popover(): void
@@ -197,6 +201,10 @@ abstract class Register_Controls_Base
 
         if (isset($this->current_control_stack[$last_control['key']])) {
             $this->current_control_stack[$last_control['key']]['popover'] = array('end' => true);
+
+            if (isset($this->current_popover['title'])) {
+                $this->current_control_stack[$last_control['key']]['popover']['title'] = $this->current_popover['title'];
+            }
         }
 
         $this->current_popover = array();
@@ -272,12 +280,19 @@ abstract class Register_Controls_Base
             'label' => __('Popover Toggle', 'dragwyb-form-builder'),
             'icon' => 'fa-solid fa-pen'
         ]);
-        $this->start_popover();
-        foreach ($control_data as $id => $data) {
+
+        $this->start_popover(
+            array(
+                'title' => $control_data['name']
+            )
+        );
+
+        foreach ($control_data['controls'] as $id => $data) {
             if (isset($id) && !empty($id) && is_array($data) && count($data) > 1) {
                 $this->add_control($id, $data);
             }
         }
+
         $this->end_popover();
     }
 
@@ -342,8 +357,9 @@ abstract class Register_Controls_Base
         $control_object->set_settings($data);
 
         $data = $control_object->get_controls();
+        $name = $control_object->get_name();
 
-        return $data;
+        return array('controls' => $data, 'name' => sanitize_text_field($name));
     }
 
     abstract protected function register_controls(): void;

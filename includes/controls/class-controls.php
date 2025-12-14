@@ -9,6 +9,7 @@ use Dragwyb\Form_Builder\Includes\Controls\Controls\Control_Base;
 
 class Controls
 {
+    const CHOOSE = 'choose';
     const COLOR = 'color';
     const DIMENSIONS = 'dimensions';
     const FONTS = 'fonts';

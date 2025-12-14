@@ -5,6 +5,8 @@ import shouldRenderField from './shouldRenderField';
 import DragwybControlBase from '../controlBase'
 import { Utils as Helper } from '../components/Utils';
 import ControlsConditions from "./controlsCondition";
+import { FaUndo } from "react-icons/fa";
+import { __ } from "@wordpress/i18n";
 
 const RenderControl = ({
     selectedTab,
@@ -125,6 +127,7 @@ const RenderControl = ({
 
         if (popOverStatus.end === true) {
             const PopoverControls = Utils.PopoverControls();
+            const PopoverTitle = popOverStatus.title;
 
             dispatch(resetPopoverControls());
             dispatch(updatePopoverInitStatus(false));
@@ -135,7 +138,15 @@ const RenderControl = ({
 
             PopoverControls[controlKey] = ControlElement;
 
-            return <div className="dragwyb-popover" style={{ display: "none" }}><div className="dragwyb-popover__container">{Object.values(PopoverControls)}</div></div>;
+            return <div className="dragwyb-popover" style={{ display: "none" }}>
+                {PopoverTitle && <div className="dragwyb-popover__title">
+                    {PopoverTitle}
+                    {/* <span onClick={() => { }}>
+                        <FaUndo size={12} title={__('Reset to Default', 'dragwyb-form-builder')} />
+                    </span> */}
+                </div>}
+                <div className="dragwyb-popover__container">{Object.values(PopoverControls)}</div>
+            </div>;
         };
 
         dispatch(updatePopoverControls(controlKey, ControlElement, popOverStatus))

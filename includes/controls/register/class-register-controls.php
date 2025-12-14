@@ -16,7 +16,7 @@ class Register_Controls
 
     private array $group_controls = [];
 
-    private array $default_controls = [Controls::COLOR, Controls::DIMENSIONS, Controls::FONTS, Controls::NUMBER, Controls::RADIO, Controls::REPEATER, Controls::SECTION, Controls::SELECT, Controls::SLIDER, Controls::SWITCHER, Controls::TABS, Controls::TAB, Controls::TEXT, Controls::TEXTAREA, Controls::POPOVER_TOGGLE];
+    private array $default_controls = [Controls::CHOOSE, Controls::COLOR, Controls::DIMENSIONS, Controls::FONTS, Controls::NUMBER, Controls::RADIO, Controls::REPEATER, Controls::SECTION, Controls::SELECT, Controls::SLIDER, Controls::SWITCHER, Controls::TABS, Controls::TAB, Controls::TEXT, Controls::TEXTAREA, Controls::POPOVER_TOGGLE];
 
     private array $default_group_controls = [Controls::GROUP_TYPOGRAPHY];
 

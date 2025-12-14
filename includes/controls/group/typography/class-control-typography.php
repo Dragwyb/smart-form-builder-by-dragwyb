@@ -135,11 +135,18 @@ class Control_Typography extends Control_Base
             // --- Alignment ---
             'alignment' => [
                 'options' => [
-                    ''        => __('Default', 'dragwyb-form-builder'),
-                    'left'    => __('Left', 'dragwyb-form-builder'),
-                    'center'  => __('Center', 'dragwyb-form-builder'),
-                    'right'   => __('Right', 'dragwyb-form-builder'),
-                    'justify' => __('Justify', 'dragwyb-form-builder'),
+                    'left' => [
+                        'title' => __('Left', 'dragwyb-form-builder'),
+                        'icon'  => 'fa fa-align-left',
+                    ],
+                    'center' => [
+                        'title' => __('Center', 'dragwyb-form-builder'),
+                        'icon'  => 'fa fa-align-center',
+                    ],
+                    'right' => [
+                        'title' => __('Right', 'dragwyb-form-builder'),
+                        'icon'  => 'fa fa-align-right',
+                    ],
                 ],
                 'default' => '',
             ]
@@ -171,7 +178,7 @@ class Control_Typography extends Control_Base
         }
 
         // 2. Selects (Weight, Transform, Style, etc.)
-        $select_keys = ['weight', 'transform', 'style', 'decoration', 'alignment'];
+        $select_keys = ['weight', 'transform', 'style', 'decoration'];
         foreach ($select_keys as $key) {
             if (isset($value[$key])) {
                 $sanitized[$key] = $this->sanitize_select_options($value[$key]);
@@ -188,7 +195,35 @@ class Control_Typography extends Control_Base
             }
         }
 
+        // 4. Alignment
+        if (isset($value['alignment'])) {
+            $sanitized['alignment'] = $this->sanitize_choose_options($value['alignment']);
+        }
+
         return $sanitized;
+    }
+
+    protected function sanitize_choose_options($setting)
+    {
+        if (!is_array($setting)) return [];
+        $clean = [];
+
+        // Sanitize Options Array
+        if (isset($setting['options']) && is_array($setting['options'])) {
+            foreach ($setting['options'] as $o => $l) {
+                $clean['options'][$this->string_sanitize($o)] = [
+                    'title' => $this->string_sanitize($l['title'] ?? $o),
+                    'icon'  => $this->string_sanitize($l['icon'] ?? ''),
+                ];
+            }
+        }
+
+        // Sanitize Default
+        if (isset($setting['default'])) {
+            $clean['default'] = $this->string_sanitize($setting['default']);
+        }
+
+        return $clean;
     }
 
     protected function sanitize_responsive_slider($setting)
@@ -345,14 +380,14 @@ class Control_Typography extends Control_Base
         // 2. Control Map
         $map = [
             'size'           => ['type' => Controls::SLIDER, 'label' => __('Font Size', 'dragwyb-form-builder')],
-            'line_height'    => ['type' => Controls::SLIDER, 'label' => __('Line Height', 'dragwyb-form-builder')],
-            'letter_spacing' => ['type' => Controls::SLIDER, 'label' => __('Letter Spacing', 'dragwyb-form-builder')],
-            'word_spacing'   => ['type' => Controls::SLIDER, 'label' => __('Word Spacing', 'dragwyb-form-builder')],
             'weight'         => ['type' => Controls::SELECT, 'label' => __('Weight', 'dragwyb-form-builder'), 'label_inline' => true],
             'transform'      => ['type' => Controls::SELECT, 'label' => __('Transform', 'dragwyb-form-builder'), 'label_inline' => true],
             'style'          => ['type' => Controls::SELECT, 'label' => __('Style', 'dragwyb-form-builder'), 'label_inline' => true],
             'decoration'     => ['type' => Controls::SELECT, 'label' => __('Decoration', 'dragwyb-form-builder'), 'label_inline' => true],
-            'alignment'      => ['type' => Controls::SELECT, 'label' => __('Alignment', 'dragwyb-form-builder'), 'label_inline' => true],
+            'line_height'    => ['type' => Controls::SLIDER, 'label' => __('Line Height', 'dragwyb-form-builder')],
+            'letter_spacing' => ['type' => Controls::SLIDER, 'label' => __('Letter Spacing', 'dragwyb-form-builder')],
+            'word_spacing'   => ['type' => Controls::SLIDER, 'label' => __('Word Spacing', 'dragwyb-form-builder')],
+            'alignment'      => ['type' => Controls::CHOOSE, 'label' => __('Alignment', 'dragwyb-form-builder'), 'label_inline' => true],
         ];
 
         // 3. Generate Controls
@@ -375,6 +410,8 @@ class Control_Typography extends Control_Base
                 $control_args['range'] = $config['range'] ?? [];
                 $control_args['units'] = $config['units'] ?? ['px'];
             } elseif ($meta['type'] === Controls::SELECT) {
+                $control_args['options'] = $config['options'] ?? [];
+            } elseif ($meta['type'] === Controls::CHOOSE) {
                 $control_args['options'] = $config['options'] ?? [];
             }
 

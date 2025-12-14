@@ -175,6 +175,69 @@
   }
 
   /* =========================
+   Choose Control
+   ========================= */
+  .dragwyb-control--choose {
+
+    // Container for the buttons
+    .dragwyb-choose-group {
+      display: flex;
+      // Using your input border color variable
+      border: 1px solid hsl(var(--dragwyb-input) / var(--dragwyb-border-opacity, 1));
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .dragwyb-choose-option {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-grow: 1;
+      padding: 7px 10px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+      gap: 6px; // Space between icon and text
+
+      // Default colors (Unselected)
+      background-color: hsl(var(--dragwyb-background) / var(--dragwyb-bg-opacity, 1));
+      color: hsl(var(--dragwyb-sidebar-foreground) / var(--dragwyb-text-opacity, 1));
+      border-right: 1px solid hsl(var(--dragwyb-input) / var(--dragwyb-border-opacity, 1));
+
+      // Remove border from the last item so it doesn't double up
+      &:last-child {
+        border-right: none;
+      }
+
+      // Hover State
+      &:hover {
+        background-color: hsl(var(--dragwyb-input) / 0.3);
+      }
+
+      // Active/Selected State
+      &.active {
+        background-color: hsl(var(--dragwyb-primary) / var(--dragwyb-bg-opacity, 1));
+        color: #fff;
+        // Ensure the active border doesn't clash
+        border-color: hsl(var(--dragwyb-primary) / var(--dragwyb-bg-opacity, 1));
+      }
+
+      // Icon styling adjustments
+      i {
+        font-size: 14px;
+        pointer-events: none;
+      }
+
+      // Text label styling
+      span {
+        font-size: 12px;
+        font-weight: 500;
+      }
+    }
+  }
+
+  /* =========================
      Select
      ========================= */
   .dragwyb-control--select {
@@ -549,6 +612,30 @@
     border: 1px solid hsl(var(--dragwyb-border) / var(--dragwyb-border-opacity, 1));
     box-shadow: var(--dragwyb-ring-offset-shadow, 0 0 #0000), var(--dragwyb-ring-shadow, 0 0 #0000), var(--dragwyb-shadow);
     right: 8px;
+
+    &__title {
+      padding: 10px 16px;
+      box-shadow: var(--dragwyb-ring-offset-shadow, 0 0 rgba(0, 0, 0, 0)), var(--dragwyb-ring-shadow, 0 0 rgba(0, 0, 0, 0)), var(--dragwyb-shadow);
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: hsl(var(--dragwyb-card-foreground)/var(--dragwyb-text-opacity, 1));
+
+      span {
+        cursor: pointer;
+        padding: .2rem;
+        border-radius: 4px;
+        display: flex;
+        font-size: 12px;
+        box-shadow: var(--dragwyb-ring-offset-shadow, 0 0 rgba(0, 0, 0, 0)), var(--dragwyb-ring-shadow, 0 0 rgba(0, 0, 0, 0)), var(--dragwyb-shadow);
+      }
+    }
+
+    &__container {
+      padding-bottom: 15px;
+    }
 
     // 🔽 Arrow connector
     &::after {
