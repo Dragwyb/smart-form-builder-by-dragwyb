@@ -81,7 +81,7 @@ abstract class Control_Base
 
         $matched_keys = array_intersect_key($control_settings, $data);
 
-        
+
         foreach ($matched_keys as $key => $key_type) {
             if (!array_key_exists($key, $control_settings) || !array_key_exists($key, $data)) {
                 continue;
@@ -180,15 +180,26 @@ abstract class Control_Base
         return (bool) $value;
     }
 
-    protected function number_sanitize(int $value)
+    protected function number_sanitize($value)
     {
         return $this->number_setting_sanitize($value);
     }
 
-    private function number_setting_sanitize(int $value)
+    private function number_setting_sanitize($value)
     {
-        // Keep decimals if float, otherwise cast to int
-        return is_float($value) !== false ? floatval($value) : intval($value);
+
+        // 1. Check if it's a valid number (accepts "10", 10, 10.5, "10.5")
+        if (!is_numeric($value)) {
+            return 0;
+        }
+
+        // 2. Check if it's a float
+        if (is_float($value)) {
+            return floatval($value);
+        }
+
+        // 3. If it's an integer
+        return intval($value);
     }
 
     private function conditions_setting_sanitize(array $conditions)

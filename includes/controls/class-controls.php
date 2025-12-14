@@ -11,6 +11,7 @@ class Controls
 {
     const COLOR = 'color';
     const DIMENSIONS = 'dimensions';
+    const FONTS = 'fonts';
     const NUMBER = 'number';
     const POPOVER_TOGGLE = 'popover-toggle';
     const RADIO = 'radio';
@@ -24,8 +25,11 @@ class Controls
     const TEXT = 'text';
     const TEXTAREA = 'textarea';
 
+    const GROUP_TYPOGRAPHY = 'typography';
+
     private static $instance = null;
     private $controls = [];
+    private array $group_controls = [];
 
     public static function instance(): self
     {
@@ -57,6 +61,7 @@ class Controls
         // Load field registrations
         $register = Register_Controls::instance();
         $this->controls = $register->get_controls();
+        $this->group_controls = $register->get_group_controls();
     }
 
     public function get_controls(): array
@@ -67,5 +72,15 @@ class Controls
     public function get_control($type): ?Control_Base
     {
         return $this->controls[$type] ?? null;
+    }
+
+    public function get_group_controls(): array
+    {
+        return $this->group_controls;
+    }
+
+    public function get_group_control($type): ?Control_Base
+    {
+        return $this->group_controls[$type] ?? null;
     }
 }

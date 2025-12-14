@@ -195,8 +195,8 @@ abstract class Register_Controls_Base
 
         $last_control = $this->get_last_control();
 
-        if(isset($this->current_control_stack[$last_control['key']])){
-            $this->current_control_stack[$last_control['key']]['popover'] = array('end'=>true);
+        if (isset($this->current_control_stack[$last_control['key']])) {
+            $this->current_control_stack[$last_control['key']]['popover'] = array('end' => true);
         }
 
         $this->current_popover = array();
@@ -226,7 +226,7 @@ abstract class Register_Controls_Base
             $conditions = array_merge($conditions, array('section' => $this->current_section));
         }
 
-        $control_data=$this->controller_settings(array_merge($data, array('conditions' => $conditions)));
+        $control_data = $this->controller_settings(array_merge($data, array('conditions' => $conditions)));
 
         if (isset($this->current_popover['initialize']) && !isset($control_data['popover'])) {
             $control_data['popover'] = array();
@@ -238,6 +238,47 @@ abstract class Register_Controls_Base
         }
 
         $this->current_control_stack[$id] = $control_data;
+    }
+
+    final protected function add_group_control(string $id = '', array $data = array()): void
+    {
+        // if (!$id = self::validate_id($id, 'Control')) return;
+
+        if ($this->current_section === null) {
+            throw new \Exception(__('No section is currently open to add controls.', 'dragwyb-form-builder'));
+        }
+
+        $id = sanitize_text_field($id);
+
+        if (isset($this->settings_arr[$id]) || isset($this->current_control_stack[$id])) {
+            throw new \Exception(__('Do not use duplicate control ID use unique Id.', 'dragwyb-form-builder'));
+        }
+
+        $conditions = isset($data['conditions']) ? $data['conditions'] : array();
+
+        if (isset($this->current_section_stack[$this->current_tabs]['conditions'])) {
+            $conditions = array_merge($this->current_section_stack[$this->current_tabs]['conditions'], $conditions);
+            $conditions[$this->current_tabs] = $this->current_tab;
+        } else if (isset($this->settings_arr[$this->current_section]['conditions'])) {
+            $conditions = array_merge($conditions, $this->settings_arr[$this->current_section]['conditions']);
+        } else {
+            $conditions = array_merge($conditions, array('section' => $this->current_section));
+        }
+
+        $control_data = $this->group_controller_settings($id, array_merge($data, array('conditions' => $conditions)));
+
+        $this->add_control($id . '_popover_toggle', [
+            'type' => Controls::POPOVER_TOGGLE,
+            'label' => __('Popover Toggle', 'dragwyb-form-builder'),
+            'icon' => 'fa-solid fa-pen'
+        ]);
+        $this->start_popover();
+        foreach ($control_data as $id => $data) {
+            if (isset($id) && !empty($id) && is_array($data) && count($data) > 1) {
+                $this->add_control($id, $data);
+            }
+        }
+        $this->end_popover();
     }
 
     private function get_last_control(): array
@@ -257,7 +298,7 @@ abstract class Register_Controls_Base
             return array();
         }
 
-        $type = $data['type'];
+        $type = sanitize_text_field($data['type']);
 
         $control_object = $this->control_base->get_control($type);
 
@@ -272,6 +313,37 @@ abstract class Register_Controls_Base
         $value = $control_object->get_settings();
 
         return $value;
+    }
+
+    private function group_controller_settings(string $id = '', array $data): array
+    {
+        $id = sanitize_text_field($id);
+        $controls_class = Controls::class;
+        $controls_base_class = Control_Base::class;
+
+        if (!isset($data['type']) || !($this->control_base instanceof $controls_class)) {
+            return array();
+        }
+
+        $type = sanitize_text_field($data['type']);
+
+        $control_object = $this->control_base->get_group_control($type);
+
+
+        if (!$control_object || !($control_object instanceof $controls_base_class)) {
+            return array();
+        }
+
+        $control_object = $control_object->newInstance();
+
+        $control_object->register_controls($id, $data);
+        $control_object->get_controls();
+
+        $control_object->set_settings($data);
+
+        $data = $control_object->get_controls();
+
+        return $data;
     }
 
     abstract protected function register_controls(): void;

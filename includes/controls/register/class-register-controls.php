@@ -14,7 +14,11 @@ class Register_Controls
 
     private array $controls = [];
 
-    private array $default_controls = [Controls::COLOR, Controls::DIMENSIONS, Controls::NUMBER, Controls::RADIO, Controls::REPEATER, Controls::SECTION, Controls::SELECT, Controls::SLIDER, Controls::SWITCHER, Controls::TABS, Controls::TAB, Controls::TEXT, Controls::TEXTAREA, Controls::POPOVER_TOGGLE];
+    private array $group_controls = [];
+
+    private array $default_controls = [Controls::COLOR, Controls::DIMENSIONS, Controls::FONTS, Controls::NUMBER, Controls::RADIO, Controls::REPEATER, Controls::SECTION, Controls::SELECT, Controls::SLIDER, Controls::SWITCHER, Controls::TABS, Controls::TAB, Controls::TEXT, Controls::TEXTAREA, Controls::POPOVER_TOGGLE];
+
+    private array $default_group_controls = [Controls::GROUP_TYPOGRAPHY];
 
     public static function instance(): self
     {
@@ -27,6 +31,7 @@ class Register_Controls
     public function __construct()
     {
         $this->register_default_controls();
+        $this->register_default_group_controls();
 
         do_action('Dragwyb/register_controls', $this);
     }
@@ -44,7 +49,20 @@ class Register_Controls
                 $this->register_control(new $class());
             }
         }
-        // Register more controls here
+    }
+
+    private function register_default_group_controls(): void
+    {
+        foreach ($this->default_group_controls as $control) {
+
+            $dir = dirname(__NAMESPACE__);
+            $control = $this->captialize_class_name($control);
+            $class = $dir . '\Group\\' . $control . '\\Control_' . ucfirst(esc_html($control));
+
+            if (class_exists($class)) {
+                $this->register_group_control(new $class());
+            }
+        }
     }
 
     private function captialize_class_name($string)
@@ -63,8 +81,18 @@ class Register_Controls
         $this->controls[$field->get_type()] = $field;
     }
 
+    public function register_group_control(Control_Base $field): void
+    {
+        $this->group_controls[$field->get_type()] = $field;
+    }
+
     public function get_controls(): array
     {
         return $this->controls;
+    }
+
+    public function get_group_controls(): array
+    {
+        return $this->group_controls;
     }
 }
