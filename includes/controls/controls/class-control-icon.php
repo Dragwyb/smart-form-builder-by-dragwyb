@@ -43,7 +43,16 @@ class Control_Icon extends Control_Base
 
     protected function sanitize_control($value)
     {
+        $icon = array();
+        $icon['icon'] = '';
+        $icon['type'] = '';
+
+        if (isset($value['icon']) && isset($value['type'])) {
+            $icon['icon'] = sanitize_text_field($value['icon']);
+            $icon['type'] = sanitize_text_field($value['type']);
+        }
+
         // Sanitize as a CSS class string (e.g., "fa fa-home")
-        return sanitize_text_field($value);
+        return $icon;
     }
 }

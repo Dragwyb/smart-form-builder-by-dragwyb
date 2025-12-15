@@ -949,30 +949,22 @@
     }
 
     display: inline-flex;
-    gap: 10px;
+    font-size: 14px;
+    padding: 0 4px;
+    border-radius: 4px;
+    color: hsl(var(--dragwyb-muted-foreground) / var(--dragwyb-text-opacity, 1));
+    cursor: pointer;
 
-    i {
-      font-style: normal;
-      font-size: 14px;
-      padding: 4px 6px;
-      border-radius: 4px;
-      color: hsl(var(--dragwyb-muted-foreground) / var(--dragwyb-text-opacity, 1));
-      cursor: pointer;
-      transition: background 0.2s ease;
+    &.dragwyb-repeater-delete {
+      color: hsl(var(--dragwyb-destructive) / var(--dragwyb-text-opacity, 1));
+    }
 
-      &:hover {
-        background-color: hsl(var(--dragwyb-muted-foreground) / var(--dragwyb-text-opacity, 1));
-        color: #000;
-      }
+    svg {
+      transition: all 0.2s ease-in-out;
+    }
 
-      &[title="Delete"] {
-        color: hsl(var(--dragwyb-destructive) / var(--dragwyb-text-opacity, 1));
-
-        &:hover {
-          background-color: hsl(var(--dragwyb-destructive) / var(--dragwyb-text-opacity, 1));
-          color: #000;
-        }
-      }
+    &:hover svg {
+      transform: scale(1.1);
     }
   }
 }
@@ -1007,12 +999,12 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: hsl(var(--dragwyb-background) / 0.7);
-  border: 1px solid hsl(var(--dragwyb-input));
-  border-radius: 4px;
+  background: hsl(var(--dragwyb-sidebar-foreground) / 0.7);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
   overflow: hidden;
   padding: 2rem;
@@ -1021,11 +1013,36 @@
     background: hsl(var(--dragwyb-background));
     width: 100%;
     height: 100%;
+    max-width: 50rem;
+    position: relative;
+  }
+
+  &__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    cursor: pointer;
+    color: hsl(var(--dragwyb-muted-foreground) / var(--dragwyb-text-opacity, 1));
+    transition: all 0.2s;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    padding: 1rem;
+    text-align: start;
+    color: hsl(var(--dragwyb-card-foreground)/var(--dragwyb-text-opacity, 1));
+    border-bottom: 1px solid hsl(var(--dragwyb-input));
   }
 
   // Search Bar
   .dragwyb-icon-search-wrapper {
-    padding: 10px;
+    padding: 1rem;
     border-bottom: 1px solid hsl(var(--dragwyb-input));
 
     input {
@@ -1084,11 +1101,13 @@
 
   // Grid
   .dragwyb-icon-grid {
-    padding: 10px;
+    margin: 1rem;
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
     gap: 10px;
-    max-height: calc(100% - 93px);
+    max-height: calc(100% - 178px);
+    height: 100%;
     overflow-y: auto;
 
     .dragwyb-icon-item {
@@ -1098,10 +1117,11 @@
       justify-content: center;
       cursor: pointer;
       border-radius: 3px;
-      border: 1px solid transparent;
-      color: hsl(var(--dragwyb-sidebar-foreground));
+      border: 1px solid hsl(var(--dragwyb-border)/var(--dragwyb-border-opacity, 1));
+      color: hsl(var(--dragwyb-card-foreground)/var(--dragwyb-text-opacity, 1));
       transition: all 0.2s;
       min-width: 50px;
+      padding: .5rem;
 
       &:hover {
         background: hsl(var(--dragwyb-input));
@@ -1115,7 +1135,23 @@
       }
 
       i {
-        font-size: 16px;
+        font-size: 20px;
+      }
+
+      &.empty {
+        font-weight: 500;
+        width: 100%;
+        height: 100%;
+        aspect-ratio: unset;
+        font-size: 1.5rem;
+        font-style: italic;
+        cursor: unset;
+
+        &:hover,
+        &:active {
+          background-color: inherit;
+          color: inherit;
+        }
       }
     }
 

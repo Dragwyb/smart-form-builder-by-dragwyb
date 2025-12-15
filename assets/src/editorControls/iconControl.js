@@ -124,7 +124,7 @@ export default class IconControl extends DragwybEditor.editor.extends.ControlBas
         // 1. Get the structured object containing all filtered lists
         const filteredGroups = this.getFilteredIcons();
 
-        const displayValue = value ? value.replace(/fa[srb] fa-/, '') : 'Select Icon';
+        const displayValue = value.icon && value.type ? this.createIconClass(value.type, value.icon) : 'Select Icon';
 
         let iconCount = 0;
 
@@ -142,9 +142,9 @@ export default class IconControl extends DragwybEditor.editor.extends.ControlBas
                 const fullIconClass = this.createIconClass(type, icon);
                 return <div
                     key={`${fullIconClass}-${index}`}
-                    className={`dragwyb-icon-item ${value === fullIconClass ? 'active' : ''}`}
+                    className={`dragwyb-icon-item ${value && value.type === type && value.icon === icon ? 'active' : ''}`}
                     onClick={() => {
-                        this.updateControlHandler(id, fullIconClass);
+                        this.updateControlHandler(id, { type, icon });
                         this.setState({ isOpen: false });
                     }}
                     title={fullIconClass}
@@ -156,8 +156,6 @@ export default class IconControl extends DragwybEditor.editor.extends.ControlBas
             }) : null;
         }
 
-
-        console.log(search)
         return (
             <div className="dragwyb-control dragwyb-control--icon" id={`control-${id}`} ref={this.wrapperRef}>
                 {settings.label && (
@@ -170,7 +168,7 @@ export default class IconControl extends DragwybEditor.editor.extends.ControlBas
                         <div className="dragwyb-preview-left">
                             {value ? (
                                 <div className="dragwyb-icon-box selected">
-                                    <i className={value}></i>
+                                    <i className={this.createIconClass(value.type, value.icon)}></i>
                                 </div>
                             ) : (
                                 <div className="dragwyb-icon-box empty">
@@ -203,8 +201,9 @@ export default class IconControl extends DragwybEditor.editor.extends.ControlBas
                                 <div className="dragwyb-icon-panel__inner">
                                     {/* Close Icon */}
                                     <span className="dragwyb-icon-panel__close" onClick={() => this.setState({ isOpen: false })} title={__('Close', 'dragwyb-form-builder')}>
-                                        <FaXmark />
+                                        <FaXmark size={20} />
                                     </span>
+                                    <h2 className="dragwyb-icon-panel__title">{__('Icon Library', 'dragwyb-form-builder')}</h2>
                                     {/* Search Bar */}
                                     <div className="dragwyb-icon-search-wrapper">
                                         <SearchInput
@@ -212,13 +211,6 @@ export default class IconControl extends DragwybEditor.editor.extends.ControlBas
                                             placeholder="Search fields..."
                                             id="dragwyb-controls__search"
                                         />
-                                        {/* <input
-                                    type="text"
-                                    placeholder="Filter by name..."
-                                    value={search}
-                                    onChange={(e) => searchDebounceCallback(e.target.value)}
-                                    autoFocus
-                                /> */}
                                     </div>
 
                                     {/* Library Tabs */}
@@ -245,9 +237,7 @@ export default class IconControl extends DragwybEditor.editor.extends.ControlBas
                                             </>
                                             :
                                             <div className="dragwyb-icon-item empty">
-                                                <i className="fas fa-plus">
-                                                    {__('No icons found', 'dragwyb-form-builder')}
-                                                </i>
+                                                {__('No icons found', 'dragwyb-form-builder')}
                                             </div>
                                         }
                                     </div>

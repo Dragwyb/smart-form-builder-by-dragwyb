@@ -4,6 +4,7 @@ import { CSS } from "@dnd-kit/utilities";
 import shouldRenderField from "../../editor/Editor/shouldRenderField";
 import { __ } from "@wordpress/i18n";
 import DragwybControlBase from "../../editor/controlBase";
+import { HiOutlineDuplicate, HiOutlineTrash } from "react-icons/hi";
 
 const renderControls = ({
   key,
@@ -97,8 +98,8 @@ const SortableRepeaterItem = ({
     >
       <div ref={setNodeRef} {...attributes} {...listeners} className="dragwyb-repeater-item__header" data-id={id}>
         {repeaterHeading(settings.item_label, index)}
-        <span><i class="fa-regular fa-copy" onClick={() => { onCopy(repeaterItem, index + 1) }} title={__('Copy', 'dragwyb-form-builder')}></i></span>
-        {repeaterItems.length > 1 && <span><i class="fa-regular fa-trash-can" onClick={() => { onDelete(id) }} title={__('Delete', 'dragwyb-form-builder')}></i></span>}
+        <span className="dragwyb-repeater-copy"><HiOutlineDuplicate size="20" onClick={() => { onCopy(repeaterItem, index + 1) }} title={__('Duplicate', 'dragwyb-form-builder')} /></span>
+        {repeaterItems.length > 1 && <span className="dragwyb-repeater-delete"><HiOutlineTrash size="20" onClick={() => { onDelete(id) }} title={__('Delete', 'dragwyb-form-builder')} /></span>}
       </div>
       {(activeRepeater && activeRepeater === id) && Object.values(settings.items).map((data) => {
         return renderControls({
