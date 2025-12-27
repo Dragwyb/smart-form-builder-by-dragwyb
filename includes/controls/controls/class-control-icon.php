@@ -14,6 +14,7 @@ class Control_Icon extends Control_Base
             'label'   => 'string',
             'default' => 'string',
             'fa_lib' => 'custom',
+            'label_inline' => 'boolean',
         );
     }
 

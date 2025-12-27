@@ -23,6 +23,9 @@ class Control_Url extends Control_Base
             'default'     => 'url', // Custom sanitizer below
             'placeholder' => 'string',
             'show_external' => 'boolean', // Option to hide/show the "New Window" checkbox
+            'is_external' => 'boolean', // Option to hide/show the "New Window" checkbox
+            'nofollow' => 'boolean', // Option to hide/show the "New Window" checkbox
+            'url' => 'url', // Option to hide/show the "New Window" checkbox
         );
     }
 
