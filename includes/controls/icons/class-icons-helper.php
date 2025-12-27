@@ -49,7 +49,7 @@ class Icons_Helper
         return self::$brands_icons;
     }
 
-    private function get_icons_list($path)
+    private static function get_icons_list($path)
     {
         $path = sanitize_text_field($path);
 
