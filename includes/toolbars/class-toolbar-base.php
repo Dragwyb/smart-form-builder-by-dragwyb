@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Toolbars;
 
+use Dragwyb\Form_Builder\Includes\Controls\Controls;
+
 abstract class Toolbar_Base
 {
     private string $id;
@@ -112,12 +114,17 @@ abstract class Toolbar_Base
         $this->data = $this->sanitize_data($data);
     }
 
+    public function get_display_settings(): array
+    {
+        return $this->get_toolbar_data();
+    }
+
     /**
      * Each toolbar must handle its own data sanitization
      */
     protected function sanitize_data(array $data): array
     {
-        $settings = $this->get_settings();;
+        $settings = $this->get_settings();
         $sanitize_data = new Sanitize_Data($data, $settings['controls']);
         $sanitize_data = $sanitize_data->get_data();
 
