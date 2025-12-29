@@ -5,7 +5,7 @@ const initializeFields = () => {
 
     const defaultFields = {
         'fields': (args) => new Fields(args),
-        'advance-settings': (args) => new AdvanceSettings(args)
+        // 'advance-settings': (args) => new AdvanceSettings(args)
     };
 
     Object.keys(defaultFields).forEach(key =>
@@ -16,6 +16,6 @@ const initializeFields = () => {
     );
 };
 
-jQuery(document).on('Dragwyb:editorInit', () => {   
+jQuery(document).on('Dragwyb:editorInit', () => {
     initializeFields();
 });
