@@ -34,7 +34,7 @@ class Control_Fonts extends Control_Base
     protected function default_setting(): array
     {
         return [
-            'value' => 'Roboto', // Default Font
+            'default' => 'Roboto', // Default Font
             'options' => $this->get_fonts_list(),
             'label_inline' => true,
         ];

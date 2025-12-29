@@ -18,7 +18,7 @@ class Register_Controls
 
     private array $default_controls = [Controls::CHOOSE, Controls::COLOR, Controls::DIMENSIONS, Controls::FONTS, Controls::GALLERY, Controls::ICON, Controls::NUMBER, Controls::RADIO, Controls::REPEATER, Controls::SECTION, Controls::SELECT, Controls::SLIDER, Controls::SWITCHER, Controls::TABS, Controls::TAB, Controls::TEXT, Controls::TEXTAREA, Controls::POPOVER_TOGGLE, Controls::URL];
 
-    private array $default_group_controls = [Controls::GROUP_TYPOGRAPHY];
+    private array $default_group_controls = [Controls::GROUP_TYPOGRAPHY, Controls::GROUP_BORDER, Controls::GROUP_BOX_SHADOW, Controls::GROUP_TEXT_SHADOW];
 
     public static function instance(): self
     {

@@ -30,6 +30,9 @@ class Controls
     const URL = 'url';
 
     const GROUP_TYPOGRAPHY = 'typography';
+    const GROUP_BORDER = 'border';
+    const GROUP_BOX_SHADOW = 'box-shadow';
+    const GROUP_TEXT_SHADOW = 'text-shadow';
 
     private static $instance = null;
     private $controls = [];
