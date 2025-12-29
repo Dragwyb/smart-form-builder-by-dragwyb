@@ -32,7 +32,7 @@ class Advance_Settings extends Toolbar_Base
 
     protected function get_icon(): string
     {
-        return 'fas fa-cog';
+        return 'fas fa-sliders-h';
     }
 
     public function __construct()
@@ -67,5 +67,25 @@ class Advance_Settings extends Toolbar_Base
 
     protected function update_toolbar(): void
     {
+        $settings = $this->get_display_settings();
+
+        if ($settings) {
+            $form_id = $this->get_form_id();
+
+            $post_update = array();
+
+            if (isset($settings['form_name'])) {
+                $post_update['post_title'] = sanitize_text_field($settings['form_name']);
+            }
+            if (isset($settings['form_status'])) {
+                $post_update['post_status'] = sanitize_text_field($settings['form_status']);
+            }
+
+            if (!empty($post_update)) {
+                $post_update['ID'] = $form_id;
+
+                $post_update = wp_update_post($post_update);
+            }
+        }
     }
 }
