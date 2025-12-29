@@ -164,7 +164,7 @@
         background-color: hsl(var(--dragwyb-primary) / var(--dragwyb-bg-opacity, 1));
         padding-right: 28px;
         padding-left: 10px;
-        color: #fff;
+        color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
 
         &::before {
           left: auto;
@@ -218,8 +218,7 @@
       // Active/Selected State
       &.active {
         background-color: hsl(var(--dragwyb-primary) / var(--dragwyb-bg-opacity, 1));
-        color: #fff;
-        // Ensure the active border doesn't clash
+        color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
         border-color: hsl(var(--dragwyb-primary) / var(--dragwyb-bg-opacity, 1));
       }
 
@@ -829,6 +828,7 @@
     border: 1px solid hsl(var(--dragwyb-border) / var(--dragwyb-border-opacity, 1));
     box-shadow: var(--dragwyb-ring-offset-shadow, 0 0 #0000), var(--dragwyb-ring-shadow, 0 0 #0000), var(--dragwyb-shadow);
     right: 8px;
+    z-index: 99;
 
     &__title {
       padding: 10px 16px;
@@ -978,9 +978,9 @@
     padding: 8px 16px;
     font-size: 13px;
     font-weight: 500;
-    color: #2271b1;
+    color: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
     background-color: hsl(var(--dragwyb-primary)/0.1);
-    border: 1px dashed #2271b1;
+    border: 1px dashed hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.2s ease;

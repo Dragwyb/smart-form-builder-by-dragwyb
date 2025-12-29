@@ -15,7 +15,7 @@ export default class DimensionsControl extends DragwybEditor.editor.extends.Cont
 
         // fallback
         const currentValue =
-            value || defaultValue || { top: "", right: "", bottom: "", left: "", unit: "px", linked: true };
+            value || defaultValue || { top: "", right: "", bottom: "", left: "", unit: "px", linked: settings.linked };
 
         const updateValue = (key, val) => {
             val = val && val !== '' ? Number(val) : val;
