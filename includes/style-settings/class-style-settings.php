@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Dragwyb\Form_Builder\Includes\General_Settings;
+namespace Dragwyb\Form_Builder\Includes\Style_Settings;
 
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
 // use Dragwyb\Form_Builder\Includes\Modules\Sanitize_Module_Settings\Sanitize_Module_Settings;
 
-class General_Settings extends Toolbar_Base
+class Style_Settings extends Toolbar_Base
 {
     private static $instance = null;
     private $general_settings = null;
@@ -22,12 +22,12 @@ class General_Settings extends Toolbar_Base
 
     protected function get_id(): string
     {
-        return 'general';
+        return 'style';
     }
 
     protected function get_name(): string
     {
-        return __('General', 'dragwyb-form-builder');
+        return __('Style', 'dragwyb-form-builder');
     }
 
     protected function get_icon(): string
@@ -65,7 +65,5 @@ class General_Settings extends Toolbar_Base
         return $data;
     }
 
-    protected function update_toolbar(): void
-    {
-    }
+    protected function update_toolbar(): void {}
 }
