@@ -49,7 +49,7 @@
     --dragwyb-popover-foreground: 210 15% 15%;
     --dragwyb-popover-border: 210 12% 88%;
 
-    --dragwyb-primary: 243 75% 59%;
+    --dragwyb-primary: 105.9 85.1% 50%;
     --dragwyb-primary-foreground: 220 20% 98%;
 
     --dragwyb-secondary: 210 15% 88%;
@@ -99,8 +99,8 @@
     --dragwyb-sidebar-accent-border: hsl(var(--dragwyb-sidebar-accent));
     --dragwyb-sidebar-accent-border: hsl(from hsl(var(--dragwyb-sidebar-accent)) h s calc(l + var(--dragwyb-opaque-button-border-intensity)) / alpha);
 
-    --dragwyb-primary-border: hsl(var(--dragwyb-primary));
-    --dragwyb-primary-border: hsl(from hsl(var(--dragwyb-primary)) h s calc(l + var(--dragwyb-opaque-button-border-intensity)) / alpha);
+    --dragwyb-primary-border: hsl(var(--dragwyb-primary) / var(--dragwyb-border-opacity, 1));
+    --dragwyb-primary-border: hsl(from hsl(var(--dragwyb-primary) / var(--dragwyb-border-opacity, 1)) h s calc(l + var(--dragwyb-opaque-button-border-intensity)) / alpha);
 
     --dragwyb-secondary-border: hsl(var(--dragwyb-secondary));
     --dragwyb-secondary-border: hsl(from hsl(var(--dragwyb-secondary)) h s calc(l + var(--dragwyb-opaque-button-border-intensity)) / alpha);
@@ -125,33 +125,33 @@
     --dragwyb-elevate-1: rgba(255, 255, 255, .04);
     --dragwyb-elevate-2: rgba(255, 255, 255, .09);
 
-    --dragwyb-background: 210 5% 8%;
-    --dragwyb-foreground: 210 5% 90%;
+    --dragwyb-background: 103 17% 8%;
+    --dragwyb-foreground: 103 17% 90%;
 
-    --dragwyb-border: 210 5% 18%;
+    --dragwyb-border: 106 18% 19%;
 
-    --dragwyb-card: 210 5% 12%;
-    --dragwyb-card-foreground: 210 5% 90%;
-    --dragwyb-card-border: 210 5% 20%;
+    --dragwyb-card: 103 17% 12%;
+    --dragwyb-card-foreground: 0 0% 100%;
+    --dragwyb-card-border: 103 17% 20%;
 
-    --dragwyb-sidebar: 210 5% 10%;
-    --dragwyb-sidebar-foreground: 210 5% 90%;
-    --dragwyb-sidebar-border: 210 5% 16%;
+    --dragwyb-sidebar: 107 16% 11%;
+    --dragwyb-sidebar-foreground: 103 17% 90%;
+    --dragwyb-sidebar-border: 103 17% 16%;
     --dragwyb-sidebar-primary: 220 100% 45%;
     --dragwyb-sidebar-primary-foreground: 220 20% 98%;
-    --dragwyb-sidebar-accent: 215 9% 27%;
+    --dragwyb-sidebar-accent: 106 18% 19%;
     --dragwyb-sidebar-accent-foreground: 210 5% 85%;
     --dragwyb-sidebar-ring: 220 100% 45%;
 
-    --dragwyb-popover: 210 5% 14%;
-    --dragwyb-popover-foreground: 210 5% 90%;
-    --dragwyb-popover-border: 210 5% 22%;
+    --dragwyb-popover: 103 17% 14%;
+    --dragwyb-popover-foreground: 103 17% 90%;
+    --dragwyb-popover-border: 103 17% 22%;
 
-    --dragwyb-secondary: 210 5% 20%;
-    --dragwyb-secondary-foreground: 210 5% 85%;
+    --dragwyb-secondary: 103 17% 20%;
+    --dragwyb-secondary-foreground: 103 17% 85%;
 
-    --dragwyb-muted: 210 5% 16%;
-    --dragwyb-muted-foreground: 210 5% 65%;
+    --dragwyb-muted: 103 17% 16%;
+    --dragwyb-muted-foreground: 103 17% 65%;
 
     --dragwyb-accent: 260 85% 65%;
     --dragwyb-accent-foreground: 260 20% 95%;
@@ -159,7 +159,7 @@
     --dragwyb-destructive: 0 84% 60%;
     --dragwyb-destructive-foreground: 0 20% 98%;
 
-    --dragwyb-input: 210 5% 30%;
+    --dragwyb-input: 103 17% 30%;
     --dragwyb-ring: 220 100% 45%;
 
     --dragwyb-chart-1: 220 100% 65%;
@@ -168,14 +168,14 @@
     --dragwyb-chart-4: 260 85% 75%;
     --dragwyb-chart-5: 200 90% 70%;
 
-    --dragwyb-shadow-2xs: 0px 1px 2px 0px hsl(210 5% 2% / 0.3);
-    --dragwyb-shadow-xs: 0px 1px 3px 0px hsl(210 5% 2% / 0.4);
-    --dragwyb-shadow-sm: 0px 1px 2px 0px hsl(210 5% 2% / 0.3), 0px 2px 4px -1px hsl(210 5% 2% / 0.4);
-    --dragwyb-shadow: 0px 1px 3px 0px hsl(210 5% 2% / 0.4), 0px 1px 2px -1px hsl(210 5% 2% / 0.4);
-    --dragwyb-shadow-md: 0px 4px 6px -1px hsl(210 5% 2% / 0.4), 0px 2px 4px -2px hsl(210 5% 2% / 0.4);
-    --dragwyb-shadow-lg: 0px 10px 15px -3px hsl(210 5% 2% / 0.4), 0px 4px 6px -4px hsl(210 5% 2% / 0.4);
-    --dragwyb-shadow-xl: 0px 20px 25px -5px hsl(210 5% 2% / 0.4), 0px 8px 10px -6px hsl(210 5% 2% / 0.4);
-    --dragwyb-shadow-2xl: 0px 25px 50px -12px hsl(210 5% 2% / 0.5);
+    --dragwyb-shadow-2xs: 0px 1px 2px 0px hsl(103 17% 2% / 0.3);
+    --dragwyb-shadow-xs: 0px 1px 3px 0px hsl(103 17% 2% / 0.4);
+    --dragwyb-shadow-sm: 0px 1px 2px 0px hsl(103 17% 2% / 0.3), 0px 2px 4px -1px hsl(103 17% 2% / 0.4);
+    --dragwyb-shadow: 0px 1px 3px 0px hsl(103 17% 2% / 0.4), 0px 1px 2px -1px hsl(103 17% 2% / 0.4);
+    --dragwyb-shadow-md: 0px 4px 6px -1px hsl(103 17% 2% / 0.4), 0px 2px 4px -2px hsl(103 17% 2% / 0.4);
+    --dragwyb-shadow-lg: 0px 10px 15px -3px hsl(103 17% 2% / 0.4), 0px 4px 6px -4px hsl(103 17% 2% / 0.4);
+    --dragwyb-shadow-xl: 0px 20px 25px -5px hsl(103 17% 2% / 0.4), 0px 8px 10px -6px hsl(103 17% 2% / 0.4);
+    --dragwyb-shadow-2xl: 0px 25px 50px -12px hsl(103 17% 2% / 0.5);
 }
 
 
@@ -184,7 +184,7 @@
     // Variables
     // --primary-color: #4f46e5;
     --primary-light-color: #e0e7ff;
-    --primary-hover-color: #4338ca;
+    --dragwyb-primary-hover: 108deg 82.99% 40.02%;
     --secondary-color: #6b7280;
     --secondary-hover-color: #374151;
     // --primary-color: #2271b1;
@@ -206,7 +206,7 @@
         // Variables
         --primary-color: #4f46e5;
         --primary-light-color: #e0e7ff;
-        --primary-hover-color: #4338ca;
+        // --primary-hover-color: #4338ca;
         --secondary-color: #6b7280;
         --secondary-hover-color: #374151;
         // --primary-color: #2271b1;
@@ -235,18 +235,18 @@
 
     &:hover,
     &.active {
-        background: var(--primary-light-color);
+        // background: var(--primary-light-color);
         color: hsl(var(--dragwyb-primary) / var(--dragwyb-text-opacity, 1));
         border-color: hsl(var(--dragwyb-primary) / var(--dragwyb-border-opacity, 1));
     }
 
     &.primary {
         background: hsl(var(--dragwyb-primary) / var(--dragwyb-bg-opacity, 1));
-        color: #fff;
+        color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
         border-color: hsl(var(--dragwyb-primary) / var(--dragwyb-border-opacity, 1));
 
         &:hover {
-            background: var(--primary-hover-color);
+            background: hsl(var(--dragwyb-primary-hover) / var(--dragwyb-bg-opacity, 1));
         }
     }
 
@@ -417,6 +417,13 @@ body {
         }
     }
 
+    &__form-status {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+    }
+
     &__status {
         background: hsl(var(--dragwyb-secondary) / var(--dragwyb-bg-opacity, 1));
         display: flex;
@@ -425,43 +432,27 @@ body {
         padding: 0.13rem 0.65rem;
         border-radius: .38rem;
         line-height: 1rem;
-        color: hsl(var(--dragwyb-secondary-foreground) / var(--dragwyb-text-opacity, 1));
         font-weight: 600;
         font-size: 12px;
+        border: 1px solid hsl(var(--dragwyb-border) / var(--dragwyb-border-opacity, 1));
+        border-radius: 50px;
+
+        &[data-status="draft"] {
+            background-color: #eab2082e;
+            border-color: #eab308;
+            color: #eab308;
+        }
+
+        &[data-status="published"] {
+            background-color: hsl(var(--dragwyb-primary)/10%);
+            border-color: hsl(var(--dragwyb-primary)/var(--dragwyb-border-opacity, 1));
+            color: hsl(var(--dragwyb-primary)/var(--dragwyb-text-opacity, 1));
+        }
 
         label {
             display: flex;
             align-items: center;
             gap: 5px;
-        }
-
-        span {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            display: inline-block;
-
-            &[data-status="draft"] {
-                background: #eab308;
-            }
-
-            &[data-status="published"] {
-                background: #22c55e;
-            }
-        }
-    }
-
-    &__theme-toggle {
-        div {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            border-radius: 8px;
-            padding: 5.8px;
-            background: hsl(var(--dragwyb-secondary)/var(--dragwyb-bg-opacity, 1));
-            color: black;
-            cursor: pointer;
         }
     }
 
@@ -480,46 +471,58 @@ body {
         }
     }
 
-    // &__tab{
-    //     padding: .8rem;
-    //     width: 33.3%;
-    //     height: 100%;
-    //     display: flex;
-    //     justify-content: center;
-    //     align-items: center;
-    //     font-size: 1.3rem;
-    //     text-align: center;
-    //     border: 0px solid transparent;
-    //     border-bottom-width: 2px;
-    //     cursor: pointer;
-    //     transition: all .3s ease-in-out;
-
-    //     i{
-    //         margin-right: .5rem;
-    //     }
-    //     &.active{
-    //         border-color: var(--primary-color);
-    //         color: var(--primary-color);
-    //     }
-    // }
-
     &__actions {
         display: flex;
         gap: 0.7rem;
 
-        i {
-            margin-right: .5rem;
-        }
-
-        button {
-            padding: .5rem 1rem;
-            font-size: 1rem;
+        button,
+        &>a {
+            padding: 0.3rem 1rem;
+            font-size: 15px;
             line-height: 1;
+            font-weight: 500;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
-            &.dragwyb-preview {
-                min-width: 114px;
+            i {
+                margin-right: .5rem;
             }
         }
+
+        a:focus {
+            outline: none;
+            box-shadow: none;
+            color: hsl(var(--dragwyb-foreground)/var(--dragwyb-text-opacity, 1));
+            border: 1px solid var(--dragwyb-button-outline);
+        }
+
+        a:active {
+            color: hsl(var(--dragwyb-primary)/var(--dragwyb-text-opacity, 1));
+        }
+
+        hr {
+            border: unset;
+            width: 2px;
+            background: hsl(var(--dragwyb-sidebar-accent)/var(--dragwyb-bg-opacity, 1));
+            height: 30px;
+            margin: 0;
+        }
+    }
+
+    &__theme-toggle,
+    &__preview-toggle {
+        width: 30px;
+        height: 30px;
+        background-color: hsl(var(--dragwyb-primary)/5%);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: hsl(var(--dragwyb-card-foreground) / 0.7);
+        border-radius: 50%;
+        font-size: 1.1rem;
     }
 
     &__body {
@@ -540,9 +543,11 @@ body {
     &__main {
         flex: 1;
         padding: 20px;
-        background-color: hsl(var(--dragwyb-muted) / 0.3);
+        background-color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
         overflow: auto;
         max-height: 100%;
+        background-image: radial-gradient(hsl(var(--dragwyb-card-foreground)/0.2) 1px, transparent 1px);
+        background-size: 24px 24px;
     }
 
     &__settings {
@@ -559,27 +564,84 @@ body {
     }
 
     &__toolbar {
-        background: hsl(var(--dragwyb-muted) / 0.3);
-        border-left: 1px solid hsl(var(--dragwyb-border) / var(--dragwyb-border-opacity, 1));
+        background: hsl(var(--dragwyb-background) / var(--dragwyb-bg-opacity, 1));
+        border-right: 1px solid hsl(var(--dragwyb-border) / var(--dragwyb-border-opacity, 1));
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding-top: 1.5rem;
+        width: 80px;
+        position: relative;
 
         &-item {
             display: grid;
             text-align: center;
-            gap: .5rem;
-            padding: .5rem;
-            border-bottom: 1px solid hsl(var(--dragwyb-sidebar-accent)/var(--dragwyb-bg-opacity, 1));
-            color: hsl(var(--dragwyb-card-foreground)/var(--dragwyb-text-opacity, 1));
+            gap: 0.375rem;
+            color: hsl(var(--dragwyb-card-foreground)/0.7);
             transition: all 0.3s ease-in-out;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 11px;
+            justify-content: center;
+            line-height: 1;
+            position: relative;
 
-            &:hover,
+            &::after {
+                content: "";
+                position: absolute;
+                bottom: 0;
+                top: 10px;
+                width: 4px;
+                height: 28px;
+                background-color: transparent;
+                border-radius: 0 4px;
+                transition: all .3s ease-in-out;
+            }
+
+            &:hover {
+                color: hsl(var(--dragwyb-card-foreground)/1);
+
+                span.dragwyb-editor__toolbar-item-icon {
+                    background-color: hsl(var(--dragwyb-primary) / 5%);
+                }
+            }
+
             &.active {
-                background: hsl(var(--dragwyb-sidebar-accent)/0.6);
+                color: hsl(var(--dragwyb-card-foreground)/1);
+
+                &::after {
+                    background-color: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
+                }
+
+                span.dragwyb-editor__toolbar-item-icon {
+                    background-color: hsl(var(--dragwyb-primary)/12%);
+                }
+
+                i {
+                    color: hsl(var(--dragwyb-background) / var(--dragwyb-bg-opacity, 1));
+                    background-color: hsl(var(--dragwyb-primary) / var(--dragwyb-bg-opacity, 1));
+                    font-size: .7rem;
+                }
+            }
+
+            span.dragwyb-editor__toolbar-item-icon {
+                display: flex;
+                width: 3rem;
+                height: 3rem;
+                border-radius: 50%;
+                justify-content: center;
+                align-items: center;
+                transition: all .3s ease-in-out;
             }
 
             i {
                 font-size: 1rem;
+                border-radius: 50%;
+                width: 18px;
+                height: 18px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                transition: all .3s ease-in-out;
             }
         }
     }
@@ -806,7 +868,7 @@ body {
 
     &__header {
         padding: 15px;
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: 1px solid hsl(var(--dragwyb-border) / var(--dragwyb-border-opacity, 1));
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -1176,8 +1238,8 @@ $dropdown-max-height: 250px;
         }
 
         &:focus {
-            border-color: var(--dragwyb-primary);
-            box-shadow: 0 0 0 1px var(--dragwyb-primary);
+            border-color: hsl(var(--dragwyb-primary) / var(--dragwyb-border-opacity, 1));
+            box-shadow: 0 0 0 1px hsl(var(--dragwyb-primary) / var(--dragwyb-border-opacity, 1));
             outline: none;
         }
     }

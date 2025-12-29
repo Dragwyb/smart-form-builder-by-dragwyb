@@ -3,9 +3,9 @@ import { Button } from "../components/Common";
 
 const ToolBar = ({ setActiveTab, setSettingId }) => {
     const activeTab = useSelector(state => state.activeToolbar);
-    const toolbars=DragwybEditor.EditorToolbars.toolbars;
+    const toolbars = DragwybEditor.EditorToolbars.toolbars;
 
-    if(!toolbars || Object.keys(toolbars).length < 1){
+    if (!toolbars || Object.keys(toolbars).length < 1) {
         return <></>;
     }
 
@@ -14,13 +14,17 @@ const ToolBar = ({ setActiveTab, setSettingId }) => {
             return <div key={tab} className={`dragwyb-editor__toolbar-item ${activeTab === tab ? ' active' : ''}`}
                 onClick={() => {
                     setActiveTab(tab);
-                    setSettingId({id:tab,tab: tab });
+                    setSettingId({ id: tab, tab: tab });
                 }}
                 title={toolbars[tab].name}
                 data-tab={tab}
             >
-                <i className={toolbars[tab].icon} />
-                {toolbars[tab].name}
+                <span className="dragwyb-editor__toolbar-item-icon">
+                    <i className={toolbars[tab].icon} />
+                </span>
+                <span className="dragwyb-editor__toolbar-item-text">
+                    {toolbars[tab].name}
+                </span>
             </div>
         })}
     </div>

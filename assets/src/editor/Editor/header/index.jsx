@@ -3,6 +3,7 @@ import { useSelector, useStore, useDispatch } from 'react-redux';
 import { Utils as Helper } from '../../components/Utils';
 import { Button, SaveBtn } from '../../components/Common';
 import { __ } from '@wordpress/i18n';
+import { escUrl } from '../../utils/escaping';
 
 // Import the icons you requested
 import { FaSun, FaMoon } from 'react-icons/fa';
@@ -39,10 +40,6 @@ const Header = () => {
     const state = store.getState();
     const Utils = Helper(state, dispatch);
 
-    const handleExit = () => {
-        window.location.href = DragwybEditor.adminUrl;
-    };
-
     const setActiveTabHandler = (value) => {
         Utils.setSelectedSettingId({ value: value });
         Utils.setActiveTab({ value: value });
@@ -50,7 +47,6 @@ const Header = () => {
     }
 
     const statusHtml = <>
-        <span data-status={formStatus}></span>
         <p>{formStatus.charAt(0).toUpperCase() + formStatus.slice(1)}</p>
     </>;
 
@@ -58,12 +54,18 @@ const Header = () => {
         <div className="dragwyb-editor__header">
             <div className="dragwyb-editor__details">
                 <h2>Dragwyb Form Builder</h2>
+            </div>
 
+            <div className="dragwyb-editor__form-status">
+                <div className="dragwyb-editor__title" onClick={() => setActiveTabHandler('advance')}>
+                    <h2>{formTitle}</h2>
+                </div>
                 <div className="dragwyb-editor__status" data-status={formStatus} onClick={() => setActiveTabHandler('advance')}>
                     {statusHtml}
                 </div>
+            </div>
 
-                {/* --- NEW: Theme Toggle Button --- */}
+            <div className="dragwyb-editor__actions">
                 <div
                     className="dragwyb-editor__theme-toggle"
                     onClick={toggleTheme}
@@ -72,22 +74,13 @@ const Header = () => {
                         {theme === 'light' ? <FaMoon color='black' /> : <FaSun color="#f39c12" />}
                     </div>
                 </div>
-                {/* -------------------------------- */}
-
-            </div>
-
-            <div className="dragwyb-editor__title" onClick={() => setActiveTabHandler('advance')}>
-                <h2>{formTitle}</h2>
-            </div>
-
-            <div className="dragwyb-editor__actions">
-                <Button onClick={() => Utils.setPreviewMode({ value: !previewMode })} className='dragwyb-preview'>
-                    <i className={`far fa-eye${previewMode ? '-slash' : ''}`} />
-                    {previewMode ? __('Disable', 'dragwyb-form-builder') : __('Enable', 'dragwyb-form-builder')}
-                </Button>
-                <Button onClick={handleExit} className=''>
+                <div onClick={() => Utils.setPreviewMode({ value: !previewMode })} className='dragwyb-editor__preview-toggle'>
+                    <i className={`far fa-eye${previewMode ? '-slash' : ''}`} title={previewMode ? __('Disable Preview', 'dragwyb-form-builder') : __('Enable Preview', 'dragwyb-form-builder')} />
+                </div>
+                <hr />
+                <a href={escUrl(DragwybEditor.adminUrl)} className='dragwyb-button dragwyb-button--default dragwyb-button--medium'>
                     {DragwybBuilder.i18n.exit}
-                </Button>
+                </a>
                 <SaveBtn />
             </div>
         </div>

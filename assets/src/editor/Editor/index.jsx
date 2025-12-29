@@ -233,6 +233,10 @@ const Editor = () => {
                             }}
                             onDragMove={handleDragMove}
                         >
+                            <ToolBar
+                                setActiveTab={setActiveTabHandler}
+                                setSettingId={setSelectedSettingId}
+                            />
                             <ToolbarSettings setActiveTab={setActiveTabHandler} />
                             <Canvas
                                 onFieldSelect={setSelectedSettingId}
@@ -241,10 +245,6 @@ const Editor = () => {
                                 dropIndex={dropIndex}
                                 dropIndicatorPosition={dropIndicatorPosition}
                                 setActiveTab={setActiveTabHandler}
-                            />
-                            <ToolBar
-                                setActiveTab={setActiveTabHandler}
-                                setSettingId={setSelectedSettingId}
                             />
                             {activeDrag && <SidebarFieldOverlay data={activeDrag} />}
                         </DndContext>
