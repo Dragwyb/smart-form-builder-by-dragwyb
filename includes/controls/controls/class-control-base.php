@@ -10,7 +10,6 @@ abstract class Control_Base
     protected string $name;
     private $value = null;
     private $settings = array();
-    protected $field_type = null;
     protected $control_id = null;
 
     protected function register_scripts(): array
@@ -92,7 +91,7 @@ abstract class Control_Base
 
             $sanitize_setting = $this->filter_setting_data($control_settings[$setting], $value, $setting);
 
-            if ($sanitize_setting) {
+            if ($sanitize_setting || (isset($control_settings[$key]) && 'boolean' === $control_settings[$key] && false === $sanitize_setting)) {
                 $this->settings[$setting] = $sanitize_setting;
             }
         }
@@ -100,11 +99,10 @@ abstract class Control_Base
         $default_setting = $this->default_setting();
 
         foreach ($default_setting as $key => $value) {
-
-            if (!array_key_exists($key, $data)) {
+            if (!array_key_exists($key, $data) && isset($control_settings[$key])) {
                 $sanitize_setting = $this->filter_setting_data($control_settings[$key], $value, $key);
 
-                if ($sanitize_setting) {
+                if ($sanitize_setting || (isset($control_settings[$key]) && 'boolean' === $control_settings[$key] && false === $sanitize_setting)) {
                     $this->settings[$key] = $sanitize_setting;
                 }
             }
@@ -116,9 +114,8 @@ abstract class Control_Base
         return $this->settings;
     }
 
-    public function set_value($data, string $field_name, string $control_id): void
+    public function set_value($data, string $control_id, $extra_data = null): void
     {
-        $this->field_type = sanitize_text_field($field_name);
         $this->control_id = sanitize_text_field($control_id);
 
         $this->set_filter_value($data);

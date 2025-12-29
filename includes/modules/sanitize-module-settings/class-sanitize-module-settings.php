@@ -6,6 +6,7 @@ namespace Dragwyb\Form_Builder\Includes\Modules\Sanitize_Module_Settings;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Modules\Modules;
+use Dragwyb\Form_Builder\Includes\Toolbars\Sanitize_Data;
 
 if (!class_exists('Sanitize_Module_Settings')) {
     class Sanitize_Module_Settings
@@ -62,7 +63,6 @@ if (!class_exists('Sanitize_Module_Settings')) {
                     if (isset($field['type']) && is_array($field['attributes']) && count($field['attributes']) > 0) {
                         $type = $field['type'];
                         $attributes = $field['attributes'];
-
                         if (!isset(self::$field_module[$type])) {
                             $field_module = self::$module->get_field($type);
 
@@ -74,38 +74,16 @@ if (!class_exists('Sanitize_Module_Settings')) {
                             self::$field_module[$type] = $field_module;
                         }
 
-                        $this->attributes_loop($attributes, $type, $index);
+                        $controls = self::$field_module[$type]->get_settings();
+                        $sanitize_data = new Sanitize_Data($attributes, $controls);
+                        $data = $sanitize_data->get_data();
+
+                        self::$filtered_data[$index]['attributes'] = $data;
                     }
                 }
 
                 if (self::$filtered_data && isset(self::$filtered_data[$index]) && !isset(self::$filtered_data[$index]['attributes'])) {
                     self::$filtered_data[$index]['attributes'] = array();
-                }
-            }
-        }
-
-        private function attributes_loop($attributes, $type, $index): void
-        {
-            foreach ($attributes as $attribute => $value) {
-                if ($field_control = self::$field_module[$type]->get_control($attribute)) {
-                    if (isset($field_control['type'])) {
-                        $control_type = $field_control['type'];
-
-                        $control_obj = self::$control->get_control($control_type);
-
-                        if (!$control_obj) {
-                            continue;
-                        }
-
-                        $control_obj = $control_obj::newInstance();
-
-                        $control_obj->set_value($value, $type, $attribute);
-                        $filtered_value = $control_obj->get_value();
-
-                        if ($filtered_value) {
-                            self::$filtered_data[$index]['attributes'][$attribute] = $filtered_value;
-                        }
-                    }
                 }
             }
         }

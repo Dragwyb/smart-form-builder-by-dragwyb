@@ -37,17 +37,6 @@ class Modules extends Toolbar_Base
         return 'fas fa-plus';
     }
 
-    protected function sanitize_data(array $data): array
-    {
-        $sanitize_module_data = new Sanitize_Module_Settings($data);
-        $sanitize_data = $sanitize_module_data->get_data();
-
-        if ($sanitize_data && is_array($sanitize_data) && count($sanitize_data) > 0) {
-            return $sanitize_data;
-        }
-        return array();
-    }
-
     public function __construct()
     {
         parent::__construct();
@@ -81,6 +70,18 @@ class Modules extends Toolbar_Base
     public function get_field($type): ?Field_Base
     {
         return $this->fields[$type] ?? null;
+    }
+
+
+    protected function sanitize_data(array $data): array
+    {
+        $sanitize_module_data = new Sanitize_Module_Settings($data);
+        $sanitize_data = $sanitize_module_data->get_data();
+
+        if ($sanitize_data && is_array($sanitize_data) && count($sanitize_data) > 0) {
+            return $sanitize_data;
+        }
+        return array();
     }
 
     protected function get_settings(): array

@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Dragwyb\Form_Builder\Includes\Controls\Controls;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
-use Dragwyb\Form_Builder\Includes\Modules\Modules;
 
 class Control_Repeater extends Control_Base
 {
-
-    private $field_module_cache = array();
-    private $module = null;
     private $controls = null;
+    private $repeater_data = null;
+    private $value = null;
 
     protected function register_settings()
     {
@@ -41,9 +39,27 @@ class Control_Repeater extends Control_Base
         $this->name = __('Repeater', 'dragwyb-form-builder');
     }
 
+    public function set_value($data, string $control_id, $repeater_data = null): void
+    {
+        if (isset($repeater_data['type']) && $repeater_data['type'] == 'repeater' && isset($repeater_data['items'])) {
+            $this->repeater_data = $repeater_data;
+        } else {
+            $this->repeater_data = array();
+        }
+
+        $this->control_id = sanitize_text_field($control_id);
+
+        $this->set_filter_value($data);
+    }
+
+    private function set_filter_value($data): void
+    {
+        $this->value = $this->sanitize_control($data);
+    }
+
     protected function sanitize_control($items)
     {
-        if (!is_array($items) || count($items) <= 0 || !isset($this->field_type) || !isset($this->control_id)) {
+        if (!is_array($items) || count($items) <= 0 || !isset($this->control_id)) {
             return '';
         }
 
@@ -56,20 +72,11 @@ class Control_Repeater extends Control_Base
 
             $data[$index] = array('_id' => $item['_id']);
 
-            if (!isset($this->module)) {
-                $this->module = new Modules();
-            }
-
-            if (!isset($this->field_module_cache[$this->field_type])) {
-                $field_module = $this->module->get_field($this->field_type);
-                $this->field_module_cache[$this->field_type] = $field_module->render_controls();
-            }
-
-            if (!isset($this->field_module_cache[$this->field_type][$this->control_id])) {
+            if (!isset($this->repeater_data) || !is_array($this->repeater_data) || count($this->repeater_data) <= 0) {
                 continue;
             }
 
-            $register_fields = $this->field_module_cache[$this->field_type][$this->control_id]['items'];
+            $register_fields = $this->repeater_data['items'];
 
             if (!isset($register_fields) || !is_array($register_fields) || count($register_fields) < 0) {
                 continue;
@@ -103,7 +110,7 @@ class Control_Repeater extends Control_Base
 
                 $control_obj = $control_obj::newInstance();
 
-                $control_obj->set_value($value, $this->type, $field);
+                $control_obj->set_value($value, $field);
                 $filtered_value = $control_obj->get_value();
 
                 if (isset($filtered_value) && $filtered_value) {
@@ -113,6 +120,11 @@ class Control_Repeater extends Control_Base
         }
 
         return $data;
+    }
+
+    public function get_value()
+    {
+        return $this->value;
     }
 
     protected function items_setting_sanitize($fields)
@@ -168,7 +180,7 @@ class Control_Repeater extends Control_Base
 
                 $control_obj = $control_obj::newInstance();
 
-                $control_obj->set_value($value, $this->type, $key);
+                $control_obj->set_value($value, $key);
                 $filtered_value = $control_obj->get_value();
 
                 if (isset($filtered_value) && $filtered_value) {

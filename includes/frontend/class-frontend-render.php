@@ -160,7 +160,7 @@ class Frontend_Render
 
                     $control_obj = $control_obj::newInstance();
 
-                    $control_obj->set_value($value, $type, $attribute);
+                    $control_obj->set_value($value, $attribute, $field_control);
                     $filtered_value = $control_obj->get_value();
 
                     if (isset($filtered_value) && $filtered_value) {
