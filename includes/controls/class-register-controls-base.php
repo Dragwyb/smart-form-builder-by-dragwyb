@@ -277,7 +277,7 @@ abstract class Register_Controls_Base
 
         $this->add_control($id . '_popover_toggle', [
             'type' => Controls::POPOVER_TOGGLE,
-            'label' => __('Popover Toggle', 'dragwyb-form-builder'),
+            'label' => isset($control_data['name']) ? sanitize_text_field($control_data['name']) : __('Popover Toggle', 'dragwyb-form-builder'),
             'icon' => isset($control_data['icon']) ? $control_data['icon'] : 'fas fa-pen'
         ]);
 
@@ -352,7 +352,6 @@ abstract class Register_Controls_Base
         $control_object = $control_object->newInstance();
 
         $control_object->register_controls($id, $data);
-        $control_object->get_controls();
 
         $control_object->set_settings($data);
 
