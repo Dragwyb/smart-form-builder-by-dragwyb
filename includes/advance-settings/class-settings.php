@@ -50,7 +50,7 @@ class Settings extends Register_Controls_Base
             'label'   => __('Form Status', 'dragwyb-form-builder'),
             'options' => [
                 'draft'   => __('Draft', 'dragwyb-form-builder'),
-                'published'  => __('Published', 'dragwyb-form-builder'),
+                'publish'  => __('Published', 'dragwyb-form-builder'),
             ],
             'default' => sanitize_text_field($form_status),
         ]);
