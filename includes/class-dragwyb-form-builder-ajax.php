@@ -9,6 +9,7 @@ use Dragwyb\Form_Builder\Includes\Modules\Modules;
 use Dragwyb\Form_Builder\Includes\Modules\Sanitize_Module_Settings\Sanitize_Module_Settings;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbars;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
+use Dragwyb\Form_Builder\Includes\Frontend\Managers\CSS_Manager;
 
 class Dragwyb_Form_Builder_Ajax
 {
@@ -30,7 +31,7 @@ class Dragwyb_Form_Builder_Ajax
      */
     public function save_form(): void
     {
-        
+
         try {
             check_ajax_referer('dragwyb_editor');
 
@@ -47,6 +48,9 @@ class Dragwyb_Form_Builder_Ajax
 
             // Update form meta
             update_post_meta($form_id, '_dragwyb_form_data', $this->sanitize_form_data($form_data, $form_id));
+
+            $css_manager = CSS_Manager::getInstance();
+            $css_manager->clean_cache($form_id);
 
             wp_send_json_success([
                 'message' => __('Form saved successfully', 'dragwyb-form-builder')
@@ -94,31 +98,31 @@ class Dragwyb_Form_Builder_Ajax
     private function sanitize_form_data(array $data, int $form_id): array
     {
 
-        $sanitize_data=array();
-        $toolbar_obj=new Toolbars();
-        $toolbars=$toolbar_obj->get_toolbars();
-        $toolbars_cache=array();
+        $sanitize_data = array();
+        $toolbar_obj = new Toolbars();
+        $toolbars = $toolbar_obj->get_toolbars();
+        $toolbars_cache = array();
 
-        foreach($data as $key=>$value){
-            if($key === 'id'){
+        foreach ($data as $key => $value) {
+            if ($key === 'id') {
                 continue;
             }
 
-            if(count($toolbars) > 0 && isset($toolbars[$key]) && $toolbars[$key] instanceof Toolbar_Base){
-                $toolbar=$toolbars[$key];
+            if (count($toolbars) > 0 && isset($toolbars[$key]) && $toolbars[$key] instanceof Toolbar_Base) {
+                $toolbar = $toolbars[$key];
                 $toolbar->set_form_id($form_id);
                 $toolbar->set_toolbar_data($value);
-                $toolbar_data=$toolbar->get_toolbar_data();
-                
-                if($toolbar_data){
-                    $sanitize_data[$key]=$toolbar_data;
-                    $toolbars_cache[$key]=$toolbar;
+                $toolbar_data = $toolbar->get_toolbar_data();
+
+                if ($toolbar_data) {
+                    $sanitize_data[$key] = $toolbar_data;
+                    $toolbars_cache[$key] = $toolbar;
                 }
             }
         }
 
-        if(count($toolbars_cache) > 0){
-            foreach($toolbars_cache as $toolbar){
+        if (count($toolbars_cache) > 0) {
+            foreach ($toolbars_cache as $toolbar) {
                 $toolbar->settings_updated();
             }
         }

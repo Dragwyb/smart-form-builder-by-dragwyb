@@ -10,11 +10,14 @@ if (!defined('ABSPATH')) {
 
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
 use Dragwyb\Form_Builder\Includes\Frontend\Frontend_Render;
+use Dragwyb\Form_Builder\Includes\Frontend\Managers\CSS_Manager;
 
 class Shortcode_Handler
 {
 
     private static ?self $instance = null;
+
+    private static $frontend_render = null;
 
     public static function instance(): self
     {
@@ -51,8 +54,14 @@ class Shortcode_Handler
             return '<p>' . esc_html__('No fields found in this form.', 'dragwyb-form-builder') . '</p>';
         }
 
+        self::$frontend_render = new Frontend_Render($form_id);
+
+        $css_manager = CSS_Manager::getInstance();
+
+        $css_manager->enqueue_form_styles($form_id, self::$frontend_render);
+
         // Generate form HTML
-        $form_html = (new Frontend_Render($form_id))->render();
+        $form_html = self::$frontend_render->render();
 
         return '<div class="dragwyb-form-wrapper" id="dragwyb-form-wrapper-' . esc_attr($form_id) . '">' . wp_kses($form_html, $this->allowed_html_for_form()) . '</div>';
     }

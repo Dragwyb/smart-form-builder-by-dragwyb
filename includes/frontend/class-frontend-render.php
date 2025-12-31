@@ -29,12 +29,12 @@ class Frontend_Render
     private static $form_data = null;
     private static $toolbar_data = array();
 
-    public function __construct($form_id)
+    public function __construct(int $form_id)
     {
-        self::$form_id = $form_id;
+        self::$form_id = absint($form_id);
         self::$toolbar_data = array();
         self::$fields = array();
-        self::$form_data = get_post_meta($form_id, '_dragwyb_form_data', true);
+        self::$form_data = get_post_meta(self::$form_id, '_dragwyb_form_data', true);
 
         if (empty(self::$form_data) || !is_array(self::$form_data) || !isset(self::$form_data['fields']) || count(self::$form_data) < 1) {
             self::$fields = array();
@@ -169,5 +169,136 @@ class Frontend_Render
                 }
             }
         }
+    }
+
+    public function get_generated_css(): string
+    {
+        $css_output = '';
+        $toolbar_obj = new Toolbars();
+        $toolbars = $toolbar_obj->get_toolbars();
+
+        foreach (self::$toolbar_data as $toolbar_key => $settings) {
+            if (isset($toolbars[$toolbar_key]) && method_exists($toolbars[$toolbar_key], 'get_toolbar_settings')) {
+                $toolbar_settings = $toolbars[$toolbar_key]->get_toolbar_settings();
+
+                if (isset($toolbar_settings['controls']) && is_array($toolbar_settings['controls']) && count($toolbar_settings['controls']) > 0) {
+                    $css = $this->extract_css_from_settings($settings, $toolbar_settings['controls']);
+                    if ($css && !empty($css)) {
+                        $css_output .= $css;
+                    }
+                }
+            }
+        }
+
+        // 2. Fields CSS
+        if (!empty(self::$fields)) {
+            foreach (self::$fields as $field) {
+                if (empty($field['type']) || empty($field['_id'])) continue;
+
+                $type = $field['type'];
+
+                // Load Module if not loaded
+                if (!isset(self::$field_module_cache[$type])) {
+                    $field_module = self::$module->get_field($type);
+                    if ($field_module) {
+                        self::$field_module_cache[$type] = $field_module;
+                    }
+                }
+
+                // Extract CSS from Field Attributes
+                if (isset(self::$field_module_cache[$type]) && !empty($field['attributes']) && method_exists(self::$field_module_cache[$type], 'get_settings')) {
+                    $field_settings = self::$field_module_cache[$type]->get_settings();
+
+                    if ($field_settings && is_array($field_settings) && count($field_settings) > 0) {
+                        $css = $this->extract_css_from_settings($field['attributes'], $field_settings);
+                        if ($css && !empty($css)) {
+                            $css_output .= $css;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $css_output;
+    }
+
+    /**
+     * Generates CSS string from settings.
+     * Only processes controls that define 'selectors'.
+     */
+    private function extract_css_from_settings(array $settings, array $controls): string
+    {
+        $css = '';
+        $form_wrapper_id = '#dragwyb-form-wrapper-' . self::$form_id;
+
+        foreach ($settings as $control_id => $setting_value) {
+
+            // var_dump($control_id);
+
+            // 1. Validate: Ensure control definition and 'selectors' exist
+            if (
+                !isset($controls[$control_id]) ||
+                !isset($controls[$control_id]['type']) ||
+                !isset($controls[$control_id]['selectors']) ||
+                !is_array($controls[$control_id]['selectors']) ||
+                count($controls[$control_id]['selectors']) < 1
+            ) {
+                continue;
+            }
+
+            $control_config = $controls[$control_id];
+
+            // 2. Instantiate Control
+            $control_manager = self::$control->get_control($control_config['type']);
+
+            if (!$control_manager || !$control_manager instanceof Control_Base) {
+                continue;
+            }
+
+            $control_instance = $control_manager::newInstance();
+            $control_instance->set_value($setting_value, $control_id, $control_config);
+
+            // 3. Get Data Placeholders (e.g., ['VALUE' => '#fff'] or ['TOP' => 10, 'UNIT' => 'px'])
+            // Uses helper method to support both complex and simple controls
+            $placeholders = $this->get_control_placeholders($control_instance);
+
+            // 4. Process 'selectors' Loop
+            // Format: ['{{WRAPPER}} .title' => 'color: {{VALUE}};']
+            foreach ($control_config['selectors'] as $css_selector => $css_property) {
+
+                $final_selector = trim(sanitize_text_field($css_selector));
+
+                // A. Parse Selector (Replace {{WRAPPER}})
+                $final_selector = str_replace('{{WRAPPER}}', $form_wrapper_id, $final_selector);
+
+                // B. Parse Property (Replace {{VALUE}}, {{UNIT}}, etc.)
+                $final_property = $css_property;
+
+                foreach ($placeholders as $ph_key => $ph_value) {
+                    $final_property = str_replace('{{' . $ph_key . '}}', (string)$ph_value, $final_property);
+                }
+
+                // C. Append to CSS string if property is valid
+                if (!empty($final_property)) {
+                    $css .= sprintf('%s{%s}', $final_selector, $final_property);
+                }
+            }
+        }
+
+        return $css;
+    }
+
+    /**
+     * Helper: Normalize placeholder data retrieval
+     */
+    private function get_control_placeholders($control_instance): array
+    {
+        // If control has specific logic (e.g., Dimensions returns TOP, RIGHT, UNIT)
+        if (method_exists($control_instance, 'get_style_placeholders')) {
+            return $control_instance->get_style_placeholders();
+        }
+
+        // Fallback for simple controls (Color, Text) that just use {{VALUE}}
+        return ['VALUE' => $control_instance->get_value()];
     }
 }
