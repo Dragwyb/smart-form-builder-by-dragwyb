@@ -32,7 +32,22 @@ if (!class_exists('Form_Overview')) {
             $screen('form-overview');
             if (gettype($screen) === 'object' && $screen('form-overview')) {
                 $this->display_post_entries();
+                $this->admin_assets();
             }
+        }
+
+        public function admin_assets(): void
+        {
+            $this->enqueue_admin_assets();
+        }
+
+        private function enqueue_admin_assets(): void
+        {
+            wp_enqueue_script(DRAGWYB_PREFIX . '-overview-assets', esc_url(DRAGWYB_FORM_BUILDER_URL . '/assets/js/dragwyb-oveview-assets.js'), array('jquery'), DRAGWYB_FORM_BUILDER_VERSION, true);
+
+            wp_localize_script(DRAGWYB_PREFIX . '-overview-assets', 'DragwybOverviewPage', array(
+                'ajaxurl' => admin_url('admin-ajax.php'),
+            ));
         }
 
         public function display_post_entries(): void

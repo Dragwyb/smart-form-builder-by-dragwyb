@@ -113,7 +113,7 @@ class Dragwyb_Pages
 
     private static function allowed_pages()
     {
-        $default_pages = array('form-overview', 'add-form');
+        $default_pages = array('form-overview');
 
         $allowed_pages = apply_filters('Dragwyb_allowed_pages', $default_pages);
 
