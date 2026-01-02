@@ -46,7 +46,7 @@ const RenderItem = ({
         dragRef(Node);
     };
 
-    let wrapperClass = "field-wrapper";
+    let wrapperClass = `dragwyb-field-wrapper dragwyb-${field.type}-field${field.className && '' !== field.className ? ` ${field.className}` : ''}`;
 
     if (selectedField && selectedField === field._id) {
         wrapperClass += " selected";
@@ -173,11 +173,11 @@ const Canvas = ({
         deepClone._id = id;
 
         const fieldControls = DragwybEditor.fields.fields[deepClone.type]?.controls || {};
-        
+
         Object.keys(deepClone.attributes || {}).forEach((id) => {
             if (!["tabs", "tab", "section"].includes(fieldControls[id]?.type)) {
                 let value = deepClone.attributes[id];
-                const settings=fieldControls[id];
+                const settings = fieldControls[id];
                 value = DragwybBuilder.Hooks.applyFilter(
                     `Dragwyb/Editor/DuplicateControl/${fieldControls[id].type}.duplicateValue`,
                     value,
@@ -207,32 +207,34 @@ const Canvas = ({
         <div className="dragwyb-editor__main">
             <div className="dragwyb-canvas-wrapper" ref={setNodeRef}>
                 <div className={canvasCls}>
-                    {fields && fields.length > 0 && (
-                        <>
-                            {fields.map((field, index) => (
-                                <RenderItem
-                                    key={field._id}
-                                    field={field}
-                                    values={values}
-                                    onFieldSelect={onFieldSelect}
-                                    onDuplicate={(field) => handleDuplicateField(field, index)}
-                                    onDelete={handleDeleteField}
-                                    errors={errors}
-                                    index={index}
-                                    dropIndex={dropIndex}
-                                    dropIndicatorPosition={dropIndicatorPosition}
-                                />
-                            ))}
-                            {dropIndex && dropIndex === fields.length ? (
-                                <span className="dragwyb-editor-indicator"></span>
-                            ) : (
-                                ""
-                            )}
-                        </>
-                    )}
-                    {(!fields || fields.length === 0) && (
-                        <EmptyCanvas setActiveTab={setActiveTab} isOver={isOver} />
-                    )}
+                    <div className="dragwyb-form-wrapper" id={`dragwyb-form-wrapper-${DragwybEditor.formId}`}>
+                        {fields && fields.length > 0 && (
+                            <>
+                                {fields.map((field, index) => (
+                                    <RenderItem
+                                        key={field._id}
+                                        field={field}
+                                        values={values}
+                                        onFieldSelect={onFieldSelect}
+                                        onDuplicate={(field) => handleDuplicateField(field, index)}
+                                        onDelete={handleDeleteField}
+                                        errors={errors}
+                                        index={index}
+                                        dropIndex={dropIndex}
+                                        dropIndicatorPosition={dropIndicatorPosition}
+                                    />
+                                ))}
+                                {dropIndex && dropIndex === fields.length ? (
+                                    <span className="dragwyb-editor-indicator"></span>
+                                ) : (
+                                    ""
+                                )}
+                            </>
+                        )}
+                        {(!fields || fields.length === 0) && (
+                            <EmptyCanvas setActiveTab={setActiveTab} isOver={isOver} />
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
