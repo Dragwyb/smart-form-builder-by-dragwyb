@@ -20,6 +20,7 @@ class List_Table extends WP_List_Table
     public $per_page;
     private $count;
     private $view;
+    private string $upload_dir;
 
     /**
      * Primary class constructor.
@@ -37,6 +38,10 @@ class List_Table extends WP_List_Table
         );
 
         $this->per_page = (int) apply_filters(DRAGWYB_PREFIX . '_overview_per_page', 20);
+
+        $upload_info = wp_upload_dir();
+        // Create a specific folder for your plugin's CSS
+        $this->upload_dir = $upload_info['basedir'] . '/dragwyb-forms/css/';
     }
 
     /**
@@ -70,6 +75,7 @@ class List_Table extends WP_List_Table
             'author' => 'Author',
             'shortcode' => 'Shortcode',
             'id' => 'ID',
+            'clean_cache' => 'Clean Cache',
             'date' => 'Date'
         );
 
@@ -135,8 +141,12 @@ class List_Table extends WP_List_Table
                 $value = $author ? esc_html($author->display_name) : '';
                 break;
 
-            case 'php':
-                $value = '<code>if ( function_exists( \'my_form_function\' ) ) { my_form_function( ' . $form->ID . ' ); }</code>';
+            case 'clean_cache':
+                if ($this->css_cache_exist($form->ID)) {
+                    $value = '<button type="button" id="clean-cache-' . (int)$form->ID . '" data-key="' . wp_create_nonce(sanitize_text_field($form->post_type) . (int)$form->ID . '-clean-cache') . '" class="button">Clean Cache</button>';
+                } else {
+                    $value = '<button type="button" id="clean-cache-' . (int)$form->ID . '" disabled class="button">Clean Cache</button>';
+                }
                 break;
 
             default:
@@ -144,6 +154,13 @@ class List_Table extends WP_List_Table
         }
 
         return apply_filters('dragwyb_form_overview_column_value', $value, $form, $column_name);
+    }
+
+    private function css_cache_exist($form_id)
+    {
+        $file_name = 'form-' . $form_id . '.css';
+        $file_path = $this->upload_dir . $file_name;
+        return file_exists($file_path);
     }
 
     /**
@@ -323,7 +340,7 @@ class List_Table extends WP_List_Table
             case 'trash':
                 $post_status = $status;
                 break;
-        
+
             default:
                 $post_status = array('publish', 'draft'); // ✅ Compatible syntax for all versions
                 break;
