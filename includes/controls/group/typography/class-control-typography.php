@@ -31,8 +31,6 @@ class Control_Typography extends Control_Base
         return [
             'name'       => 'string',
             'label'      => 'string',
-            'conditions' => 'conditions',
-            'selector'   => 'string',
             'settings'   => 'custom' // Custom array structure
         ];
     }
@@ -156,7 +154,8 @@ class Control_Typography extends Control_Base
                     ],
                 ],
                 'default' => '',
-            ]
+            ],
+            'selector' => ''
         ];
     }
 
@@ -368,7 +367,21 @@ class Control_Typography extends Control_Base
     {
         $settings = $this->get_display_settings();
         $id = $this->string_sanitize($this->id);
+        $selector = isset($settings['selector']) && !empty($settings['selector']) ? $settings['selector'] : false;
         $controls = [];
+
+        $selecotrs = [
+            'family' => array('properties' => 'family', 'placeholder' => '{{VALUE}}'),
+            'size' => array('properties' => 'font-size', 'placeholder' => '{{VALUE}}{{UNIT}}'),
+            'weight' => array('properties' => 'font-weight', 'placeholder' => '{{VALUE}}'),
+            'transform' => array('properties' => 'text-transform', 'placeholder' => '{{VALUE}}'),
+            'style' => array('properties' => 'font-style', 'placeholder' => '{{VALUE}}'),
+            'decoration' => array('properties' => 'text-decoration', 'placeholder' => '{{VALUE}}'),
+            'line_height' => array('properties' => 'line-height', 'placeholder' => '{{VALUE}}{{UNIT}}'),
+            'letter_spacing' => array('properties' => 'letter-spacing', 'placeholder' => '{{VALUE}}{{UNIT}}'),
+            'word_spacing' => array('properties' => 'word-spacing', 'placeholder' => '{{VALUE}}{{UNIT}}'),
+            'align' => array('properties' => 'text-align', 'placeholder' => '{{VALUE}}'),
+        ];
 
         // 1. Font Family Control
         $font_control_args = [
@@ -423,6 +436,16 @@ class Control_Typography extends Control_Base
             }
 
             $controls[$id . '_' . $key] = $control_args;
+        }
+
+        if ($selector) {
+            foreach ($selecotrs as $key => $style) {
+                if (isset($controls[$id . '_' . $key])) {
+                    $controls[$id . '_' . $key]['selectors'] = [
+                        $selector => $style['properties'] . ':' . $style['placeholder'],
+                    ];
+                }
+            }
         }
 
         return $controls;

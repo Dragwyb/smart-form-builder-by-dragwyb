@@ -30,8 +30,6 @@ class Control_Border extends Control_Base
         return [
             'name'       => 'string',
             'label'      => 'string',
-            'conditions' => 'conditions',
-            'selector'   => 'string',
             'settings'   => 'custom'
         ];
     }
@@ -143,6 +141,7 @@ class Control_Border extends Control_Base
             'label'   => __('Border Style', 'dragwyb-form-builder'),
             'options' => $settings['style']['options'],
             'default' => $settings['style']['default'],
+            'label_inline' => true,
         ];
 
         // 2. Border Width

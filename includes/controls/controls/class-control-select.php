@@ -12,7 +12,6 @@ class Control_Select extends Control_Base
             'name' => 'string',
             'label' => 'string',
             'default' => 'string',
-            'conditions' => 'conditions',
             'options' => 'custom',
             'label_inline' => 'boolean',
         );

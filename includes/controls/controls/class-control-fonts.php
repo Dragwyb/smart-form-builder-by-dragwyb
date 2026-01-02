@@ -23,7 +23,6 @@ class Control_Fonts extends Control_Base
             'name'    => 'string',
             'label'   => 'string',
             'default' => 'string',
-            'conditions' => 'conditions',
             'exclude_fonts' => 'custom',
             'groups' => 'custom',
             'options' => 'custom', // Allow passing specific font groups if needed

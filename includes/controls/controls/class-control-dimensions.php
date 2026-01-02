@@ -12,7 +12,6 @@ class Control_Dimensions extends Control_Base
             'name'       => 'string',
             'label'      => 'string',
             'default'    => 'custom',
-            'conditions' => 'conditions',
             'show_label'      => 'boolean',
             'linked'      => 'boolean',
             'units'      => 'custom'
@@ -130,5 +129,24 @@ class Control_Dimensions extends Control_Base
         }
 
         return $filtered_units;
+    }
+
+    protected function style_placeholders(): array
+    {
+
+
+        $value = $this->get_display_value();
+
+        $placeholders = [];
+
+        foreach ($value as $key => $value) {
+            if ($key === 'linked') {
+                continue;
+            }
+
+            $placeholders[strtoupper($this->string_sanitize($key))] = $this->string_sanitize($key);
+        }
+
+        return $placeholders;
     }
 }

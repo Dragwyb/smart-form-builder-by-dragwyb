@@ -11,7 +11,6 @@ class Control_Section extends Control_Base
         return array(
             'name' => 'string',
             'label' => 'string',
-            'conditions' => 'conditions',
         );
     }
 

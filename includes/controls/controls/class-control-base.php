@@ -69,6 +69,14 @@ abstract class Control_Base
             $control_settings['type'] = 'string';
         }
 
+        if (!isset($control_settings['selectors'])) {
+            $control_settings['selectors'] = 'custom';
+        }
+
+        if (!isset($control_settings['conditions'])) {
+            $control_settings['conditions'] = 'custom';
+        }
+
         // Default value always set in last index.
         if (isset($data['default'])) {
             $default = $data['default'];
@@ -129,6 +137,23 @@ abstract class Control_Base
     public function get_value()
     {
         return $this->value;
+    }
+
+    protected function get_display_value()
+    {
+        return $this->value;
+    }
+
+    final public function get_style_placeholders(): array
+    {
+        return $this->style_placeholders();
+    }
+
+    protected function style_placeholders(): array
+    {
+        return array(
+            'VALUE' => true,
+        );
     }
 
     private function filter_setting_data($type, $value, $key)
@@ -208,6 +233,17 @@ abstract class Control_Base
         }
 
         return $condition;
+    }
+
+    private function selectors_setting_sanitize($value)
+    {
+        $return = [];
+
+        foreach ($value as $key => $value) {
+            $return[sanitize_text_field(esc_html($key))] = sanitize_text_field(esc_html($value));
+        }
+
+        return $return;
     }
 
     protected function range_sanitize(array $range)

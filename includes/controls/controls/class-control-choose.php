@@ -25,7 +25,6 @@ class Control_Choose extends Control_Base
             'default' => 'string',
             'options' => 'options', // Custom type handled below
             'toggle'  => 'boolean', // Allow unselecting the option
-            'conditions' => 'conditions',
             'label_inline' => 'boolean', // Allow inline label
         );
     }

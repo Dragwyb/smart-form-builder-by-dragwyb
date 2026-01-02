@@ -30,7 +30,6 @@ class Control_Text_Shadow extends Control_Base
         return [
             'name'       => 'string',
             'label'      => 'string',
-            'selector'   => 'string',
             'settings'   => 'custom'
         ];
     }

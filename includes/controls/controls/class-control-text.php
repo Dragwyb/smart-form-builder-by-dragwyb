@@ -18,7 +18,6 @@ class Control_Text extends Control_Base
             'name' => 'string',
             'label' => 'string',
             'default' => 'string',
-            'conditions' => 'conditions',
             'label_inline' => 'boolean',
         );
     }

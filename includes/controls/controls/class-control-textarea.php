@@ -12,7 +12,6 @@ class Control_Textarea extends Control_Base
             'name' => 'string',
             'label' => 'string',
             'default' => 'string',
-            'conditions' => 'conditions'
         );
     }
 

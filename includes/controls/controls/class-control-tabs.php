@@ -12,7 +12,6 @@ class Control_Tabs extends Control_Base
             'name' => 'string',
             'label' => 'string',
             'active_tab' => 'string',
-            'conditions' => 'conditions',
             'tabs' => 'custom'
         );
     }
@@ -28,7 +27,8 @@ class Control_Tabs extends Control_Base
         return sanitize_text_field($value);
     }
 
-    protected function tabs_setting_sanitize($value){
+    protected function tabs_setting_sanitize($value)
+    {
         return $value;
     }
 }

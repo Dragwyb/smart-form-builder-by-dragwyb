@@ -19,7 +19,6 @@ class Control_Popover_Toggle extends Control_Base
             'label' => 'string',
             'popover' => 'string',
             'icon' => 'string',
-            'conditions' => 'conditions',
             'label_inline' => 'boolean',
         );
     }

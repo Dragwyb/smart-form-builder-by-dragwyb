@@ -18,7 +18,6 @@ class Control_Repeater extends Control_Base
             'name' => 'string',
             'label' => 'string',
             'default' => 'custom',
-            'conditions' => 'conditions',
             'items' => 'custom',
             'item_label' => 'string',
             'add_item' => 'string',

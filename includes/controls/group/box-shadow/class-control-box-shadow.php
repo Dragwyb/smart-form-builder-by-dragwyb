@@ -30,7 +30,6 @@ class Control_Box_Shadow extends Control_Base
         return [
             'name'       => 'string',
             'label'      => 'string',
-            'selector'   => 'string',
             'settings'   => 'custom'
         ];
     }
@@ -144,6 +143,7 @@ class Control_Box_Shadow extends Control_Base
                 'inset'   => __('Inset', 'dragwyb-form-builder'),
             ],
             'default' => $settings['position'],
+            'label_inline' => true,
         ];
 
         return $controls;
