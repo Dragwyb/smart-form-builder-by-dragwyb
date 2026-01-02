@@ -40,12 +40,10 @@ class Field_Date extends Field_Base
                 </label>
             <?php endif; ?>
 
-            <div class="dragwyb-input-wrapper">
-                <input type="date" id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($id); ?>"
-                    placeholder="<?php echo esc_attr($placeholder); ?>"
-                    <?php echo $required ? 'required' : ''; ?>
-                    class="dragwyb-input" />
-            </div>
+            <input type="date" id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($id); ?>"
+                placeholder="<?php echo esc_attr($placeholder); ?>"
+                <?php echo $required ? 'required' : ''; ?>
+                class="dragwyb-input" />
         </div>
 
 <?php

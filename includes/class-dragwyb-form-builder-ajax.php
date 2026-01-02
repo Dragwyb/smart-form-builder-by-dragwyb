@@ -49,7 +49,7 @@ class Dragwyb_Form_Builder_Ajax
             // Update form meta
             update_post_meta($form_id, '_dragwyb_form_data', $this->sanitize_form_data($form_data, $form_id));
 
-            $css_manager = CSS_Manager::getInstance();
+            $css_manager = CSS_Manager::instance();
             $css_manager->clean_cache($form_id);
 
             wp_send_json_success([

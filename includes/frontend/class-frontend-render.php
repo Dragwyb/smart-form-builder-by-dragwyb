@@ -29,8 +29,28 @@ class Frontend_Render
     private static $form_data = null;
     private static $toolbar_data = array();
 
-    public function __construct(int $form_id)
+    private static $css_cache = array();
+
+    private static $instance = null;
+
+
+    public static function instance(): self
     {
+        if (null === self::$instance) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
+    public function __construct()
+    {
+        add_action('Dragwyb/before_enqueue/editor_scripts', [$this, 'enqueue_static_assets']);
+    }
+
+    public function init(int $form_id)
+    {
+        $this->clean_old_data();
         self::$form_id = absint($form_id);
         self::$toolbar_data = array();
         self::$fields = array();
@@ -173,7 +193,6 @@ class Frontend_Render
 
     public function get_generated_css(): string
     {
-        $css_output = '';
         $toolbar_obj = new Toolbars();
         $toolbars = $toolbar_obj->get_toolbars();
 
@@ -210,25 +229,46 @@ class Frontend_Render
                     $field_settings = self::$field_module_cache[$type]->get_settings();
 
                     if ($field_settings && is_array($field_settings) && count($field_settings) > 0) {
-                        $css = $this->extract_css_from_settings($field['attributes'], $field_settings);
-                        if ($css && !empty($css)) {
-                            $css_output .= $css;
-                        }
+                        $this->extract_css_from_settings($field['attributes'], $field_settings);
                     }
                 }
             }
         }
 
-        return $css_output;
+        if (self::$css_cache && count(self::$css_cache) > 0) {
+            $css_string = json_encode(self::$css_cache);
+
+            $css_string = substr($css_string, 1, -1);
+
+            $css_string = preg_replace('/"([^"]+)":"({[^}]+})"(?:,|$)/', '$1$2', $css_string);
+
+            return $css_string;
+        }
+
+        return '';
+    }
+
+    public static function enqueue_static_assets()
+    {
+        self::frontend_assets();
+    }
+
+    private static function frontend_assets()
+    {
+        do_action('Dragwyb/Frontend/Before_Render/Enqueue_Static_Assets');
+
+        wp_enqueue_style('dragwyb-form-builder', esc_url(DRAGWYB_FORM_BUILDER_URL . '/assets/css/dragwyb-form-frontend.css'), [], sanitize_text_field(DRAGWYB_FORM_BUILDER_VERSION));
+
+        do_action('Dragwyb/Frontend/After_Render/Enqueue_Static_Assets');
     }
 
     /**
      * Generates CSS string from settings.
      * Only processes controls that define 'selectors'.
      */
-    private function extract_css_from_settings(array $settings, array $controls): string
+    private function extract_css_from_settings(array $settings, array $controls): void
     {
-        $css = '';
+        // $css = '';
         $form_wrapper_id = '#dragwyb-form-wrapper-' . self::$form_id;
 
         foreach ($settings as $control_id => $setting_value) {
@@ -257,6 +297,7 @@ class Frontend_Render
 
             $control_instance = $control_manager::newInstance();
             $control_instance->set_value($setting_value, $control_id, $control_config);
+            $control_value = $control_instance->get_value();
 
             // 3. Get Data Placeholders (e.g., ['VALUE' => '#fff'] or ['TOP' => 10, 'UNIT' => 'px'])
             // Uses helper method to support both complex and simple controls
@@ -275,17 +316,27 @@ class Frontend_Render
                 $final_property = $css_property;
 
                 foreach ($placeholders as $ph_key => $ph_value) {
-                    $final_property = str_replace('{{' . $ph_key . '}}', (string)$ph_value, $final_property);
+                    $css_value = '';
+                    if ($ph_value === true && is_string($control_value)) {
+                        $css_value = $control_value;
+                    } else {
+                        $css_value = isset($control_value[$ph_value]) ? $control_value[$ph_value] : '';
+                    }
+
+                    $final_property = trim(str_replace('{{' . $ph_key . '}}', (string)$css_value, $final_property));
                 }
 
                 // C. Append to CSS string if property is valid
                 if (!empty($final_property)) {
-                    $css .= sprintf('%s{%s}', $final_selector, $final_property);
+                    $final_property = str_ends_with($final_property, ';') ? $final_property : $final_property . ';';
+                    if (!isset(self::$css_cache[$final_selector])) {
+                        self::$css_cache[$final_selector] = "{" . $final_property . "}";
+                    } else {
+                        self::$css_cache[$final_selector] = rtrim(self::$css_cache[$final_selector], '}') . $final_property . "}";
+                    }
                 }
             }
         }
-
-        return $css;
     }
 
     /**
@@ -299,6 +350,18 @@ class Frontend_Render
         }
 
         // Fallback for simple controls (Color, Text) that just use {{VALUE}}
-        return ['VALUE' => $control_instance->get_value()];
+        return ['VALUE' => 'value'];
+    }
+
+    private function clean_old_data(): void
+    {
+        self::$form_id = null;
+        self::$css_cache = array();
+        self::$fields = array();
+        self::$module = null;
+        self::$toolbar_data = null;
+        self::$field_module_cache = null;
+        self::$field_data = null;
+        self::$form_data = null;
     }
 }

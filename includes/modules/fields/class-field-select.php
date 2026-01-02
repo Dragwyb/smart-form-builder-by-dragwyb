@@ -93,26 +93,23 @@ class Field_Select extends Field_Base
                     <?php if ($required): ?><span class="required">*</span><?php endif; ?>
                 </label>
             <?php endif; ?>
+            <select id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($id); ?>"
+                <?php echo $required ? 'required' : ''; ?>
+                class="dragwyb-input">
+                <?php if (!empty($options)) : ?>
+                    <?php foreach ($options as $option) :
+                        $attribute = $option['attributes'];
+                        $val = $this->field_key_exist($attribute, 'option_label', '');
+                        $text = $this->field_key_exist($attribute, 'option_value', $val);
 
-            <div class="dragwyb-input-wrapper">
-                <select id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($id); ?>"
-                    <?php echo $required ? 'required' : ''; ?>
-                    class="dragwyb-input">
-                    <?php if (!empty($options)) : ?>
-                        <?php foreach ($options as $option) :
-                            $attribute = $option['attributes'];
-                            $val = $this->field_key_exist($attribute, 'option_label', '');
-                            $text = $this->field_key_exist($attribute, 'option_value', $val);
-
-                            if ($val && !empty($val)):
-                        ?>
-                                <option value="<?php echo esc_attr($val); ?>"><?php echo esc_html($text); ?></option>
-                        <?php
-                            endif;
-                        endforeach; ?>
-                    <?php endif; ?>
-                </select>
-            </div>
+                        if ($val && !empty($val)):
+                    ?>
+                            <option value="<?php echo esc_attr($val); ?>"><?php echo esc_html($text); ?></option>
+                    <?php
+                        endif;
+                    endforeach; ?>
+                <?php endif; ?>
+            </select>
         </div>
 
 <?php

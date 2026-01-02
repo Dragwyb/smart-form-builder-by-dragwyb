@@ -42,15 +42,13 @@ class Field_Email extends Field_Base
                 </label>
             <?php endif; ?>
 
-            <div class="dragwyb-input-wrapper <?php echo !empty($icon) ? 'has-icon' : ''; ?>">
-                <?php if (!empty($icon)): ?>
-                    <span class="dragwyb-input-icon"><i class="<?php echo esc_attr($icon); ?>"></i></span>
-                <?php endif; ?>
-                <input type="email" id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($id); ?>"
-                    placeholder="<?php echo esc_attr($placeholder); ?>"
-                    <?php echo $required ? 'required' : ''; ?>
-                    class="dragwyb-input" />
-            </div>
+            <?php if (!empty($icon)): ?>
+                <span class="dragwyb-input-icon"><i class="<?php echo esc_attr($icon); ?>"></i></span>
+            <?php endif; ?>
+            <input type="email" id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($id); ?>"
+                placeholder="<?php echo esc_attr($placeholder); ?>"
+                <?php echo $required ? 'required' : ''; ?>
+                class="dragwyb-input" />
         </div>
 
 <?php

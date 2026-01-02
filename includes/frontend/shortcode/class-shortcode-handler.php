@@ -19,6 +19,11 @@ class Shortcode_Handler
 
     private static $frontend_render = null;
 
+    /**
+     * Whether the frontend static assets have been enqueued.
+     */
+    private static $static_assets_enqueued = false;
+
     public static function instance(): self
     {
         if (null === self::$instance) {
@@ -54,9 +59,15 @@ class Shortcode_Handler
             return '<p>' . esc_html__('No fields found in this form.', 'dragwyb-form-builder') . '</p>';
         }
 
-        self::$frontend_render = new Frontend_Render($form_id);
+        self::$frontend_render = Frontend_Render::instance();
+        self::$frontend_render->init($form_id);
 
-        $css_manager = CSS_Manager::getInstance();
+        if (!self::$static_assets_enqueued) {
+            self::$static_assets_enqueued = true;
+            self::$frontend_render::enqueue_static_assets();
+        }
+
+        $css_manager = CSS_Manager::instance();
 
         $css_manager->enqueue_form_styles($form_id, self::$frontend_render);
 

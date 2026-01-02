@@ -40,13 +40,10 @@ class Field_Textarea extends Field_Base
                     <?php if ($required): ?><span class="required">*</span><?php endif; ?>
                 </label>
             <?php endif; ?>
-
-            <div class="dragwyb-input-wrapper">
-                <textarea id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($id); ?>"
-                    placeholder="<?php echo esc_attr($placeholder); ?>"
-                    <?php echo $required ? 'required' : ''; ?>
-                    class="dragwyb-input"></textarea>
-            </div>
+            <textarea id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($id); ?>"
+                placeholder="<?php echo esc_attr($placeholder); ?>"
+                <?php echo $required ? 'required' : ''; ?>
+                class="dragwyb-input"></textarea>
         </div>
 <?php
     }

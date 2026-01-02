@@ -55,6 +55,10 @@ class Field_Text extends Field_Base
             'type' => Controls::COLOR,
             'label' => __('Field Label Color', 'dragwyb-form-builder'),
             'default' => '',
+            'selectors' => array(
+                '{{WRAPPER}} .form-text input' => 'color: {{VALUE}}',
+                '{{WRAPPER}} .form-text input::placeholder' => 'color: {{VALUE}}',
+            )
         ]);
 
         $this->end_tab();
@@ -67,8 +71,8 @@ class Field_Text extends Field_Base
             'type' => Controls::COLOR,
             'label' => __('Field Label Color', 'dragwyb-form-builder'),
             'default' => '',
-            'selectoR' => array(
-                '{{WRAPPER}} .form-text input: {color: {{VALUE}}}',
+            'selectors' => array(
+                '{{WRAPPER}} .form-text input:hover' => 'color: {{VALUE}}',
             )
         ]);
 
@@ -128,11 +132,35 @@ class Field_Text extends Field_Base
             'type' => Controls::DIMENSIONS,
             'label' => __('Spacing', 'dragwyb-form-builder'),
             'units' => ['px', '%'],
+            'selectors' => array(
+                '{{WRAPPER}} .form-text input' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+            ),
         ]);
         $this->add_control('text_css_class', [
             'type' => Controls::TEXT,
             'label' => __('CSS Class', 'dragwyb-form-builder'),
             'default' => '',
+        ]);
+
+        // Url Control For text
+        $this->add_control('text_url', [
+            'type' => Controls::URL,
+            'label' => __('URL', 'dragwyb-form-builder'),
+            'default' => '',
+        ]);
+
+        // Gallery control for text
+        $this->add_control('text_gallery', [
+            'type' => Controls::GALLERY,
+            'label' => __('Gallery', 'dragwyb-form-builder'),
+            'default' => '',
+        ]);
+
+
+        // Icon control for text
+        $this->add_control('text_icon', [
+            'type' => Controls::ICON,
+            'label' => __('Icon', 'dragwyb-form-builder'),
         ]);
 
         $this->end_section();
@@ -146,7 +174,71 @@ class Field_Text extends Field_Base
             'label' => __('CSS Class', 'dragwyb-form-builder'),
             'default' => '',
         ]);
+
+        $this->add_control(
+            'alignment', // Unique ID for this setting
+            [
+                'label'   => __('Alignment', 'dragwyb-form-builder'),
+                'type'    => 'choose', // Or Controls::CHOOSE if you defined the constant
+                'default' => 'left',
+                'options' => [
+                    'left' => [
+                        'title' => __('Left', 'dragwyb-form-builder'),
+                        'icon'  => 'fa fa-align-left',
+                    ],
+                    'center' => [
+                        'title' => __('Center', 'dragwyb-form-builder'),
+                        'icon'  => 'fa fa-align-center',
+                    ],
+                    'right' => [
+                        'title' => __('Right', 'dragwyb-form-builder'),
+                        'icon'  => 'fa fa-align-right',
+                    ],
+                ],
+            ]
+        );
+
+        $this->add_control('text_fonts', [
+            'type' => Controls::FONTS,
+            'label' => __('Text Fonts', 'dragwyb-form-builder'),
+            'default' => 'Arial',
+            'family' => 'Arial',
+            // 'groups' => ['system'],
+            // 'exclude_fonts' => ['Times New Roman']
+        ]);
+
+        $this->add_group_control(
+            'text_fonts_group',
+            [
+                'type' => Controls::GROUP_TYPOGRAPHY,
+                'label' => __('Text Fonts', 'dragwyb-form-builder'),
+                'settings' => [
+                    'family' => ['Arial', 'Times New Roman', 'Courier New'],
+                    'size' => [
+                        'default' => [
+                            'unit' => '%',
+                            'size' => 10,
+                        ],
+                        'units' => ['px', '%'],
+                        'range' => [
+                            'px' => [
+                                'min' => 1,
+                                'max' => 50,
+                                'step' => 5
+                            ],
+                            '%' => [
+                                'min' => 1,
+                                'max' => 50,
+                                'step' => 5
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
         $this->end_section();
+
 
         $this->start_section('text_form_style_tab', [
             'label' => 'Form Style',
@@ -171,41 +263,45 @@ class Field_Text extends Field_Base
         $this->add_control('text_style_popover_toggle', [
             'type' => Controls::POPOVER_TOGGLE,
             'label' => __('Popover Toggle', 'dragwyb-form-builder'),
-            'icon' => 'fa-solid fa-pen'
+            'icon' => 'fas fa-pen'
         ]);
 
-        $this->start_popover();
+        $this->start_popover(
+            array(
+                'title' => __('Text Style', 'dragwyb-form-builder')
+            )
+        );
 
         $this->add_control('text_popover_hover_color', [
             'type' => Controls::COLOR,
             'label' => __('Field Label Color', 'dragwyb-form-builder'),
             'default' => '',
-            'selectoR' => array(
-                '{{WRAPPER}} .form-text input: {color: {{VALUE}}}',
+            'selectors' => array(
+                '{{WRAPPER}} .form-text input:hover' => 'color: {{VALUE}}',
             )
         ]);
         $this->add_control('text_popover_hover_color_one', [
             'type' => Controls::COLOR,
             'label' => __('Field Label Color', 'dragwyb-form-builder'),
             'default' => '',
-            'selectoR' => array(
-                '{{WRAPPER}} .form-text input: {color: {{VALUE}}}',
+            'selectors' => array(
+                '{{WRAPPER}} .form-text input:hover' => 'color: {{VALUE}}',
             )
         ]);
         $this->add_control('text_popover_hover_color_two', [
             'type' => Controls::COLOR,
             'label' => __('Field Label Color', 'dragwyb-form-builder'),
             'default' => '',
-            'selectoR' => array(
-                '{{WRAPPER}} .form-text input: {color: {{VALUE}}}',
+            'selectors' => array(
+                '{{WRAPPER}} .form-text input:hover' => 'color: {{VALUE}}',
             )
         ]);
         $this->add_control('text_popover_hover_color_three', [
             'type' => Controls::COLOR,
             'label' => __('Field Label Color', 'dragwyb-form-builder'),
             'default' => '',
-            'selectoR' => array(
-                '{{WRAPPER}} .form-text input: {color: {{VALUE}}}',
+            'selectors' => array(
+                '{{WRAPPER}} .form-text input:hover' => 'color: {{VALUE}}',
             )
         ]);
 
@@ -231,16 +327,13 @@ class Field_Text extends Field_Base
                     <?php if ($required): ?><span class="required">*</span><?php endif; ?>
                 </label>
             <?php endif; ?>
-
-            <div class="dragwyb-input-wrapper <?php echo !empty($icon) ? 'has-icon' : ''; ?>">
-                <?php if (!empty($icon)): ?>
-                    <span class="dragwyb-input-icon"><i class="<?php echo esc_attr($icon); ?>"></i></span>
-                <?php endif; ?>
-                <input type="text" id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($id); ?>"
-                    placeholder="<?php echo esc_attr($placeholder); ?>"
-                    <?php echo $required ? 'required' : ''; ?>
-                    class="dragwyb-input" />
-            </div>
+            <?php if (!empty($icon)): ?>
+                <span class="dragwyb-input-icon"><i class="<?php echo esc_attr($icon); ?>"></i></span>
+            <?php endif; ?>
+            <input type="text" id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($id); ?>"
+                placeholder="<?php echo esc_attr($placeholder); ?>"
+                <?php echo $required ? 'required' : ''; ?>
+                class="dragwyb-input" />
         </div>
 <?php
     }

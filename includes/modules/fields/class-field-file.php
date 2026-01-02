@@ -42,12 +42,9 @@ class Field_File extends Field_Base
                     <?php if ($required): ?><span class="required">*</span><?php endif; ?>
                 </label>
             <?php endif; ?>
-
-            <div class="dragwyb-input-wrapper">
-                <input type="file" id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($id); ?>"
-                    <?php echo $required ? 'required' : ''; ?>
-                    class="dragwyb-input" />
-            </div>
+            <input type="file" id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($id); ?>"
+                <?php echo $required ? 'required' : ''; ?>
+                class="dragwyb-input" />
         </div>
 <?php
     }

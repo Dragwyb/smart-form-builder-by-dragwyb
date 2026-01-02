@@ -10,6 +10,8 @@ use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Pages;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Editor\Dragwyb_Builder_Editor;
 use Dragwyb\Form_Builder\Includes\Frontend\Shortcode\Shortcode_Handler;
+use Dragwyb\Form_Builder\Includes\Frontend\Frontend_Render;
+use Dragwyb\Form_Builder\Includes\Frontend\Managers\CSS_Manager;
 
 class Dragwyb_Init
 {
@@ -32,21 +34,28 @@ class Dragwyb_Init
             new Dragwyb_Builder_Editor();
             // new Dragwyb_Form_Builder_Editor();
             new Dragwyb_Pages();
-
             // Initialize post type
             new Dragwyb_Post();
-    
             // Initialize AJAX handler
             new Dragwyb_Form_Builder_Ajax();
+            // Initialize Frontend Render
+            Frontend_Render::instance();
         }
 
         Shortcode_Handler::instance();
+
+        add_action('admin_init', [$this, 'initial_files']);
+    }
+
+    public function initial_files()
+    {
+        CSS_Manager::instance();
     }
 
     public static function core_script()
     {
 
-        $thisObj=self::instance();
+        $thisObj = self::instance();
 
         // Enqueue React and dependencies
         wp_register_script(
