@@ -1,11 +1,9 @@
 import Fields from "./fields";
-import AdvanceSettings from "./advacne-settings";
 
 const initializeFields = () => {
 
     const defaultFields = {
         'fields': (args) => new Fields(args),
-        // 'advance-settings': (args) => new AdvanceSettings(args)
     };
 
     Object.keys(defaultFields).forEach(key =>
