@@ -38,6 +38,18 @@ export default class DimensionsControl extends DragwybEditor.editor.extends.Cont
 
         const toggleLink = () => {
             let newValue = { ...currentValue, linked: !currentValue.linked };
+            const sides = ["top", "right", "bottom", "left"];
+            let largetValue = null;
+            if (!currentValue.linked) {
+                sides.forEach(side => {
+                    if ((currentValue[side] > largetValue) || null === largetValue) {
+                        largetValue = currentValue[side];
+                    }
+                });
+                newValue.top = newValue.right = newValue.bottom = newValue.left = largetValue;
+            }
+
+            console.log(newValue);
             this.updateControlHandler(id, newValue);
         };
 
