@@ -17,7 +17,7 @@ class Control_Text_Shadow extends Control_Base
     {
         $this->type = 'text_shadow';
         $this->name = __('Text Shadow', 'dragwyb-form-builder');
-        $this->icon = 'fas fa-pencil-alt'; // Or custom icon
+        $this->icon = 'fas fa-pencil-alt';
     }
 
     public function get_icon(): string
@@ -41,6 +41,8 @@ class Control_Text_Shadow extends Control_Base
             'horizontal' => ['size' => 0, 'unit' => 'px'],
             'vertical'   => ['size' => 0, 'unit' => 'px'],
             'blur'       => ['size' => 10, 'unit' => 'px'],
+            // Added default selector
+            'selector'   => ''
         ];
     }
 
@@ -56,6 +58,11 @@ class Control_Text_Shadow extends Control_Base
 
         if (isset($value['color'])) {
             $sanitized['color'] = sanitize_text_field($value['color']);
+        }
+
+        // Added Selector Sanitization
+        if (isset($value['selector'])) {
+            $sanitized['selector'] = sanitize_text_field($value['selector']);
         }
 
         foreach (['horizontal', 'vertical', 'blur'] as $key) {
@@ -84,7 +91,15 @@ class Control_Text_Shadow extends Control_Base
     private function get_display_settings(): array
     {
         $defaults = $this->default_setting();
-        $user_data = isset($this->data['settings']) && is_array($this->data['settings']) ? $this->data['settings'] : $this->data;
+        $user_data = isset($this->data['settings']) && is_array($this->data['settings'])
+            ? $this->data['settings']
+            : $this->data;
+
+        // Handle root selector fallback
+        if (isset($this->data['selector']) && empty($user_data['selector'])) {
+            $user_data['selector'] = $this->data['selector'];
+        }
+
         $valid_user_data = array_intersect_key($user_data, $defaults);
         return array_replace_recursive($defaults, $valid_user_data);
     }
@@ -93,6 +108,8 @@ class Control_Text_Shadow extends Control_Base
     {
         $settings = $this->get_display_settings();
         $id = $this->string_sanitize($this->id);
+        $selector = isset($settings['selector']) && !empty($settings['selector']) ? $settings['selector'] : false;
+
         $controls = [];
 
         $controls[$id . '_color'] = [
@@ -121,6 +138,22 @@ class Control_Text_Shadow extends Control_Base
             'range'   => ['px' => ['min' => 0, 'max' => 100, 'step' => 1]],
             'default' => $settings['blur'],
         ];
+
+        // Inject Selector
+        if ($selector) {
+            // Text Shadow CSS Syntax: h-shadow v-shadow blur-radius color
+            $text_shadow_value = '{{HORIZONTAL}} {{VERTICAL}} {{BLUR}} {{COLOR}}';
+
+            $keys = ['_color', '_horizontal', '_vertical', '_blur'];
+
+            foreach ($keys as $key_suffix) {
+                if (isset($controls[$id . $key_suffix])) {
+                    $controls[$id . $key_suffix]['selectors'] = [
+                        $selector => 'text-shadow: ' . $text_shadow_value . ';',
+                    ];
+                }
+            }
+        }
 
         return $controls;
     }

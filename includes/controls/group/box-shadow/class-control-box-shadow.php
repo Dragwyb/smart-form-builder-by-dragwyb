@@ -43,6 +43,8 @@ class Control_Box_Shadow extends Control_Base
             'blur'       => ['size' => 10, 'unit' => 'px'],
             'spread'     => ['size' => 0, 'unit' => 'px'],
             'position'   => 'outline', // outline | inset
+            // Added default selector
+            'selector'   => ''
         ];
     }
 
@@ -62,6 +64,11 @@ class Control_Box_Shadow extends Control_Base
 
         if (isset($value['position'])) {
             $sanitized['position'] = sanitize_text_field($value['position']);
+        }
+
+        // Added Selector Sanitization
+        if (isset($value['selector'])) {
+            $sanitized['selector'] = sanitize_text_field($value['selector']);
         }
 
         foreach (['horizontal', 'vertical', 'blur', 'spread'] as $key) {
@@ -90,7 +97,15 @@ class Control_Box_Shadow extends Control_Base
     private function get_display_settings(): array
     {
         $defaults = $this->default_setting();
-        $user_data = isset($this->data['settings']) && is_array($this->data['settings']) ? $this->data['settings'] : $this->data;
+        $user_data = isset($this->data['settings']) && is_array($this->data['settings'])
+            ? $this->data['settings']
+            : $this->data;
+
+        // Ensure we handle the root selector if passed directly in data
+        if (isset($this->data['selector']) && empty($user_data['selector'])) {
+            $user_data['selector'] = $this->data['selector'];
+        }
+
         $valid_user_data = array_intersect_key($user_data, $defaults);
         return array_replace_recursive($defaults, $valid_user_data);
     }
@@ -99,6 +114,8 @@ class Control_Box_Shadow extends Control_Base
     {
         $settings = $this->get_display_settings();
         $id = $this->string_sanitize($this->id);
+        $selector = isset($settings['selector']) && !empty($settings['selector']) ? $settings['selector'] : false;
+
         $controls = [];
 
         $controls[$id . '_color'] = [
@@ -136,15 +153,34 @@ class Control_Box_Shadow extends Control_Base
         ];
 
         $controls[$id . '_position'] = [
-            'type'    => Controls::SELECT,
-            'label'   => __('Position', 'dragwyb-form-builder'),
-            'options' => [
+            'type'         => Controls::SELECT,
+            'label'        => __('Position', 'dragwyb-form-builder'),
+            'options'      => [
                 'outline' => __('Outline', 'dragwyb-form-builder'),
                 'inset'   => __('Inset', 'dragwyb-form-builder'),
             ],
-            'default' => $settings['position'],
+            'default'      => $settings['position'],
             'label_inline' => true,
         ];
+
+        // Inject Selector
+        if ($selector) {
+            // Box Shadow CSS Syntax: horizontal vertical blur spread color (inset)
+            // We use standard placeholders that your frontend JS generator will replace
+            $box_shadow_value = '{{HORIZONTAL}} {{VERTICAL}} {{BLUR}} {{SPREAD}} {{COLOR}} {{POSITION}}';
+
+            // We apply this same complex rule to EVERY control in the group.
+            // When any of these change, the JS should re-compile the full box-shadow string.
+            $keys = ['_color', '_horizontal', '_vertical', '_blur', '_spread', '_position'];
+
+            foreach ($keys as $key_suffix) {
+                if (isset($controls[$id . $key_suffix])) {
+                    $controls[$id . $key_suffix]['selectors'] = [
+                        $selector => 'box-shadow: ' . $box_shadow_value . ';',
+                    ];
+                }
+            }
+        }
 
         return $controls;
     }

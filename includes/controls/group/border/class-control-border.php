@@ -50,7 +50,7 @@ class Control_Border extends Control_Base
                 'default' => 'solid',
             ],
             'width' => [
-                'unit' => 'px', // Dimensions usually have one unit active
+                'unit' => 'px',
                 'top' => '',
                 'right' => '',
                 'bottom' => '',
@@ -66,6 +66,8 @@ class Control_Border extends Control_Base
                 'left' => '',
                 'isLinked' => true,
             ],
+            // Added default selector
+            'selector' => ''
         ];
     }
 
@@ -105,6 +107,11 @@ class Control_Border extends Control_Base
             }
         }
 
+        // Selector
+        if (isset($value['selector'])) {
+            $sanitized['selector'] = sanitize_text_field($value['selector']);
+        }
+
         return $sanitized;
     }
 
@@ -124,7 +131,16 @@ class Control_Border extends Control_Base
     private function get_display_settings(): array
     {
         $defaults = $this->default_setting();
-        $user_data = isset($this->data['settings']) && is_array($this->data['settings']) ? $this->data['settings'] : $this->data;
+        // Extract settings safely
+        $user_data = isset($this->data['settings']) && is_array($this->data['settings'])
+            ? $this->data['settings']
+            : $this->data;
+
+        // Ensure we handle the root selector if passed directly in data (common pattern)
+        if (isset($this->data['selector']) && empty($user_data['selector'])) {
+            $user_data['selector'] = $this->data['selector'];
+        }
+
         $valid_user_data = array_intersect_key($user_data, $defaults);
         return array_replace_recursive($defaults, $valid_user_data);
     }
@@ -133,14 +149,25 @@ class Control_Border extends Control_Base
     {
         $settings = $this->get_display_settings();
         $id = $this->string_sanitize($this->id);
+        $selector = isset($settings['selector']) && !empty($settings['selector']) ? $settings['selector'] : false;
+
         $controls = [];
+
+        // Definition of selectors map
+        // Note: Dimensions (width/radius) use specific placeholders {{TOP}}, {{RIGHT}}, etc.
+        $selectors_map = [
+            'style'  => ['property' => 'border-style',  'placeholder' => '{{VALUE}}'],
+            'color'  => ['property' => 'border-color',  'placeholder' => '{{VALUE}}'],
+            'width'  => ['property' => 'border-width',  'placeholder' => '{{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}'],
+            'radius' => ['property' => 'border-radius', 'placeholder' => '{{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}'],
+        ];
 
         // 1. Border Style
         $controls[$id . '_style'] = [
-            'type'    => Controls::SELECT,
-            'label'   => __('Border Style', 'dragwyb-form-builder'),
-            'options' => $settings['style']['options'],
-            'default' => $settings['style']['default'],
+            'type'         => Controls::SELECT,
+            'label'        => __('Border Style', 'dragwyb-form-builder'),
+            'options'      => $settings['style']['options'],
+            'default'      => $settings['style']['default'],
             'label_inline' => true,
         ];
 
@@ -151,7 +178,7 @@ class Control_Border extends Control_Base
             'size_units' => ['px', 'em', '%'],
             'default'    => $settings['width'],
             'condition'  => [
-                $id . '_style!' => ['none', ''] // Hide width if style is none
+                $id . '_style!' => ['none', '']
             ]
         ];
 
@@ -165,13 +192,24 @@ class Control_Border extends Control_Base
             ]
         ];
 
-        // 4. Border Radius (Always visible usually)
+        // 4. Border Radius
         $controls[$id . '_radius'] = [
             'type'       => Controls::DIMENSIONS,
             'label'      => __('Border Radius', 'dragwyb-form-builder'),
             'size_units' => ['px', 'em', '%'],
             'default'    => $settings['radius'],
         ];
+
+        // Inject Selectors if valid selector string exists
+        if ($selector) {
+            foreach ($selectors_map as $key => $map) {
+                if (isset($controls[$id . '_' . $key])) {
+                    $controls[$id . '_' . $key]['selectors'] = [
+                        $selector => $map['property'] . ': ' . $map['placeholder'] . ';',
+                    ];
+                }
+            }
+        }
 
         return $controls;
     }
