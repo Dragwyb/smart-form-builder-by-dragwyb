@@ -33,37 +33,39 @@ class Settings extends Register_Controls_Base
         $this->add_control('form_bg_color', [
             'type'      => Controls::COLOR,
             'label'     => __('Background Color', 'dragwyb-form-builder'),
-            'selector'  => [
+            // "selectors": Array format. Key = Selector, Value = CSS Property with {{VALUE}}
+            'selectors' => [
                 '{{WRAPPER}}' => 'background-color: {{VALUE}};',
             ],
         ]);
 
         $this->add_group_control('form_border', [
-            'type'      => Controls::GROUP_BORDER, // Assuming you have a Border Group
+            'type'      => Controls::GROUP_BORDER,
             'label'     => __('Border', 'dragwyb-form-builder'),
+            // "selector": String format. Just the target element. Group handles properties.
             'selector'  => '{{WRAPPER}}',
         ]);
 
         $this->add_group_control('form_box_shadow', [
-            'type'      => Controls::GROUP_BOX_SHADOW, // Assuming you have a Box Shadow Group
+            'type'      => Controls::GROUP_BOX_SHADOW,
             'label'     => __('Box Shadow', 'dragwyb-form-builder'),
             'selector'  => '{{WRAPPER}}',
         ]);
 
         $this->add_control('form_padding', [
-            'type'       => Controls::DIMENSIONS,
-            'label'      => __('Padding', 'dragwyb-form-builder'),
-            'size_units' => ['px', 'em', '%'],
-            'selector'   => [
+            'type'      => Controls::DIMENSIONS,
+            'label'     => __('Padding', 'dragwyb-form-builder'),
+            'units'     => ['px', 'em', '%'],
+            'selectors' => [
                 '{{WRAPPER}}' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
         ]);
 
         $this->add_control('form_margin', [
-            'type'       => Controls::DIMENSIONS,
-            'label'      => __('Margin', 'dragwyb-form-builder'),
-            'size_units' => ['px', 'em', '%'],
-            'selector'   => [
+            'type'      => Controls::DIMENSIONS,
+            'label'     => __('Margin', 'dragwyb-form-builder'),
+            'units'     => ['px', 'em', '%'],
+            'selectors' => [
                 '{{WRAPPER}}' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
         ]);
@@ -75,8 +77,7 @@ class Settings extends Register_Controls_Base
             'range'     => [
                 'px' => ['min' => 0, 'max' => 100],
             ],
-            // Adjust selector to your specific field wrapper class
-            'selector'  => [
+            'selectors' => [
                 '{{WRAPPER}} .dragwyb-field-group' => 'margin-bottom: {{SIZE}}{{UNIT}};',
             ],
         ]);
@@ -94,7 +95,7 @@ class Settings extends Register_Controls_Base
             'type'      => Controls::COLOR,
             'label'     => __('Text Color', 'dragwyb-form-builder'),
             'default'   => '#333333',
-            'selector'  => [
+            'selectors' => [
                 '{{WRAPPER}} label' => 'color: {{VALUE}};',
             ],
         ]);
@@ -110,7 +111,7 @@ class Settings extends Register_Controls_Base
             'label'     => __('Spacing (Bottom)', 'dragwyb-form-builder'),
             'default'   => ['size' => 5, 'unit' => 'px'],
             'range'     => ['px' => ['min' => 0, 'max' => 50]],
-            'selector'  => [
+            'selectors' => [
                 '{{WRAPPER}} label' => 'margin-bottom: {{SIZE}}{{UNIT}}; display: inline-block;',
             ],
         ]);
@@ -124,14 +125,14 @@ class Settings extends Register_Controls_Base
             'label' => __('Input Fields', 'dragwyb-form-builder'),
         ]);
 
-        // Standard Inputs Selector
+        // Centralized selector variable for cleaner code
         $input_selector = '{{WRAPPER}} input:not([type="button"]):not([type="submit"]), {{WRAPPER}} textarea, {{WRAPPER}} select';
 
         $this->add_control('input_text_color', [
             'type'      => Controls::COLOR,
             'label'     => __('Text Color', 'dragwyb-form-builder'),
             'default'   => '#555555',
-            'selector'  => [
+            'selectors' => [
                 $input_selector => 'color: {{VALUE}};',
             ],
         ]);
@@ -140,7 +141,7 @@ class Settings extends Register_Controls_Base
             'type'      => Controls::COLOR,
             'label'     => __('Background Color', 'dragwyb-form-builder'),
             'default'   => '#ffffff',
-            'selector'  => [
+            'selectors' => [
                 $input_selector => 'background-color: {{VALUE}};',
             ],
         ]);
@@ -148,7 +149,7 @@ class Settings extends Register_Controls_Base
         $this->add_control('input_placeholder_color', [
             'type'      => Controls::COLOR,
             'label'     => __('Placeholder Color', 'dragwyb-form-builder'),
-            'selector'  => [
+            'selectors' => [
                 "$input_selector::placeholder" => 'color: {{VALUE}};',
             ],
         ]);
@@ -160,28 +161,19 @@ class Settings extends Register_Controls_Base
         ]);
 
         $this->add_group_control('input_border', [
-            'type'      => Controls::GROUP_BORDER,
-            'label'     => __('Border', 'dragwyb-form-builder'),
-            'selector'  => $input_selector,
+            'type'     => Controls::GROUP_BORDER,
+            'label'    => __('Border', 'dragwyb-form-builder'),
+            'selector' => $input_selector,
         ]);
 
         $this->add_control('input_padding', [
-            'type'       => Controls::DIMENSIONS,
-            'label'      => __('Padding', 'dragwyb-form-builder'),
-            'size_units' => ['px', 'em'],
-            'selector'   => [
+            'type'      => Controls::DIMENSIONS,
+            'label'     => __('Padding', 'dragwyb-form-builder'),
+            'units'     => ['px', 'em'],
+            'selectors' => [
                 $input_selector => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
         ]);
-
-        // $this->add_control('input_border_radius', [
-        //     'type'       => Controls::DIMENSIONS,
-        //     'label'      => __('Border Radius', 'dragwyb-form-builder'),
-        //     'size_units' => ['px', '%'],
-        //     'selector'   => [
-        //         $input_selector => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-        //     ],
-        // ]);
 
         $this->end_section();
 
@@ -211,7 +203,7 @@ class Settings extends Register_Controls_Base
             'type'      => Controls::COLOR,
             'label'     => __('Text Color', 'dragwyb-form-builder'),
             'default'   => '#ffffff',
-            'selector'  => [
+            'selectors' => [
                 $btn_selector => 'color: {{VALUE}};',
             ],
         ]);
@@ -220,7 +212,7 @@ class Settings extends Register_Controls_Base
             'type'      => Controls::COLOR,
             'label'     => __('Background Color', 'dragwyb-form-builder'),
             'default'   => '#0073e6',
-            'selector'  => [
+            'selectors' => [
                 $btn_selector => 'background-color: {{VALUE}};',
             ],
         ]);
@@ -235,7 +227,7 @@ class Settings extends Register_Controls_Base
         $this->add_control('button_hover_text_color', [
             'type'      => Controls::COLOR,
             'label'     => __('Text Color', 'dragwyb-form-builder'),
-            'selector'  => [
+            'selectors' => [
                 "$btn_selector:hover" => 'color: {{VALUE}};',
             ],
         ]);
@@ -244,7 +236,7 @@ class Settings extends Register_Controls_Base
             'type'      => Controls::COLOR,
             'label'     => __('Background Color', 'dragwyb-form-builder'),
             'default'   => '#005bb5',
-            'selector'  => [
+            'selectors' => [
                 "$btn_selector:hover" => 'background-color: {{VALUE}};',
             ],
         ]);
@@ -252,7 +244,7 @@ class Settings extends Register_Controls_Base
         $this->add_control('button_hover_border_color', [
             'type'      => Controls::COLOR,
             'label'     => __('Border Color', 'dragwyb-form-builder'),
-            'selector'  => [
+            'selectors' => [
                 "$btn_selector:hover" => 'border-color: {{VALUE}};',
             ],
         ]);
@@ -266,23 +258,14 @@ class Settings extends Register_Controls_Base
             'type'      => Controls::GROUP_BORDER,
             'label'     => __('Border', 'dragwyb-form-builder'),
             'selector'  => $btn_selector,
-            'separator' => 'before', // Add visual separator
+            'separator' => 'before',
         ]);
 
-        // $this->add_control('button_border_radius', [
-        //     'type'       => Controls::DIMENSIONS,
-        //     'label'      => __('Border Radius', 'dragwyb-form-builder'),
-        //     'size_units' => ['px', '%'],
-        //     'selector'   => [
-        //         $btn_selector => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-        //     ],
-        // ]);
-
         $this->add_control('button_padding', [
-            'type'       => Controls::DIMENSIONS,
-            'label'      => __('Padding', 'dragwyb-form-builder'),
-            'size_units' => ['px', 'em'],
-            'selector'   => [
+            'type'      => Controls::DIMENSIONS,
+            'label'     => __('Padding', 'dragwyb-form-builder'),
+            'units'     => ['px', 'em'],
+            'selectors' => [
                 $btn_selector => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
         ]);

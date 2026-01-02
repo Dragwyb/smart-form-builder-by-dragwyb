@@ -53,6 +53,7 @@ class Settings extends Register_Controls_Base
                 'publish'  => __('Published', 'dragwyb-form-builder'),
             ],
             'default' => sanitize_text_field($form_status),
+            'label_inline' => true,
         ]);
 
         $this->end_section();
