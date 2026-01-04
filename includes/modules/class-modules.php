@@ -114,4 +114,9 @@ class Modules extends Toolbar_Base
 
         return $data;
     }
+
+    protected function get_setting_instance(): string
+    {
+        return Settings::class;
+    }
 }
