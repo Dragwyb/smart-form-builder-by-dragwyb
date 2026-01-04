@@ -13,6 +13,7 @@ abstract class Toolbar_Base
     private string $icon;
     private array $data = [];
     private static int $form_id = 0;
+    protected $toolbar_settings = null;
 
     public function __construct()
     {
@@ -63,10 +64,31 @@ abstract class Toolbar_Base
      */
     abstract protected function get_icon(): string;
 
+    abstract protected function get_setting_instance(): string;
+
     /**
      * Each toolbar must handle its own data sanitization
      */
-    abstract protected function get_settings(): array;
+    protected function get_settings(): array
+    {
+        $settings = $this->toolbar_settings;
+        $data = array();
+        $form_id = absint($this->get_form_id());
+
+        $setting_instance = $this->get_setting_instance();
+
+        if ($settings instanceof $setting_instance) {
+            $settings->set_form_id($form_id);
+            $conrols = $settings->render_controls();
+            $data['label'] = sprintf(esc_html__('%s Settings'), sanitize_text_field($this->get_name()));
+
+            if ($conrols && count($conrols) > 0) {
+                $data['controls'] = $conrols;
+            }
+        }
+
+        return $data;
+    }
 
     /**
      * Update toolbar call update settings

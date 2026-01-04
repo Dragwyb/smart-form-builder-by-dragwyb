@@ -9,7 +9,7 @@ use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
 class After_SUbmission extends Toolbar_Base
 {
     private static $instance = null;
-    private $advance_settings = null;
+    protected $toolbar_settings = null;
 
     public static function instance(): self
     {
@@ -42,27 +42,16 @@ class After_SUbmission extends Toolbar_Base
 
     private function init(): void
     {
-        $this->advance_settings = new Settings();
+        $this->toolbar_settings = new Settings();
     }
 
-    protected function get_settings(): array
+    protected function get_setting_instance(): string
     {
-        $settings = $this->advance_settings;
-        $data = array();
-
-        if ($settings instanceof Settings) {
-            $conrols = $settings->render_controls();
-            $data['label'] = sprintf(esc_html__('%s Settings'), sanitize_text_field($this->get_name()));
-
-            if ($conrols && count($conrols) > 0) {
-                $data['controls'] = $conrols;
-            }
-        }
-
-        return $data;
+        return Settings::class;
     }
 
-    protected function update_toolbar(): void{
+    protected function update_toolbar(): void
+    {
         // var_dump($this->get_toolbar_data());
     }
 }
