@@ -17,6 +17,8 @@ import {
     UPDATE_FIELD_IDS,
     UPDATE_FIELD_ID,
     DELETE_FIELD_ID,
+    UPDATE_STYLE_SELECTORS,
+    DELETE_STYLE_SELECTORS,
     SHOW_NOTICE,
     HIDE_NOTICE,
     ERROR_NOTICE
@@ -147,7 +149,7 @@ export default function reducer(state = initialState, action) {
             };
 
         case UPDATE_SECTION_SETTINGS:
-            if(state.sectionSettings && state.sectionSettings[action.payload.Id] && state.sectionSettings[action.payload.Id] === action.payload.value){
+            if (state.sectionSettings && state.sectionSettings[action.payload.Id] && state.sectionSettings[action.payload.Id] === action.payload.value) {
                 return state;
             }
 
@@ -160,8 +162,8 @@ export default function reducer(state = initialState, action) {
             };
 
         case RESET_SECTION_SETTINGS:
-            
-            if(Object.keys(state.sectionSettings || {}).length < 1){
+
+            if (Object.keys(state.sectionSettings || {}).length < 1) {
                 return state;
             }
 
@@ -183,11 +185,11 @@ export default function reducer(state = initialState, action) {
                 if (!action.payload.id || !action.payload.control) return state;
 
                 const status = action.payload.status;
-                const popoverInit=state.popoverInitialize;
-                let popoverInitialize=true;
+                const popoverInit = state.popoverInitialize;
+                let popoverInitialize = true;
 
                 if (status && true === status.start) {
-                    if(true === popoverInit){
+                    if (true === popoverInit) {
                         console.error(
                             `[Popover] Attempt to start a new popover before closing the previous one. Key: ${action.payload.id}`
                         );
@@ -197,7 +199,7 @@ export default function reducer(state = initialState, action) {
                 }
 
                 if (status && true === status.end) {
-                    if(!popoverInit){
+                    if (!popoverInit) {
                         console.error(
                             `[Popover] Attempt to close a popover that was never opened. Key: ${action.payload.id}`
                         );
@@ -215,7 +217,7 @@ export default function reducer(state = initialState, action) {
 
         case RESET_POPOVER_CONTROLS:
             {
-                if(Object.keys(state.popoverControls).length < 1) return state;
+                if (Object.keys(state.popoverControls).length < 1) return state;
 
                 return {
                     ...state,
@@ -225,7 +227,7 @@ export default function reducer(state = initialState, action) {
 
         case UPDATE_SELECTED_SETTING_ID:
 
-            if(state.selectedSettingId === action.payload) return state;
+            if (state.selectedSettingId === action.payload) return state;
 
             return {
                 ...state,
@@ -234,7 +236,7 @@ export default function reducer(state = initialState, action) {
 
         case UPDATE_ACTIVE_TOOLBAR:
 
-            if(state.activeToolbar === action.payload) return state;
+            if (state.activeToolbar === action.payload) return state;
 
             return {
                 ...state,
@@ -243,7 +245,7 @@ export default function reducer(state = initialState, action) {
 
         case UPDATE_PREVIEW_MODE:
 
-            if(state.previewMode === action.payload) return state;
+            if (state.previewMode === action.payload) return state;
 
             return {
                 ...state,
@@ -261,6 +263,22 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 fieldIds: [...state.fieldIds, action.payload.id]
             }
+
+        case UPDATE_STYLE_SELECTORS:
+            if (!action.payload.key || !action.payload.value) return state;
+            return {
+                ...state,
+                styleSelectors: { ...state.styleSelectors || {}, [action.payload.key]: { ...state.styleSelectors[action.payload.key] || {}, ...action.payload.value } }
+            }
+
+        case DELETE_STYLE_SELECTORS:
+            if (!action.payload.key) return state;
+
+            if (state.styleSelectors[action.payload.key]) {
+                delete state.styleSelectors[action.payload.key];
+            }
+
+            return state;
 
         case DELETE_FIELD_ID:
             return {

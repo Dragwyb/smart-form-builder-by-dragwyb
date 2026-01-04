@@ -10,6 +10,7 @@ import { __ } from "@wordpress/i18n";
 
 const RenderControl = ({
     selectedTab,
+    selectedToolbar,
     controlKey,
     settings,
     fieldValue,
@@ -112,6 +113,8 @@ const RenderControl = ({
                 <Control
                     key={controlKey}
                     id={controlKey}
+                    toolbarId={selectedToolbar}
+                    selectedSetting={selectedTab}
                     settings={settings}
                     value={fieldVal}
                     handleChange={handleChange}

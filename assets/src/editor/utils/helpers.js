@@ -1,7 +1,8 @@
 
 import React, { useRef, useEffect } from "react";
-import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updatePreviewMode, updateFieldValues,updateToolbarSettings, updateSectionSettings } from "../store/actions";
+import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updatePreviewMode, updateFieldValues, updateToolbarSettings, updateSectionSettings } from "../store/actions";
 import PropTypes from "prop-types";
+import { Placeholder } from "@wordpress/components";
 
 /**
  * Generates a unique ID
@@ -32,7 +33,7 @@ export const generateId = ({ state, dispatch }) => {
     return id;
 };
 
-export const PopoverControls = ({state, dispatch})=>{
+export const PopoverControls = ({ state, dispatch }) => {
     return state.popoverControls;
 }
 
@@ -64,16 +65,16 @@ export const AddField = ({ type, dispatch, Utils, index = null }) => {
     return field;
 };
 
-export const updateFieldValue=({dispatch, id, value})=>{
+export const updateFieldValue = ({ dispatch, id, value }) => {
     try {
-        const validatorId=validateProp({
+        const validatorId = validateProp({
             key: "id",
             value: id, // invalid
             types: ["string"],
             required: true,
             functionName: "updateFieldValue"
         });
-        const validatorValue=validateProp({
+        const validatorValue = validateProp({
             key: "value",
             value: value, // invalid
             types: ["any"],
@@ -86,21 +87,21 @@ export const updateFieldValue=({dispatch, id, value})=>{
     }
 }
 
-export const updateToolbarSetting=({id, value, dispatch})=>{
+export const updateToolbarSetting = ({ id, value, dispatch }) => {
 
-    if(!DragwybEditor.EditorToolbars || !DragwybEditor.EditorToolbars.toolbars || !DragwybEditor.EditorToolbars.toolbars[id]){
+    if (!DragwybEditor.EditorToolbars || !DragwybEditor.EditorToolbars.toolbars || !DragwybEditor.EditorToolbars.toolbars[id]) {
         return;
     }
 
     try {
-        const validatorId=validateProp({
+        const validatorId = validateProp({
             key: "id",
             value: id, // invalid
             types: ["string"],
             required: true,
             functionName: "updateFieldValue"
         });
-        const validatorValue=validateProp({
+        const validatorValue = validateProp({
             key: "value",
             value: value, // invalid
             types: ["any"],
@@ -115,7 +116,7 @@ export const updateToolbarSetting=({id, value, dispatch})=>{
 
 export const setSelectedSettingId = ({ dispatch, value }) => {
     try {
-        const validator=validateProp({
+        const validator = validateProp({
             key: "value",
             value: value, // invalid
             types: ["bool", "string"],
@@ -129,7 +130,7 @@ export const setSelectedSettingId = ({ dispatch, value }) => {
 }
 
 export const setActiveTab = ({ dispatch, value }) => {
-      try {
+    try {
         validateProp({
             key: "value",
             value: value, // invalid
@@ -144,16 +145,16 @@ export const setActiveTab = ({ dispatch, value }) => {
     }
 }
 
-export const updateSectionSetting = ({dispatch, key, value})=>{
+export const updateSectionSetting = ({ dispatch, key, value }) => {
     try {
-        const validatorKey=validateProp({
+        const validatorKey = validateProp({
             key: "key",
             value: key, // invalid
             types: ["string"],
             required: true,
             functionName: "updateSectionSetting"
         });
-        const validatorValue=validateProp({
+        const validatorValue = validateProp({
             key: "value",
             value: value, // invalid
             types: ["string"],
@@ -166,8 +167,61 @@ export const updateSectionSetting = ({dispatch, key, value})=>{
     }
 }
 
+export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, placeholders, currentItem }) => {
+    try {
+        const validatorKey = validateProp({
+            key: "key",
+            value: key, // invalid
+            types: ["string"],
+            required: true,
+            functionName: "updateStyleSelectors"
+        });
+        const validatorValue = validateProp({
+            key: "value",
+            value: value, // invalid
+            types: ["any"],
+            required: true,
+            functionName: "updateStyleSelectors"
+        });
+        const validatorSelectors = validateProp({
+            key: "selectors",
+            value: selectors, // invalid
+            types: ["object"],
+            required: true,
+            functionName: "updateStyleSelectors"
+        });
+        const validatorPlaceholders = validateProp({
+            key: "placeholders",
+            value: placeholders, // invalid
+            types: ["object"],
+            required: true,
+            functionName: "updateStyleSelectors"
+        });
+
+        const wrapperId = state.form.id;
+
+        const cssCache = {};
+        Object.keys(selectors).forEach((selector) => {
+            const targetSelector = selector.replaceAll("{{WRAPPER}}", `#dragwyb-form-wrapper-${wrapperId}`);
+            cssCache[targetSelector] = selectors[selector];
+
+            Object.keys(placeholders).forEach((placeholder) => {
+                if (placeholder === 'VALUE' && placeholders[placeholder] === true && ['string', 'number', 'BigInt'].includes(typeof value)) {
+                    cssCache[targetSelector] = cssCache[targetSelector].replaceAll("{{VALUE}}", value);
+                } else {
+                    cssCache[targetSelector] = cssCache[targetSelector].replaceAll("{{" + placeholder + "}}", value[placeholders[placeholder]]);
+                }
+            });
+        });
+
+        console.log(cssCache);
+    } catch (e) {
+        console.error("Validation failed:", e.message);
+    }
+}
+
 export const setPreviewMode = ({ dispatch, value }) => {
-      try {
+    try {
         validateProp({
             key: "value",
             value: value, // invalid

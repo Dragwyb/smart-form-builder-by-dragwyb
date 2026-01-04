@@ -57,8 +57,14 @@ class DragwybControlBase extends Component {
     #setDisplaySetting(props) {
         this.id = props.id;
         this.settings = props.settings;
+        this.selectedSetting = props.selectedSetting;
         this.#updateValue = props.handleChange;
         this.Utils = props.Utils;
+        this.selectorKey = props.toolbarId;
+
+        if (props.selectedSetting && '' !== props.selectedSetting) {
+            this.selectorKey += '_' + props.selectedSetting;
+        }
     }
 
     updateControlHandler(key, value) {
@@ -73,6 +79,15 @@ class DragwybControlBase extends Component {
     #triggerOnChange(key, value) {
         this.#updateValue(key, value, this.settings.type, this);
         this.onValueUpdated(key, value);
+
+        this.#updateStyleSelector(key, value);
+    }
+
+    #updateStyleSelector(key, value) {
+        if (this.settings && this.settings.type && this.settings.selectors && this.settings.selectors_placeholders) {
+            const uniqueSelector = this.selectorKey + '_' + key;
+            this.Utils.updateStyleSelectors({ key: uniqueSelector, value, selectors: this.settings.selectors, placeholders: this.settings.selectors_placeholders });
+        }
     }
 
     /**

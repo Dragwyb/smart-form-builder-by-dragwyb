@@ -2,10 +2,10 @@ import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import reducer from './reducers';
 
-let fieldIds=[];
+let fieldIds = [];
 
-if(DragwybEditor?.formData?.fields){
-    const existingIds=JSON.stringify(DragwybEditor?.formData?.fields);
+if (DragwybEditor?.formData?.fields) {
+    const existingIds = JSON.stringify(DragwybEditor?.formData?.fields);
     fieldIds = [...existingIds.matchAll(/"_id"\s*:\s*"([^"]+)"/g)].map(match => match[1]);
 }
 
@@ -20,6 +20,7 @@ const initialState = {
     previewMode: false,
     popoverInitialize: false,
     popoverControls: {},
+    styleSelectors: {},
 };
 
 const store = createStore(reducer, initialState, applyMiddleware(thunk));

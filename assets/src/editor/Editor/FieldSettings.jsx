@@ -78,7 +78,8 @@ const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingCh
                 <div className='field-header_controls'>
                     <RenderControl
                         key={toolbarSettings.id}
-                        selectedTab={selectedTab}
+                        selectedToolbar={selectedTab}
+                        selectedTab={toolbarSettings.id}
                         controlKey={'header_controls'}
                         settings={toolbarSettings.controls.header_controls}
                         fieldValue={toolbarValue}
@@ -94,7 +95,8 @@ const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingCh
                         {key === 'header_controls' ? null
                             : <RenderControl
                                 key={key}
-                                selectedTab={selectedTab}
+                                selectedToolbar={selectedTab}
+                                selectedTab={toolbarSettings.id}
                                 controlKey={key}
                                 settings={toolbarSettings.controls[key]}
                                 fieldValue={toolbarValue}
