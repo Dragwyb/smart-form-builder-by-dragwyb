@@ -370,17 +370,17 @@ class Control_Typography extends Control_Base
         $selector = isset($settings['selector']) && !empty($settings['selector']) ? $settings['selector'] : false;
         $controls = [];
 
-        $selecotrs = [
-            'family' => array('properties' => 'family', 'placeholder' => '{{VALUE}}'),
-            'size' => array('properties' => 'font-size', 'placeholder' => '{{VALUE}}{{UNIT}}'),
-            'weight' => array('properties' => 'font-weight', 'placeholder' => '{{VALUE}}'),
-            'transform' => array('properties' => 'text-transform', 'placeholder' => '{{VALUE}}'),
-            'style' => array('properties' => 'font-style', 'placeholder' => '{{VALUE}}'),
-            'decoration' => array('properties' => 'text-decoration', 'placeholder' => '{{VALUE}}'),
-            'line_height' => array('properties' => 'line-height', 'placeholder' => '{{VALUE}}{{UNIT}}'),
-            'letter_spacing' => array('properties' => 'letter-spacing', 'placeholder' => '{{VALUE}}{{UNIT}}'),
-            'word_spacing' => array('properties' => 'word-spacing', 'placeholder' => '{{VALUE}}{{UNIT}}'),
-            'align' => array('properties' => 'text-align', 'placeholder' => '{{VALUE}}'),
+        $selectors = [
+            'family' => array('property' => '--dragwyb-form-typography-family', 'placeholder' => '{{VALUE}}'),
+            'size' => array('property' => '--dragwyb-form-typography-size', 'placeholder' => '{{VALUE}}{{UNIT}}'),
+            'weight' => array('property' => '--dragwyb-form-typography-wt', 'placeholder' => '{{VALUE}}'),
+            'transform' => array('property' => '--dragwyb-form-typography-ts', 'placeholder' => '{{VALUE}}'),
+            'style' => array('property' => '--dragwyb-form-typography-st', 'placeholder' => '{{VALUE}}'),
+            'decoration' => array('property' => '--dragwyb-form-typography-dt', 'placeholder' => '{{VALUE}}'),
+            'line_height' => array('property' => '--dragwyb-form-typography-lh', 'placeholder' => '{{VALUE}}{{UNIT}}'),
+            'letter_spacing' => array('property' => '--dragwyb-form-typography-ls', 'placeholder' => '{{VALUE}}{{UNIT}}'),
+            'word_spacing' => array('property' => '--dragwyb-form-typography-ws', 'placeholder' => '{{VALUE}}{{UNIT}}'),
+            'align' => array('property' => '--dragwyb-form-typography-align', 'placeholder' => '{{VALUE}}'),
         ];
 
         // 1. Font Family Control
@@ -439,10 +439,10 @@ class Control_Typography extends Control_Base
         }
 
         if ($selector) {
-            foreach ($selecotrs as $key => $style) {
+            foreach ($selectors as $key => $style) {
                 if (isset($controls[$id . '_' . $key])) {
                     $controls[$id . '_' . $key]['selectors'] = [
-                        $selector => $style['properties'] . ':' . $style['placeholder'],
+                        $selector => $style['property'] . ':' . $style['placeholder'],
                     ];
                 }
             }

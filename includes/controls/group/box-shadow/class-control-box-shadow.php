@@ -42,8 +42,7 @@ class Control_Box_Shadow extends Control_Base
             'vertical'   => ['size' => 0, 'unit' => 'px'],
             'blur'       => ['size' => 10, 'unit' => 'px'],
             'spread'     => ['size' => 0, 'unit' => 'px'],
-            'position'   => 'outline', // outline | inset
-            // Added default selector
+            'position'   => '', // outset | inset
             'selector'   => ''
         ];
     }
@@ -116,6 +115,15 @@ class Control_Box_Shadow extends Control_Base
         $id = $this->string_sanitize($this->id);
         $selector = isset($settings['selector']) && !empty($settings['selector']) ? $settings['selector'] : false;
 
+        $selectors = [
+            'color' => array('property' => '--dragwyb-form-box-shadow-color', 'placeholder' => '{{VALUE}}'),
+            'horizontal' => array('property' => '--dragwyb-form-box-shadow-h', 'placeholder' => '{{VALUE}}{{UNIT}}'),
+            'vertical' => array('property' => '--dragwyb-form-box-shadow-v', 'placeholder' => '{{VALUE}}{{UNIT}}'),
+            'blur' => array('property' => '--dragwyb-form-box-shadow-blur', 'placeholder' => '{{VALUE}}{{UNIT}}'),
+            'spread' => array('property' => '--dragwyb-form-box-shadow-spread', 'placeholder' => '{{VALUE}}{{UNIT}}'),
+            'position' => array('property' => '--dragwyb-form-box-shadow-position', 'placeholder' => '{{VALUE}}'),
+        ];
+
         $controls = [];
 
         $controls[$id . '_color'] = [
@@ -156,27 +164,18 @@ class Control_Box_Shadow extends Control_Base
             'type'         => Controls::SELECT,
             'label'        => __('Position', 'dragwyb-form-builder'),
             'options'      => [
-                'outline' => __('Outline', 'dragwyb-form-builder'),
+                '' => __('Default', 'dragwyb-form-builder'),
                 'inset'   => __('Inset', 'dragwyb-form-builder'),
             ],
             'default'      => $settings['position'],
             'label_inline' => true,
         ];
 
-        // Inject Selector
         if ($selector) {
-            // Box Shadow CSS Syntax: horizontal vertical blur spread color (inset)
-            // We use standard placeholders that your frontend JS generator will replace
-            $box_shadow_value = '{{HORIZONTAL}} {{VERTICAL}} {{BLUR}} {{SPREAD}} {{COLOR}} {{POSITION}}';
-
-            // We apply this same complex rule to EVERY control in the group.
-            // When any of these change, the JS should re-compile the full box-shadow string.
-            $keys = ['_color', '_horizontal', '_vertical', '_blur', '_spread', '_position'];
-
-            foreach ($keys as $key_suffix) {
-                if (isset($controls[$id . $key_suffix])) {
-                    $controls[$id . $key_suffix]['selectors'] = [
-                        $selector => 'box-shadow: ' . $box_shadow_value . ';',
+            foreach ($selectors as $key => $style) {
+                if (isset($controls[$id . '_' . $key])) {
+                    $controls[$id . '_' . $key]['selectors'] = [
+                        $selector => $style['property'] . ':' . $style['placeholder'],
                     ];
                 }
             }

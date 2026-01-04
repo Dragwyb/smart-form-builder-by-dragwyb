@@ -155,11 +155,11 @@ class Control_Border extends Control_Base
 
         // Definition of selectors map
         // Note: Dimensions (width/radius) use specific placeholders {{TOP}}, {{RIGHT}}, etc.
-        $selectors_map = [
-            'style'  => ['property' => 'border-style',  'placeholder' => '{{VALUE}}'],
-            'color'  => ['property' => 'border-color',  'placeholder' => '{{VALUE}}'],
-            'width'  => ['property' => 'border-width',  'placeholder' => '{{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}'],
-            'radius' => ['property' => 'border-radius', 'placeholder' => '{{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}'],
+        $selectors = [
+            'style'  => ['property' => '--dragwyb-form-border-style',  'placeholder' => '{{VALUE}}'],
+            'color'  => ['property' => '--dragwyb-form-border-color',  'placeholder' => '{{VALUE}}'],
+            'width'  => ['property' => '--dragwyb-form-border-width',  'placeholder' => '{{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}'],
+            'radius' => ['property' => '--dragwyb-form-border-radius', 'placeholder' => '{{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}'],
         ];
 
         // 1. Border Style
@@ -200,12 +200,11 @@ class Control_Border extends Control_Base
             'default'    => $settings['radius'],
         ];
 
-        // Inject Selectors if valid selector string exists
         if ($selector) {
-            foreach ($selectors_map as $key => $map) {
+            foreach ($selectors as $key => $style) {
                 if (isset($controls[$id . '_' . $key])) {
                     $controls[$id . '_' . $key]['selectors'] = [
-                        $selector => $map['property'] . ': ' . $map['placeholder'] . ';',
+                        $selector => $style['property'] . ':' . $style['placeholder'],
                     ];
                 }
             }

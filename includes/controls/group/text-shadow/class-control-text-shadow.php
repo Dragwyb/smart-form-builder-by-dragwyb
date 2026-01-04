@@ -110,6 +110,13 @@ class Control_Text_Shadow extends Control_Base
         $id = $this->string_sanitize($this->id);
         $selector = isset($settings['selector']) && !empty($settings['selector']) ? $settings['selector'] : false;
 
+        $selectors = [
+            'color' => array('property' => '--dragwyb-form-text-shadow-color', 'placeholder' => '{{VALUE}}'),
+            'horizontal' => array('property' => '--dragwyb-form-text-shadow-h', 'placeholder' => '{{VALUE}}{{UNIT}}'),
+            'vertical' => array('property' => '--dragwyb-form-text-shadow-v', 'placeholder' => '{{VALUE}}{{UNIT}}'),
+            'blur' => array('property' => '--dragwyb-form-text-shadow-blur', 'placeholder' => '{{VALUE}}{{UNIT}}'),
+        ];
+
         $controls = [];
 
         $controls[$id . '_color'] = [
@@ -141,15 +148,10 @@ class Control_Text_Shadow extends Control_Base
 
         // Inject Selector
         if ($selector) {
-            // Text Shadow CSS Syntax: h-shadow v-shadow blur-radius color
-            $text_shadow_value = '{{HORIZONTAL}} {{VERTICAL}} {{BLUR}} {{COLOR}}';
-
-            $keys = ['_color', '_horizontal', '_vertical', '_blur'];
-
-            foreach ($keys as $key_suffix) {
-                if (isset($controls[$id . $key_suffix])) {
-                    $controls[$id . $key_suffix]['selectors'] = [
-                        $selector => 'text-shadow: ' . $text_shadow_value . ';',
+            foreach ($selectors as $key => $style) {
+                if (isset($controls[$id . '_' . $key])) {
+                    $controls[$id . '_' . $key]['selectors'] = [
+                        $selector => $style['property'] . ':' . $style['placeholder'],
                     ];
                 }
             }
