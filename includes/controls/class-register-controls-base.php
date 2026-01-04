@@ -327,6 +327,11 @@ abstract class Register_Controls_Base
 
         $value = $control_object->get_settings();
 
+        if (defined('DRAGWYB_EDITOR') && true === DRAGWYB_EDITOR && isset($data['type']) && isset($data['selectors']) && count($data['selectors']) > 0) {
+            $selector_placeholders = $control_object->get_style_placeholders();
+            $value['selectors_placeholders'] = $selector_placeholders;
+        }
+
         return $value;
     }
 
