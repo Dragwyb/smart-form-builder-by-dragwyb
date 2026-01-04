@@ -133,20 +133,6 @@ class Control_Dimensions extends Control_Base
 
     protected function style_placeholders(): array
     {
-
-
-        $value = $this->get_display_value();
-
-        $placeholders = [];
-
-        foreach ($value as $key => $value) {
-            if ($key === 'linked') {
-                continue;
-            }
-
-            $placeholders[strtoupper($this->string_sanitize($key))] = $this->string_sanitize($key);
-        }
-
-        return $placeholders;
+        return ['TOP' => 'top', 'RIGHT' => 'right', 'BOTTOM' => 'bottom', 'LEFT' => 'left', 'UNIT' => 'unit'];
     }
 }

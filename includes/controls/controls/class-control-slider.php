@@ -85,24 +85,6 @@ class Control_Slider extends Control_Base
 
     protected function style_placeholders(): array
     {
-
-
-        $value = $this->get_display_value();
-
-        $placeholders = [];
-
-        foreach ($value as $key => $value) {
-
-            if ($key === 'linked') {
-                continue;
-            }
-
-            $value_key = $key === 'size' ? 'value' : $key;
-
-
-            $placeholders[strtoupper($this->string_sanitize($value_key))] = $this->string_sanitize($key);
-        }
-
-        return $placeholders;
+        return ['VALUE' => 'size', 'UNIT' => 'unit'];
     }
 }
