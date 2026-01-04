@@ -2,47 +2,51 @@
 
 namespace Dragwyb\Form_Builder;
 
-if(!defined('ABSPATH')){
+if (!defined('ABSPATH')) {
     exit;
 }
 
 
-if(!class_exists('Dragwyb_Form_Builder_Autoload')){
-    class Dragwyb_Form_Builder_Autoload{
+if (!class_exists('Dragwyb_Form_Builder_Autoload')) {
+    class Dragwyb_Form_Builder_Autoload
+    {
 
         private  static $instance;
 
-        public static function instance(){
-            if(!isset(self::$instance)){
+        public static function instance()
+        {
+            if (!isset(self::$instance)) {
                 self::$instance = new self();
             }
             return self::$instance;
         }
-        
-        public function __construct(){
+
+        public function __construct()
+        {
             static $autoloade_status = false;
 
-			if (! $autoloade_status) {
-				$autoloade_status = spl_autoload_register([__CLASS__, 'autoload']);
-			}
+            if (! $autoloade_status) {
+                $autoloade_status = spl_autoload_register([__CLASS__, 'autoload']);
+            }
         }
 
-        public function autoload($class){
+        public function autoload($class)
+        {
             if (0 !== strpos($class, __NAMESPACE__)) {
-				return;
-			}
+                return;
+            }
 
-			$has_class_alias = isset($this->classes_aliases[$class]);
+            $has_class_alias = isset($this->classes_aliases[$class]);
 
-			// Backward Compatibility: Save old class name for set an alias after the new class is loaded
-			if ($has_class_alias) {
-				$class_alias_name = $this->classes_aliases[$class];
-				$class_to_load = $class_alias_name;
-			} else {
-				$class_to_load = $class;
-			}
+            // Backward Compatibility: Save old class name for set an alias after the new class is loaded
+            if ($has_class_alias) {
+                $class_alias_name = $this->classes_aliases[$class];
+                $class_to_load = $class_alias_name;
+            } else {
+                $class_to_load = $class;
+            }
 
-			if (! class_exists($class_to_load)) {
+            if (! class_exists($class_to_load)) {
                 $filename = strtolower(
                     preg_replace(
                         [
@@ -53,7 +57,7 @@ if(!class_exists('Dragwyb_Form_Builder_Autoload')){
                         ],
                         [
                             '',
-                            '$1-$2', 
+                            '$1-$2',
                             '-',
                             DIRECTORY_SEPARATOR
                         ],
@@ -61,30 +65,26 @@ if(!class_exists('Dragwyb_Form_Builder_Autoload')){
                     )
                 );
 
-				$parts = explode('\\', $filename);
+                $parts = explode('\\', $filename);
 
-				if (count($parts) > 1) {
-					$last_index = count($parts) - 1;
-					$parts[$last_index] = 'class-' . $parts[$last_index];
-				}
+                if (count($parts) > 1) {
+                    $last_index = count($parts) - 1;
+                    $parts[$last_index] = 'class-' . $parts[$last_index];
+                }
 
-				$filename = implode('\\', $parts);
+                $filename = implode('\\', $parts);
 
-				
-				$filename = trailingslashit(DRAGWYB_FORM_BUILDER_PATH) . $filename . '.php';
 
-				
-				if (is_readable($filename)) {
-					require_once $filename;
-				}
-			}
+                $filename = trailingslashit(DRAGWYB_FORM_BUILDER_PATH) . $filename . '.php';
 
-			if ($has_class_alias) {
-				class_alias($class_alias_name, $class_name);
-			}
-            
+                if (is_readable($filename)) {
+                    require_once $filename;
+                }
+            }
+
+            if ($has_class_alias) {
+                class_alias($class_alias_name, $class_name);
+            }
         }
     }
 }
-
-

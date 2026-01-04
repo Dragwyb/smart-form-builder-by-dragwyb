@@ -16,7 +16,6 @@ if (!defined('ABSPATH')) {
 }
 
 use Dragwyb\Form_Builder\Dragwyb_Form_Builder_Autoload;
-use Dragwyb\Form_Builder\Includes\Dragwyb_Form;
 use Dragwyb\Form_Builder\Includes\Dragwyb_Init;
 
 final class Dragwyb_Form_Builder
