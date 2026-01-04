@@ -219,7 +219,7 @@ abstract class Register_Controls_Base
         }
 
         if (isset($this->settings_arr[$id]) || isset($this->current_control_stack[$id])) {
-            throw new \Exception(__('Do not use duplicate control ID use unique Id.', 'dragwyb-form-builder'));
+            throw new \Exception(__("Do not use duplicate $id ID use unique Id.", 'dragwyb-form-builder'));
         }
 
         $conditions = isset($data['conditions']) ? $data['conditions'] : array();
