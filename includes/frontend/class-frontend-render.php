@@ -238,9 +238,12 @@ class Frontend_Render
         if (self::$css_cache && count(self::$css_cache) > 0) {
             $css_string = json_encode(self::$css_cache);
 
+
             $css_string = substr($css_string, 1, -1);
 
             $css_string = preg_replace('/"([^"]+)":"({[^}]+})"(?:,|$)/', '$1$2', $css_string);
+            $css_string = str_replace('":"', ':', $css_string);
+            $css_string = ltrim($css_string, '"');
 
             return $css_string;
         }
@@ -268,20 +271,13 @@ class Frontend_Render
      */
     private function extract_css_from_settings(array $settings, array $controls): void
     {
-        // $css = '';
         $form_wrapper_id = '#dragwyb-form-wrapper-' . self::$form_id;
 
         foreach ($settings as $control_id => $setting_value) {
-
-            // var_dump($control_id);
-
             // 1. Validate: Ensure control definition and 'selectors' exist
             if (
                 !isset($controls[$control_id]) ||
-                !isset($controls[$control_id]['type']) ||
-                !isset($controls[$control_id]['selectors']) ||
-                !is_array($controls[$control_id]['selectors']) ||
-                count($controls[$control_id]['selectors']) < 1
+                !isset($controls[$control_id]['type'])
             ) {
                 continue;
             }
@@ -295,6 +291,44 @@ class Frontend_Render
                 continue;
             }
 
+            if ($control_config['type'] === 'repeater' && isset($control_config['items'])) {
+                $control_instance = $control_manager::newInstance();
+                $control_instance->set_value($setting_value, $control_id, $control_config);
+                $repeater_values = $control_instance->get_value();
+
+                $repeater_controls_instance_cache = array();
+                foreach ($repeater_values as $index => $item) {
+                    if (!isset($item['attributes']) || count($item['attributes']) < 1) continue;
+
+                    $repeater_id = $item['_id'];
+
+                    foreach ($item['attributes'] as $item_control_id => $item_control_data) {
+                        if (!isset($control_config['items'][$item_control_id])) continue;
+                        if (!isset($control_config['items'][$item_control_id]['selectors'])) continue;
+                        if (count($control_config['items'][$item_control_id]['selectors']) < 1) continue;
+
+                        if (!isset($repeater_controls_instance_cache[$item_control_id])) {
+                            $repeater_control_manager = self::$control->get_control($control_config['items'][$item_control_id]['type']);
+                            $repeater_controls_instance_cache[$item_control_id] = $repeater_control_manager::newInstance();
+                        }
+
+                        $repeater_controls_instance_cache[$item_control_id]->set_value($item_control_data, $item_control_id);
+                        $repeater_item_value = $repeater_controls_instance_cache[$item_control_id]->get_value();
+
+                        $placeholders = $this->get_control_placeholders($control_instance);
+
+                        $placeholders = $this->replace_selector_placeholders($form_wrapper_id, $control_config['items'][$item_control_id]['selectors'], $placeholders, $repeater_item_value, $repeater_id);
+                    }
+                }
+                continue;
+            } else if (
+                !isset($controls[$control_id]['selectors']) ||
+                !is_array($controls[$control_id]['selectors']) &&
+                count($controls[$control_id]['selectors']) < 1
+            ) {
+                continue;
+            }
+
             $control_instance = $control_manager::newInstance();
             $control_instance->set_value($setting_value, $control_id, $control_config);
             $control_value = $control_instance->get_value();
@@ -303,37 +337,46 @@ class Frontend_Render
             // Uses helper method to support both complex and simple controls
             $placeholders = $this->get_control_placeholders($control_instance);
 
-            // 4. Process 'selectors' Loop
-            // Format: ['{{WRAPPER}} .title' => 'color: {{VALUE}};']
-            foreach ($control_config['selectors'] as $css_selector => $css_property) {
+            $this->replace_selector_placeholders($form_wrapper_id, $control_config['selectors'], $placeholders, $control_value);
+        }
+    }
 
-                $final_selector = trim(sanitize_text_field($css_selector));
+    private function replace_selector_placeholders($wrapper_id, $selectors, $placeholders, $value, $current_item = false): void
+    {
+        // 4. Process 'selectors' Loop
+        // Format: ['{{WRAPPER}} .title' => 'color: {{VALUE}};']
+        foreach ($selectors as $css_selector => $css_property) {
 
-                // A. Parse Selector (Replace {{WRAPPER}})
-                $final_selector = str_replace('{{WRAPPER}}', $form_wrapper_id, $final_selector);
+            $final_selector = trim(sanitize_text_field($css_selector));
 
-                // B. Parse Property (Replace {{VALUE}}, {{UNIT}}, etc.)
-                $final_property = $css_property;
+            // A. Parse Selector (Replace {{WRAPPER}})
+            $final_selector = str_replace('{{WRAPPER}}', $wrapper_id, $final_selector);
 
-                foreach ($placeholders as $ph_key => $ph_value) {
-                    $css_value = '';
-                    if ($ph_value === true && is_string($control_value)) {
-                        $css_value = $control_value;
-                    } else {
-                        $css_value = isset($control_value[$ph_value]) ? $control_value[$ph_value] : '';
-                    }
+            if ($current_item && is_string($current_item)) {
+                $final_selector = str_replace('{{CURRENT_ITEM}}', '.' . $current_item, $final_selector);
+            }
 
-                    $final_property = trim(str_replace('{{' . $ph_key . '}}', (string)$css_value, $final_property));
+            // B. Parse Property (Replace {{VALUE}}, {{UNIT}}, etc.)
+            $final_property = $css_property;
+
+            foreach ($placeholders as $ph_key => $ph_value) {
+                $css_value = '';
+                if ($ph_value === true && is_string($value)) {
+                    $css_value = $value;
+                } else {
+                    $css_value = isset($value[$ph_value]) ? $value[$ph_value] : '';
                 }
 
-                // C. Append to CSS string if property is valid
-                if (!empty($final_property)) {
-                    $final_property = str_ends_with($final_property, ';') ? $final_property : $final_property . ';';
-                    if (!isset(self::$css_cache[$final_selector])) {
-                        self::$css_cache[$final_selector] = "{" . $final_property . "}";
-                    } else {
-                        self::$css_cache[$final_selector] = rtrim(self::$css_cache[$final_selector], '}') . $final_property . "}";
-                    }
+                $final_property = trim(str_replace('{{' . $ph_key . '}}', (string)$css_value, $final_property));
+            }
+
+            // C. Append to CSS string if property is valid
+            if (!empty($final_property)) {
+                $final_property = str_ends_with($final_property, ';') ? $final_property : $final_property . ';';
+                if (!isset(self::$css_cache[$final_selector])) {
+                    self::$css_cache[$final_selector] = "{" . $final_property . "}";
+                } else {
+                    self::$css_cache[$final_selector] = rtrim(self::$css_cache[$final_selector], '}') . $final_property . "}";
                 }
             }
         }
