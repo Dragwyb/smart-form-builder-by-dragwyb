@@ -1,98 +1,101 @@
 /* =========================================
    1. CSS VARIABLE DEFAULTS
-   Defined at the wrapper level so they can be 
-   overridden dynamically by inline styles.
+   Defined at the wrapper level. These match your
+   PHP Group Control configurations exactly.
    ========================================= */
 
 .dragwyb-form-wrapper {
-    /* =========================================
-     1. FORM CONTAINER (The Card Look)
-     ========================================= */
+
+    /* --- 1. GLOBAL TYPOGRAPHY (From your Typography Group) --- */
+    --dragwyb-form-typography-family: inherit;
+    --dragwyb-form-typography-size: 16px;
+    --dragwyb-form-typography-wt: 400;
+    --dragwyb-form-typography-ts: none;
+    /* transform */
+    --dragwyb-form-typography-st: normal;
+    /* style */
+    --dragwyb-form-typography-dt: none;
+    /* decoration */
+    --dragwyb-form-typography-lh: 1.5;
+    --dragwyb-form-typography-ls: 0px;
+    --dragwyb-form-typography-ws: 0px;
+    --dragwyb-form-typography-align: left;
+
+    /* --- 2. FORM CONTAINER (Background & Spacing) --- */
     --dragwyb-form-bg: #ffffff;
 
-    // A soft, diffused shadow like the image
-    --dragwyb-form-shadow-h: 0px;
-    --dragwyb-form-shadow-v: 10px;
-    --dragwyb-form-shadow-blur: 40px;
-    --dragwyb-form-shadow-spread: -5px;
-    --dragwyb-form-shadow-color: rgba(0, 0, 0, 0.1);
+    // Width
+    --dragwyb-form-width: clamp(50%, 600px, 80%);
 
-    // Rounded Corners
-    --dragwyb-form-border-radius: 12px;
-
-    // Generous Padding inside the card
+    // Padding
     --dragwyb-form-pt: 40px;
     --dragwyb-form-pr: 40px;
     --dragwyb-form-pb: 40px;
     --dragwyb-form-pl: 40px;
 
-    // Spacing between rows
+    // Margin
+    --dragwyb-form-mt: 0px;
+    --dragwyb-form-mr: 0px;
+    --dragwyb-form-mb: 0px;
+    --dragwyb-form-ml: 0px;
+
+    // Rows Gap
     --dragwyb-row-gap: 20px;
 
-    /* =========================================
-     2. TYPOGRAPHY (Headings)
-     ========================================= */
-    // Title "Get in touch"
-    --dragwyb-title-color: #111827;
-    --dragwyb-title-fs: 24px;
-    --dragwyb-title-fw: 700;
-    --dragwyb-title-mb: 8px;
+    /* --- 3. BORDER GROUP (Standardized) --- */
+    --dragwyb-form-border-width: 0px;
+    --dragwyb-form-border-style: solid;
+    --dragwyb-form-border-color: transparent;
+    --dragwyb-form-border-radius: 12px;
 
-    // Description "We'd love to hear..."
-    --dragwyb-desc-color: #6b7280;
-    --dragwyb-desc-fs: 14px;
-    --dragwyb-desc-fw: 400;
-    --dragwyb-desc-mb: 32px;
+    /* --- 4. BOX SHADOW GROUP (Matches your PHP keys) --- */
+    --dragwyb-form-box-shadow-h: 0px;
+    --dragwyb-form-box-shadow-v: 10px;
+    --dragwyb-form-box-shadow-blur: 40px;
+    --dragwyb-form-box-shadow-spread: -5px;
+    --dragwyb-form-box-shadow-color: rgba(0, 0, 0, 0.1);
+    --dragwyb-form-box-shadow-position: ;
+
+    /* --- 5. TEXT SHADOW GROUP (Matches your PHP keys) --- */
+    --dragwyb-form-text-shadow-h: 0px;
+    --dragwyb-form-text-shadow-v: 0px;
+    --dragwyb-form-text-shadow-blur: 0px;
+    --dragwyb-form-text-shadow-color: transparent;
 
     /* =========================================
-     3. LABELS & INPUTS
-     ========================================= */
-    // Labels
+       SPECIFIC ELEMENT DEFAULTS 
+       (Labels, Inputs, Buttons)
+       ========================================= */
+
+    /* --- Labels --- */
     --dragwyb-label-color: #374151;
     --dragwyb-label-fs: 14px;
     --dragwyb-label-fw: 600;
     --dragwyb-label-spacing: 6px;
 
-    // Inputs
+    /* --- Inputs --- */
     --dragwyb-input-bg: #ffffff;
     --dragwyb-input-color: #111827;
     --dragwyb-input-placeholder: #9ca3af;
-
-    // Light Grey Border
     --dragwyb-input-border-width: 1px;
-    --dragwyb-input-border-type: solid;
+    --dragwyb-input-border-style: solid;
     --dragwyb-input-border-color: #d1d5db;
     --dragwyb-input-radius: 6px;
-
-    // Input Padding (Comfortable typing area)
     --dragwyb-input-pt: 10px;
     --dragwyb-input-pr: 14px;
     --dragwyb-input-pb: 10px;
     --dragwyb-input-pl: 14px;
 
-    /* =========================================
-     4. SUBMIT BUTTON (Full Width & Blue)
-     ========================================= */
+    /* --- Submit Button --- */
     --dragwyb-btn-bg: #1d4ed8;
-    /* Bright Blue */
     --dragwyb-btn-color: #ffffff;
-
-    // Button Dimensions
     --dragwyb-btn-width: 100%;
-    /* Full Width */
+    --dragwyb-btn-radius: 6px;
     --dragwyb-btn-pt: 12px;
     --dragwyb-btn-pr: 20px;
     --dragwyb-btn-pb: 12px;
     --dragwyb-btn-pl: 20px;
-
-    // Button Typography
-    --dragwyb-btn-fs: 16px;
-    --dragwyb-btn-fw: 600;
-    --dragwyb-btn-radius: 6px;
-
-    // Hover State
     --dragwyb-btn-hover-bg: #1e40af;
-    /* Darker Blue */
 }
 
 /* =========================================
@@ -100,43 +103,46 @@
    ========================================= */
 
 .dragwyb-form-wrapper {
-    /* --- 1. Container Styling --- */
-    background-color: var(--dragwyb-form-bg);
-    box-shadow: var(--dragwyb-form-shadow-h) var(--dragwyb-form-shadow-v) var(--dragwyb-form-shadow-blur) var(--dragwyb-form-shadow-spread) var(--dragwyb-form-shadow-color);
-    border-radius: var(--dragwyb-form-border-radius);
+    /* Container Dimensions */
     padding: var(--dragwyb-form-pt) var(--dragwyb-form-pr) var(--dragwyb-form-pb) var(--dragwyb-form-pl);
-    margin: 0 auto;
-    max-width: 480px;
-    /* Optional: limits width like the image card */
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    margin: var(--dragwyb-form-mt) var(--dragwyb-form-mr) var(--dragwyb-form-mb) var(--dragwyb-form-ml);
+    width: var(--dragwyb-form-width);
+    margin-left: auto;
+    margin-right: auto;
 
-    /* --- 2. Header (Title & Subheading) --- */
-    .dragwyb-form-header {
-        text-align: center;
-        /* Centered Layout */
+    /* Background & Border */
+    background-color: var(--dragwyb-form-bg);
+    border-width: var(--dragwyb-form-border-width);
+    border-style: var(--dragwyb-form-border-style);
+    border-color: var(--dragwyb-form-border-color);
+    border-radius: var(--dragwyb-form-border-radius);
 
-        .dragwyb-title {
-            color: var(--dragwyb-title-color);
-            font-size: var(--dragwyb-title-fs);
-            font-weight: var(--dragwyb-title-fw);
-            margin: 0 0 var(--dragwyb-title-mb) 0;
-        }
+    /* Typography Group Application */
+    font-family: var(--dragwyb-form-typography-family);
+    font-size: var(--dragwyb-form-typography-size);
+    font-weight: var(--dragwyb-form-typography-wt);
+    font-style: var(--dragwyb-form-typography-st);
+    text-transform: var(--dragwyb-form-typography-ts);
+    text-decoration: var(--dragwyb-form-typography-dt);
+    line-height: var(--dragwyb-form-typography-lh);
+    letter-spacing: var(--dragwyb-form-typography-ls);
+    word-spacing: var(--dragwyb-form-typography-ws);
+    text-align: var(--dragwyb-form-typography-align);
 
-        .dragwyb-description {
-            color: var(--dragwyb-desc-color);
-            font-size: var(--dragwyb-desc-fs);
-            font-weight: var(--dragwyb-desc-fw);
-            margin: 0 0 var(--dragwyb-desc-mb) 0;
-            line-height: 1.5;
-        }
-    }
+    /* Box Shadow Group Application */
+    box-shadow: var(--dragwyb-form-box-shadow-position) var(--dragwyb-form-box-shadow-h) var(--dragwyb-form-box-shadow-v) var(--dragwyb-form-box-shadow-blur) var(--dragwyb-form-box-shadow-spread) var(--dragwyb-form-box-shadow-color);
 
-    /* --- 3. Field Groups --- */
+    /* Text Shadow Group Application */
+    text-shadow: var(--dragwyb-form-text-shadow-h) var(--dragwyb-form-text-shadow-v) var(--dragwyb-form-text-shadow-blur) var(--dragwyb-form-text-shadow-color);
+
+    /* --- Inner Elements --- */
+
     .dragwyb-field-group {
         margin-bottom: var(--dragwyb-row-gap);
+        text-align: left;
+        /* Reset text align for fields */
     }
 
-    /* --- 4. Labels --- */
     label {
         display: block;
         color: var(--dragwyb-label-color);
@@ -145,81 +151,38 @@
         margin-bottom: var(--dragwyb-label-spacing);
     }
 
-    /* --- 5. Inputs (Text, Email, Textarea, Select) --- */
     input:not([type="submit"]),
     textarea,
     select {
         width: 100%;
         box-sizing: border-box;
-        background: var(--dragwyb-input-bg);
+        background-color: var(--dragwyb-input-bg);
         color: var(--dragwyb-input-color);
 
-        border: var(--dragwyb-input-border-width) var(--dragwyb-input-border-type) var(--dragwyb-input-border-color);
+        border-width: var(--dragwyb-input-border-width);
+        border-style: var(--dragwyb-input-border-style);
+        border-color: var(--dragwyb-input-border-color);
         border-radius: var(--dragwyb-input-radius);
-        padding: var(--dragwyb-input-pt) var(--dragwyb-input-pr) var(--dragwyb-input-pb) var(--dragwyb-input-pl);
 
-        font-size: 14px;
-        line-height: 1.5;
+        padding: var(--dragwyb-input-pt) var(--dragwyb-input-pr) var(--dragwyb-input-pb) var(--dragwyb-input-pl);
         outline: none;
-        transition: border-color 0.2s;
 
         &::placeholder {
             color: var(--dragwyb-input-placeholder);
         }
-
-        &:focus {
-            border-color: var(--dragwyb-btn-bg);
-            /* Focus color matches button */
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-            /* Subtle focus ring */
-        }
     }
 
-    /* Fix for Textarea resize */
-    textarea {
-        resize: vertical;
-        min-height: 100px;
-    }
-
-    /* --- 6. Submit Button --- */
-    button[type="submit"],
-    input[type="submit"] {
+    button[type="submit"] {
         width: var(--dragwyb-btn-width);
-        /* Full Width Setting */
-        display: block;
-        cursor: pointer;
-        text-align: center;
-
         background-color: var(--dragwyb-btn-bg);
         color: var(--dragwyb-btn-color);
-
-        border: none;
         border-radius: var(--dragwyb-btn-radius);
         padding: var(--dragwyb-btn-pt) var(--dragwyb-btn-pr) var(--dragwyb-btn-pb) var(--dragwyb-btn-pl);
-
-        font-size: var(--dragwyb-btn-fs);
-        font-weight: var(--dragwyb-btn-fw);
-        transition: background-color 0.2s;
+        border: none;
+        cursor: pointer;
 
         &:hover {
             background-color: var(--dragwyb-btn-hover-bg);
-        }
-    }
-
-    /* --- 7. Footer (Privacy Policy text) --- */
-    .dragwyb-form-footer {
-        text-align: center;
-        margin-top: 16px;
-        font-size: 12px;
-        color: #6b7280;
-
-        a {
-            color: var(--dragwyb-btn-bg);
-            text-decoration: none;
-
-            &:hover {
-                text-decoration: underline;
-            }
         }
     }
 }
