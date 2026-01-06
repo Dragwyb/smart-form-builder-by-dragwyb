@@ -77,13 +77,13 @@ abstract class Field_Base extends Register_Controls_Base
     }
 
 
-    public function set_the_id(int $id = 0): void
+    public function set_the_id($id = ''): void
     {
-        $field_id = absint(sanitize_text_field($id));
-        $this->field_id = (int) $field_id;
+        $field_id = sanitize_text_field($id);
+        $this->field_id = $field_id;
     }
 
-    public function get_the_id(): int
+    public function get_the_id(): string
     {
         return $this->field_id;
     }

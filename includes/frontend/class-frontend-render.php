@@ -141,7 +141,7 @@ class Frontend_Render
 
                     if (!self::$field_module_cache[$type] instanceof Field_Base) return;
 
-                    self::$field_module_cache[$type]->set_the_id((int) self::$field_data['_id']);
+                    self::$field_module_cache[$type]->set_the_id(sanitize_text_field(self::$field_data['_id']));
                     self::$field_module_cache[$type]->set_form_settings(self::$toolbar_data);
 
                     if (isset($field['attributes']) && !empty($field['attributes'])) {
