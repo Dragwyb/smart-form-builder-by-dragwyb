@@ -103,11 +103,27 @@
     --dragwyb-btn-hover-bg: #1e40af;
 }
 
+@mixin font {
+    font-family: var(--dragwyb-form-typography-family);
+    font-size: var(--dragwyb-form-typography-size);
+    font-weight: var(--dragwyb-form-typography-wt);
+    font-style: var(--dragwyb-form-typography-st);
+    text-transform: var(--dragwyb-form-typography-ts);
+    text-decoration: var(--dragwyb-form-typography-dt);
+    line-height: var(--dragwyb-form-typography-lh);
+    letter-spacing: var(--dragwyb-form-typography-ls);
+    word-spacing: var(--dragwyb-form-typography-ws);
+    text-align: var(--dragwyb-form-typography-align);
+}
+
 /* =========================================
    2. APPLYING VARIABLES TO ELEMENTS
    ========================================= */
 
 .dragwyb-form-wrapper {
+    /* Typography Group Application */
+    @include font;
+
     /* Container Dimensions */
     padding: var(--dragwyb-form-pt) var(--dragwyb-form-pr) var(--dragwyb-form-pb) var(--dragwyb-form-pl);
     margin: var(--dragwyb-form-mt) var(--dragwyb-form-mr) var(--dragwyb-form-mb) var(--dragwyb-form-ml);
@@ -121,18 +137,6 @@
     border-style: var(--dragwyb-form-border-style);
     border-color: var(--dragwyb-form-border-color);
     border-radius: var(--dragwyb-form-border-radius);
-
-    /* Typography Group Application */
-    font-family: var(--dragwyb-form-typography-family);
-    font-size: var(--dragwyb-form-typography-size);
-    font-weight: var(--dragwyb-form-typography-wt);
-    font-style: var(--dragwyb-form-typography-st);
-    text-transform: var(--dragwyb-form-typography-ts);
-    text-decoration: var(--dragwyb-form-typography-dt);
-    line-height: var(--dragwyb-form-typography-lh);
-    letter-spacing: var(--dragwyb-form-typography-ls);
-    word-spacing: var(--dragwyb-form-typography-ws);
-    text-align: var(--dragwyb-form-typography-align);
 
     /* Box Shadow Group Application */
     box-shadow: var(--dragwyb-form-box-shadow-position) var(--dragwyb-form-box-shadow-h) var(--dragwyb-form-box-shadow-v) var(--dragwyb-form-box-shadow-blur) var(--dragwyb-form-box-shadow-spread) var(--dragwyb-form-box-shadow-color);
@@ -149,16 +153,16 @@
     }
 
     label {
+        @include font;
         display: block;
         color: var(--dragwyb-label-color);
-        font-size: var(--dragwyb-label-fs);
-        font-weight: var(--dragwyb-label-fw);
         margin-bottom: var(--dragwyb-label-spacing);
     }
 
     input:not([type="submit"]),
     textarea,
     select {
+        @include font;
         width: 100%;
         box-sizing: border-box;
         background-color: var(--dragwyb-input-bg);

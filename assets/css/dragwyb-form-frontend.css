@@ -88,18 +88,6 @@
    2. APPLYING VARIABLES TO ELEMENTS
    ========================================= */
 .dragwyb-form-wrapper {
-  /* Container Dimensions */
-  padding: var(--dragwyb-form-pt) var(--dragwyb-form-pr) var(--dragwyb-form-pb) var(--dragwyb-form-pl);
-  margin: var(--dragwyb-form-mt) var(--dragwyb-form-mr) var(--dragwyb-form-mb) var(--dragwyb-form-ml);
-  width: var(--dragwyb-form-width);
-  margin-left: auto;
-  margin-right: auto;
-  /* Background & Border */
-  background-color: var(--dragwyb-form-bg);
-  border-width: var(--dragwyb-form-border-width);
-  border-style: var(--dragwyb-form-border-style);
-  border-color: var(--dragwyb-form-border-color);
-  border-radius: var(--dragwyb-form-border-radius);
   /* Typography Group Application */
   font-family: var(--dragwyb-form-typography-family);
   font-size: var(--dragwyb-form-typography-size);
@@ -112,6 +100,18 @@
   letter-spacing: var(--dragwyb-form-typography-ls);
   word-spacing: var(--dragwyb-form-typography-ws);
   text-align: var(--dragwyb-form-typography-align);
+  /* Container Dimensions */
+  padding: var(--dragwyb-form-pt) var(--dragwyb-form-pr) var(--dragwyb-form-pb) var(--dragwyb-form-pl);
+  margin: var(--dragwyb-form-mt) var(--dragwyb-form-mr) var(--dragwyb-form-mb) var(--dragwyb-form-ml);
+  width: var(--dragwyb-form-width);
+  margin-left: auto;
+  margin-right: auto;
+  /* Background & Border */
+  background-color: var(--dragwyb-form-bg);
+  border-width: var(--dragwyb-form-border-width);
+  border-style: var(--dragwyb-form-border-style);
+  border-color: var(--dragwyb-form-border-color);
+  border-radius: var(--dragwyb-form-border-radius);
   /* Box Shadow Group Application */
   box-shadow: var(--dragwyb-form-box-shadow-position) var(--dragwyb-form-box-shadow-h) var(--dragwyb-form-box-shadow-v) var(--dragwyb-form-box-shadow-blur) var(--dragwyb-form-box-shadow-spread) var(--dragwyb-form-box-shadow-color);
   /* Text Shadow Group Application */
@@ -124,15 +124,35 @@
   /* Reset text align for fields */
 }
 .dragwyb-form-wrapper label {
+  font-family: var(--dragwyb-form-typography-family);
+  font-size: var(--dragwyb-form-typography-size);
+  font-weight: var(--dragwyb-form-typography-wt);
+  font-style: var(--dragwyb-form-typography-st);
+  text-transform: var(--dragwyb-form-typography-ts);
+  -webkit-text-decoration: var(--dragwyb-form-typography-dt);
+          text-decoration: var(--dragwyb-form-typography-dt);
+  line-height: var(--dragwyb-form-typography-lh);
+  letter-spacing: var(--dragwyb-form-typography-ls);
+  word-spacing: var(--dragwyb-form-typography-ws);
+  text-align: var(--dragwyb-form-typography-align);
   display: block;
   color: var(--dragwyb-label-color);
-  font-size: var(--dragwyb-label-fs);
-  font-weight: var(--dragwyb-label-fw);
   margin-bottom: var(--dragwyb-label-spacing);
 }
 .dragwyb-form-wrapper input:not([type=submit]),
 .dragwyb-form-wrapper textarea,
 .dragwyb-form-wrapper select {
+  font-family: var(--dragwyb-form-typography-family);
+  font-size: var(--dragwyb-form-typography-size);
+  font-weight: var(--dragwyb-form-typography-wt);
+  font-style: var(--dragwyb-form-typography-st);
+  text-transform: var(--dragwyb-form-typography-ts);
+  -webkit-text-decoration: var(--dragwyb-form-typography-dt);
+          text-decoration: var(--dragwyb-form-typography-dt);
+  line-height: var(--dragwyb-form-typography-lh);
+  letter-spacing: var(--dragwyb-form-typography-ls);
+  word-spacing: var(--dragwyb-form-typography-ws);
+  text-align: var(--dragwyb-form-typography-align);
   width: 100%;
   box-sizing: border-box;
   background-color: var(--dragwyb-input-bg);
