@@ -1,7 +1,6 @@
 import React, { useState, useEffect, act } from "react";
 import { useSelector, useDispatch, useStore } from "react-redux";
 import Canvas from "./Canvas";
-import Preview from "./Preview";
 import {
     saveForm,
     resetSectionSettings,
@@ -31,7 +30,6 @@ import Header from "./header";
 import ToolbarSettings from "../Toolbar/ToolbarSettings";
 
 const Editor = () => {
-    const previewMode = useSelector((state) => state.previewMode);
     const [activeDrag, setActiveDrag] = useState(null);
     const [sidebarDrag, setSidebarDrag] = useState(null);
     const [dropIndicatorPosition, setDropIndicatorPosition] = useState(false);
@@ -61,7 +59,6 @@ const Editor = () => {
         resetSection();
 
         Utils.setActiveTab({ value: value });
-        Utils.setPreviewMode({ value: false });
     };
 
     const sensors = useSensors(
@@ -221,35 +218,31 @@ const Editor = () => {
         <div className="dragwyb-editor">
             <Header />
             <div className="dragwyb-editor__body">
-                {previewMode ? (
-                    <Preview />
-                ) : (
-                    <>
-                        <DndContext
-                            sensors={sensors}
-                            onDragEnd={handleDragEnd}
-                            onDragCancel={() => {
-                                setActiveDrag(null);
-                            }}
-                            onDragMove={handleDragMove}
-                        >
-                            <ToolBar
-                                setActiveTab={setActiveTabHandler}
-                                setSettingId={setSelectedSettingId}
-                            />
-                            <ToolbarSettings setActiveTab={setActiveTabHandler} />
-                            <Canvas
-                                onFieldSelect={setSelectedSettingId}
-                                Utils={Utils}
-                                sidebarDrag={sidebarDrag}
-                                dropIndex={dropIndex}
-                                dropIndicatorPosition={dropIndicatorPosition}
-                                setActiveTab={setActiveTabHandler}
-                            />
-                            {activeDrag && <SidebarFieldOverlay data={activeDrag} />}
-                        </DndContext>
-                    </>
-                )}
+                <>
+                    <DndContext
+                        sensors={sensors}
+                        onDragEnd={handleDragEnd}
+                        onDragCancel={() => {
+                            setActiveDrag(null);
+                        }}
+                        onDragMove={handleDragMove}
+                    >
+                        <ToolBar
+                            setActiveTab={setActiveTabHandler}
+                            setSettingId={setSelectedSettingId}
+                        />
+                        <ToolbarSettings setActiveTab={setActiveTabHandler} />
+                        <Canvas
+                            onFieldSelect={setSelectedSettingId}
+                            Utils={Utils}
+                            sidebarDrag={sidebarDrag}
+                            dropIndex={dropIndex}
+                            dropIndicatorPosition={dropIndicatorPosition}
+                            setActiveTab={setActiveTabHandler}
+                        />
+                        {activeDrag && <SidebarFieldOverlay data={activeDrag} />}
+                    </DndContext>
+                </>
             </div>
         </div>
     );

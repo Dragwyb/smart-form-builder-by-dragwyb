@@ -149,7 +149,7 @@ export default class FontsControl extends DragwybEditor.editor.extends.ControlBa
                 <SelectGroup
                     options={optionsByGroups(options)}
                     value={currentValue}
-                    onChange={(option) => this.setState({ value: option.value || option })} // Handle object or string return
+                    onChange={(option) => this.updateControlHandler(id, option.value || option)}
                     searchInput={true}
                     style={{ fontFamily: loadedFonts.has(currentValue) ? currentValue : 'inherit' }}
                     // 1. Pass the Observer Ref Setup

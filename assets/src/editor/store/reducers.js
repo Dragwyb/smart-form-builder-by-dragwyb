@@ -39,7 +39,6 @@ const initialState = {
     fieldIds: [],
     selectedSettingId: false,
     activeToolbar: DragwybEditor?.EditorToolbars?.Default ?? false,
-    previewMode: false,
 };
 
 export default function reducer(state = initialState, action) {
@@ -241,15 +240,6 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 activeToolbar: action.payload
-            }
-
-        case UPDATE_PREVIEW_MODE:
-
-            if (state.previewMode === action.payload) return state;
-
-            return {
-                ...state,
-                previewMode: action.payload
             }
 
         case UPDATE_FIELD_IDS:

@@ -49,7 +49,6 @@ export default class DimensionsControl extends DragwybEditor.editor.extends.Cont
                 newValue.top = newValue.right = newValue.bottom = newValue.left = largetValue;
             }
 
-            console.log(newValue);
             this.updateControlHandler(id, newValue);
         };
 
@@ -132,5 +131,24 @@ export default class DimensionsControl extends DragwybEditor.editor.extends.Cont
                 </div>
             </div>
         );
+    }
+
+    getStyleSelectorPlaceholder(value, placeholders) {
+        placeholders = JSON.parse(JSON.stringify(placeholders));
+        let valueExists = false;
+
+        Object.keys(placeholders).forEach(placeholder => {
+            if ((!value[placeholders[placeholder]] && value[placeholders[placeholder]] !== 0) || '' === value[placeholders[placeholder]]) {
+                delete placeholders[placeholder];
+            } else if (value[placeholders[placeholder]] && valueExists === false) {
+                valueExists = true;
+            }
+        });
+
+        if (!valueExists) {
+            placeholders = {};
+        }
+
+        return placeholders;
     }
 }

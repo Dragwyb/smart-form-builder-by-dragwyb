@@ -1,6 +1,6 @@
 
 import React, { useRef, useEffect } from "react";
-import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updatePreviewMode, updateFieldValues, updateToolbarSettings, updateSectionSettings } from "../store/actions";
+import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updateFieldValues, updateToolbarSettings, updateSectionSettings, updateStyleSelectors as updateStyleSelectorsAction } from "../store/actions";
 import PropTypes from "prop-types";
 import { Placeholder } from "@wordpress/components";
 
@@ -214,23 +214,7 @@ export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, p
             });
         });
 
-        console.log(cssCache);
-    } catch (e) {
-        console.error("Validation failed:", e.message);
-    }
-}
-
-export const setPreviewMode = ({ dispatch, value }) => {
-    try {
-        validateProp({
-            key: "value",
-            value: value, // invalid
-            types: ["bool"],
-            required: true,
-            functionName: "setPreviewMode"
-        });
-
-        dispatch(updatePreviewMode(value))
+        dispatch(updateStyleSelectorsAction(key, cssCache))
     } catch (e) {
         console.error("Validation failed:", e.message);
     }

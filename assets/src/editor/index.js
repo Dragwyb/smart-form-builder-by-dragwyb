@@ -6,12 +6,12 @@ import DragwybFieldBase from './fieldBase';
 import DragwybToolbarBase from './toolbarBase';
 import '../../sass/editor.scss';
 
-if(!DragwybEditor.editor){
-    DragwybEditor.editor={};
+if (!DragwybEditor.editor) {
+    DragwybEditor.editor = {};
 }
 
-if(!DragwybEditor.editor.extends){
-    DragwybEditor.editor.extends={};
+if (!DragwybEditor.editor.extends) {
+    DragwybEditor.editor.extends = {};
 }
 
 DragwybEditor.editor.extends.FieldBase = DragwybFieldBase;
@@ -39,11 +39,11 @@ jQuery(document).on('Dragwyb:init', () => {
 
         const theme = localStorage.getItem("DragwybEditorTheme") || 'light';
         const oldClass = theme === 'light' ? 'dark' : 'light';
-        const bodyEleCls=document.body.classList;
+        const bodyEleCls = document.body.classList;
 
-        if(oldClass === 'dark'){
+        if (oldClass === 'dark') {
             bodyEleCls.remove(oldClass)
-        }else{
+        } else {
             bodyEleCls.add(theme);
         }
 

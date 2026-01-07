@@ -76,6 +76,10 @@ class DragwybControlBase extends Component {
         this.#triggerOnChange(key, value)
     }
 
+    getStyleSelectorPlaceholder(value, placeholder) {
+        return placeholder;
+    }
+
     #triggerOnChange(key, value) {
         this.#updateValue(key, value, this.settings.type, this);
         this.onValueUpdated(key, value);
@@ -86,7 +90,7 @@ class DragwybControlBase extends Component {
     #updateStyleSelector(key, value) {
         if (this.settings && this.settings.type && this.settings.selectors && this.settings.selectors_placeholders) {
             const uniqueSelector = this.selectorKey + '_' + key;
-            this.Utils.updateStyleSelectors({ key: uniqueSelector, value, selectors: this.settings.selectors, placeholders: this.settings.selectors_placeholders });
+            this.Utils.updateStyleSelectors({ key: uniqueSelector, value: value, selectors: this.settings.selectors, placeholders: this.getStyleSelectorPlaceholder(value, this.settings.selectors_placeholders) });
         }
     }
 

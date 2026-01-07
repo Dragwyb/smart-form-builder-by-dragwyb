@@ -12,7 +12,6 @@ const Header = () => {
     // Existing Selectors
     const formTitle = useSelector(state => state?.form?.advance?.form_name || DragwybEditor.formData.title);
     const formStatus = useSelector(state => state?.form?.advance?.form_status || DragwybEditor.formData.status);
-    const previewMode = useSelector(state => state.previewMode);
 
     // --- NEW: Theme State Management ---
     // You can default to 'light' or check localStorage/OS preference
@@ -43,7 +42,6 @@ const Header = () => {
     const setActiveTabHandler = (value) => {
         Utils.setSelectedSettingId({ value: value });
         Utils.setActiveTab({ value: value });
-        Utils.setPreviewMode({ value: false });
     }
 
     const statusHtml = <>
@@ -74,9 +72,9 @@ const Header = () => {
                         {theme === 'light' ? <FaMoon color='black' /> : <FaSun color="#f39c12" />}
                     </div>
                 </div>
-                <div onClick={() => Utils.setPreviewMode({ value: !previewMode })} className='dragwyb-editor__preview-toggle'>
-                    <i className={`far fa-eye${previewMode ? '-slash' : ''}`} title={previewMode ? __('Disable Preview', 'dragwyb-form-builder') : __('Enable Preview', 'dragwyb-form-builder')} />
-                </div>
+                <a href={escUrl(DragwybEditor.previewUrl)} className='dragwyb-editor__preview-toggle' target="_blank">
+                    <i className='far fa-eye' title={__('Preview', 'dragwyb-form-builder')} />
+                </a>
                 <hr />
                 <a href={escUrl(DragwybEditor.adminUrl)} className='dragwyb-button dragwyb-button--default dragwyb-button--medium'>
                     {DragwybBuilder.i18n.exit}

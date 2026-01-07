@@ -17,7 +17,6 @@ const initialState = {
     fieldIds,
     selectedSettingId: null,
     activeToolbar: DragwybEditor?.EditorToolbars?.Default ?? false,
-    previewMode: false,
     popoverInitialize: false,
     popoverControls: {},
     styleSelectors: {},

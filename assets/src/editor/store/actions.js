@@ -95,11 +95,6 @@ export const updateActiveToolbar = (value) => ({
     payload: value
 })
 
-export const updatePreviewMode = (value) => ({
-    type: 'UPDATE_PREVIEW_MODE',
-    payload: value
-})
-
 export const updateFieldIds = (ids) => ({
     type: UPDATE_FIELD_IDS,
     payload: { ids }

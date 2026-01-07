@@ -523,6 +523,11 @@ body {
         color: hsl(var(--dragwyb-card-foreground) / 0.7);
         border-radius: 50%;
         font-size: 1.1rem;
+        text-decoration: none;
+    }
+
+    &__preview-toggle i {
+        margin-right: 0px !important;
     }
 
     &__body {
