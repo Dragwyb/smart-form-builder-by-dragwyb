@@ -34,16 +34,16 @@ class Form_Preview
 
             $post_id = absint($_GET['p']);
 
+            if (function_exists('status_header')) status_header(200);
+
             !defined("DRAGWYB_FORM_PREVIEW") && define('DRAGWYB_FORM_PREVIEW', true);
 
             add_filter('pre_get_document_title', [$this, 'set_document_title'], 999);
 
-            $post_object = get_post($post_id);
-
             if (function_exists('get_header')) get_header();
 
             // 3. ECHO THE SHORTCODE (Crucial Step)
-            echo '<div class="dragwyb-preview-wrapper">';
+            echo '<div id="dragwyb-preview-wrapper">';
             echo do_shortcode('[dragwyb-form id="' . $post_id . '"]');
             echo '</div>';
 
