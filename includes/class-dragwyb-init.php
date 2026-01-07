@@ -11,6 +11,7 @@ use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Pages;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Editor\Dragwyb_Builder_Editor;
 use Dragwyb\Form_Builder\Includes\Frontend\Shortcode\Shortcode_Handler;
 use Dragwyb\Form_Builder\Includes\Frontend\Frontend_Render;
+use Dragwyb\Form_Builder\Includes\Frontend\Form_Preview;
 use Dragwyb\Form_Builder\Includes\Frontend\Managers\CSS_Manager;
 
 class Dragwyb_Init
@@ -40,7 +41,10 @@ class Dragwyb_Init
             new Dragwyb_Form_Builder_Ajax();
             // Initialize Frontend Render
             Frontend_Render::instance();
+            // Initialize Frontend Preview
         }
+
+        Form_Preview::instance();
 
         Shortcode_Handler::instance();
 

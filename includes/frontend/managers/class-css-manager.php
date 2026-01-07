@@ -38,6 +38,11 @@ class CSS_Manager
      */
     public function enqueue_form_styles(int $form_id, Frontend_Render $frontend): void
     {
+
+        if (defined('DRAGWYB_FORM_PREVIEW') && true === DRAGWYB_FORM_PREVIEW) {
+            return;
+        }
+
         $file_name = 'form-' . $form_id . '.css';
         $file_path = $this->upload_dir . $file_name;
         $file_url  = $this->upload_url . $file_name;

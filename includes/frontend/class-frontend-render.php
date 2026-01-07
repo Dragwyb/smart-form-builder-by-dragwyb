@@ -262,6 +262,11 @@ class Frontend_Render
 
         wp_enqueue_style('dragwyb-form-builder', esc_url(DRAGWYB_FORM_BUILDER_URL . '/assets/css/dragwyb-form-frontend.css'), [], sanitize_text_field(DRAGWYB_FORM_BUILDER_VERSION));
 
+
+        if (defined('DRAGWYB_FORM_PREVIEW') && true === DRAGWYB_FORM_PREVIEW && function_exists('wp_add_inline_style')) {
+            wp_add_inline_style('dragwyb-form-builder', self::instance()->get_generated_css());
+        }
+
         do_action('Dragwyb/Frontend/After_Render/Enqueue_Static_Assets');
     }
 

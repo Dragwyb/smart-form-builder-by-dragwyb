@@ -11,6 +11,7 @@ use Dragwyb\Form_Builder\Includes\Dragwyb_Init;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbars;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Icons\Icons_Helper;
+use Dragwyb\Form_Builder\Includes\Frontend\Form_Preview;
 
 if (!defined("ABSPATH")) {
     die("You can't access this page");
@@ -39,6 +40,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             add_action('Dragwyb_Current_Screen', [$this, 'init'], 1);
             add_filter('Dragwyb_i18n', [$this, 'localize_i18n_strings']);
             add_filter('Dragwyb/Editor/Localize_Settings', [$this, 'editor_toolbars_localize']);
+            add_action('admin_head', [$this, 'render_dynamic_style_container']);
         }
 
         public function init($screen)
@@ -68,7 +70,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             if (isset(self::$form_id) && self::$form_id) {
                 echo '<div id="' . esc_attr(self::Current_Page) . '-editor-wrapper" ><div id="' . esc_attr(self::Current_Page) . '-editor-container" ></div></div>';
             } else {
-                $post_type = Dragwyb_Post::post_type();
+                $post_type = Dragwyb_Post::POST_TYPE;
 
                 printf(
                     '<h1>%s</h1>',
@@ -102,7 +104,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
 
             $form_id = isset($_GET['form_id']) ? absint($_GET['form_id']) : 0;
 
-            $post_type = Dragwyb_Post::post_type();
+            $post_type = Dragwyb_Post::POST_TYPE;
 
             if (!isset($form_id) || !$form_id) {
                 $post_id = wp_insert_post([
@@ -175,6 +177,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 'formTypes' => $this->get_form_types(),
                 'adminUrl' => admin_url('admin.php?page=dragwyb-form-overview'),
                 'faIconsList' => $this->get_fa_icons_list(),
+                'previewUrl' => home_url('/?post_type=' . Dragwyb_Post::POST_TYPE . '&p=' . self::$form_id . '&preview_id=' . Form_Preview::generate_key(self::$form_id)),
             ];
 
             $localize_data = apply_filters('Dragwyb/Editor/Localize_Settings', $localize_data);
@@ -182,6 +185,13 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             wp_localize_script('dragwyb-form-editor', 'DragwybEditor', $localize_data);
 
             do_action('Dragwyb/after_enqueue/editor_scripts');
+        }
+
+        public function render_dynamic_style_container()
+        {
+            $form_id = isset($_GET['form_id']) ? absint($_GET['form_id']) : 0;
+
+            echo '<style id="dragwyb-form-' . $form_id . '"></style>';
         }
 
         private function get_fa_icons_list(): array

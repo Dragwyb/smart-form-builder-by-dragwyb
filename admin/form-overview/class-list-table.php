@@ -8,6 +8,7 @@ use WP_List_Table;
 use WP_Post;
 use WP_Screen;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
+use Dragwyb\Form_Builder\Includes\Frontend\Form_Preview;
 
 /**
  * Generate the table on the plugin overview page.
@@ -200,10 +201,9 @@ class List_Table extends WP_List_Table
 
         // Generate preview and edit links for users with appropriate permissions
         $edit_url = get_edit_post_link($form->ID);
-        $preview_url = get_permalink($form->ID);
         $value = sprintf(
             '<a href="%s" target="_blank">%s</a>',
-            esc_url($preview_url),
+            esc_url($this->get_preview_url($form->ID)),
             esc_html($title)
         );
 
@@ -216,6 +216,11 @@ class List_Table extends WP_List_Table
         }
 
         return $value;
+    }
+
+    private function get_preview_url(int $id)
+    {
+        return home_url('/?post_type=' . sanitize_text_field(Dragwyb_Post::POST_TYPE) . '&p=' . $id . '&preview_id=' . Form_Preview::generate_key($id));
     }
 
     /**
@@ -232,6 +237,7 @@ class List_Table extends WP_List_Table
         $actions = [];
 
         $actions['edit'] = '<a href="?page=dragwyb-form-builder&form_id=' . (int) esc_attr($form->ID) . '">Edit</a>';
+        $actions['view'] = '<a href="' . esc_url($this->get_preview_url($form->ID)) . '" target="_blank">View</a>';
         $actions['delete'] = sprintf(
             '<a href="%s" class="submitdelete" onclick="return confirm(\'Are you sure you want to delete %s form?\');">%s</a>',
             esc_url(wp_nonce_url("post.php?action=trash&post={$form->ID}", 'trash-post_' . $form->ID)),
