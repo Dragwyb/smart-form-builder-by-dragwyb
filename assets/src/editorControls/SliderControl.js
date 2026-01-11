@@ -1,5 +1,7 @@
 import UnitSelector from './common/UnitSelector';
 import Slider from '../editor/components/Common/Slider';
+import Reset from '../editor/components/Common/Reset';
+import ObjectCompare from './common/ObjectCompare';
 
 export default class SliderControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
@@ -10,11 +12,12 @@ export default class SliderControl extends DragwybEditor.editor.extends.ControlB
         if (!this.shouldRender()) return <></>;
 
         const { settings, id } = this;
-        const { label, range, default: defaultValue } = settings;
-        const { value } = this.state;
+        const { label, range, default: defaultValue = {} } = settings;
+        const { value = {} } = this.state;
 
         // Fallback to default value if no value is set
-        const currentValue = value || defaultValue || { unit: "px", size: 0 };
+        // const currentValue = value || defaultValue || { unit: "px", size: 0 };
+        const currentValue = { size: value.size || defaultValue.size || '', unit: value.unit || defaultValue.unit || 'px' }
 
         const units = settings.units;
 
@@ -52,6 +55,7 @@ export default class SliderControl extends DragwybEditor.editor.extends.ControlB
                         <label className="dragwyb-control__label" htmlFor={id}>
                             {label}
                         </label>
+                        <Reset handler={this.resetControl.bind(this)} disabled={!this.valueChanged()} />
                         {units && Object.keys(units).length > 1 &&
                             <UnitSelector
                                 units={units}
@@ -73,5 +77,28 @@ export default class SliderControl extends DragwybEditor.editor.extends.ControlB
                 </div>
             </div>
         );
+    }
+
+    resetControl() {
+        const { id, settings } = this;
+        const { default: defaultValue = {} } = settings;
+
+        const resetValue = {
+            size: defaultValue.size || "",
+            unit: defaultValue.unit || "px"
+        };
+
+        this.updateControlHandler(id, resetValue);
+    };
+
+    valueChanged() {
+        const { default: defaultValue = {} } = this.settings;
+        const { value = {} } = this.state;
+
+        const currentValue = { size: value.size || defaultValue.size || '', unit: value.unit || defaultValue.unit || 'px' }
+
+        let defaultVal = { size: defaultValue.size || "", unit: defaultValue.unit || "px" }
+
+        return !ObjectCompare(defaultVal, currentValue);
     }
 }

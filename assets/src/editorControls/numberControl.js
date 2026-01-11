@@ -1,3 +1,5 @@
+import Reset from '../editor/components/Common/Reset';
+
 export default class NumberControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
         return 'number';
@@ -8,16 +10,14 @@ export default class NumberControl extends DragwybEditor.editor.extends.ControlB
 
         const { settings, id } = this;
         const { value } = this.state;
-
-        const min = settings.min ?? 0;
-        const max = settings.max ?? 100;
-        const step = settings.step ?? 1;
+        const { default: defaultValue, min = 0, max = 100, step = 1 } = settings;
 
         return (
             <div className="dragwyb-control dragwyb-control--number" data-control="number" id={`control-${id}`}>
                 {settings.label && (
                     <label className="dragwyb-control__label" htmlFor={id}>
                         {settings.label}
+                        <Reset handler={this.resetControl.bind(this)} disabled={value === defaultValue} />
                     </label>
                 )}
                 <input
@@ -28,7 +28,7 @@ export default class NumberControl extends DragwybEditor.editor.extends.ControlB
                     min={min}
                     max={max}
                     step={step}
-                    value={value}
+                    value={value || defaultValue}
                     onChange={(e) => this.updateControlHandler(id, parseFloat(e.target.value))}
                 />
             </div>

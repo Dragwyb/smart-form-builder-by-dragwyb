@@ -46,7 +46,8 @@ const RenderItem = ({
         dragRef(Node);
     };
 
-    let wrapperClass = `dragwyb-field-wrapper dragwyb-${field.type}-field${field.className && '' !== field.className ? ` ${field.className}` : ''}`;
+    let wrapperClass = `dragwyb-field-wrapper dragwyb-${field.type}-field${field.className && "" !== field.className ? ` ${field.className}` : ""
+        }`;
 
     if (selectedField && selectedField === field._id) {
         wrapperClass += " selected";
@@ -104,40 +105,31 @@ const RenderItem = ({
     );
 };
 
-const EmptyCanvas = ({ setActiveTab, isOver }) => {
+const AddFieldMsg = ({ setActiveTab, isOver, updateFieldSelect }) => {
     const activeTab = useSelector((state) => state.activeToolbar);
 
-    let emptyMessage = __(
-        "Begin creating your form by dragging fields from the sidebar, or simply click a field to add it.",
-        "dragwyb-form-builder"
-    );
-
-    if (activeTab !== "fields") {
-        emptyMessage = __(
-            "Click “Add Field” to open the field tab and start building your form.",
-            "dragwyb-form-builder"
-        );
-    }
+    let emptyMessage = emptyMessage = __("Add field", "dragwyb-form-builder");
 
     if (isOver) {
-        emptyMessage = __(
-            "Release the mouse or lift your finger to drop the field into your form.",
-            "dragwyb-form-builder"
-        );
+        emptyMessage = __("Drag field here.", "dragwyb-form-builder");
     }
 
     return (
-        <div className="dragwyb-canvas__empty">
+        <div
+            className="dragwyb-canvas__add-field"
+            onClick={() => {
+                if (activeTab === 'fields') {
+                    updateFieldSelect({ id: false });
+                } else {
+                    setActiveTab("fields");
+                }
+            }}
+        >
             <div
-                className={`dragwyb-canvas__empty-wrapper ${isOver ? " drag-active" : ""
+                className={`dragwyb-canvas__add-field-wrapper ${isOver ? " drag-active" : ""
                     }`}
             >
-                {activeTab !== "fields" && (
-                    <Button onClick={() => setActiveTab("fields")} className="add-field">
-                        <i className="fas fa-plus" />
-                        {__("Add Field", "dragwyb-form-builder")}
-                    </Button>
-                )}
+                <i className="fas fa-plus" />
                 <p>{emptyMessage}</p>
             </div>
         </div>
@@ -172,7 +164,8 @@ const Canvas = ({
         const id = Utils.generateId();
         deepClone._id = id;
 
-        const fieldControls = DragwybEditor.fields.fields[deepClone.type]?.controls || {};
+        const fieldControls =
+            DragwybEditor.fields.fields[deepClone.type]?.controls || {};
 
         Object.keys(deepClone.attributes || {}).forEach((id) => {
             if (!["tabs", "tab", "section"].includes(fieldControls[id]?.type)) {
@@ -207,7 +200,10 @@ const Canvas = ({
         <div className="dragwyb-editor__main">
             <div className="dragwyb-canvas-wrapper" ref={setNodeRef}>
                 <div className={canvasCls}>
-                    <div className="dragwyb-form-wrapper" id={`dragwyb-form-wrapper-${DragwybEditor.formId}`}>
+                    <div
+                        className="dragwyb-form-wrapper"
+                        id={`dragwyb-form-wrapper-${DragwybEditor.formId}`}
+                    >
                         {fields && fields.length > 0 && (
                             <>
                                 {fields.map((field, index) => (
@@ -224,16 +220,13 @@ const Canvas = ({
                                         dropIndicatorPosition={dropIndicatorPosition}
                                     />
                                 ))}
-                                {dropIndex && dropIndex === fields.length ? (
-                                    <span className="dragwyb-editor-indicator"></span>
-                                ) : (
-                                    ""
-                                )}
                             </>
                         )}
-                        {(!fields || fields.length === 0) && (
-                            <EmptyCanvas setActiveTab={setActiveTab} isOver={isOver} />
-                        )}
+                        <AddFieldMsg
+                            setActiveTab={setActiveTab}
+                            isOver={isOver || dropIndex === fields.length}
+                            updateFieldSelect={onFieldSelect}
+                        />
                     </div>
                 </div>
             </div>

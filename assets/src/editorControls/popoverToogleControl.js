@@ -15,7 +15,15 @@ export default class PopoverToggleControl extends DragwybEditor.editor.extends.C
             const ele = e.target;
             const popoverWrp = jQuery(ele).closest('.dragwyb-setting-row').next('.dragwyb-popover');
 
-            popoverWrp.toggle();
+            const status = popoverWrp.css('display') === 'none';
+
+            jQuery('.dragwyb-popover').hide();
+
+            if (status) {
+                popoverWrp.show();
+            } else {
+                popoverWrp.hide();
+            }
         }
 
         return (

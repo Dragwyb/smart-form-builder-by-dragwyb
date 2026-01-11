@@ -62,9 +62,27 @@ class DragwybControlBase extends Component {
         this.Utils = props.Utils;
         this.selectorKey = props.toolbarId;
 
+        if (this.settings.popover) {
+            props.resetControlEventLifting(this.resetControl.bind(this));
+            props.valueChangedCheckLifting(this.valueChanged.bind(this));
+        }
+
         if (props.selectedSetting && '' !== props.selectedSetting) {
             this.selectorKey += '_' + props.selectedSetting;
         }
+    }
+
+    resetControl() {
+        const value = this.settings && [undefined, null].includes(this.settings.default) ? '' : this.settings.default;
+        this.setState({ value: value });
+        this.updateControls(this.id, value);
+    }
+
+    valueChanged() {
+        const { default: defaultValue } = this.settings;
+        const currentValue = this.state.value || '';
+
+        return currentValue !== defaultValue;
     }
 
     updateControlHandler(key, value) {

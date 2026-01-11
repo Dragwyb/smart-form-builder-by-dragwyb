@@ -39,6 +39,20 @@
       cursor: inherit;
     }
 
+    .dragwyb-control_reset {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: auto;
+      float: right;
+      cursor: pointer;
+
+      &.disabled {
+        cursor: not-allowed;
+        opacity: .5;
+      }
+    }
+
     input[type="text"],
     input[type="number"],
     input[type="color"],
@@ -842,8 +856,8 @@
 
       span {
         cursor: pointer;
-        padding: .2rem;
-        border-radius: 4px;
+        padding: .4rem;
+        border-radius: 5px;
         display: flex;
         font-size: 12px;
         box-shadow: var(--dragwyb-ring-offset-shadow, 0 0 rgba(0, 0, 0, 0)), var(--dragwyb-ring-shadow, 0 0 rgba(0, 0, 0, 0)), var(--dragwyb-shadow);
@@ -890,10 +904,10 @@
       }
 
       i {
-        padding: .5rem;
+        padding: .4rem;
         background: hsl(var(--dragwyb-popover)/var(--dragwyb-bg-opacity, 1));
         border: 1px solid hsl(var(--dragwyb-border)/var(--dragwyb-border-opacity, 1));
-        border-radius: 50%;
+        border-radius: 5px;
       }
     }
 

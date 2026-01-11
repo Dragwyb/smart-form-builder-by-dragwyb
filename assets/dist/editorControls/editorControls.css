@@ -68,6 +68,18 @@
   margin-bottom: 0.5rem;
   cursor: inherit;
 }
+.dragwyb-editor .dragwyb-setting-row .dragwyb-control_reset {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  float: right;
+  cursor: pointer;
+}
+.dragwyb-editor .dragwyb-setting-row .dragwyb-control_reset.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
 .dragwyb-editor .dragwyb-setting-row input[type=text],
 .dragwyb-editor .dragwyb-setting-row input[type=number],
 .dragwyb-editor .dragwyb-setting-row input[type=color],
@@ -711,8 +723,8 @@
 }
 .dragwyb-editor .dragwyb-popover__title span {
   cursor: pointer;
-  padding: 0.2rem;
-  border-radius: 4px;
+  padding: 0.4rem;
+  border-radius: 5px;
   display: flex;
   font-size: 12px;
   box-shadow: var(--dragwyb-ring-offset-shadow, 0 0 rgba(0, 0, 0, 0)), var(--dragwyb-ring-shadow, 0 0 rgba(0, 0, 0, 0)), var(--dragwyb-shadow);
@@ -748,10 +760,10 @@
   color: #fff;
 }
 .dragwyb-editor .dragwyb-control--popover-toggle .dragwyb-popover__trigger i {
-  padding: 0.5rem;
+  padding: 0.4rem;
   background: hsl(var(--dragwyb-popover)/var(--dragwyb-bg-opacity, 1));
   border: 1px solid hsl(var(--dragwyb-border)/var(--dragwyb-border-opacity, 1));
-  border-radius: 50%;
+  border-radius: 5px;
 }
 .dragwyb-editor .dragwyb-control--popover-toggle .dragwyb-popover__content {
   margin-top: 6px;

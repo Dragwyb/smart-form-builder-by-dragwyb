@@ -1,7 +1,11 @@
-import UnitSelector from './common/UnitSelector';
+import UnitSelector from "./common/UnitSelector";
+import Reset from "../editor/components/Common/Reset";
 import { RiLink, RiLinkUnlink } from "react-icons/ri";
+import ObjectCompare from "./common/ObjectCompare";
+import getValidValue from "./common/getValidValue";
 
-export default class DimensionsControl extends DragwybEditor.editor.extends.ControlBase {
+export default class DimensionsControl extends DragwybEditor.editor.extends
+    .ControlBase {
     controlName() {
         return "dimensions";
     }
@@ -10,23 +14,35 @@ export default class DimensionsControl extends DragwybEditor.editor.extends.Cont
         if (!this.shouldRender()) return <></>;
 
         const { settings, id } = this;
-        const { label, units = ["px", "%", "em", "rem"], default: defaultValue } = settings;
-        const { value } = this.state;
+        const {
+            label = __("Dimension", "dragwyb-form-builder"),
+            units = ["px", "%", "em", "rem"],
+            default: defaultValue = {},
+        } = settings;
+        const { value = {} } = this.state;
 
         // fallback
-        const currentValue =
-            value || defaultValue || { top: "", right: "", bottom: "", left: "", unit: "px", linked: settings.linked };
+        const currentValue = {
+            top: getValidValue(value.top, defaultValue.top, ""),
+            right: getValidValue(value.right, defaultValue.right, ""),
+            bottom: getValidValue(value.bottom, defaultValue.bottom, ""),
+            left: getValidValue(value.left, defaultValue.left, ""),
+            unit: getValidValue(value.unit, defaultValue.unit, "px"),
+            linked: getValidValue(value.linked, defaultValue.linked, settings.linked),
+        };
 
         const updateValue = (key, val) => {
-            val = val && val !== '' ? Number(val) : val;
+            val = val && val !== "" ? Number(val) : val;
             let newValue = { ...currentValue };
 
-            if (currentValue.linked && ["top", "right", "bottom", "left"].includes(key)) {
+            if (
+                currentValue.linked &&
+                ["top", "right", "bottom", "left"].includes(key)
+            ) {
                 newValue.top = newValue.right = newValue.bottom = newValue.left = val;
             } else {
                 newValue[key] = val;
             }
-
 
             this.updateControlHandler(id, newValue);
         };
@@ -41,12 +57,16 @@ export default class DimensionsControl extends DragwybEditor.editor.extends.Cont
             const sides = ["top", "right", "bottom", "left"];
             let largetValue = null;
             if (!currentValue.linked) {
-                sides.forEach(side => {
-                    if ((currentValue[side] > largetValue) || null === largetValue) {
+                sides.forEach((side) => {
+                    if (currentValue[side] > largetValue || null === largetValue) {
                         largetValue = currentValue[side];
                     }
                 });
-                newValue.top = newValue.right = newValue.bottom = newValue.left = largetValue;
+                newValue.top =
+                    newValue.right =
+                    newValue.bottom =
+                    newValue.left =
+                    largetValue;
             }
 
             this.updateControlHandler(id, newValue);
@@ -60,18 +80,17 @@ export default class DimensionsControl extends DragwybEditor.editor.extends.Cont
             >
                 {/* Header */}
                 <div className="dragwyb-dimensions__header dragwyb-label-inline">
-                    {label && (
-                        <label className="dragwyb-control__label" htmlFor={id}>
-                            {label}
-                        </label>
-                    )}
-                    {units && Object.keys(units).length > 1 &&
+                    <label className="dragwyb-control__label" htmlFor={id}>
+                        {label}
+                    </label>
+                    <Reset handler={this.resetControl.bind(this)} disabled={!this.valueChanged()} />
+                    {units && Object.keys(units).length > 1 && (
                         <UnitSelector
                             units={units}
                             value={currentValue.unit}
                             onChange={updateUnit}
                         />
-                    }
+                    )}
                 </div>
 
                 {/* Fields */}
@@ -137,8 +156,12 @@ export default class DimensionsControl extends DragwybEditor.editor.extends.Cont
         placeholders = JSON.parse(JSON.stringify(placeholders));
         let valueExists = false;
 
-        Object.keys(placeholders).forEach(placeholder => {
-            if ((!value[placeholders[placeholder]] && value[placeholders[placeholder]] !== 0) || '' === value[placeholders[placeholder]]) {
+        Object.keys(placeholders).forEach((placeholder) => {
+            if (
+                (!value[placeholders[placeholder]] &&
+                    value[placeholders[placeholder]] !== 0) ||
+                "" === value[placeholders[placeholder]]
+            ) {
                 delete placeholders[placeholder];
             } else if (value[placeholders[placeholder]] && valueExists === false) {
                 valueExists = true;
@@ -150,5 +173,46 @@ export default class DimensionsControl extends DragwybEditor.editor.extends.Cont
         }
 
         return placeholders;
+    }
+
+    resetControl() {
+        const { id, settings } = this;
+        const { default: defaultValue = {} } = settings;
+
+        const resetValue = {
+            top: getValidValue(defaultValue.top, ""),
+            right: getValidValue(defaultValue.right, ""),
+            bottom: getValidValue(defaultValue.bottom, ""),
+            left: getValidValue(defaultValue.left, ""),
+            unit: getValidValue(defaultValue.unit, "px"),
+            linked: getValidValue(defaultValue.linked, false),
+        };
+
+        this.updateControlHandler(id, resetValue);
+    };
+
+    valueChanged() {
+        const { default: defaultValue = {} } = this.settings;
+        const value = this.state.value || {};
+
+        const currentValue = {
+            top: getValidValue(value.top, defaultValue.top, ""),
+            right: getValidValue(value.right, defaultValue.right, ""),
+            bottom: getValidValue(value.bottom, defaultValue.bottom, ""),
+            left: getValidValue(value.left, defaultValue.left, ""),
+            unit: getValidValue(value.unit, defaultValue.unit, "px"),
+            linked: getValidValue(value.linked, defaultValue.linked, this.settings.linked),
+        };
+
+        let defaultVal = {
+            top: getValidValue(defaultValue.top, ""),
+            right: getValidValue(defaultValue.right, ""),
+            bottom: getValidValue(defaultValue.bottom, ""),
+            left: getValidValue(defaultValue.left, ""),
+            unit: getValidValue(defaultValue.unit, "px"),
+            linked: getValidValue(defaultValue.linked, false),
+        };
+
+        return !ObjectCompare(defaultVal, currentValue);
     }
 }
