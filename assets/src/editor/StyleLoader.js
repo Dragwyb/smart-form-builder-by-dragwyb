@@ -5,6 +5,8 @@ const StyleLoader = () => {
     const styleSelectors = useSelector((state) => state.styleSelectors);
     const formId = useSelector((state) => state.form.id);
     const [styleWrapper, setStyleWrapper] = useState(null);
+
+
     useEffect(() => {
         const handler = setTimeout(() => {
 
@@ -34,7 +36,6 @@ const StyleLoader = () => {
             }
 
             if (styleWrapper) {
-                console.log(styleWrapper)
                 styleWrapper.innerHTML = cssString;
             }
 
@@ -44,7 +45,7 @@ const StyleLoader = () => {
             clearTimeout(handler);
         };
 
-    }, [styleSelectors]);
+    }, [styleSelectors, styleWrapper]);
 
     return null;
 };

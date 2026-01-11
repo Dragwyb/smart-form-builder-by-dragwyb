@@ -46,7 +46,7 @@ const Editor = () => {
         dispatch(resetSectionSettings());
     };
 
-    const setSelectedSettingId = ({ id, tab = "fields" }) => {
+    const setSelectedSettingId = ({ id = false, tab = "fields" }) => {
         Utils.setSelectedSettingId({ value: id });
         resetSection();
 

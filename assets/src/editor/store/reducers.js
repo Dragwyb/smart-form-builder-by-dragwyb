@@ -210,7 +210,7 @@ export default function reducer(state = initialState, action) {
                 return {
                     ...state,
                     popoverInitialize,
-                    popoverControls: { ...state.popoverControls || {}, [action.payload.id]: action.payload.control }
+                    popoverControls: { ...state.popoverControls || {}, [action.payload.id]: { ...state.popoverControls[action.payload.id] || {}, control: action.payload.control, resetControlEvent: action.payload.resetControlEvent, valueChangedCheck: action.payload.valueChangedCheck } }
                 }
             }
 

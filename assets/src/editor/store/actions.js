@@ -55,9 +55,9 @@ export const updatePopoverInitStatus = (status) => ({
     payload: { status }
 })
 
-export const updatePopoverControls = (id, control, status) => ({
+export const updatePopoverControls = (id, control, resetControlEvent, valueChangedCheck, status) => ({
     type: UPDATE_POPOVER_CONTROLS,
-    payload: { id, control, status }
+    payload: { id, control, resetControlEvent, valueChangedCheck, status }
 })
 
 

@@ -662,9 +662,6 @@ body {
         width: 100%;
         height: 100%;
         min-height: 400px;
-        background: hsl(var(--dragwyb-card) / var(--dragwyb-bg-opacity, 1));
-        border: 1px solid hsl(var(--dragwyb-card-border) / var(--dragwyb-border-opacity, 1));
-        box-shadow: var(--dragwyb-ring-offset-shadow, 0 0 #0000), var(--dragwyb-ring-shadow, 0 0 #0000), var(--dragwyb-sm-shadow);
     }
 
     &.canvas-empty {
@@ -673,56 +670,56 @@ body {
         height: 100%;
     }
 
-    &__empty {
+    &__add-field {
         width: 100%;
         height: 100%;
-        padding: 20px;
 
         &-wrapper {
-            padding: 40px;
+            border: 2px dashed hsl(var(--dragwyb-border)/var(--dragwyb-bg-opacity, 1));
+            background-color: hsl(var(--dragwyb-muted)/0.4);
+            padding: 20px;
             text-align: center;
-            font-size: 1.5rem;
-            color: hsl(var(--dragwyb-primary) / var(--dragwyb-text-opacity, 1));
+            color: hsl(var(--dragwyb-card-foreground)/0.3);
             width: 100%;
             height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            transition: all .3s ease-in-out;
+            transition: all 0.3s ease-in-out;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
 
-            &.drag-active {
-                background-color: var(--primary-light-color);
-                border: 1px dashed hsl(var(--dragwyb-primary) / var(--dragwyb-border-opacity, 1));
+            i {
+                font-size: 13px;
+                border-radius: 50%;
+                width: 18px;
+                height: 18px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                transition: all 0.3s ease-in-out;
+                background: hsl(var(--dragwyb-card-foreground)/0.3);
+                color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
             }
 
             P {
-                margin-top: 1rem;
-                font-size: 2rem;
+                margin-top: 6px;
+                font-size: 17px;
                 font-weight: 600;
                 max-width: 800px;
                 line-height: 1.4;
             }
 
-            button.add-field {
-                padding: .5rem 1rem;
-                font-size: 1.5rem;
-                // border-style: dashed;
+            &.drag-active,
+            &:hover {
                 border-color: hsl(var(--dragwyb-primary) / var(--dragwyb-border-opacity, 1));
-                color: hsl(var(--dragwyb-primary) / var(--dragwyb-text-opacity, 1));
-                line-height: 1;
-                border-radius: 40px;
-                font-weight: 600;
-                border-width: 2px;
+                background-color: hsl(var(--dragwyb-primary)/12%);
+                color: hsl(var(--dragwyb-primary)/1);
 
                 i {
-                    margin-right: 0.8rem;
-                }
-
-                &:hover {
-                    background: hsl(var(--dragwyb-primary) / var(--dragwyb-bg-opacity, 1));
-                    color: var(--primary-light-color);
-                    transform: scale(1.1);
+                    background: hsl(var(--dragwyb-primary)/1);
                 }
             }
         }
@@ -732,7 +729,7 @@ body {
         width: 100%;
         height: 0px;
         display: block;
-        background-color: var(--primary-light-color);
+        background-color: hsl(var(--dragwyb-primary)/12%);
         animation: indicatorVisible 150ms ease-out forwards;
     }
 
@@ -751,12 +748,25 @@ body {
 
     .dragwyb-field-wrapper {
         position: relative;
-        padding: 15px;
-        margin: 10px 0;
-        border: 1px solid var(--border-color);
+        // padding: 15px;
+        // margin: 10px 0;
+        border: 1px solid transparent;
         border-radius: 4px;
         background: #fff;
         transition: all 0.2s ease;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            background: transparent;
+            z-index: -1;
+        }
 
         &.dragwyb-start-drag {
             height: 0px !important;
@@ -834,28 +844,28 @@ body {
             transition: all 0.2s ease;
             cursor: move;
             text-align: center;
-            background-color: hsl(var(--dragwyb-sidebar) / var(--dragwyb-bg-opacity, 1));
-            border: 1px solid hsl(var(--dragwyb-sidebar-accent) / var(--dragwyb-bg-opacity, 1));
+            background-color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
+            border: 1px solid hsl(var(--dragwyb-input)/var(--dragwyb-border-opacity, 1));
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: .5rem;
             padding-block: 1rem;
-            color: hsl(var(--dragwyb-card-foreground) / var(--dragwyb-text-opacity, 1));
+            color: hsl(var(--dragwyb-muted-foreground)/var(--dragwyb-text-opacity, 1));
 
             &:hover {
-                transform: translateY(-2px);
-                background-color: hsl(var(--dragwyb-sidebar-accent) / var(--dragwyb-bg-opacity, 1));
+                transform: scale(1.03);
+                // background-color: hsl(var(--dragwyb-primary)/3%);
                 box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+                border-color: hsl(var(--dragwyb-primary)/var(--dragwyb-border-opacity, 1));
+                color: hsl(var(--dragwyb-primary)/var(--dragwyb-text-opacity, 1));
             }
 
             i {
                 padding: 0.5rem;
                 border-radius: 10px;
                 aspect-ratio: 1/1;
-                background: hsl(var(--dragwyb-muted) / var(--dragwyb-bg-opacity, 1));
-                color: hsl(var(--dragwyb-muted-foreground) / var(--dragwyb-text-opacity, 1));
+                // color: hsl(var(--dragwyb-muted-foreground) / var(--dragwyb-text-opacity, 1));
                 font-size: 1.5rem;
             }
 
@@ -926,7 +936,7 @@ body {
 
         &::-webkit-scrollbar-track {
             background: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
-            border-radius: 20px;
+            border-left: 1px solid hsl(var(--dragwyb-border) / var(--dragwyb-border-opacity, 1));
         }
 
         &::-webkit-scrollbar-thumb {
