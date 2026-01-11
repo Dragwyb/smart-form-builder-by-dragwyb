@@ -12,6 +12,7 @@ use Dragwyb\Form_Builder\Includes\Toolbars\Toolbars;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Icons\Icons_Helper;
 use Dragwyb\Form_Builder\Includes\Frontend\Form_Preview;
+use Dragwyb\Form_Builder\Includes\Frontend\Frontend_Render;
 
 if (!defined("ABSPATH")) {
     die("You can't access this page");
@@ -24,6 +25,8 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
         private static $form_id = null;
         private const Current_Page = DRAGWYB_PREFIX . '-form-builder';
         private static ?self $instance = null;
+        private static $style_cache = [];
+        private static $google_fonts = [];
 
         public static function instance(): self
         {
@@ -256,56 +259,69 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
 
         public function editor_toolbars_localize($data): array
         {
-            $toolbar_data = array();
+            $form_id = isset($data['formId']) ? absint($data['formId']) : 0;
 
-            $toolbar_obj = new Toolbars();
+            if (!$form_id) {
+                return $data;
+            }
+
+            if (!isset($data['formData'])) $data['formData'] = array();
+            if (!isset($data['EditorToolbars'])) $data['EditorToolbars'] = array();
+            if (!isset($data['EditorToolbars'])) $data['EditorToolbars'] = array();
+            if (!isset($data['frontendInitialData'])) $data['frontendInitialData'] = array();
+
+            $frontend = Frontend_Render::instance();
+            $frontend->init($form_id);
+            $style_cache = $frontend->get_generated_css();
+
+            $toolbar_obj = Toolbars::instance();
             $default_toolbar = $toolbar_obj->defaultToolbar();
             $toolbars = $toolbar_obj->get_toolbars();
-            $form_data = [];
 
-            if (isset($data['formId'])) {
-                $form_data = get_post_meta($data['formId'], '_dragwyb_form_data', true);
+            if (isset($style_cache['css']) && is_array($style_cache['css']) && !empty($style_cache['css'])) {
+                $data['frontendInitialData']['css'] = $style_cache['css'];
+            }
 
-                if (!empty($form_data) && !isset($data['formData'])) {
-                    $data['formData'] = array();
+            if (isset($style_cache['google_fonts']) && is_array($style_cache['google_fonts']) && !empty($style_cache['google_fonts'])) {
+                $data['frontendInitialData']['googleFonts'] = $style_cache['google_fonts'];
+            }
+
+            if ($toolbars && !empty($toolbars)) {
+                $toolbars_keys = array_keys($toolbars);
+
+                foreach ($toolbars_keys as $key) {
+                    if (isset($data['formData'][$key]) || isset($data[$key])) {
+                        continue;
+                    }
+
+                    $toolbars[$key]->enqueue_assets();
+
+                    if (!isset($data['EditorToolbars']['toolbars'])) {
+                        $data['EditorToolbars']['toolbars'] = array();
+                    }
+
+                    if (!isset($data['EditorToolbars']['toolbars'][$key])) {
+                        $data['EditorToolbars']['toolbars'][$key] = array('name' => $toolbars[$key]->get_toolbar_name(), 'icon' => $toolbars[$key]->get_toolbar_icon());
+                    }
+
+                    $toolbar_data = array();
+
+                    if ($key === 'fields') {
+                        $toolbar_data = $frontend->get_fields_values();
+                    } else {
+                        $toolbar_data = $frontend->get_toolbars_values($key);
+                    }
+
+                    $toolbar_settings = $frontend->get_toolbar_data($key);
+
+                    $data['formData'][$key] = $toolbar_data;
+                    $data[$key] = $toolbar_settings;
                 }
             }
 
-            if (count($toolbars) < 1) {
-                return array();
+            if (isset($data['EditorToolbars']['toolbars'][$default_toolbar])) {
+                $data['EditorToolbars']['Default'] = sanitize_text_field($default_toolbar);
             }
-
-            foreach ($toolbars as $key => $toolbar) {
-                if ($toolbar instanceof Toolbar_Base) {
-                    $toolbar->set_form_id($data['formId']);
-                    $settings = $toolbar->get_toolbar_settings();
-                    $name = $toolbar->get_toolbar_name();
-                    $icon = $toolbar->get_toolbar_icon();
-                    $toolbar->enqueue_assets();
-
-                    if ($settings) {
-                        if (!isset($data[$key]))
-                            $data[$key] = $settings;
-
-                        $toolbar_data[$key] = array('name' => $name, 'icon' => $icon);
-                    }
-
-                    if (isset($form_data[$key])) {
-                        $toolbar->set_toolbar_data($form_data[$key]);
-                        $sanitize_toolbar_data = $toolbar->get_toolbar_data();
-
-                        $data['formData'][$key] = $sanitize_toolbar_data;
-                    }
-                }
-            }
-
-            $toolbar_data = array('toolbars' => $toolbar_data);
-
-            if (isset($toolbar_data['toolbars'][$default_toolbar])) {
-                $toolbar_data['Default'] = sanitize_text_field($default_toolbar);
-            }
-
-            $data = array_merge($data, array('EditorToolbars' => $toolbar_data));
 
             return $data;
         }
@@ -372,6 +388,11 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             ];
 
             return array_merge($localize_strings, $strings);
+        }
+
+        private function set_style_selector_cache($style): void
+        {
+            self::$style_cache[] = $style;
         }
     }
 }
