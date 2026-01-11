@@ -10,6 +10,7 @@ use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Controls\Control_Base;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbars;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
+use Dragwyb\Form_Builder\Includes\Controls\Fonts\Fonts_Helper;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -27,9 +28,15 @@ class Frontend_Render
 
     private static $field_data = null;
     private static $form_data = null;
+    private static $toolbars = null;
     private static $toolbar_data = array();
+    private static $toolbar_settings = array();
 
     private static $css_cache = array();
+
+    private static $google_fonts_cache = null;
+
+    private static $google_fonts = null;
 
     private static $instance = null;
 
@@ -107,6 +114,34 @@ class Frontend_Render
     {
         return $this->render_fields();
     }
+
+    public function get_fields_values(): array
+    {
+        return self::$fields;
+    }
+
+    public function get_toolbars_values(string $type): array
+    {
+        if (!isset(self::$toolbar_data[$type])) {
+            return array();
+        }
+
+        return self::$toolbar_data[$type];
+    }
+
+    public function get_toolbar_data(string $type): array
+    {
+        if (!isset(self::$toolbars[$type])) {
+            return array();
+        }
+
+        if (!isset(self::$toolbar_settings[$type])) {
+            self::$toolbar_settings[$type] = self::$toolbars[$type]->get_toolbar_settings();
+        }
+
+        return self::$toolbar_settings[$type];
+    }
+
 
     private function render_fields()
     {
@@ -191,20 +226,17 @@ class Frontend_Render
         }
     }
 
-    public function get_generated_css(): string
+    public function get_generated_css(): array
     {
         $toolbar_obj = new Toolbars();
-        $toolbars = $toolbar_obj->get_toolbars();
+        self::$toolbars = $toolbar_obj->get_toolbars();
 
         foreach (self::$toolbar_data as $toolbar_key => $settings) {
-            if (isset($toolbars[$toolbar_key]) && method_exists($toolbars[$toolbar_key], 'get_toolbar_settings')) {
-                $toolbar_settings = $toolbars[$toolbar_key]->get_toolbar_settings();
+            if (isset(self::$toolbars[$toolbar_key]) && method_exists(self::$toolbars[$toolbar_key], 'get_toolbar_settings')) {
+                self::$toolbar_settings[$toolbar_key] = self::$toolbars[$toolbar_key]->get_toolbar_settings();
 
-                if (isset($toolbar_settings['controls']) && is_array($toolbar_settings['controls']) && count($toolbar_settings['controls']) > 0) {
-                    $css = $this->extract_css_from_settings($settings, $toolbar_settings['controls']);
-                    if ($css && !empty($css)) {
-                        $css_output .= $css;
-                    }
+                if (isset(self::$toolbar_settings[$toolbar_key]['controls']) && is_array(self::$toolbar_settings[$toolbar_key]['controls']) && count(self::$toolbar_settings[$toolbar_key]['controls']) > 0) {
+                    $this->extract_css_from_settings($settings, self::$toolbar_settings[$toolbar_key]['controls'], $toolbar_key);
                 }
             }
         }
@@ -229,15 +261,19 @@ class Frontend_Render
                     $field_settings = self::$field_module_cache[$type]->get_settings();
 
                     if ($field_settings && is_array($field_settings) && count($field_settings) > 0) {
-                        $this->extract_css_from_settings($field['attributes'], $field_settings);
+                        $this->extract_css_from_settings($field['attributes'], $field_settings, 'fields', $field['_id']);
                     }
                 }
             }
         }
 
+        if (defined('DRAGWYB_EDITOR') && true === DRAGWYB_EDITOR) {
+            return array('css' => self::$css_cache, 'google_fonts' => self::$google_fonts);
+        }
+
+
         if (self::$css_cache && count(self::$css_cache) > 0) {
             $css_string = json_encode(self::$css_cache);
-
 
             $css_string = substr($css_string, 1, -1);
 
@@ -245,10 +281,10 @@ class Frontend_Render
             $css_string = str_replace('":"', ':', $css_string);
             $css_string = ltrim($css_string, '"');
 
-            return $css_string;
+            return array('css' => $css_string, 'google_fonts' => self::$google_fonts);
         }
 
-        return '';
+        return array('css' => '', 'google_fonts' => array());
     }
 
     public static function enqueue_static_assets()
@@ -264,19 +300,59 @@ class Frontend_Render
 
 
         if (defined('DRAGWYB_FORM_PREVIEW') && true === DRAGWYB_FORM_PREVIEW && function_exists('wp_add_inline_style')) {
-            wp_add_inline_style('dragwyb-form-builder', self::instance()->get_generated_css());
+            $style_content = self::instance()->get_generated_css();
+            wp_add_inline_style('dragwyb-form-builder', $style_content['css']);
+
+            if ($style_content['google_fonts'] && !empty($style_content['google_fonts'])) {
+                self::instance()->load_google_fonts(array_map('sanitize_text_field', $style_content['google_fonts']));
+            }
         }
 
         do_action('Dragwyb/Frontend/After_Render/Enqueue_Static_Assets');
+    }
+
+    private function load_google_fonts(array $google_fonts): void
+    {
+
+        if ($google_fonts && !empty($google_fonts) && is_array($google_fonts)) {
+            $font_url = "https://fonts.googleapis.com/css2?";
+
+            $fontFamilies = [];
+
+            foreach ($google_fonts as $fontName) {
+                if (in_array($fontName, self::$google_fonts_cache)) {
+                    continue;
+                }
+
+                self::$google_fonts_cache[] = $fontName;
+
+                $fontName = str_replace(' ', '+', $fontName);
+
+                $fontFamilies[] = $fontName;
+            }
+
+
+            if (count($fontFamilies) < 1) {
+                return;
+            }
+
+            $font_url .= "family=" . implode('&family=', $fontFamilies);
+
+            wp_enqueue_style('dragwyb-form-google-fonts', 'https://fonts.googleapis.com/css2?' . $font_url, [], DRAGWYB_FORM_BUILDER_VERSION);
+        }
     }
 
     /**
      * Generates CSS string from settings.
      * Only processes controls that define 'selectors'.
      */
-    private function extract_css_from_settings(array $settings, array $controls): void
+    private function extract_css_from_settings(array $settings, array $controls, $type, $field_id = null): void
     {
         $form_wrapper_id = '#dragwyb-form-wrapper-' . self::$form_id;
+
+        if ($field_id && is_string($field_id) && !empty($field_id)) {
+            $form_wrapper_id .= ' #dragwyb-field-wrapper-' . $field_id;
+        }
 
         foreach ($settings as $control_id => $setting_value) {
             // 1. Validate: Ensure control definition and 'selectors' exist
@@ -320,9 +396,12 @@ class Frontend_Render
                         $repeater_controls_instance_cache[$item_control_id]->set_value($item_control_data, $item_control_id);
                         $repeater_item_value = $repeater_controls_instance_cache[$item_control_id]->get_value();
 
+                        // google fonts cache
+                        $this->fonts_family_cache($repeater_controls_instance_cache[$item_control_id], $repeater_item_value);
+
                         $placeholders = $this->get_control_placeholders($control_instance);
 
-                        $placeholders = $this->replace_selector_placeholders($form_wrapper_id, $control_config['items'][$item_control_id]['selectors'], $placeholders, $repeater_item_value, $repeater_id);
+                        $placeholders = $this->replace_selector_placeholders($form_wrapper_id, $control_config['items'][$item_control_id]['selectors'], $placeholders, $repeater_item_value, $type, $control_id, $field_id, $repeater_id);
                     }
                 }
                 continue;
@@ -338,15 +417,17 @@ class Frontend_Render
             $control_instance->set_value($setting_value, $control_id, $control_config);
             $control_value = $control_instance->get_value();
 
-            // 3. Get Data Placeholders (e.g., ['VALUE' => '#fff'] or ['TOP' => 10, 'UNIT' => 'px'])
+            // google fonts cache
+            $this->fonts_family_cache($control_instance, $control_value);
+
             // Uses helper method to support both complex and simple controls
             $placeholders = $this->get_control_placeholders($control_instance);
 
-            $this->replace_selector_placeholders($form_wrapper_id, $control_config['selectors'], $placeholders, $control_value);
+            $this->replace_selector_placeholders($form_wrapper_id, $control_config['selectors'], $placeholders, $control_value, $type, $control_id, $field_id);
         }
     }
 
-    private function replace_selector_placeholders($wrapper_id, $selectors, $placeholders, $value, $current_item = false): void
+    private function replace_selector_placeholders($wrapper_id, $selectors, $placeholders, $value, $type, $control_id, $field_id = null, $current_item = null): void
     {
         // 4. Process 'selectors' Loop
         // Format: ['{{WRAPPER}} .title' => 'color: {{VALUE}};']
@@ -377,12 +458,36 @@ class Frontend_Render
 
             // C. Append to CSS string if property is valid
             if (!empty($final_property)) {
-                $final_property = str_ends_with($final_property, ';') ? $final_property : $final_property . ';';
-                if (!isset(self::$css_cache[$final_selector])) {
-                    self::$css_cache[$final_selector] = "{" . $final_property . "}";
-                } else {
-                    self::$css_cache[$final_selector] = rtrim(self::$css_cache[$final_selector], '}') . $final_property . "}";
-                }
+                $this->set_css_cache($final_selector, $final_property, $type, $control_id, $field_id, $current_item);
+            }
+        }
+    }
+
+    private function set_css_cache($selector, $property, $type, $control_id, $field_id = null, $current_item = null)
+    {
+        $property = str_ends_with($property, ';') ? $property : $property . ';';
+
+        if (defined('DRAGWYB_EDITOR') && true === DRAGWYB_EDITOR) {
+            $unique_key = sanitize_text_field($type) . '_' . sanitize_text_field($control_id);
+
+            if ($field_id && is_string($field_id)) {
+                $unique_key .= '_' . sanitize_text_field($field_id);
+            }
+
+            if ($current_item && is_string($current_item)) {
+                $unique_key .= '_' . sanitize_text_field($current_item);
+            }
+
+            if (!isset(self::$css_cache[$unique_key])) {
+                self::$css_cache[$unique_key] = array();
+            }
+
+            self::$css_cache[$unique_key][$selector] = $property;
+        } else {
+            if (!isset(self::$css_cache[$selector])) {
+                self::$css_cache[$selector] = "{" . $property . "}";
+            } else {
+                self::$css_cache[$selector] = rtrim(self::$css_cache[$selector], '}') . $property . "}";
             }
         }
     }
@@ -401,15 +506,35 @@ class Frontend_Render
         return ['VALUE' => 'value'];
     }
 
+    private function fonts_family_cache($control_instance, $value): void
+    {
+        $type = $control_instance->get_type();
+
+        if ($type !== 'fonts') {
+            return;
+        }
+
+        if (!isset(self::$google_fonts_cache) || empty(self::$google_fonts_cache)) {
+            self::$google_fonts_cache = Fonts_Helper::get_fonts_by_groups(['google']);
+        }
+
+        if (isset(self::$google_fonts_cache[sanitize_text_field($value)]) && 'google' === self::$google_fonts_cache[sanitize_text_field($value)] && (!isset(self::$google_fonts) || !in_array(sanitize_text_field($value), self::$google_fonts))) {
+            self::$google_fonts[] = sanitize_text_field($value);
+        }
+    }
+
     private function clean_old_data(): void
     {
         self::$form_id = null;
-        self::$css_cache = array();
         self::$fields = array();
         self::$module = null;
-        self::$toolbar_data = null;
         self::$field_module_cache = null;
         self::$field_data = null;
         self::$form_data = null;
+        self::$toolbar_data = array();
+        self::$toolbar_settings = array();
+        self::$css_cache = array();
+        self::$google_fonts_cache = null;
+        self::$google_fonts = null;
     }
 }
