@@ -47,12 +47,29 @@ class Settings extends Register_Controls_Base
         $this->add_group_control('form_border', [
             'type'      => Controls::GROUP_BORDER,
             'label'     => __('Border', 'dragwyb-form-builder'),
+            'settings' => [
+                'radius' => [
+                    'unit' => 'px',
+                    'top' => 20,
+                    'right' => 20,
+                    'bottom' => 20,
+                    'left' => 20,
+                    'isLinked' => true,
+                ]
+            ],
             'selector'  => '{{WRAPPER}}', // Applied directly to wrapper class
         ]);
 
         $this->add_group_control('form_box_shadow', [
             'type'      => Controls::GROUP_BOX_SHADOW,
             'label'     => __('Box Shadow', 'dragwyb-form-builder'),
+            'settings' => [
+                'color' => '#0000001a',
+                'horizontal' => ['size' => 0, 'unit' => 'px'],
+                'vertical'   => ['size' => 10, 'unit' => 'px'],
+                'blur'       => ['size' => 40, 'unit' => 'px'],
+                'spread'     => ['size' => -5, 'unit' => 'px'],
+            ],
             'selector'  => '{{WRAPPER}}',
         ]);
 
@@ -60,6 +77,7 @@ class Settings extends Register_Controls_Base
             'type'       => Controls::DIMENSIONS,
             'label'      => __('Padding', 'dragwyb-form-builder'),
             'units'      => ['px', 'em', '%'],
+            'default'    => ['top' => 20, 'right' => 20, 'bottom' => 20, 'left' => 20, 'unit' => 'px', 'linked' => false],
             'selectors'  => [
                 // Mapping single control to 4 separate CSS variables
                 '{{WRAPPER}}' => '--dragwyb-form-pt: {{TOP}}{{UNIT}}; --dragwyb-form-pr: {{RIGHT}}{{UNIT}}; --dragwyb-form-pb: {{BOTTOM}}{{UNIT}}; --dragwyb-form-pl: {{LEFT}}{{UNIT}};',
