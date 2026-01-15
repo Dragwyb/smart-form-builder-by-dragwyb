@@ -119,6 +119,20 @@ class DragwybControlBase extends Component {
         return this.settings?.type === this.controlName && DragwybEditor.controlTypes[this.settings.type];
     }
 
+    getValidValue(...args) {
+        let validValue = args[args.length - 1];
+        // Loop through all arguments passed to the function
+        for (const value of args) {
+
+            if (value || value === 0 || value === "" || value === false) {
+                validValue = value;
+                break;
+            };
+        }
+
+        return validValue;
+    }
+
     onInit() { }
 
     onRender() { }

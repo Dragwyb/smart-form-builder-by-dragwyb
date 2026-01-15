@@ -2,7 +2,6 @@ import UnitSelector from "./common/UnitSelector";
 import Reset from "../editor/components/Common/Reset";
 import { RiLink, RiLinkUnlink } from "react-icons/ri";
 import ObjectCompare from "./common/ObjectCompare";
-import getValidValue from "./common/getValidValue";
 
 export default class DimensionsControl extends DragwybEditor.editor.extends
     .ControlBase {
@@ -23,12 +22,12 @@ export default class DimensionsControl extends DragwybEditor.editor.extends
 
         // fallback
         const currentValue = {
-            top: getValidValue(value.top, defaultValue.top, ""),
-            right: getValidValue(value.right, defaultValue.right, ""),
-            bottom: getValidValue(value.bottom, defaultValue.bottom, ""),
-            left: getValidValue(value.left, defaultValue.left, ""),
-            unit: getValidValue(value.unit, defaultValue.unit, "px"),
-            linked: getValidValue(value.linked, defaultValue.linked, settings.linked),
+            top: this.getValidValue(value.top, defaultValue.top, ""),
+            right: this.getValidValue(value.right, defaultValue.right, ""),
+            bottom: this.getValidValue(value.bottom, defaultValue.bottom, ""),
+            left: this.getValidValue(value.left, defaultValue.left, ""),
+            unit: this.getValidValue(value.unit, defaultValue.unit, "px"),
+            linked: this.getValidValue(value.linked, defaultValue.linked, settings.linked),
         };
 
         const updateValue = (key, val) => {
@@ -180,12 +179,12 @@ export default class DimensionsControl extends DragwybEditor.editor.extends
         const { default: defaultValue = {} } = settings;
 
         const resetValue = {
-            top: getValidValue(defaultValue.top, ""),
-            right: getValidValue(defaultValue.right, ""),
-            bottom: getValidValue(defaultValue.bottom, ""),
-            left: getValidValue(defaultValue.left, ""),
-            unit: getValidValue(defaultValue.unit, "px"),
-            linked: getValidValue(defaultValue.linked, false),
+            top: this.getValidValue(defaultValue.top, ""),
+            right: this.getValidValue(defaultValue.right, ""),
+            bottom: this.getValidValue(defaultValue.bottom, ""),
+            left: this.getValidValue(defaultValue.left, ""),
+            unit: this.getValidValue(defaultValue.unit, "px"),
+            linked: this.getValidValue(defaultValue.linked, false),
         };
 
         this.updateControlHandler(id, resetValue);
@@ -196,21 +195,21 @@ export default class DimensionsControl extends DragwybEditor.editor.extends
         const value = this.state.value || {};
 
         const currentValue = {
-            top: getValidValue(value.top, defaultValue.top, ""),
-            right: getValidValue(value.right, defaultValue.right, ""),
-            bottom: getValidValue(value.bottom, defaultValue.bottom, ""),
-            left: getValidValue(value.left, defaultValue.left, ""),
-            unit: getValidValue(value.unit, defaultValue.unit, "px"),
-            linked: getValidValue(value.linked, defaultValue.linked, this.settings.linked),
+            top: this.getValidValue(value.top, defaultValue.top, ""),
+            right: this.getValidValue(value.right, defaultValue.right, ""),
+            bottom: this.getValidValue(value.bottom, defaultValue.bottom, ""),
+            left: this.getValidValue(value.left, defaultValue.left, ""),
+            unit: this.getValidValue(value.unit, defaultValue.unit, "px"),
+            linked: this.getValidValue(value.linked, defaultValue.linked, this.settings.linked),
         };
 
         let defaultVal = {
-            top: getValidValue(defaultValue.top, ""),
-            right: getValidValue(defaultValue.right, ""),
-            bottom: getValidValue(defaultValue.bottom, ""),
-            left: getValidValue(defaultValue.left, ""),
-            unit: getValidValue(defaultValue.unit, "px"),
-            linked: getValidValue(defaultValue.linked, false),
+            top: this.getValidValue(defaultValue.top, ""),
+            right: this.getValidValue(defaultValue.right, ""),
+            bottom: this.getValidValue(defaultValue.bottom, ""),
+            left: this.getValidValue(defaultValue.left, ""),
+            unit: this.getValidValue(defaultValue.unit, "px"),
+            linked: this.getValidValue(defaultValue.linked, false),
         };
 
         return !ObjectCompare(defaultVal, currentValue);

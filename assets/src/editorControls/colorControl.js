@@ -1,7 +1,6 @@
 import { IoColorPaletteOutline } from "react-icons/io5";
 import { __ } from "@wordpress/i18n";
 import Reset from '../editor/components/Common/Reset';
-import getValidValue from "./common/getValidValue";
 
 export default class ColorControl extends DragwybEditor.editor.extends.ControlBase {
     pickr = null;
@@ -109,7 +108,7 @@ export default class ColorControl extends DragwybEditor.editor.extends.ControlBa
     resetControl() {
         const { id, settings } = this;
         const { default: defaultValue = '' } = settings;
-        const value = getValidValue(defaultValue, '');
+        const value = this.getValidValue(defaultValue, '');
 
         if (this.pickr) {
             this.pickr.setColor(value);
