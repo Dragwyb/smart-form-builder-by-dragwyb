@@ -32,9 +32,20 @@ class Form_Preview
     {
         if (is_user_logged_in() && isset($_GET['preview_id']) && isset($_GET['p']) && isset($_GET['post_type']) && $_GET['post_type'] === Dragwyb_Post::POST_TYPE && wp_verify_nonce($_GET['preview_id'], self::private_key_name(absint($_GET['p'])))) {
 
-            $post_id = absint($_GET['p']);
 
             if (function_exists('status_header')) status_header(200);
+
+            if (isset($_GET['dragwyb_iframe_mode']) && $_GET['dragwyb_iframe_mode'] === 'true') {
+                $frontend_render = Frontend_Render::instance();
+                $frontend_render->init(absint($_GET['p']));
+                $frontend_render->enqueue_static_assets();
+                $this->enqueue_editor_preview_styles();
+                $this->enqueue_editor_preview_scripts();
+                do_action('wp_head');
+                exit;
+            }
+
+            $post_id = absint($_GET['p']);
 
             !defined("DRAGWYB_FORM_PREVIEW") && define('DRAGWYB_FORM_PREVIEW', true);
 
@@ -54,6 +65,16 @@ class Form_Preview
             // 4. STOP EXECUTION
             exit;
         }
+    }
+
+    public function enqueue_editor_preview_styles()
+    {
+        wp_enqueue_style('dragwyb-editor-preview', esc_url(DRAGWYB_FORM_BUILDER_URL . '/assets/css/dragwyb-editor-preview.css'), [], sanitize_text_field(DRAGWYB_FORM_BUILDER_VERSION));
+    }
+
+    public function enqueue_editor_preview_scripts()
+    {
+        do_action('Dragwyb/Editor/Preview/Enqueue_Scripts');
     }
 
     public function set_document_title(string $title): string

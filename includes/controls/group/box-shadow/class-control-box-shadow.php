@@ -37,7 +37,7 @@ class Control_Box_Shadow extends Control_Base
     protected function default_setting(): array
     {
         return [
-            'color'      => 'rgba(0,0,0,0.5)',
+            'color'      => '#00000080',
             'horizontal' => ['size' => 0, 'unit' => 'px'],
             'vertical'   => ['size' => 0, 'unit' => 'px'],
             'blur'       => ['size' => 10, 'unit' => 'px'],

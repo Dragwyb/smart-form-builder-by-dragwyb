@@ -50,11 +50,6 @@ class Frontend_Render
         return self::$instance;
     }
 
-    public function __construct()
-    {
-        add_action('Dragwyb/before_enqueue/editor_scripts', [$this, 'enqueue_static_assets']);
-    }
-
     public function init(int $form_id)
     {
         $this->clean_old_data();

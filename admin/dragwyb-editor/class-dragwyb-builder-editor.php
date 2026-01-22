@@ -163,6 +163,10 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 true
             );
 
+            if (isset($_GET['dragwyb_iframe_mode'])) {
+                return;
+            }
+
             wp_enqueue_style(
                 'dragwyb-form-editor',
                 DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editor/editor.css',
