@@ -1,15 +1,10 @@
-import React, { useState, useEffect, act } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch, useStore } from "react-redux";
 import Canvas from "./Canvas";
 import {
-    saveForm,
     resetSectionSettings,
-    updateFieldValues,
     updateFieldOrder,
 } from "../store/actions";
-import { Button, SaveBtn } from "../components/Common";
-import { Dashicon } from "@wordpress/components";
-import { __ } from "@wordpress/i18n";
 import {
     DndContext,
     useSensor,
@@ -18,28 +13,24 @@ import {
     MouseSensor,
     TouchSensor,
 } from "@dnd-kit/core";
-import {
-    restrictToParentElement,
-    createSnapModifier,
-} from "@dnd-kit/modifiers";
+
 import SidebarFieldOverlay from "../components/SidebarFieldOverlay";
-import { Utils as Helper, AddField } from "../components/Utils";
+import { Utils as Helper } from "../components/Utils";
 import ToolBar from "../Toolbar/Toolbar";
 import Header from "./header";
-// import ToolbarSettings from '../Toolbar/ToolbarSettingsold';
 import ToolbarSettings from "../Toolbar/ToolbarSettings";
+import PreviewIframe from "./PreviewIframe";
 
 const Editor = () => {
     const [activeDrag, setActiveDrag] = useState(null);
-    const [sidebarDrag, setSidebarDrag] = useState(null);
-    const [dropIndicatorPosition, setDropIndicatorPosition] = useState(false);
     const [dropIndex, setDropIndex] = useState(false);
+    const [dropIndicatorPosition, setDropIndicatorPosition] = useState(false);
+
+    const PREVIEW_URL = DragwybEditor?.previewUrl;
 
     const dispatch = useDispatch();
-
     const store = useStore();
     const state = store.getState();
-
     const Utils = Helper(state, dispatch);
 
     const resetSection = () => {
@@ -49,7 +40,6 @@ const Editor = () => {
     const setSelectedSettingId = ({ id = false, tab = "fields" }) => {
         Utils.setSelectedSettingId({ value: id });
         resetSection();
-
         const defaultToolbar = DragwybEditor?.EditorToolbars?.Default ?? false;
         Utils.setActiveTab({ value: false === id ? defaultToolbar : tab });
     };
@@ -57,159 +47,189 @@ const Editor = () => {
     const setActiveTabHandler = (value) => {
         Utils.setSelectedSettingId({ value: false });
         resetSection();
-
         Utils.setActiveTab({ value: value });
     };
 
     const sensors = useSensors(
-        useSensor(PointerSensor, {
-            activationConstraint: {
-                distance: 5, // drag starts only after moving 5px
-            },
-        }),
-        useSensor(MouseSensor, {
-            activationConstraint: {
-                distance: 5, // drag starts only after moving 5px
-            },
-        }),
-        useSensor(TouchSensor, {
-            activationConstraint: {
-                delay: 5, // drag starts only after moving 5px
-                tolerance: 6,
-            },
-        })
+        useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+        useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
+        useSensor(TouchSensor, { activationConstraint: { delay: 5, tolerance: 6 } })
     );
 
-    const gridSize = 20; // pixels
-    const snapToGridModifier = createSnapModifier(gridSize);
+    const measureDroppableContainers = (node) => {
+        const rect = node.getBoundingClientRect();
+
+        const iframe = document.getElementById('dragwyb-preview-iframe');
+
+        if (iframe && node.ownerDocument !== document) {
+            const iframeRect = iframe.getBoundingClientRect();
+
+            return {
+                top: rect.top + iframeRect.top,
+                left: rect.left + iframeRect.left,
+                bottom: rect.bottom + iframeRect.top,
+                right: rect.right + iframeRect.left,
+                width: rect.width,
+                height: rect.height,
+                x: rect.x + iframeRect.left,
+                y: rect.y + iframeRect.top,
+            };
+        }
+
+        console.log(rect.top)
+
+        // Standard measuring for everything else
+        return {
+            top: rect.top,
+            left: rect.left,
+            bottom: rect.bottom,
+            right: rect.right,
+            width: rect.width,
+            height: rect.height,
+            x: rect.x,
+            y: rect.y,
+        };
+    };
+
+    const measureDraggableContainers = (node) => {
+        const rect = node.getBoundingClientRect();
+
+        const iframe = document.getElementById('dragwyb-preview-iframe');
+
+        const finalPosition = {
+            top: rect.top,
+            left: rect.left,
+            bottom: rect.bottom,
+            right: rect.right,
+            width: rect.width,
+            height: rect.height,
+            x: rect.x,
+            y: rect.y,
+        };
+
+        const iframeRect = iframe.getBoundingClientRect();
+
+        if (iframe && node.ownerDocument !== document) {
+            finalPosition.top = rect.top + iframeRect.top;
+            finalPosition.left = rect.left + iframeRect.left;
+            finalPosition.bottom = rect.bottom + iframeRect.top;
+            finalPosition.right = rect.right + iframeRect.left;
+            finalPosition.width = rect.width;
+            finalPosition.height = rect.height;
+            finalPosition.x = rect.x + iframeRect.left;
+            finalPosition.y = rect.y + iframeRect.top;
+        } else {
+            finalPosition.top = rect.top + iframeRect.top;
+            finalPosition.bottom = rect.bottom + iframeRect.top;
+            finalPosition.height = rect.height;
+            finalPosition.y = rect.y + iframeRect.top;
+        }
+
+        return finalPosition;
+    };
+
+    // --- Drag Handlers ---
+
+    const handleDragStart = (event) => {
+        const { active, activatorEvent } = event;
+
+        const activeDragData = { activeDrag: active };
+
+        if (activatorEvent) {
+            activeDragData.extraData = {
+                offsetX: activatorEvent.offsetX,
+                offsetY: activatorEvent.offsetY,
+                width: active.rect.current?.initial?.width || 0,
+                height: active.rect.current?.initial?.height || 0,
+            };
+        }
+
+        if (active?.data?.current?.currentIndex >= 0) {
+            setDropIndex(active.data.current.currentIndex);
+        }
+
+        setActiveDrag(activeDragData);
+    };
 
     const handleDragMove = (event) => {
         const { active, over, delta, activatorEvent } = event;
 
-        if (activeDrag === null) {
-            const activeDragData = { activeDrag: active };
-
-            if (over && activatorEvent) {
-                activeDragData.extraData = {
-                    offsetX: activatorEvent.offsetX,
-                    offsetY: activatorEvent.offsetY,
-                    width: over.rect.width,
-                    height: over.rect.height,
-                };
-            }
-
-            if (active?.data?.current?.currentIndex >= 0) {
-                setDropIndex(active.data.current.currentIndex);
-            }
-
-            setActiveDrag(activeDragData);
+        // If we are not over anything, clear indicators
+        if (!over) {
+            if (dropIndex !== false) setDropIndex(false);
+            if (dropIndicatorPosition !== false) setDropIndicatorPosition(false);
+            return;
         }
 
-        if (over) {
-            const activeId = active.id.replace("canvas-drag-", "");
-            const overId = over?.id.replace("canvas-drop-", "");
+        const activeId = active.id.replace("canvas-drag-", "");
+        const overId = over.id.replace("canvas-drop-", "");
 
-            if (!overId) {
-                false !== dropIndex && setDropIndex(false);
-                false !== dropIndicatorPosition && setDropIndicatorPosition(false);
-                return;
-            }
+        // Don't drop on self
+        if (activeId === overId) {
+            setDropIndex(false);
+            setDropIndicatorPosition(false);
+            return;
+        }
 
-            // Skip if we’re hovering over ourselves
-            if (activeId === overId) {
-                false !== dropIndex && setDropIndex(false);
-                false !== dropIndicatorPosition && setDropIndicatorPosition(false);
-                return;
-            }
+        let newDropIndex = over.data.current.currentIndex;
 
-            let newdropIndex = over.data.current.currentIndex;
+        const isCanvasDrag = active?.data?.current?.canvasDrag;
+        const activeIndex = active?.data?.current?.currentIndex;
 
-            if (
-                (over.data.current.addInitialField ||
-                    over.data.current.canvasFieldDrop) &&
-                dropIndex !== newdropIndex
-            ) {
-                setDropIndex(newdropIndex);
-                false !== dropIndicatorPosition && setDropIndicatorPosition(false);
-                return;
-            }
+        // If simply hovering a container/wrapper, just set index
+        if (over.data.current.canvasFieldDrop || over.data.current.addInitialField) {
+            if (dropIndex !== newDropIndex) setDropIndex(newDropIndex);
+            setDropIndicatorPosition(false);
+            return;
+        }
 
-            if (
-                (over.data.current.addInitialField ||
-                    over.data.current.canvasFieldDrop) &&
-                dropIndex === newdropIndex
-            ) {
-                false !== dropIndicatorPosition && setDropIndicatorPosition(false);
-                return;
-            }
+        // Detailed field sorting logic
+        const pointerY = activatorEvent.clientY + delta.y; // Or use event.active.rect.current.translated.top
+        const overMiddle = over.rect.top + (over.rect.height / 2);
 
-            let activeIndex = active?.data?.current?.currentIndex;
-            let extraTop = 0;
+        let targetIndex = newDropIndex;
 
-            if (newdropIndex === dropIndex) {
-                extraTop += 15;
-            }
-
-            if (newdropIndex > activeIndex) {
-                extraTop -= activeDrag.extraData.height + 15;
-            }
-
-            const movingPosiont = event.activatorEvent.clientY + delta.y;
-            const overRect = over.rect.top + over.rect.height / 2 + extraTop;
-
-            if (active?.data?.current?.canvasDrag && newdropIndex > activeIndex) {
-                newdropIndex--;
-                dropIndicatorPosition !== "bottom" &&
-                    setDropIndicatorPosition("bottom");
-            } else {
-                dropIndicatorPosition !== false && setDropIndicatorPosition(false);
-            }
-
-            if (overRect < movingPosiont) {
-                newdropIndex++;
-            }
-
-            if (dropIndex !== newdropIndex) {
-                setDropIndex(newdropIndex);
-            }
+        // Determine "After" vs "Before"
+        if (pointerY > overMiddle) {
+            targetIndex = newDropIndex + 1;
+            setDropIndicatorPosition("bottom");
         } else {
-            false !== dropIndex && setDropIndex(false);
-            false !== dropIndicatorPosition && setDropIndicatorPosition(false);
+            setDropIndicatorPosition("top"); // or false/default
+        }
+
+        // Adjustment for moving items downwards in the same list
+        if (isCanvasDrag && activeIndex < targetIndex) {
+            targetIndex -= 1;
+        }
+
+        if (dropIndex !== targetIndex) {
+            setDropIndex(targetIndex);
         }
     };
 
     const handleDragEnd = (event) => {
         setActiveDrag(null);
-        setSidebarDrag(null);
         setDropIndex(false);
         setDropIndicatorPosition(false);
 
         const { active, over } = event;
 
-        if (!over) return;
-        if (!over.id.startsWith("canvas-drop-")) return;
-        if (
-            !over.data.current ||
-            over.data.current.canvasDrop === null ||
-            over.data.current.canvasDrop === undefined
-        )
-            return;
+        // Validation: Did we drop on a valid canvas dropzone?
+        if (!over || !over.id.startsWith("canvas-drop-")) return;
+
         const isFromSidebar = active?.data?.current?.fromSidebar;
         const isCanvasDrag = active?.data?.current?.canvasDrag;
-        const index = dropIndex;
+
+        const finalIndex = dropIndex !== false ? dropIndex : (over.data.current.currentIndex || 0);
 
         if (isFromSidebar) {
             const type = active.data.current.type;
-            const newField = Utils.AddField({ type, Utils, index: index });
-
+            const newField = Utils.AddField({ type, Utils, index: finalIndex });
             setSelectedSettingId({ id: newField._id });
-
-            return;
         } else if (isCanvasDrag) {
             const oldIndex = active?.data?.current?.currentIndex;
-
-            if (oldIndex !== index) {
-                dispatch(updateFieldOrder(oldIndex, index));
+            if (oldIndex !== undefined && oldIndex !== finalIndex) {
+                dispatch(updateFieldOrder(oldIndex, finalIndex));
             }
         }
     };
@@ -217,32 +237,57 @@ const Editor = () => {
     return (
         <div className="dragwyb-editor">
             <Header />
+
             <div className="dragwyb-editor__body">
-                <>
-                    <DndContext
-                        sensors={sensors}
-                        onDragEnd={handleDragEnd}
-                        onDragCancel={() => {
-                            setActiveDrag(null);
-                        }}
-                        onDragMove={handleDragMove}
-                    >
-                        <ToolBar
-                            setActiveTab={setActiveTabHandler}
-                            setSettingId={setSelectedSettingId}
+                <DndContext
+                    sensors={sensors}
+                    onDragStart={handleDragStart}
+                    onDragEnd={handleDragEnd}
+                    onDragCancel={() => setActiveDrag(null)}
+                    onDragMove={handleDragMove}
+                    measuring={{
+                        droppable: {
+                            strategy: 'always',
+                            measure: measureDroppableContainers // <--- Apply the fix
+                        },
+                        draggable: {
+                            strategy: 'always',
+                            measure: measureDraggableContainers
+                        }
+                    }}
+                >
+                    <ToolBar
+                        setActiveTab={setActiveTabHandler}
+                        setSettingId={setSelectedSettingId}
+                    />
+                    <ToolbarSettings setActiveTab={setActiveTabHandler} />
+
+                    {/* The Iframe Shield: Crucial for dragging over iframe */}
+                    {activeDrag && (
+                        <div
+                            style={{
+                                position: 'fixed',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '100%',
+                                zIndex: 9998,
+                                cursor: 'grabbing'
+                            }}
                         />
-                        <ToolbarSettings setActiveTab={setActiveTabHandler} />
+                    )}
+
+                    <PreviewIframe url={PREVIEW_URL}>
                         <Canvas
                             onFieldSelect={setSelectedSettingId}
                             Utils={Utils}
-                            sidebarDrag={sidebarDrag}
                             dropIndex={dropIndex}
                             dropIndicatorPosition={dropIndicatorPosition}
                             setActiveTab={setActiveTabHandler}
                         />
-                        {activeDrag && <SidebarFieldOverlay data={activeDrag} />}
-                    </DndContext>
-                </>
+                    </PreviewIframe>
+                    {activeDrag && <SidebarFieldOverlay data={activeDrag} />}
+                </DndContext>
             </div>
         </div>
     );

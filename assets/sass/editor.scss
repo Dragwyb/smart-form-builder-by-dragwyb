@@ -543,16 +543,17 @@ body {
         box-sizing: border-box;
         height: 100%;
         position: relative;
-    }
 
-    &__main {
-        flex: 1;
-        padding: 20px;
-        background-color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
-        overflow: auto;
-        max-height: 100%;
-        background-image: radial-gradient(hsl(var(--dragwyb-card-foreground)/0.2) 1px, transparent 1px);
-        background-size: 24px 24px;
+        &.ui-resizable-resizing::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 100%;
+            background-color: transparent !important;
+            width: calc(100vw - var(--panel-width) - 100px);
+            height: 100%;
+            cursor: col-resize;
+        }
     }
 
     &__settings {
@@ -650,6 +651,10 @@ body {
             }
         }
     }
+
+    #dragwyb-preview-iframe {
+        flex: 1;
+    }
 }
 
 // Canvas
@@ -657,6 +662,7 @@ body {
     border-radius: 4px;
     padding: 20px;
     max-height: 100%;
+    height: 100%;
 
     &-wrapper {
         width: 100%;
@@ -1368,6 +1374,7 @@ $dropdown-max-height: 250px;
 }
 
 .dragwyb-overlay-preview {
+
     &.field-type {
         cursor: move;
         text-align: center;
