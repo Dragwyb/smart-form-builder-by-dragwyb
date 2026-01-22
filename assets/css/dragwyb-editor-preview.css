@@ -1,0 +1,226 @@
+:root {
+  --dragwyb-text-opacity: 1;
+  --dragwyb-bg-opacity: 1;
+  --dragwyb-border-opacity: 1;
+  /* Ring Border Shadow */
+  --dragwyb-ring-offset-shadow: 0 0 #0000;
+  --dragwyb-ring-shadow: 0 0 #0000;
+  --dragwyb-sm-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --dragwyb-ring-offset-color: #fff;
+  --dragwyb-button-outline: rgba(0, 0, 0, .10);
+  --dragwyb-badge-outline: rgba(0, 0, 0, .05);
+  /* Automatic computation of border around primary / danger buttons */
+  --dragwyb-opaque-button-border-intensity: -8;
+  /* In terms of percentages */
+  /* Backgrounds applied on top of other backgrounds when hovered/active */
+  --dragwyb-elevate-1: rgba(0, 0, 0, .03);
+  --dragwyb-elevate-2: rgba(0, 0, 0, .08);
+  --dragwyb-background: 210 20% 98%;
+  --dragwyb-foreground: 210 15% 15%;
+  --dragwyb-border: 210 12% 88%;
+  --dragwyb-card: 210 15% 96%;
+  --dragwyb-card-foreground: 210 15% 15%;
+  --dragwyb-card-border: 210 12% 92%;
+  --dragwyb-sidebar: 210 15% 94%;
+  --dragwyb-sidebar-foreground: 210 15% 15%;
+  --dragwyb-sidebar-border: 210 12% 90%;
+  --dragwyb-sidebar-primary: 220 100% 45%;
+  --dragwyb-sidebar-primary-foreground: 220 20% 98%;
+  --dragwyb-sidebar-accent: 214 9% 85%;
+  --dragwyb-sidebar-accent-foreground: 210 15% 25%;
+  --dragwyb-sidebar-ring: 220 100% 45%;
+  --dragwyb-popover: 210 15% 92%;
+  --dragwyb-popover-foreground: 210 15% 15%;
+  --dragwyb-popover-border: 210 12% 88%;
+  --dragwyb-primary: 105.9 85.1% 50%;
+  --dragwyb-primary-foreground: 220 20% 98%;
+  --dragwyb-secondary: 210 15% 88%;
+  --dragwyb-secondary-foreground: 210 15% 25%;
+  --dragwyb-muted: 210 12% 90%;
+  --dragwyb-muted-foreground: 210 12% 45%;
+  --dragwyb-accent: 260 85% 65%;
+  --dragwyb-accent-foreground: 260 20% 15%;
+  --dragwyb-destructive: 0 84% 60%;
+  --dragwyb-destructive-foreground: 0 20% 98%;
+  --dragwyb-input: 210 15% 75%;
+  --dragwyb-ring: 220 100% 45%;
+  --dragwyb-chart-1: 220 100% 35%;
+  --dragwyb-chart-2: 25 85% 45%;
+  --dragwyb-chart-3: 145 70% 35%;
+  --dragwyb-chart-4: 260 85% 55%;
+  --dragwyb-chart-5: 200 90% 40%;
+  --dragwyb-font-sans: Open Sans, sans-serif;
+  --dragwyb-font-serif: Georgia, serif;
+  --dragwyb-font-mono: Menlo, monospace;
+  --dragwyb-radius: .5rem;
+  /* 8px */
+  --dragwyb-shadow-2xs: 0px 1px 2px 0px hsl(210 12% 8% / 0.05);
+  --dragwyb-shadow-xs: 0px 1px 3px 0px hsl(210 12% 8% / 0.1);
+  --dragwyb-shadow-sm: 0px 1px 2px 0px hsl(210 12% 8% / 0.05), 0px 2px 4px -1px hsl(210 12% 8% / 0.1);
+  --dragwyb-shadow: 0px 1px 3px 0px hsl(210 12% 8% / 0.1), 0px 1px 2px -1px hsl(210 12% 8% / 0.1);
+  --dragwyb-shadow-md: 0px 4px 6px -1px hsl(210 12% 8% / 0.1), 0px 2px 4px -2px hsl(210 12% 8% / 0.1);
+  --dragwyb-shadow-lg: 0px 10px 15px -3px hsl(210 12% 8% / 0.1), 0px 4px 6px -4px hsl(210 12% 8% / 0.1);
+  --dragwyb-shadow-xl: 0px 20px 25px -5px hsl(210 12% 8% / 0.1), 0px 8px 10px -6px hsl(210 12% 8% / 0.1);
+  --dragwyb-shadow-2xl: 0px 25px 50px -12px hsl(210 12% 8% / 0.25);
+  --dragwyb-tracking-normal: 0em;
+  --dragwyb-spacing: 0.25rem;
+  /* Automatically computed borders */
+  --dragwyb-sidebar-primary-border: hsl(var(--dragwyb-sidebar-primary));
+  --dragwyb-sidebar-primary-border: hsl(from hsl(var(--dragwyb-sidebar-primary)) h s calc(l + var(--dragwyb-opaque-button-border-intensity)) / alpha);
+  --dragwyb-sidebar-accent-border: hsl(var(--dragwyb-sidebar-accent));
+  --dragwyb-sidebar-accent-border: hsl(from hsl(var(--dragwyb-sidebar-accent)) h s calc(l + var(--dragwyb-opaque-button-border-intensity)) / alpha);
+  --dragwyb-primary-border: hsl(var(--dragwyb-primary) / var(--dragwyb-border-opacity, 1));
+  --dragwyb-primary-border: hsl(from hsl(var(--dragwyb-primary) / var(--dragwyb-border-opacity, 1)) h s calc(l + var(--dragwyb-opaque-button-border-intensity)) / alpha);
+  --dragwyb-secondary-border: hsl(var(--dragwyb-secondary));
+  --dragwyb-secondary-border: hsl(from hsl(var(--dragwyb-secondary)) h s calc(l + var(--dragwyb-opaque-button-border-intensity)) / alpha);
+  --dragwyb-muted-border: hsl(var(--dragwyb-muted));
+  --dragwyb-muted-border: hsl(from hsl(var(--dragwyb-muted)) h s calc(l + var(--dragwyb-opaque-button-border-intensity)) / alpha);
+  --dragwyb-accent-border: hsl(var(--dragwyb-accent));
+  --dragwyb-accent-border: hsl(from hsl(var(--dragwyb-accent)) h s calc(l + var(--dragwyb-opaque-button-border-intensity)) / alpha);
+  --dragwyb-destructive-border: hsl(var(--dragwyb-destructive));
+  --dragwyb-destructive-border: hsl(from hsl(var(--dragwyb-destructive)) h s calc(l + var(--dragwyb-opaque-button-border-intensity)) / alpha);
+}
+
+body {
+  background: transparent !important;
+  min-height: 100%;
+}
+
+html {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.dragwyb-editor__main {
+  flex: 1;
+  padding: 20px;
+  background-color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
+  overflow: auto;
+  height: 100%;
+  background-image: radial-gradient(hsl(var(--dragwyb-card-foreground)/0.2) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.dragwyb-canvas__add-field {
+  width: 100%;
+}
+.dragwyb-canvas__add-field-wrapper {
+  border: 2px dashed hsl(var(--dragwyb-border)/var(--dragwyb-bg-opacity, 1));
+  background-color: hsl(var(--dragwyb-muted)/0.4);
+  padding: 20px;
+  text-align: center;
+  color: hsl(var(--dragwyb-card-foreground)/0.3);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  transition: all 0.3s ease-in-out;
+  border-radius: 5px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+.dragwyb-canvas__add-field-wrapper i {
+  font-size: 13px;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease-in-out;
+  background: hsl(var(--dragwyb-card-foreground)/0.3);
+  color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
+}
+.dragwyb-canvas__add-field-wrapper P {
+  margin: 0;
+  margin-top: 6px;
+  font-size: 17px;
+  font-weight: 600;
+  max-width: 800px;
+  line-height: 1.4;
+}
+.dragwyb-canvas__add-field-wrapper.drag-active, .dragwyb-canvas__add-field-wrapper:hover {
+  border-color: hsl(var(--dragwyb-primary)/var(--dragwyb-border-opacity, 1));
+  background-color: hsl(var(--dragwyb-primary)/12%);
+  color: hsl(var(--dragwyb-primary)/1);
+}
+.dragwyb-canvas__add-field-wrapper.drag-active i, .dragwyb-canvas__add-field-wrapper:hover i {
+  background: hsl(var(--dragwyb-primary)/1);
+}
+.dragwyb-canvas .dragwyb-editor-indicator {
+  width: 100%;
+  height: 0px;
+  display: block;
+  background-color: hsl(var(--dragwyb-primary)/12%);
+  animation: indicatorVisible 150ms ease-out forwards;
+}
+@keyframes indicatorVisible {
+  0% {
+    height: 0;
+    transform: scaleX(0.8);
+  }
+  100% {
+    height: 15px;
+    transform: scaleX(1);
+  }
+}
+.dragwyb-canvas .dragwyb-field-wrapper {
+  position: relative;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+.dragwyb-canvas .dragwyb-field-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  z-index: -1;
+}
+.dragwyb-canvas .dragwyb-field-wrapper.dragwyb-start-drag {
+  height: 0px !important;
+  overflow: hidden !important;
+  border: unset !important;
+  opacity: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.dragwyb-canvas .dragwyb-field-wrapper:hover {
+  border-color: hsl(var(--dragwyb-primary)/var(--dragwyb-border-opacity, 1));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.dragwyb-canvas .dragwyb-field-wrapper.selected {
+  border-color: hsl(var(--dragwyb-primary)/var(--dragwyb-border-opacity, 1));
+  box-shadow: 0 0 0 1px var(--rimary-color);
+}
+.dragwyb-canvas .dragwyb-field-wrapper.dragging {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.dragwyb-canvas .dragwyb-field-wrapper .field-actions {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 9999;
+  display: none;
+}
+.dragwyb-canvas .dragwyb-field-wrapper .field-actions button {
+  padding: 4px;
+  margin-left: 4px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #666;
+}
+.dragwyb-canvas .dragwyb-field-wrapper .field-actions button:hover {
+  color: hsl(var(--dragwyb-primary)/var(--dragwyb-text-opacity, 1));
+}
+.dragwyb-canvas .dragwyb-field-wrapper:hover .field-actions {
+  display: flex;
+}/*# sourceMappingURL=dragwyb-editor-preview.css.map */
