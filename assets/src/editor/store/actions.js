@@ -25,6 +25,18 @@ export const UPDATE_FIELD_ID = 'UPDATE_FIELD_ID';
 export const DELETE_FIELD_ID = 'DELETE_FIELD_ID';
 export const UPDATE_STYLE_SELECTORS = 'UPDATE_STYLE_SELECTORS';
 export const DELETE_STYLE_SELECTORS = 'DELETE_STYLE_SELECTORS';
+export const UPDATE_THEME_MODE = 'UPDATE_THEME_MODE';
+export const UPDATE_IFRAME_NODE = 'UPDATE_IFRAME_NODE';
+
+export const updateThemeMode = (themeMode) => ({
+    type: UPDATE_THEME_MODE,
+    payload: { themeMode }
+})
+
+export const updateIframeNode = (node) => ({
+    type: UPDATE_IFRAME_NODE,
+    payload: { node }
+})
 
 export const addField = ({ field, index = null }) => ({
     type: ADD_FIELD,
@@ -60,7 +72,6 @@ export const updatePopoverControls = (id, control, resetControlEvent, valueChang
     payload: { id, control, resetControlEvent, valueChangedCheck, status }
 })
 
-
 export const resetPopoverControls = () => ({
     type: RESET_POPOVER_CONTROLS
 })
@@ -80,10 +91,12 @@ export const updateFieldValues = (fieldId, value) => ({
     payload: { fieldId, value }
 });
 
-export const updateToolbarSettings = (id, value) => ({
-    type: UPDATE_TOOLBAR_SETTINGS,
-    payload: { id, value }
-});
+export const updateToolbarSettings = (id, value) => {
+    return {
+        type: UPDATE_TOOLBAR_SETTINGS,
+        payload: { id, value }
+    }
+};
 
 export const updateSelectedSettingId = (value) => ({
     type: 'UPDATE_SELECTED_SETTING_ID',

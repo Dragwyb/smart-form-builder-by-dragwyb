@@ -13,7 +13,8 @@ import {
     RESET_POPOVER_CONTROLS,
     UPDATE_SELECTED_SETTING_ID,
     UPDATE_ACTIVE_TOOLBAR,
-    UPDATE_PREVIEW_MODE,
+    UPDATE_THEME_MODE,
+    UPDATE_IFRAME_NODE,
     UPDATE_FIELD_IDS,
     UPDATE_FIELD_ID,
     DELETE_FIELD_ID,
@@ -39,10 +40,25 @@ const initialState = {
     fieldIds: [],
     selectedSettingId: false,
     activeToolbar: DragwybEditor?.EditorToolbars?.Default ?? false,
+    themeMode: localStorage.getItem("DragwybEditorTheme") || 'light'
 };
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
+
+        case UPDATE_THEME_MODE:
+            localStorage.setItem("DragwybEditorTheme", action.payload.themeMode);
+            return {
+                ...state,
+                themeMode: action.payload.themeMode
+            }
+
+        case UPDATE_IFRAME_NODE:
+            return {
+                ...state,
+                iframeEle: action.payload.node
+            }
+
         case ADD_FIELD:
             const { field, fieldIndex = null } = action.payload;
             if (!state?.form?.fields) {

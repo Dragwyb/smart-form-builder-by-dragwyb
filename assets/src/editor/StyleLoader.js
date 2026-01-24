@@ -5,47 +5,52 @@ const StyleLoader = () => {
     const styleSelectors = useSelector((state) => state.styleSelectors);
     const formId = useSelector((state) => state.form.id);
     const [styleWrapper, setStyleWrapper] = useState(null);
+    const iframeEle = useSelector(state => state?.iframeEle);
 
 
     useEffect(() => {
-        const handler = setTimeout(() => {
 
-            const cssCache = {};
-            let cssString = "";
+        if (iframeEle) {
+            const handler = setTimeout(() => {
 
-            Object.keys(styleSelectors).forEach(key => {
-                const entry = styleSelectors[key];
-                const selector = Object.keys(entry)[0];
-                const rule = Object.values(entry)[0];
+                const cssCache = {};
+                let cssString = "";
 
-                if (!cssCache[selector]) {
-                    cssCache[selector] = [];
+                Object.keys(styleSelectors).forEach(key => {
+                    const entry = styleSelectors[key];
+                    const selector = Object.keys(entry)[0];
+                    const rule = Object.values(entry)[0];
+
+                    if (!cssCache[selector]) {
+                        cssCache[selector] = [];
+                    }
+                    cssCache[selector].push(rule);
+                });
+
+                for (const selector in cssCache) {
+                    if (cssCache.hasOwnProperty(selector)) {
+                        const rules = cssCache[selector].join(';');
+                        cssString += `${selector} { ${rules} }\n`;
+                    }
                 }
-                cssCache[selector].push(rule);
-            });
 
-            for (const selector in cssCache) {
-                if (cssCache.hasOwnProperty(selector)) {
-                    const rules = cssCache[selector].join(';');
-                    cssString += `${selector} { ${rules} }\n`;
+                if (!styleWrapper && '' !== cssString) {
+                    setStyleWrapper(iframeEle.getElementById('dragwyb-form-' + formId));
                 }
-            }
 
-            if (!styleWrapper && '' !== cssString) {
-                setStyleWrapper(document.getElementById('dragwyb-form-' + formId));
-            }
+                if (styleWrapper) {
+                    styleWrapper.innerHTML = cssString;
+                }
 
-            if (styleWrapper) {
-                styleWrapper.innerHTML = cssString;
-            }
+            }, 5);
 
-        }, 5);
+            return () => {
+                clearTimeout(handler);
+            };
+        }
 
-        return () => {
-            clearTimeout(handler);
-        };
 
-    }, [styleSelectors, styleWrapper]);
+    }, [styleSelectors, styleWrapper, iframeEle]);
 
     return null;
 };

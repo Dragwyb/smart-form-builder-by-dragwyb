@@ -43,7 +43,6 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             add_action('Dragwyb_Current_Screen', [$this, 'init'], 1);
             add_filter('Dragwyb_i18n', [$this, 'localize_i18n_strings']);
             add_filter('Dragwyb/Editor/Localize_Settings', [$this, 'editor_toolbars_localize']);
-            add_action('admin_head', [$this, 'render_dynamic_style_container']);
         }
 
         public function init($screen)
@@ -194,13 +193,6 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             do_action('Dragwyb/after_enqueue/editor_scripts');
         }
 
-        public function render_dynamic_style_container()
-        {
-            $form_id = isset($_GET['form_id']) ? absint($_GET['form_id']) : 0;
-
-            echo '<style id="dragwyb-form-' . $form_id . '"></style>';
-        }
-
         private function get_fa_icons_list(): array
         {
             $icons = Icons_Helper::get_icons_list_group();
@@ -318,8 +310,13 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
 
                     $toolbar_settings = $frontend->get_toolbar_data($key);
 
-                    $data['formData'][$key] = $toolbar_data;
-                    $data[$key] = $toolbar_settings;
+                    if (!empty($toolbar_data)) {
+                        $data['formData'][$key] = $toolbar_data;
+                    }
+
+                    if (!empty($toolbar_settings)) {
+                        $data[$key] = $toolbar_settings;
+                    }
                 }
             }
 

@@ -14,6 +14,10 @@ class Form_Preview
 {
     private static $instance = null;
 
+    private static $form_id = 0;
+
+    private static $is_iframe_mode = false;
+
     public static function instance(): self
     {
         if (null === self::$instance) {
@@ -26,6 +30,7 @@ class Form_Preview
     public function __construct()
     {
         add_action('template_redirect', [$this, 'init']);
+        add_action('wp_head', [$this, 'render_dynamic_style_container']);
     }
 
     public function init()
@@ -37,7 +42,9 @@ class Form_Preview
 
             if (isset($_GET['dragwyb_iframe_mode']) && $_GET['dragwyb_iframe_mode'] === 'true') {
                 $frontend_render = Frontend_Render::instance();
-                $frontend_render->init(absint($_GET['p']));
+                self::$form_id = absint($_GET['p']);
+                self::$is_iframe_mode = true;
+                $frontend_render->init(self::$form_id);
                 $frontend_render->enqueue_static_assets();
                 $this->enqueue_editor_preview_styles();
                 $this->enqueue_editor_preview_scripts();
@@ -65,6 +72,14 @@ class Form_Preview
             // 4. STOP EXECUTION
             exit;
         }
+    }
+
+    public function render_dynamic_style_container()
+    {
+        if (!self::$form_id || !self::$is_iframe_mode) {
+            return;
+        }
+        echo '<style id="dragwyb-form-' . self::$form_id . '"></style>';
     }
 
     public function enqueue_editor_preview_styles()

@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useDispatch } from 'react-redux';
+import { updateIframeNode } from '../store/actions';
 
-const PreviewIframe = ({ children, url }) => {
+const PreviewIframe = ({ children, url, style }) => {
     const [mountNode, setMountNode] = useState(null);
+    const dispatch = useDispatch();
 
     const iframeSrc = `${url}&dragwyb_iframe_mode=true`;
 
@@ -10,16 +13,11 @@ const PreviewIframe = ({ children, url }) => {
         const iframe = event.target;
         const doc = iframe.contentWindow.document;
 
-        const targetDiv = doc.getElementById('dragwyb-iframe-root');
-
-        if (targetDiv) {
-            setMountNode(targetDiv);
-            // Add a class for specific iframe styling if needed
-            doc.body.classList.add('dragwyb-iframe-body');
-        } else {
-            console.warn("Dragwyb: Iframe root #dragwyb-iframe-root not found. Falling back to body.");
-            setMountNode(doc.body);
-        }
+        setMountNode(doc.body);
+        setTimeout(() => {
+            dispatch(updateIframeNode(doc));
+            jQuery(document).trigger('Dragwyb:editorAppLoaded');
+        }, 2000);
     };
 
     return (
@@ -32,7 +30,8 @@ const PreviewIframe = ({ children, url }) => {
                 width: '100%',
                 height: '100%',
                 border: 'none',
-                display: 'block'
+                display: 'block',
+                ...style,
             }}
         >
             {mountNode && createPortal(children, mountNode)}

@@ -146,7 +146,7 @@ const Canvas = ({
 }) => {
     const values = useSelector((state) => state.values);
     const formData = useSelector((state) => state.form);
-    const fields = formData.fields;
+    const fields = formData.fields || [];
     const errors = useSelector((state) => state.errors);
 
     const dispatch = useDispatch();

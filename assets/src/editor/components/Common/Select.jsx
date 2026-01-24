@@ -103,7 +103,6 @@ const Select = ({
     };
 
     const handleKeyDown = (e) => {
-        console.log("testing")
         if (!isOpen) {
             if (e.key === "Enter" || e.key === "ArrowDown") {
                 e.preventDefault();

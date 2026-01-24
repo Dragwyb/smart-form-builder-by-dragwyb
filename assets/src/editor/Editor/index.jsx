@@ -20,8 +20,11 @@ import ToolBar from "../Toolbar/Toolbar";
 import Header from "./header";
 import ToolbarSettings from "../Toolbar/ToolbarSettings";
 import PreviewIframe from "./PreviewIframe";
+import PreviewLoading from "./previewLoading";
 
 const Editor = () => {
+    const iframeEle = useSelector(state => state?.iframeEle);
+
     const [activeDrag, setActiveDrag] = useState(null);
     const [dropIndex, setDropIndex] = useState(false);
     const [dropIndicatorPosition, setDropIndicatorPosition] = useState(false);
@@ -75,8 +78,6 @@ const Editor = () => {
                 y: rect.y + iframeRect.top,
             };
         }
-
-        console.log(rect.top)
 
         // Standard measuring for everything else
         return {
@@ -236,6 +237,7 @@ const Editor = () => {
 
     return (
         <div className="dragwyb-editor">
+            {!iframeEle && <PreviewLoading />}
             <Header />
 
             <div className="dragwyb-editor__body">
@@ -277,7 +279,7 @@ const Editor = () => {
                         />
                     )}
 
-                    <PreviewIframe url={PREVIEW_URL}>
+                    <PreviewIframe url={PREVIEW_URL} style={{ display: iframeEle ? 'block' : 'none' }}>
                         <Canvas
                             onFieldSelect={setSelectedSettingId}
                             Utils={Utils}
