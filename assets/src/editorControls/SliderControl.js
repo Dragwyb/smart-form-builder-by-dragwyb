@@ -1,7 +1,6 @@
 import UnitSelector from './common/UnitSelector';
 import Slider from '../editor/components/Common/Slider';
 import Reset from '../editor/components/Common/Reset';
-import ObjectCompare from './common/ObjectCompare';
 
 export default class SliderControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
@@ -98,6 +97,6 @@ export default class SliderControl extends DragwybEditor.editor.extends.ControlB
 
         let defaultVal = { size: this.getValidValue(defaultValue.size, "", 0), unit: this.getValidValue(defaultValue.unit, "px", 'px') }
 
-        return !ObjectCompare(defaultVal, currentValue);
+        return !this.Utils.compareTwoObjects({ obj1: defaultVal, obj2: currentValue });
     }
 }

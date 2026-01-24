@@ -1,7 +1,6 @@
 import UnitSelector from "./common/UnitSelector";
 import Reset from "../editor/components/Common/Reset";
 import { RiLink, RiLinkUnlink } from "react-icons/ri";
-import ObjectCompare from "./common/ObjectCompare";
 
 export default class DimensionsControl extends DragwybEditor.editor.extends
     .ControlBase {
@@ -212,6 +211,6 @@ export default class DimensionsControl extends DragwybEditor.editor.extends
             linked: this.getValidValue(defaultValue.linked, false),
         };
 
-        return !ObjectCompare(defaultVal, currentValue);
+        return !this.Utils.compareTwoObjects({ obj1: defaultVal, obj2: currentValue });
     }
 }
