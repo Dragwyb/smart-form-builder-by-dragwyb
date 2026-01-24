@@ -31,6 +31,7 @@ class Form_Preview
     {
         add_action('template_redirect', [$this, 'init']);
         add_action('wp_head', [$this, 'render_dynamic_style_container']);
+        add_action('Dragwyb/Editor/Preview/Init', [$this, 'init_iframe']);
     }
 
     public function init()
@@ -41,6 +42,7 @@ class Form_Preview
             if (function_exists('status_header')) status_header(200);
 
             if (isset($_GET['dragwyb_iframe_mode']) && $_GET['dragwyb_iframe_mode'] === 'true') {
+                do_action('Dragwyb/Editor/Preview/Init');
                 $frontend_render = Frontend_Render::instance();
                 self::$form_id = absint($_GET['p']);
                 self::$is_iframe_mode = true;
@@ -72,6 +74,17 @@ class Form_Preview
             // 4. STOP EXECUTION
             exit;
         }
+    }
+
+    public function init_iframe()
+    {
+        // font-awesome@5.15.4
+        wp_enqueue_style(
+            'dragwyb-font-awesome',
+            DRAGWYB_FORM_BUILDER_URL . 'assets/font-awesome/v5/all.min.css',
+            [],
+            '5.15.4'
+        );
     }
 
     public function render_dynamic_style_container()

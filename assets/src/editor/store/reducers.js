@@ -40,7 +40,7 @@ const initialState = {
     fieldIds: [],
     selectedSettingId: false,
     activeToolbar: DragwybEditor?.EditorToolbars?.Default ?? false,
-    themeMode: localStorage.getItem("DragwybEditorTheme") || 'light'
+    themeMode: localStorage.getItem("DragwybEditorTheme") || 'dark'
 };
 
 export default function reducer(state = initialState, action) {

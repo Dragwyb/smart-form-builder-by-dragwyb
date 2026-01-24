@@ -15,6 +15,8 @@ const Header = () => {
     const formStatus = useSelector(state => state?.form?.advance?.form_status || DragwybEditor.formData.status);
     const themeMode = useSelector(state => state?.themeMode || 'light');
     const iframeEle = useSelector(state => state.iframeEle);
+    const pluginUrl = DragwybEditor.pluginUrl;
+    const pluginPath = DragwybEditor.pluginPath;
 
     const dispatch = useDispatch();
     const store = useStore();
@@ -52,6 +54,7 @@ const Header = () => {
     return (
         <div className="dragwyb-editor__header">
             <div className="dragwyb-editor__details">
+                <img src={pluginUrl + 'assets/img/logo1.png'} alt="Dragwyb Form Builder" width={40} />
                 <h2>Dragwyb Form Builder</h2>
             </div>
 

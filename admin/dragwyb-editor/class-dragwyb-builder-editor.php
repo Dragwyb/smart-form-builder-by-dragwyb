@@ -175,6 +175,8 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
 
             $localize_data = [
                 'ajaxUrl' => admin_url('admin-ajax.php'),
+                'pluginUrl' => DRAGWYB_FORM_BUILDER_URL,
+                'pluginPath' => DRAGWYB_FORM_BUILDER_PATH,
                 'nonce' => wp_create_nonce('dragwyb_editor'),
                 'formId' => (int) self::$form_id,
                 'editorContainer' => esc_html(self::Current_Page) . '-editor-container',
@@ -202,11 +204,12 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
 
         private function external_libs(): void
         {
+            // font-awesome@5.15.4
             wp_enqueue_style(
                 'dragwyb-font-awesome',
                 DRAGWYB_FORM_BUILDER_URL . 'assets/font-awesome/v5/all.min.css',
                 [],
-                '6.7.2'
+                '5.15.4'
             );
 
             // @simonwep/pickr@1.9.1 style
@@ -214,7 +217,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 'dragwyb-pickr',
                 DRAGWYB_FORM_BUILDER_URL . 'assets/lib/pickr/css/index.css',
                 [],
-                '6.7.2'
+                '1.9.1'
             );
 
             // @simonwep/pickr@1.9.1 script

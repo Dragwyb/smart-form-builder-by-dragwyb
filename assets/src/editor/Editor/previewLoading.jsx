@@ -1,4 +1,5 @@
 const PreviewLoading = () => {
+    const pluginUrl = DragwybEditor.pluginUrl;
     return (
         <div className="dragwyb-editor-loader-wrapper">
             <div className="dragwyb-editor-loader-container">
@@ -15,18 +16,7 @@ const PreviewLoading = () => {
 
                     {/* Professional Form Preview */}
                     <div className="dragwyb-editor-loader-form-preview">
-                        <div className="dragwyb-editor-loader-field-line dragwyb-editor-loader-w-30"></div>
-
-                        <div className="dragwyb-editor-loader-form-row">
-                            <div className="dragwyb-editor-loader-field-line dragwyb-editor-loader-w-50"></div>
-                            <div className="dragwyb-editor-loader-field-line dragwyb-editor-loader-w-50"></div>
-                        </div>
-
-                        <div className="dragwyb-editor-loader-field-line dragwyb-editor-loader-w-100"></div>
-                        <div className="dragwyb-editor-loader-field-line dragwyb-editor-loader-w-100"></div>
-                        <div className="dragwyb-editor-loader-field-line dragwyb-editor-loader-w-100"></div>
-
-                        <div className="dragwyb-editor-loader-field-line dragwyb-editor-loader-btn-fill"></div>
+                        <img src={pluginUrl + 'assets/img/logo1.png'} alt="Dragwyb Form Builder" />
                     </div>
                 </div>
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Admin\Dragwyb_Pages;
 
+use Dragwyb\Form_Builder\Admin\Dragwyb_Editor\Dragwyb_Builder_Editor;
 use Dragwyb\Form_Builder\Admin\Form_Overview\Form_Overview;
 
 class Dragwyb_Pages
@@ -43,7 +44,7 @@ class Dragwyb_Pages
             'manage_options',
             DRAGWYB_PREFIX . '-form-overview',
             [$this, 'dragwyb_render_page'],
-            'dashicons-forms',
+            DRAGWYB_FORM_BUILDER_URL . 'assets/img/menu-logo.png',
             20
         );
 

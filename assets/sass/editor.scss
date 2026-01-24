@@ -424,70 +424,18 @@ body {
         }
 
         &-form-preview {
-            width: 100px;
-            height: 130px;
-            // Border uses primary with opacity
-            border: 1.5px solid hsl(var(--dragwyb-primary) / 0.2);
+            width: 170px;
             border-radius: var(--dragwyb-radius);
             padding: 14px;
-            // Uses card background for light/dark mode compatibility
-            background: hsl(var(--dragwyb-card) / 0.6);
-            backdrop-filter: blur(8px);
             display: flex;
+            justify-content: center;
             flex-direction: column;
             gap: 10px;
             animation: app-loader-bounceIn 2s cubic-bezier(0.68, -0.6, 0.32, 1.6) infinite alternate;
-            box-shadow: var(--dragwyb-shadow-xl);
-        }
 
-        &-form-row {
-            display: flex;
-            gap: 6px;
-            width: 100%;
-        }
-
-        &-field-line {
-            height: 12px;
-            // Uses muted/border colors for field lines
-            background: hsl(var(--dragwyb-muted) / 0.8);
-            border-radius: 3px;
-            position: relative;
-            overflow: hidden;
-
-            &::after {
-                content: "";
-                position: absolute;
-                top: 0;
-                left: -100%;
-                width: 50%;
-                height: 100%;
-                background: linear-gradient(90deg, transparent, hsl(var(--dragwyb-primary) / 0.2), transparent);
-                animation: app-loader-shimmer 1.5s infinite;
+            img {
+                width: 100%;
             }
-        }
-
-        &-w-30 {
-            width: 30%;
-            height: 5px !important;
-            background: hsl(var(--dragwyb-primary) / 0.4) !important;
-            margin-bottom: 4px;
-        }
-
-        &-w-50 {
-            width: 50%;
-        }
-
-        &-w-100 {
-            width: 100%;
-        }
-
-        &-btn-fill {
-            background: hsl(var(--dragwyb-primary) / 1) !important;
-            margin-top: auto;
-            height: 26px !important;
-            box-shadow: 0 4px 12px hsl(var(--dragwyb-primary) / 0.3);
-            border-radius: 4px;
-            opacity: 0.9;
         }
 
         &-bottom-ui {
@@ -1613,16 +1561,6 @@ $dropdown-max-height: 250px;
     50% {
         opacity: 1;
         transform: scale(1.2);
-    }
-}
-
-@keyframes app-loader-shimmer {
-    0% {
-        left: -100%;
-    }
-
-    100% {
-        left: 200%;
     }
 }
 
