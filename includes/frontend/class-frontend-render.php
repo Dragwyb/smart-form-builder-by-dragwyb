@@ -388,6 +388,10 @@ class Frontend_Render
                             $repeater_controls_instance_cache[$item_control_id] = $repeater_control_manager::newInstance();
                         }
 
+                        if (!$this->control_render_conditions($control_config['items'][$item_control_id], $control_config['items'], $item['attributes'])) {
+                            continue;
+                        }
+
                         $repeater_controls_instance_cache[$item_control_id]->set_value($item_control_data, $item_control_id);
                         $repeater_item_value = $repeater_controls_instance_cache[$item_control_id]->get_value();
 
@@ -411,6 +415,10 @@ class Frontend_Render
             $control_instance = $control_manager::newInstance();
             $control_instance->set_value($setting_value, $control_id, $control_config);
             $control_value = $control_instance->get_value();
+
+            if (!$this->control_render_conditions($control_config, $controls, $settings)) {
+                continue;
+            }
 
             // google fonts cache
             $this->fonts_family_cache($control_instance, $control_value);
@@ -463,11 +471,13 @@ class Frontend_Render
         $property = str_ends_with($property, ';') ? $property : $property . ';';
 
         if (defined('DRAGWYB_EDITOR') && true === DRAGWYB_EDITOR) {
-            $unique_key = sanitize_text_field($type) . '_' . sanitize_text_field($control_id);
+            $unique_key = sanitize_text_field($type);
 
             if ($field_id && is_string($field_id)) {
                 $unique_key .= '_' . sanitize_text_field($field_id);
             }
+
+            $unique_key .= '_' . sanitize_text_field($control_id);
 
             if ($current_item && is_string($current_item)) {
                 $unique_key .= '_' . sanitize_text_field($current_item);
@@ -516,6 +526,64 @@ class Frontend_Render
         if (isset(self::$google_fonts_cache[sanitize_text_field($value)]) && 'google' === self::$google_fonts_cache[sanitize_text_field($value)] && (!isset(self::$google_fonts) || !in_array(sanitize_text_field($value), self::$google_fonts))) {
             self::$google_fonts[] = sanitize_text_field($value);
         }
+    }
+
+    /**
+     * Helper: Check if a control should be rendered based on conditions
+     */
+    private function control_render_conditions($current_control, $controls, $settings): bool
+    {
+        $conditions = $current_control['conditions'] ?? null;
+
+        // If no conditions or not an array, allow rendering
+        if (empty($conditions) || !is_array($conditions)) {
+            return true;
+        }
+
+        foreach ($conditions as $key => $expected) {
+            // Check if key ends with "!"
+            $is_not = (substr($key, -1) === '!');
+
+            // Remove the "!" to get the real control ID
+            $clean_key = $is_not ? substr($key, 0, -1) : $key;
+
+            // We look up the dependency control config using the clean key
+            if (isset($controls[$clean_key])) {
+                $dependency_control = $controls[$clean_key];
+                $type = $dependency_control['type'] ?? '';
+
+                // If the dependency is just a layout element, ignore this condition
+                if (in_array($type, ['section', 'tabs'], true)) {
+                    continue;
+                }
+            }
+
+            if (!isset($settings[$clean_key]) && $clean_key === 'section') {
+                continue;
+            }
+
+            // We use array_key_exists to ensure we catch null values correctly
+            if (!array_key_exists($clean_key, $settings) && $clean_key !== 'section') {
+                return false;
+            }
+
+            $actual = $settings[$clean_key];
+
+            // 4. Comparison Logic
+            if ($is_not) {
+                // Logic: Fail if they ARE equal
+                if ($actual === $expected) {
+                    return false;
+                }
+            } else {
+                // Logic: Fail if they are NOT equal
+                if ($actual !== $expected) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     private function clean_old_data(): void
