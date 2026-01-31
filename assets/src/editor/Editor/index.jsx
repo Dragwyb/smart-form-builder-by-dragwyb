@@ -23,8 +23,6 @@ import PreviewIframe from "./PreviewIframe";
 import PreviewLoading from "./previewLoading";
 
 const Editor = () => {
-    const iframeEle = useSelector(state => state?.iframeEle);
-
     const [activeDrag, setActiveDrag] = useState(null);
     const [dropIndex, setDropIndex] = useState(false);
     const [dropIndicatorPosition, setDropIndicatorPosition] = useState(false);
@@ -64,7 +62,7 @@ const Editor = () => {
 
         const iframe = document.getElementById('dragwyb-preview-iframe');
 
-        if (iframe && node.ownerDocument !== document) {
+        if (iframe && node.ownerDocument === iframe.contentDocument) {
             const iframeRect = iframe.getBoundingClientRect();
 
             return {
@@ -228,7 +226,7 @@ const Editor = () => {
 
     return (
         <div className="dragwyb-editor">
-            {!iframeEle && <PreviewLoading />}
+            <PreviewLoading />
             <Header />
 
             <div className="dragwyb-editor__body">
@@ -270,7 +268,7 @@ const Editor = () => {
                         />
                     )}
 
-                    <PreviewIframe url={PREVIEW_URL} style={{ display: iframeEle ? 'block' : 'none' }}>
+                    <PreviewIframe url={PREVIEW_URL}>
                         <Canvas
                             onFieldSelect={setSelectedSettingId}
                             Utils={Utils}

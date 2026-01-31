@@ -178,24 +178,73 @@
     --dragwyb-shadow-2xl: 0px 25px 50px -12px hsl(103 17% 2% / 0.5);
 }
 
+/* Custom Scrollbar */
+.dragwyb-scrollbar {
+    &-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    &-content {
+        width: 100%;
+        height: 100%;
+        overflow-y: scroll;
+
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+
+        &::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            display: none;
+        }
+    }
+
+    &-track {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 8px;
+        background: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
+        z-index: 100;
+        border-radius: 4px;
+
+        &:hover {
+            .dragwyb-scrollbar-thumb {
+                background-color: hsl(var(--dragwyb-border)/var(--dragwyb-bg-opacity, 1));
+            }
+        }
+    }
+
+    &-thumb {
+        width: 100%;
+        background-color: hsl(var(--dragwyb-border)/var(--dragwyb-bg-opacity, 1));
+        border-radius: 4px;
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        transition: background-color 0.2s;
+
+        &.active {
+            background-color: hsl(var(--dragwyb-border)/var(--dragwyb-bg-opacity, 1));
+        }
+    }
+}
+
 
 .dragwyb-editor {
 
     // Variables
     --primary-light-color: #e0e7ff;
     --dragwyb-primary-hover: 108deg 82.99% 40.02%;
-    --secondary-color: #6b7280;
     --secondary-hover-color: #374151;
-    --secondary-color: #1d2327;
     --border-color: #e1e7ef;
-    --background-color: #f0f0f1;
     --success-color: #00a32a;
     --error-color: #d63638;
 
-    --topbar-bg-color: #f9fafb;
-    --sidebar-bg-color: #edf0f2;
-    --canvas-bg-color: #f2f4f5;
-    --canvas-inner-clor: #f3f5f6;
     --panel-width: 330px;
 
     --cubic-transition: all cubic-bezier(0.4, 0, 0.2, 1) 150ms;
@@ -205,19 +254,11 @@
         --primary-color: #4f46e5;
         --primary-light-color: #e0e7ff;
         // --primary-hover-color: #4338ca;
-        --secondary-color: #6b7280;
         --secondary-hover-color: #374151;
         // --primary-color: #2271b1;
-        --secondary-color: #1d2327;
         --border-color: #e1e7ef;
-        --background-color: #f0f0f1;
         --success-color: #00a32a;
         --error-color: #d63638;
-
-        --topbar-bg-color: #0a2131;
-        --sidebar-bg-color: #052033;
-        --canvas-bg-color: #081726;
-        --canvas-inner-clor: #fff;
     }
 }
 
@@ -1057,7 +1098,6 @@ body {
     &__content {
         font-family: "Segoe UI", Tahoma, sans-serif;
         height: calc(100% - 61px);
-        overflow-y: auto;
 
         &::-webkit-scrollbar {
             width: 8px;
@@ -1079,6 +1119,7 @@ body {
 
     &__settings {
         position: relative;
+        height: calc(100% - 39px);
     }
 }
 

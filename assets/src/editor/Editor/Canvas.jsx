@@ -4,6 +4,7 @@ import { useDraggable, useDroppable } from "../components/Common";
 import * as Fields from "./Fields";
 import { duplicateField } from "../store/actions";
 import { __ } from "@wordpress/i18n";
+import Scrollbar from "../components/Scrollbar";
 
 const RenderItem = ({
     field,
@@ -183,7 +184,7 @@ const Canvas = ({
     }
 
     return (
-        <>
+        <Scrollbar  >
             <div className="dragwyb-editor__main">
                 <div className="dragwyb-canvas-wrapper" ref={setNodeRef}>
                     <div className={canvasCls}>
@@ -218,7 +219,7 @@ const Canvas = ({
                     </div>
                 </div>
             </div>
-        </>
+        </Scrollbar>
     );
 };
 

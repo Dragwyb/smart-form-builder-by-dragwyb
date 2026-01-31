@@ -1,4 +1,11 @@
+import React from 'react';
+import { useSelector } from 'react-redux';
+
 const PreviewLoading = () => {
+    const iframeEle = useSelector(state => state?.iframeEle);
+
+    if (iframeEle) return null;
+
     const pluginUrl = DragwybEditor.pluginUrl;
     return (
         <div className="dragwyb-editor-loader-wrapper">

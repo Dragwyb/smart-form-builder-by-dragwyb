@@ -140,12 +140,56 @@ html {
   padding: 0 !important;
 }
 
+/* Custom Scrollbar */
+.dragwyb-scrollbar-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.dragwyb-scrollbar-content {
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.dragwyb-scrollbar-content::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+.dragwyb-scrollbar-track {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 8px;
+  background: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
+  z-index: 100;
+  border-radius: 4px;
+}
+.dragwyb-scrollbar-track:hover .dragwyb-scrollbar-thumb {
+  background-color: hsl(var(--dragwyb-border)/var(--dragwyb-bg-opacity, 1));
+}
+.dragwyb-scrollbar-thumb {
+  width: 100%;
+  background-color: hsl(var(--dragwyb-border)/var(--dragwyb-bg-opacity, 1));
+  border-radius: 4px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  transition: background-color 0.2s;
+}
+.dragwyb-scrollbar-thumb.active {
+  background-color: hsl(var(--dragwyb-border)/var(--dragwyb-bg-opacity, 1));
+}
+
 .dragwyb-editor__main {
   flex: 1;
   padding: 20px;
   background-color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
-  overflow: auto;
-  height: 100%;
+  height: unset;
   background-image: radial-gradient(hsl(var(--dragwyb-card-foreground)/0.2) 1px, transparent 1px);
   background-size: 24px 24px;
 }
@@ -237,7 +281,7 @@ html {
   height: 0px !important;
   overflow: hidden !important;
   border: unset !important;
-  opacity: 0 !important;
+  opacity: 0.5 !important;
   padding: 0 !important;
   margin: 0 !important;
 }

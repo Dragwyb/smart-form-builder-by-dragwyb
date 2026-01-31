@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { useDispatch } from 'react-redux';
 import { updateIframeNode } from '../store/actions';
 
-const PreviewIframe = ({ children, url, style }) => {
+const PreviewIframe = ({ children, url, style = {} }) => {
     const [mountNode, setMountNode] = useState(null);
     const dispatch = useDispatch();
 
@@ -13,8 +13,8 @@ const PreviewIframe = ({ children, url, style }) => {
         const iframe = event.target;
         const doc = iframe.contentWindow.document;
 
-        setMountNode(doc.body);
         setTimeout(() => {
+            setMountNode(doc.body);
             dispatch(updateIframeNode(doc));
             jQuery(document).trigger('Dragwyb:editorAppLoaded');
         }, 1500);

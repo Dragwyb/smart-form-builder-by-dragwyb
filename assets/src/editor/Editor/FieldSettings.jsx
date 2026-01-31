@@ -4,6 +4,7 @@ import { updateSectionSettings, resetSectionSettings } from '../store/actions';
 import { Panel } from '../components/Common';
 import DragwybControlBase from '../controlBase'
 import RenderControl from './RenderControls';
+import Scrollbar from '../components/Scrollbar';
 
 const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingChange, onClose }) => {
 
@@ -90,22 +91,24 @@ const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingCh
                 </div>
             }
             <div className="dragwyb-panel__settings">
-                {Object.keys(toolbarSettings.controls).map(key => (
-                    <>
-                        {key === 'header_controls' ? null
-                            : <RenderControl
-                                key={key}
-                                selectedToolbar={selectedTab}
-                                selectedTab={toolbarSettings.id}
-                                controlKey={key}
-                                settings={toolbarSettings.controls[key]}
-                                fieldValue={toolbarValue}
-                                handleChange={handleChange}
-                                defautlActiveSection={defautlActiveSection}
-                                defautlActiveTab={defautlActiveTab}
-                            />}
-                    </>
-                ))}
+                <Scrollbar>
+                    {Object.keys(toolbarSettings.controls).map(key => (
+                        <>
+                            {key === 'header_controls' ? null
+                                : <RenderControl
+                                    key={key}
+                                    selectedToolbar={selectedTab}
+                                    selectedTab={toolbarSettings.id}
+                                    controlKey={key}
+                                    settings={toolbarSettings.controls[key]}
+                                    fieldValue={toolbarValue}
+                                    handleChange={handleChange}
+                                    defautlActiveSection={defautlActiveSection}
+                                    defautlActiveTab={defautlActiveTab}
+                                />}
+                        </>
+                    ))}
+                </Scrollbar>
             </div>
         </Panel>
     );
