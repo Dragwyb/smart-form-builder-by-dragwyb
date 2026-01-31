@@ -143,12 +143,20 @@ class Fields extends DragwybEditor.editor.extends.ToolbarBase {
 
   updateToolbarHandler = (key, value) => {
 
+    const data = this.toolbarData;
+
     if (this.toolbarData) {
       let valueUpdate = false;
       this.toolbarData.map(field => {
         if (field._id === this.settingId && field.attributes) {
           valueUpdate = true;
           field.attributes[key] = value;
+
+          if (field.type && typeof DragwybEditor.fields.fields[field.type]?.controls?.[key]?.default === 'object' && this.Utils.compareTwoObjects({ obj1: DragwybEditor.fields.fields[field.type].controls[key].default, obj2: value })) {
+            delete field.attributes[key];
+          } else if (DragwybEditor.fields.fields[field.type]?.controls?.[key]?.default === value) {
+            delete field.attributes[key];
+          }
         }
       })
 
