@@ -42,7 +42,6 @@ class Settings extends Register_Controls_Base
             'type'    => Controls::TEXT,
             'label'   => __('Form ID', 'dragwyb-form-builder'),
             'default' => sanitize_text_field($form_id),
-            'description' => __('Unique identifier (auto-generated). Change only if required.', 'dragwyb-form-builder'),
         ]);
 
         $this->add_control('form_status', [
@@ -51,6 +50,7 @@ class Settings extends Register_Controls_Base
             'options' => [
                 'draft'   => __('Draft', 'dragwyb-form-builder'),
                 'publish'  => __('Published', 'dragwyb-form-builder'),
+                'private'  => __('Private', 'dragwyb-form-builder'),
             ],
             'default' => sanitize_text_field($form_status),
             'label_inline' => true,
@@ -58,26 +58,7 @@ class Settings extends Register_Controls_Base
 
         $this->end_section();
 
-        // 🔹 Display Options
-        $this->start_section('display_options', [
-            'label' => __('Display Options', 'dragwyb-form-builder'),
-        ]);
-
-        $this->add_control('enable_popup', [
-            'type'    => Controls::SWITCHER,
-            'label'   => __('Open in Popup', 'dragwyb-form-builder'),
-            'default' => 'no',
-        ]);
-
-        $this->add_control('multi_step', [
-            'type'    => Controls::SWITCHER,
-            'label'   => __('Enable Multi-Step Form', 'dragwyb-form-builder'),
-            'default' => 'no',
-        ]);
-
-        $this->end_section();
-
-        // 🔹 Performance & Behavior
+        // Performance & Behavior
         $this->start_section('performance', [
             'label' => __('Performance & Behavior', 'dragwyb-form-builder'),
         ]);
@@ -85,38 +66,74 @@ class Settings extends Register_Controls_Base
         $this->add_control('ajax_submit', [
             'type'    => Controls::SWITCHER,
             'label'   => __('Enable AJAX Submission', 'dragwyb-form-builder'),
-            'default' => 'no',
+            'default' => 'yes',
+            'description' => __('Submit form without reloading the page.', 'dragwyb-form-builder'),
+        ]);
+
+        $this->add_control('reset_after_submit', [
+            'type'    => Controls::SWITCHER,
+            'label'   => __('Reset Form After Submit', 'dragwyb-form-builder'),
+            'default' => 'yes',
         ]);
 
         $this->add_control('save_progress', [
             'type'    => Controls::SWITCHER,
-            'label'   => __('Save & Continue Later', 'dragwyb-form-builder'),
+            'label'   => __('Auto-Save Progress (Local)', 'dragwyb-form-builder'),
             'default' => 'no',
+            'description' => __('Saves inputs to browser storage so data isn\'t lost on refresh.', 'dragwyb-form-builder'),
         ]);
 
         $this->end_section();
 
-        // 🔹 Security & Privacy
+        // Form Restrictions (Great for Contests)
+        $this->start_section('restrictions', [
+            'label' => __('Restrictions', 'dragwyb-form-builder'),
+        ]);
+
+        $this->add_control('limit_entries', [
+            'type'    => Controls::SWITCHER,
+            'label'   => __('Limit Number of Entries', 'dragwyb-form-builder'),
+            'default' => 'no',
+        ]);
+
+        $this->add_control('max_entries', [
+            'type'    => Controls::NUMBER,
+            'label'   => __('Max Entries Allowed', 'dragwyb-form-builder'),
+            'default' => 100,
+            'min'     => 1,
+            'conditions' => [
+                'limit_entries' => true
+            ]
+        ]);
+
+        $this->add_control('limit_message', [
+            'type'    => Controls::TEXTAREA,
+            'label'   => __('Message when limit reached', 'dragwyb-form-builder'),
+            'default' => __('This form is no longer accepting submissions.', 'dragwyb-form-builder'),
+            'conditions' => [
+                'limit_entries' => true
+            ]
+        ]);
+
+        $this->end_section();
+
+        // Security & Privacy
         $this->start_section('security', [
             'label' => __('Security & Privacy', 'dragwyb-form-builder'),
         ]);
 
-        $this->add_control('gdpr_consent', [
-            'type'    => Controls::SWITCHER,
-            'label'   => __('Enable GDPR Consent Field', 'dragwyb-form-builder'),
-            'default' => false,
-        ]);
-
         $this->add_control('honeypot', [
             'type'    => Controls::SWITCHER,
-            'label'   => __('Enable Honeypot Protection', 'dragwyb-form-builder'),
-            'default' => 'no',
+            'label'   => __('Enable Honeypot (Anti-Spam)', 'dragwyb-form-builder'),
+            'default' => 'yes',
+            'description' => __('Adds an invisible field to trap bots.', 'dragwyb-form-builder'),
         ]);
 
         $this->add_control('recaptcha', [
             'type'    => Controls::SWITCHER,
-            'label'   => __('Enable reCAPTCHA (if configured)', 'dragwyb-form-builder'),
+            'label'   => __('Enable reCAPTCHA', 'dragwyb-form-builder'),
             'default' => 'no',
+            'description' => __('Requires API Keys in Global Settings.', 'dragwyb-form-builder'),
         ]);
 
         $this->end_section();
