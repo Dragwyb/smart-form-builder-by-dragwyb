@@ -8,12 +8,12 @@ class textField extends DragwybEditor.editor.extends.FieldBase {
 
         return (
             <label for={this.id}>
-            {this.attributes?.text_label && this.attributes.text_label}
-            <input
-                type={this.fieldName}
-                value={this.value}
-                id={this.id}
-                onChange={(e) => this.updateField(this.id, e.target.value)} />
+                {this.attributes?.text_label && this.attributes.text_label}
+                <input
+                    type={this.fieldName}
+                    value={this.value}
+                    id={this.id}
+                    onChange={(e) => this.updateField(this.id, e.target.value)} />
             </label>
         );
     }
@@ -121,6 +121,55 @@ class emailField extends DragwybEditor.editor.extends.FieldBase {
     }
 }
 
+class ButtonField extends DragwybEditor.editor.extends.FieldBase {
+
+    // Unique identifier for this field type
+    fieldName() {
+        return 'button';
+    }
+
+    // Main render method
+    bind() {
+        if (!this.shouldRender()) return <></>;
+
+        // 1. Get Settings (Defaults match your PHP)
+        const text = this.attributes.text || 'Submit';
+        const align = this.attributes.button_align || 'left';
+        const width = this.attributes.width || 'auto';
+        const action = this.attributes.button_action || 'submit'; // 'submit' or 'reset'
+
+        // 2. Build Classes
+        let btnClasses = `dragwyb-btn dragwyb-btn-${action}`;
+        if (width === '100%') {
+            btnClasses += ' dragwyb-btn-block';
+        }
+
+        // 3. Wrapper Style for Alignment
+        const wrapperStyle = {
+            textAlign: align,
+            marginTop: '10px' // Visual separation in editor
+        };
+
+        return (
+            <div
+                className="dragwyb-field-button-wrapper"
+                style={wrapperStyle}
+            >
+                <button
+                    type="button" // Always 'button' in editor to prevent form submission
+                    className={btnClasses}
+                    id={`dragwyb_btn_${this.id}`}
+                    // Prevent default action in editor
+                    onClick={(e) => e.preventDefault()}
+                    type={action}
+                >
+                    {text}
+                </button>
+            </div>
+        );
+    }
+}
+
 const initializeFields = () => {
     const defaultFields = {
         'text': (args) => new textField(args),
@@ -129,6 +178,7 @@ const initializeFields = () => {
         'radio': (args) => new radioField(args),
         'file': (args) => new fileField(args),
         'email': (args) => new emailField(args),
+        'button': (args) => new ButtonField(args),
     };
 
     Object.keys(defaultFields).forEach(key =>
@@ -139,6 +189,6 @@ const initializeFields = () => {
     );
 };
 
-jQuery(document).on('Dragwyb:editorInit', () => {   
+jQuery(document).on('Dragwyb:editorInit', () => {
     initializeFields();
 });
