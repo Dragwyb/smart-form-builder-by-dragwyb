@@ -9,18 +9,18 @@ const ControlsConditions = ({ conditions, updateHandler, controlKey }) => {
     if (!setting) {
         return null;
     }
-    
+
     if (conditions && Object.keys(conditions).length > 0) {
         const formData = useSelector(state => state.form);
-        
+
         const toolbarData = selectedToolbar && formData[setting];
         const toolbarSettings = DragwybEditor[setting];
         const sectionSettings = useSelector(state => state.sectionSettings);
-        
+
         let toolBarHtml = false;
-        
+
         let toolBarObject = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/toolbarRender/' + setting, toolBarHtml, setting, selectedToolbar, toolbarData, toolbarSettings);
-        
+
         if (!(toolBarObject instanceof DragwybToolbarBase || toolBarObject instanceof DragwybEditor.editor.extends.ToolbarBase)) {
             toolBarHtml = <></>;
             toolBarObject = new DragwybToolbarBase([toolBarHtml, setting, selectedToolbar, toolbarData, toolbarSettings]);
@@ -31,10 +31,11 @@ const ControlsConditions = ({ conditions, updateHandler, controlKey }) => {
 
         const selectedSettings = { ...toolbarValue, ...sectionSettings };
 
-        const shouldRender=shouldRenderField(settings.controls[controlKey], selectedSettings);
-        
-        updateHandler(shouldRender);
+        const shouldRender = shouldRenderField(settings.controls[controlKey], selectedSettings);
 
+        const shouldRenderStyleSelector = shouldRenderField(settings.controls[controlKey], toolbarValue);
+
+        updateHandler(shouldRender, shouldRenderStyleSelector);
     }
 
     return null;

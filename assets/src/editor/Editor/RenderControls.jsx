@@ -55,9 +55,14 @@ const RenderControl = ({
     const conditionUpdateHandler = (value) => {
         if (shouldRender !== value) {
             setShouldRender(value);
+
+            if (!value && settings.selectors) {
+                const uniqueSelector = `${selectedToolbar}${selectedTab && '' !== selectedTab ? '_' + selectedTab : ''}_${controlKey}`;
+
+                Utils.deleteStyleSelectors({ key: uniqueSelector });
+            }
         }
     }
-
 
     if (!shouldRender) {
         return <ControlsConditions

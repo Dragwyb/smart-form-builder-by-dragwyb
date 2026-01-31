@@ -20,7 +20,29 @@ class DragwybControlBase extends Component {
     }
 
     componentDidMount = () => {
+        this.renderStyleSelector();
         this.onRender();
+    }
+
+    renderStyleSelector() {
+        const controlType = this.controlName;
+        const designControls = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/DesignControls', ['section', 'tabs']);
+
+        if (!designControls || !Array.isArray(designControls) || designControls.includes(controlType)) {
+            return;
+        }
+
+        if (!this?.settings?.selectors || !this?.settings?.selectors_placeholders || Object.keys(this?.settings?.selectors).length === 0 || Object.keys(this?.settings?.selectors_placeholders).length === 0) {
+            return;
+        }
+
+        if (!this.state.value && 0 !== this.state.value) {
+            return;
+        }
+
+        const uniqueSelector = `${this.selectorKey}${this.selectedSetting && '' !== this.selectedSetting ? '_' + this.selectedSetting : ''}_${this.id}`;
+
+        this.Utils.updateStyleSelectors({ key: uniqueSelector, value: this.state.value, selectors: this.settings.selectors, placeholders: this.getStyleSelectorPlaceholder(this.state.value, this.settings.selectors_placeholders), toolbarType: this.selectorKey, itemId: this.selectedSetting, initialRender: true });
     }
 
     componentDidUpdate = (prevProps, prevState) => {
@@ -66,10 +88,6 @@ class DragwybControlBase extends Component {
             props.resetControlEventLifting(this.resetControl.bind(this));
             props.valueChangedCheckLifting(this.valueChanged.bind(this));
         }
-
-        if (props.selectedSetting && '' !== props.selectedSetting) {
-            this.selectorKey += '_' + props.selectedSetting;
-        }
     }
 
     resetControl() {
@@ -107,8 +125,9 @@ class DragwybControlBase extends Component {
 
     #updateStyleSelector(key, value) {
         if (this.settings && this.settings.type && this.settings.selectors && this.settings.selectors_placeholders) {
-            const uniqueSelector = this.selectorKey + '_' + key;
-            this.Utils.updateStyleSelectors({ key: uniqueSelector, value: value, selectors: this.settings.selectors, placeholders: this.getStyleSelectorPlaceholder(value, this.settings.selectors_placeholders) });
+            const uniqueSelector = `${this.selectorKey}${this.selectedSetting && '' !== this.selectedSetting ? '_' + this.selectedSetting : ''}_${key}`;
+
+            this.Utils.updateStyleSelectors({ key: uniqueSelector, value: value, selectors: this.settings.selectors, placeholders: this.getStyleSelectorPlaceholder(value, this.settings.selectors_placeholders), toolbarType: this.selectorKey, itemId: this.selectedSetting });
         }
     }
 

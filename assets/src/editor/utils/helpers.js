@@ -1,6 +1,6 @@
 
 import React, { useRef, useEffect } from "react";
-import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updateFieldValues, updateToolbarSettings, updateSectionSettings, updateStyleSelectors as updateStyleSelectorsAction } from "../store/actions";
+import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updateFieldValues, updateToolbarSettings, updateSectionSettings, updateStyleSelectors as updateStyleSelectorsAction, deleteStyleSelectors as deleteStyleSelectorsAction } from "../store/actions";
 import PropTypes from "prop-types";
 import { Placeholder } from "@wordpress/components";
 
@@ -167,7 +167,7 @@ export const updateSectionSetting = ({ dispatch, key, value }) => {
     }
 }
 
-export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, placeholders, currentItem }) => {
+export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, placeholders, toolbarType, itemId, currentItemId, initialRender = false }) => {
     try {
         const validatorKey = validateProp({
             key: "key",
@@ -198,12 +198,29 @@ export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, p
             functionName: "updateStyleSelectors"
         });
 
-        const wrapperId = state.form.id;
+        const existSelectors = state.styleSelectors;
+        const formId = state.form.id;
+
+        if (initialRender && existSelectors[key]) {
+            return;
+        }
 
         const cssCache = {};
         Object.keys(selectors).forEach((selector) => {
+            let wrapperId = formId;
+
+            if (toolbarType === 'fields' && itemId && itemId !== '') {
+                wrapperId += ' #dragwyb-field-wrapper-' + itemId;
+            }
+
             const targetSelector = selector.replaceAll("{{WRAPPER}}", `#dragwyb-form-wrapper-${wrapperId}`);
+
             cssCache[targetSelector] = selectors[selector];
+
+            if (currentItemId && '' !== currentItemId && targetSelector.includes('{{CURRENT_ITEM}}')) {
+                cssCache[targetSelector] = cssCache[targetSelector].replaceAll('{{CURRENT_ITEM}}', currentItemId);
+            }
+
 
             Object.keys(placeholders).forEach((placeholder) => {
                 if (placeholder === 'VALUE' && placeholders[placeholder] === true && ['string', 'number', 'BigInt'].includes(typeof value)) {
@@ -212,9 +229,27 @@ export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, p
                     cssCache[targetSelector] = cssCache[targetSelector].replaceAll("{{" + placeholder + "}}", value[placeholders[placeholder]]);
                 }
             });
+
         });
 
         dispatch(updateStyleSelectorsAction(key, cssCache))
+    } catch (e) {
+        console.error("Validation failed:", e.message);
+    }
+}
+
+export const deleteStyleSelectors = ({ dispatch, state, key }) => {
+    try {
+        const validatorKey = validateProp({
+            key: "key",
+            value: key, // invalid
+            types: ["string"],
+            required: true,
+            functionName: "deleteStyleSelectors"
+        });
+        const currentStyles = state.styleSelectors;
+
+        dispatch(deleteStyleSelectorsAction(key))
     } catch (e) {
         console.error("Validation failed:", e.message);
     }

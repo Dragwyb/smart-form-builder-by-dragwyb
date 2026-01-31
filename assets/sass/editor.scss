@@ -419,7 +419,7 @@ body {
             stroke-linecap: round;
             stroke-dasharray: 880;
             stroke-dashoffset: 880;
-            animation: app-loader-fillProgress 2.5s ease-in-out infinite;
+            animation: app-loader-fillProgress 1.9s ease-in-out infinite;
             filter: drop-shadow(0 0 10px hsl(var(--dragwyb-primary) / 0.5));
         }
 
@@ -1219,6 +1219,13 @@ $dropdown-max-height: 250px;
         margin: 0;
         overflow-y: auto;
         flex-grow: 1; // Take remaining height
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+
+        li {
+            margin: 0;
+            padding: 0;
+        }
     }
 
     // --- ITEMS ---
@@ -1239,12 +1246,13 @@ $dropdown-max-height: 250px;
     .dragwyb-option {
         padding: 8px 10px 8px 10px;
         cursor: pointer;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
         font-size: 13px;
         color: hsl(var(--dragwyb-card-foreground)/var(--dragwyb-text-opacity, 1));
         margin: 0;
+
+        &:nth-child(2n+2) {
+            background-color: hsl(var(--dragwyb-secondary)/0.3);
+        }
 
         &.highlighted {
             background-color: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
@@ -1500,30 +1508,23 @@ $dropdown-max-height: 250px;
 }
 
 .dragwyb-overlay-preview {
+    background-color: #f9fafb3f;
+    border: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    backdrop-filter: blur(5px);
 
-    &.field-type {
-        cursor: move;
-        text-align: center;
-        background-color: #f9fafb;
-        border: 1px solid #e5e7eb;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: .5rem;
-        padding-block: 1rem;
-        opacity: 0.8;
+    i {
+        color: hsl(var(--dragwyb-muted-foreground)/var(--dragwyb-text-opacity, 1));
+        font-size: 1.5rem;
+    }
 
-        i {
-            color: hsl(var(--dragwyb-primary) / var(--dragwyb-text-opacity, 1));
-            font-size: 1.5rem;
-        }
-
-        p {
-            color: var(--secondary-hover-color);
-            font-weight: 500;
-            font-size: 1rem;
-        }
+    p {
+        color: hsl(var(--dragwyb-muted-foreground)/var(--dragwyb-text-opacity, 1));
+        font-weight: 700;
+        font-size: 1rem;
     }
 }
 

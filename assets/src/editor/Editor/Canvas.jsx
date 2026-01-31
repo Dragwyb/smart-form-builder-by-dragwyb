@@ -77,7 +77,7 @@ const RenderItem = ({
                 onClick={() => onFieldSelectHandler(field._id)}
                 {...listeners}
                 {...attributes}
-                id={`field-wrapp-${field._id}`}
+                id={`dragwyb-field-wrapper-${field._id}`}
             >
                 <Fields.Preview fields={[field]} values={values} errors={errors} />
                 <div className="field-actions">

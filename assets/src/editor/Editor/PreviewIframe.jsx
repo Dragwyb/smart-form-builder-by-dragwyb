@@ -17,7 +17,7 @@ const PreviewIframe = ({ children, url, style }) => {
         setTimeout(() => {
             dispatch(updateIframeNode(doc));
             jQuery(document).trigger('Dragwyb:editorAppLoaded');
-        }, 2000);
+        }, 1500);
     };
 
     return (

@@ -19,7 +19,8 @@ const StyleLoader = () => {
                 Object.keys(styleSelectors).forEach(key => {
                     const entry = styleSelectors[key];
                     const selector = Object.keys(entry)[0];
-                    const rule = Object.values(entry)[0];
+                    let rule = Object.values(entry)[0].trim();
+                    rule = rule.endsWith(';') ? rule : rule + ';';
 
                     if (!cssCache[selector]) {
                         cssCache[selector] = [];
@@ -29,7 +30,7 @@ const StyleLoader = () => {
 
                 for (const selector in cssCache) {
                     if (cssCache.hasOwnProperty(selector)) {
-                        const rules = cssCache[selector].join(';');
+                        const rules = cssCache[selector].join(' ');
                         cssString += `${selector} { ${rules} }\n`;
                     }
                 }

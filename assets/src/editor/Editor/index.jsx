@@ -132,18 +132,9 @@ const Editor = () => {
     // --- Drag Handlers ---
 
     const handleDragStart = (event) => {
-        const { active, activatorEvent } = event;
+        const { active } = event;
 
         const activeDragData = { activeDrag: active };
-
-        if (activatorEvent) {
-            activeDragData.extraData = {
-                offsetX: activatorEvent.offsetX,
-                offsetY: activatorEvent.offsetY,
-                width: active.rect.current?.initial?.width || 0,
-                height: active.rect.current?.initial?.height || 0,
-            };
-        }
 
         if (active?.data?.current?.currentIndex >= 0) {
             setDropIndex(active.data.current.currentIndex);
@@ -199,9 +190,9 @@ const Editor = () => {
         }
 
         // Adjustment for moving items downwards in the same list
-        if (isCanvasDrag && activeIndex < targetIndex) {
-            targetIndex -= 1;
-        }
+        // if (isCanvasDrag && activeIndex < targetIndex) {
+        //     targetIndex -= 1;
+        // }
 
         if (dropIndex !== targetIndex) {
             setDropIndex(targetIndex);

@@ -282,6 +282,11 @@ export default function reducer(state = initialState, action) {
 
             if (state.styleSelectors[action.payload.key]) {
                 delete state.styleSelectors[action.payload.key];
+
+                return {
+                    ...state,
+                    styleSelectors: { ...state.styleSelectors }
+                }
             }
 
             return state;
