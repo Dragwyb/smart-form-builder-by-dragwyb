@@ -81,7 +81,7 @@ class Form_Preview
         // font-awesome@5.15.4
         wp_enqueue_style(
             'dragwyb-font-awesome',
-            DRAGWYB_FORM_BUILDER_URL . 'assets/font-awesome/v5/all.min.css',
+            esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/font-awesome/v5/all.min.css'),
             [],
             '5.15.4'
         );
@@ -97,7 +97,14 @@ class Form_Preview
 
     public function enqueue_editor_preview_styles()
     {
-        wp_enqueue_style('dragwyb-editor-preview', esc_url(DRAGWYB_FORM_BUILDER_URL . '/assets/css/dragwyb-editor-preview.css'), [], sanitize_text_field(DRAGWYB_FORM_BUILDER_VERSION));
+        wp_enqueue_style(
+            'dragwyb-form-editor-global',
+            esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/css/editor-global.css'),
+            [],
+            esc_attr(DRAGWYB_FORM_BUILDER_VERSION)
+        );
+
+        wp_enqueue_style('dragwyb-editor-preview', esc_url(DRAGWYB_FORM_BUILDER_URL . '/assets/css/dragwyb-editor-preview.css'), ['dragwyb-form-editor-global'], esc_attr(DRAGWYB_FORM_BUILDER_VERSION));
     }
 
     public function enqueue_editor_preview_scripts()

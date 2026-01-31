@@ -43,7 +43,7 @@ if (!class_exists('Form_Overview')) {
 
         private function enqueue_admin_assets(): void
         {
-            wp_enqueue_script(DRAGWYB_PREFIX . '-overview-assets', esc_url(DRAGWYB_FORM_BUILDER_URL . '/assets/js/dragwyb-oveview-assets.js'), array('jquery'), DRAGWYB_FORM_BUILDER_VERSION, true);
+            wp_enqueue_script(DRAGWYB_PREFIX . '-overview-assets', esc_url(DRAGWYB_FORM_BUILDER_URL . '/assets/js/dragwyb-oveview-assets.js'), array('jquery'), esc_attr(DRAGWYB_FORM_BUILDER_VERSION), true);
 
             wp_localize_script(DRAGWYB_PREFIX . '-overview-assets', 'DragwybOverviewPage', array(
                 'ajaxurl' => admin_url('admin-ajax.php'),

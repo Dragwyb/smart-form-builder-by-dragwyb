@@ -38,9 +38,9 @@ abstract class Toolbar_Base
     {
         wp_register_script(
             'dragwyb-editor-toolbars',
-            DRAGWYB_FORM_BUILDER_URL . 'assets/dist/toolbars/toolbars.js',
+            esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/toolbars/toolbars.js'),
             ['dragwyb-form-editor'],
-            DRAGWYB_FORM_BUILDER_VERSION,
+            esc_attr(DRAGWYB_FORM_BUILDER_VERSION),
             true
         );
 

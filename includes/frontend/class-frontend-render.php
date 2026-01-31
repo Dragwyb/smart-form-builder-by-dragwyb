@@ -291,7 +291,7 @@ class Frontend_Render
     {
         do_action('Dragwyb/Frontend/Before_Render/Enqueue_Static_Assets');
 
-        wp_enqueue_style('dragwyb-form-builder', esc_url(DRAGWYB_FORM_BUILDER_URL . '/assets/css/dragwyb-form-frontend.css'), [], sanitize_text_field(DRAGWYB_FORM_BUILDER_VERSION));
+        wp_enqueue_style('dragwyb-form-builder', esc_url(DRAGWYB_FORM_BUILDER_URL . '/assets/css/dragwyb-form-frontend.css'), [], esc_attr(DRAGWYB_FORM_BUILDER_VERSION));
 
 
         if (defined('DRAGWYB_FORM_PREVIEW') && true === DRAGWYB_FORM_PREVIEW && function_exists('wp_add_inline_style')) {

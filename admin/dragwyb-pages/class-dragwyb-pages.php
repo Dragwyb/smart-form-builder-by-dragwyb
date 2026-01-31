@@ -44,7 +44,7 @@ class Dragwyb_Pages
             'manage_options',
             DRAGWYB_PREFIX . '-form-overview',
             [$this, 'dragwyb_render_page'],
-            DRAGWYB_FORM_BUILDER_URL . 'assets/img/menu-logo.png',
+            esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/img/menu-logo.png'),
             20
         );
 

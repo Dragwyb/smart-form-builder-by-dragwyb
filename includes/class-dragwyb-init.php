@@ -64,9 +64,9 @@ class Dragwyb_Init
         // Enqueue React and dependencies
         wp_register_script(
             'dragwyb-form-core',
-            DRAGWYB_FORM_BUILDER_URL . 'assets/dist/core/core.js',
+            esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/core/core.js'),
             ['wp-element', 'wp-components', 'wp-i18n', 'jquery'],
-            DRAGWYB_FORM_BUILDER_VERSION,
+            esc_attr(DRAGWYB_FORM_BUILDER_VERSION),
             true
         );
 

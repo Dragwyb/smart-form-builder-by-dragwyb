@@ -106,7 +106,7 @@ class CSS_Manager
 
             $font_url .= "family=" . implode('&family=', $fontFamilies);
 
-            wp_enqueue_style('dragwyb-form-google-fonts', 'https://fonts.googleapis.com/css2?' . $font_url, [], DRAGWYB_FORM_BUILDER_VERSION);
+            wp_enqueue_style('dragwyb-form-google-fonts', 'https://fonts.googleapis.com/css2?' . $font_url, [], esc_attr(DRAGWYB_FORM_BUILDER_VERSION));
         }
     }
 
