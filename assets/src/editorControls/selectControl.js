@@ -9,7 +9,7 @@ export default class SelectControl extends DragwybEditor.editor.extends.ControlB
         if (!this.shouldRender()) return <></>;
 
         const { settings, id } = this;
-        const { value } = this.state;
+        const { value = settings.default } = this.state;
         const options = settings.options || {};
         const labelInline = settings.label_inline || false;
 
@@ -25,19 +25,6 @@ export default class SelectControl extends DragwybEditor.editor.extends.ControlB
                         {settings.label}
                     </label>
                 )}
-                {/* <select
-                    id={id}
-                    name={id}
-                    className="dragwyb-control__select"
-                    value={value}
-                    onChange={(e) => this.updateControlHandler(id, e.target.value)}
-                >
-                    {Object.keys(options).map((key) => (
-                        <option key={key} value={key}>
-                            {options[key]}
-                        </option>
-                    ))}
-                </select> */}
                 <Select
                     options={options}
                     value={value}

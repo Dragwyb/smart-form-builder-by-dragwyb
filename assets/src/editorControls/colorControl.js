@@ -31,7 +31,7 @@ export default class ColorControl extends DragwybEditor.editor.extends.ControlBa
         this.pickr = Pickr.create({
             el: `.dragwyb-color__preview[data-id="${id}"]`,
             theme: 'monolith',
-            default: value || defaultColor,
+            default: value || defaultColor || '',
             comparison: false,
             appClass: 'dragwyb-color__pickr',
 

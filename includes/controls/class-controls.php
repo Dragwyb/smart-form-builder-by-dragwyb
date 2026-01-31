@@ -14,6 +14,7 @@ class Controls
     const DIMENSIONS = 'dimensions';
     const FONTS = 'fonts';
     const GALLERY = 'gallery';
+    const HEADING = 'heading';
     const ICON = 'icon';
     const NUMBER = 'number';
     const POPOVER_TOGGLE = 'popover-toggle';
