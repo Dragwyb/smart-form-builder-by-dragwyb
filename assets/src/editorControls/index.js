@@ -19,6 +19,7 @@ import UrlControl from './urlControl';
 import GalleryControl from './galleryControl';
 import IconControl from './iconControl';
 import HeadingControl from './headingControl';
+import RawHtmlControl from './rawHtmlControl';
 
 const initializeControls = () => {
     const defaultControls = {
@@ -28,6 +29,7 @@ const initializeControls = () => {
         'switcher': SwitcherControl,
         'dimensions': DimensionsControl,
         'radio': RadioControl,
+        'raw_html': RawHtmlControl,
         'slider': SliderControl,
         'number': NumberControl,
         'color': ColorControl,
