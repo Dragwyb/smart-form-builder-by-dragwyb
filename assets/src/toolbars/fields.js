@@ -142,9 +142,6 @@ class Fields extends DragwybEditor.editor.extends.ToolbarBase {
   }
 
   updateToolbarHandler = (key, value) => {
-
-    const data = this.toolbarData;
-
     if (this.toolbarData) {
       let valueUpdate = false;
       this.toolbarData.map(field => {
@@ -157,6 +154,8 @@ class Fields extends DragwybEditor.editor.extends.ToolbarBase {
           } else if (DragwybEditor.fields.fields[field.type]?.controls?.[key]?.default === value) {
             delete field.attributes[key];
           }
+
+          field.attributes = { ...field.attributes };
         }
       })
 
