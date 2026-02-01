@@ -31,17 +31,11 @@ class Dragwyb_Init
     {
         // Initialize admin
         if (is_admin()) {
-            // new Dragwyb_Form_Builder_Admin();
             new Dragwyb_Builder_Editor();
-            // new Dragwyb_Form_Builder_Editor();
             new Dragwyb_Pages();
-            // Initialize post type
             new Dragwyb_Post();
-            // Initialize AJAX handler
             new Dragwyb_Form_Builder_Ajax();
-            // Initialize Frontend Render
             Frontend_Render::instance();
-            // Initialize Frontend Preview
         }
 
         Form_Preview::instance();
