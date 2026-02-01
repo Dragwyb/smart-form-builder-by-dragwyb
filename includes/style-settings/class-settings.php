@@ -253,9 +253,9 @@ class Settings extends Register_Controls_Base
         $this->end_tabs();
         $this->end_section();
 
-        // SECTION 4: SUBMIT BUTTON
+        // SECTION 4: BUTTON
         $this->start_section('section_button_style', [
-            'label' => __('Submit Button', 'dragwyb-form-builder'),
+            'label' => __('Button', 'dragwyb-form-builder'),
         ]);
 
         $this->add_control('button_width_type', [
