@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useDispatch } from 'react-redux';
 import { updateIframeNode } from '../store/actions';
+import UpdateFormLabelPosition from './updateFormLabelPosition';
 
 const PreviewIframe = ({ children, url, style = {} }) => {
     const [mountNode, setMountNode] = useState(null);
@@ -34,6 +35,7 @@ const PreviewIframe = ({ children, url, style = {} }) => {
                 ...style,
             }}
         >
+            {mountNode && <UpdateFormLabelPosition />}
             {mountNode && createPortal(children, mountNode)}
         </iframe>
     );

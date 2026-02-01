@@ -1,14 +1,8 @@
-#dragwyb-preview-wrapper {
-  width: 100%;
-}
-
-/* =========================================
-   1. CSS VARIABLE DEFAULTS
-   Defined at the wrapper level. These match your
-   PHP Group Control configurations exactly.
-   ========================================= */
+/* ==========================================================================
+   1. GLOBAL VARIABLES & DEFAULTS
+   ========================================================================== */
 .dragwyb-form-wrapper {
-  /* --- 1. GLOBAL TYPOGRAPHY (From your Typography Group) --- */
+  /* --- 1. GLOBAL TYPOGRAPHY (Matched to Controls) --- */
   --dragwyb-form-typography-family: inherit;
   --dragwyb-form-typography-size: 16px;
   --dragwyb-form-typography-wt: 400;
@@ -22,45 +16,48 @@
   --dragwyb-form-typography-ls: 0px;
   --dragwyb-form-typography-ws: 0px;
   --dragwyb-form-typography-align: left;
-  /* --- 2. FORM CONTAINER (Background & Spacing) --- */
+  /* --- 2. FORM CONTAINER --- */
   --dragwyb-form-bg: #ffffff;
+  --dragwyb-form-bg-filled: #f3f4f6;
+  /* Used for 'Inside' Floating variant */
   --dragwyb-form-width: clamp(50%, 600px, 80%);
+  /* Spacing */
   --dragwyb-form-pt: 40px;
   --dragwyb-form-pr: 40px;
   --dragwyb-form-pb: 40px;
   --dragwyb-form-pl: 40px;
-  --dragwyb-form-mt: 0px;
-  --dragwyb-form-mr: 0px;
-  --dragwyb-form-mb: 0px;
-  --dragwyb-form-ml: 0px;
+  --dragwyb-form-mt: 20px;
+  --dragwyb-form-mr: 20px;
+  --dragwyb-form-mb: 20px;
+  --dragwyb-form-ml: 20px;
   --dragwyb-row-gap: 20px;
-  /* --- 3. BORDER GROUP (Standardized) --- */
+  /* Space between fields */
+  /* Borders */
   --dragwyb-form-border-width: 0px;
   --dragwyb-form-border-style: solid;
   --dragwyb-form-border-color: transparent;
   --dragwyb-form-border-radius: 12px;
-  /* --- 4. BOX SHADOW GROUP (Matches your PHP keys) --- */
+  /* Shadows */
   --dragwyb-form-box-shadow-h: 0px;
   --dragwyb-form-box-shadow-v: 10px;
   --dragwyb-form-box-shadow-blur: 40px;
   --dragwyb-form-box-shadow-spread: -5px;
   --dragwyb-form-box-shadow-color: rgba(0, 0, 0, 0.1);
   --dragwyb-form-box-shadow-position: ;
-  /* --- 5. TEXT SHADOW GROUP (Matches your PHP keys) --- */
   --dragwyb-form-text-shadow-h: 0px;
   --dragwyb-form-text-shadow-v: 0px;
   --dragwyb-form-text-shadow-blur: 0px;
   --dragwyb-form-text-shadow-color: transparent;
-  /* =========================================
-     SPECIFIC ELEMENT DEFAULTS 
-     (Labels, Inputs, Buttons)
-     ========================================= */
-  /* --- Labels --- */
+  /* --- 3. FIELD ELEMENTS --- */
+  /* Labels */
   --dragwyb-label-color: #374151;
   --dragwyb-label-fs: 14px;
   --dragwyb-label-fw: 600;
   --dragwyb-label-spacing: 6px;
-  /* --- Inputs --- */
+  /* Bottom spacing */
+  --dragwyb-label-width: 120px;
+  /* For Left Layout Grid */
+  /* Inputs */
   --dragwyb-input-bg: #ffffff;
   --dragwyb-input-color: #111827;
   --dragwyb-input-placeholder: #9ca3af;
@@ -72,7 +69,10 @@
   --dragwyb-input-pr: 14px;
   --dragwyb-input-pb: 10px;
   --dragwyb-input-pl: 14px;
-  /* --- Submit Button --- */
+  /* Input Focus State */
+  --dragwyb-input-focus-bg: #ffffff;
+  --dragwyb-input-focus-border: #1d4ed8;
+  /* Buttons */
   --dragwyb-btn-bg: #1d4ed8;
   --dragwyb-btn-color: #ffffff;
   --dragwyb-btn-width: 100%;
@@ -82,13 +82,19 @@
   --dragwyb-btn-pb: 12px;
   --dragwyb-btn-pl: 20px;
   --dragwyb-btn-hover-bg: #1e40af;
+  /* Animation Utility */
+  --dragwyb-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* =========================================
-   2. APPLYING VARIABLES TO ELEMENTS
-   ========================================= */
+/* --- MIXINS (For Typography) --- */
+#dragwyb-preview-wrapper {
+  width: 100%;
+}
+
+/* ==========================================================================
+   2. FORM CONTAINER STYLES
+   ========================================================================== */
 .dragwyb-form-wrapper {
-  /* Typography Group Application */
   font-family: var(--dragwyb-form-typography-family);
   font-size: var(--dragwyb-form-typography-size);
   font-weight: var(--dragwyb-form-typography-wt);
@@ -100,7 +106,8 @@
   letter-spacing: var(--dragwyb-form-typography-ls);
   word-spacing: var(--dragwyb-form-typography-ws);
   text-align: var(--dragwyb-form-typography-align);
-  /* Container Dimensions */
+  box-sizing: border-box;
+  /* Container Dimensions & Spacing */
   padding: var(--dragwyb-form-pt) var(--dragwyb-form-pr) var(--dragwyb-form-pb) var(--dragwyb-form-pl);
   margin: var(--dragwyb-form-mt) var(--dragwyb-form-mr) var(--dragwyb-form-mb) var(--dragwyb-form-ml);
   width: var(--dragwyb-form-width);
@@ -112,18 +119,25 @@
   border-style: var(--dragwyb-form-border-style);
   border-color: var(--dragwyb-form-border-color);
   border-radius: var(--dragwyb-form-border-radius);
-  /* Box Shadow Group Application */
+  /* Shadows */
   box-shadow: var(--dragwyb-form-box-shadow-position) var(--dragwyb-form-box-shadow-h) var(--dragwyb-form-box-shadow-v) var(--dragwyb-form-box-shadow-blur) var(--dragwyb-form-box-shadow-spread) var(--dragwyb-form-box-shadow-color);
-  /* Text Shadow Group Application */
   text-shadow: var(--dragwyb-form-text-shadow-h) var(--dragwyb-form-text-shadow-v) var(--dragwyb-form-text-shadow-blur) var(--dragwyb-form-text-shadow-color);
-  /* --- Inner Elements --- */
 }
-.dragwyb-form-wrapper .dragwyb-field-group {
+
+/* ==========================================================================
+   3. BASE FIELD STYLES & LAYOUT
+   ========================================================================== */
+/* Wrapper for individual fields */
+.dragwyb-field-wrapper {
   margin-bottom: var(--dragwyb-row-gap);
-  text-align: left;
-  /* Reset text align for fields */
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  /* Default, overridden by inline PHP width style */
 }
-.dragwyb-form-wrapper label {
+
+/* --- Label Styles --- */
+.dragwyb-field-label {
   font-family: var(--dragwyb-form-typography-family);
   font-size: var(--dragwyb-form-typography-size);
   font-weight: var(--dragwyb-form-typography-wt);
@@ -135,13 +149,36 @@
   letter-spacing: var(--dragwyb-form-typography-ls);
   word-spacing: var(--dragwyb-form-typography-ws);
   text-align: var(--dragwyb-form-typography-align);
+  /* Apply global typography */
   display: block;
+  width: -moz-fit-content;
+  width: fit-content;
   color: var(--dragwyb-label-color);
   margin-bottom: var(--dragwyb-label-spacing);
+  font-size: var(--dragwyb-label-fs);
+  font-weight: var(--dragwyb-label-fw);
+  cursor: pointer;
+  transition: var(--dragwyb-transition);
 }
-.dragwyb-form-wrapper input:not([type=submit]),
-.dragwyb-form-wrapper textarea,
-.dragwyb-form-wrapper select {
+
+.dragwyb-required {
+  color: #ef4444;
+  margin-left: 3px;
+  font-weight: bold;
+}
+
+/* --- Help Text --- */
+.dragwyb-field-help {
+  font-size: 0.85em;
+  color: #6b7280;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* ==========================================================================
+   4. INPUT STYLES (Text, Email, Textarea, Select)
+   ========================================================================== */
+.dragwyb-field-input {
   font-family: var(--dragwyb-form-typography-family);
   font-size: var(--dragwyb-form-typography-size);
   font-weight: var(--dragwyb-form-typography-wt);
@@ -155,32 +192,352 @@
   text-align: var(--dragwyb-form-typography-align);
   width: 100%;
   box-sizing: border-box;
+  /* Colors & Borders */
   background-color: var(--dragwyb-input-bg);
   color: var(--dragwyb-input-color);
   border-width: var(--dragwyb-input-border-width);
   border-style: var(--dragwyb-input-border-style);
   border-color: var(--dragwyb-input-border-color);
   border-radius: var(--dragwyb-input-radius);
+  /* Padding */
   padding: var(--dragwyb-input-pt) var(--dragwyb-input-pr) var(--dragwyb-input-pb) var(--dragwyb-input-pl);
   outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  /* Placeholder */
+  /* Focus State */
 }
-.dragwyb-form-wrapper input:not([type=submit])::-moz-placeholder, .dragwyb-form-wrapper textarea::-moz-placeholder, .dragwyb-form-wrapper select::-moz-placeholder {
+.dragwyb-field-input::-moz-placeholder {
+  color: var(--dragwyb-input-placeholder);
+  opacity: 1;
+}
+.dragwyb-field-input::placeholder {
+  color: var(--dragwyb-input-placeholder);
+  opacity: 1;
+}
+.dragwyb-field-input:focus {
+  background-color: var(--dragwyb-input-focus-bg);
+  border-color: var(--dragwyb-input-focus-border);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  /* Subtle ring */
+}
+
+/* Specific: Textarea */
+textarea.dragwyb-field-input {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Specific: Select */
+select.dragwyb-field-input {
+  cursor: pointer;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5em;
+  /* Space for arrow */
+}
+
+/* ==========================================================================
+   5. LAYOUT VARIANTS (Top, Left, Floating, Hidden)
+   ========================================================================== */
+/* --- A. DEFAULT / TOP LAYOUT --- 
+   Applies when class is .dragwyb-layout-top OR no layout class is present.
+   Logic: Input is 1st in DOM, Label is 2nd. Flex Column-Reverse stacks them visually correctly.
+*/
+.dragwyb-form-wrapper:not(.dragwyb-layout-left):not(.dragwyb-layout-floating) .dragwyb-input-group,
+.dragwyb-form-wrapper.dragwyb-layout-top .dragwyb-input-group {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 6px;
+}
+
+/* --- B. LEFT LAYOUT (Side-by-Side) --- 
+   Applies when class is .dragwyb-layout-left
+*/
+.dragwyb-form-wrapper.dragwyb-layout-left {
+  /* Reset Input Group for Grid Context */
+  /* Label -> Col 1 */
+  /* Input -> Col 2 */
+  /* Help Text -> Col 2 (Under Input) */
+}
+.dragwyb-form-wrapper.dragwyb-layout-left .dragwyb-field-wrapper:not(.dragwyb-no-grid) {
+  display: grid;
+  /* Col 1: Label (Auto Width), Col 2: Input (Rest) */
+  grid-template-columns: minmax(auto, max-content) 1fr;
+  gap: 1.5em;
+  align-items: baseline;
+}
+.dragwyb-form-wrapper.dragwyb-layout-left .dragwyb-input-group {
+  display: contents;
+  /* Children participate in Grid */
+}
+.dragwyb-form-wrapper.dragwyb-layout-left .dragwyb-field-label {
+  grid-column: 1;
+  grid-row: 1;
+  margin-bottom: 0;
+  align-self: center;
+  min-width: var(--dragwyb-label-width);
+  /* Consistent align */
+}
+.dragwyb-form-wrapper.dragwyb-layout-left .dragwyb-field-input,
+.dragwyb-form-wrapper.dragwyb-layout-left .dragwyb-options-container {
+  grid-column: 2;
+  grid-row: 1;
+  width: 100%;
+}
+.dragwyb-form-wrapper.dragwyb-layout-left .dragwyb-field-help {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+/* --- C. FLOATING LAYOUT (Material Style) --- 
+   Applies when class is .dragwyb-layout-floating
+*/
+.dragwyb-form-wrapper.dragwyb-layout-floating {
+  /* Apply only to fields that support floating (Text, Email, Select, Textarea) */
+}
+.dragwyb-form-wrapper.dragwyb-layout-floating .dragwyb-field-wrapper:not(.dragwyb-no-float) {
+  /* Stack Normally (Input 1st, Label 2nd) for absolute positioning */
+  /* Hide the real placeholder */
+  /* --- ACTIVE STATE (Float Up) --- */
+  /* Triggered if Input Focus OR Placeholder Hidden (Has Value) */
+  /* --- Textarea Specific Fixes --- */
+}
+.dragwyb-form-wrapper.dragwyb-layout-floating .dragwyb-field-wrapper:not(.dragwyb-no-float) .dragwyb-input-group {
+  display: block;
+  position: relative;
+}
+.dragwyb-form-wrapper.dragwyb-layout-floating .dragwyb-field-wrapper:not(.dragwyb-no-float) .dragwyb-field-label {
+  position: absolute;
+  z-index: 10;
+  top: 50%;
+  left: var(--dragwyb-input-pl);
+  /* Match input padding */
+  transform: translateY(-50%);
+  margin: 0;
+  pointer-events: none;
+  /* Clicks go through to input */
+  transform-origin: left center;
+  background-color: transparent;
+  transition: all 0.2s ease-out;
   color: var(--dragwyb-input-placeholder);
 }
-.dragwyb-form-wrapper input:not([type=submit])::placeholder,
-.dragwyb-form-wrapper textarea::placeholder,
-.dragwyb-form-wrapper select::placeholder {
-  color: var(--dragwyb-input-placeholder);
+.dragwyb-form-wrapper.dragwyb-layout-floating .dragwyb-field-wrapper:not(.dragwyb-no-float) .dragwyb-field-input::-moz-placeholder {
+  color: transparent;
 }
-.dragwyb-form-wrapper button[type=submit] {
-  width: var(--dragwyb-btn-width);
+.dragwyb-form-wrapper.dragwyb-layout-floating .dragwyb-field-wrapper:not(.dragwyb-no-float) .dragwyb-field-input::placeholder {
+  color: transparent;
+}
+.dragwyb-form-wrapper.dragwyb-layout-floating .dragwyb-field-wrapper:not(.dragwyb-no-float) .dragwyb-field-input:not(:-moz-placeholder-shown) ~ .dragwyb-field-label {
+  top: 0;
+  transform: translateY(-50%) scale(0.85);
+  color: var(--dragwyb-input-focus-border);
+  font-weight: 600;
+}
+.dragwyb-form-wrapper.dragwyb-layout-floating .dragwyb-field-wrapper:not(.dragwyb-no-float) .dragwyb-field-input:focus ~ .dragwyb-field-label,
+.dragwyb-form-wrapper.dragwyb-layout-floating .dragwyb-field-wrapper:not(.dragwyb-no-float) .dragwyb-field-input:not(:placeholder-shown) ~ .dragwyb-field-label {
+  top: 0;
+  transform: translateY(-50%) scale(0.85);
+  color: var(--dragwyb-input-focus-border);
+  font-weight: 600;
+}
+.dragwyb-form-wrapper.dragwyb-layout-floating .dragwyb-field-wrapper:not(.dragwyb-no-float) textarea.dragwyb-field-input ~ .dragwyb-field-label {
+  top: 1.5em;
+  /* Start lower */
+  transform: none;
+}
+.dragwyb-form-wrapper.dragwyb-layout-floating .dragwyb-field-wrapper:not(.dragwyb-no-float) textarea.dragwyb-field-input:not(:-moz-placeholder-shown) ~ .dragwyb-field-label {
+  top: 0;
+  transform: translateY(-50%) scale(0.85);
+}
+.dragwyb-form-wrapper.dragwyb-layout-floating .dragwyb-field-wrapper:not(.dragwyb-no-float) textarea.dragwyb-field-input:focus ~ .dragwyb-field-label,
+.dragwyb-form-wrapper.dragwyb-layout-floating .dragwyb-field-wrapper:not(.dragwyb-no-float) textarea.dragwyb-field-input:not(:placeholder-shown) ~ .dragwyb-field-label {
+  top: 0;
+  transform: translateY(-50%) scale(0.85);
+}
+
+/* --- Sub-Variant: OUTLINED (White Bg Mask) --- */
+.dragwyb-form-wrapper.dragwyb-float-outlined .dragwyb-field-wrapper:not(.dragwyb-no-float) .dragwyb-field-input:not(:-moz-placeholder-shown) ~ .dragwyb-field-label {
+  padding: 0 4px;
+  margin-left: -4px;
+  background-color: var(--dragwyb-input-bg);
+  /* Masks the top border line */
+}
+.dragwyb-form-wrapper.dragwyb-float-outlined .dragwyb-field-wrapper:not(.dragwyb-no-float) .dragwyb-field-input:focus ~ .dragwyb-field-label,
+.dragwyb-form-wrapper.dragwyb-float-outlined .dragwyb-field-wrapper:not(.dragwyb-no-float) .dragwyb-field-input:not(:placeholder-shown) ~ .dragwyb-field-label {
+  padding: 0 4px;
+  margin-left: -4px;
+  background-color: var(--dragwyb-input-bg);
+  /* Masks the top border line */
+}
+
+/* --- Sub-Variant: INSIDE (Filled Bg) --- */
+.dragwyb-form-wrapper.dragwyb-float-inside .dragwyb-field-wrapper:not(.dragwyb-no-float) .dragwyb-field-input {
+  background-color: var(--dragwyb-form-bg-filled);
+  border: none;
+  border-bottom: 2px solid var(--dragwyb-input-border-color);
+  border-radius: 6px 6px 0 0;
+  /* Add Top Padding for Label Room */
+  padding-top: calc(var(--dragwyb-input-pt) + 0.8em);
+  padding-bottom: calc(var(--dragwyb-input-pb) - 0.2em);
+}
+.dragwyb-form-wrapper.dragwyb-float-inside .dragwyb-field-wrapper:not(.dragwyb-no-float) .dragwyb-field-input:focus {
+  box-shadow: none;
+  border-color: var(--dragwyb-input-focus-border);
+  background-color: #e5e7eb;
+  /* Darken on focus */
+}
+.dragwyb-form-wrapper.dragwyb-float-inside .dragwyb-field-wrapper:not(.dragwyb-no-float) .dragwyb-field-input:not(:-moz-placeholder-shown) ~ .dragwyb-field-label {
+  top: 0.8em;
+  /* Stay inside the box */
+  transform: translateY(0) scale(0.75);
+}
+.dragwyb-form-wrapper.dragwyb-float-inside .dragwyb-field-wrapper:not(.dragwyb-no-float) .dragwyb-field-input:focus ~ .dragwyb-field-label,
+.dragwyb-form-wrapper.dragwyb-float-inside .dragwyb-field-wrapper:not(.dragwyb-no-float) .dragwyb-field-input:not(:placeholder-shown) ~ .dragwyb-field-label {
+  top: 0.8em;
+  /* Stay inside the box */
+  transform: translateY(0) scale(0.75);
+}
+
+/* --- D. HIDDEN LABELS --- 
+   Applies when class is .dragwyb-layout-hidden
+*/
+.dragwyb-form-wrapper.dragwyb-layout-hidden {
+  /* Force placeholders to show since labels are gone */
+}
+.dragwyb-form-wrapper.dragwyb-layout-hidden .dragwyb-field-label {
+  display: none !important;
+}
+.dragwyb-form-wrapper.dragwyb-layout-hidden .dragwyb-field-input::-moz-placeholder {
+  color: var(--dragwyb-input-placeholder) !important;
+  opacity: 1 !important;
+}
+.dragwyb-form-wrapper.dragwyb-layout-hidden .dragwyb-field-input::placeholder {
+  color: var(--dragwyb-input-placeholder) !important;
+  opacity: 1 !important;
+}
+
+/* ==========================================================================
+   6. RADIO & CHECKBOX STYLES
+   ========================================================================== */
+/* Container */
+.dragwyb-options-container {
+  display: flex;
+  flex-direction: column;
+  /* Default: Stacked */
+  gap: 8px;
+  margin-top: 5px;
+}
+
+/* Inline Variant */
+.dragwyb-options-container.dragwyb-inline-options {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+/* Item */
+.dragwyb-option-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.dragwyb-option-item input[type=radio],
+.dragwyb-option-item input[type=checkbox] {
+  width: auto;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--dragwyb-btn-bg);
+}
+
+.dragwyb-radio-label {
+  font-family: var(--dragwyb-form-typography-family);
+  font-size: var(--dragwyb-form-typography-size);
+  font-weight: var(--dragwyb-form-typography-wt);
+  font-style: var(--dragwyb-form-typography-st);
+  text-transform: var(--dragwyb-form-typography-ts);
+  -webkit-text-decoration: var(--dragwyb-form-typography-dt);
+          text-decoration: var(--dragwyb-form-typography-dt);
+  line-height: var(--dragwyb-form-typography-lh);
+  letter-spacing: var(--dragwyb-form-typography-ls);
+  word-spacing: var(--dragwyb-form-typography-ws);
+  text-align: var(--dragwyb-form-typography-align);
+  color: var(--dragwyb-input-color);
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   7. FILE UPLOAD STYLES
+   ========================================================================== */
+.dragwyb-file-upload-container {
+  position: relative;
+  overflow: hidden;
+}
+
+input[type=file].dragwyb-field-input {
+  padding: 10px;
+  background-color: #f9fafb;
+  border: 1px dashed var(--dragwyb-input-border-color);
+  cursor: pointer;
+  min-height: auto;
+  /* Reset textarea height if inherited */
+}
+input[type=file].dragwyb-field-input::file-selector-button {
+  margin-right: 15px;
+  border: none;
+  background: var(--dragwyb-btn-bg);
+  color: var(--dragwyb-btn-color);
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+input[type=file].dragwyb-field-input::file-selector-button:hover {
+  background: var(--dragwyb-btn-hover-bg);
+}
+
+/* ==========================================================================
+   8. BUTTON STYLES
+   ========================================================================== */
+.dragwyb-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  /* Variables mapped from Global */
+  width: auto;
+  /* Default auto, overridden by PHP inline style */
   background-color: var(--dragwyb-btn-bg);
   color: var(--dragwyb-btn-color);
   border-radius: var(--dragwyb-btn-radius);
   padding: var(--dragwyb-btn-pt) var(--dragwyb-btn-pr) var(--dragwyb-btn-pb) var(--dragwyb-btn-pl);
-  border: none;
+  border: 1px solid transparent;
+  font-weight: 500;
   cursor: pointer;
+  transition: var(--dragwyb-transition);
+  /* Hover */
 }
-.dragwyb-form-wrapper button[type=submit]:hover {
+.dragwyb-btn:hover {
   background-color: var(--dragwyb-btn-hover-bg);
+}
+
+/* Full Width Helper */
+.dragwyb-btn-block {
+  width: 100%;
+  display: flex;
+}
+
+/* Reset Button Variant */
+.dragwyb-btn-reset {
+  background-color: transparent;
+  border: 1px solid var(--dragwyb-input-border-color);
+  color: var(--dragwyb-label-color);
+}
+.dragwyb-btn-reset:hover {
+  background-color: var(--dragwyb-form-bg-filled);
+  color: var(--dragwyb-input-color);
 }/*# sourceMappingURL=dragwyb-form-frontend.css.map */

@@ -126,7 +126,7 @@ const RenderControl = ({
             />
             <div key={controlKey} className="dragwyb-setting-row" data-type={settings.type}>
                 <Control
-                    key={controlKey}
+                    key={selectedTab}
                     id={controlKey}
                     toolbarId={selectedToolbar}
                     selectedSetting={selectedTab}

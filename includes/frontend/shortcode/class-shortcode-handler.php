@@ -73,8 +73,22 @@ class Shortcode_Handler
 
         // Generate form HTML
         $form_html = self::$frontend_render->render();
+        $toolbar_values = self::$frontend_render->get_toolbars_values('style');
+        $label_position = isset($toolbar_values['label_position']) ? $toolbar_values['label_position'] : 'top';
 
-        return '<div class="dragwyb-form-wrapper" id="dragwyb-form-wrapper-' . esc_attr($form_id) . '">' . wp_kses($form_html, $this->allowed_html_for_form()) . '</div>';
+        $class = 'dragwyb-form-wrapper';
+
+        if (isset($label_position) && !empty($label_position)) {
+            $class .= ' dragwyb-layout-' . esc_attr($label_position);
+
+            if ($label_position === 'floating') {
+                $floating_style = isset($toolbar_values['floating_style']) ? $toolbar_values['floating_style'] : 'outlined';
+
+                $class .= ' dragwyb-float-' . esc_attr($floating_style);
+            }
+        }
+
+        return '<div class="' . esc_attr($class) . '" id="dragwyb-form-wrapper-' . esc_attr($form_id) . '">' . wp_kses($form_html, $this->allowed_html_for_form()) . '</div>';
     }
 
     private function allowed_html_for_form(): array
