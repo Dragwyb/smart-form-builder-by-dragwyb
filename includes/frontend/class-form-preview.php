@@ -104,7 +104,7 @@ class Form_Preview
             esc_attr(DRAGWYB_FORM_BUILDER_VERSION)
         );
 
-        wp_enqueue_style('dragwyb-editor-preview', esc_url(DRAGWYB_FORM_BUILDER_URL . '/assets/css/dragwyb-editor-preview.css'), ['dragwyb-form-editor-global'], esc_attr(DRAGWYB_FORM_BUILDER_VERSION));
+        wp_enqueue_style('dragwyb-editor-preview', esc_url(DRAGWYB_FORM_BUILDER_URL . '/assets/css/editor-preview.css'), ['dragwyb-form-editor-global'], esc_attr(DRAGWYB_FORM_BUILDER_VERSION));
     }
 
     public function enqueue_editor_preview_scripts()

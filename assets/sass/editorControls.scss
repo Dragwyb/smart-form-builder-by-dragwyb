@@ -883,7 +883,7 @@
     background: hsl(var(--dragwyb-popover) / var(--dragwyb-bg-opacity, 1));
     border: 1px solid hsl(var(--dragwyb-border) / var(--dragwyb-border-opacity, 1));
     box-shadow: var(--dragwyb-ring-offset-shadow, 0 0 #0000), var(--dragwyb-ring-shadow, 0 0 #0000), var(--dragwyb-shadow);
-    right: 8px;
+    right: 16px;
     z-index: 99;
     margin-top: 5px;
 

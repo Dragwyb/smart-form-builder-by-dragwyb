@@ -55,6 +55,57 @@ const makeConfig = (folder) => ({
     }
 });
 
+const makeScssConfig = (scssFile) => ({
+    entry: {
+        [scssFile]: `./assets/sass/${scssFile}.scss`
+    },
+    output: {
+        filename: '[name].js',
+        path: path.resolve(__dirname, 'assets/css'),
+        clean: false
+    },
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: '[name].css' // Automatically uses the entry name
+        }),
+        {
+            apply: (compiler) => {
+                compiler.hooks.afterEmit.tap('DeleteJsArtifact', (compilation) => {
+                    const unwantedFile = path.resolve(
+                        compiler.options.output.path,
+                        `${scssFile}.js`
+                    );
+
+                    if (fs.existsSync(unwantedFile)) {
+                        fs.unlinkSync(unwantedFile);
+                    }
+                });
+            }
+        }
+    ],
+    module: {
+        rules: [
+            {
+                test: /\.scss$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            implementation: require('sass'),
+                            api: 'modern',
+                        }
+                    }
+                ],
+            }
+        ]
+    },
+    resolve: {
+        extensions: ['.scss']
+    }
+});
+
 // 🔹 Default fallback config (safe dummy build)
 const defaultConfig = {
     entry: {},
@@ -85,6 +136,25 @@ const validFoldersFilter = (folders) => {
     return valid;
 };
 
+const validScssFilesFilter = (scssFiles) => {
+    if (!scssFiles || scssFiles.length === 0) {
+        console.warn("⚠️ No SCSS files were provided to Webpack.");
+        return [];
+    }
+
+    const valid = scssFiles.filter(file =>
+        fs.existsSync(path.resolve(__dirname, `assets/sass/${file}.scss`))
+    );
+
+    if (valid.length === 0) {
+        console.warn(`⚠️ No valid SCSS files found in: [${scssFiles.join(', ')}]`);
+    } else {
+        console.log(`✅ Building configs for: [${valid.join(', ')}]`);
+    }
+
+    return valid;
+};
+
 module.exports = (env, argv) => {
     let validFolders = [];
 
@@ -100,8 +170,15 @@ module.exports = (env, argv) => {
         'frontend'
     ];
 
+    const scssFiles = [
+        'editor-global',
+        'form-frontend',
+        'editor-preview'
+    ]
+
     if (env && env.type === 'editor') {
         console.log("ℹ️  Running Webpack in *editor* mode...");
+        validScssFiles = validScssFilesFilter(scssFiles);
         validFolders = validFoldersFilter(editorFolders);
     } else if (env && env.type === 'frontend') {
         console.log("ℹ️  Running Webpack in *frontend* mode...");
@@ -116,6 +193,8 @@ module.exports = (env, argv) => {
         return defaultConfig;
     }
 
+
+
     // ✅ Return multiple configs (Webpack multi-compiler mode)
-    return validFolders.map(folder => makeConfig(folder));
+    return [...validFolders.map(folder => makeConfig(folder)), ...validScssFiles.map(file => makeScssConfig(file))];
 };
