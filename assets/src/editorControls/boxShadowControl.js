@@ -19,16 +19,16 @@ export default class BoxShadowControl extends DragwybEditor.editor.extends.Contr
         return (
             <div className="dragwyb-control dragwyb-control--box-shadow" id={`control-${id}`}>
                 <div className="dragwyb-control-header">
-                    <label className="dragwyb-control__label">{settings.label}</label>
+                    <this.RenderLabel />
                 </div>
-                
+
                 <div className="dragwyb-box-shadow-inputs">
                     {/* Color Picker */}
                     <div className="dragwyb-control-row">
                         <label>Color</label>
-                        <input 
-                            type="color" 
-                            value={value.color || '#000000'} 
+                        <input
+                            type="color"
+                            value={value.color || '#000000'}
                             onChange={(e) => this.handleParamChange('color', e.target.value)}
                         />
                     </div>
@@ -38,17 +38,17 @@ export default class BoxShadowControl extends DragwybEditor.editor.extends.Contr
                         <div className="dragwyb-control-slider-row" key={param}>
                             <label>{param.charAt(0).toUpperCase() + param.slice(1)}</label>
                             <div className="dragwyb-slider-wrapper">
-                                <input 
-                                    type="range" 
-                                    min="-100" 
-                                    max="100" 
-                                    value={value[param] || 0} 
+                                <input
+                                    type="range"
+                                    min="-100"
+                                    max="100"
+                                    value={value[param] || 0}
                                     onChange={(e) => this.handleParamChange(param, e.target.value)}
                                 />
-                                <input 
-                                    type="number" 
+                                <input
+                                    type="number"
                                     className="dragwyb-small-input"
-                                    value={value[param] || 0} 
+                                    value={value[param] || 0}
                                     onChange={(e) => this.handleParamChange(param, e.target.value)}
                                 />
                             </div>
@@ -58,8 +58,8 @@ export default class BoxShadowControl extends DragwybEditor.editor.extends.Contr
                     {/* Inset Toggle */}
                     <div className="dragwyb-control-row">
                         <label>Position</label>
-                        <select 
-                            value={value.inset || ''} 
+                        <select
+                            value={value.inset || ''}
                             onChange={(e) => this.handleParamChange('inset', e.target.value)}
                         >
                             <option value="">Outline</option>

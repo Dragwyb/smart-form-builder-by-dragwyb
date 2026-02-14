@@ -35,11 +35,7 @@ export default class PopoverToggleControl extends DragwybEditor.editor.extends.C
                     aria-pressed={isActive}
                     onClick={clickHandler}
                 >
-                    {settings.label && (
-                        <label className="dragwyb-control__label">
-                            {settings.label}
-                        </label>
-                    )}
+                    <this.RenderLabel />
                     {settings.icon && (
                         <i className={`dragwyb-popover-toggle__icon ${settings.icon}`} aria-hidden="true" />
                     )}

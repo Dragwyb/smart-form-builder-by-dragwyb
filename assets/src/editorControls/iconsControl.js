@@ -30,7 +30,7 @@ export default class IconsControl extends DragwybEditor.editor.extends.ControlBa
 
         return (
             <div className="dragwyb-control dragwyb-control--icons-list" id={`control-${id}`}>
-                <label className="dragwyb-control__label">{settings.label}</label>
+                <this.RenderLabel />
 
                 <div className="dragwyb-repeater-list">
                     {items.map((item, index) => (

@@ -14,12 +14,11 @@ export default class NumberControl extends DragwybEditor.editor.extends.ControlB
 
         return (
             <div className="dragwyb-control dragwyb-control--number" data-control="number" id={`control-${id}`}>
-                {settings.label && (
-                    <label className="dragwyb-control__label" htmlFor={id}>
-                        {settings.label}
-                        <Reset handler={this.resetControl.bind(this)} disabled={value === defaultValue} />
-                    </label>
-                )}
+                <this.RenderLabel
+                    attr={
+                        { htmlFor: id }
+                    }
+                />
                 <input
                     type="number"
                     id={id}

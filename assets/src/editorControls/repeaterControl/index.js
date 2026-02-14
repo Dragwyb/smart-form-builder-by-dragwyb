@@ -11,7 +11,6 @@ class RepeaterControl extends DragwybEditor.editor.extends.ControlBase {
         const { settings, id } = this;
         const { value: repeaterItems, tabsSettings = {} } = this.state;
 
-
         const updateHandler = (id, item) => {
             this.setState({ value: item })
             this.updateControls(id, item)
@@ -23,10 +22,6 @@ class RepeaterControl extends DragwybEditor.editor.extends.ControlBase {
             if (tabsSettings && (!tabsSettings[id] || tabsSettings[id] !== value)) {
                 this.setState({ tabsSettings: { ...tabsSettings, [id]: value } });
             }
-        }
-
-        const resetTabSettings = (id, value) => {
-            this.setState({ tabsSettings: {} });
         }
 
         const addItemHandler = () => {
@@ -90,6 +85,7 @@ const defaultValueHandler = (settings, attributes, Utils) => {
             }
         })
     }
+
     return attributes;
 }
 

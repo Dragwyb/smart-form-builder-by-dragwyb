@@ -78,10 +78,11 @@ export default class DimensionsControl extends DragwybEditor.editor.extends
             >
                 {/* Header */}
                 <div className="dragwyb-dimensions__header dragwyb-label-inline">
-                    <label className="dragwyb-control__label" htmlFor={id}>
-                        {label}
-                    </label>
-                    <Reset handler={this.resetControl.bind(this)} disabled={!this.valueChanged()} />
+                    <this.RenderLabel
+                        attr={
+                            { htmlFor: id }
+                        }
+                    />
                     {units && Object.keys(units).length > 1 && (
                         <UnitSelector
                             units={units}
@@ -156,7 +157,7 @@ export default class DimensionsControl extends DragwybEditor.editor.extends
 
         Object.keys(placeholders).forEach((placeholder) => {
             if (
-                (!value[placeholders[placeholder]] &&
+                (!value || !value[placeholders[placeholder]] &&
                     value[placeholders[placeholder]] !== 0) ||
                 "" === value[placeholders[placeholder]]
             ) {
@@ -172,22 +173,6 @@ export default class DimensionsControl extends DragwybEditor.editor.extends
 
         return placeholders;
     }
-
-    resetControl() {
-        const { id, settings } = this;
-        const { default: defaultValue = {} } = settings;
-
-        const resetValue = {
-            top: this.getValidValue(defaultValue.top, ""),
-            right: this.getValidValue(defaultValue.right, ""),
-            bottom: this.getValidValue(defaultValue.bottom, ""),
-            left: this.getValidValue(defaultValue.left, ""),
-            unit: this.getValidValue(defaultValue.unit, "px"),
-            linked: this.getValidValue(defaultValue.linked, false),
-        };
-
-        this.updateControlHandler(id, resetValue);
-    };
 
     valueChanged() {
         const { default: defaultValue = {} } = this.settings;

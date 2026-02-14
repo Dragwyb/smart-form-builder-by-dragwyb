@@ -27,13 +27,17 @@ const RepeaterSortable = ({ items, settings, updateControls, controlId, Utils, u
   };
 
   const updateHandler = (key, value, index) => {
-    
-    if(settings?.items[key] && settings.items[key].type === 'tabs' && value){
+
+    if (settings?.items[key] && settings.items[key].type === 'tabs' && value) {
       updateTabsHandler(key, value);
       return;
     }
 
     const updatedItems = [...items];
+
+    if (!updatedItems[index].attributes) {
+      updatedItems[index].attributes = {};
+    }
 
     updatedItems[index].attributes[key] = value;
 
@@ -45,7 +49,7 @@ const RepeaterSortable = ({ items, settings, updateControls, controlId, Utils, u
   };
 
   const onCopy = (item, index) => {
-    const newItem = {  _id: Utils.generateId(), attributes: JSON.parse(JSON.stringify(item)) };
+    const newItem = { _id: Utils.generateId(), attributes: JSON.parse(JSON.stringify(item)) };
     items.splice(index, 0, newItem);
 
     updateControls(controlId, items);
@@ -65,7 +69,7 @@ const RepeaterSortable = ({ items, settings, updateControls, controlId, Utils, u
             settings={settings}
             updateTabsHandler={updateTabsHandler}
             activeRepeater={tabsSettings.activeRepeaterId || false}
-            repeaterItem={{...item.attributes||{}, ...tabsSettings || {}}}
+            repeaterItem={{ ...item.attributes || {}, ...tabsSettings || {} }}
             repeaterItems={items}
             Utils={Utils}
           />

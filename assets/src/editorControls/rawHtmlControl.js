@@ -15,11 +15,11 @@ export default class RawHtmlControl extends DragwybEditor.editor.extends.Control
 
         return (
             <div className="dragwyb-control dragwyb-control--raw-html" data-control="raw_html" id={`control-${id}`}>
-                {settings.label && (
-                    <label className="dragwyb-control__label" htmlFor={id}>
-                        {settings.label}
-                    </label>
-                )}
+                <this.RenderLabel
+                    attr={
+                        { htmlFor: id }
+                    }
+                />
                 <div
                     dangerouslySetInnerHTML={{ __html: value }}
                 />

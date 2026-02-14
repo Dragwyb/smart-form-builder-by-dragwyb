@@ -22,14 +22,11 @@ export default class SwitcherControl extends DragwybEditor.editor.extends.Contro
                 data-control="switcher"
                 id={`control-${id}`}
             >
-                {settings.label && (
-                    <label
-                        className="dragwyb-control__label"
-                        htmlFor={id}
-                    >
-                        {settings.label}
-                    </label>
-                )}
+                <this.RenderLabel
+                    attr={
+                        { htmlFor: id }
+                    }
+                />
 
                 <label className="dragwyb-switcher">
                     <input

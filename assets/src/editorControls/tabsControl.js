@@ -16,11 +16,7 @@ export default class TabsControl extends DragwybEditor.editor.extends.ControlBas
 
         return (
             <div className="dragwyb-control dragwyb-control--tabs" data-control="tabs" id={`control-${id}`}>
-                {settings.label && (
-                    <label className="dragwyb-control__label">
-                        {settings.label}
-                    </label>
-                )}
+                <this.RenderLabel />
                 <div className="dragwyb-tabs__nav">
                     {Object.keys(options)?.map((option) => (
                         <button

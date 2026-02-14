@@ -11,11 +11,11 @@ export default class TextControl extends DragwybEditor.editor.extends.ControlBas
 
         return (
             <div className="dragwyb-control dragwyb-control--text" data-control="text" id={`control-${id}`}>
-                {settings.label && (
-                    <label className="dragwyb-control__label" htmlFor={id}>
-                        {settings.label}
-                    </label>
-                )}
+                <this.RenderLabel
+                    attr={
+                        { htmlFor: id }
+                    }
+                />
                 <input
                     type="text"
                     className="dragwyb-control__input"

@@ -138,11 +138,11 @@ export default class FontsControl extends DragwybEditor.editor.extends.ControlBa
             >
                 {/* Header */}
                 <div className="dragwyb-fonts__header">
-                    {label && (
-                        <label className="dragwyb-control__label" htmlFor={id}>
-                            {label}
-                        </label>
-                    )}
+                    <this.RenderLabel
+                        attr={
+                            { htmlFor: id }
+                        }
+                    />
                 </div>
 
                 {/* Fields */}

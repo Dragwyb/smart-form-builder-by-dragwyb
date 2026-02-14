@@ -23,12 +23,11 @@ export default class ChooseControl extends DragwybEditor.editor.extends.ControlB
 
         return (
             <div className={wrapperClass} data-control="choose" id={`control-${id}`}>
-
-                {settings.label && (
-                    <label className="dragwyb-control__label" htmlFor={id}>
-                        {settings.label}
-                    </label>
-                )}
+                <this.RenderLabel
+                    attr={
+                        { htmlFor: id }
+                    }
+                />
 
                 <div className="dragwyb-control__content">
                     <div className="dragwyb-choose-group">

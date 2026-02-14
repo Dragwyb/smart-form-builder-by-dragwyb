@@ -11,9 +11,7 @@ export default class RadioControl extends DragwybEditor.editor.extends.ControlBa
 
         return (
             <div className="dragwyb-control dragwyb-control--radio" data-control="radio" id={`control-${id}`}>
-                {settings.label && (
-                    <label className="dragwyb-control__label">{settings.label}</label>
-                )}
+                <this.RenderLabel />
                 <div className="dragwyb-control__options">
                     {options.map((opt) => (
                         <label key={opt.value} className="dragwyb-radio">
