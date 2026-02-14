@@ -7,32 +7,55 @@ const StyleLoader = () => {
     const [styleWrapper, setStyleWrapper] = useState(null);
     const iframeEle = useSelector(state => state?.iframeEle);
 
+    const generateCssStrings = (cssSelectors) => {
+        const cssCache = {};
+        let cssString = "";
+
+        Object.keys(cssSelectors).forEach(key => {
+            const entry = cssSelectors[key];
+            const selector = Object.keys(entry)[0];
+            let rule = Object.values(entry)[0].trim();
+            rule = rule.endsWith(';') ? rule : rule + ';';
+
+            if (!cssCache[selector]) {
+                cssCache[selector] = [];
+            }
+            cssCache[selector].push(rule);
+        });
+
+        for (const selector in cssCache) {
+            if (cssCache.hasOwnProperty(selector)) {
+                const rules = cssCache[selector].join(' ');
+                cssString += `${selector} { ${rules} }\n`;
+            }
+        }
+        return cssString;
+    }
 
     useEffect(() => {
 
-        if (iframeEle) {
+        if (iframeEle && styleSelectors && Object.keys(styleSelectors).length > 0) {
             const handler = setTimeout(() => {
 
-                const cssCache = {};
-                let cssString = "";
+                const deepClonsedStyleSelectors = { ...styleSelectors };
+                const tableStyleSelectors = deepClonsedStyleSelectors['tablet'] || {};
+                const mobileStyleSelectors = deepClonsedStyleSelectors['mobile'] || {};
 
-                Object.keys(styleSelectors).forEach(key => {
-                    const entry = styleSelectors[key];
-                    const selector = Object.keys(entry)[0];
-                    let rule = Object.values(entry)[0].trim();
-                    rule = rule.endsWith(';') ? rule : rule + ';';
+                delete deepClonsedStyleSelectors['tablet']
+                delete deepClonsedStyleSelectors['mobile']
 
-                    if (!cssCache[selector]) {
-                        cssCache[selector] = [];
-                    }
-                    cssCache[selector].push(rule);
-                });
+                let cssString = generateCssStrings(deepClonsedStyleSelectors);
 
-                for (const selector in cssCache) {
-                    if (cssCache.hasOwnProperty(selector)) {
-                        const rules = cssCache[selector].join(' ');
-                        cssString += `${selector} { ${rules} }\n`;
-                    }
+                if (Object.keys(tableStyleSelectors).length > 0) {
+                    cssString += `@media (max-width: 768px) {
+                        ${generateCssStrings(tableStyleSelectors)}
+                    }`;
+                }
+
+                if (Object.keys(mobileStyleSelectors).length > 0) {
+                    cssString += `@media (max-width: 480px) {
+                        ${generateCssStrings(mobileStyleSelectors)}
+                    }`;
                 }
 
                 if (!styleWrapper && '' !== cssString) {

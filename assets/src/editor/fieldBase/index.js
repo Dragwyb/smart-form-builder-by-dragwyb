@@ -1,32 +1,33 @@
 class DragwybFieldBase {
     #updateValue = () => { }
 
-    constructor(args){
-        this.fieldName=this.fieldName();
+    constructor(args) {
+        this.fieldName = this.fieldName();
+
         return this.#renderContent(args);
     }
 
-    #renderContent(args){
+    #renderContent(args) {
 
-        if(!this.fieldName){
+        if (!this.fieldName) {
             return;
         }
 
         return this.renderComponent(args)
     }
 
-    renderComponent(args){
+    renderComponent(args) {
         this.#setDisplaySetting(args);
         return this.bind();
     }
 
-    #setDisplaySetting(args){
-        this.html=args[0];
-        this.type=args[1];
-        this.id=args[2];
-        this.value=args[3];
-        this.field=args[4];
-        this.attributes=this.field.attributes
+    #setDisplaySetting(args) {
+        this.html = args[0];
+        this.type = args[1];
+        this.id = args[2];
+        this.value = args[3];
+        this.field = args[4];
+        this.attributes = this.field.attributes
         this.#updateValue = args[5];
     }
 
@@ -35,8 +36,8 @@ class DragwybFieldBase {
     }
 
     #triggerOnChange(key, value) {
-        this.value=value;
-        this.#updateValue({fieldObject: this});
+        this.value = value;
+        this.#updateValue({ fieldObject: this });
     }
 
     /**

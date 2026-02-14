@@ -15,6 +15,7 @@ import {
     UPDATE_ACTIVE_TOOLBAR,
     UPDATE_THEME_MODE,
     UPDATE_IFRAME_NODE,
+    UPDATE_RESPONSIVE_TYPE,
     UPDATE_FIELD_IDS,
     UPDATE_FIELD_ID,
     DELETE_FIELD_ID,
@@ -40,7 +41,8 @@ const initialState = {
     fieldIds: [],
     selectedSettingId: false,
     activeToolbar: DragwybEditor?.EditorToolbars?.Default ?? false,
-    themeMode: localStorage.getItem("DragwybEditorTheme") || 'dark'
+    themeMode: localStorage.getItem("DragwybEditorTheme") || 'dark',
+    responsiveType: 1024
 };
 
 export default function reducer(state = initialState, action) {
@@ -57,6 +59,12 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 iframeEle: action.payload.node
+            }
+
+        case UPDATE_RESPONSIVE_TYPE:
+            return {
+                ...state,
+                responsiveType: action.payload.responsiveType
             }
 
         case ADD_FIELD:
@@ -272,6 +280,14 @@ export default function reducer(state = initialState, action) {
 
         case UPDATE_STYLE_SELECTORS:
             if (!action.payload.key || !action.payload.value) return state;
+
+            if (action.payload.responsiveType && 'desktop' !== action.payload.responsiveType) {
+                return {
+                    ...state,
+                    styleSelectors: { ...state.styleSelectors || {}, [action.payload.responsiveType]: { ...state.styleSelectors[action.payload.responsiveType] || {}, [action.payload.key]: action.payload.value } }
+                }
+            }
+
             return {
                 ...state,
                 styleSelectors: { ...state.styleSelectors || {}, [action.payload.key]: { ...state.styleSelectors[action.payload.key] || {}, ...action.payload.value } }

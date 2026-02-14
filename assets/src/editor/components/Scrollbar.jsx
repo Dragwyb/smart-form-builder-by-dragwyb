@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 
-const Scrollbar = ({ children, className = '' }) => {
+const Scrollbar = ({ children, className = '', isIframe = false, iframeRef = false }) => {
     const contentRef = useRef(null);
     const scrollTrackRef = useRef(null);
     const scrollThumbRef = useRef(null);
-    const iframeEle = useSelector(state => state?.iframeEle);
 
-    if (!iframeEle) return null;
+    if (isIframe && !iframeRef) return null;
 
     const [thumbHeight, setThumbHeight] = useState(20);
     const [isDragging, setIsDragging] = useState(false);
@@ -66,7 +65,7 @@ const Scrollbar = ({ children, className = '' }) => {
 
         const targetDocument = e?.target?.ownerDocument;
 
-        if (targetDocument === iframeEle) {
+        if (targetDocument === iframeRef) {
             setActiveDocumentType('iframe');
         } else if (activeDocumentType !== 'parent') {
             setActiveDocumentType('parent');
@@ -141,7 +140,7 @@ const Scrollbar = ({ children, className = '' }) => {
 
     const handleThumbMouseUp = useCallback(() => {
         if (isDragging) {
-            const targetDoument = activeDocumentType === 'iframe' ? iframeEle : document;
+            const targetDoument = activeDocumentType === 'iframe' ? iframeRef : document;
 
             setIsDragging(false);
             targetDoument.body.style.userSelect = '';
@@ -153,7 +152,7 @@ const Scrollbar = ({ children, className = '' }) => {
 
         if ('' === activeDocumentType) return;
 
-        const targetDoument = activeDocumentType === 'iframe' ? iframeEle : document;
+        const targetDoument = activeDocumentType === 'iframe' ? iframeRef : document;
 
         if (isDragging) {
             targetDoument.addEventListener('mousemove', handleThumbMouseMove);

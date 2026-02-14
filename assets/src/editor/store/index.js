@@ -21,7 +21,8 @@ const initialState = {
     popoverControls: {},
     styleSelectors: DragwybEditor?.frontendInitialData?.css && typeof DragwybEditor?.frontendInitialData?.css === 'object' ? DragwybEditor?.frontendInitialData?.css : {},
     iframeEle: null,
-    themeMode: localStorage.getItem("DragwybEditorTheme") || 'dark'
+    themeMode: localStorage.getItem("DragwybEditorTheme") || 'dark',
+    responsiveType: 1024
 };
 
 const store = createStore(reducer, initialState, applyMiddleware(thunk));

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateIframeNode } from '../store/actions';
 import UpdateFormLabelPosition from './updateFormLabelPosition';
+import Scrollbar from '../components/Scrollbar';
 
 const PreviewIframe = ({ children, url, style = {} }) => {
     const [mountNode, setMountNode] = useState(null);
+    const responsiveType = useSelector((state) => state.responsiveType);
     const dispatch = useDispatch();
 
     const iframeSrc = `${url}&dragwyb_iframe_mode=true`;
@@ -15,7 +17,7 @@ const PreviewIframe = ({ children, url, style = {} }) => {
         const doc = iframe.contentWindow.document;
 
         setTimeout(() => {
-            setMountNode(doc.body);
+            setMountNode(doc);
             dispatch(updateIframeNode(doc));
             jQuery(document).trigger('Dragwyb:editorAppLoaded');
         }, 1500);
@@ -28,15 +30,13 @@ const PreviewIframe = ({ children, url, style = {} }) => {
             id="dragwyb-preview-iframe"
             title="Form Preview"
             style={{
-                width: '100%',
-                height: '100%',
-                border: 'none',
-                display: 'block',
                 ...style,
+                '--preview-width': `${responsiveType >= 1024 ? '100%' : responsiveType + 'px'}`,
             }}
+            data-responsive-type={responsiveType >= 1024 ? 'desktop' : responsiveType >= 768 ? 'tablet' : 'mobile'}
         >
             {mountNode && <UpdateFormLabelPosition />}
-            {mountNode && createPortal(children, mountNode)}
+            {mountNode && createPortal(<Scrollbar isIframe={true} iframeRef={mountNode}>{children}</Scrollbar>, mountNode.body)}
         </iframe>
     );
 };

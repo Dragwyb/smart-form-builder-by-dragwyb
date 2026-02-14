@@ -49,7 +49,11 @@ const RenderItem = ({
         dragRef(Node);
     };
 
-    let wrapperClass = `dragwyb-field-wrapper dragwyb-${field.type}-field${field.className && "" !== field.className ? ` ${field.className}` : ""}`;
+    let wrapperClass = `dragwyb-field-wrapper dragwyb-${field.type}-field${field.css_classes || ''}`;
+
+    if (['button', 'file', 'radio', 'checkbox'].includes(field.type)) {
+        wrapperClass += " dragwyb-no-float";
+    }
 
     if (selectedField && selectedField === field._id) {
         wrapperClass += " selected";
@@ -83,6 +87,7 @@ const RenderItem = ({
                 <Fields.Preview fields={[field]} values={values} errors={errors} />
                 <div className="field-actions">
                     <button
+                        title={__("Duplicate", "dragwyb-form-builder")}
                         className="duplicate"
                         onClick={(e) => {
                             e.stopPropagation();
@@ -92,6 +97,7 @@ const RenderItem = ({
                         <span className="dashicons dashicons-admin-page"></span>
                     </button>
                     <button
+                        title={__("Delete", "dragwyb-form-builder")}
                         className="delete"
                         onClick={(e) => {
                             e.stopPropagation();
@@ -163,11 +169,17 @@ const Canvas = ({
     });
 
     const handleDuplicateField = (field, index) => {
-        const deepClone = JSON.parse(JSON.stringify(field));
+        let deepClone = JSON.parse(JSON.stringify(field));
         const id = Utils.generateId();
         deepClone._id = id;
 
-        // (Truncated for brevity: your existing logic for clearing attributes goes here)
+        if (DragwybEditor.fields.fields[deepClone.type] && DragwybEditor.fields.fields[deepClone.type].controls) {
+            const fieldControls = DragwybEditor.fields.fields[deepClone.type].controls;
+
+            if (fieldControls.field_id) {
+                deepClone.attributes.field_id = `field_${deepClone._id}`;
+            }
+        }
 
         dispatch(duplicateField(deepClone, index + 1, dispatch));
         onFieldSelect({ id: deepClone._id });
@@ -184,14 +196,14 @@ const Canvas = ({
     }
 
     return (
-        <Scrollbar  >
-            <div className="dragwyb-editor__main">
-                <div className="dragwyb-canvas-wrapper" ref={setNodeRef}>
-                    <div className={canvasCls}>
-                        <div
-                            className="dragwyb-form-wrapper"
-                            id={`dragwyb-form-wrapper-${DragwybEditor.formId}`}
-                        >
+        <div className="dragwyb-editor__main">
+            <div className="dragwyb-canvas-wrapper" ref={setNodeRef}>
+                <div className={canvasCls}>
+                    <div
+                        className="dragwyb-form-wrapper"
+                        id={`dragwyb-form-wrapper-${DragwybEditor.formId}`}
+                    >
+                        <form className="dragwyb-form" action="#" onSubmit={(e) => { e.preventDefault(); return false; }}>
                             {fields && fields.length > 0 && (
                                 <>
                                     {fields.map((field, index) => (
@@ -210,16 +222,16 @@ const Canvas = ({
                                     ))}
                                 </>
                             )}
-                            <AddFieldMsg
-                                setActiveTab={setActiveTab}
-                                isOver={isOver || dropIndex === fields.length}
-                                updateFieldSelect={onFieldSelect}
-                            />
-                        </div>
+                        </form>
+                        <AddFieldMsg
+                            setActiveTab={setActiveTab}
+                            isOver={isOver || dropIndex === fields.length}
+                            updateFieldSelect={onFieldSelect}
+                        />
                     </div>
                 </div>
             </div>
-        </Scrollbar>
+        </div>
     );
 };
 

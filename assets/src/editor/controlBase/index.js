@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+import { Field } from "../Editor/Fields";
+import ResponsiveDevices from "../../editor/components/Common/ResponsiveDevices";
+import { Value } from "sass";
 
 class DragwybControlBase extends Component {
     #updateValue = () => { }
@@ -10,6 +13,7 @@ class DragwybControlBase extends Component {
         }
         this.controlName = this.controlName() || props.settings.type;
         this.onInit();
+        this.RenderLabel = this.RenderLabel.bind(this);
         this.#renderContent(props);
     }
 
@@ -40,9 +44,16 @@ class DragwybControlBase extends Component {
             return;
         }
 
-        const uniqueSelector = `${this.selectorKey}${this.selectedSetting && '' !== this.selectedSetting ? '_' + this.selectedSetting : ''}_${this.id}`;
+        const selectedSetting = this.selectedSetting && '' !== this.selectedSetting && this.selectedSetting !== this.selectorKey ? this.selectedSetting : false;
+        const uniqueSelector = `${this.selectorKey}${selectedSetting ? '_' + selectedSetting : ''}_${this.id}`;
 
-        this.Utils.updateStyleSelectors({ key: uniqueSelector, value: this.state.value, selectors: this.settings.selectors, placeholders: this.getStyleSelectorPlaceholder(this.state.value, this.settings.selectors_placeholders), toolbarType: this.selectorKey, itemId: this.selectedSetting, initialRender: true });
+        const styleSelectorsData = { key: uniqueSelector, value: this.state.value, selectors: this.settings.selectors, placeholders: this.getStyleSelectorPlaceholder(this.state.value, this.settings.selectors_placeholders), toolbarType: this.selectorKey, itemId: this.selectedSetting, initialRender: true };
+
+        if (this?.settings?.responsive_control && this?.settings?.responsive_type) {
+            styleSelectorsData.responsiveType = this.settings.responsive_type;
+        }
+
+        this.Utils.updateStyleSelectors(styleSelectorsData);
     }
 
     componentDidUpdate = (prevProps, prevState) => {
@@ -76,6 +87,22 @@ class DragwybControlBase extends Component {
         return this.bind();
     }
 
+    RenderLabel({ label = null, className = '', attr = {}, children = null }) {
+        label = label || this.settings.label;
+
+        if (!label) {
+            return null;
+        }
+
+        return (
+            <label className={`dragwyb-control__label${className !== '' ? ' ' + className : ''}`} {...attr}>
+                {label}
+                {this.settings.responsive_control && this.settings.responsive_type && <ResponsiveDevices Utils={this.Utils} style='dropdown' />}
+                {children}
+            </label>
+        );
+    }
+
     #setDisplaySetting(props) {
         this.id = props.id;
         this.settings = props.settings;
@@ -91,9 +118,8 @@ class DragwybControlBase extends Component {
     }
 
     resetControl() {
-        const value = this.settings && [undefined, null].includes(this.settings.default) ? '' : this.settings.default;
-        this.setState({ value: value });
-        this.updateControls(this.id, value);
+        this.setState({ value: undefined });
+        this.updateControls(this.id, undefined);
     }
 
     valueChanged() {
@@ -125,9 +151,23 @@ class DragwybControlBase extends Component {
 
     #updateStyleSelector(key, value) {
         if (this.settings && this.settings.type && this.settings.selectors && this.settings.selectors_placeholders) {
-            const uniqueSelector = `${this.selectorKey}${this.selectedSetting && '' !== this.selectedSetting ? '_' + this.selectedSetting : ''}_${key}`;
+            const selectedSetting = this.selectedSetting && '' !== this.selectedSetting && this.selectedSetting !== this.selectorKey ? this.selectedSetting : false;
+            const uniqueSelector = `${this.selectorKey}${selectedSetting ? '_' + selectedSetting : ''}_${key}`;
 
-            this.Utils.updateStyleSelectors({ key: uniqueSelector, value: value, selectors: this.settings.selectors, placeholders: this.getStyleSelectorPlaceholder(value, this.settings.selectors_placeholders), toolbarType: this.selectorKey, itemId: this.selectedSetting });
+            if (value === undefined || value === null || value === '') {
+                const defaultValue = this?.settings?.default;
+
+                this.Utils.deleteStyleSelectors({ key: uniqueSelector });
+            } else {
+
+                const styleSelectorsData = { key: uniqueSelector, value: value, selectors: this.settings.selectors, placeholders: this.getStyleSelectorPlaceholder(value, this.settings.selectors_placeholders), toolbarType: this.selectorKey, itemId: this.selectedSetting };
+
+                if (this?.settings?.responsive_control && this?.settings?.responsive_type) {
+                    styleSelectorsData.responsiveType = this.settings.responsive_type;
+                }
+
+                this.Utils.updateStyleSelectors(styleSelectorsData);
+            }
         }
     }
 

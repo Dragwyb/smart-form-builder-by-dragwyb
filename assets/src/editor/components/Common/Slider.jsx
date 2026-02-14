@@ -108,6 +108,19 @@ const Slider = ({
         // Handle empty string from number input
         if (val === "") {
             setLocalValue("");
+            if (onChange) onChange("");
+            return;
+        }
+
+        if (val < min) {
+            setLocalValue(min);
+            if (onChange) onChange(min);
+            return;
+        }
+
+        if (val > max) {
+            setLocalValue(max);
+            if (onChange) onChange(max);
             return;
         }
 

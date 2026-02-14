@@ -13,6 +13,7 @@ const RenderControl = ({
     selectedToolbar,
     controlKey,
     settings,
+    toolbarSettings,
     fieldValue,
     handleChange,
     defautlActiveSection,
@@ -44,7 +45,7 @@ const RenderControl = ({
     // 🔹 Merge values: section + field-level
     const shouldRenderSettings = { ...fieldValue, ...getSectionSettings() };
 
-    const [shouldRender, setShouldRender] = useState(shouldRenderField(settings, shouldRenderSettings))
+    const [shouldRender, setShouldRender] = useState(shouldRenderField(settings, shouldRenderSettings, toolbarSettings?.controls))
     const [resetControlEvent, setResetControlEvent] = useState(null);
     const [valueChangedCheck, setValueChangedCheck] = useState(false);
     const dispatch = useDispatch();
@@ -52,12 +53,13 @@ const RenderControl = ({
     const state = store.getState();
     const Utils = Helper(state, dispatch);
 
-    const conditionUpdateHandler = (value) => {
+    const conditionUpdateHandler = (value, renderStyleSelector = true) => {
         if (shouldRender !== value) {
             setShouldRender(value);
 
-            if (!value && settings.selectors) {
-                const uniqueSelector = `${selectedToolbar}${selectedTab && '' !== selectedTab ? '_' + selectedTab : ''}_${controlKey}`;
+            if (!value && settings.selectors && !renderStyleSelector) {
+                const selectedSetting = selectedTab && '' !== selectedTab && selectedTab !== selectedToolbar ? selectedTab : false;
+                const uniqueSelector = `${selectedToolbar}${selectedSetting ? '_' + selectedSetting : ''}_${controlKey}`;
 
                 Utils.deleteStyleSelectors({ key: uniqueSelector });
             }
@@ -69,6 +71,8 @@ const RenderControl = ({
             controlKey={controlKey}
             conditions={settings.conditions}
             updateHandler={conditionUpdateHandler}
+            isResponsiveControl={settings.responsive_control}
+            responsiveType={settings.responsive_type}
         />;
     }
 
@@ -122,6 +126,8 @@ const RenderControl = ({
             <ControlsConditions
                 controlKey={controlKey}
                 conditions={settings.conditions}
+                responsiveType={settings.responsive_type}
+                isResponsiveControl={settings.responsive_control}
                 updateHandler={conditionUpdateHandler}
             />
             <div key={controlKey} className="dragwyb-setting-row" data-type={settings.type}>

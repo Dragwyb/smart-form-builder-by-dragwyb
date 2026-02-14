@@ -27,6 +27,7 @@ export const UPDATE_STYLE_SELECTORS = 'UPDATE_STYLE_SELECTORS';
 export const DELETE_STYLE_SELECTORS = 'DELETE_STYLE_SELECTORS';
 export const UPDATE_THEME_MODE = 'UPDATE_THEME_MODE';
 export const UPDATE_IFRAME_NODE = 'UPDATE_IFRAME_NODE';
+export const UPDATE_RESPONSIVE_TYPE = 'UPDATE_RESPONSIVE_TYPE';
 
 export const updateThemeMode = (themeMode) => ({
     type: UPDATE_THEME_MODE,
@@ -36,6 +37,11 @@ export const updateThemeMode = (themeMode) => ({
 export const updateIframeNode = (node) => ({
     type: UPDATE_IFRAME_NODE,
     payload: { node }
+})
+
+export const updateResponsiveType = (responsiveType) => ({
+    type: UPDATE_RESPONSIVE_TYPE,
+    payload: { responsiveType }
 })
 
 export const addField = ({ field, index = null }) => ({
@@ -123,9 +129,9 @@ export const deleteFieldIds = (id) => ({
     payload: { id }
 })
 
-export const updateStyleSelectors = (key, value) => ({
+export const updateStyleSelectors = (key, value, responsiveType = 'desktop') => ({
     type: UPDATE_STYLE_SELECTORS,
-    payload: { key, value }
+    payload: { key, value, responsiveType }
 })
 
 export const deleteStyleSelectors = (key) => ({
