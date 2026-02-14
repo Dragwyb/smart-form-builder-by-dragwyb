@@ -26,12 +26,21 @@ class CSS_Manager
 
     public function __construct()
     {
-        $upload_info = wp_upload_dir();
+        $dragwyb_upload_info = wp_upload_dir();
+
         // Create a specific folder for your plugin's CSS
-        $this->upload_dir = $upload_info['basedir'] . '/dragwyb-forms/css/';
-        $this->upload_url = $upload_info['baseurl'] . '/dragwyb-forms/css/';
+        $this->upload_dir = $dragwyb_upload_info['basedir'] . '/dragwyb-forms/css/';
+        $this->upload_url = $this->get_upload_dir_url($dragwyb_upload_info['baseurl']) . '/dragwyb-forms/css/';
 
         add_action('wp_ajax_dragwyb_clean_form_cache', [$this, 'clean_cache_request']);
+    }
+
+    /**
+     * Filter and return url based on ssl protocol form start
+     */
+    private function get_upload_dir_url(string $url): string
+    {
+        return is_ssl() ? preg_replace('/^http:/', 'https:', $url) : $url;
     }
 
     /**
@@ -69,7 +78,7 @@ class CSS_Manager
         if (file_exists($file_path)) {
             wp_enqueue_style(
                 'dragwyb-form-' . $form_id,
-                $file_url,
+                esc_url($file_url),
                 [],
                 filemtime($file_path) // Version based on file modification time
             );
