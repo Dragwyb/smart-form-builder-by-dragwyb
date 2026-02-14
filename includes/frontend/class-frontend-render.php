@@ -268,18 +268,46 @@ class Frontend_Render
 
 
         if (self::$css_cache && count(self::$css_cache) > 0) {
-            $css_string = json_encode(self::$css_cache);
+            $tablet_css = '';
+            $mobile_css = '';
 
-            $css_string = substr($css_string, 1, -1);
+            if (isset(self::$css_cache['tablet'])) {
+                $tablet_css = self::$css_cache['tablet'];
+                unset(self::$css_cache['tablet']);
+            }
 
-            $css_string = preg_replace('/"([^"]+)":"({[^}]+})"(?:,|$)/', '$1$2', $css_string);
-            $css_string = str_replace('":"', ':', $css_string);
-            $css_string = ltrim($css_string, '"');
+            if (isset(self::$css_cache['mobile'])) {
+                $mobile_css = self::$css_cache['mobile'];
+                unset(self::$css_cache['mobile']);
+            }
+
+            $css_string = $this->convert_css_into_strings(self::$css_cache);
+
+            if ($tablet_css && $tablet_css !== '') {
+                $css_string .= '@media (max-width: 768px) {' . $this->convert_css_into_strings($tablet_css) . '}';
+            }
+
+            if ($mobile_css && $mobile_css !== '') {
+                $css_string .= '@media (max-width: 480px) {' . $this->convert_css_into_strings($mobile_css) . '}';
+            }
 
             return array('css' => $css_string, 'google_fonts' => self::$google_fonts);
         }
 
         return array('css' => '', 'google_fonts' => array());
+    }
+
+    private function convert_css_into_strings($css_cache): string
+    {
+        $css_string = '';
+
+        foreach ($css_cache as $selector => $styles) {
+            $css_string .= $selector . '{';
+            $css_string .= $styles;
+            $css_string .= '}';
+        }
+
+        return sanitize_text_field($css_string);
     }
 
     public static function enqueue_static_assets()
@@ -400,7 +428,7 @@ class Frontend_Render
 
                         $placeholders = $this->get_control_placeholders($control_instance);
 
-                        $placeholders = $this->replace_selector_placeholders($form_wrapper_id, $control_config['items'][$item_control_id]['selectors'], $placeholders, $repeater_item_value, $type, $control_id, $field_id, $repeater_id);
+                        $placeholders = $this->replace_selector_placeholders($form_wrapper_id, $control_config['items'][$item_control_id]['selectors'], $placeholders, $repeater_item_value, $type, $control_id, $control_config['items'][$item_control_id], $field_id, $repeater_id);
                     }
                 }
                 continue;
@@ -426,12 +454,25 @@ class Frontend_Render
             // Uses helper method to support both complex and simple controls
             $placeholders = $this->get_control_placeholders($control_instance);
 
-            $this->replace_selector_placeholders($form_wrapper_id, $control_config['selectors'], $placeholders, $control_value, $type, $control_id, $field_id);
+            $this->replace_selector_placeholders($form_wrapper_id, $control_config['selectors'], $placeholders, $control_value, $type, $control_id, $control_config, $field_id);
         }
     }
 
-    private function replace_selector_placeholders($wrapper_id, $selectors, $placeholders, $value, $type, $control_id, $field_id = null, $current_item = null): void
+    private function replace_selector_placeholders($wrapper_id, $selectors, $placeholders, $value, $type, $control_id, $control_config, $field_id = null, $current_item = null): void
     {
+        $css_array = &self::$css_cache;
+
+        $responsive = false;
+        if (isset($control_config['responsive_control']) && isset($control_config['responsive_type']) && true === $control_config['responsive_control'] && !empty($control_config['responsive_type']) && is_string($control_config['responsive_type']) && 'desktop' !== $control_config['responsive_type']) {
+            $responsive = sanitize_text_field($control_config['responsive_type']);
+
+            if (!isset($css_array[$responsive])) {
+                $css_array[$responsive] = array();
+            }
+
+            $css_array = &$css_array[$responsive];
+        }
+
         // 4. Process 'selectors' Loop
         // Format: ['{{WRAPPER}} .title' => 'color: {{VALUE}};']
         foreach ($selectors as $css_selector => $css_property) {
@@ -461,12 +502,12 @@ class Frontend_Render
 
             // C. Append to CSS string if property is valid
             if (!empty($final_property)) {
-                $this->set_css_cache($final_selector, $final_property, $type, $control_id, $field_id, $current_item);
+                $this->set_css_cache($css_array, $final_selector, $final_property, $type, $control_id, $field_id, $current_item);
             }
         }
     }
 
-    private function set_css_cache($selector, $property, $type, $control_id, $field_id = null, $current_item = null)
+    private function set_css_cache(&$css_array, $selector, $property, $type, $control_id, $field_id = null, $current_item = null)
     {
         $property = str_ends_with($property, ';') ? $property : $property . ';';
 
@@ -483,16 +524,16 @@ class Frontend_Render
                 $unique_key .= '_' . sanitize_text_field($current_item);
             }
 
-            if (!isset(self::$css_cache[$unique_key])) {
-                self::$css_cache[$unique_key] = array();
+            if (!isset($css_array[$unique_key])) {
+                $css_array[$unique_key] = array();
             }
 
-            self::$css_cache[$unique_key][$selector] = $property;
+            $css_array[$unique_key][$selector] = $property;
         } else {
-            if (!isset(self::$css_cache[$selector])) {
-                self::$css_cache[$selector] = "{" . $property . "}";
+            if (!isset($css_array[$selector])) {
+                $css_array[$selector] = $property;
             } else {
-                self::$css_cache[$selector] = rtrim(self::$css_cache[$selector], '}') . $property . "}";
+                $css_array[$selector] = $css_array[$selector] . $property;
             }
         }
     }
