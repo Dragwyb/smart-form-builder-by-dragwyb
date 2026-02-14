@@ -18,7 +18,7 @@ class Field_Date extends Field_Base
         return array();
     }
 
-    protected function register_controls(): void
+    protected function register_field_controls(): void
     {
         // ==============================================================
         // CONTENT TAB
@@ -120,69 +120,6 @@ class Field_Date extends Field_Base
         ]);
 
         $this->end_section();
-
-        // ==============================================================
-        // ADVANCE TAB
-        // ==============================================================
-
-        $this->start_section('section_advance_layout', [
-            'label' => __('Layout & ID', 'dragwyb-form-builder'),
-            'tab'   => self::AdvanceTab,
-        ]);
-
-        $this->add_control('field_id', [
-            'type'        => Controls::TEXT,
-            'label'       => __('Field ID', 'dragwyb-form-builder'),
-            'default'     => uniqid('field_'),
-            'dynamic'     => ['active' => false],
-        ]);
-
-        $this->add_control('width', [
-            'type'         => Controls::SELECT,
-            'label'        => __('Field Width', 'dragwyb-form-builder'),
-            'label_inline' => true,
-            'options'      => [
-                '100%' => '100%',
-                '50%'  => '50%',
-                '33%'  => '33%',
-                '25%'  => '25%',
-                'auto' => 'Auto',
-            ],
-            'default'   => '100%',
-            'selectors' => [
-                '{{WRAPPER}}' => 'width: {{VALUE}};',
-            ],
-        ]);
-
-        $this->add_control('css_classes', [
-            'type'        => Controls::TEXT,
-            'label'       => __('Custom CSS Classes', 'dragwyb-form-builder'),
-        ]);
-
-        $this->end_section();
-
-        $this->start_section('section_advance_logic', [
-            'label' => __('Conditional Logic', 'dragwyb-form-builder'),
-            'tab'   => self::AdvanceTab,
-        ]);
-
-        $this->add_control('enable_logic', [
-            'type'         => Controls::SWITCHER,
-            'label'        => __('Enable Logic', 'dragwyb-form-builder'),
-            'default'      => '',
-            'return_value' => '',
-            'disabled'     => true,
-        ]);
-
-        $this->add_control('logic_msg', [
-            'type' => Controls::RAW_HTML,
-            'raw'  => '<div style="color: hsl(var(--dragwyb-sidebar-foreground)/var(--dragwyb-text-opacity, 1)); font-size: 12px; padding: 10px 0;">' . sprintf(__('%1$sComing Soon%2$s: Advanced Conditional Logic is in development. This feature will allow you to dynamically show or hide fields based on user input.', 'dragwyb-form-builder'), '<strong>', '</strong>') . '</div>',
-            'condition' => [
-                'enable_logic' => 'yes',
-            ],
-        ]);
-
-        $this->end_section();
     }
 
     protected function init(): void
@@ -194,20 +131,21 @@ class Field_Date extends Field_Base
 
     protected function render_field()
     {
+        $settings = $this->get_field_settings();
         $field_data = $this->get_field_settings();
-
-        $id = 'field_' . $this->get_the_id();
+        $id = $this->get_the_id();
+        $field_id      = $this->field_key_exist($settings, 'field_id', uniqid('date_'));
         $required = !empty($field_data['required']);
 ?>
-        <div class="dragwyb-field-wrapper dragwyb-date-field">
+        <div id="dragwyb-field-wrapper-<?php echo esc_attr($id); ?>" class="dragwyb-field-wrapper dragwyb-date-field">
             <?php if (!empty($label)) : ?>
-                <label for="<?php echo esc_attr($id); ?>" class="dragwyb-label">
+                <label for="<?php echo esc_attr($field_id); ?>" class="dragwyb-label">
                     <?php echo esc_html($label); ?>
                     <?php if ($required): ?><span class="required">*</span><?php endif; ?>
                 </label>
             <?php endif; ?>
 
-            <input type="date" id="<?php echo esc_attr($id); ?>" name="<?php echo esc_attr($id); ?>"
+            <input type="date" id="<?php echo esc_attr($field_id); ?>" name="<?php echo esc_attr($field_id); ?>"
                 placeholder="<?php echo esc_attr($placeholder); ?>"
                 <?php echo $required ? 'required' : ''; ?>
                 class="dragwyb-input" />

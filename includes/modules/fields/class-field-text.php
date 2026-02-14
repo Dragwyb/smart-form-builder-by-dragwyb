@@ -37,7 +37,7 @@ class Field_Text extends Field_Base
         $this->icon = 'fas fa-font';
     }
 
-    protected function register_controls(): void
+    protected function register_field_controls(): void
     {
         // This section defines the main content settings for the field
 
@@ -249,80 +249,13 @@ class Field_Text extends Field_Base
         ]);
 
         $this->end_section();
-
-
-        // The Advance tab contains layout options and technical identifiers
-
-        $this->start_section('section_advance_layout', [
-            'label' => __('Layout & ID', 'dragwyb-form-builder'),
-            'tab'   => self::AdvanceTab,
-        ]);
-
-        // The Field ID is a unique identifier used for saving data and logic
-        $this->add_control('field_id', [
-            'type'        => Controls::TEXT,
-            'label'       => __('Field ID', 'dragwyb-form-builder'),
-            'description' => __('Unique ID for logic and emails (e.g., text_field_1).', 'dragwyb-form-builder'),
-            'dynamic'     => ['active' => false],
-        ]);
-
-        // Allow users to set the width of the field, for example 50 percent for two columns
-        // We display the label inline for a cleaner layout in the settings panel
-        $this->add_control('width', [
-            'type'         => Controls::SELECT,
-            'label'        => __('Field Width', 'dragwyb-form-builder'),
-            'label_inline' => true,
-            'options'      => [
-                '100%' => '100%',
-                '50%'  => '50%',
-                '33%'  => '33%',
-                '25%'  => '25%',
-                'auto' => 'Auto',
-            ],
-            'default'   => '100%',
-            'selectors' => [
-                '{{WRAPPER}}' => 'width: {{VALUE}};',
-            ],
-        ]);
-
-        $this->add_control('css_classes', [
-            'type'        => Controls::TEXT,
-            'label'       => __('Custom CSS Classes', 'dragwyb-form-builder'),
-            'description' => __('Add custom classes to the wrapper.', 'dragwyb-form-builder'),
-        ]);
-
-        $this->end_section();
-
-        // Placeholder section for conditional logic which will be added in future updates
-        $this->start_section('section_advance_logic', [
-            'label' => __('Conditional Logic', 'dragwyb-form-builder'),
-            'tab'   => self::AdvanceTab,
-        ]);
-
-        $this->add_control('enable_logic', [
-            'type'         => Controls::SWITCHER,
-            'label'        => __('Enable Logic', 'dragwyb-form-builder'),
-            'default'      => '',
-            'return_value' => '',
-            'disabled'     => true,
-        ]);
-
-        $this->add_control('logic_msg', [
-            'type' => Controls::RAW_HTML,
-            'raw'  => '<div style="color: hsl(var(--dragwyb-sidebar-foreground)/var(--dragwyb-text-opacity, 1)); font-size: 12px; padding: 10px 0;">' . sprintf(__('%1$sComing Soon%2$s: Advanced Conditional Logic is in development. This feature will allow you to dynamically show or hide fields based on user input.', 'dragwyb-form-builder'), '<strong>', '</strong>') . '</div>',
-            'condition' => [
-                'enable_logic' => 'yes',
-            ],
-        ]);
-
-        $this->end_section();
     }
 
     protected function render_field()
     {
         $settings = $this->get_field_settings();
-
-        $id       = $this->field_key_exist($settings, 'field_id', uniqid('field_'));
+        $id = $this->get_the_id();
+        $field_id       = $this->field_key_exist($settings, 'field_id', uniqid('field_'));
         $label    = $this->field_key_exist($settings, 'label', 'Text Field');
         $placeholder = $this->field_key_exist($settings, 'placeholder', ' '); // Space for float logic
         $value    = $this->field_key_exist($settings, 'default_value', '');
@@ -330,18 +263,18 @@ class Field_Text extends Field_Base
         $required = $this->field_key_exist($settings, 'required', '') === 'yes';
         $classes  = $this->field_key_exist($settings, 'css_classes', '');
 ?>
-        <div class="dragwyb-field-wrapper <?php echo esc_attr($classes); ?>">
+        <div id="dragwyb-field-wrapper-<?php echo esc_attr($id); ?>" class="dragwyb-field-wrapper <?php echo esc_attr($classes); ?>">
             <div class="dragwyb-input-group">
                 <input
                     type="text"
-                    id="<?php echo esc_attr($id); ?>"
-                    name="<?php echo esc_attr($id); ?>"
+                    id="<?php echo esc_attr($field_id); ?>"
+                    name="<?php echo esc_attr($field_id); ?>"
                     value="<?php echo esc_attr($value); ?>"
                     placeholder="<?php echo esc_attr($placeholder); ?>"
                     class="dragwyb-field-input"
                     <?php echo $required ? 'required' : ''; ?> />
                 <?php if (!empty($label)) : ?>
-                    <label for="<?php echo esc_attr($id); ?>" class="dragwyb-field-label">
+                    <label for="<?php echo esc_attr($field_id); ?>" class="dragwyb-field-label">
                         <?php echo esc_html($label); ?>
                         <?php if ($required) : ?><span class="dragwyb-required">*</span><?php endif; ?>
                     </label>

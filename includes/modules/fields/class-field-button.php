@@ -21,7 +21,7 @@ class Field_Button extends Field_Base
     /**
      * Define settings specific to this button
      */
-    protected function register_controls(): void
+    protected function register_field_controls(): void
     {
         // ==============================================================
         // CONTENT TAB
@@ -84,19 +84,19 @@ class Field_Button extends Field_Base
         $this->add_control('bg_color', [
             'type'      => Controls::COLOR,
             'label'     => __('Background Color', 'dragwyb-form-builder'),
-            'selectors' => ['{{WRAPPER}} .dragwyb-btn' => 'background-color: {{VALUE}};'],
+            'selectors' => ['{{WRAPPER}} button' => '--dragwyb-btn-bg: {{VALUE}};'],
         ]);
 
         $this->add_control('text_color', [
             'type'      => Controls::COLOR,
             'label'     => __('Text Color', 'dragwyb-form-builder'),
-            'selectors' => ['{{WRAPPER}} .dragwyb-btn' => 'color: {{VALUE}};'],
+            'selectors' => ['{{WRAPPER}} button' => '--dragwyb-btn-color: {{VALUE}};'],
         ]);
 
         $this->add_group_control('border', [
             'type'     => Controls::GROUP_BORDER,
             'label'    => __('Border', 'dragwyb-form-builder'),
-            'selector' => '{{WRAPPER}} .dragwyb-btn',
+            'selector' => '{{WRAPPER}} button',
         ]);
 
         $this->end_tab();
@@ -107,19 +107,19 @@ class Field_Button extends Field_Base
         $this->add_control('hover_bg_color', [
             'type'      => Controls::COLOR,
             'label'     => __('Background Color', 'dragwyb-form-builder'),
-            'selectors' => ['{{WRAPPER}} .dragwyb-btn:hover' => 'background-color: {{VALUE}};'],
+            'selectors' => ['{{WRAPPER}} button:hover' => '--dragwyb-btn-bg: {{VALUE}};'],
         ]);
 
         $this->add_control('hover_text_color', [
             'type'      => Controls::COLOR,
             'label'     => __('Text Color', 'dragwyb-form-builder'),
-            'selectors' => ['{{WRAPPER}} .dragwyb-btn:hover' => 'color: {{VALUE}};'],
+            'selectors' => ['{{WRAPPER}} button:hover' => '--dragwyb-btn-color: {{VALUE}};'],
         ]);
 
         $this->add_control('hover_border_color', [
             'type'      => Controls::COLOR,
             'label'     => __('Border Color', 'dragwyb-form-builder'),
-            'selectors' => ['{{WRAPPER}} .dragwyb-btn:hover' => 'border-color: {{VALUE}};'],
+            'selectors' => ['{{WRAPPER}} button:hover' => '--dragwyb-btn-border-color: {{VALUE}};'],
         ]);
 
         $this->end_tab();
@@ -141,67 +141,6 @@ class Field_Button extends Field_Base
         ]);
 
         $this->end_section();
-
-        // ==============================================================
-        // ADVANCE TAB
-        // ==============================================================
-
-        $this->start_section('section_advance_layout', [
-            'label' => __('Layout & ID', 'dragwyb-form-builder'),
-            'tab'   => self::AdvanceTab,
-        ]);
-
-        $this->add_control('field_id', [
-            'type'        => Controls::TEXT,
-            'label'       => __('Button ID', 'dragwyb-form-builder'),
-            'default'     => uniqid('btn_'),
-            'dynamic'     => ['active' => false],
-        ]);
-
-        $this->add_control('width', [
-            'type'         => Controls::SELECT,
-            'label'        => __('Width', 'dragwyb-form-builder'),
-            'label_inline' => true,
-            'options'      => [
-                'auto' => 'Auto',
-                '100%' => 'Full Width',
-                '50%'  => '50%',
-            ],
-            'default'   => 'auto',
-            'selectors' => [
-                '{{WRAPPER}}' => 'width: {{VALUE}};',
-            ],
-        ]);
-
-        $this->add_control('css_classes', [
-            'type'        => Controls::TEXT,
-            'label'       => __('Custom CSS Classes', 'dragwyb-form-builder'),
-        ]);
-
-        $this->end_section();
-
-        $this->start_section('section_advance_logic', [
-            'label' => __('Conditional Logic', 'dragwyb-form-builder'),
-            'tab'   => self::AdvanceTab,
-        ]);
-
-        $this->add_control('enable_logic', [
-            'type'         => Controls::SWITCHER,
-            'label'        => __('Enable Logic', 'dragwyb-form-builder'),
-            'default'      => '',
-            'return_value' => '',
-            'disabled'     => true,
-        ]);
-
-        $this->add_control('logic_msg', [
-            'type' => Controls::RAW_HTML,
-            'raw'  => '<div style="color: hsl(var(--dragwyb-sidebar-foreground)/var(--dragwyb-text-opacity, 1)); font-size: 12px; padding: 10px 0;">' . sprintf(__('%1$sComing Soon%2$s: Advanced Conditional Logic is in development. This feature will allow you to dynamically show or hide fields based on user input.', 'dragwyb-form-builder'), '<strong>', '</strong>') . '</div>',
-            'condition' => [
-                'enable_logic' => 'yes',
-            ],
-        ]);
-
-        $this->end_section();
     }
 
     /**
@@ -210,7 +149,8 @@ class Field_Button extends Field_Base
     protected function render_field()
     {
         $settings = $this->get_field_settings();
-        $id       = $this->field_key_exist($settings, 'field_id', uniqid('btn_'));
+        $id = $this->get_the_id();
+        $field_id       = $this->field_key_exist($settings, 'field_id', uniqid('btn_'));
         $text     = $this->field_key_exist($settings, 'text', 'Submit');
         $action   = $this->field_key_exist($settings, 'button_action', 'submit');
         $align    = $this->field_key_exist($settings, 'alignment', 'left');
@@ -224,8 +164,8 @@ class Field_Button extends Field_Base
         $type = ($action === 'reset') ? 'reset' : 'submit';
 
 ?>
-        <div class="dragwyb-field-wrapper dragwyb-no-float <?php echo esc_attr($classes); ?>" style="<?php echo esc_attr($wrapper_style); ?>">
-            <button type="<?php echo esc_attr($type); ?>" id="<?php echo esc_attr($id); ?>" class="<?php echo esc_attr($btn_class); ?>">
+        <div id="dragwyb-field-wrapper-<?php echo esc_attr($id); ?>" class="dragwyb-field-wrapper dragwyb-no-float <?php echo esc_attr($classes); ?>" style="<?php echo esc_attr($wrapper_style); ?>">
+            <button type="<?php echo esc_attr($type); ?>" id="<?php echo esc_attr($field_id); ?>" class="<?php echo esc_attr($btn_class); ?>">
                 <?php echo esc_html($text); ?>
             </button>
         </div>
