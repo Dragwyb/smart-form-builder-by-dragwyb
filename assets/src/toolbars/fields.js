@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { SearchInput } from '../editor/components/Common';
 import { __ } from '@wordpress/i18n';
+import Scrollbar from '../editor/components/Scrollbar';
 
 const SidebarField = (props) => {
   const { type, label, icon, addFieldHandler, useDraggable } = props;
@@ -61,16 +62,18 @@ const Sidebar = ({ fieldTypes, Utils, addFieldHandler }) => {
       />
     </div>
     <div className="dragwyb-controls__fields">
-      {Object.entries(renderFields).map(([type, config]) => (
-        <SidebarField
-          key={type}
-          addFieldHandler={(t) => addFieldHandler(t, Utils)}
-          type={type}
-          icon={config.icon}
-          label={config.label}
-          useDraggable={Utils.useDraggable}
-        />
-      ))}
+      <Scrollbar>
+        {Object.entries(renderFields).map(([type, config]) => (
+          <SidebarField
+            key={type}
+            addFieldHandler={(t) => addFieldHandler(t, Utils)}
+            type={type}
+            icon={config.icon}
+            label={config.label}
+            useDraggable={Utils.useDraggable}
+          />
+        ))}
+      </Scrollbar>
     </div>
   </>
 }
@@ -122,7 +125,6 @@ class Fields extends DragwybEditor.editor.extends.ToolbarBase {
     const key = this.settingId;
     const data = this.toolbarData;
 
-
     if (key === 'fields' || !key) return false;
     const selectedField = this.getSelectedField(data, key);
 
@@ -149,7 +151,9 @@ class Fields extends DragwybEditor.editor.extends.ToolbarBase {
           valueUpdate = true;
           field.attributes[key] = value;
 
-          if (field.type && typeof DragwybEditor.fields.fields[field.type]?.controls?.[key]?.default === 'object' && this.Utils.compareTwoObjects({ obj1: DragwybEditor.fields.fields[field.type].controls[key].default, obj2: value })) {
+          if (value === undefined) {
+            delete field.attributes[key];
+          } else if (field.type && typeof DragwybEditor.fields.fields[field.type]?.controls?.[key]?.default === 'object' && this.Utils.compareTwoObjects({ obj1: DragwybEditor.fields.fields[field.type].controls[key].default, obj2: value })) {
             delete field.attributes[key];
           } else if (DragwybEditor.fields.fields[field.type]?.controls?.[key]?.default === value) {
             delete field.attributes[key];
