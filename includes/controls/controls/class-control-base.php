@@ -77,13 +77,25 @@ abstract class Control_Base
             $control_settings['conditions'] = 'custom';
         }
 
+        if (!isset($control_settings['responsive'])) {
+            $control_settings['responsive'] = 'boolean';
+        }
+
+        if (!isset($control_settings['responsive_type'])) {
+            $control_settings['responsive_type'] = 'string';
+        }
+
+        if (!isset($control_settings['responsive_control'])) {
+            $control_settings['responsive_control'] = 'boolean';
+        }
+
         // Default value always set in last index.
-        if (isset($data['default'])) {
-            $default = $data['default'];
+        if (isset($control_settings['default'])) {
+            $default = $control_settings['default'];
 
-            unset($data['default']);
+            unset($control_settings['default']);
 
-            $data['default'] = $default;
+            $control_settings['default'] = $default;
         }
 
         $matched_keys = array_intersect_key($control_settings, $data);
@@ -240,7 +252,7 @@ abstract class Control_Base
         $return = [];
 
         foreach ($value as $key => $value) {
-            $return[sanitize_text_field(esc_html($key))] = sanitize_text_field(esc_html($value));
+            $return[sanitize_textarea_field($key)] = sanitize_text_field($value);
         }
 
         return $return;

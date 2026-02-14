@@ -63,7 +63,7 @@ class Form_Preview
             if (function_exists('get_header')) get_header();
 
             // 3. ECHO THE SHORTCODE (Crucial Step)
-            echo '<div id="dragwyb-preview-wrapper">';
+            echo '<div id="dragwyb-preview-wrapper" style="width: 100%;">';
             echo do_shortcode('[dragwyb-form id="' . $post_id . '"]');
             echo '</div>';
 

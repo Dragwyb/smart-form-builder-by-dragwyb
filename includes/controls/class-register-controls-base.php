@@ -73,12 +73,15 @@ abstract class Register_Controls_Base
             throw new \Exception(__('Do not use duplicate section ID use unique Id.', 'dragwyb-form-builder'));
         }
 
+        do_action('Dragwyb/Editor/before_section_start/' . sanitize_text_field($id), $data);
+
         $this->current_section = $id; // Assuming type is the section identifier
 
         $conditions = isset($data['conditions']) ? $data['conditions'] : array();
 
         $conditions = $this->tab_condition($conditions, $data);
 
+        do_action('Dragwyb/Editor/after_section_start/' . sanitize_text_field($id), $data);
 
         $this->settings_arr[$this->current_section] = $this->controller_settings(array_merge($data, array('type' => 'section', 'conditions' => $conditions)));
     }
@@ -89,13 +92,16 @@ abstract class Register_Controls_Base
             throw new \Exception(__('No section is currently open.', 'dragwyb-form-builder'));
         }
 
-        $this->settings_arr = array_merge($this->settings_arr, $this->current_section_stack, $this->current_control_stack);
+        do_action('Dragwyb/Editor/before_section_end/' . sanitize_text_field($this->current_section), $this->settings_arr[$this->current_section]);
 
+        $this->settings_arr = array_merge($this->settings_arr, $this->current_section_stack, $this->current_control_stack);
 
         $this->current_section = null;
 
         $this->current_control_stack = array();
         $this->current_section_stack = array();
+
+        do_action('Dragwyb/Editor/after_section_end/' . sanitize_text_field($this->current_section), $this->settings_arr[$this->current_section]);
     }
 
     final protected function start_tabs(string $id = '', array $data = array()): void
@@ -222,6 +228,8 @@ abstract class Register_Controls_Base
             throw new \Exception(__("Do not use duplicate $id ID use unique Id.", 'dragwyb-form-builder'));
         }
 
+        do_action('Dragwyb/Editor/before_add_control/' . sanitize_text_field($id), $data);
+
         $conditions = isset($data['conditions']) ? $data['conditions'] : array();
 
         if (isset($this->current_section_stack[$this->current_tabs]['conditions'])) {
@@ -246,12 +254,12 @@ abstract class Register_Controls_Base
         }
 
         $this->current_control_stack[$id] = $control_data;
+
+        do_action('Dragwyb/Editor/after_add_control/' . sanitize_text_field($id), $data);
     }
 
     final protected function add_group_control(string $id = '', array $data = array()): void
     {
-        // if (!$id = self::validate_id($id, 'Control')) return;
-
         if ($this->current_section === null) {
             throw new \Exception(__('No section is currently open to add controls.', 'dragwyb-form-builder'));
         }
@@ -294,6 +302,23 @@ abstract class Register_Controls_Base
         }
 
         $this->end_popover();
+    }
+
+    final function add_responsive_control(string $id = '', array $data = array()): void
+    {
+        $responsive_types = ['desktop', 'tablet', 'mobile'];
+
+        foreach ($responsive_types as $index => $responsive_type) {
+
+            if ('desktop' !== $responsive_type && isset($data[$responsive_type . '_default'])) {
+                $data['default'] = $data[$responsive_type . '_default'];
+            }
+
+            $data['responsive_type'] = $responsive_type;
+            $data['responsive_control'] = true;
+
+            $this->add_control($id . '_' . $responsive_type, $data);
+        }
     }
 
     private function get_last_control(): array
