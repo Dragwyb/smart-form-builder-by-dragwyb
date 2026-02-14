@@ -61,7 +61,9 @@ class DragwybToolbarBase extends Component {
             this.toolbarData = { ...this.toolbarData };
         }
 
-        if (typeof this?.settings?.controls?.[key]?.default === 'object' && this.Utils.compareTwoObjects({ obj1: this?.settings?.controls?.[key]?.default, obj2: value })) {
+        if (value === undefined) {
+            delete this.toolbarData[key];
+        } else if (typeof this?.settings?.controls?.[key]?.default === 'object' && this.Utils.compareTwoObjects({ obj1: this?.settings?.controls?.[key]?.default, obj2: value || {} })) {
             delete this.toolbarData[key];
         } else if (this?.settings?.controls?.[key]?.default === value) {
             delete this.toolbarData[key];

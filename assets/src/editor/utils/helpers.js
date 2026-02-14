@@ -1,7 +1,7 @@
 
 import React, { useRef, useEffect } from "react";
-import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updateFieldValues, updateToolbarSettings, updateSectionSettings, updateStyleSelectors as updateStyleSelectorsAction, deleteStyleSelectors as deleteStyleSelectorsAction } from "../store/actions";
-import PropTypes from "prop-types";
+import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updateFieldValues, updateToolbarSettings, updateSectionSettings, updateStyleSelectors as updateStyleSelectorsAction, deleteStyleSelectors as deleteStyleSelectorsAction, updateResponsiveType as updateResponsiveTypeAction } from "../store/actions";
+import PropTypes, { number } from "prop-types";
 import { Placeholder } from "@wordpress/components";
 
 /**
@@ -33,12 +33,28 @@ export const generateId = ({ state, dispatch }) => {
     return id;
 };
 
+export const updateResponsiveType = ({ state, dispatch, responsiveType }) => {
+    try {
+        const validatorResponsiveType = validateProp({
+            key: "responsiveType",
+            value: responsiveType, // invalid
+            types: [number],
+            required: true,
+            functionName: "updateResponsiveType"
+        });
+
+        dispatch(updateResponsiveTypeAction(responsiveType));
+    } catch (e) {
+        console.error("Validation failed:", e.message);
+    }
+}
+
 export const PopoverControls = ({ state, dispatch }) => {
     return state.popoverControls;
 }
 
 export const AddField = ({ type, dispatch, Utils, index = null }) => {
-    const field = {
+    let field = {
         _id: Utils.generateId(),
         type,
     };
@@ -56,6 +72,10 @@ export const AddField = ({ type, dispatch, Utils, index = null }) => {
                 field.attributes[id] = defaultValue;
             }
         })
+
+        if (fieldControls.field_id) {
+            field.attributes.field_id = `field_${field._id}`;
+        }
     }
 
     dispatch(addField({ field, index }));
@@ -167,7 +187,7 @@ export const updateSectionSetting = ({ dispatch, key, value }) => {
     }
 }
 
-export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, placeholders, toolbarType, itemId, currentItemId, initialRender = false }) => {
+export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, placeholders, toolbarType, itemId, currentItemId, responsiveType = 'desktop', initialRender = false }) => {
     try {
         const validatorKey = validateProp({
             key: "key",
@@ -232,7 +252,7 @@ export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, p
 
         });
 
-        dispatch(updateStyleSelectorsAction(key, cssCache))
+        dispatch(updateStyleSelectorsAction(key, cssCache, responsiveType))
     } catch (e) {
         console.error("Validation failed:", e.message);
     }

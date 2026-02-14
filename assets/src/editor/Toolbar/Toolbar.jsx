@@ -12,7 +12,11 @@ const ToolBar = ({ setActiveTab, setSettingId }) => {
     return <div className='dragwyb-editor__toolbar'>
         {Object.keys(toolbars).map(tab => {
             return <div key={tab} className={`dragwyb-editor__toolbar-item ${activeTab === tab ? ' active' : ''}`}
-                onClick={() => {
+                onClick={(e) => {
+                    e.preventDefault();
+                    if (tab === activeTab) {
+                        return;
+                    }
                     setActiveTab(tab);
                     setSettingId({ id: tab, tab: tab });
                 }}
