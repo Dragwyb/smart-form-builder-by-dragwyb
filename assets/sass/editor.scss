@@ -381,8 +381,111 @@ body {
         justify-content: space-between;
         align-items: center;
         padding-inline: 1.5rem;
-        min-height: 4.5rem;
+        min-height: 3.5rem;
         color: #fff;
+
+        h2 {
+            margin: 0;
+        }
+    }
+
+    &__responsive-devices {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+
+        &:not(.responsive-devices-dropdown) button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            padding: 5px 8px;
+            margin: 0;
+            position: relative;
+            height: 3.3rem;
+
+            &::after {
+                content: "";
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 4px;
+                border-radius: 0 4px;
+                transition: all 0.3s ease-in-out;
+            }
+
+            &.active {
+                &::after {
+                    background-color: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
+                }
+
+                svg {
+                    fill: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
+                    stroke: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
+                }
+            }
+
+            svg {
+                width: 1.5rem;
+                height: 1.5rem;
+                fill: hsl(var(--dragwyb-foreground) / var(--dragwyb-text-opacity, 1));
+                stroke: hsl(var(--dragwyb-foreground) / var(--dragwyb-text-opacity, 1));
+            }
+        }
+
+        &.responsive-devices-dropdown {
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            padding: 4px 6px;
+            height: 1.2rem;
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: absolute;
+            margin-left: 0.8rem;
+            z-index: 4;
+            overflow: hidden;
+
+            button {
+                background-color: transparent;
+                border: none;
+                cursor: pointer;
+                margin: 0;
+                display: block;
+                padding: 0;
+                line-height: 1;
+                order: 1;
+                transition: all 0.2s ease-in-out;
+
+                &.active {
+                    order: 0;
+                }
+
+                &:hover {
+                    transform: scale(1.1);
+
+                    svg {
+                        fill: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
+                        stroke: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
+                    }
+                }
+            }
+
+            svg {
+                width: 1rem;
+                height: 1rem;
+                fill: hsl(var(--dragwyb-foreground)/var(--dragwyb-text-opacity, 1));
+                stroke: hsl(var(--dragwyb-foreground)/var(--dragwyb-text-opacity, 1));
+            }
+
+            &:hover {
+                height: 5rem;
+                background-color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
+            }
+        }
     }
 
     &__details {
@@ -528,6 +631,7 @@ body {
         flex: 1;
         display: flex;
         overflow: hidden;
+        background-color: hsl(var(--dragwyb-sidebar)/var(--dragwyb-bg-opacity, 1));
     }
 
     &__sidebar {
@@ -648,11 +752,23 @@ body {
 
     #dragwyb-preview-iframe {
         flex: 1;
+        height: 100%;
+        border: none;
+        display: block;
+        max-width: var(--preview-width, 100%);
+        transition: all .3s ease-in-out;
+
+        &:not([data-responsive-type="desktop"]) {
+            height: calc(100% - 40px);
+            margin: 20px auto;
+        }
     }
 }
 
 // Controls
 .dragwyb-controls {
+    height: 100%;
+
     &__header {
         padding: 15px;
         border-bottom: 1px solid var(--border-color);
@@ -668,43 +784,47 @@ body {
     }
 
     &__fields {
-        padding: 15px;
-        display: grid;
-        gap: 0.75rem;
-        grid-template-columns: repeat(auto-fill, minmax(min(135px, 50% - 5px), 1fr));
+        height: calc(100% - 60px);
 
-        .field-type {
-            transition: all 0.2s ease;
-            cursor: move;
-            text-align: center;
-            background-color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
-            border: 1px solid hsl(var(--dragwyb-input)/var(--dragwyb-border-opacity, 1));
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding-block: 1rem;
-            color: hsl(var(--dragwyb-muted-foreground)/var(--dragwyb-text-opacity, 1));
+        .dragwyb-scrollbar-content {
+            padding: 5px 15px 15px 15px;
+            display: grid;
+            gap: 0.75rem;
+            grid-template-columns: repeat(auto-fill, minmax(min(135px, 50% - 5px), 1fr));
 
-            &:hover {
-                transform: scale(1.03);
-                // background-color: hsl(var(--dragwyb-primary)/3%);
-                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-                border-color: hsl(var(--dragwyb-primary)/var(--dragwyb-border-opacity, 1));
-                color: hsl(var(--dragwyb-primary)/var(--dragwyb-text-opacity, 1));
-            }
+            .field-type {
+                transition: all 0.2s ease;
+                cursor: move;
+                text-align: center;
+                background-color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
+                border: 1px solid hsl(var(--dragwyb-input)/var(--dragwyb-border-opacity, 1));
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding-block: 1rem;
+                color: hsl(var(--dragwyb-muted-foreground)/var(--dragwyb-text-opacity, 1));
 
-            i {
-                padding: 0.5rem;
-                border-radius: 10px;
-                aspect-ratio: 1/1;
-                // color: hsl(var(--dragwyb-muted-foreground) / var(--dragwyb-text-opacity, 1));
-                font-size: 1.5rem;
-            }
+                &:hover {
+                    transform: scale(1.03);
+                    // background-color: hsl(var(--dragwyb-primary)/3%);
+                    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+                    border-color: hsl(var(--dragwyb-primary)/var(--dragwyb-border-opacity, 1));
+                    color: hsl(var(--dragwyb-primary)/var(--dragwyb-text-opacity, 1));
+                }
 
-            p {
-                font-weight: 500;
-                font-size: 1rem;
+                i {
+                    padding: 0.5rem;
+                    border-radius: 10px;
+                    aspect-ratio: 1/1;
+                    // color: hsl(var(--dragwyb-muted-foreground) / var(--dragwyb-text-opacity, 1));
+                    font-size: 1.5rem;
+                }
+
+                p {
+                    font-weight: 500;
+                    font-size: 1rem;
+                }
             }
         }
     }
@@ -713,6 +833,7 @@ body {
 // Panel
 .dragwyb-panel {
     height: 100%;
+    user-select: none;
 
     &__header {
         padding: 15px;
