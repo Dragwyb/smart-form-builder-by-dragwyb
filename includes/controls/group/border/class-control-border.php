@@ -48,26 +48,18 @@ class Control_Border extends Control_Base
                     'groove' => __('Groove', 'dragwyb-form-builder'),
                 ],
                 'default' => 'solid',
-            ],
-            'width' => [
-                'unit' => 'px',
-                'top' => '',
-                'right' => '',
-                'bottom' => '',
-                'left' => '',
-                'isLinked' => true,
-            ],
-            'color' => '#333333',
-            'radius' => [
-                'unit' => 'px',
-                'top' => '',
-                'right' => '',
-                'bottom' => '',
-                'left' => '',
-                'isLinked' => true,
-            ],
-            // Added default selector
-            'selector' => ''
+            ]
+        ];
+    }
+
+    protected function valid_default_settings(): array
+    {
+        return [
+            'style',
+            'width',
+            'radius',
+            'color',
+            'selector'
         ];
     }
 
@@ -131,6 +123,7 @@ class Control_Border extends Control_Base
     private function get_display_settings(): array
     {
         $defaults = $this->default_setting();
+        $valid_settings = $this->valid_default_settings();
         // Extract settings safely
         $user_data = isset($this->data['settings']) && is_array($this->data['settings'])
             ? $this->data['settings']
@@ -141,8 +134,18 @@ class Control_Border extends Control_Base
             $user_data['selector'] = $this->data['selector'];
         }
 
-        $valid_user_data = array_intersect_key($user_data, $defaults);
-        return array_replace_recursive($defaults, $valid_user_data);
+        $user_data = array_replace_recursive($defaults, $user_data);
+
+        // Only valid keys from defaults
+        $valid_user_data = [];
+
+        foreach ($valid_settings as $key) {
+            if (isset($user_data[$key])) {
+                $valid_user_data[$key] = $user_data[$key];
+            }
+        }
+
+        return $valid_user_data;
     }
 
     final public function get_controls(): array
@@ -166,39 +169,54 @@ class Control_Border extends Control_Base
         $controls[$id . '_style'] = [
             'type'         => Controls::SELECT,
             'label'        => __('Border Style', 'dragwyb-form-builder'),
-            'options'      => $settings['style']['options'],
-            'default'      => $settings['style']['default'],
             'label_inline' => true,
         ];
+
+        if (isset($settings['style']['options'])) {
+            $controls[$id . '_style']['options'] = $settings['style']['options'];
+        }
+
+        if (isset($settings['style']['default'])) {
+            $controls[$id . '_style']['default'] = $settings['style']['default'];
+        }
 
         // 2. Border Width
         $controls[$id . '_width'] = [
             'type'       => Controls::DIMENSIONS,
             'label'      => __('Width', 'dragwyb-form-builder'),
             'size_units' => ['px', 'em', '%'],
-            'default'    => $settings['width'],
             'condition'  => [
                 $id . '_style!' => ['none', '']
             ]
         ];
 
+        if (isset($settings['width'])) {
+            $controls[$id . '_width']['default'] = $settings['width'];
+        }
+
         // 3. Border Color
         $controls[$id . '_color'] = [
             'type'      => Controls::COLOR,
             'label'     => __('Color', 'dragwyb-form-builder'),
-            'default'   => $settings['color'],
             'condition' => [
                 $id . '_style!' => ['none', '']
             ]
         ];
+
+        if (isset($settings['color'])) {
+            $controls[$id . '_color']['default'] = $settings['color'];
+        }
 
         // 4. Border Radius
         $controls[$id . '_radius'] = [
             'type'       => Controls::DIMENSIONS,
             'label'      => __('Border Radius', 'dragwyb-form-builder'),
             'size_units' => ['px', 'em', '%'],
-            'default'    => $settings['radius'],
         ];
+
+        if (isset($settings['radius'])) {
+            $controls[$id . '_radius']['default'] = $settings['radius'];
+        }
 
         if ($selector) {
             foreach ($selectors as $key => $style) {

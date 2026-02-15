@@ -34,16 +34,16 @@ class Control_Box_Shadow extends Control_Base
         ];
     }
 
-    protected function default_setting(): array
+    protected function valid_default_settings(): array
     {
         return [
-            'color'      => '#00000080',
-            'horizontal' => ['size' => 0, 'unit' => 'px'],
-            'vertical'   => ['size' => 0, 'unit' => 'px'],
-            'blur'       => ['size' => 10, 'unit' => 'px'],
-            'spread'     => ['size' => 0, 'unit' => 'px'],
-            'position'   => '', // outset | inset
-            'selector'   => ''
+            'color',
+            'horizontal',
+            'vertical',
+            'blur',
+            'spread',
+            'position',
+            'selector'
         ];
     }
 
@@ -95,7 +95,7 @@ class Control_Box_Shadow extends Control_Base
 
     private function get_display_settings(): array
     {
-        $defaults = $this->default_setting();
+        $valid_settings = $this->valid_default_settings();
         $user_data = isset($this->data['settings']) && is_array($this->data['settings'])
             ? $this->data['settings']
             : $this->data;
@@ -105,8 +105,16 @@ class Control_Box_Shadow extends Control_Base
             $user_data['selector'] = $this->data['selector'];
         }
 
-        $valid_user_data = array_intersect_key($user_data, $defaults);
-        return array_replace_recursive($defaults, $valid_user_data);
+        // Only valid keys from defaults
+        $valid_user_data = [];
+
+        foreach ($valid_settings as $key) {
+            if (isset($user_data[$key])) {
+                $valid_user_data[$key] = $user_data[$key];
+            }
+        }
+
+        return $valid_user_data;
     }
 
     final public function get_controls(): array
@@ -129,36 +137,51 @@ class Control_Box_Shadow extends Control_Base
         $controls[$id . '_color'] = [
             'type'    => Controls::COLOR,
             'label'   => __('Color', 'dragwyb-form-builder'),
-            'default' => $settings['color'],
         ];
+
+        if (isset($settings['color'])) {
+            $controls[$id . '_color']['default'] = $settings['color'];
+        }
 
         $controls[$id . '_horizontal'] = [
             'type'    => Controls::SLIDER,
             'label'   => __('Horizontal', 'dragwyb-form-builder'),
             'range'   => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]],
-            'default' => $settings['horizontal'],
         ];
+
+        if (isset($settings['horizontal'])) {
+            $controls[$id . '_horizontal']['default'] = $settings['horizontal'];
+        }
 
         $controls[$id . '_vertical'] = [
             'type'    => Controls::SLIDER,
             'label'   => __('Vertical', 'dragwyb-form-builder'),
             'range'   => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]],
-            'default' => $settings['vertical'],
         ];
+
+        if (isset($settings['vertical'])) {
+            $controls[$id . '_vertical']['default'] = $settings['vertical'];
+        }
 
         $controls[$id . '_blur'] = [
             'type'    => Controls::SLIDER,
             'label'   => __('Blur', 'dragwyb-form-builder'),
             'range'   => ['px' => ['min' => 0, 'max' => 100, 'step' => 1]],
-            'default' => $settings['blur'],
         ];
+
+        if (isset($settings['blur'])) {
+            $controls[$id . '_blur']['default'] = $settings['blur'];
+        }
 
         $controls[$id . '_spread'] = [
             'type'    => Controls::SLIDER,
             'label'   => __('Spread', 'dragwyb-form-builder'),
             'range'   => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]],
-            'default' => $settings['spread'],
         ];
+
+        if (isset($settings['spread'])) {
+            $controls[$id . '_spread']['default'] = $settings['spread'];
+        }
 
         $controls[$id . '_position'] = [
             'type'         => Controls::SELECT,
@@ -167,9 +190,12 @@ class Control_Box_Shadow extends Control_Base
                 '' => __('Default', 'dragwyb-form-builder'),
                 'inset'   => __('Inset', 'dragwyb-form-builder'),
             ],
-            'default'      => $settings['position'],
             'label_inline' => true,
         ];
+
+        if (isset($settings['position'])) {
+            $controls[$id . '_position']['default'] = $settings['position'];
+        }
 
         if ($selector) {
             foreach ($selectors as $key => $style) {
