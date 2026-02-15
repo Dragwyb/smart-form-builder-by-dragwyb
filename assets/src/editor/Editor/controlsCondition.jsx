@@ -8,7 +8,7 @@ const ControlsConditions = ({ conditions, updateHandler, controlKey, isResponsiv
     const selectedToolbar = useSelector(state => state.selectedSettingId);
     const formData = useSelector(state => state.form);
     const sectionSettings = useSelector(state => state.sectionSettings);
-    const activeToolbarData = formData?.[setting];
+    const activeToolbarData = formData?.[setting] || {};
     const responsiveType = useSelector(state => state.responsiveType);
 
     const prevConditions = useRef(null);
@@ -95,7 +95,7 @@ const ControlsConditions = ({ conditions, updateHandler, controlKey, isResponsiv
             return;
         }
 
-        const activeToolbarData = formData?.[setting];
+        const activeToolbarData = formData?.[setting] || {};
 
         const noChanges = JSON.stringify(prevDataRef.current) === JSON.stringify({ setting, selectedToolbar, activeToolbarData, controlKey, conditions, sectionSettings });
 
