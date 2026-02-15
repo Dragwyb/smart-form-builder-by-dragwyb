@@ -72,6 +72,7 @@ html {
         height: unset;
         background-image: radial-gradient(hsl(var(--dragwyb-card-foreground)/0.2) 1px, transparent 1px);
         background-size: 24px 24px;
+        min-height: 100%;
     }
 }
 
