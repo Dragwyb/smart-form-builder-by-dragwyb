@@ -101,7 +101,7 @@ abstract class Register_Controls_Base
         $this->current_control_stack = array();
         $this->current_section_stack = array();
 
-        do_action('Dragwyb/Editor/after_section_end/' . sanitize_text_field($this->current_section), $this->settings_arr[$this->current_section]);
+        do_action('Dragwyb/Editor/after_section_end/' . sanitize_text_field($this->current_section));
     }
 
     final protected function start_tabs(string $id = '', array $data = array()): void
@@ -312,6 +312,8 @@ abstract class Register_Controls_Base
 
             if ('desktop' !== $responsive_type && isset($data[$responsive_type . '_default'])) {
                 $data['default'] = $data[$responsive_type . '_default'];
+            } else if ('desktop' !== $responsive_type) {
+                unset($data['default']);
             }
 
             $data['responsive_type'] = $responsive_type;
