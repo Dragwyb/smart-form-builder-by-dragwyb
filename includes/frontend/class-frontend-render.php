@@ -266,7 +266,6 @@ class Frontend_Render
             return array('css' => self::$css_cache, 'google_fonts' => self::$google_fonts);
         }
 
-
         if (self::$css_cache && count(self::$css_cache) > 0) {
             $tablet_css = '';
             $mobile_css = '';
@@ -377,27 +376,37 @@ class Frontend_Render
             $form_wrapper_id .= ' #dragwyb-field-wrapper-' . $field_id;
         }
 
-        foreach ($settings as $control_id => $setting_value) {
+        foreach ($controls as $control_id => $control_settings) {
             // 1. Validate: Ensure control definition and 'selectors' exist
             if (
-                !isset($controls[$control_id]) ||
-                !isset($controls[$control_id]['type'])
+                !isset($control_settings['type'])
             ) {
                 continue;
             }
 
-            $control_config = $controls[$control_id];
-
             // 2. Instantiate Control
-            $control_manager = self::$control->get_control($control_config['type']);
+            $control_manager = self::$control->get_control($control_settings['type']);
 
             if (!$control_manager || !$control_manager instanceof Control_Base) {
                 continue;
             }
 
-            if ($control_config['type'] === 'repeater' && isset($control_config['items'])) {
+            $setting_value = null;
+
+            if (isset($settings[$control_id])) {
+                $setting_value = $settings[$control_id];
+            } else if (isset($control_settings['default'])) {
+                $setting_value = $control_settings['default'];
+            }
+
+            if (!isset($setting_value)) {
+                continue;
+            }
+
+            if ($control_settings['type'] === 'repeater' && isset($control_settings['items'])) {
                 $control_instance = $control_manager::newInstance();
-                $control_instance->set_value($setting_value, $control_id, $control_config);
+
+                $control_instance->set_value($setting_value, $control_id, $control_settings);
                 $repeater_values = $control_instance->get_value();
 
                 $repeater_controls_instance_cache = array();
@@ -407,16 +416,16 @@ class Frontend_Render
                     $repeater_id = $item['_id'];
 
                     foreach ($item['attributes'] as $item_control_id => $item_control_data) {
-                        if (!isset($control_config['items'][$item_control_id])) continue;
-                        if (!isset($control_config['items'][$item_control_id]['selectors'])) continue;
-                        if (count($control_config['items'][$item_control_id]['selectors']) < 1) continue;
+                        if (!isset($control_settings['items'][$item_control_id])) continue;
+                        if (!isset($control_settings['items'][$item_control_id]['selectors'])) continue;
+                        if (count($control_settings['items'][$item_control_id]['selectors']) < 1) continue;
 
                         if (!isset($repeater_controls_instance_cache[$item_control_id])) {
-                            $repeater_control_manager = self::$control->get_control($control_config['items'][$item_control_id]['type']);
+                            $repeater_control_manager = self::$control->get_control($control_settings['items'][$item_control_id]['type']);
                             $repeater_controls_instance_cache[$item_control_id] = $repeater_control_manager::newInstance();
                         }
 
-                        if (!$this->control_render_conditions($control_config['items'][$item_control_id], $control_config['items'], $item['attributes'])) {
+                        if (!$this->control_render_conditions($control_settings['items'][$item_control_id], $control_settings['items'], $item['attributes'])) {
                             continue;
                         }
 
@@ -428,23 +437,24 @@ class Frontend_Render
 
                         $placeholders = $this->get_control_placeholders($control_instance);
 
-                        $placeholders = $this->replace_selector_placeholders($form_wrapper_id, $control_config['items'][$item_control_id]['selectors'], $placeholders, $repeater_item_value, $type, $control_id, $control_config['items'][$item_control_id], $field_id, $repeater_id);
+                        $placeholders = $this->replace_selector_placeholders($form_wrapper_id, $control_settings['items'][$item_control_id]['selectors'], $placeholders, $repeater_item_value, $type, $control_id, $control_settings['items'][$item_control_id], $field_id, $repeater_id);
                     }
                 }
                 continue;
             } else if (
-                !isset($controls[$control_id]['selectors']) ||
-                !is_array($controls[$control_id]['selectors']) &&
-                count($controls[$control_id]['selectors']) < 1
+                !isset($control_settings['selectors']) ||
+                !is_array($control_settings['selectors']) &&
+                count($control_settings['selectors']) < 1
             ) {
                 continue;
             }
 
             $control_instance = $control_manager::newInstance();
-            $control_instance->set_value($setting_value, $control_id, $control_config);
+            $control_instance->set_value($setting_value, $control_id, $control_settings);
             $control_value = $control_instance->get_value();
 
-            if (!$this->control_render_conditions($control_config, $controls, $settings)) {
+
+            if (!$this->control_render_conditions($control_settings, $controls, $control_settings)) {
                 continue;
             }
 
@@ -454,7 +464,7 @@ class Frontend_Render
             // Uses helper method to support both complex and simple controls
             $placeholders = $this->get_control_placeholders($control_instance);
 
-            $this->replace_selector_placeholders($form_wrapper_id, $control_config['selectors'], $placeholders, $control_value, $type, $control_id, $control_config, $field_id);
+            $this->replace_selector_placeholders($form_wrapper_id, $control_settings['selectors'], $placeholders, $control_value, $type, $control_id, $control_settings, $field_id);
         }
     }
 
@@ -500,11 +510,23 @@ class Frontend_Render
                 $final_property = trim(str_replace('{{' . $ph_key . '}}', (string)$css_value, $final_property));
             }
 
+            $final_property = $this->clean_css_params($final_property);
+
+            if (trim($final_property) === '') {
+                continue;
+            }
+
             // C. Append to CSS string if property is valid
             if (!empty($final_property)) {
                 $this->set_css_cache($css_array, $final_selector, $final_property, $type, $control_id, $field_id, $current_item);
             }
         }
+    }
+
+    private function clean_css_params($css)
+    {
+        $css = preg_replace('/[\w-]*:\s*(;|$)/', '', $css);
+        return trim(preg_replace('/\s+/', ' ', $css));
     }
 
     private function set_css_cache(&$css_array, $selector, $property, $type, $control_id, $field_id = null, $current_item = null)
