@@ -205,7 +205,7 @@ export default function reducer(state = initialState, action) {
 
         case UPDATE_POPOVER_CONTROLS:
             {
-                if (!action.payload.id || !action.payload.control) return state;
+                if (!action.payload.id || (!action.payload.control && false !== action.payload.control)) return state;
 
                 const status = action.payload.status;
                 const popoverInit = state.popoverInitialize;
@@ -231,10 +231,12 @@ export default function reducer(state = initialState, action) {
                     }
                 }
 
+                let controlObject = false === action.payload.control ? {} : { control: action.payload.control, resetControlEvent: action.payload.resetControlEvent, valueChangedCheck: action.payload.valueChangedCheck }
+
                 return {
                     ...state,
                     popoverInitialize,
-                    popoverControls: { ...state.popoverControls || {}, [action.payload.id]: { ...state.popoverControls[action.payload.id] || {}, control: action.payload.control, resetControlEvent: action.payload.resetControlEvent, valueChangedCheck: action.payload.valueChangedCheck } }
+                    popoverControls: { ...state.popoverControls || {}, [action.payload.id]: { ...state.popoverControls[action.payload.id] || {}, ...controlObject } }
                 }
             }
 

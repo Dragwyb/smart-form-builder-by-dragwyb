@@ -66,7 +66,81 @@ const RenderControl = ({
         }
     }
 
+    const popOverControl = (settings, ControlEle = false) => {
+        const popOverStatus = settings.popover;
+
+        if (popOverStatus.end === true) {
+            const PopoverControls = Utils.PopoverControls();
+            const PopoverTitle = popOverStatus.title;
+
+            const controlElements = [];
+            const resetControlEvents = [];
+            const valueChanged = [];
+            let popoverUpdate = false;
+
+            dispatch(resetPopoverControls());
+            dispatch(updatePopoverInitStatus(false));
+
+            if (!PopoverControls && typeof PopoverControls !== 'object') {
+                return;
+            }
+
+            if (ControlEle !== false) {
+                PopoverControls[controlKey] = { control: ControlEle, resetControlEvent, valueChangedCheck };
+            }
+
+            Object.values(PopoverControls).forEach((control) => {
+                controlElements.push(control.control);
+                resetControlEvents.push(control.resetControlEvent);
+                valueChanged.push(control.valueChangedCheck);
+            });
+
+            valueChanged.forEach((check) => {
+                if (popoverUpdate === true) {
+                    return;
+                }
+
+                if (typeof check === 'function') {
+                    popoverUpdate = check();
+                }
+            });
+
+            const resetControlsValues = () => {
+                resetControlEvents.forEach((event) => {
+                    if (typeof event === 'function') {
+                        event();
+                    }
+                });
+            }
+
+            return <div className="dragwyb-popover" style={{ display: "none" }}>
+                {PopoverTitle && <div className="dragwyb-popover__title">
+                    {PopoverTitle}
+                    <span onClick={resetControlsValues}>
+                        <FaUndo size={12} title={__('Reset to Default', 'dragwyb-form-builder')} />
+                    </span>
+                </div>}
+                <div className="dragwyb-popover__container">{controlElements}</div>
+            </div>;
+        };
+
+        dispatch(updatePopoverControls(controlKey, ControlEle, resetControlEvent, valueChangedCheck, popOverStatus))
+    }
+
     if (!shouldRender) {
+
+        if (settings.popover) {
+            const popOverStatus = settings.popover;
+
+            if (popOverStatus.end === true) {
+                return popOverControl(settings, false);
+            };
+
+            popOverControl(settings, false);
+
+            return null;
+        }
+
         return <ControlsConditions
             controlKey={controlKey}
             conditions={settings.conditions}
@@ -151,59 +225,10 @@ const RenderControl = ({
         const popOverStatus = settings.popover;
 
         if (popOverStatus.end === true) {
-            const PopoverControls = Utils.PopoverControls();
-            const PopoverTitle = popOverStatus.title;
-
-            const controlElements = [];
-            const resetControlEvents = [];
-            const valueChanged = [];
-            let popoverUpdate = false;
-
-            dispatch(resetPopoverControls());
-            dispatch(updatePopoverInitStatus(false));
-
-            if (!PopoverControls && typeof PopoverControls !== 'object') {
-                return;
-            }
-
-            PopoverControls[controlKey] = { control: ControlElement, resetControlEvent, valueChangedCheck };
-
-            Object.values(PopoverControls).forEach((control) => {
-                controlElements.push(control.control);
-                resetControlEvents.push(control.resetControlEvent);
-                valueChanged.push(control.valueChangedCheck);
-            });
-
-            valueChanged.forEach((check) => {
-                if (popoverUpdate === true) {
-                    return;
-                }
-
-                if (typeof check === 'function') {
-                    popoverUpdate = check();
-                }
-            });
-
-            const resetControlsValues = () => {
-                resetControlEvents.forEach((event) => {
-                    if (typeof event === 'function') {
-                        event();
-                    }
-                });
-            }
-
-            return <div className="dragwyb-popover" style={{ display: "none" }}>
-                {PopoverTitle && <div className="dragwyb-popover__title">
-                    {PopoverTitle}
-                    <span onClick={resetControlsValues}>
-                        <FaUndo size={12} title={__('Reset to Default', 'dragwyb-form-builder')} />
-                    </span>
-                </div>}
-                <div className="dragwyb-popover__container">{controlElements}</div>
-            </div>;
+            return popOverControl(settings, ControlElement);
         };
 
-        dispatch(updatePopoverControls(controlKey, ControlElement, resetControlEvent, valueChangedCheck, popOverStatus))
+        popOverControl(settings, ControlElement);
 
         return null;
     }
