@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dragwyb\Form_Builder\Includes\Controls;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls\Control_Base;
+use Dragwyb\Form_Builder\Includes\Controls\Group\Group_Control_Base;
 
 abstract class Register_Controls_Base
 {
@@ -366,7 +367,7 @@ abstract class Register_Controls_Base
     {
         $id = sanitize_text_field($id);
         $controls_class = Controls::class;
-        $controls_base_class = Control_Base::class;
+        $group_control_base_class = Group_Control_Base::class;
 
         if (!isset($data['type']) || !($this->control_base instanceof $controls_class)) {
             return array();
@@ -376,20 +377,16 @@ abstract class Register_Controls_Base
 
         $control_object = $this->control_base->get_group_control($type);
 
-
-        if (!$control_object || !($control_object instanceof $controls_base_class)) {
+        if (!$control_object || !($control_object instanceof $group_control_base_class)) {
             return array();
         }
 
         $control_object = $control_object->newInstance();
 
         $control_object->register_controls($id, $data);
-
-        $control_object->set_settings($data);
-
-        $data = $control_object->get_controls();
-        $name = $control_object->get_name();
-        $icon = $control_object->get_icon();
+        $name = isset($data['label']) ? $data['label'] : $control_object->get_name();
+        $icon = isset($data['icon']) ? $data['icon'] : $control_object->get_icon();
+        $data = $control_object->get_settings();
 
         return array('controls' => $data, 'name' => sanitize_text_field($name), 'icon' => $icon);
     }

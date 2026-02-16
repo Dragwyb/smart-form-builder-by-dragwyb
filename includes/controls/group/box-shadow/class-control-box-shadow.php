@@ -4,25 +4,16 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Controls\Group\Box_Shadow;
 
-use Dragwyb\Form_Builder\Includes\Controls\Controls\Control_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
+use Dragwyb\Form_Builder\Includes\Controls\Group\Group_Control_Base;
 
-class Control_Box_Shadow extends Control_Base
+class Control_Box_Shadow extends Group_Control_Base
 {
-    private string $id = '';
-    private array $data = [];
-    private string $icon = '';
-
     protected function init(): void
     {
         $this->type = 'box-shadow';
         $this->name = __('Box Shadow', 'dragwyb-form-builder');
         $this->icon = 'fas fa-clone';
-    }
-
-    public function get_icon(): string
-    {
-        return $this->icon;
     }
 
     protected function register_settings(): array
@@ -87,12 +78,6 @@ class Control_Box_Shadow extends Control_Base
         return sanitize_text_field($val);
     }
 
-    final public function register_controls(string $id, array $data = []): void
-    {
-        $this->id = $this->string_sanitize($id);
-        $this->data = $data;
-    }
-
     private function get_display_settings(): array
     {
         $valid_settings = $this->valid_default_settings();
@@ -117,7 +102,7 @@ class Control_Box_Shadow extends Control_Base
         return $valid_user_data;
     }
 
-    final public function get_controls(): array
+    protected function register_group_controls(): void
     {
         $settings = $this->get_display_settings();
         $id = $this->string_sanitize($this->id);
@@ -132,81 +117,53 @@ class Control_Box_Shadow extends Control_Base
             'position' => array('property' => '--dragwyb-form-box-shadow-position', 'placeholder' => '{{VALUE}}'),
         ];
 
-        $controls = [];
 
-        $controls[$id . '_color'] = [
-            'type'    => Controls::COLOR,
-            'label'   => __('Color', 'dragwyb-form-builder'),
+        // 2. Control Map
+        $map = [
+            'color'         => ['type' => Controls::COLOR, 'label' => __('Color', 'dragwyb-form-builder')],
+            'horizontal'    => ['type' => Controls::SLIDER, 'label' => __('Horizontal', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]], 'responsive' => true],
+            'vertical'      => ['type' => Controls::SLIDER, 'label' => __('Vertical', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]], 'responsive' => true],
+            'blur'          => ['type' => Controls::SLIDER, 'label' => __('Blur', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => 0, 'max' => 100, 'step' => 1]], 'responsive' => true],
+            'spread'        => ['type' => Controls::SLIDER, 'label' => __('Spread', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]], 'responsive' => true],
+            'position'      => ['type' => Controls::SELECT, 'label' => __('Position', 'dragwyb-form-builder'), 'options' => ['' => __('Default', 'dragwyb-form-builder'), 'inset' => __('Inset', 'dragwyb-form-builder')], 'label_inline' => true],
         ];
 
-        if (isset($settings['color'])) {
-            $controls[$id . '_color']['default'] = $settings['color'];
-        }
+        // 3. Generate Controls
+        foreach ($map as $key => $meta) {
+            $config = $settings[$key];
 
-        $controls[$id . '_horizontal'] = [
-            'type'    => Controls::SLIDER,
-            'label'   => __('Horizontal', 'dragwyb-form-builder'),
-            'range'   => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]],
-        ];
+            $control_args = array_filter($meta, function ($key, $value) {
+                return $key !== 'responsive';
+            }, ARRAY_FILTER_USE_BOTH);
 
-        if (isset($settings['horizontal'])) {
-            $controls[$id . '_horizontal']['default'] = $settings['horizontal'];
-        }
+            if (isset($config['default'])) {
+                $control_args['default'] = $config['default'];
+            }
 
-        $controls[$id . '_vertical'] = [
-            'type'    => Controls::SLIDER,
-            'label'   => __('Vertical', 'dragwyb-form-builder'),
-            'range'   => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]],
-        ];
+            if ($settings['conditions'] && !empty($settings['conditions'])) {
+                $control_args['conditions'] = $settings['conditions'];
+            }
 
-        if (isset($settings['vertical'])) {
-            $controls[$id . '_vertical']['default'] = $settings['vertical'];
-        }
-
-        $controls[$id . '_blur'] = [
-            'type'    => Controls::SLIDER,
-            'label'   => __('Blur', 'dragwyb-form-builder'),
-            'range'   => ['px' => ['min' => 0, 'max' => 100, 'step' => 1]],
-        ];
-
-        if (isset($settings['blur'])) {
-            $controls[$id . '_blur']['default'] = $settings['blur'];
-        }
-
-        $controls[$id . '_spread'] = [
-            'type'    => Controls::SLIDER,
-            'label'   => __('Spread', 'dragwyb-form-builder'),
-            'range'   => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]],
-        ];
-
-        if (isset($settings['spread'])) {
-            $controls[$id . '_spread']['default'] = $settings['spread'];
-        }
-
-        $controls[$id . '_position'] = [
-            'type'         => Controls::SELECT,
-            'label'        => __('Position', 'dragwyb-form-builder'),
-            'options'      => [
-                '' => __('Default', 'dragwyb-form-builder'),
-                'inset'   => __('Inset', 'dragwyb-form-builder'),
-            ],
-            'label_inline' => true,
-        ];
-
-        if (isset($settings['position'])) {
-            $controls[$id . '_position']['default'] = $settings['position'];
-        }
-
-        if ($selector) {
-            foreach ($selectors as $key => $style) {
-                if (isset($controls[$id . '_' . $key])) {
-                    $controls[$id . '_' . $key]['selectors'] = [
-                        $selector => $style['property'] . ':' . $style['placeholder'],
-                    ];
+            if ($meta['type'] === Controls::SLIDER) {
+                if (isset($config['range'])) {
+                    $control_args['range'] = $config['range'];
+                }
+                if (isset($config['units'])) {
+                    $control_args['units'] = $config['units'];
                 }
             }
-        }
 
-        return $controls;
+            if (isset($selectors[$key])) {
+                $control_args['selectors'] = [
+                    $selector => $selectors[$key]['property'] . ':' . $selectors[$key]['placeholder'],
+                ];
+            }
+
+            if (isset($meta['responsive']) && $meta['responsive']) {
+                $this->add_responsive_control($id . '_' . $key, $control_args);
+            } else {
+                $this->add_control($id . '_' . $key, $control_args);
+            }
+        }
     }
 }
