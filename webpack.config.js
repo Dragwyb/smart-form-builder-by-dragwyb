@@ -70,14 +70,23 @@ const makeScssConfig = (scssFile) => ({
         }),
         {
             apply: (compiler) => {
-                compiler.hooks.afterEmit.tap('DeleteJsArtifact', (compilation) => {
+                // Use 'done' instead of 'afterEmit' to ensure Webpack is finished writing
+                compiler.hooks.done.tap('DeleteJsArtifact', (stats) => {
                     const unwantedFile = path.resolve(
                         compiler.options.output.path,
                         `${scssFile}.js`
                     );
 
+                    // Add a tiny delay to allow Windows to release the file lock
                     if (fs.existsSync(unwantedFile)) {
-                        fs.unlinkSync(unwantedFile);
+                        setTimeout(() => {
+                            try {
+                                fs.unlinkSync(unwantedFile);
+                            } catch (e) {
+                                // If it fails, just log it instead of crashing the build
+                                console.warn(`Could not delete ${scssFile}.js: ${e.message}`);
+                            }
+                        }, 100);
                     }
                 });
             }

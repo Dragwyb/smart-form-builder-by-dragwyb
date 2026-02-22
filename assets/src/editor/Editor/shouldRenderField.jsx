@@ -1,4 +1,20 @@
+import store from "../store";
+
 const shouldRenderField = (field, fieldValues, settings, skipSections = false) => {
+
+    if (field?.responsive_control === true && field?.responsive_type) {
+        const getResponsiveDevice = (size) => (
+            size < 768 ? 'mobile' : size < 1024 ? 'tablet' : 'desktop'
+        );
+
+        const controlResponsiveType = field.responsive_type;
+
+        if (controlResponsiveType !== getResponsiveDevice(store.getState().responsiveType)) {
+            return false;
+        }
+    }
+
+
     const conditions = field.conditions;
     fieldValues = JSON.parse(JSON.stringify(fieldValues));
 

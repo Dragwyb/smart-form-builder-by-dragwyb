@@ -66,10 +66,26 @@ const RenderControl = ({
         }
     }
 
-    const popOverControl = (settings, ControlEle = false) => {
-        const popOverStatus = settings.popover;
+    const popOverResponsiveEnd = (settings) => {
+        if (settings.responsive && settings.responsive_control) {
+            const controlResponsiveType = settings.responsive_type;
+            let mobileControlKey = controlKey.replace(`_${controlResponsiveType}`, '');
+            mobileControlKey = `${mobileControlKey}_mobile`;
 
-        if (popOverStatus.end === true) {
+            if (toolbarSettings?.controls?.[mobileControlKey] && toolbarSettings?.controls?.[mobileControlKey].popover && toolbarSettings.controls[mobileControlKey].popover.end === true) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    const popOverControl = (settings, ControlEle = false) => {
+        let popOverStatus = settings.popover;
+
+        const popOverResponsiveEndStatus = popOverResponsiveEnd(settings);
+
+        if (popOverStatus.end === true || popOverResponsiveEndStatus === true) {
             const PopoverControls = Utils.PopoverControls();
             const PopoverTitle = popOverStatus.title;
 
@@ -78,16 +94,15 @@ const RenderControl = ({
             const valueChanged = [];
             let popoverUpdate = false;
 
-            dispatch(resetPopoverControls());
-            dispatch(updatePopoverInitStatus(false));
 
             if (!PopoverControls && typeof PopoverControls !== 'object') {
                 return;
             }
 
-            if (ControlEle !== false) {
-                PopoverControls[controlKey] = { control: ControlEle, resetControlEvent, valueChangedCheck };
-            }
+            dispatch(resetPopoverControls());
+            dispatch(updatePopoverInitStatus(false));
+
+            PopoverControls[controlKey] = { control: ControlEle, resetControlEvent, valueChangedCheck };
 
             Object.values(PopoverControls).forEach((control) => {
                 controlElements.push(control.control);
@@ -124,23 +139,20 @@ const RenderControl = ({
             </div>;
         };
 
+        if (settings.responsive && settings.responsive_control && 'desktop' !== settings.responsive_type) {
+            const desktopControlKey = controlKey.replace(`_${settings.responsive_type}`, '');
+            const desktopControl = toolbarSettings?.controls?.[desktopControlKey];
+
+            if (desktopControl) {
+                popOverStatus = desktopControl.popover;
+            }
+        }
+
         dispatch(updatePopoverControls(controlKey, ControlEle, resetControlEvent, valueChangedCheck, popOverStatus))
+        return null;
     }
 
     if (!shouldRender) {
-
-        if (settings.popover) {
-            const popOverStatus = settings.popover;
-
-            if (popOverStatus.end === true) {
-                return popOverControl(settings, false);
-            };
-
-            popOverControl(settings, false);
-
-            return null;
-        }
-
         return <ControlsConditions
             controlKey={controlKey}
             conditions={settings.conditions}
@@ -222,15 +234,7 @@ const RenderControl = ({
     );
 
     if (settings.popover) {
-        const popOverStatus = settings.popover;
-
-        if (popOverStatus.end === true) {
-            return popOverControl(settings, ControlElement);
-        };
-
-        popOverControl(settings, ControlElement);
-
-        return null;
+        return popOverControl(settings, ControlElement);
     }
 
     return ControlElement;

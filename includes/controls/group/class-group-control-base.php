@@ -52,7 +52,13 @@ abstract class Group_Control_Base extends Control_Base
             $data['responsive_type'] = $responsive_type;
             $data['responsive_control'] = true;
 
-            $this->add_control($id . '_' . $responsive_type, $data);
+            $control_id = $id;
+
+            if ('desktop' !== $responsive_type) {
+                $control_id .= '_' . $responsive_type;
+            }
+
+            $this->add_control($control_id, $data);
         }
     }
 
