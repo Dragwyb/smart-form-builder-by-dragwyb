@@ -49,7 +49,31 @@ class Settings extends Register_Controls_Base
             'selector'  => '{{WRAPPER}}',
         ]);
 
-        $this->add_control('form_padding', [
+        $this->add_control('form_justify_content', [
+            'type'      => Controls::CHOOSE,
+            'label'     => __('Justify Content', 'dragwyb-form-builder'),
+            'default'   => 'center',
+            'options' => [
+                'left'   => ['title' => 'Left',   'icon' => 'fa fa-align-left'],
+                'center' => ['title' => 'Center', 'icon' => 'fa fa-align-center'],
+                'right'  => ['title' => 'Right',  'icon' => 'fa fa-align-right'],
+                'space-between' => ['title' => 'Space Between', 'icon' => 'fa fa-align-justify'],
+            ],
+            'selectors' => [
+                '{{WRAPPER}}' => '--dragwyb-form-justify-content: {{VALUE}};',
+            ],
+        ]);
+
+        $this->add_responsive_control('form_margin', [
+            'type'       => Controls::DIMENSIONS,
+            'label'      => __('Margin', 'dragwyb-form-builder'),
+            'units'      => ['px', 'em', '%'],
+            'selectors'  => [
+                '{{WRAPPER}}' => '--dragwyb-form-mt: {{TOP}}{{UNIT}}; --dragwyb-form-mr: {{RIGHT}}{{UNIT}}; --dragwyb-form-mb: {{BOTTOM}}{{UNIT}}; --dragwyb-form-ml: {{LEFT}}{{UNIT}};',
+            ],
+        ]);
+
+        $this->add_responsive_control('form_padding', [
             'type'       => Controls::DIMENSIONS,
             'label'      => __('Padding', 'dragwyb-form-builder'),
             'units'      => ['px', 'em', '%'],
@@ -59,13 +83,14 @@ class Settings extends Register_Controls_Base
             ],
         ]);
 
-        $this->add_control('field_spacing', [
+        $this->add_responsive_control('field_spacing', [
             'type'      => Controls::SLIDER,
             'label'     => __('Rows Gap', 'dragwyb-form-builder'),
             'default'   => ['size' => 20, 'unit' => 'px'],
             'range'     => ['px' => ['min' => 0, 'max' => 100]],
+            'units'     => ['px', '%'],
             'selectors' => [
-                '{{WRAPPER}}' => '--dragwyb-row-gap: {{VALUE}}{{UNIT}};',
+                '{{WRAPPER}}' => '--dragwyb-field-gap: {{VALUE}}{{UNIT}};',
             ],
         ]);
 
@@ -149,7 +174,7 @@ class Settings extends Register_Controls_Base
             'selector' => '{{WRAPPER}} label',
         ]);
 
-        $this->add_control('label_spacing', [
+        $this->add_responsive_control('label_spacing', [
             'type'      => Controls::SLIDER,
             'label'     => __('Spacing (Bottom)', 'dragwyb-form-builder'),
             'default'   => ['size' => 6, 'unit' => 'px'],
@@ -161,7 +186,7 @@ class Settings extends Register_Controls_Base
 
         $this->add_group_control('help_typography', [
             'type'     => Controls::GROUP_TYPOGRAPHY,
-            'label'    => __('Typography', 'dragwyb-form-builder'),
+            'label'    => __('Help Text Typography', 'dragwyb-form-builder'),
             'selector' => '{{WRAPPER}} .dragwyb-field-description',
         ]);
 
@@ -205,7 +230,7 @@ class Settings extends Register_Controls_Base
             'selector' => '{{WRAPPER}} input, {{WRAPPER}} textarea, {{WRAPPER}} select',
         ]);
 
-        $this->add_control('input_padding', [
+        $this->add_responsive_control('input_padding', [
             'type'       => Controls::DIMENSIONS,
             'label'      => __('Padding', 'dragwyb-form-builder'),
             'units'      => ['px', 'em'],
@@ -269,7 +294,7 @@ class Settings extends Register_Controls_Base
             'label_inline' => true,
         ]);
 
-        $this->add_control('button_width', [
+        $this->add_responsive_control('button_width', [
             'type'    => Controls::SLIDER,
             'label'   => __('Width', 'dragwyb-form-builder'),
             'units' => ['px', '%'],
@@ -369,7 +394,7 @@ class Settings extends Register_Controls_Base
         $this->end_tab();
         $this->end_tabs();
 
-        $this->add_control('button_padding', [
+        $this->add_responsive_control('button_padding', [
             'type'       => Controls::DIMENSIONS,
             'label'      => __('Padding', 'dragwyb-form-builder'),
             'units'      => ['px', 'em'],
