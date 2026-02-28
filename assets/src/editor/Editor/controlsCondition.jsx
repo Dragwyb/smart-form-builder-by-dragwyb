@@ -97,23 +97,6 @@ const ControlsConditions = ({ conditions, updateHandler, controlKey, isResponsiv
 
         const activeToolbarData = formData?.[setting] || {};
 
-        const noChanges = JSON.stringify(prevDataRef.current) === JSON.stringify({ setting, selectedToolbar, activeToolbarData, controlKey, conditions, sectionSettings });
-
-        if (noChanges) {
-            if (isResponsiveControl) {
-                if (!prevConditions.current) prevConditions.current = {};
-                const { shouldRender = true, shouldRenderStyleSelector = true } = prevConditions.current;
-                const deviceType = getResponsiveDevice(responsiveType);
-                const conditionMatched = controlResponsiveType === deviceType;
-
-                if (conditionMatched !== shouldRender) {
-                    prevConditions.current.shouldRender = conditionMatched;
-                    updateHandler(conditionMatched, shouldRenderStyleSelector);
-                }
-            }
-            return
-        };
-
         // Check if the primary toolbar data has changed
         const hasToolbarChanged =
             JSON.stringify(prevDataRef.current.activeToolbarData) !== JSON.stringify(activeToolbarData) ||
@@ -134,7 +117,27 @@ const ControlsConditions = ({ conditions, updateHandler, controlKey, isResponsiv
         prevDataRef.current = { setting, selectedToolbar, activeToolbarData: JSON.parse(JSON.stringify(activeToolbarData)), controlKey, conditions, sectionSettings };
 
         return () => clearTimeout(debounceTimer.current);
-    }, [setting, selectedToolbar, formData, controlKey, conditions, sectionSettings, responsiveType]);
+    }, [setting, selectedToolbar, formData, controlKey, conditions, sectionSettings]);
+
+    useEffect(() => {
+        const activeToolbarData = formData?.[setting] || {};
+
+        const noChanges = JSON.stringify(prevDataRef.current) === JSON.stringify({ setting, selectedToolbar, activeToolbarData, controlKey, conditions, sectionSettings });
+
+        if (noChanges) {
+            if (isResponsiveControl) {
+                if (!prevConditions.current) prevConditions.current = {};
+                const { shouldRender = true, shouldRenderStyleSelector = true } = prevConditions.current;
+                const deviceType = getResponsiveDevice(responsiveType);
+                const conditionMatched = controlResponsiveType === deviceType;
+
+                if (conditionMatched !== shouldRender) {
+                    shouldRenderCallback(0, false);
+                }
+            }
+            return
+        };
+    }, [responsiveType])
 
     return null;
 };

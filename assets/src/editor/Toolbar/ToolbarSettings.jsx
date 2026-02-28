@@ -115,7 +115,7 @@ const ToolbarSettings = ({ setActiveTab, position }) => {
         selectedTab={setting}
         toolbarValue={toolbarValue}
         toolbarSettings={settings}
-        onClose={() => setActiveTab(setting)}
+        onClose={() => setActiveTab('fields')}
         onSettingChange={onSettingChangeHandler}
         setUpdateToolbarValue={setUpdateToolbarValueHandler}
       />
