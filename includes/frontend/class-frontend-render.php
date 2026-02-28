@@ -453,8 +453,7 @@ class Frontend_Render
             $control_instance->set_value($setting_value, $control_id, $control_settings);
             $control_value = $control_instance->get_value();
 
-
-            if (!$this->control_render_conditions($control_settings, $controls, $control_settings)) {
+            if (!$this->control_render_conditions($control_settings, $controls, $settings)) {
                 continue;
             }
 
@@ -594,7 +593,7 @@ class Frontend_Render
     /**
      * Helper: Check if a control should be rendered based on conditions
      */
-    private function control_render_conditions($current_control, $controls, $settings): bool
+    private function control_render_conditions($current_control, $controls, $toolbar_values): bool
     {
         $conditions = $current_control['conditions'] ?? null;
 
@@ -621,26 +620,41 @@ class Frontend_Render
                 }
             }
 
-            if (!isset($settings[$clean_key]) && $clean_key === 'section') {
+            if (!isset($toolbar_values[$clean_key]) && $clean_key === 'section') {
                 continue;
             }
 
             // We use array_key_exists to ensure we catch null values correctly
-            if (!array_key_exists($clean_key, $settings) && $clean_key !== 'section') {
-                return false;
+            if (!array_key_exists($clean_key, $toolbar_values) && $clean_key !== 'section') {
+                if (!array_key_exists($clean_key, $controls) || !array_key_exists('default', $controls[$clean_key])) {
+                    return false;
+                }
             }
 
-            $actual = $settings[$clean_key];
+            $actual = '';
+            if (isset($toolbar_values[$clean_key])) {
+                $actual = $toolbar_values[$clean_key];
+            } else {
+                $actual = sanitize_text_field($controls[$clean_key]['default']);
+            }
 
             // 4. Comparison Logic
             if ($is_not) {
                 // Logic: Fail if they ARE equal
-                if ($actual === $expected) {
+
+                if (is_array($expected)) {
+                    if (in_array($actual, $expected)) {
+                        return false;
+                    }
+                } else if ($actual === $expected) {
                     return false;
                 }
             } else {
-                // Logic: Fail if they are NOT equal
-                if ($actual !== $expected) {
+                if (is_array($expected)) {
+                    if (!in_array($actual, $expected)) {
+                        return false;
+                    }
+                } else if ($actual !== $expected) {
                     return false;
                 }
             }
