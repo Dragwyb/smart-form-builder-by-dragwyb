@@ -149,7 +149,24 @@ class Control_Typography extends Group_Control_Base
         ];
     }
 
-    // --- Sanitization Methods ---
+    protected function valid_default_settings(): array
+    {
+        return [
+            'font',
+            'size',
+            'weight',
+            'transform',
+            'style',
+            'decoration',
+            'line_height',
+            'letter_spacing',
+            'word_spacing',
+            'alignment',
+            'selector',
+            'conditions',
+            'prefix'
+        ];
+    }
 
     /**
      * Entry point for sanitizing the control settings array.
@@ -312,6 +329,7 @@ class Control_Typography extends Group_Control_Base
     private function get_display_settings(): array
     {
         $defaults = $this->default_setting();
+        $valid_settings = $this->valid_default_settings();
 
         // 1. Determine where the overrides are coming from
         // If 'settings' key exists and is an array, use it. Otherwise use root data.
@@ -321,15 +339,17 @@ class Control_Typography extends Group_Control_Base
 
 
         // 2. Security: Only allow keys that exist in our defaults
-        $valid_user_data = array_intersect_key($user_data, $defaults);
+        foreach ($valid_settings as $key) {
+            if (!array_key_exists($key, $user_data)) {
+                continue;
+            }
 
-        foreach ($valid_user_data as $key => $value) {
-            if (is_array($value) && in_array($key, ['range', 'units'])) {
+            if (is_array($user_data[$key]) && in_array($key, ['range', 'units'])) {
                 $defaults[$key] = $user_data[$key];
-            } else if (is_array($value)) {
-                $this->merge_array_settings($value, $user_data[$key], $defaults[$key]);
+            } else if (is_array($user_data[$key])) {
+                $this->merge_array_settings($user_data[$key], $user_data[$key], $defaults[$key]);
             } else {
-                $defaults[$key] = $value;
+                $defaults[$key] = $user_data[$key];
             }
         }
 
@@ -352,21 +372,22 @@ class Control_Typography extends Group_Control_Base
     protected function register_group_controls(): void
     {
         $settings = $this->get_display_settings();
+
         $id = $this->string_sanitize($this->id);
         $selector = isset($settings['selector']) && !empty($settings['selector']) ? $settings['selector'] : false;
         $controls = [];
 
         $selectors = [
-            'family' => array('property' => '--dragwyb-form-typography-family', 'placeholder' => '{{VALUE}}'),
-            'size' => array('property' => '--dragwyb-form-typography-size', 'placeholder' => '{{VALUE}}{{UNIT}}'),
-            'weight' => array('property' => '--dragwyb-form-typography-wt', 'placeholder' => '{{VALUE}}'),
-            'transform' => array('property' => '--dragwyb-form-typography-ts', 'placeholder' => '{{VALUE}}'),
-            'style' => array('property' => '--dragwyb-form-typography-st', 'placeholder' => '{{VALUE}}'),
-            'decoration' => array('property' => '--dragwyb-form-typography-dt', 'placeholder' => '{{VALUE}}'),
-            'line_height' => array('property' => '--dragwyb-form-typography-lh', 'placeholder' => '{{VALUE}}{{UNIT}}'),
-            'letter_spacing' => array('property' => '--dragwyb-form-typography-ls', 'placeholder' => '{{VALUE}}{{UNIT}}'),
-            'word_spacing' => array('property' => '--dragwyb-form-typography-ws', 'placeholder' => '{{VALUE}}{{UNIT}}'),
-            'align' => array('property' => '--dragwyb-form-typography-align', 'placeholder' => '{{VALUE}}'),
+            'family' => array('--dragwyb-form-typography-family' => '{{VALUE}}'),
+            'size' => array('--dragwyb-form-typography-size' => '{{VALUE}}{{UNIT}}'),
+            'weight' => array('--dragwyb-form-typography-wt' => '{{VALUE}}'),
+            'transform' => array('--dragwyb-form-typography-ts' => '{{VALUE}}'),
+            'style' => array('--dragwyb-form-typography-st' => '{{VALUE}}'),
+            'decoration' => array('--dragwyb-form-typography-dt' => '{{VALUE}}'),
+            'line_height' => array('--dragwyb-form-typography-lh' => '{{VALUE}}{{UNIT}}'),
+            'letter_spacing' => array('--dragwyb-form-typography-ls' => '{{VALUE}}{{UNIT}}'),
+            'word_spacing' => array('--dragwyb-form-typography-ws' => '{{VALUE}}{{UNIT}}'),
+            'align' => array('--dragwyb-form-typography-align' => '{{VALUE}}'),
         ];
 
         // 2. Control Map
@@ -389,7 +410,7 @@ class Control_Typography extends Group_Control_Base
 
         // 3. Generate Controls
         foreach ($map as $key => $meta) {
-            $config = $settings[$key];
+            $config = $key === 'family' ? $settings['font'] : (isset($settings[$key]) ? $settings[$key] : array());
 
             $control_args = array_filter($meta, function ($key, $value) {
                 return $key !== 'responsive';
@@ -420,10 +441,15 @@ class Control_Typography extends Group_Control_Base
                 }
             }
 
-            if (isset($selectors[$key])) {
-                $control_args['selectors'] = [
-                    $selector => $selectors[$key]['property'] . ':' . $selectors[$key]['placeholder'],
-                ];
+            if (isset($selectors[$key]) && is_array($selectors[$key])) {
+                $selector_style = '';
+                foreach ($selectors[$key] as $selector_key => $selector_value) {
+                    $selector_style .= $selector_key . ':' . $selector_value . ';';
+                }
+
+                if (!empty($selector_style)) {
+                    $control_args['selectors'][$selector] = $selector_style;
+                }
             }
 
             if (isset($meta['responsive']) && $meta['responsive']) {

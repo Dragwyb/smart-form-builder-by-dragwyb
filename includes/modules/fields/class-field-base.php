@@ -183,10 +183,7 @@ abstract class Field_Base extends Register_Controls_Base
             ],
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-field-width: {{VALUE}};',
-            ],
-            'condition' => [
-                'width' => 'custom',
-            ],
+            ]
         ]);
 
         $this->add_control('css_classes', [

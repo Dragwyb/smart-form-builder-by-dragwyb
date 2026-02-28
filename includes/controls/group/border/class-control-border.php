@@ -50,7 +50,9 @@ class Control_Border extends Group_Control_Base
             'width',
             'radius',
             'color',
-            'selector'
+            'selector',
+            'conditions',
+            'prefix'
         ];
     }
 
@@ -123,6 +125,10 @@ class Control_Border extends Group_Control_Base
         $valid_user_data = [];
 
         foreach ($valid_settings as $key) {
+            if (!array_key_exists($key, $user_data)) {
+                continue;
+            }
+
             if (isset($user_data[$key])) {
                 $valid_user_data[$key] = $user_data[$key];
             }
@@ -136,14 +142,15 @@ class Control_Border extends Group_Control_Base
         $settings = $this->get_display_settings();
         $id = $this->string_sanitize($this->id);
         $selector = isset($settings['selector']) && !empty($settings['selector']) ? $settings['selector'] : false;
+        $prefix = isset($settings['prefix']) && !empty($settings['prefix']) ? $settings['prefix'] : 'form';
 
         // Definition of selectors map
         // Note: Dimensions (width/radius) use specific placeholders {{TOP}}, {{RIGHT}}, etc.
         $selectors = [
-            'style'  => ['property' => '--dragwyb-form-border-style',  'placeholder' => '{{VALUE}}'],
-            'color'  => ['property' => '--dragwyb-form-border-color',  'placeholder' => '{{VALUE}}'],
-            'width'  => ['property' => '--dragwyb-form-border-width',  'placeholder' => '{{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}'],
-            'radius' => ['property' => '--dragwyb-form-border-radius', 'placeholder' => '{{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}'],
+            'style'  => array('--dragwyb-' . $prefix . '-border-style' => '{{VALUE}}'),
+            'color'  => array('--dragwyb-' . $prefix . '-border-color' => '{{VALUE}}'),
+            'width'  => array('--dragwyb-' . $prefix . '-border-top-width' => '{{TOP}}{{UNIT}}', '--dragwyb-' . $prefix . '-border-bottom-width' => '{{BOTTOM}}{{UNIT}}', '--dragwyb-' . $prefix . '-border-right-width' => '{{RIGHT}}{{UNIT}}', '--dragwyb-' . $prefix . '-border-left-width' => '{{LEFT}}{{UNIT}}'),
+            'radius' => array('--dragwyb-' . $prefix . '-border-top-radius' => '{{TOP}}{{UNIT}}', '--dragwyb-' . $prefix . '-border-bottom-radius' => '{{BOTTOM}}{{UNIT}}', '--dragwyb-' . $prefix . '-border-right-radius' => '{{RIGHT}}{{UNIT}}', '--dragwyb-' . $prefix . '-border-left-radius' => '{{LEFT}}{{UNIT}}'),
         ];
 
 
@@ -163,7 +170,7 @@ class Control_Border extends Group_Control_Base
 
         // 3. Generate Controls
         foreach ($map as $key => $meta) {
-            $config = $settings[$key];
+            $config = isset($settings[$key]) ? $settings[$key] : array();
 
             $control_args = array_filter($meta, function ($key, $value) {
                 return $key !== 'responsive';
@@ -187,10 +194,15 @@ class Control_Border extends Group_Control_Base
                 }
             }
 
-            if (isset($selectors[$key])) {
-                $control_args['selectors'] = [
-                    $selector => $selectors[$key]['property'] . ':' . $selectors[$key]['placeholder'],
-                ];
+            if (isset($selectors[$key]) && is_array($selectors[$key])) {
+                $selector_style = '';
+                foreach ($selectors[$key] as $selector_key => $selector_value) {
+                    $selector_style .= $selector_key . ':' . $selector_value . ';';
+                }
+
+                if (!empty($selector_style)) {
+                    $control_args['selectors'][$selector] = $selector_style;
+                }
             }
 
             if (isset($meta['responsive']) && $meta['responsive']) {

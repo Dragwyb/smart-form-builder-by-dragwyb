@@ -33,7 +33,9 @@ class Control_Text_Shadow extends Group_Control_Base
             'selector',
             'horizontal',
             'vertical',
-            'blur'
+            'blur',
+            'conditions',
+            'prefix'
         ]);
     }
 
@@ -87,6 +89,10 @@ class Control_Text_Shadow extends Group_Control_Base
         $valid_user_data = [];
 
         foreach ($valid_settings as $key) {
+            if (!array_key_exists($key, $user_data)) {
+                continue;
+            }
+
             if (isset($user_data[$key])) {
                 $valid_user_data[$key] = $user_data[$key];
             }
@@ -100,12 +106,13 @@ class Control_Text_Shadow extends Group_Control_Base
         $settings = $this->get_display_settings();
         $id = $this->string_sanitize($this->id);
         $selector = isset($settings['selector']) && !empty($settings['selector']) ? $settings['selector'] : false;
+        $prefix = isset($settings['prefix']) && !empty($settings['prefix']) ? $settings['prefix'] : 'form';
 
         $selectors = [
-            'color' => array('property' => '--dragwyb-form-text-shadow-color', 'placeholder' => '{{VALUE}}'),
-            'horizontal' => array('property' => '--dragwyb-form-text-shadow-h', 'placeholder' => '{{VALUE}}{{UNIT}}'),
-            'vertical' => array('property' => '--dragwyb-form-text-shadow-v', 'placeholder' => '{{VALUE}}{{UNIT}}'),
-            'blur' => array('property' => '--dragwyb-form-text-shadow-blur', 'placeholder' => '{{VALUE}}{{UNIT}}'),
+            'color' => array('--dragwyb-' . $prefix . '-text-shadow-color' => '{{VALUE}}'),
+            'horizontal' => array('--dragwyb-' . $prefix . '-text-shadow-h' => '{{VALUE}}{{UNIT}}'),
+            'vertical' => array('--dragwyb-' . $prefix . '-text-shadow-v' => '{{VALUE}}{{UNIT}}'),
+            'blur' => array('--dragwyb-' . $prefix . '-text-shadow-blur' => '{{VALUE}}{{UNIT}}'),
         ];
 
 
@@ -119,7 +126,7 @@ class Control_Text_Shadow extends Group_Control_Base
 
         // 3. Generate Controls
         foreach ($map as $key => $meta) {
-            $config = $settings[$key];
+            $config = isset($settings[$key]) ? $settings[$key] : array();
 
             $control_args = array_filter($meta, function ($key, $value) {
                 return $key !== 'responsive';
@@ -142,10 +149,15 @@ class Control_Text_Shadow extends Group_Control_Base
                 }
             }
 
-            if (isset($selectors[$key])) {
-                $control_args['selectors'] = [
-                    $selector => $selectors[$key]['property'] . ':' . $selectors[$key]['placeholder'],
-                ];
+            if (isset($selectors[$key]) && is_array($selectors[$key])) {
+                $selector_style = '';
+                foreach ($selectors[$key] as $selector_key => $selector_value) {
+                    $selector_style .= $selector_key . ':' . $selector_value . ';';
+                }
+
+                if (!empty($selector_style)) {
+                    $control_args['selectors'][$selector] = $selector_style;
+                }
             }
 
             if (isset($meta['responsive']) && $meta['responsive']) {
