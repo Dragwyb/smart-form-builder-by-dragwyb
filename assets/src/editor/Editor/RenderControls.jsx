@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector, useStore } from "react-redux";
-import { updatePopoverControls, resetPopoverControls, updatePopoverInitStatus } from "../store/actions";
 import shouldRenderField from './shouldRenderField';
 import DragwybControlBase from '../controlBase'
 import { Utils as Helper } from '../components/Utils';
@@ -18,6 +17,8 @@ const RenderControl = ({
     handleChange,
     defautlActiveSection,
     defautlActiveTab,
+    setResetControlEvent = () => { },
+    setValueChangedCheck = () => { }
 }) => {
     // 🔹 Validate settings early
     if (!settings || typeof settings !== "object") {
@@ -46,12 +47,6 @@ const RenderControl = ({
     const shouldRenderSettings = { ...fieldValue, ...getSectionSettings() };
 
     const [shouldRender, setShouldRender] = useState(shouldRenderField(settings, shouldRenderSettings, toolbarSettings?.controls))
-    const [resetControlEvent, setResetControlEvent] = useState(null);
-    const [valueChangedCheck, setValueChangedCheck] = useState(false);
-    const dispatch = useDispatch();
-    const store = useStore();
-    const state = store.getState();
-    const Utils = Helper(state, dispatch);
 
     const conditionUpdateHandler = (value, renderStyleSelector = true) => {
         if (shouldRender !== value) {
@@ -66,91 +61,10 @@ const RenderControl = ({
         }
     }
 
-    const popOverResponsiveEnd = (settings) => {
-        if (settings.responsive && settings.responsive_control) {
-            const controlResponsiveType = settings.responsive_type;
-            let mobileControlKey = controlKey.replace(`_${controlResponsiveType}`, '');
-            mobileControlKey = `${mobileControlKey}_mobile`;
-
-            if (toolbarSettings?.controls?.[mobileControlKey] && toolbarSettings?.controls?.[mobileControlKey].popover && toolbarSettings.controls[mobileControlKey].popover.end === true) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    const popOverControl = (settings, ControlEle = false) => {
-        let popOverStatus = settings.popover;
-
-        const popOverResponsiveEndStatus = popOverResponsiveEnd(settings);
-
-        if (popOverStatus.end === true || popOverResponsiveEndStatus === true) {
-            const PopoverControls = Utils.PopoverControls();
-            const PopoverTitle = popOverStatus.title;
-
-            const controlElements = [];
-            const resetControlEvents = [];
-            const valueChanged = [];
-            let popoverUpdate = false;
-
-
-            if (!PopoverControls && typeof PopoverControls !== 'object') {
-                return;
-            }
-
-            dispatch(resetPopoverControls());
-            dispatch(updatePopoverInitStatus(false));
-
-            PopoverControls[controlKey] = { control: ControlEle, resetControlEvent, valueChangedCheck };
-
-            Object.values(PopoverControls).forEach((control) => {
-                controlElements.push(control.control);
-                resetControlEvents.push(control.resetControlEvent);
-                valueChanged.push(control.valueChangedCheck);
-            });
-
-            valueChanged.forEach((check) => {
-                if (popoverUpdate === true) {
-                    return;
-                }
-
-                if (typeof check === 'function') {
-                    popoverUpdate = check();
-                }
-            });
-
-            const resetControlsValues = () => {
-                resetControlEvents.forEach((event) => {
-                    if (typeof event === 'function') {
-                        event();
-                    }
-                });
-            }
-
-            return <div className="dragwyb-popover" style={{ display: "none" }}>
-                {PopoverTitle && <div className="dragwyb-popover__title">
-                    {PopoverTitle}
-                    <span onClick={resetControlsValues}>
-                        <FaUndo size={12} title={__('Reset to Default', 'dragwyb-form-builder')} />
-                    </span>
-                </div>}
-                <div className="dragwyb-popover__container">{controlElements}</div>
-            </div>;
-        };
-
-        if (settings.responsive && settings.responsive_control && 'desktop' !== settings.responsive_type) {
-            const desktopControlKey = controlKey.replace(`_${settings.responsive_type}`, '');
-            const desktopControl = toolbarSettings?.controls?.[desktopControlKey];
-
-            if (desktopControl) {
-                popOverStatus = desktopControl.popover;
-            }
-        }
-
-        dispatch(updatePopoverControls(controlKey, ControlEle, resetControlEvent, valueChangedCheck, popOverStatus))
-        return null;
-    }
+    const dispatch = useDispatch();
+    const store = useStore();
+    const state = store.getState();
+    const Utils = Helper(state, dispatch);
 
     if (!shouldRender) {
         return <ControlsConditions
@@ -199,11 +113,11 @@ const RenderControl = ({
     }
 
     const resetControlEventLifting = (event) => {
-        setResetControlEvent(() => event);
+        setResetControlEvent(controlKey, event);
     }
 
     const valueChangedCheckLifting = (event) => {
-        setValueChangedCheck(() => event);
+        setValueChangedCheck(controlKey, event);
     }
 
     // 🔹 Build control element
@@ -232,10 +146,6 @@ const RenderControl = ({
             </div>
         </>
     );
-
-    if (settings.popover) {
-        return popOverControl(settings, ControlElement);
-    }
 
     return ControlElement;
 };

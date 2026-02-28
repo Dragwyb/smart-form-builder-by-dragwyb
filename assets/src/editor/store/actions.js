@@ -4,6 +4,7 @@ import { generateId, validateField, debounce } from '../utils/helpers';
 export const ADD_FIELD = 'ADD_FIELD';
 export const UPDATE_FIELD = 'UPDATE_FIELD';
 export const DELETE_FIELD = 'DELETE_FIELD';
+export const UPDATE_ACTIVE_POPOVER = 'UPDATE_ACTIVE_POPOVER';
 export const UPDATE_FIELD_ORDER = 'UPDATE_FIELD_ORDER';
 export const UPDATE_TOOLBAR_SETTINGS = 'UPDATE_TOOLBAR_SETTINGS';
 export const UPDATE_FORM_TITLE = 'UPDATE_FORM_TITLE';
@@ -68,14 +69,19 @@ export const resetSectionSettings = () => ({
     type: RESET_SECTION_SETTINGS
 })
 
+export const updateactivePopoverKey = (value) => ({
+    type: UPDATE_ACTIVE_POPOVER,
+    payload: { activePopoverKey: value }
+})
+
 export const updatePopoverInitStatus = (status) => ({
     type: UPDATE_POPOVER_INITIALIZE,
     payload: { status }
 })
 
-export const updatePopoverControls = (id, control, resetControlEvent, valueChangedCheck, status) => ({
+export const updatePopoverControls = (id, status) => ({
     type: UPDATE_POPOVER_CONTROLS,
-    payload: { id, control, resetControlEvent, valueChangedCheck, status }
+    payload: { id, status }
 })
 
 export const resetPopoverControls = () => ({

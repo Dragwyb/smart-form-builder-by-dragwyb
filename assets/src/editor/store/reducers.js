@@ -1,16 +1,22 @@
 import {
     ADD_FIELD,
     DUPLICATE_FIELD,
-    UPDATE_FIELD,
     DELETE_FIELD,
+    DELETE_FIELD_ID,
+    DELETE_STYLE_SELECTORS,
+    ERROR_NOTICE,
+    RESET_SECTION_SETTINGS,
+    HIDE_NOTICE,
+    RESET_POPOVER_CONTROLS,
+    SHOW_NOTICE,
+    UPDATE_ACTIVE_POPOVER,
+    UPDATE_FIELD,
     UPDATE_FIELD_ORDER,
     UPDATE_FIELD_VALUES,
     UPDATE_TOOLBAR_SETTINGS,
     UPDATE_SECTION_SETTINGS,
-    RESET_SECTION_SETTINGS,
     UPDATE_POPOVER_INITIALIZE,
     UPDATE_POPOVER_CONTROLS,
-    RESET_POPOVER_CONTROLS,
     UPDATE_SELECTED_SETTING_ID,
     UPDATE_ACTIVE_TOOLBAR,
     UPDATE_THEME_MODE,
@@ -18,12 +24,7 @@ import {
     UPDATE_RESPONSIVE_TYPE,
     UPDATE_FIELD_IDS,
     UPDATE_FIELD_ID,
-    DELETE_FIELD_ID,
-    UPDATE_STYLE_SELECTORS,
-    DELETE_STYLE_SELECTORS,
-    SHOW_NOTICE,
-    HIDE_NOTICE,
-    ERROR_NOTICE
+    UPDATE_STYLE_SELECTORS
 } from './actions';
 
 const initialState = {
@@ -34,9 +35,10 @@ const initialState = {
         notifications: [],
         confirmations: []
     },
+    activePopoverKey: false,
     sectionSettings: {},
     popoverInitialize: false,
-    popoverControls: {},
+    popoverControls: [],
     notices: [],
     fieldIds: [],
     selectedSettingId: false,
@@ -65,6 +67,12 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 responsiveType: action.payload.responsiveType
+            }
+
+        case UPDATE_ACTIVE_POPOVER:
+            return {
+                ...state,
+                activePopoverKey: action.payload.activePopoverKey
             }
 
         case ADD_FIELD:
@@ -205,7 +213,7 @@ export default function reducer(state = initialState, action) {
 
         case UPDATE_POPOVER_CONTROLS:
             {
-                if (!action.payload.id || (!action.payload.control && false !== action.payload.control)) return state;
+                if (!action.payload.id) return state;
 
                 const status = action.payload.status;
                 const popoverInit = state.popoverInitialize;
@@ -231,12 +239,10 @@ export default function reducer(state = initialState, action) {
                     }
                 }
 
-                let controlObject = false === action.payload.control ? {} : { control: action.payload.control, resetControlEvent: action.payload.resetControlEvent, valueChangedCheck: action.payload.valueChangedCheck }
-
                 return {
                     ...state,
                     popoverInitialize,
-                    popoverControls: { ...state.popoverControls || {}, [action.payload.id]: { ...state.popoverControls[action.payload.id] || {}, ...controlObject } }
+                    popoverControls: [...(state.popoverControls || []), action.payload.id]
                 }
             }
 
@@ -246,7 +252,7 @@ export default function reducer(state = initialState, action) {
 
                 return {
                     ...state,
-                    popoverControls: {}
+                    popoverControls: []
                 }
             }
 

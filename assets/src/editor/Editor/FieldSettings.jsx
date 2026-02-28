@@ -5,6 +5,7 @@ import { Panel } from '../components/Common';
 import DragwybControlBase from '../controlBase'
 import RenderControl from './RenderControls';
 import Scrollbar from '../components/Scrollbar';
+import RenderPopoverControls from './RenderPopoverControls';
 
 const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingChange, onClose, setUpdateToolbarValue }) => {
     const dispatch = useDispatch();
@@ -74,8 +75,6 @@ const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingCh
         onSettingChange(key, value);
     };
 
-    const activeSectionSettings = getSectionSettings();
-
     return (
         <Panel
             title={toolbarSettings.panelHeading}
@@ -102,18 +101,31 @@ const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingCh
                     {Object.keys(toolbarSettings.controls).map(key => (
                         <>
                             {key === 'header_controls' ? null
-                                : <RenderControl
-                                    key={toolbarSettings.id + '_' + key}
-                                    selectedToolbar={selectedTab}
-                                    selectedTab={toolbarSettings.id}
-                                    controlKey={key}
-                                    settings={toolbarSettings.controls[key]}
-                                    toolbarSettings={toolbarSettings}
-                                    fieldValue={toolbarValue}
-                                    handleChange={handleChange}
-                                    defautlActiveSection={defautlActiveSection}
-                                    defautlActiveTab={defautlActiveTab}
-                                />}
+                                : toolbarSettings.controls[key].popover
+                                    ? <RenderPopoverControls
+                                        key={toolbarSettings.id + '_' + key}
+                                        selectedToolbar={selectedTab}
+                                        selectedTab={toolbarSettings.id}
+                                        controlKey={key}
+                                        settings={toolbarSettings.controls[key]}
+                                        toolbarSettings={toolbarSettings}
+                                        fieldValue={toolbarValue}
+                                        handleChange={handleChange}
+                                        defautlActiveSection={defautlActiveSection}
+                                        defautlActiveTab={defautlActiveTab}
+                                    />
+                                    : <RenderControl
+                                        key={toolbarSettings.id + '_' + key}
+                                        selectedToolbar={selectedTab}
+                                        selectedTab={toolbarSettings.id}
+                                        controlKey={key}
+                                        settings={toolbarSettings.controls[key]}
+                                        toolbarSettings={toolbarSettings}
+                                        fieldValue={toolbarValue}
+                                        handleChange={handleChange}
+                                        defautlActiveSection={defautlActiveSection}
+                                        defautlActiveTab={defautlActiveTab}
+                                    />}
                         </>
                     ))}
                 </Scrollbar>

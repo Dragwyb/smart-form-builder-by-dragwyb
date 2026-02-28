@@ -15,6 +15,7 @@ const ToolbarSettings = ({ setActiveTab, position }) => {
   const selectedToolbar = useSelector(state => state.selectedSettingId);
   const [toolbarValue, setToolbarValue] = useState({});
   const [isToolbarSet, setIsToolbarSet] = useState(false);
+  const toolbarRef = useRef(null);
 
   if (!setting) {
     return null;
@@ -101,6 +102,12 @@ const ToolbarSettings = ({ setActiveTab, position }) => {
   const settings = toolBarObject.getToolbarSettings();
   const toolbarHTML = toolBarObject.render();
 
+  const onSettingChangeHandler = (key, value) => {
+    toolbarRef.current.updateToolbarHandler(key, value);
+  }
+
+  toolbarRef.current = toolBarObject;
+
   return <div className="dragwyb-editor__sidebar" ref={sidebarRef} >
     {toolbarHTML && <div className="dragwyb-controls" id={`dragwyb-controls__${setting}`}>{toolbarHTML}</div>}
     {settings && settings.controls && <div className="dragwyb-editor__settings">
@@ -109,7 +116,7 @@ const ToolbarSettings = ({ setActiveTab, position }) => {
         toolbarValue={toolbarValue}
         toolbarSettings={settings}
         onClose={() => setActiveTab(setting)}
-        onSettingChange={toolBarObject.updateToolbarHandler}
+        onSettingChange={onSettingChangeHandler}
         setUpdateToolbarValue={setUpdateToolbarValueHandler}
       />
     </div>}

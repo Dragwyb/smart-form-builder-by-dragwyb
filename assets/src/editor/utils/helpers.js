@@ -1,6 +1,6 @@
 
 import React, { useRef, useEffect } from "react";
-import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updateFieldValues, updateToolbarSettings, updateSectionSettings, updateStyleSelectors as updateStyleSelectorsAction, deleteStyleSelectors as deleteStyleSelectorsAction, updateResponsiveType as updateResponsiveTypeAction } from "../store/actions";
+import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updateFieldValues, updateToolbarSettings, updateSectionSettings, updateStyleSelectors as updateStyleSelectorsAction, deleteStyleSelectors as deleteStyleSelectorsAction, updateResponsiveType as updateResponsiveTypeAction, updateactivePopoverKey as updateactivePopoverKeyAction } from "../store/actions";
 import PropTypes, { number } from "prop-types";
 import { Placeholder } from "@wordpress/components";
 
@@ -44,6 +44,22 @@ export const updateResponsiveType = ({ state, dispatch, responsiveType }) => {
         });
 
         dispatch(updateResponsiveTypeAction(responsiveType));
+    } catch (e) {
+        console.error("Validation failed:", e.message);
+    }
+}
+
+export const updateactivePopoverKey = ({ dispatch, activePopoverKey }) => {
+    try {
+        const validatorPopoverControls = validateProp({
+            key: "activePopoverKey",
+            value: activePopoverKey, // invalid
+            types: ["string", "bool", "null"],
+            required: true,
+            functionName: "updateactivePopoverKey"
+        });
+
+        dispatch(updateactivePopoverKeyAction(activePopoverKey));
     } catch (e) {
         console.error("Validation failed:", e.message);
     }
