@@ -162,8 +162,12 @@ class Field_Select extends Field_Base
         $settings = $this->get_field_settings();
         $id = $this->get_the_id();
         $field_id       = $this->field_key_exist($settings, 'field_id', uniqid('field_'));
-        $label    = $this->field_key_exist($settings, 'label', '');
-        $options  = $this->field_key_exist($settings, 'options_list', []);
+        $label    = $this->field_key_exist($settings, 'label', 'Select Option');
+        $repeater_options  = $this->field_key_exist($settings, 'options_list', [
+            ['option_label' => 'Option 1', 'option_value' => 'val_1'],
+            ['option_label' => 'Option 2', 'option_value' => 'val_2'],
+            ['option_label' => 'Option 3', 'option_value' => 'val_3'],
+        ]);
         $help     = $this->field_key_exist($settings, 'help_text', '');
         $required = $this->field_key_exist($settings, 'required', '') === 'yes';
         $multiple = $this->field_key_exist($settings, 'multiple', '') === 'yes';
@@ -178,9 +182,11 @@ class Field_Select extends Field_Base
                     class="dragwyb-field-input"
                     <?php echo $required ? 'required' : ''; ?>
                     <?php echo $multiple ? 'multiple' : ''; ?>>
-                    <?php foreach ($options as $opt) : ?>
-                        <option value="<?php echo esc_attr($opt['option_value']); ?>">
-                            <?php echo esc_html($opt['option_label']); ?>
+                    <?php foreach ($repeater_options as $option) :
+                        $option =  $this->field_key_exist($option, 'attributes', []);
+                    ?>
+                        <option value="<?php echo esc_attr($option['option_value']); ?>">
+                            <?php echo esc_html($option['option_label']); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
