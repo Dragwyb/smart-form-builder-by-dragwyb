@@ -241,7 +241,13 @@ abstract class Control_Base
         $condition = [];
 
         foreach ($conditions as $key => $value) {
-            $condition[sanitize_text_field(esc_html($key))] = sanitize_text_field(esc_html($value));
+            if (is_array($value)) {
+                $condition[sanitize_text_field(esc_html($key))] = array_map(function ($item) {
+                    return sanitize_text_field(esc_html($item));
+                }, $value);
+            } else {
+                $condition[sanitize_text_field(esc_html($key))] = sanitize_text_field(esc_html($value));
+            }
         }
 
         return $condition;
