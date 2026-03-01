@@ -8,6 +8,8 @@ use Dragwyb\Form_Builder\Includes\Modules\Register\Register_Fields;
 use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Base;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
 use Dragwyb\Form_Builder\Includes\Modules\Sanitize_Module_Settings\Sanitize_Module_Settings;
+use Dragwyb\Form_Builder\Includes\Categories\Categories;
+use Dragwyb\Form_Builder\Includes\Categories\Categories\Category_Base;
 
 class Modules extends Toolbar_Base
 {
@@ -92,7 +94,28 @@ class Modules extends Toolbar_Base
         $data['label'] = sprintf(esc_html__('%s Settings'), sanitize_text_field($this->get_name()));
         $fields = [];
 
+        $categories_object = Categories::instance();
+
+        $register_categories = $categories_object->get_categories();
+
+        $field_categories = array();
+
+        foreach ($register_categories as $key => $category) {
+            if (!isset($category) || !$category instanceof Category_Base) {
+                continue;
+            }
+
+            $field_categories[$key] = array('name' => $category->get_name(), 'icon' => $category->get_icon(), 'fields' => array());
+        }
+
         foreach ($fields_data as $key => $field) {
+            $field_category = $field->get_category();
+
+            if (!isset($field_categories[$field_category])) {
+                continue;
+            }
+
+
             $field->set_form_id($form_id);
             $field->enqueue_assets();
 
@@ -100,6 +123,8 @@ class Modules extends Toolbar_Base
             $conrols = $field->render_controls();
             $icon = $field->get_icon();
             $keywords = $field->get_keywords();
+
+            array_push($field_categories[$field_category]['fields'], $key);
 
             $fields[$key]['label'] = esc_html($name);
             $fields[$key]['icon'] = esc_attr($icon);
@@ -111,6 +136,7 @@ class Modules extends Toolbar_Base
         }
 
         $data['fields'] = $fields;
+        $data['categories'] = $field_categories;
 
         return $data;
     }
