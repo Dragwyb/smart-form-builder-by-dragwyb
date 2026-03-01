@@ -375,19 +375,19 @@ class Control_Typography extends Group_Control_Base
 
         $id = $this->string_sanitize($this->id);
         $selector = isset($settings['selector']) && !empty($settings['selector']) ? $settings['selector'] : false;
-        $controls = [];
+        $prefix = isset($settings['prefix']) && !empty($settings['prefix']) ? $settings['prefix'] : 'form';
 
         $selectors = [
-            'family' => array('--dragwyb-form-typography-family' => '{{VALUE}}'),
-            'size' => array('--dragwyb-form-typography-size' => '{{VALUE}}{{UNIT}}'),
-            'weight' => array('--dragwyb-form-typography-wt' => '{{VALUE}}'),
-            'transform' => array('--dragwyb-form-typography-ts' => '{{VALUE}}'),
-            'style' => array('--dragwyb-form-typography-st' => '{{VALUE}}'),
-            'decoration' => array('--dragwyb-form-typography-dt' => '{{VALUE}}'),
-            'line_height' => array('--dragwyb-form-typography-lh' => '{{VALUE}}{{UNIT}}'),
-            'letter_spacing' => array('--dragwyb-form-typography-ls' => '{{VALUE}}{{UNIT}}'),
-            'word_spacing' => array('--dragwyb-form-typography-ws' => '{{VALUE}}{{UNIT}}'),
-            'align' => array('--dragwyb-form-typography-align' => '{{VALUE}}'),
+            'family' => array('--dragwyb-' . $prefix . '-typography-family' => '{{VALUE}}'),
+            'size' => array('--dragwyb-' . $prefix . '-typography-size' => '{{VALUE}}{{UNIT}}'),
+            'weight' => array('--dragwyb-' . $prefix . '-typography-wt' => '{{VALUE}}'),
+            'transform' => array('--dragwyb-' . $prefix . '-typography-ts' => '{{VALUE}}'),
+            'style' => array('--dragwyb-' . $prefix . '-typography-st' => '{{VALUE}}'),
+            'decoration' => array('--dragwyb-' . $prefix . '-typography-dt' => '{{VALUE}}'),
+            'line_height' => array('--dragwyb-' . $prefix . '-typography-lh' => '{{VALUE}}{{UNIT}}'),
+            'letter_spacing' => array('--dragwyb-' . $prefix . '-typography-ls' => '{{VALUE}}{{UNIT}}'),
+            'word_spacing' => array('--dragwyb-' . $prefix . '-typography-ws' => '{{VALUE}}{{UNIT}}'),
+            'align' => array('--dragwyb-' . $prefix . '-typography-align' => '{{VALUE}}'),
         ];
 
         // 2. Control Map
