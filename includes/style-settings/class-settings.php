@@ -172,6 +172,7 @@ class Settings extends Register_Controls_Base
             'type'     => Controls::GROUP_TYPOGRAPHY,
             'label'    => __('Typography', 'dragwyb-form-builder'),
             'selector' => '{{WRAPPER}} label',
+            'prefix'   => 'label',
         ]);
 
         $this->add_responsive_control('label_spacing', [
@@ -188,6 +189,7 @@ class Settings extends Register_Controls_Base
             'type'     => Controls::GROUP_TYPOGRAPHY,
             'label'    => __('Help Text Typography', 'dragwyb-form-builder'),
             'selector' => '{{WRAPPER}} .dragwyb-field-description',
+            'prefix'   => 'help-text',
         ]);
 
         $this->end_section();
@@ -228,6 +230,7 @@ class Settings extends Register_Controls_Base
             'type'     => Controls::GROUP_TYPOGRAPHY,
             'label'    => __('Typography', 'dragwyb-form-builder'),
             'selector' => '{{WRAPPER}} input, {{WRAPPER}} textarea, {{WRAPPER}} select',
+            'prefix'   => 'input',
         ]);
 
         $this->add_responsive_control('input_padding', [
@@ -243,6 +246,7 @@ class Settings extends Register_Controls_Base
             'type'     => Controls::GROUP_BORDER,
             'label'    => __('Border', 'dragwyb-form-builder'),
             'selector' => '{{WRAPPER}} input, {{WRAPPER}} textarea, {{WRAPPER}} select',
+            'prefix'   => 'input',
         ]);
 
         $this->start_tabs('tabs_input_states');
@@ -272,6 +276,7 @@ class Settings extends Register_Controls_Base
             'type'     => Controls::GROUP_BOX_SHADOW,
             'label'    => __('Box Shadow', 'dragwyb-form-builder'),
             'selector' => '{{WRAPPER}} input:focus, {{WRAPPER}} textarea:focus, {{WRAPPER}} select:focus',
+            'prefix'   => 'input',
         ]);
 
         $this->end_tab();
@@ -328,7 +333,6 @@ class Settings extends Register_Controls_Base
                 'center'  => ['title' => __('Center', 'dragwyb-form-builder'), 'icon' => 'fa fa-align-center'],
                 'right'   => ['title' => __('Right', 'dragwyb-form-builder'), 'icon' => 'fa fa-align-right'],
             ],
-            'default'   => 'center',
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-btn-align: {{VALUE}};',
             ],
@@ -338,6 +342,7 @@ class Settings extends Register_Controls_Base
             'type'     => Controls::GROUP_TYPOGRAPHY,
             'label'    => __('Typography', 'dragwyb-form-builder'),
             'selector' => '{{WRAPPER}} button[type="submit"]',
+            'prefix'   => 'btn',
         ]);
 
         $this->start_tabs('tabs_button_style');
@@ -383,14 +388,6 @@ class Settings extends Register_Controls_Base
             ],
         ]);
 
-        $this->add_control('button_hover_border_color', [
-            'type'      => Controls::COLOR,
-            'label'     => __('Border Color', 'dragwyb-form-builder'),
-            'selectors' => [
-                '{{WRAPPER}}' => '--dragwyb-btn-hover-border: {{VALUE}};',
-            ],
-        ]);
-
         $this->end_tab();
         $this->end_tabs();
 
@@ -407,12 +404,14 @@ class Settings extends Register_Controls_Base
             'type'     => Controls::GROUP_BORDER,
             'label'    => __('Border', 'dragwyb-form-builder'),
             'selector' => '{{WRAPPER}} button[type="submit"]',
+            'prefix'   => 'btn',
         ]);
 
         $this->add_group_control('button_box_shadow', [
             'type'     => Controls::GROUP_BOX_SHADOW,
             'label'    => __('Box Shadow', 'dragwyb-form-builder'),
             'selector' => '{{WRAPPER}} button[type="submit"]',
+            'prefix'   => 'btn',
         ]);
 
         $this->end_section();
