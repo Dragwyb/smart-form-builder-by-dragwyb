@@ -62,7 +62,9 @@ class Field_Button extends Field_Base
                 'right'  => ['title' => 'Right',  'icon' => 'fa fa-align-right'],
                 'justify' => ['title' => 'Justified', 'icon' => 'fa fa-align-justify'],
             ],
-            'default' => 'left',
+            'selectors' => [
+                '{{WRAPPER}} .dragwyb-btn' => '--dragwyb-btn-align: {{VALUE}};',
+            ],
         ]);
 
         $this->end_section();
@@ -154,13 +156,9 @@ class Field_Button extends Field_Base
         $field_id       = $this->field_key_exist($settings, 'field_id', uniqid('btn_'));
         $text     = $this->field_key_exist($settings, 'text', 'Submit');
         $action   = $this->field_key_exist($settings, 'button_action', 'submit');
-        $align    = $this->field_key_exist($settings, 'alignment', 'left');
-        $width    = $this->field_key_exist($settings, 'width', 'auto');
         $classes  = $this->field_key_exist($settings, 'css_classes', '');
 
-        $wrapper_style = "text-align: {$align}; width: {$width};";
         $btn_class = "dragwyb-btn dragwyb-btn-{$action}";
-        if ($width === '100%') $btn_class .= ' dragwyb-btn-block';
 
         $type = ($action === 'reset') ? 'reset' : 'submit';
 
