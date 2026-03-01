@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { SearchInput } from '../editor/components/Common';
 import { __ } from '@wordpress/i18n';
 import Scrollbar from '../editor/components/Scrollbar';
+import { RiArrowDownSLine } from "react-icons/ri";
+import { TiArrowSortedDown } from "react-icons/ti";
 
 const SidebarField = (props) => {
   const { type, label, icon, addFieldHandler, useDraggable } = props;
@@ -20,7 +22,7 @@ const SidebarField = (props) => {
       {...listeners}
       {...attributes}
       onClick={() => addFieldHandler(type)}
-      className={`field-type ${type} ${isDragging ? 'dragging' : ''}`}
+      className={`field-type${isDragging ? ' dragging' : ''}`}
     >
       <i className={icon}></i>
       <p>{label}</p>
@@ -28,14 +30,32 @@ const SidebarField = (props) => {
   );
 }
 
-const Sidebar = ({ fieldTypes, Utils, addFieldHandler }) => {
+const Sidebar = ({ Utils, addFieldHandler }) => {
+  const fieldTypes = DragwybEditor.fields.fields;
+  const categories = DragwybEditor.fields.categories;
+  const defaultActiveCategory = [];
+
+  Object.keys(categories).forEach(key => {
+    defaultActiveCategory[key] = true;
+  })
+
   const [renderFields, setRenderFields] = useState(fieldTypes);
+  const [isSearch, setIsSearch] = useState(false);
+  const [activeCategory, setActiveCategory] = useState(defaultActiveCategory);
 
   const searchFieldHandler = (value) => {
     if (value === '') {
+      if (isSearch !== false) {
+        setIsSearch(prev => !prev);
+      }
       setRenderFields(fieldTypes);
       return;
     }
+
+    if (isSearch !== true) {
+      setIsSearch(prev => !prev);
+    }
+
     const searchFields = {};
 
     Object.keys(fieldTypes).forEach(key => {
@@ -53,6 +73,13 @@ const Sidebar = ({ fieldTypes, Utils, addFieldHandler }) => {
     setRenderFields(searchFields);
   }
 
+  const toggleCategory = (key) => {
+    setActiveCategory(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  }
+
   return <>
     <div className="dragwyb-controls__search">
       <SearchInput
@@ -63,16 +90,43 @@ const Sidebar = ({ fieldTypes, Utils, addFieldHandler }) => {
     </div>
     <div className="dragwyb-controls__fields">
       <Scrollbar>
-        {Object.entries(renderFields).map(([type, config]) => (
-          <SidebarField
-            key={type}
-            addFieldHandler={(t) => addFieldHandler(t, Utils)}
-            type={type}
-            icon={config.icon}
-            label={config.label}
-            useDraggable={Utils.useDraggable}
-          />
-        ))}
+        {isSearch ?
+          (Object.entries(renderFields).map(([type, config]) => (
+            <SidebarField
+              key={type}
+              addFieldHandler={(t) => addFieldHandler(t, Utils)}
+              type={type}
+              icon={config.icon}
+              label={config.label}
+              useDraggable={Utils.useDraggable}
+            />
+          )))
+          :
+          (Object.entries(categories).map(([key, { name, icon, fields }]) => (
+            <>
+              <div className={`dagwyb-widget-category-section`} id={`category-section-${key}`} onClick={() => { toggleCategory(key) }}>
+                <i className={icon} />
+                <p className="dragwyb-section__title">{name}</p>
+                <span className="dragwyb-section__icon">
+                  <TiArrowSortedDown size={20} />
+                </span>
+              </div>
+              {
+                activeCategory[key] &&
+                fields.map(field => {
+                  return <SidebarField
+                    key={field}
+                    addFieldHandler={(t) => addFieldHandler(t, Utils)}
+                    type={field}
+                    icon={renderFields[field].icon}
+                    label={renderFields[field].label}
+                    useDraggable={Utils.useDraggable}
+                  />
+                })
+              }
+            </>
+          )))
+        }
       </Scrollbar>
     </div>
   </>
@@ -97,9 +151,7 @@ class Fields extends DragwybEditor.editor.extends.ToolbarBase {
       return false;
     }
 
-    const fieldTypes = DragwybEditor.fields.fields;
-
-    return <Sidebar fieldTypes={fieldTypes} Utils={Utils} addFieldHandler={this.addFieldHandler} />;
+    return <Sidebar Utils={Utils} addFieldHandler={this.addFieldHandler} />;
   }
 
   getToolbarSettings() {

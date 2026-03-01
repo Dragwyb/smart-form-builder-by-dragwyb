@@ -13,6 +13,8 @@ use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Icons\Icons_Helper;
 use Dragwyb\Form_Builder\Includes\Frontend\Form_Preview;
 use Dragwyb\Form_Builder\Includes\Frontend\Frontend_Render;
+use Dragwyb\Form_Builder\Includes\Categories\Categories;
+use Dragwyb\Form_Builder\Includes\Categories\Categories\Category_Base;
 
 if (!defined("ABSPATH")) {
     die("You can't access this page");
@@ -189,7 +191,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 'editorContainer' => esc_html(self::Current_Page) . '-editor-container',
                 'formData' => $this->get_form_data((int) self::$form_id),
                 'controlTypes' => $this->get_control_types(),
-                'formTypes' => $this->get_form_types(),
+                'fieldCategories' => $this->get_registered_categories(),
                 'adminUrl' => admin_url('admin.php?page=dragwyb-form-overview'),
                 'faIconsList' => $this->get_fa_icons_list(),
                 'previewUrl' => home_url('/?post_type=' . Dragwyb_Post::POST_TYPE . '&p=' . self::$form_id . '&preview_id=' . Form_Preview::generate_key(self::$form_id)),
@@ -359,19 +361,27 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             return $controls;
         }
 
-        /**
-         * Get form types
-         */
-        private function get_form_types(): array
+        private function get_registered_categories(): array
         {
-            $default_types = [
-                'standard' => __('Standard Form', 'dragwyb-form-builder'),
-                'quiz' => __('Quiz', 'dragwyb-form-builder'),
-                'poll' => __('Poll', 'dragwyb-form-builder'),
-                'survey' => __('Survey', 'dragwyb-form-builder')
-            ];
+            $categories_object = Categories::instance();
 
-            return apply_filters('dragwyb_form_types', $default_types);
+            $categories = $categories_object->get_categories();
+
+            $reigster_categories = array();
+
+            foreach ($categories as $categorie) {
+                if (!$categorie instanceof Category_Base) {
+                    continue;
+                }
+
+                $categorie_id = $categorie->get_id();
+                $categorie_name = $categorie->get_name();
+                $categorie_icon = $categorie->get_icon();
+
+                $reigster_categories[$categorie_id] = array('name' => $categorie_name, 'icon' => $categorie_icon);
+            }
+
+            return $reigster_categories;
         }
 
         public function localize_i18n_strings($strings): array
@@ -399,11 +409,6 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             ];
 
             return array_merge($localize_strings, $strings);
-        }
-
-        private function set_style_selector_cache($style): void
-        {
-            self::$style_cache[] = $style;
         }
     }
 }
