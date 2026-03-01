@@ -132,7 +132,7 @@ const ControlsConditions = ({ conditions, updateHandler, controlKey, isResponsiv
                 const conditionMatched = controlResponsiveType === deviceType;
 
                 if (conditionMatched !== shouldRender) {
-                    shouldRenderCallback(0, false);
+                    shouldRenderCallback(0, true);
                 }
             }
             return

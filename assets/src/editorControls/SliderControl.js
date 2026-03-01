@@ -37,7 +37,7 @@ export default class SliderControl extends DragwybEditor.editor.extends.ControlB
         };
 
         const updateSize = (newSize) => {
-            const newValue = { ...currentValue, size: Number(newSize) };
+            const newValue = { ...currentValue, size: '' !== newSize ? Number(newSize) : '' };
             this.updateControlHandler(id, newValue);
         };
 
@@ -83,9 +83,9 @@ export default class SliderControl extends DragwybEditor.editor.extends.ControlB
         const { default: defaultValue = {} } = this.settings;
         const { value = {} } = this.state;
 
-        const currentValue = { size: this.getValidValue(value.size, defaultValue.size, 0), unit: this.getValidValue(value.unit, defaultValue.unit, 'px') }
+        const currentValue = { size: this.getValidValue(value.size, defaultValue.size, ""), unit: this.getValidValue(value.unit, defaultValue.unit, 'px') }
 
-        let defaultVal = { size: this.getValidValue(defaultValue.size, "", 0), unit: this.getValidValue(defaultValue.unit, "px", 'px') }
+        let defaultVal = { size: this.getValidValue(defaultValue.size, ""), unit: this.getValidValue(defaultValue.unit, "px") }
 
         return !this.Utils.compareTwoObjects({ obj1: defaultVal, obj2: currentValue });
     }

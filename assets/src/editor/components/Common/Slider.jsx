@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 
 const Slider = ({
-    value = 0,
+    value = "",
     min = 0,
     max = 100,
     step = 1,
