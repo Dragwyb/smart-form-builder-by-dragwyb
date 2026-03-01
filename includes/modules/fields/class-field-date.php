@@ -8,6 +8,7 @@ use Dragwyb\Form_Builder\Includes\Controls\Controls;
 
 class Field_Date extends Field_Base
 {
+
     protected function register_scripts()
     {
         return array();
@@ -127,6 +128,7 @@ class Field_Date extends Field_Base
         $this->type = 'date';
         $this->name = __('Date Field', 'dragwyb-form-builder');
         $this->icon = 'far fa-calendar';
+        $this->category = 'advanced-fields';
     }
 
     protected function render_field()

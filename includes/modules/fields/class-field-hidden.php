@@ -13,6 +13,7 @@ class Field_Hidden extends Field_Base
         $this->type = 'hidden';
         $this->name = __('Hidden Field', 'dragwyb-form-builder');
         $this->icon = 'fas fa-eye-slash';
+        $this->category = 'advanced-fields';
     }
 
     protected function header_controls(): array

@@ -13,6 +13,7 @@ class Field_Button extends Field_Base
         $this->type = 'button';
         $this->name = __('Button', 'dragwyb-form-builder');
         $this->icon = 'fa fa-mouse-pointer';
+        $this->category = 'structure';
     }
 
     protected function register_scripts(): void {}

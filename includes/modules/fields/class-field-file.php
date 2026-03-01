@@ -124,6 +124,7 @@ class Field_File extends Field_Base
         $this->type = 'file';
         $this->name = __('File Upload', 'dragwyb-form-builder');
         $this->icon = 'fas fa-upload';
+        $this->category = 'advanced-fields';
     }
 
     protected function render_field()

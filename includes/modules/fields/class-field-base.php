@@ -6,12 +6,14 @@ namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
 use Dragwyb\Form_Builder\Includes\Controls\Register_Controls_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
+use Dragwyb\Form_Builder\Includes\Categories\Categories;
 
 abstract class Field_Base extends Register_Controls_Base
 {
     protected string $type;
     protected string $name;
     protected string $icon;
+    protected string $category = Categories::STANDARD_FIELDS;
     protected array $settings;
     protected array $form_settings;
     protected array $keywords = array();
@@ -70,6 +72,11 @@ abstract class Field_Base extends Register_Controls_Base
     public function get_icon(): string
     {
         return $this->icon;
+    }
+
+    public function get_category(): string
+    {
+        return $this->category;
     }
 
     /**
