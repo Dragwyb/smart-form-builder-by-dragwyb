@@ -65,7 +65,7 @@ if (!class_exists('Sanitize_Data')) {
                     }
                 }
 
-                if ($filtered_value && !isset(self::$filtered_data[$id])) {
+                if (isset($filtered_value) && !isset(self::$filtered_data[$id])) {
                     self::$filtered_data[$id] = $filtered_value;
                 }
             }

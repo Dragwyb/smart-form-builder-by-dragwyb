@@ -213,7 +213,7 @@ class Frontend_Render
                     $control_obj->set_value($value, $attribute, $field_control);
                     $filtered_value = $control_obj->get_value();
 
-                    if (isset($filtered_value) && $filtered_value) {
+                    if (isset($filtered_value)) {
                         self::$field_data['attributes'][$attribute] = $filtered_value;
                     }
                 }

@@ -154,14 +154,8 @@ abstract class Field_Base extends Register_Controls_Base
 
     private function field_array_key_exist(array $array, string $key, $default = false)
     {
-        if (isset($array[$key]) && (is_array($array[$key]) || is_string($array[$key]))) {
-            if (is_array($array[$key]) && count($array[$key]) > 0) {
-                return $array[$key];
-            }
-
-            if (is_string($array[$key]) && !empty($array[$key])) {
-                return $array[$key];
-            }
+        if (isset($array[$key])) {
+            return $array[$key];
         }
 
         return $default;

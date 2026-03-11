@@ -61,7 +61,7 @@ class Field_Number extends Field_Base
         $settings = $this->get_field_settings();
         $id = $this->get_the_id();
         $field_id       = $this->field_key_exist($settings, 'field_id', uniqid('field_'));
-        $label    = $this->field_key_exist($settings, 'label', '');
+        $label    = $this->field_key_exist($settings, 'label', 'Number');
         $placeholder = $this->field_key_exist($settings, 'placeholder', ' ');
         $min      = $this->field_key_exist($settings, 'min_val', '');
         $max      = $this->field_key_exist($settings, 'max_val', '');
