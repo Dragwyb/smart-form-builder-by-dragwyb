@@ -264,7 +264,8 @@ class numberField extends DragwybEditor.editor.extends.FieldBase {
         if (!this.shouldRender()) return <></>;
         const s = this.attributes;
         const fieldId = s.field_id || this.id;
-
+        const defaultLabel = DragwybEditor?.fields?.fields?.[this.fieldName]?.controls?.label?.default;
+        const { label = defaultLabel } = s;
         return (
             <>
                 <div className="dragwyb-input-group">
@@ -276,11 +277,10 @@ class numberField extends DragwybEditor.editor.extends.FieldBase {
                         min={s.min_val}
                         max={s.max_val}
                         step={s.step}
-                        readOnly
                     />
-                    {s.label && (
+                    {label && (
                         <label htmlFor={fieldId} className="dragwyb-field-label">
-                            {s.label}
+                            {label}
                             {s.required === 'yes' && <span className="dragwyb-required">*</span>}
                         </label>
                     )}
