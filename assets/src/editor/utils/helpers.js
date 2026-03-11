@@ -69,11 +69,13 @@ export const PopoverControls = ({ state, dispatch }) => {
     return state.popoverControls;
 }
 
-export const AddField = ({ type, dispatch, Utils, index = null }) => {
+export const AddField = ({ state, type, dispatch, Utils, index = null, attributes = {} }) => {
     let field = {
         _id: Utils.generateId(),
         type,
     };
+
+    const existingFields = state?.form?.fields || [];
 
     if (DragwybEditor.fields.fields[type] && DragwybEditor.fields.fields[type].controls) {
         const fieldControls = DragwybEditor.fields.fields[type].controls;
@@ -89,6 +91,8 @@ export const AddField = ({ type, dispatch, Utils, index = null }) => {
             }
         })
 
+        field.attributes = { ...field.attributes, ...attributes };
+
         if (fieldControls.field_id) {
             field.attributes.field_id = `field_${field._id}`;
         }
@@ -97,6 +101,15 @@ export const AddField = ({ type, dispatch, Utils, index = null }) => {
     dispatch(addField({ field, index }));
     setSelectedSettingId({ dispatch, value: field._id });
     setActiveTab({ dispatch, value: 'fields' });
+
+    if (existingFields.length === 0 && type !== 'button') {
+        const buttonAddStatus = DragwybEditor?.formData?.addSubmitButton;
+
+        if (buttonAddStatus === true) {
+            dispatch(AddField({ state, type: 'button', dispatch, Utils, attributes: { text: 'Submit', field_id: 'submit' } }));
+            delete DragwybEditor.formData.addSubmitButton;
+        }
+    }
 
     return field;
 };

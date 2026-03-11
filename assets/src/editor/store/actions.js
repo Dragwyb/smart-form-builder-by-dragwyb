@@ -13,6 +13,7 @@ export const RESET_SECTION_SETTINGS = 'RESET_SECTION_SETTINGS';
 export const UPDATE_POPOVER_INITIALIZE = 'UPDATE_POPOVER_INITIALIZE';
 export const UPDATE_POPOVER_CONTROLS = 'UPDATE_POPOVER_CONTROLS';
 export const RESET_POPOVER_CONTROLS = 'RESET_POPOVER_CONTROLS';
+export const UPDATE_SAVE_STATE = 'UPDATE_SAVE_STATE';
 export const SHOW_NOTICE = 'SHOW_NOTICE';
 export const HIDE_NOTICE = 'HIDE_NOTICE';
 export const UPDATE_FIELD_VALUES = 'UPDATE_FIELD_VALUES';
@@ -145,6 +146,11 @@ export const deleteStyleSelectors = (key) => ({
     payload: { key }
 })
 
+export const updateSaveState = (status) => ({
+    type: UPDATE_SAVE_STATE,
+    payload: { status }
+})
+
 export const showNotice = (message, type = 'success') => ({
     type: SHOW_NOTICE,
     payload: { message, type }
@@ -157,12 +163,14 @@ export const hideNotice = (id) => ({
 
 export const saveForm = (formData) => async (dispatch) => {
     try {
+        dispatch(updateSaveState(true));
         await api.saveForm(formData);
         dispatch(showNotice(DragwybBuilder.i18n.save));
     } catch (error) {
         dispatch(showNotice(error.message, 'error'));
         throw error;
     }
+    dispatch(updateSaveState(false));
 };
 
 export const addError = (message) => ({

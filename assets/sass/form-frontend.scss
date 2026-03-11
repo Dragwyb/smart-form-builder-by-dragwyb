@@ -42,46 +42,107 @@
     --dragwyb-form-text-shadow-v: 0px;
     --dragwyb-form-text-shadow-blur: 0px;
     --dragwyb-form-text-shadow-color: transparent;
+
+    // Label
+    --dragwyb-label-typography-family: inherit;
+    --dragwyb-label-typography-size: 14px;
+    --dragwyb-label-typography-wt: 600;
+    --dragwyb-label-typography-ts: none;
+    --dragwyb-label-typography-st: normal;
+    --dragwyb-label-typography-dt: none;
+    --dragwyb-label-typography-lh: 1.5;
+    --dragwyb-label-typography-ls: 0px;
+    --dragwyb-label-typography-ws: 0px;
+    --dragwyb-label-typography-align: left;
     --dragwyb-label-color: #374151;
     --dragwyb-label-fs: 14px;
     --dragwyb-label-fw: 600;
     --dragwyb-label-spacing: 6px;
     --dragwyb-label-width: 120px;
+
+    // Help Text
+    --dragwyb-help-text-typography-family: inherit;
+    --dragwyb-help-text-typography-size: 14px;
+    --dragwyb-help-text-typography-wt: 400;
+    --dragwyb-help-text-typography-ts: none;
+    --dragwyb-help-text-typography-st: normal;
+    --dragwyb-help-text-typography-dt: none;
+    --dragwyb-help-text-typography-lh: 1.5;
+    --dragwyb-help-text-typography-ls: 0px;
+    --dragwyb-help-text-typography-ws: 0px;
+    --dragwyb-help-text-typography-align: left;
+    --dragwyb-help-text-color: #646970;
+
+    // Input
+    --dragwyb-input-typography-family: inherit;
+    --dragwyb-input-typography-size: 14px;
+    --dragwyb-input-typography-wt: 400;
+    --dragwyb-input-typography-ts: none;
+    --dragwyb-input-typography-st: normal;
+    --dragwyb-input-typography-dt: none;
+    --dragwyb-input-typography-lh: 1.5;
+    --dragwyb-input-typography-ls: 0px;
+    --dragwyb-input-typography-ws: 0px;
+    --dragwyb-input-typography-align: left;
     --dragwyb-input-bg: #ffffff;
     --dragwyb-input-color: #111827;
     --dragwyb-input-placeholder: #9ca3af;
-    --dragwyb-input-border-width: 1px;
+    --dragwyb-input-border-top-width: 1px;
+    --dragwyb-input-border-right-width: 1px;
+    --dragwyb-input-border-bottom-width: 1px;
+    --dragwyb-input-border-left-width: 1px;
     --dragwyb-input-border-style: solid;
     --dragwyb-input-border-color: #d1d5db;
-    --dragwyb-input-radius: 6px;
+    --dragwyb-input-border-top-radius: 4px;
+    --dragwyb-input-border-bottom-radius: 4px;
+    --dragwyb-input-border-left-radius: 4px;
+    --dragwyb-input-border-right-radius: 4px;
     --dragwyb-input-pt: 10px;
     --dragwyb-input-pr: 14px;
     --dragwyb-input-pb: 10px;
     --dragwyb-input-pl: 14px;
     --dragwyb-input-focus-bg: #ffffff;
     --dragwyb-input-focus-border: #1d4ed8;
+
+    // Button
+    --dragwyb-btn-typography-family: inherit;
+    --dragwyb-btn-typography-size: 16px;
+    --dragwyb-btn-typography-wt: 400;
+    --dragwyb-btn-typography-ts: none;
+    --dragwyb-btn-typography-st: normal;
+    --dragwyb-btn-typography-dt: none;
+    --dragwyb-btn-typography-lh: 1.5;
+    --dragwyb-btn-typography-ls: 0px;
+    --dragwyb-btn-typography-ws: 0px;
+    --dragwyb-btn-typography-align: left;
     --dragwyb-btn-bg: #1d4ed8;
+    --dragwyb-btn-hover-bg: #1e40af;
     --dragwyb-btn-color: #ffffff;
     --dragwyb-btn-radius: 6px;
+    --dragwyb-btn-width: auto;
+    --dragwyb-btn-align: var(--dragwyb-form-justify-content);
     --dragwyb-btn-pt: 12px;
     --dragwyb-btn-pr: 20px;
     --dragwyb-btn-pb: 12px;
     --dragwyb-btn-pl: 20px;
-    --dragwyb-btn-hover-bg: #1e40af;
-    --dragwyb-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
+    --dragwyb-btn-border-top-width: 0px;
+    --dragwyb-btn-border-right-width: 0px;
+    --dragwyb-btn-border-bottom-width: 0px;
+    --dragwyb-btn-border-left-width: 0px;
+    --dragwyb-btn-border-style: solid;
+    --dragwyb-btn-border-color: transparent;
+    --dragwyb-btn-border-top-radius: 4px;
+    --dragwyb-btn-border-bottom-radius: 4px;
+    --dragwyb-btn-border-left-radius: 4px;
+    --dragwyb-btn-border-right-radius: 4px;
+    --dragwyb-btn-box-shadow-h: 0px;
+    --dragwyb-btn-box-shadow-v: 0px;
+    --dragwyb-btn-box-shadow-blur: 0px;
+    --dragwyb-btn-box-shadow-spread: 0;
+    --dragwyb-btn-box-shadow-color: transparent;
+    --dragwyb-btn-box-shadow-position: ;
 
-@mixin font-settings {
-    font-family: var(--dragwyb-form-typography-family);
-    font-size: var(--dragwyb-form-typography-size);
-    font-weight: var(--dragwyb-form-typography-wt);
-    font-style: var(--dragwyb-form-typography-st);
-    text-transform: var(--dragwyb-form-typography-ts);
-    text-decoration: var(--dragwyb-form-typography-dt);
-    line-height: var(--dragwyb-form-typography-lh);
-    letter-spacing: var(--dragwyb-form-typography-ls);
-    word-spacing: var(--dragwyb-form-typography-ws);
-    text-align: var(--dragwyb-form-typography-align);
+    --dragwyb-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dragwyb-form {
@@ -230,7 +291,16 @@
 
 // Fields Element Styling
 .dragwyb-form-wrapper {
-    @include font-settings;
+    font-family: var(--dragwyb-form-typography-family);
+    font-size: var(--dragwyb-form-typography-size);
+    font-weight: var(--dragwyb-form-typography-wt);
+    font-style: var(--dragwyb-form-typography-st);
+    text-transform: var(--dragwyb-form-typography-ts);
+    text-decoration: var(--dragwyb-form-typography-dt);
+    line-height: var(--dragwyb-form-typography-lh);
+    letter-spacing: var(--dragwyb-form-typography-ls);
+    word-spacing: var(--dragwyb-form-typography-ws);
+    text-align: var(--dragwyb-form-typography-align);
     box-sizing: border-box;
     width: var(--dragwyb-form-width);
     margin: var(--dragwyb-form-mt) var(--dragwyb-form-mr, auto) var(--dragwyb-form-mb) var(--dragwyb-form-ml, auto);
@@ -253,7 +323,16 @@
         flex: 0 0 calc((var(--dragwyb-field-width) * 1%) - (var(--dragwyb-field-gap) * (1 - var(--dragwyb-field-width) / 100)));
 
         .dragwyb-field-label {
-            @include font-settings;
+            font-family: var(--dragwyb-label-typography-family);
+            font-size: var(--dragwyb-label-typography-size);
+            font-weight: var(--dragwyb-label-typography-wt);
+            font-style: var(--dragwyb-label-typography-st);
+            text-transform: var(--dragwyb-label-typography-ts);
+            text-decoration: var(--dragwyb-label-typography-dt);
+            line-height: var(--dragwyb-label-typography-lh);
+            letter-spacing: var(--dragwyb-label-typography-ls);
+            word-spacing: var(--dragwyb-label-typography-ws);
+            text-align: var(--dragwyb-label-typography-align);
             display: block;
             width: fit-content;
             color: var(--dragwyb-label-color);
@@ -281,13 +360,26 @@
         input.dragwyb-field-input,
         textarea.dragwyb-field-input,
         select.dragwyb-field-input {
-            @include font-settings;
+            font-family: var(--dragwyb-input-typography-family);
+            font-size: var(--dragwyb-input-typography-size);
+            font-weight: var(--dragwyb-input-typography-wt);
+            font-style: var(--dragwyb-input-typography-st);
+            text-transform: var(--dragwyb-input-typography-ts);
+            text-decoration: var(--dragwyb-input-typography-dt);
+            line-height: var(--dragwyb-input-typography-lh);
+            letter-spacing: var(--dragwyb-input-typography-ls);
+            word-spacing: var(--dragwyb-input-typography-ws);
+            text-align: var(--dragwyb-input-typography-align);
             width: 100%;
             box-sizing: border-box;
             background-color: var(--dragwyb-input-bg);
             color: var(--dragwyb-input-color);
-            border: var(--dragwyb-input-border-width) var(--dragwyb-input-border-style) var(--dragwyb-input-border-color);
-            border-radius: var(--dragwyb-input-radius);
+            border: 0px var(--dragwyb-input-border-style) var(--dragwyb-input-border-color);
+            border-top-width: var(--dragwyb-input-border-top-width);
+            border-bottom-width: var(--dragwyb-input-border-bottom-width);
+            border-left-width: var(--dragwyb-input-border-left-width);
+            border-right-width: var(--dragwyb-input-border-right-width);
+            border-radius: var(--dragwyb-input-border-left-radius) var(--dragwyb-input-border-top-radius) var(--dragwyb-input-border-right-radius) var(--dragwyb-input-border-bottom-radius);
             padding: var(--dragwyb-input-pt) var(--dragwyb-input-pr) var(--dragwyb-input-pb) var(--dragwyb-input-pl);
             outline: none;
             transition: border-color 0.2s, box-shadow 0.2s;
@@ -345,7 +437,16 @@
                 }
 
                 .dragwyb-radio-label {
-                    @include font-settings;
+                    font-family: var(--dragwyb-label-typography-family);
+                    font-size: var(--dragwyb-label-typography-size);
+                    font-weight: var(--dragwyb-label-typography-wt);
+                    font-style: var(--dragwyb-label-typography-st);
+                    text-transform: var(--dragwyb-label-typography-ts);
+                    text-decoration: var(--dragwyb-label-typography-dt);
+                    line-height: var(--dragwyb-label-typography-lh);
+                    letter-spacing: var(--dragwyb-label-typography-ls);
+                    word-spacing: var(--dragwyb-label-typography-ws);
+                    text-align: var(--dragwyb-label-typography-align);
                     color: var(--dragwyb-input-color);
                 }
             }
@@ -353,24 +454,35 @@
 
         /* Buttons */
         button {
+            font-family: var(--dragwyb-btn-typography-family);
+            font-size: var(--dragwyb-btn-typography-size);
+            font-weight: var(--dragwyb-btn-typography-wt);
+            font-style: var(--dragwyb-btn-typography-st);
+            text-transform: var(--dragwyb-btn-typography-ts);
+            text-decoration: var(--dragwyb-btn-typography-dt);
+            line-height: var(--dragwyb-btn-typography-lh);
+            letter-spacing: var(--dragwyb-btn-typography-ls);
+            word-spacing: var(--dragwyb-btn-typography-ws);
+            text-align: var(--dragwyb-btn-typography-align);
             display: inline-flex;
-            justify-content: center;
+            justify-content: var(--dragwyb-btn-align);
             align-items: center;
             width: auto;
             background-color: var(--dragwyb-btn-bg);
             color: var(--dragwyb-btn-color);
-            border: 0px var(--dragwyb-form-border-style) var(--dragwyb-form-border-color);
-            border-top-width: var(--dragwyb-form-border-top-width);
-            border-bottom-width: var(--dragwyb-form-border-bottom-width);
-            border-left-width: var(--dragwyb-form-border-left-width);
-            border-right-width: var(--dragwyb-form-border-right-width);
+            border: 0px var(--dragwyb-btn-border-style) var(--dragwyb-btn-border-color);
+            border-top-width: var(--dragwyb-btn-border-top-width);
+            border-bottom-width: var(--dragwyb-btn-border-bottom-width);
+            border-left-width: var(--dragwyb-btn-border-left-width);
+            border-right-width: var(--dragwyb-btn-border-right-width);
             border-radius: var(--dragwyb-btn-radius);
             padding: var(--dragwyb-btn-pt) var(--dragwyb-btn-pr) var(--dragwyb-btn-pb) var(--dragwyb-btn-pl);
-            font-weight: 500;
+            box-shadow: var(--dragwyb-btn-box-shadow-position) var(--dragwyb-btn-box-shadow-h) var(--dragwyb-btn-box-shadow-v) var(--dragwyb-btn-box-shadow-blur) var(--dragwyb-btn-box-shadow-spread) var(--dragwyb-btn-box-shadow-color);
             cursor: pointer;
             transition: var(--dragwyb-transition);
 
             &:hover {
+                color: var(--dragwyb-btn-hover-color);
                 background-color: var(--dragwyb-btn-hover-bg);
             }
 

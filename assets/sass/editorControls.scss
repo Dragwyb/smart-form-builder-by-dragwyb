@@ -4,6 +4,10 @@
     .dragwyb-setting-row {
       padding: 0;
     }
+
+    &~.dragwyb-panel__settings {
+      height: calc(100% - 39px);
+    }
   }
 
   // Form Fields
@@ -13,6 +17,11 @@
     gap: 6px;
     color: hsl(var(--dragwyb-card-foreground) / var(--dragwyb-text-opacity, 1));
     padding: 0 16px;
+
+    &[data-type="section"] {
+      border-top: 1px solid hsl(var(--dragwyb-border)/var(--dragwyb-border-opacity, 1));
+      padding: 0px;
+    }
 
     .dragwyb-label-inline {
       display: flex;
@@ -586,14 +595,12 @@
      ========================= */
   .dragwyb-control--section {
     transition: var(--cubic-transition);
-    padding-block: 0.3rem;
     display: flex;
     flex: 1 1 0%;
     cursor: pointer;
     justify-content: space-between;
     position: relative;
-    margin-top: .75rem;
-
+    padding: 12px 16px;
 
     svg {
       width: 1rem;

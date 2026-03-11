@@ -21,6 +21,7 @@ import Header from "./header";
 import ToolbarSettings from "../Toolbar/ToolbarSettings";
 import PreviewIframe from "./PreviewIframe";
 import PreviewLoading from "./previewLoading";
+import Notice from "../components/Common/Notice";
 
 const Editor = () => {
     const [activeDrag, setActiveDrag] = useState(null);
@@ -280,6 +281,7 @@ const Editor = () => {
                     {activeDrag && <SidebarFieldOverlay data={activeDrag} />}
                 </DndContext>
             </div>
+            <Notice />
         </div>
     );
 };

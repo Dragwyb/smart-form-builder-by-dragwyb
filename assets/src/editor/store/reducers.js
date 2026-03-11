@@ -6,6 +6,7 @@ import {
     DELETE_STYLE_SELECTORS,
     ERROR_NOTICE,
     RESET_SECTION_SETTINGS,
+    UPDATE_SAVE_STATE,
     HIDE_NOTICE,
     RESET_POPOVER_CONTROLS,
     SHOW_NOTICE,
@@ -39,6 +40,7 @@ const initialState = {
     sectionSettings: {},
     popoverInitialize: false,
     popoverControls: [],
+    updateSaveState: false,
     notices: [],
     fieldIds: [],
     selectedSettingId: false,
@@ -319,6 +321,12 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 fieldIds: state.fieldIds.filter(id => id !== action.payload.id)
+            }
+
+        case UPDATE_SAVE_STATE:
+            return {
+                ...state,
+                updateSaveState: action.payload.status
             }
 
         case SHOW_NOTICE:

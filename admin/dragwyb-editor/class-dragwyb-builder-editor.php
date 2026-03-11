@@ -27,6 +27,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
         private static $form_id = null;
         private const Current_Page = DRAGWYB_PREFIX . '-form-builder';
         private static ?self $instance = null;
+        private static $initial_load = false;
         private static $style_cache = [];
         private static $google_fonts = [];
 
@@ -118,6 +119,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                     'post_author'  => get_current_user_id(),
                 ]);
 
+                self::$initial_load = true;
                 self::$form_id = $post_id;
             } else {
                 $form = get_post((int) $form_id);
@@ -258,11 +260,23 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
         {
             $form = get_post($form_id);
 
-            return [
+            $form_data = [
                 'id' => $form_id,
                 'title' => $form ? $form->post_title : '',
                 'status' => $form ? $form->post_status : '',
             ];
+
+            if (self::$initial_load === true) {
+                $form_data['addSubmitButton'] = true;
+            } else {
+                $form_saved_data = get_post_meta($form_id, '_dragwyb_form_data', true);
+
+                if (empty($form_saved_data)) {
+                    $form_data['addSubmitButton'] = true;
+                }
+            }
+
+            return $form_data;
         }
 
         public function editor_toolbars_localize($data): array
