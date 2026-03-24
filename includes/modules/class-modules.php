@@ -15,6 +15,7 @@ class Modules extends Toolbar_Base
 {
     private static $instance = null;
     private $fields = [];
+    private $root_containers = [];
 
     public static function instance(): self
     {
@@ -79,10 +80,12 @@ class Modules extends Toolbar_Base
     {
         $sanitize_module_data = new Sanitize_Module_Settings($data);
         $sanitize_data = $sanitize_module_data->get_data();
+        $this->root_containers = $sanitize_module_data->get_root_containers();
 
         if ($sanitize_data && is_array($sanitize_data) && count($sanitize_data) > 0) {
             return $sanitize_data;
         }
+
         return array();
     }
 
@@ -123,12 +126,22 @@ class Modules extends Toolbar_Base
             $conrols = $field->render_controls();
             $icon = $field->get_icon();
             $keywords = $field->get_keywords();
+            $is_root_container = $field->is_root_container();
+            $allow_child = $field->get_allow_child();
 
             array_push($field_categories[$field_category]['fields'], $key);
 
             $fields[$key]['label'] = esc_html($name);
             $fields[$key]['icon'] = esc_attr($icon);
             $fields[$key]['controls'] = $conrols;
+
+            if ($is_root_container === true) {
+                $fields[$key]['is_root_container'] = true;
+            }
+
+            if ($allow_child === true) {
+                $fields[$key]['allow_child'] = true;
+            }
 
             if ($keywords && count($keywords) > 0) {
                 $fields[$key]['keywords'] = $keywords;
@@ -144,5 +157,12 @@ class Modules extends Toolbar_Base
     protected function get_setting_instance(): string
     {
         return Settings::class;
+    }
+
+    public function get_root_containers(): array
+    {
+        return (is_array($this->root_containers) && count($this->root_containers) > 0)
+            ? $this->root_containers
+            : array();
     }
 }
