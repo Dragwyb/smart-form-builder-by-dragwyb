@@ -12,6 +12,7 @@ if (!class_exists('Sanitize_Module_Settings')) {
     class Sanitize_Module_Settings
     {
         private static $filtered_data = [];
+        private static $root_containers = [];
 
         private static $form_fields = null;
 
@@ -19,7 +20,6 @@ if (!class_exists('Sanitize_Module_Settings')) {
 
         private static $instance = null;
 
-        private static $control = null;
         private static $module = null;
 
         public static function instance(array $control_data): self
@@ -34,14 +34,8 @@ if (!class_exists('Sanitize_Module_Settings')) {
         {
             self::$form_fields = $data;
 
-            $this->set_control();
             $this->set_module();
             $this->field_loop();
-        }
-
-        private function set_control(): void
-        {
-            self::$control =  new Controls();
         }
 
         private function set_module(): void
@@ -56,13 +50,36 @@ if (!class_exists('Sanitize_Module_Settings')) {
                     continue;
                 }
 
-                self::$filtered_data[$index]['_id'] = $field['_id'];
-                self::$filtered_data[$index]['type'] = $field['type'];
+                self::$filtered_data[$field['_id']]['_id'] = sanitize_text_field($field['_id']);
+                self::$filtered_data[$field['_id']]['type'] = sanitize_text_field($field['type']);
+
+                if (isset($field['children']) && is_array($field['children']) && count($field['children']) > 0) {
+                    self::$filtered_data[$field['_id']]['children'] = array_map(function ($child) {
+                        return isset($child) ? sanitize_text_field($child) : null;
+                    }, $field['children']);
+                }
+
+                if (isset($field['parentId'])) {
+                    self::$filtered_data[$field['_id']]['parentId'] = sanitize_text_field($field['parentId']);
+                }
+
+                if (isset($field['children'])) {
+                    $type = sanitize_text_field($field['type']);
+                    $this->set_field_module($type);
+
+                    $is_root_container = self::$field_module[$type]->is_root_container();
+                    if ($is_root_container) {
+                        self::$root_containers[] = $field['_id'];
+                        self::$filtered_data[$field['_id']]['is_root_container'] = true;
+                    }
+                }
 
                 if (isset($field['type']) && isset($field['attributes'])) {
-                    if (isset($field['type']) && is_array($field['attributes']) && count($field['attributes']) > 0) {
-                        $type = $field['type'];
+                    if (is_array($field['attributes']) && count($field['attributes']) > 0) {
+                        $type = sanitize_text_field($field['type']);
                         $attributes = $field['attributes'];
+
+                        $this->set_field_module($type);
                         if (!isset(self::$field_module[$type])) {
                             $field_module = self::$module->get_field($type);
 
@@ -75,16 +92,31 @@ if (!class_exists('Sanitize_Module_Settings')) {
                         }
 
                         $controls = self::$field_module[$type]->get_settings();
+
                         $sanitize_data = new Sanitize_Data($attributes, $controls);
                         $data = $sanitize_data->get_data();
 
-                        self::$filtered_data[$index]['attributes'] = $data;
+                        self::$filtered_data[$field['_id']]['attributes'] = $data;
                     }
                 }
 
-                if (self::$filtered_data && isset(self::$filtered_data[$index]) && !isset(self::$filtered_data[$index]['attributes'])) {
-                    self::$filtered_data[$index]['attributes'] = array();
+                if (self::$filtered_data && isset(self::$filtered_data[$field['_id']]) && !isset(self::$filtered_data[$field['_id']]['attributes'])) {
+                    self::$filtered_data[$field['_id']]['attributes'] = array();
                 }
+            }
+        }
+
+        private function set_field_module($type): void
+        {
+            if (!isset(self::$field_module[$type])) {
+                $field_module = self::$module->get_field($type);
+
+                if (!$field_module) {
+                    return;
+                }
+
+                $field_module->render_controls();
+                self::$field_module[$type] = $field_module;
             }
         }
 
@@ -100,12 +132,18 @@ if (!class_exists('Sanitize_Module_Settings')) {
                 : false;
         }
 
+        public function get_root_containers(): array
+        {
+            return (is_array(self::$root_containers) && count(self::$root_containers) > 0)
+                ? self::$root_containers
+                : array();
+        }
+
         public function __destruct()
         {
             self::$filtered_data = [];
             self::$form_fields = null;
             self::$field_module = null;
-            self::$control = null;
             self::$module = null;
         }
     }
