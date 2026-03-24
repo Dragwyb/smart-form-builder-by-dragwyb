@@ -163,7 +163,7 @@ class Field_Button extends Field_Base
         $type = ($action === 'reset') ? 'reset' : 'submit';
 
 ?>
-        <div id="dragwyb-field-wrapper-<?php echo esc_attr($id); ?>" class="dragwyb-field-wrapper dragwyb-no-float <?php echo esc_attr($classes); ?>" style="<?php echo esc_attr($wrapper_style); ?>">
+        <div id="dragwyb-field-wrapper-<?php echo esc_attr($id); ?>" class="dragwyb-field-wrapper dragwyb-no-float <?php echo esc_attr($classes); ?>">
             <button type="<?php echo esc_attr($type); ?>" id="<?php echo esc_attr($field_id); ?>" class="<?php echo esc_attr($btn_class); ?>">
                 <?php echo esc_html($text); ?>
             </button>
