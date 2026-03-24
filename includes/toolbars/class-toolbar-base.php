@@ -14,6 +14,7 @@ abstract class Toolbar_Base
     private array $data = [];
     private static int $form_id = 0;
     protected $toolbar_settings = null;
+    private $root_containers = [];
 
     public function __construct()
     {
@@ -126,6 +127,13 @@ abstract class Toolbar_Base
     public function get_toolbar_data(): array
     {
         return $this->data;
+    }
+
+    public function get_root_containers(): array
+    {
+        return (is_array($this->root_containers) && count($this->root_containers) > 0)
+            ? $this->root_containers
+            : array();
     }
 
     /**
