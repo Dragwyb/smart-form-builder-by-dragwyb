@@ -315,12 +315,22 @@
     box-shadow: var(--dragwyb-form-box-shadow-position) var(--dragwyb-form-box-shadow-h) var(--dragwyb-form-box-shadow-v) var(--dragwyb-form-box-shadow-blur) var(--dragwyb-form-box-shadow-spread) var(--dragwyb-form-box-shadow-color);
     text-shadow: var(--dragwyb-form-text-shadow-h) var(--dragwyb-form-text-shadow-v) var(--dragwyb-form-text-shadow-blur) var(--dragwyb-form-text-shadow-color);
 
+    /* Grid */
+    .dragwyb-row {
+        display: grid;
+        grid-template-columns: repeat(var(--dragwyb-row-columns, 1), 1fr);
+        grid-template-rows: repeat(var(--dragwyb-row-rows, 1), 1fr);
+        gap: var(--dragwyb-row-gap, 20px);
+        width: var(--dragwyb-row-width, 100%);
+    }
+
     /* Field Container */
     .dragwyb-field-wrapper {
         position: relative;
         box-sizing: border-box;
         width: calc(var(--dragwyb-field-width) * 1%);
         flex: 0 0 calc((var(--dragwyb-field-width) * 1%) - (var(--dragwyb-field-gap) * (1 - var(--dragwyb-field-width) / 100)));
+        grid-column: span var(--dragwyb-column-span, 1);
 
         .dragwyb-field-label {
             font-family: var(--dragwyb-label-typography-family);

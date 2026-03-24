@@ -30,6 +30,10 @@ export const DELETE_STYLE_SELECTORS = 'DELETE_STYLE_SELECTORS';
 export const UPDATE_THEME_MODE = 'UPDATE_THEME_MODE';
 export const UPDATE_IFRAME_NODE = 'UPDATE_IFRAME_NODE';
 export const UPDATE_RESPONSIVE_TYPE = 'UPDATE_RESPONSIVE_TYPE';
+export const ADD_ROOT_CONTAINERS = 'ADD_ROOT_CONTAINERS';
+export const DELETE_ROOT_CONTAINERS = 'DELETE_ROOT_CONTAINERS';
+export const UPDATE_ACTIVE_ROOT_CONTAINER = 'UPDATE_ACTIVE_ROOT_CONTAINER';
+export const RESET_ACTIVE_ROOT_CONTAINER = 'RESET_ACTIVE_ROOT_CONTAINER';
 
 export const updateThemeMode = (themeMode) => ({
     type: UPDATE_THEME_MODE,
@@ -46,14 +50,33 @@ export const updateResponsiveType = (responsiveType) => ({
     payload: { responsiveType }
 })
 
+export const addRootContainers = (rootContainerId) => ({
+    type: ADD_ROOT_CONTAINERS,
+    payload: { rootContainerId }
+})
+
+export const deleteRootContainers = (rootContainerId) => ({
+    type: DELETE_ROOT_CONTAINERS,
+    payload: { rootContainerId }
+})
+
+export const updateActiveRootContainer = (rootContainerId, activeColumnIndex = null) => ({
+    type: UPDATE_ACTIVE_ROOT_CONTAINER,
+    payload: { rootContainerId, activeColumnIndex }
+})
+
+export const resetActiveRootContainer = () => ({
+    type: RESET_ACTIVE_ROOT_CONTAINER
+})
+
 export const addField = ({ field, index = null }) => ({
     type: ADD_FIELD,
     payload: { field: field, fieldIndex: index }
 });
 
-export const duplicateField = (field, index, dispatch) => ({
+export const duplicateField = (field, index) => ({
     type: DUPLICATE_FIELD,
-    payload: { field, index, dispatch }
+    payload: { field, fieldIndex: index }
 })
 
 export const updateField = (fieldId, field) => ({
@@ -94,9 +117,9 @@ export const deleteField = (fieldId) => ({
     payload: fieldId
 });
 
-export const updateFieldOrder = (oldIndex, newIndex) => ({
+export const updateFieldOrder = (targetId, afterId) => ({
     type: UPDATE_FIELD_ORDER,
-    payload: { oldIndex, newIndex }
+    payload: { targetId, afterId }
 });
 
 export const updateFieldValues = (fieldId, value) => ({
@@ -168,7 +191,7 @@ export const saveForm = (formData) => async (dispatch) => {
         dispatch(showNotice(DragwybBuilder.i18n.save));
     } catch (error) {
         dispatch(showNotice(error.message, 'error'));
-        throw error;
+        console.error(error);
     }
     dispatch(updateSaveState(false));
 };

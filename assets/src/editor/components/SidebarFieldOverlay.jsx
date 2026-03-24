@@ -42,9 +42,10 @@ const SidebarFieldOverlay = ({ data }) => {
     if (activeDrag?.data?.current?.fromSidebar) {
         type = activeDrag.data.current.type;
     } else if (activeDrag?.data?.current?.canvasDrag) {
-        const fieldIndex = activeDrag.data.current.currentIndex
+        const fieldId = activeDrag.data.current.currentId
         wrapperCls = 'canvas-overlay-field';
-        type = fields[fieldIndex].type;
+
+        type = fields[fieldId].type;
     }
 
     if (!type) return null;

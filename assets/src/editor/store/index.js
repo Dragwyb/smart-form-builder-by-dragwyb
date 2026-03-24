@@ -23,7 +23,9 @@ const initialState = {
     styleSelectors: DragwybEditor?.frontendInitialData?.css && typeof DragwybEditor?.frontendInitialData?.css === 'object' ? DragwybEditor?.frontendInitialData?.css : {},
     iframeEle: null,
     themeMode: localStorage.getItem("DragwybEditorTheme") || 'dark',
-    responsiveType: 1024
+    responsiveType: 1024,
+    rootContainers: DragwybEditor?.formData?.fields?.rootContainers || [],
+    activeRootContainer: null
 };
 
 const store = createStore(reducer, initialState, applyMiddleware(thunk));

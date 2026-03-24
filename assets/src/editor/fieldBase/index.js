@@ -23,12 +23,16 @@ class DragwybFieldBase {
 
     #setDisplaySetting(args) {
         this.html = args[0];
-        this.type = args[1];
-        this.id = args[2];
-        this.value = args[3];
-        this.field = args[4];
+        this.children = args[1]
+        this.type = args[2];
+        this.id = args[3];
+        this.value = args[4];
+        this.field = args[5];
+        this.#updateValue = args[6];
+        this.Utils = args[7];
+        this.childrenIds = args[8];
+
         this.attributes = this.field.attributes
-        this.#updateValue = args[5];
     }
 
     updateField(key, value) {

@@ -1,3 +1,5 @@
+import rowField from './row';
+
 class textField extends DragwybEditor.editor.extends.FieldBase {
     fieldName() { return 'text'; }
     bind() {
@@ -352,6 +354,7 @@ const initializeFields = () => {
         'number': (args) => new numberField(args),
         'hidden': (args) => new hiddenField(args),
         'button': (args) => new ButtonField(args),
+        'row': (args) => new rowField(args),
     };
 
     Object.keys(defaultFields).forEach(key =>

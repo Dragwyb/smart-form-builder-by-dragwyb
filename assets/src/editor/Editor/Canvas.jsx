@@ -3,30 +3,43 @@ import { useDispatch, useSelector } from "react-redux";
 import { useDraggable, useDroppable } from "../components/Common";
 import * as Fields from "./Fields";
 import { duplicateField } from "../store/actions";
-import { __ } from "@wordpress/i18n";
-import Scrollbar from "../components/Scrollbar";
+import { __, sprintf } from "@wordpress/i18n";
+import { GiConsoleController } from "react-icons/gi";
 
 const RenderItem = ({
-    field,
+    fieldId,
     values,
     index,
-    dropIndex,
+    dropId,
     dropIndicatorPosition,
     onFieldSelect,
     onDuplicate,
     onDelete,
     errors,
+    Utils
 }) => {
+    const field = useSelector((state) => state.form.fields[fieldId]);
+
+    if (!field) {
+        return null;
+    }
+
     const selectedField = useSelector((state) => state.selectedSettingId);
+    const fieldSettings = DragwybEditor.fields.fields[field.type];
+    const allowedChildren = fieldSettings?.allow_child || false;
+    const isRootContainer = field?.is_root_container || false;
+
+    const childrens = field.children;
 
     // Droppable for this specific field (for sorting)
-    const { setNodeRef: dropRef } = useDroppable({
+    const { setNodeRef: dropRef } = allowedChildren === true ? useDroppable({
         id: `canvas-drop-field-${field._id}`,
         data: {
             canvasDrop: true,
-            currentIndex: index,
+            currentId: isRootContainer ? 'root' : fieldId,
+            index: index,
         },
-    });
+    }) : {};
 
     // Draggable for this specific field
     const {
@@ -34,22 +47,29 @@ const RenderItem = ({
         listeners,
         setNodeRef: dragRef,
         isDragging,
-    } = useDraggable({
+    } = allowedChildren === true ? useDraggable({
         id: `canvas-drag-field-${field._id}`,
         data: {
             canvasDrag: true,
-            currentIndex: index,
+            currentId: fieldId,
+            index: index,
         },
-    });
+    }) : {};
 
     // Combine refs
     const setNodeRef = (Node) => {
         if (!Node) return;
-        dropRef(Node);
-        dragRef(Node);
+        if (dropRef) dropRef(Node);
+        if (dragRef) dragRef(Node);
     };
 
     let wrapperClass = `dragwyb-field-wrapper dragwyb-${field.type}-field${field.css_classes || ''}`;
+    let id = `dragwyb-field-wrapper-${field._id}`;
+
+    if (allowedChildren === true) {
+        wrapperClass = `dragwyb-${field.type} dragwyb-has-actions`;
+        id = `dragwyb-${field.type}-${field._id}`;
+    }
 
     if (['button', 'file', 'radio', 'checkbox'].includes(field.type)) {
         wrapperClass += " dragwyb-no-float";
@@ -63,56 +83,101 @@ const RenderItem = ({
         wrapperClass += " dragwyb-start-drag";
     }
 
-    const onFieldSelectHandler = (id) => {
-        if (selectedField !== id) {
-            onFieldSelect({ id });
+    const onRootContainerSelect = () => {
+        const id = field._id;
+
+        if (!id || selectedField === id) {
+            return;
         }
+
+        onFieldSelect({ id });
+    }
+
+    const onFieldSelectHandler = () => {
+        const id = field._id;
+
+        if (!id || isRootContainer || selectedField === id) {
+            return;
+        }
+
+        onFieldSelect({ id });
     };
+
+    if (dropId && dropId.targetId === (isRootContainer ? 'root' : fieldId)) {
+        if ("bottom" !== dropIndicatorPosition && dropId.index === index) {
+            wrapperClass += ' indicator-top';
+        }
+        
+        if ("bottom" === dropIndicatorPosition && dropId.index === index + 1) {
+            wrapperClass += ' indicator-bottom';
+        }
+    }
 
     return (
         <>
-            {/* Top Indicator */}
-            {dropIndex === index && "bottom" !== dropIndicatorPosition && (
-                <span className="dragwyb-editor-indicator"></span>
-            )}
-
             <div
                 ref={setNodeRef}
                 className={wrapperClass}
-                onClick={() => onFieldSelectHandler(field._id)}
+                onClick={onFieldSelectHandler}
                 {...listeners}
                 {...attributes}
-                id={`dragwyb-field-wrapper-${field._id}`}
+                id={id}
             >
-                <Fields.Preview fields={[field]} values={values} errors={errors} />
-                <div className="field-actions">
-                    <button
-                        title={__("Duplicate", "dragwyb-form-builder")}
-                        className="duplicate"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onDuplicate(field);
-                        }}
-                    >
-                        <span className="dashicons dashicons-admin-page"></span>
-                    </button>
-                    <button
-                        title={__("Delete", "dragwyb-form-builder")}
-                        className="delete"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onDelete(field._id);
-                        }}
-                    >
-                        <span className="dashicons dashicons-trash"></span>
-                    </button>
-                </div>
+                {allowedChildren && <span style={{ position: "absolute", zIndex: 999, background: "#fff" }}>{"allowedChildren: " + fieldId}</span>}
+                <Fields.Preview fields={[field]} values={values} errors={errors} childrens={childrens} Utils={Utils}>
+                    {childrens && childrens.length > 0 && (
+                        childrens.map((childId, childIndex) => (
+                            <>
+                                {!childId ? null :
+                                    <RenderItem
+                                        key={childId} // Use ID as key, not the whole object
+                                        fieldId={childId} // Pass ID instead of the full object
+                                        index={childIndex}
+                                        dropId={dropId}
+                                        onFieldSelect={onFieldSelect}
+                                        onDuplicate={onDuplicate}
+                                        onDelete={onDelete}
+                                        values={values}
+                                        errors={errors}
+                                        Utils={Utils}
+                                    />
+                                }
+                            </>
+                        ))
+                    )}
+                </Fields.Preview>
+                {isRootContainer && (
+                    <div className="field-actions">
+                        <button
+                            title={__("Duplicate", "dragwyb-form-builder")}
+                            className="duplicate"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onDuplicate(field);
+                            }}
+                        >
+                            <span className="dashicons dashicons-admin-page"></span>
+                        </button>
+                        <button
+                            title={sprintf(__('%s Settings', 'dragwyb-form-builder'), fieldSettings.label)}
+                            className="settings"
+                            onClick={onRootContainerSelect}
+                        >
+                            <span className="dashicons dashicons-menu"></span>
+                        </button>
+                        <button
+                            title={__("Delete", "dragwyb-form-builder")}
+                            className="delete"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onDelete(field._id);
+                            }}
+                        >
+                            <span className="dashicons dashicons-trash"></span>
+                        </button>
+                    </div>
+                )}
             </div>
-
-            {/* Bottom Indicator */}
-            {dropIndex === index && "bottom" === dropIndicatorPosition && (
-                <span className="dragwyb-editor-indicator"></span>
-            )}
         </>
     );
 };
@@ -147,15 +212,14 @@ const AddFieldMsg = ({ setActiveTab, isOver, updateFieldSelect }) => {
 const Canvas = ({
     onFieldSelect,
     Utils,
-    dropIndex,
+    dropId,
     dropIndicatorPosition,
     setActiveTab
 }) => {
     const values = useSelector((state) => state.values);
     const formData = useSelector((state) => state.form);
-    const fields = formData.fields || [];
     const errors = useSelector((state) => state.errors);
-
+    const rootContainers = useSelector((state) => state.form.rootContainers);
     const dispatch = useDispatch();
 
     // Main Droppable Wrapper (for dropping into empty list or at end)
@@ -164,7 +228,7 @@ const Canvas = ({
         data: {
             canvasFieldDrop: true,
             canvasDrop: true,
-            currentIndex: fields ? fields.length || 0 : 0,
+            currentId: null,
         },
     });
 
@@ -181,7 +245,18 @@ const Canvas = ({
             }
         }
 
-        dispatch(duplicateField(deepClone, index + 1, dispatch));
+        const type = deepClone.type;
+
+        if (DragwybEditor.fields.fields[type] && DragwybEditor.fields.fields[type].controls) {
+            const fieldControls = DragwybEditor.fields.fields[type].controls;
+            Object.keys(deepClone.attributes).forEach(id => {
+                if (!['tabs', 'tab', 'section'].includes(fieldControls[id]?.type)) {
+                    deepClone.attributes[id] = DragwybBuilder.Hooks.applyFilter(`Dragwyb/Editor/DuplicateControl/${fieldControls[id].type}.duplicateValue`, deepClone.attributes[id], fieldControls[id], Utils);
+                }
+            })
+        }
+
+        dispatch(duplicateField(deepClone, index + 1));
         onFieldSelect({ id: deepClone._id });
     };
 
@@ -191,7 +266,7 @@ const Canvas = ({
     };
 
     let canvasCls = "dragwyb-canvas";
-    if (!fields || fields.length === 0) {
+    if (!rootContainers || rootContainers.length === 0) {
         canvasCls += " canvas-empty";
     }
 
@@ -204,20 +279,21 @@ const Canvas = ({
                         id={`dragwyb-form-wrapper-${DragwybEditor.formId}`}
                     >
                         <form className="dragwyb-form" action="#" onSubmit={(e) => { e.preventDefault(); return false; }}>
-                            {fields && fields.length > 0 && (
+                            {rootContainers && rootContainers.length > 0 && (
                                 <>
-                                    {fields.map((field, index) => (
+                                    {rootContainers.map((fieldKey, index) => (
                                         <RenderItem
-                                            key={field._id}
-                                            field={field}
+                                            key={fieldKey}
+                                            fieldId={fieldKey}
                                             values={values}
                                             onFieldSelect={onFieldSelect}
                                             onDuplicate={(field) => handleDuplicateField(field, index)}
                                             onDelete={handleDeleteField}
                                             errors={errors}
                                             index={index}
-                                            dropIndex={dropIndex}
+                                            dropId={dropId}
                                             dropIndicatorPosition={dropIndicatorPosition}
+                                            Utils={Utils}
                                         />
                                     ))}
                                 </>
@@ -225,7 +301,6 @@ const Canvas = ({
                         </form>
                         <AddFieldMsg
                             setActiveTab={setActiveTab}
-                            isOver={isOver || dropIndex === fields.length}
                             updateFieldSelect={onFieldSelect}
                         />
                     </div>

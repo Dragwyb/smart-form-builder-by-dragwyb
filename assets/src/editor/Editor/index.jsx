@@ -25,7 +25,7 @@ import Notice from "../components/Common/Notice";
 
 const Editor = () => {
     const [activeDrag, setActiveDrag] = useState(null);
-    const [dropIndex, setDropIndex] = useState(false);
+    const [dropID, setDropID] = useState(false);
     const [dropIndicatorPosition, setDropIndicatorPosition] = useState(false);
 
     const PREVIEW_URL = DragwybEditor?.previewUrl;
@@ -135,8 +135,11 @@ const Editor = () => {
 
         const activeDragData = { activeDrag: active };
 
-        if (active?.data?.current?.currentIndex >= 0) {
-            setDropIndex(active.data.current.currentIndex);
+        if (active?.data?.current?.currentId) {
+            setDropID({ 
+                targetId: active.data.current.currentId, 
+                index: active.data.current.index 
+            });
         }
 
         setActiveDrag(activeDragData);
@@ -147,7 +150,7 @@ const Editor = () => {
 
         // If we are not over anything, clear indicators
         if (!over) {
-            if (dropIndex !== false) setDropIndex(false);
+            if (dropID !== false) setDropID(false);
             if (dropIndicatorPosition !== false) setDropIndicatorPosition(false);
             return;
         }
@@ -157,19 +160,22 @@ const Editor = () => {
 
         // Don't drop on self
         if (activeId === overId) {
-            setDropIndex(false);
+            setDropID(false);
             setDropIndicatorPosition(false);
             return;
         }
 
-        let newDropIndex = over.data.current.currentIndex;
+        let newDropID = over.data.current.currentId;
 
         const isCanvasDrag = active?.data?.current?.canvasDrag;
-        const activeIndex = active?.data?.current?.currentIndex;
+        const activeIndex = active?.data?.current?.currentId;
 
         // If simply hovering a container/wrapper, just set index
         if (over.data.current.canvasFieldDrop || over.data.current.addInitialField) {
-            if (dropIndex !== newDropIndex) setDropIndex(newDropIndex);
+            const dropObj = { targetId: newDropID, index: 0 };
+            if (!dropID || dropID.targetId !== dropObj.targetId || dropID.index !== dropObj.index) {
+                setDropID(dropObj);
+            }
             setDropIndicatorPosition(false);
             return;
         }
@@ -178,29 +184,27 @@ const Editor = () => {
         const pointerY = activatorEvent.clientY + delta.y; // Or use event.active.rect.current.translated.top
         const overMiddle = over.rect.top + (over.rect.height / 2);
 
-        let targetIndex = newDropIndex;
+        let targetIndex = over.data.current.index;
+        let targetId = over.data.current.currentId;
 
         // Determine "After" vs "Before"
-        if (pointerY > overMiddle) {
-            targetIndex = newDropIndex + 1;
-            setDropIndicatorPosition("bottom");
-        } else {
+        if (pointerY <= overMiddle) {
             setDropIndicatorPosition("top"); // or false/default
+        } else {
+            targetIndex = targetIndex + 1;
+            setDropIndicatorPosition("bottom");
         }
 
-        // Adjustment for moving items downwards in the same list
-        // if (isCanvasDrag && activeIndex < targetIndex) {
-        //     targetIndex -= 1;
-        // }
+        const dropObj = { targetId, index: targetIndex };
 
-        if (dropIndex !== targetIndex) {
-            setDropIndex(targetIndex);
+        if (!dropID || dropID.targetId !== dropObj.targetId || dropID.index !== dropObj.index) {
+            setDropID(dropObj);
         }
     };
 
     const handleDragEnd = (event) => {
         setActiveDrag(null);
-        setDropIndex(false);
+        setDropID(false);
         setDropIndicatorPosition(false);
 
         const { active, over } = event;
@@ -211,16 +215,16 @@ const Editor = () => {
         const isFromSidebar = active?.data?.current?.fromSidebar;
         const isCanvasDrag = active?.data?.current?.canvasDrag;
 
-        const finalIndex = dropIndex !== false ? dropIndex : (over.data.current.currentIndex || 0);
+        const finalId = dropID !== false && dropID.targetId !== undefined ? dropID : { targetId: over.data.current.currentId, index: over.data.current.index };
 
         if (isFromSidebar) {
             const type = active.data.current.type;
-            const newField = Utils.AddField({ type, Utils, index: finalIndex });
+            const newField = Utils.AddField({ type, Utils, index: finalId.index });
             setSelectedSettingId({ id: newField._id });
         } else if (isCanvasDrag) {
-            const oldIndex = active?.data?.current?.currentIndex;
-            if (oldIndex !== undefined && oldIndex !== finalIndex) {
-                dispatch(updateFieldOrder(oldIndex, finalIndex));
+            const oldId = active?.data?.current?.currentId;
+            if (oldId !== undefined) {
+                dispatch(updateFieldOrder(oldId, finalId));
             }
         }
     };
@@ -273,7 +277,7 @@ const Editor = () => {
                         <Canvas
                             onFieldSelect={setSelectedSettingId}
                             Utils={Utils}
-                            dropIndex={dropIndex}
+                            dropID={dropID}
                             dropIndicatorPosition={dropIndicatorPosition}
                             setActiveTab={setActiveTabHandler}
                         />

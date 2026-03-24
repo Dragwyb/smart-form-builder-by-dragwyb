@@ -1,6 +1,6 @@
 
 import React, { useRef, useEffect } from "react";
-import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updateFieldValues, updateToolbarSettings, updateSectionSettings, updateStyleSelectors as updateStyleSelectorsAction, deleteStyleSelectors as deleteStyleSelectorsAction, updateResponsiveType as updateResponsiveTypeAction, updateactivePopoverKey as updateactivePopoverKeyAction } from "../store/actions";
+import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updateFieldValues, updateToolbarSettings, updateSectionSettings, updateStyleSelectors as updateStyleSelectorsAction, deleteStyleSelectors as deleteStyleSelectorsAction, updateResponsiveType as updateResponsiveTypeAction, updateactivePopoverKey as updateactivePopoverKeyAction, updateActiveRootContainer as updateActiveRootContainerAction, resetActiveRootContainer as resetActiveRootContainerAction } from "../store/actions";
 import PropTypes, { number } from "prop-types";
 import { Placeholder } from "@wordpress/components";
 
@@ -69,16 +69,53 @@ export const PopoverControls = ({ state, dispatch }) => {
     return state.popoverControls;
 }
 
+export const updateActiveRootContainer = ({ state, dispatch, rootContainerId, activeColumnIndex = null }) => {
+    try {
+        const validatorRootContainerId = validateProp({
+            key: "rootContainerId",
+            value: rootContainerId, // invalid
+            types: ["string"],
+            required: true,
+            functionName: "updateActiveRootContainer"
+        });
+        if (null !== activeColumnIndex) {
+            const validatorActiveColumnIndex = validateProp({
+                key: "activeColumnIndex",
+                value: activeColumnIndex, // invalid
+                types: ["number"],
+                required: false,
+                functionName: "updateActiveRootContainer"
+            });
+        }
+
+        dispatch(updateActiveRootContainerAction(rootContainerId, activeColumnIndex));
+    } catch (e) {
+        console.error("Validation failed:", e.message);
+    }
+}
+
+export const resetActiveRootContainer = ({ state, dispatch }) => {
+    dispatch(resetActiveRootContainerAction());
+}
+
 export const AddField = ({ state, type, dispatch, Utils, index = null, attributes = {} }) => {
     let field = {
         _id: Utils.generateId(),
         type,
     };
 
-    const existingFields = state?.form?.fields || [];
+    const activeRootContainer = state.activeRootContainer;
 
-    if (DragwybEditor.fields.fields[type] && DragwybEditor.fields.fields[type].controls) {
-        const fieldControls = DragwybEditor.fields.fields[type].controls;
+    const existingFields = state?.form?.fields || {};
+
+    const fieldData = DragwybEditor.fields.fields[type] || {};
+
+    if (fieldData.is_root_container === true) {
+        field.is_root_container = true;
+    }
+
+    if (fieldData.controls) {
+        const fieldControls = fieldData.controls;
         field.attributes = {};
         Object.keys(fieldControls).forEach(id => {
             if (!['tabs', 'tab', 'section'].includes(fieldControls[id].type)) {
@@ -98,16 +135,42 @@ export const AddField = ({ state, type, dispatch, Utils, index = null, attribute
         }
     }
 
+    if (!fieldData.is_root_container) {
+        if (activeRootContainer) {
+            const activeParentId = activeRootContainer.rootContainerId;
+            index = activeRootContainer.activeColumnIndex;
+            field.parentId = activeParentId;
+            Utils.resetActiveRootContainer();
+        } else {
+            const rootContainerId = AddField({ state, type: 'row', dispatch, Utils });
+            field.parentId = rootContainerId['_id'];
+            index = 0;
+        }
+    }
+
+    field = DragwybBuilder.Hooks.applyFilter(`Dragwyb/Editor/AddField/${type}`, field, Utils);
+
+
     dispatch(addField({ field, index }));
     setSelectedSettingId({ dispatch, value: field._id });
     setActiveTab({ dispatch, value: 'fields' });
 
-    if (existingFields.length === 0 && type !== 'button') {
+    if (!state.form.hasOwnProperty('fields')) {
+        state.form.fields = {}
+    }
+
+    if (Object.keys(state.form.fields).length < 1) {
+        state.form.fields[field._id] = field;
+    }
+
+    if (Object.keys(existingFields).length === 0 && type !== 'button') {
         const buttonAddStatus = DragwybEditor?.formData?.addSubmitButton;
 
         if (buttonAddStatus === true) {
-            dispatch(AddField({ state, type: 'button', dispatch, Utils, attributes: { text: 'Submit', field_id: 'submit' } }));
+            AddField({ state, type: 'button', dispatch, Utils, attributes: { text: 'Submit', field_id: 'submit' } });
             delete DragwybEditor.formData.addSubmitButton;
+
+            setSelectedSettingId({ dispatch, value: field._id });
         }
     }
 
@@ -217,6 +280,7 @@ export const updateSectionSetting = ({ dispatch, key, value }) => {
 }
 
 export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, placeholders, toolbarType, itemId, currentItemId, responsiveType = 'desktop', initialRender = false }) => {
+
     try {
         const validatorKey = validateProp({
             key: "key",
@@ -259,7 +323,13 @@ export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, p
             let wrapperId = formId;
 
             if (toolbarType === 'fields' && itemId && itemId !== '') {
-                wrapperId += ' #dragwyb-field-wrapper-' + itemId;
+                const fieldData = state.form.fields[itemId];
+
+                if (fieldData.type === 'row') {
+                    wrapperId += ' #dragwyb-row-' + itemId;
+                } else {
+                    wrapperId += ' #dragwyb-field-wrapper-' + itemId;
+                }
             }
 
             const targetSelector = selector.replaceAll("{{WRAPPER}}", `#dragwyb-form-wrapper-${wrapperId}`);

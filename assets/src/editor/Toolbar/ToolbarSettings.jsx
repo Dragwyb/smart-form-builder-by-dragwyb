@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import { useSelector } from 'react-redux';
 import FieldSettings from "../Editor/FieldSettings";
 import DragwybToolbarBase from "../toolbarBase"
-import { Utils as Helper, AddField } from '../components/Utils';
+import { Utils as Helper } from '../components/Utils';
 import { useDraggable, useDroppable } from "../components/Common";
 import { GiConsoleController } from "react-icons/gi";
 
@@ -90,11 +90,6 @@ const ToolbarSettings = ({ setActiveTab, position }) => {
     }
   }, [selectedToolbar])
 
-  if (!isToolbarSet) {
-    setToolbarValue(toolBarObject.getToolbarValue());
-    setIsToolbarSet(true);
-  }
-
   const setUpdateToolbarValueHandler = () => {
     setToolbarValue(toolBarObject.getToolbarValue());
   }
@@ -106,6 +101,21 @@ const ToolbarSettings = ({ setActiveTab, position }) => {
     toolbarRef.current.updateToolbarHandler(key, value);
   }
 
+  const getToolbarValue = () => {
+    let toolbarValue = {};
+
+    if (!isToolbarSet) {
+      toolbarValue = toolBarObject.getToolbarValue();
+
+      if (toolbarValue) {
+        setToolbarValue(toolbarValue);
+        setIsToolbarSet(true);
+      }
+    }
+
+    return toolbarValue;
+  }
+
   toolbarRef.current = toolBarObject;
 
   return <div className="dragwyb-editor__sidebar" ref={sidebarRef} >
@@ -113,7 +123,7 @@ const ToolbarSettings = ({ setActiveTab, position }) => {
     {settings && settings.controls && <div className="dragwyb-editor__settings">
       <FieldSettings
         selectedTab={setting}
-        toolbarValue={toolbarValue}
+        toolbarValue={!toolbarValue || Object.keys(toolbarValue).length === 0 ? getToolbarValue() : toolbarValue}
         toolbarSettings={settings}
         onClose={() => setActiveTab('fields')}
         onSettingChange={onSettingChangeHandler}

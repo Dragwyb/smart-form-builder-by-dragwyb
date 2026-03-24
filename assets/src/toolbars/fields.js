@@ -198,22 +198,21 @@ class Fields extends DragwybEditor.editor.extends.ToolbarBase {
   updateToolbarHandler = (key, value) => {
     if (this.toolbarData) {
       let valueUpdate = false;
-      this.toolbarData.map(field => {
-        if (field._id === this.settingId && field.attributes) {
-          valueUpdate = true;
-          field.attributes[key] = value;
 
-          if (value === undefined) {
-            delete field.attributes[key];
-          } else if (field.type && typeof DragwybEditor.fields.fields[field.type]?.controls?.[key]?.default === 'object' && this.Utils.compareTwoObjects({ obj1: DragwybEditor.fields.fields[field.type].controls[key].default, obj2: value })) {
-            delete field.attributes[key];
-          } else if (DragwybEditor.fields.fields[field.type]?.controls?.[key]?.default === value) {
-            delete field.attributes[key];
-          }
+      if (this.toolbarData && this.toolbarData.hasOwnProperty(this.settingId)) {
+        valueUpdate = true;
+        this.toolbarData[this.settingId].attributes[key] = value;
 
-          field.attributes = { ...field.attributes };
+        if (value === undefined) {
+          delete this.toolbarData[this.settingId].attributes[key];
+        } else if (this.toolbarData[this.settingId].type && typeof DragwybEditor.fields.fields[this.toolbarData[this.settingId].type]?.controls?.[key]?.default === 'object' && this.Utils.compareTwoObjects({ obj1: DragwybEditor.fields.fields[this.toolbarData[this.settingId].type].controls[key].default, obj2: value })) {
+          delete this.toolbarData[this.settingId].attributes[key];
+        } else if (DragwybEditor.fields.fields[this.toolbarData[this.settingId].type]?.controls?.[key]?.default === value) {
+          delete this.toolbarData[this.settingId].attributes[key];
         }
-      })
+
+        this.toolbarData[this.settingId].attributes = { ...this.toolbarData[this.settingId].attributes };
+      }
 
       if (valueUpdate) {
         this.updateToolbar();

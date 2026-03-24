@@ -25,7 +25,11 @@ import {
     UPDATE_RESPONSIVE_TYPE,
     UPDATE_FIELD_IDS,
     UPDATE_FIELD_ID,
-    UPDATE_STYLE_SELECTORS
+    UPDATE_STYLE_SELECTORS,
+    ADD_ROOT_CONTAINERS,
+    DELETE_ROOT_CONTAINER,
+    UPDATE_ACTIVE_ROOT_CONTAINER,
+    RESET_ACTIVE_ROOT_CONTAINER
 } from './actions';
 
 const initialState = {
@@ -46,7 +50,23 @@ const initialState = {
     selectedSettingId: false,
     activeToolbar: DragwybEditor?.EditorToolbars?.Default ?? false,
     themeMode: localStorage.getItem("DragwybEditorTheme") || 'dark',
-    responsiveType: 1024
+    responsiveType: 1024,
+    rootContainers: DragwybEditor?.formData?.fields?.rootContainers || []
+};
+
+const deleteFieldRecursive = (fields, fieldId) => {
+    const field = fields[fieldId];
+    if (!field) return;
+
+    if (field.children && field.children.length > 0) {
+        field.children.forEach(childId => {
+            deleteFieldRecursive(fields, childId);
+        });
+    }
+
+    delete fields[fieldId];
+
+    return fields;
 };
 
 export default function reducer(state = initialState, action) {
@@ -77,10 +97,157 @@ export default function reducer(state = initialState, action) {
                 activePopoverKey: action.payload.activePopoverKey
             }
 
-        case ADD_FIELD:
+        case ADD_ROOT_CONTAINERS: {
+            const { rootContainerId } = action.payload;
+            return {
+                ...state,
+                form: {
+                    ...state.form,
+                    rootContainers: [...state.form.rootContainers, rootContainerId]
+                }
+            };
+        }
+
+        case DELETE_ROOT_CONTAINER: {
+            const { rootContainerId } = action.payload;
+
+            if (!rootContainerId) return state;
+
+            if (!state.form.rootContainers.includes(rootContainerId)) {
+                return state;
+            }
+
+            const childrens = state.form.fields[rootContainerId].children;
+            const fields = state.form.fields;
+
+            const deleteChildrens = (childId) => {
+                const childrens = fields[childId].children;
+                if (childrens.length > 0) {
+                    childrens.forEach(childId => {
+                        deleteChildrens(childId)
+                    })
+                }
+
+                delete fields[childId];
+            };
+
+            childrens.forEach(childId => deleteChildrens(childId));
+
+            delete fields[rootContainerId];
+
+            return {
+                ...state,
+                form: {
+                    ...state.form,
+                    rootContainers: state.form.rootContainers.filter(rootContainer => rootContainer.id !== rootContainerId),
+                    fields
+                }
+            };
+        }
+
+        case UPDATE_ACTIVE_ROOT_CONTAINER: {
+            const { rootContainerId, activeColumnIndex } = action.payload;
+            return {
+                ...state,
+                activeRootContainer: {
+                    rootContainerId,
+                    activeColumnIndex
+                }
+            };
+        }
+
+        case RESET_ACTIVE_ROOT_CONTAINER: {
+            return {
+                ...state,
+                activeRootContainer: null
+            };
+        }
+
+        case ADD_FIELD: {
             const { field, fieldIndex = null } = action.payload;
             if (!state?.form?.fields) {
-                state.form.fields = [];
+                state.form.fields = {};
+            }
+
+            const index = null === fieldIndex ? (field.is_root_container ? Object.keys(state.form.fields).length : Object.keys(state.form.fields[field.parentId].children).length) : fieldIndex;
+            const fieldId = field._id;
+
+            let childrens = [];
+            if (field.parentId) {
+                childrens = [...(state.form.fields[field.parentId].children ?? [])];
+
+                if (childrens.length < index) {
+                    for (let i = childrens.length; i < index; i++) {
+                        if (!childrens[i]) {
+                            childrens.push(null);
+                        }
+                    }
+                }
+
+                childrens[index] = fieldId;
+            }
+
+            const newFields = Object.entries(state.form.fields);
+            const lastField = state.form.fields[Object.keys(state.form.fields)[Object.keys(state.form.fields).length - 1]];
+
+            const rootContainers = state.form.rootContainers;
+
+            if (lastField && lastField.type === 'button' && !fieldIndex) {
+                const rootContainer = lastField.parentId;
+                const newFieldIndex = newFields.findIndex(([key]) => key === rootContainer);
+
+                if (field.is_root_container && !rootContainers.includes(fieldId)) {
+                    const rootContainerIndex = rootContainers.findIndex((key) => key === rootContainer);
+                    rootContainers.splice(rootContainerIndex, 0, fieldId);
+                }
+
+                // Add before button root container
+                newFields.splice(newFieldIndex - 1, 0, [fieldId, field]);
+
+            } else {
+                newFields.push([fieldId, field]);
+            }
+
+            if (field.is_root_container && !rootContainers.includes(fieldId)) {
+                rootContainers.push(fieldId);
+            }
+
+            const fields = Object.fromEntries(newFields);
+
+            if (field.parentId) {
+                fields[field.parentId] = {
+                    ...fields[field.parentId],
+                    children: childrens,
+                    rootContainers
+                };
+            }
+
+            return {
+                ...state,
+                form: {
+                    ...state.form,
+                    fields,
+                    rootContainers
+                }
+            };
+        }
+
+        case DUPLICATE_FIELD: {
+            const { field, fieldIndex = null } = action.payload;
+
+            if (!field) {
+                return state;
+            }
+
+            if (!field._id || !field.type) {
+                return state;
+            }
+
+            const duplicateId = state.form.fields[field._id];
+
+            if (duplicateId) {
+                console.error('Duplicate field id are not allowed');
+                return state;
             }
 
             const index = null === fieldIndex ? state.form.fields.length : fieldIndex;
@@ -89,36 +256,13 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 form: {
                     ...state.form,
-                    fields: [
-                        ...state.form.fields.slice(0, index),
-                        field,
-                        ...state.form.fields.slice(index)
-                    ]
+                    fields: {
+                        ...state.form.fields,
+                        [field._id]: field
+                    }
                 }
             };
-
-        case DUPLICATE_FIELD:
-            if (!action.payload.field) {
-                return state;
-            }
-
-            if (!action.payload.field._id || !action.payload.field.type) {
-                return state;
-            }
-
-            const duplicateId = state.form.fields.filter(field => field._id === action.payload.field._id);
-
-            if (duplicateId.length > 0) {
-                return state;
-            }
-
-            return {
-                ...state,
-                form: {
-                    ...state.form,
-                    fields: [...state.form.fields, action.payload.field],
-                }
-            }
+        }
 
         case UPDATE_FIELD:
             return {
@@ -133,27 +277,71 @@ export default function reducer(state = initialState, action) {
                 }
             };
 
-        case DELETE_FIELD:
+        case DELETE_FIELD: {
+            let fields = { ...state.form.fields };
+            let rootContainers = [...state.form.rootContainers];
+            let parentField = null;
+            if (fields[action.payload].is_root_container) {
+                rootContainers = rootContainers.filter(rootContainer => rootContainer !== action.payload);
+            } else if (fields[action.payload].parentId) {
+                parentField = fields[action.payload].parentId;
+                fields[parentField].children = fields[parentField].children.filter(childId => childId !== action.payload);
+            }
+
+            if (fields[action.payload].children && fields[action.payload].children.length > 0) {
+                fields = deleteFieldRecursive(fields, action.payload);
+            }
+
+            delete fields[action.payload];
+
             return {
                 ...state,
                 form: {
                     ...state.form,
-                    fields: state.form.fields.filter(
-                        field => field._id !== action.payload
-                    )
+                    fields,
+                    rootContainers
                 }
             };
+        }
 
+        // AD changes pending
         case UPDATE_FIELD_ORDER:
-            const fields = [...state.form.fields];
-            const [removed] = fields.splice(action.payload.oldIndex, 1);
-            fields.splice(action.payload.newIndex, 0, removed);
+            const fields = { ...state.form.fields };
+            const { targetId, afterId } = action.payload;
+
+            const targetIndex = Object.keys(fields).findIndex(fieldId => fieldId === targetId);
+            let afterIndex = 0;
+
+            if (!targetId && !afterId) {
+                return state;
+            }
+
+            if (targetId === afterId) {
+                return state;
+            }
+
+            if (afterId) {
+                afterIndex = Object.keys(fields).findIndex(fieldId => fieldId === afterId);
+            }
+
+            if (targetIndex === -1 || afterIndex === -1) {
+                return state;
+            }
+
+            let rootContainers = [...state.form.rootContainers];
+            if (fields[targetId].is_root_container) {
+                const newRootIndex = rootContainers.findIndex(rootContainer => rootContainer === afterId);
+                const currentRootIndex = rootContainers.findIndex(rootContainer => rootContainer === targetId);
+                rootContainers.splice(currentRootIndex, 1);
+                rootContainers.splice(newRootIndex, 0, targetId);
+            }
 
             return {
                 ...state,
                 form: {
                     ...state.form,
-                    fields
+                    fields,
+                    rootContainers
                 }
             };
 

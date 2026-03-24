@@ -1,12 +1,29 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
+import { useDraggable, useDroppable } from "../../components/Common";
+import { helpers } from '../../utils/helpers';
 
-const Field = ({ field, value = '', onChange, errors = [], disabled = false }) => {
+const Field = ({ field, value = '', onChange, errors = [], disabled = false, children, childrens, Utils }) => {
+
     const getHtml = () => {
         return <div>Unsupported field type: {field.type}</div>;
     };
 
-    let Html = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/FieldRender/' + field.type, getHtml(), field.type, field._id, value, field, onChange);
+
+    if (['grid', 'column'].includes(field.type)) {
+        const extensibleUtils = {};
+        extensibleUtils.useDraggable = useDraggable;
+        extensibleUtils.useDroppable = useDroppable;
+
+        extensibleUtils.setSelectedSettingId = helpers.setSelectedSettingId;
+        extensibleUtils.setActiveTab = helpers.setActiveTab;
+
+        Object.freeze(extensibleUtils);
+
+        Utils = { ...Utils, ...extensibleUtils };
+    }
+
+    let Html = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/FieldRender/' + field.type, getHtml(), children, field.type, field._id, value, field, onChange, Utils, childrens);
 
     return (
         <>

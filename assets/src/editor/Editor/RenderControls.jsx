@@ -20,6 +20,7 @@ const RenderControl = ({
     setResetControlEvent = () => { },
     setValueChangedCheck = () => { }
 }) => {
+    const [isStyleSelectorAdd, setIsStyleSelectorAdd] = useState(false);
     // 🔹 Validate settings early
     if (!settings || typeof settings !== "object") {
         console.error(`[RenderControl] Invalid settings for key: ${controlKey}`);
@@ -48,50 +49,11 @@ const RenderControl = ({
 
     const [shouldRender, setShouldRender] = useState(shouldRenderField(settings, shouldRenderSettings, toolbarSettings?.controls))
 
-    const conditionUpdateHandler = (value, renderStyleSelector = true) => {
-        if (shouldRender !== value) {
-            setShouldRender(value);
-
-            if (!value && settings.selectors && !renderStyleSelector) {
-                const selectedSetting = selectedTab && '' !== selectedTab && selectedTab !== selectedToolbar ? selectedTab : false;
-                const uniqueSelector = `${selectedToolbar}${selectedSetting ? '_' + selectedSetting : ''}_${controlKey}`;
-
-                Utils.deleteStyleSelectors({ key: uniqueSelector });
-            }
-        }
-    }
 
     const dispatch = useDispatch();
     const store = useStore();
     const state = store.getState();
     const Utils = Helper(state, dispatch);
-
-    if (!shouldRender) {
-        return <ControlsConditions
-            controlKey={controlKey}
-            conditions={settings.conditions}
-            updateHandler={conditionUpdateHandler}
-            isResponsiveControl={settings.responsive_control}
-            responsiveType={settings.responsive_type}
-        />;
-    }
-
-    // 🔹 Handle "section" & "tabs" special cases
-    if (settings.type === "section") {
-        defautlActiveSection(controlKey, settings, settings.conditions);
-    }
-
-    if (settings.type === "tabs") {
-        defautlActiveTab(controlKey, settings);
-    }
-
-    const selectedSettings = { ...fieldValue, ...getSectionSettings() };
-
-    // 🔹 Resolve current value
-    let fieldVal = selectedSettings[controlKey];
-    if (settings.type === "section" && !fieldVal) {
-        fieldVal = selectedSettings["section"];
-    }
 
     // 🔹 Control lookup via filter
     let Control = DragwybBuilder.Hooks.applyFilter(
@@ -118,6 +80,62 @@ const RenderControl = ({
 
     const valueChangedCheckLifting = (event) => {
         setValueChangedCheck(controlKey, event);
+    }
+
+    const conditionUpdateHandler = (value, renderStyleSelector = true) => {
+        if (shouldRender !== value) {
+            setShouldRender(value);
+
+            if (!value && settings.selectors && !renderStyleSelector) {
+                const selectedSetting = selectedTab && '' !== selectedTab && selectedTab !== selectedToolbar ? selectedTab : false;
+                const uniqueSelector = `${selectedToolbar}${selectedSetting ? '_' + selectedSetting : ''}_${controlKey}`;
+
+                Utils.deleteStyleSelectors({ key: uniqueSelector });
+            }
+        } else {
+            if (value && settings.selectors && renderStyleSelector && !isStyleSelectorAdd) {
+                setIsStyleSelectorAdd(true);
+                <Control
+                    key={selectedTab}
+                    id={controlKey}
+                    toolbarId={selectedToolbar}
+                    selectedSetting={selectedTab}
+                    settings={settings}
+                    value={shouldRenderSettings[controlKey]}
+                    handleChange={handleChange}
+                    Utils={Utils}
+                    resetControlEventLifting={resetControlEventLifting}
+                    valueChangedCheckLifting={valueChangedCheckLifting}
+                />
+            }
+        }
+    }
+
+    if (!shouldRender) {
+        return <ControlsConditions
+            controlKey={controlKey}
+            conditions={settings.conditions}
+            updateHandler={conditionUpdateHandler}
+            isResponsiveControl={settings.responsive_control}
+            responsiveType={settings.responsive_type}
+        />;
+    }
+
+    // 🔹 Handle "section" & "tabs" special cases
+    if (settings.type === "section") {
+        defautlActiveSection(controlKey, settings, settings.conditions);
+    }
+
+    if (settings.type === "tabs") {
+        defautlActiveTab(controlKey, settings);
+    }
+
+    const selectedSettings = { ...fieldValue, ...getSectionSettings() };
+
+    // 🔹 Resolve current value
+    let fieldVal = selectedSettings[controlKey];
+    if (settings.type === "section" && !fieldVal) {
+        fieldVal = selectedSettings["section"];
     }
 
     // 🔹 Build control element

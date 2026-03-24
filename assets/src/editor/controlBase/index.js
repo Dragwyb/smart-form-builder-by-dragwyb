@@ -11,6 +11,8 @@ class DragwybControlBase extends Component {
         this.state = {
             value: props.value
         }
+        this.styleRender = props.styleRender || false;
+
         this.controlName = this.controlName() || props.settings.type;
         this.onInit();
         this.RenderLabel = this.RenderLabel.bind(this);
@@ -175,7 +177,7 @@ class DragwybControlBase extends Component {
      * ✅ Shared method: Check if this control should renfder based on settings.type
      */
     shouldRender() {
-        return this.settings?.type === this.controlName && DragwybEditor.controlTypes[this.settings.type];
+        return (this.settings?.type === this.controlName && DragwybEditor.controlTypes[this.settings.type]) || this.styleRender;
     }
 
     getValidValue(...args) {
