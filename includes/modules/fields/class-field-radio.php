@@ -58,7 +58,7 @@ class Field_Radio extends Field_Base
                 ['option_label' => 'Yes', 'option_value' => 'yes'],
                 ['option_label' => 'No', 'option_value' => 'no'],
             ],
-            'title_field' => '{{{ option_label }}}',
+            'item_label' => 'option_label',
         ]);
 
         // Choose layout: stacked vertically or side-by-side
@@ -140,6 +140,7 @@ class Field_Radio extends Field_Base
     protected function render_field()
     {
         $settings = $this->get_field_settings();
+
         $id = $this->get_the_id();
         $field_id       = $this->field_key_exist($settings, 'field_id', uniqid('field_'));
         $label    = $this->field_key_exist($settings, 'label', '');
@@ -158,7 +159,9 @@ class Field_Radio extends Field_Base
                 <?php endif; ?>
 
                 <div class="dragwyb-options-container <?php echo esc_attr($layout_class); ?>">
-                    <?php foreach ($options as $index => $opt) : $opt_id = $field_id . '_' . $index; ?>
+                    <?php foreach ($options as $index => $opt) : $opt_id = $field_id . '_' . $index;
+                        $opt = $this->field_key_exist($opt, 'attributes', $opt);
+                    ?>
                         <label class="dragwyb-option-item" for="<?php echo esc_attr($opt_id); ?>">
                             <input type="radio" id="<?php echo esc_attr($opt_id); ?>" name="<?php echo esc_attr($field_id); ?>" value="<?php echo esc_attr($opt['option_value']); ?>">
                             <span class="dragwyb-radio-label"><?php echo esc_html($opt['option_label']); ?></span>
