@@ -26,11 +26,11 @@ class Frontend_Render
 
     private static $field_module_cache = null;
 
-    private static $field_data = null;
     private static $form_data = null;
     private static $toolbars = null;
     private static $toolbar_data = array();
     private static $toolbar_settings = array();
+    private static $root_containers = array();
 
     private static $css_cache = array();
 
@@ -94,6 +94,12 @@ class Frontend_Render
                 $toolbar->set_toolbar_data($value);
                 $toolbar_data = $toolbar->get_toolbar_data();
 
+                $root_containers = $toolbar->get_root_containers();
+
+                if (is_array($root_containers) && count($root_containers) > 0) {
+                    self::$root_containers = array_unique(array_merge(self::$root_containers, $root_containers));
+                }
+
                 if ($toolbar_data) {
                     if ($key === 'fields') {
                         self::$fields = $toolbar_data;
@@ -133,66 +139,120 @@ class Frontend_Render
         if (!isset(self::$toolbar_settings[$type])) {
             self::$toolbar_settings[$type] = self::$toolbars[$type]->get_toolbar_settings();
         }
-
         return self::$toolbar_settings[$type];
     }
 
+    public function get_field_data(string $field_id): array
+    {
+        if (!isset(self::$fields[$field_id])) {
+            return array();
+        }
+
+        return self::$fields[$field_id];
+    }
+
+    public function get_control(string $type)
+    {
+        return self::$control->get_control($type);
+    }
+
+    public function get_module(string $type)
+    {
+        if (!isset(self::$field_module_cache[$type])) {
+            $field_module_cache = self::$module->get_field($type);
+
+            if (!$field_module_cache instanceof Field_Base) {
+                return array();
+            }
+
+            $field_module_cache->render_controls();
+            self::$field_module_cache[$type] = $field_module_cache;
+        }
+
+        return self::$field_module_cache[$type];
+    }
+
+    public function get_root_containers(): array
+    {
+        return self::$root_containers;
+    }
 
     private function render_fields()
     {
 
         ob_start();
 
-        if (count(self::$fields) < 1) {
+        if (count(self::$root_containers) < 1) {
             echo '<p>' . esc_html__('No fields found in this form.', 'dragwyb-form-builder') . '</p>';
             return ob_get_clean();
         }
 
         echo '<form class="dragwyb-form" id="dragwyb-form-' . esc_attr(self::$form_id) . '">';
 
-        foreach (self::$fields as $field) {
-            if (!isset($field['_id']) || !$field['type'] || empty($field['_id']) || empty($field['type'])) {
+        foreach (self::$root_containers as $root_container) {
+            $row_field = self::$fields[$root_container];
+
+            if (!isset($row_field['_id']) || !isset($row_field['type']) || empty($row_field['_id']) || empty($row_field['type'])) {
                 continue;
             }
 
-            self::$field_data['_id'] = $field['_id'];
-            self::$field_data['type'] = $field['type'];
+            $type = $row_field['type'];
 
-            if (isset($field['type'])) {
-                if (isset($field['type'])) {
-                    $type = $field['type'];
-
-
-                    if (!isset(self::$field_module_cache[$type])) {
-                        $field_module_cache = self::$module->get_field($type);
-                        $field_module_cache->render_controls();
-                        self::$field_module_cache[$type] = $field_module_cache;
-                    }
-
-                    if (!self::$field_module_cache[$type] instanceof Field_Base) return;
-
-                    self::$field_module_cache[$type]->set_the_id(sanitize_text_field(self::$field_data['_id']));
-                    self::$field_module_cache[$type]->set_form_settings(self::$toolbar_data);
-
-                    if (isset($field['attributes']) && !empty($field['attributes'])) {
-                        $attributes = $field['attributes'];
-                        $this->attributes_loop($attributes, $type);
-                        self::$field_module_cache[$type]->set_field_settings(self::$field_data['attributes']);
-                    } else {
-                        self::$field_module_cache[$type]->set_field_settings(array());
-                    }
-
-                    self::$field_module_cache[$type]->render();
-                }
+            if (!isset(self::$field_module_cache[$type])) {
+                $field_module_cache = self::$module->get_field($type);
+                $field_module_cache->render_controls();
+                self::$field_module_cache[$type] = $field_module_cache;
             }
 
-            self::$field_data = null;
+            if (!self::$field_module_cache[$type] instanceof Field_Base) return;
+
+            $is_root_container = self::$field_module_cache[$type]->is_root_container();
+
+            if (true !== $is_root_container) {
+                continue;
+            }
+
+            $field_data = array();
+
+            $field_data['_id'] = $row_field['_id'];
+
+            if (isset($row_field['type'])) {
+                $type = $row_field['type'];
+
+
+                if (!isset(self::$field_module_cache[$type])) {
+                    $field_module_cache = self::$module->get_field($type);
+                    $field_module_cache->render_controls($this);
+                    self::$field_module_cache[$type] = $field_module_cache;
+                }
+
+                if (!self::$field_module_cache[$type] instanceof Field_Base) return;
+
+                self::$field_module_cache[$type]->set_the_id(sanitize_text_field($field_data['_id']));
+                self::$field_module_cache[$type]->set_frontend_handler($this);
+
+                if (isset($row_field['attributes']) && !empty($row_field['attributes'])) {
+                    $attributes = $row_field['attributes'];
+                    $field_data['attributes'] = array();
+                    $this->attributes_loop($attributes, $type, $field_data);
+                    $field_data['attributes'] = array_merge($field_data['attributes'], array('children' => $row_field['children']));
+                    self::$field_module_cache[$type]->set_field_settings($field_data['attributes']);
+                } else {
+                    $field_data['attributes'] = array();
+                    $field_data['attributes'] = array_merge($field_data['attributes'], array('children' => $row_field['children']));
+                    self::$field_module_cache[$type]->set_field_settings($field_data['attributes']);
+                }
+
+                self::$field_module_cache[$type]->render();
+            }
+
+            $field_data = null;
         }
 
         return ob_get_clean();
     }
 
-    private function attributes_loop($attributes, $type): void
+    private function attributes_loop($attributes, $type, &$field_data): void
     {
 
         if (!self::$field_module_cache[$type] instanceof Field_Base) return;
@@ -214,7 +274,7 @@ class Frontend_Render
                     $filtered_value = $control_obj->get_value();
 
                     if (isset($filtered_value)) {
-                        self::$field_data['attributes'][$attribute] = $filtered_value;
+                        $field_data['attributes'][$attribute] = $filtered_value;
                     }
                 }
             }
@@ -372,7 +432,9 @@ class Frontend_Render
     {
         $form_wrapper_id = '#dragwyb-form-wrapper-' . self::$form_id;
 
-        if ($field_id && is_string($field_id) && !empty($field_id)) {
+        if (isset(self::$fields[$field_id]['is_root_container']) && true === self::$fields[$field_id]['is_root_container'] && isset(self::$fields[$field_id]['type'])) {
+            $form_wrapper_id .= ' #dragwyb-' . self::$fields[$field_id]['type'] . '-' . $field_id;
+        } else if ($field_id && is_string($field_id) && !empty($field_id)) {
             $form_wrapper_id .= ' #dragwyb-field-wrapper-' . $field_id;
         }
 
@@ -500,8 +562,8 @@ class Frontend_Render
 
             foreach ($placeholders as $ph_key => $ph_value) {
                 $css_value = '';
-                if ($ph_value === true && is_string($value)) {
-                    $css_value = $value;
+                if ($ph_value === true) {
+                    $css_value = sanitize_text_field($value);
                 } else {
                     $css_value = isset($value[$ph_value]) ? $value[$ph_value] : '';
                 }
@@ -669,7 +731,6 @@ class Frontend_Render
         self::$fields = array();
         self::$module = null;
         self::$field_module_cache = null;
-        self::$field_data = null;
         self::$form_data = null;
         self::$toolbar_data = array();
         self::$toolbar_settings = array();
