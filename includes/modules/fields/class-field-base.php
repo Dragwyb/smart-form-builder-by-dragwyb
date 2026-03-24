@@ -7,15 +7,18 @@ namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 use Dragwyb\Form_Builder\Includes\Controls\Register_Controls_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Categories\Categories;
+use Dragwyb\Form_Builder\Includes\Frontend\Frontend_Render;
 
 abstract class Field_Base extends Register_Controls_Base
 {
     protected string $type;
     protected string $name;
     protected string $icon;
+    protected bool $allow_child = false;
+    protected bool $is_root_container = false;
     protected string $category = Categories::STANDARD_FIELDS;
     protected array $settings;
-    protected array $form_settings;
+    protected Frontend_Render $frontend_handler;
     protected array $keywords = array();
     private ?array $display_settings = array();
     private $field_id = 0;
@@ -79,6 +82,16 @@ abstract class Field_Base extends Register_Controls_Base
         return $this->category;
     }
 
+    public function is_root_container(): bool
+    {
+        return $this->is_root_container;
+    }
+
+    public function get_allow_child(): bool
+    {
+        return $this->allow_child;
+    }
+
     /**
      * Get the keywords for this field.
      *
@@ -124,9 +137,9 @@ abstract class Field_Base extends Register_Controls_Base
         return $this->display_settings;
     }
 
-    public function set_form_settings(array $setting): void
+    public function set_frontend_handler(Frontend_Render $frontend_render): void
     {
-        $this->form_settings = $setting;
+        $this->frontend_handler = $frontend_render;
     }
 
     /**
@@ -134,9 +147,40 @@ abstract class Field_Base extends Register_Controls_Base
      *
      * @return array|null Array of settings or null if not set.
      */
-    protected function get_form_settings()
+    protected function get_toolbars_values(String $type = '')
     {
-        return $this->form_settings;
+        if (isset($type) && !empty($type)) {
+            return $this->frontend_handler->get_toolbars_values($type);
+        }
+
+        return array();
+    }
+
+    protected function get_field_data(string $field_id): array
+    {
+        if (isset($field_id) && !empty($field_id)) {
+            return $this->frontend_handler->get_field_data($field_id);
+        }
+
+        return array();
+    }
+
+    protected function get_module(string $type)
+    {
+        if (isset($type) && !empty($type)) {
+            return $this->frontend_handler->get_module($type);
+        }
+
+        return array();
+    }
+
+    protected function get_control_handler(string $type)
+    {
+        if (isset($type) && !empty($type)) {
+            return $this->frontend_handler->get_control($type);
+        }
+
+        return array();
     }
 
     abstract protected function render_field();
@@ -176,14 +220,52 @@ abstract class Field_Base extends Register_Controls_Base
             'dynamic'     => ['active' => false],
         ]);
 
+        // column span
+        $this->add_responsive_control('column_span', [
+            'type'        => Controls::SLIDER,
+            'label'       => __('Column Span', 'dragwyb-form-builder'),
+            'range' => [
+                'px' => [
+                    'min' => 1,
+                    'max' => 30,
+                ],
+            ],
+            'default' => [
+                'size' => 1,
+            ],
+            'selectors' => [
+                '{{WRAPPER}}' => '--dragwyb-column-span: {{VALUE}};',
+            ]
+        ]);
+
         $this->add_responsive_control('field_width', [
             'type'        => Controls::SLIDER,
             'label'       => __('Width', 'dragwyb-form-builder'),
+            'range' => [
+                'px' => [
+                    'min' => 1,
+                    'max' => 1000,
+                ],
+                '%' => [
+                    'min' => 1,
+                    'max' => 100,
+                ],
+                'em' => [
+                    'min' => 1,
+                    'max' => 100,
+                ],
+                'rem' => [
+                    'min' => 1,
+                    'max' => 100,
+                ],
+            ],
+            'units' => ['px', '%', 'em', 'rem'],
             'default' => [
-                'size' => 100
+                'size' => 100,
+                'unit' => '%',
             ],
             'selectors' => [
-                '{{WRAPPER}}' => '--dragwyb-field-width: {{VALUE}};',
+                '{{WRAPPER}}' => '--dragwyb-field-width: {{VALUE}}{{UNIT}};',
             ]
         ]);
 
