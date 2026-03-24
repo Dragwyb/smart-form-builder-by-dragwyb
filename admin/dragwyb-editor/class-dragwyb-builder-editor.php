@@ -292,9 +292,12 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             if (!isset($data['EditorToolbars'])) $data['EditorToolbars'] = array();
             if (!isset($data['frontendInitialData'])) $data['frontendInitialData'] = array();
 
+            $data['formData']['rootContainers'] = array();
+
             $frontend = Frontend_Render::instance();
             $frontend->init($form_id);
             $style_cache = $frontend->get_generated_css();
+            $root_containers = $frontend->get_root_containers();
 
             $toolbar_obj = Toolbars::instance();
             $default_toolbar = $toolbar_obj->defaultToolbar();
@@ -348,6 +351,10 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
 
             if (isset($data['EditorToolbars']['toolbars'][$default_toolbar])) {
                 $data['EditorToolbars']['Default'] = sanitize_text_field($default_toolbar);
+            }
+
+            if ($root_containers && !empty($root_containers) && is_array($root_containers)) {
+                $data['formData']['rootContainers'] = $root_containers;
             }
 
             return $data;
