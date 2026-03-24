@@ -57,6 +57,7 @@ class Dragwyb_Form_Builder_Ajax
     private function sanitize_form_data(array $data, int $form_id): array
     {
 
+        defined('DRAGWYB_EDITOR_SAVE_AJAX') || define('DRAGWYB_EDITOR_SAVE_AJAX', true);
         $sanitize_data = array();
         $toolbar_obj = new Toolbars();
         $toolbars = $toolbar_obj->get_toolbars();
