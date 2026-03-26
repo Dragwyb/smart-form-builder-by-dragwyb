@@ -55,7 +55,7 @@ class Field_Row extends Field_Base
             'tab'   => self::ContentTab,
         ]);
 
-        $this->add_control('columns', [
+        $this->add_responsive_control('columns', [
             'type'    => Controls::NUMBER,
             'label'   => __('Columns', 'dragwyb-form-builder'),
             'default' => 1,
@@ -66,7 +66,7 @@ class Field_Row extends Field_Base
             ],
         ]);
 
-        $this->add_control('rows', [
+        $this->add_responsive_control('rows', [
             'type'    => Controls::NUMBER,
             'label'   => __('Rows', 'dragwyb-form-builder'),
             'default' => 1,
