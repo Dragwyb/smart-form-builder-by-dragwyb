@@ -75,6 +75,9 @@ class Dragwyb_Form_Builder_Ajax
                 $toolbar_data = $toolbar->get_toolbar_data();
 
                 if ($toolbar_data) {
+                    if ($key === 'fields') {
+                        $toolbar_data = $this->sorting_fields($toolbar_data, $data['rootContainers'] ?? array());
+                    }
                     $sanitize_data[$key] = $toolbar_data;
                     $toolbars_cache[$key] = $toolbar;
                 }
@@ -88,5 +91,38 @@ class Dragwyb_Form_Builder_Ajax
         }
 
         return $sanitize_data;
+    }
+
+    /**
+     * Sort fields
+     */
+    private function sorting_fields(array $fields, $root_containers): array
+    {
+        $sorted_fields = array();
+        foreach ($root_containers as $root_container) {
+            $sorted_fields[$root_container] = $fields[$root_container] ?? array();
+
+            if (isset($fields[$root_container]['is_root_container']) && true === $fields[$root_container]['is_root_container'] && isset($fields[$root_container]['children']) && count($fields[$root_container]['children']) > 0) {
+                $this->sorting_child_fields($fields[$root_container]['children'], $fields, $sorted_fields);
+            }
+        }
+
+        return $sorted_fields;
+    }
+
+    /**
+     * Sort child fields
+     */
+    private function sorting_child_fields(array $childrens, array $fields, array &$sorted_fields): void
+    {
+        foreach ($childrens as $field_id) {
+            if (isset($field_id) && isset($fields[$field_id])) {
+                $sorted_fields[$field_id] = $fields[$field_id];
+
+                if (isset($fields[$field_id]['children']) && count($fields[$field_id]['children']) > 0) {
+                    $this->sorting_child_fields($fields[$field_id]['children'], $fields, $sorted_fields);
+                }
+            }
+        }
     }
 }
