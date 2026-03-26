@@ -13,7 +13,8 @@ class rowField extends DragwybEditor.editor.extends.FieldBase {
 
         const addFields = (e) => {
             e.stopPropagation();
-            this.Utils.updateActiveRootContainer({ rootContainerId: this.id, activeColumnIndex: parseInt(e.target.dataset.index) });
+            const columnEle = e.target.classList.contains('dragwyb-field__add-column') ? e.target : e.target.closest('.dragwyb-field__add-column');
+            this.Utils.updateActiveRootContainer({ rootContainerId: this.id, activeColumnIndex: parseInt(columnEle.dataset.index) });
             this.Utils.setSelectedSettingId({ value: false });
             this.Utils.setActiveTab({ value: 'fields' });
         }
