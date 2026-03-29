@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes;
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 use Dragwyb\Form_Builder\Includes\Dragwyb_Form_Builder_Ajax;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Pages;

@@ -292,6 +292,7 @@ abstract class Field_Base extends Register_Controls_Base
 
         $this->add_control('logic_msg', [
             'type' => Controls::RAW_HTML,
+            // translators: %1$s is the opening bold tag, %2$s is the closing bold tag
             'raw'  => '<div style="color: hsl(var(--dragwyb-sidebar-foreground)/var(--dragwyb-text-opacity, 1)); font-size: 12px; padding: 10px 0;">' . sprintf(__('%1$sComing Soon%2$s: Advanced Conditional Logic is in development. This feature will allow you to dynamically show or hide fields based on user input.', 'dragwyb-form-builder'), '<strong>', '</strong>') . '</div>',
             'condition' => [
                 'enable_logic' => 'yes',
@@ -316,7 +317,7 @@ abstract class Field_Base extends Register_Controls_Base
             ),
         );
 
-        $tabs = apply_filters('Dragwy/Editor/render_controls/header_tabs', $tabs);
+        $tabs = apply_filters('Dragwyb/Editor/render_controls/header_tabs', $tabs);
 
         $header_tab['header_controls'] = array(
             'type' => 'tabs',

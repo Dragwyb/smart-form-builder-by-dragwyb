@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Frontend\Managers;
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 use Dragwyb\Form_Builder\Includes\Frontend\Frontend_Render;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
 
@@ -166,7 +170,7 @@ class CSS_Manager
 
         $nonce_key = $post_type . $form_id . '-clean-cache';
 
-        if (!isset($_POST['nonce']) || !wp_verify_nonce(wp_unslash($_POST['nonce']), $nonce_key)) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), $nonce_key)) {
             wp_send_json_error('Invalid nonce');
         }
 
@@ -187,7 +191,7 @@ class CSS_Manager
         $file_name = 'form-' . $id . '.css';
         $file_path = $this->upload_dir . $file_name;
         if (file_exists($file_path)) {
-            unlink($file_path);
+            wp_delete_file($file_path);
         }
 
         delete_post_meta($id, 'dragwyb_form_google_fonts');

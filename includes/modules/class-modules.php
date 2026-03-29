@@ -94,7 +94,8 @@ class Modules extends Toolbar_Base
         $fields_data = $this->get_fields();
         $form_id = absint($this->get_form_id());
         $data = array();
-        $data['label'] = sprintf(esc_html__('%s Settings'), sanitize_text_field($this->get_name()));
+        // translators: %s is the name of the module
+        $data['label'] = sprintf(esc_html__('%s Settings', 'dragwyb-form-builder'), sanitize_text_field($this->get_name()));
         $fields = [];
 
         $categories_object = Categories::instance();

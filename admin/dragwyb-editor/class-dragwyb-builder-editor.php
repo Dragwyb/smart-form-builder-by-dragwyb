@@ -79,7 +79,8 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
 
                 printf(
                     '<h1>%s</h1>',
-                    sprintf(__('Failed to create the %s.', 'dragwyb-form-builder'), esc_html($post_type))
+                    // translators: %s is the post type name
+                    sprintf(esc_html__('Failed to create the %s.', 'dragwyb-form-builder'), esc_html($post_type))
                 );
             }
         }
@@ -103,10 +104,12 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             $screen_id = DRAGWYB_PREFIX . '-form_page_' . DRAGWYB_PREFIX . '-form-builder';
             $current_screen = get_current_screen();
 
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for admin dashboard pages check
             if (!isset($current_screen) && $current_screen->id !== $screen_id && !isset($_GET['page']) || $_GET['page'] !== $builder_page) {
                 return;
             }
 
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for form id check
             $form_id = isset($_GET['form_id']) ? absint($_GET['form_id']) : 0;
 
             $post_type = Dragwyb_Post::POST_TYPE;
@@ -170,6 +173,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 true
             );
 
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for iframe mode check already returned with this check
             if (isset($_GET['dragwyb_iframe_mode'])) {
                 return;
             }

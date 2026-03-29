@@ -77,17 +77,20 @@ class Form_Bulk_Actions_Handler
                 $query_args =     array(
                     'trashed' => sanitize_text_field($this->trashed),
                     'ids'     => implode(',', $post_ids),
-                    'locked'  => sanitize_text_field($this->locked)
+                    'locked'  => sanitize_text_field($this->locked),
+                    '_wpnonce' => wp_create_nonce("bulk-trash-" . sanitize_text_field($this->post_type))
                 );
                 break;
             case 'delete':
                 $query_args =     array(
-                    'deleted' => sanitize_text_field($this->deleted)
+                    'deleted' => sanitize_text_field($this->deleted),
+                    '_wpnonce' => wp_create_nonce("bulk-delete-" . sanitize_text_field($this->post_type))
                 );
                 break;
             case 'untrash':
                 $query_args =     array(
                     'untrashed' => sanitize_text_field($this->untrashed),
+                    '_wpnonce' => wp_create_nonce("bulk-untrash-" . sanitize_text_field($this->post_type))
                 );
                 break;
         }
@@ -97,7 +100,8 @@ class Form_Bulk_Actions_Handler
 
     protected function get_current_action()
     {
-        return $_REQUEST['action'] !== '-1' ? sanitize_key($_REQUEST['action']) : sanitize_key($_REQUEST['action2'] ?? '');
+        check_admin_referer('bulk-' . sanitize_text_field($this->post_type));
+        return isset($_REQUEST['action']) && $_REQUEST['action'] !== '-1' ? sanitize_key($_REQUEST['action']) : (isset($_REQUEST['action2']) ? sanitize_key($_REQUEST['action2']) : '');
     }
 
     protected function trash_post($post_id)
@@ -108,7 +112,7 @@ class Form_Bulk_Actions_Handler
         }
 
         if (! wp_trash_post($post_id)) {
-            wp_die(__('Error in moving the item to Trash.'));
+            wp_die(esc_html__('Error in moving the item to Trash.', 'dragwyb-form-builder'));
         }
 
         ++$this->trashed;
@@ -117,11 +121,11 @@ class Form_Bulk_Actions_Handler
     protected function delete_post($post_id)
     {
         if (! current_user_can('delete_post', $post_id)) {
-            wp_die(__('Sorry, you are not allowed to delete this item.'));
+            wp_die(esc_html__('Sorry, you are not allowed to delete this item.', 'dragwyb-form-builder'));
         }
 
         if (! wp_delete_post($post_id)) {
-            wp_die(__('Error in deleting the item.'));
+            wp_die(esc_html__('Error in deleting the item.', 'dragwyb-form-builder'));
         }
 
         ++$this->deleted;
@@ -130,11 +134,11 @@ class Form_Bulk_Actions_Handler
     protected function untrash_post($post_id)
     {
         if (! current_user_can('delete_post', $post_id)) {
-            wp_die(__('Sorry, you are not allowed to restore this item from the Trash.'));
+            wp_die(esc_html__('Sorry, you are not allowed to restore this item from the Trash.', 'dragwyb-form-builder'));
         }
 
         if (! wp_untrash_post($post_id)) {
-            wp_die(__('Error in restoring the item from Trash.'));
+            wp_die(esc_html__('Error in restoring the item from Trash.', 'dragwyb-form-builder'));
         }
 
         ++$this->untrashed;
@@ -179,7 +183,7 @@ class Form_Bulk_Actions_Handler
         $this->untrashed = 0;
         $this->deleted = 0;
 
-        wp_redirect($sendback);
+        wp_safe_redirect($sendback);
         exit;
     }
 }

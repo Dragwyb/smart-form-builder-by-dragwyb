@@ -36,7 +36,15 @@ class Form_Preview
 
     public function init()
     {
-        if (is_user_logged_in() && isset($_GET['preview_id']) && isset($_GET['p']) && isset($_GET['post_type']) && $_GET['post_type'] === Dragwyb_Post::POST_TYPE && wp_verify_nonce($_GET['preview_id'], self::private_key_name(absint($_GET['p'])))) {
+        if (!is_user_logged_in()) {
+            return;
+        }
+
+        $form_preview_id = isset($_GET['preview_id']) ? sanitize_text_field(wp_unslash($_GET['preview_id'])) : '';
+        $form_id = isset($_GET['p']) ? absint($_GET['p']) : 0;
+        $post_type = isset($_GET['post_type']) ? sanitize_text_field(wp_unslash($_GET['post_type'])) : '';
+
+        if ($form_preview_id && $form_id && $post_type === Dragwyb_Post::POST_TYPE && wp_verify_nonce($form_preview_id, self::private_key_name($form_id))) {
 
 
             if (function_exists('status_header')) status_header(200);
@@ -50,6 +58,7 @@ class Form_Preview
                 $frontend_render->enqueue_static_assets();
                 $this->enqueue_editor_preview_styles();
                 $this->enqueue_editor_preview_scripts();
+                // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- it's a core WordPress hook for rendering the head section
                 do_action('wp_head');
                 exit;
             }
@@ -92,7 +101,7 @@ class Form_Preview
         if (!self::$form_id || !self::$is_iframe_mode) {
             return;
         }
-        echo '<style id="dragwyb-form-' . self::$form_id . '"></style>';
+        echo '<style id="dragwyb-form-' . absint(self::$form_id) . '"></style>';
     }
 
     public function enqueue_editor_preview_styles()
@@ -114,7 +123,14 @@ class Form_Preview
 
     public function set_document_title(string $title): string
     {
-        return get_the_title(absint($_GET['p']));
+        $form_preview_id = isset($_GET['preview_id']) ? sanitize_text_field(wp_unslash($_GET['preview_id'])) : '';
+        $form_id = isset($_GET['p']) ? absint($_GET['p']) : 0;
+
+        if ($form_preview_id && $form_id && wp_verify_nonce($form_preview_id, self::private_key_name($form_id))) {
+            return get_the_title($form_id);
+        }
+
+        return $title;
     }
 
     private static function private_key_name(int $form_id): string

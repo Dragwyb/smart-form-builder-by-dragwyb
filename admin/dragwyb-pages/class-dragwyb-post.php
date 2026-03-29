@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Admin\Dragwyb_Pages;
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 use Dragwyb\Form_Builder\Admin\Form_Overview\Form_Bulk_Actions_Handler;
 
 class Dragwyb_Post
@@ -26,10 +30,6 @@ class Dragwyb_Post
         add_action('init', [$this, 'register_post_type']);
         add_filter('manage_' . self::POST_TYPE . '_posts_columns', [$this, 'set_custom_columns']);
         add_action('manage_' . self::POST_TYPE . '_posts_custom_column', [$this, 'render_custom_columns'], 10, 2);
-
-        // Add editor integration
-        // add_action('load-post.php', [$this, 'redirect_to_custom_editor']);
-        // add_action('load-post-new.php', [$this, 'redirect_to_custom_editor']);
 
         add_action('init', [$this, 'dragwyb_add_caps_to_admin']);
 
@@ -55,7 +55,7 @@ class Dragwyb_Post
             'supports'            => ['title', 'author', 'revisions'],
             'capability_type'     => array(sanitize_text_field(DRAGWYB_PREFIX) . '_forms', sanitize_text_field(DRAGWYB_PREFIX) . '_form'), // Not using 'capability_type' anywhere. It just has to be custom for security reasons.
             'capabilities'        => $this->capabilties(),
-            'map_meta_cap'        => true, // Don't 
+            'map_meta_cap'        => true
         ];
 
         register_post_type(self::POST_TYPE, $args);
@@ -150,6 +150,7 @@ class Dragwyb_Post
             return;
         }
 
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for admin dashboard pages check
         $form_id = isset($_GET['post']) ? absint($_GET['post']) : 0;
 
         if ($form_id) {
@@ -176,8 +177,8 @@ class Dragwyb_Post
     {
         if (isset($_GET['_wpnonce'])) {
             $current_post_type = sanitize_text_field(self::POST_TYPE);
-            $nonce = sanitize_text_field(wp_unslash($_REQUEST['_wpnonce']));
-            if (wp_verify_nonce($nonce, "bulk-" . $current_post_type)) {
+            $nonce = isset($_REQUEST['_wpnonce']) ? sanitize_text_field(wp_unslash($_REQUEST['_wpnonce'])) : '';
+            if (!empty($nonce) && wp_verify_nonce($nonce, "bulk-" . $current_post_type)) {
 
                 if (function_exists('wp_get_referer')) {
                     $referal_url = wp_get_referer();
@@ -197,33 +198,31 @@ class Dragwyb_Post
             return;
         }
 
-
-        if (empty($_GET['trashed']) && empty($_GET['deleted']) && empty($_GET['untrashed'])) {
-            return;
-        }
-
-        if (!empty($_GET['trashed'])) {
+        if (!empty($_GET['trashed']) && isset($_GET['_wpnonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), "bulk-trash-" . sanitize_text_field(self::POST_TYPE))) {
             $count = absint($_GET['trashed']);
             printf(
                 '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
-                sprintf(_n('%s form moved to the Trash.', '%s forms moved to the Trash.', $count, 'your-textdomain'), $count)
+                // translators: %s is the number of forms moved to the trash
+                sprintf(esc_html('%s form moved to the Trash.', 'dragwyb-form-builder'), absint($count))
             );
         }
 
-        if (!empty($_GET['deleted'])) {
+        if (!empty($_GET['deleted']) && isset($_GET['_wpnonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), "bulk-delete-" . sanitize_text_field(self::POST_TYPE))) {
             $count = absint($_GET['deleted']);
             printf(
                 '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
-                sprintf(_n('%s form permanently deleted.', '%s forms permanently deleted.', $count, 'your-textdomain'), $count)
+                // translators: %s is the number of forms permanently deleted
+                sprintf(esc_html('%s form permanently deleted.', 'dragwyb-form-builder'), absint($count))
             );
         }
 
-        if (!empty($_GET['untrashed'])) {
+        if (!empty($_GET['untrashed']) && isset($_GET['_wpnonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), "bulk-untrash-" . sanitize_text_field(self::POST_TYPE))) {
             $count = absint($_GET['untrashed']);
 
             printf(
                 '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
-                sprintf(_n('%s form restored from Trash.', '%s forms restored from Trash.', $count, 'your-textdomain'), $count)
+                // translators: %s is the number of forms restored from trash
+                sprintf(esc_html('%s form restored from Trash.', 'dragwyb-form-builder'), absint($count))
             );
         }
     }

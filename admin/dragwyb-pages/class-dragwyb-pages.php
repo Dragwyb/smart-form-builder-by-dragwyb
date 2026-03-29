@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Admin\Dragwyb_Pages;
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 use Dragwyb\Form_Builder\Admin\Dragwyb_Editor\Dragwyb_Builder_Editor;
 use Dragwyb\Form_Builder\Admin\Form_Overview\Form_Overview;
 
@@ -123,8 +127,10 @@ class Dragwyb_Pages
 
     private static function current_page_name($slug)
     {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for admin dashboard pages check
         if (isset($_REQUEST['page']) && (in_array($slug, self::allowed_pages()) || in_array(DRAGWYB_PREFIX . '-' . $slug, self::allowed_pages()))) {
-            return ($slug === esc_html($_REQUEST['page']) || DRAGWYB_PREFIX . '-' . $slug === esc_html($_REQUEST['page']));
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for admin dashboard pages check
+            return ($slug === sanitize_text_field(wp_unslash($_REQUEST['page'])) || DRAGWYB_PREFIX . '-' . $slug === sanitize_text_field(wp_unslash($_REQUEST['page'])));
         };
 
         return false;
