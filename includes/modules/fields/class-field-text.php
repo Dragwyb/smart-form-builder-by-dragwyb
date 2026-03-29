@@ -263,7 +263,7 @@ class Field_Text extends Field_Base
         $required = $this->field_key_exist($settings, 'required', '') === 'yes';
         $classes  = $this->field_key_exist($settings, 'css_classes', '');
 ?>
-        <div id="dragwyb-field-wrapper-<?php echo esc_attr($id); ?>" class="dragwyb-field-wrapper <?php echo esc_attr($classes); ?>">
+        <div id="<?php echo esc_attr($this->field_wrapper_id($id)); ?>" class="<?php echo esc_attr($this->field_wrapper_class($classes)); ?>">
             <div class="dragwyb-input-group">
                 <input
                     type="text"

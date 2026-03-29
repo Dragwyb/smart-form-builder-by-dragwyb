@@ -131,7 +131,7 @@ class Field_Checkbox extends Field_Base
         $layout_class = ($layout === 'inline') ? 'dragwyb-inline-options' : '';
 
 ?>
-        <div id="dragwyb-field-wrapper-<?php echo esc_attr($id); ?>" class="dragwyb-field-wrapper dragwyb-no-float <?php echo esc_attr($classes); ?>">
+        <div id="<?php echo esc_attr($this->field_wrapper_id($id)); ?>" class="<?php echo esc_attr($this->field_wrapper_class($classes)); ?> dragwyb-no-float">
             <div class="dragwyb-input-group">
                 <?php if (!empty($label)) : ?>
                     <div class="dragwyb-field-label"><?php echo esc_html($label); ?></div>

@@ -139,7 +139,7 @@ class Field_File extends Field_Base
         $help     = $this->field_key_exist($settings, 'help_text', '');
 
 ?>
-        <div id="dragwyb-field-wrapper-<?php echo esc_attr($id); ?>" class="dragwyb-field-wrapper dragwyb-no-float <?php echo esc_attr($classes); ?>">
+        <div id="<?php echo esc_attr($this->field_wrapper_id($id)); ?>" class="<?php echo esc_attr($this->field_wrapper_class($classes)); ?> dragwyb-no-float">
             <?php if (!empty($label)) : ?>
                 <label for="<?php echo esc_attr($field_id); ?>" class="dragwyb-field-label">
                     <?php echo esc_html($label); ?>

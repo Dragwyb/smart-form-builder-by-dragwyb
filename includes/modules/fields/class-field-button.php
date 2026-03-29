@@ -63,7 +63,7 @@ class Field_Button extends Field_Base
                 'justify' => ['title' => 'Justified', 'icon' => 'fa fa-align-justify'],
             ],
             'selectors' => [
-                '{{WRAPPER}} .dragwyb-btn' => '--dragwyb-btn-align: {{VALUE}};',
+                '{{WRAPPER}} .dragwyb-btn-wrapper' => '--dragwyb-btn-align: {{VALUE}};',
             ],
         ]);
 
@@ -163,7 +163,7 @@ class Field_Button extends Field_Base
         $type = ($action === 'reset') ? 'reset' : 'submit';
 
 ?>
-        <div id="dragwyb-field-wrapper-<?php echo esc_attr($id); ?>" class="dragwyb-field-wrapper dragwyb-no-float <?php echo esc_attr($classes); ?>">
+        <div id="<?php echo esc_attr($this->field_wrapper_id($id)); ?>" class="<?php echo esc_attr($this->field_wrapper_class($classes)); ?> dragwyb-no-float">
             <button type="<?php echo esc_attr($type); ?>" id="<?php echo esc_attr($field_id); ?>" class="<?php echo esc_attr($btn_class); ?>">
                 <?php echo esc_html($text); ?>
             </button>

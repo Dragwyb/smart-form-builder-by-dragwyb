@@ -191,6 +191,27 @@ abstract class Field_Base extends Register_Controls_Base
         $this->render_field();
     }
 
+    protected function field_wrapper_id(string $id = '')
+    {
+        $wrapper_id = "dragwyb-field-wrapper-" . esc_attr($id);
+
+        $wrapper_id = apply_filters('Dragwyb/Field/Wrapper_ID/' . sanitize_text_field($this->type), $wrapper_id, $id);
+        return $wrapper_id;
+    }
+
+    protected function field_wrapper_class(string $classes = '')
+    {
+        $wrapper_class = "dragwyb-field-wrapper dragwyb-" . esc_attr($this->type) . "-field";
+
+        if ($classes && !empty($classes)) {
+            $wrapper_class .= ' ' . esc_attr($classes);
+        }
+
+        $wrapper_class = apply_filters('Dragwyb/Field/Wrapper_Class/' . sanitize_text_field($this->type), $wrapper_class, $classes);
+
+        return $wrapper_class;
+    }
+
     protected function field_key_exist(array $array, string $key, $default = false)
     {
         return $this->field_array_key_exist($array, $key, $default);

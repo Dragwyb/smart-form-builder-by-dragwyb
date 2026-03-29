@@ -139,7 +139,7 @@ class Field_Date extends Field_Base
         $field_id      = $this->field_key_exist($settings, 'field_id', uniqid('date_'));
         $required = !empty($field_data['required']);
 ?>
-        <div id="dragwyb-field-wrapper-<?php echo esc_attr($id); ?>" class="dragwyb-field-wrapper dragwyb-date-field">
+        <div id="<?php echo esc_attr($this->field_wrapper_id($id)); ?>" class="<?php echo esc_attr($this->field_wrapper_class($classes)); ?> dragwyb-no-float">
             <?php if (!empty($label)) : ?>
                 <label for="<?php echo esc_attr($field_id); ?>" class="dragwyb-label">
                     <?php echo esc_html($label); ?>
