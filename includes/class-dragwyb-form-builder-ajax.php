@@ -35,14 +35,17 @@ class Dragwyb_Form_Builder_Ajax
         }
 
         $form_id = absint($_POST['form_id'] ?? 0);
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- data properly sanitized in sanitize_form_data
         $form_data = json_decode(wp_unslash($_POST['form_data'] ?? ''), true);
 
         if (!$form_id || !is_array($form_data)) {
             wp_send_json_error(['message' => __('Invalid form data', 'dragwyb-form-builder')]);
         }
 
+        $sanitized_data = $this->sanitize_form_data($form_data, $form_id);
+
         // Update form meta
-        update_post_meta($form_id, '_dragwyb_form_data', $this->sanitize_form_data($form_data, $form_id));
+        update_post_meta($form_id, '_dragwyb_form_data', $sanitized_data);
 
         $css_manager = CSS_Manager::instance();
         $css_manager->clean_cache($form_id);
