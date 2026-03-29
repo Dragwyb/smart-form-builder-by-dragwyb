@@ -1,0 +1,14 @@
+node_modules
+.cursorrules
+.distignore
+.git
+.gitignore
+.vscode
+.gitattributes
+instruction.md
+package.json
+package-lock.json
+phpcs.xml
+README.md
+webpack.config.js
+*LICENSE.txt

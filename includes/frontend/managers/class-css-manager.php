@@ -86,40 +86,6 @@ class CSS_Manager
                 [],
                 filemtime($file_path) // Version based on file modification time
             );
-
-            $this->load_google_fonts($form_id);
-        }
-    }
-
-    private function load_google_fonts(int $form_id): void
-    {
-        $google_fonts = get_post_meta($form_id, 'dragwyb_form_google_fonts', true);
-
-        if ($google_fonts && !empty($google_fonts) && is_array($google_fonts)) {
-            $font_url = "https://fonts.googleapis.com/css2?";
-
-            $fontFamilies = [];
-
-            foreach ($google_fonts as $fontName) {
-                if (in_array($fontName, self::$google_fonts_cache)) {
-                    continue;
-                }
-
-                self::$google_fonts_cache[] = $fontName;
-
-                $fontName = str_replace(' ', '+', $fontName);
-
-                $fontFamilies[] = $fontName;
-            }
-
-
-            if (count($fontFamilies) < 1) {
-                return;
-            }
-
-            $font_url .= "family=" . implode('&family=', $fontFamilies);
-
-            wp_enqueue_style('dragwyb-form-google-fonts', 'https://fonts.googleapis.com/css2?' . $font_url, [], esc_attr(DRAGWYB_FORM_BUILDER_VERSION));
         }
     }
 

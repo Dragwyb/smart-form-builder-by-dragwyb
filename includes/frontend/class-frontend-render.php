@@ -384,44 +384,9 @@ class Frontend_Render
         if (defined('DRAGWYB_FORM_PREVIEW') && true === DRAGWYB_FORM_PREVIEW && function_exists('wp_add_inline_style')) {
             $style_content = self::instance()->get_generated_css();
             wp_add_inline_style('dragwyb-form-builder', $style_content['css']);
-
-            if ($style_content['google_fonts'] && !empty($style_content['google_fonts'])) {
-                self::instance()->load_google_fonts(array_map('sanitize_text_field', $style_content['google_fonts']));
-            }
         }
 
         do_action('Dragwyb/Frontend/After_Render/Enqueue_Static_Assets');
-    }
-
-    private function load_google_fonts(array $google_fonts): void
-    {
-
-        if ($google_fonts && !empty($google_fonts) && is_array($google_fonts)) {
-            $font_url = "https://fonts.googleapis.com/css2?";
-
-            $fontFamilies = [];
-
-            foreach ($google_fonts as $fontName) {
-                if (in_array($fontName, self::$google_fonts_cache)) {
-                    continue;
-                }
-
-                self::$google_fonts_cache[] = $fontName;
-
-                $fontName = str_replace(' ', '+', $fontName);
-
-                $fontFamilies[] = $fontName;
-            }
-
-
-            if (count($fontFamilies) < 1) {
-                return;
-            }
-
-            $font_url .= "family=" . implode('&family=', $fontFamilies);
-
-            wp_enqueue_style('dragwyb-form-google-fonts', 'https://fonts.googleapis.com/css2?' . $font_url, [], DRAGWYB_FORM_BUILDER_VERSION);
-        }
     }
 
     /**
