@@ -42,6 +42,9 @@ class Dragwyb_Init
         Shortcode_Handler::instance();
 
         add_action('admin_init', [$this, 'initial_files']);
+
+        // Enqueue admin assets
+        add_action('admin_enqueue_scripts', [$this, 'admin_assets']);
     }
 
     public function initial_files()
@@ -82,6 +85,18 @@ class Dragwyb_Init
         $data = apply_filters('Dragwyb_Localize_Core_Script', $data);
         // Localize data
         wp_localize_script('dragwyb-form-core', 'DragwybBuilder', $data);
+    }
+
+    public function admin_assets()
+    {
+        // Enqueue admin styles
+        wp_enqueue_style(
+            'dragwyb-form-admin',
+            esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/css/admin.css'),
+            array(),
+            esc_attr(DRAGWYB_FORM_BUILDER_VERSION),
+            'all'
+        );
     }
 
     private function get_translations()
