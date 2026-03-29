@@ -113,7 +113,6 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
 
             if (!isset($form_id) || !$form_id) {
                 $post_id = wp_insert_post([
-                    'post_title'   => 'New Form',
                     'post_status'  => 'draft',
                     'post_type'    => $post_type,
                     'post_author'  => get_current_user_id(),
@@ -121,6 +120,11 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
 
                 self::$initial_load = true;
                 self::$form_id = $post_id;
+
+                wp_update_post([
+                    'ID' => $post_id,
+                    'post_title' => 'Form #' . $post_id,
+                ]);
             } else {
                 $form = get_post((int) $form_id);
 
