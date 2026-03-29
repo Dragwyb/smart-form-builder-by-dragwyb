@@ -40,6 +40,7 @@ const initialState = {
         notifications: [],
         confirmations: []
     },
+    values: {},
     activePopoverKey: false,
     sectionSettings: {},
     popoverInitialize: false,
@@ -257,18 +258,24 @@ export default function reducer(state = initialState, action) {
                 return state;
             }
 
-            const index = null === fieldIndex ? state.form.fields.length : fieldIndex;
+            if (field.is_root_container) {
+                const index = null === fieldIndex ? state.form.fields.length : fieldIndex;
 
-            return {
-                ...state,
-                form: {
-                    ...state.form,
-                    fields: {
-                        ...state.form.fields,
-                        [field._id]: field
+                const rootContainers = [...state.form.rootContainers];
+                rootContainers.splice(index, 0, field._id);
+
+                return {
+                    ...state,
+                    form: {
+                        ...state.form,
+                        fields: {
+                            ...state.form.fields,
+                            [field._id]: field
+                        },
+                        rootContainers
                     }
-                }
-            };
+                };
+            }
         }
 
         case UPDATE_FIELD:

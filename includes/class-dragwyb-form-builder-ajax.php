@@ -8,9 +8,6 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-use Dragwyb\Form_Builder\Includes\Controls\Controls;
-use Dragwyb\Form_Builder\Includes\Modules\Modules;
-use Dragwyb\Form_Builder\Includes\Modules\Sanitize_Module_Settings\Sanitize_Module_Settings;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbars;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
 use Dragwyb\Form_Builder\Includes\Frontend\Managers\CSS_Manager;
@@ -38,7 +35,7 @@ class Dragwyb_Form_Builder_Ajax
         }
 
         $form_id = absint($_POST['form_id'] ?? 0);
-        $form_data = json_decode(stripslashes($_POST['form_data'] ?? ''), true);
+        $form_data = json_decode(wp_unslash($_POST['form_data'] ?? ''), true);
 
         if (!$form_id || !is_array($form_data)) {
             wp_send_json_error(['message' => __('Invalid form data', 'dragwyb-form-builder')]);

@@ -1,8 +1,8 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, useStore } from "react-redux";
 import { useDraggable, useDroppable } from "../components/Common";
 import * as Fields from "./Fields";
-import { duplicateField } from "../store/actions";
+import { duplicateField, addField } from "../store/actions";
 import { __, sprintf } from "@wordpress/i18n";
 
 const RenderItem = ({
@@ -209,6 +209,7 @@ const Canvas = ({
     const errors = useSelector((state) => state.errors);
     const rootContainers = useSelector((state) => state.form.rootContainers);
     const dispatch = useDispatch();
+    const store = useStore();
 
     // Main Droppable Wrapper (for dropping into empty list or at end)
     const { setNodeRef, isOver } = useDroppable({
@@ -220,7 +221,7 @@ const Canvas = ({
         },
     });
 
-    const handleDuplicateField = (field, index) => {
+    const handleDuplicateField = (field, index, parentID = null) => {
         let deepClone = JSON.parse(JSON.stringify(field));
         const id = Utils.generateId();
         deepClone._id = id;
@@ -244,8 +245,25 @@ const Canvas = ({
             })
         }
 
-        dispatch(duplicateField(deepClone, index + 1));
+        let childreIds = [];
+        if (deepClone.is_root_container && deepClone.children.length > 0) {
+            childreIds = deepClone.children;
+            deepClone.children = [];
+        }
+
+        if (deepClone.parentId && parentID) {
+            deepClone.parentId = parentID;
+        }
+
+        dispatch(addField({ field: deepClone, index: index + 1 }));
         onFieldSelect({ id: deepClone._id });
+        Utils.duplicateStyleSelectors({ cloneId: deepClone._id, currentId: field._id, dispatch, state: store.getState() });
+
+        if (childreIds.length > 0) {
+            childreIds.map((childId, childIndex) => {
+                handleDuplicateField(formData.fields[childId], childIndex - 1, deepClone._id);
+            })
+        }
     };
 
     const handleDeleteField = (id) => {

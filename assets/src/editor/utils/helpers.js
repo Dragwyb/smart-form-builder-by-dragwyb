@@ -411,6 +411,54 @@ export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, p
     }
 }
 
+export const duplicateStyleSelectors = ({ cloneId, currentId, state, dispatch }) => {
+    try {
+        validateProp({
+            key: "cloneId",
+            value: cloneId, // invalid
+            types: ["string"],
+            required: true,
+            functionName: "duplicateStyleSelectors"
+        });
+
+        validateProp({
+            key: "currentId",
+            value: currentId, // invalid
+            types: ["string"],
+            required: true,
+            functionName: "duplicateStyleSelectors"
+        });
+
+        const refStyles = { ...state.styleSelectors };
+
+        Object.keys(refStyles).forEach((key) => {
+            if (key.startsWith(`fields_${currentId}`)) {
+                let newKey = key.replaceAll(currentId, cloneId);
+                let newStyleSelectors = JSON.stringify(refStyles[key]);
+                newStyleSelectors = newStyleSelectors.replaceAll(currentId, cloneId);
+                dispatch(updateStyleSelectorsAction(newKey, JSON.parse(newStyleSelectors)))
+            }
+        });
+
+        const responsiveDevices = ['desktop', 'tablet', 'mobile'];
+
+        responsiveDevices.forEach((device) => {
+            if (refStyles[device]) {
+                Object.keys(refStyles[device]).forEach((key) => {
+                    if (key.startsWith(`fields_${currentId}`)) {
+                        let newKey = key.replaceAll(currentId, cloneId);
+                        let newStyleSelectors = JSON.stringify(refStyles[device][key]);
+                        newStyleSelectors = newStyleSelectors.replaceAll(currentId, cloneId);
+                        dispatch(updateStyleSelectorsAction(newKey, JSON.parse(newStyleSelectors), device))
+                    }
+                });
+            }
+        });
+    } catch (e) {
+        console.error("Validation failed:", e.message);
+    }
+}
+
 export const deleteStyleSelectors = ({ dispatch, state, key }) => {
     try {
         const validatorKey = validateProp({
