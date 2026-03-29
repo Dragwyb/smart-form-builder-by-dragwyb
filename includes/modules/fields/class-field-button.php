@@ -63,7 +63,7 @@ class Field_Button extends Field_Base
                 'justify' => ['title' => 'Justified', 'icon' => 'fa fa-align-justify'],
             ],
             'selectors' => [
-                '{{WRAPPER}} .dragwyb-btn-wrapper' => '--dragwyb-btn-align: {{VALUE}};',
+                '{{WRAPPER}}.dragwyb-button-field' => '--dragwyb-btn-align: {{VALUE}};',
             ],
         ]);
 
@@ -100,6 +100,7 @@ class Field_Button extends Field_Base
             'type'     => Controls::GROUP_BORDER,
             'label'    => __('Border', 'dragwyb-form-builder'),
             'selector' => '{{WRAPPER}} button',
+            'prefix' => 'btn'
         ]);
 
         $this->end_tab();
@@ -133,14 +134,30 @@ class Field_Button extends Field_Base
             'type'       => Controls::DIMENSIONS,
             'label'      => __('Padding', 'dragwyb-form-builder'),
             'size_units' => ['px', 'em', '%'],
-            'selectors'  => ['{{WRAPPER}} .dragwyb-btn' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'],
+            'selectors'  => ['{{WRAPPER}}.dragwyb-button-field' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'],
             'separator'  => 'before',
         ]);
 
         $this->add_group_control('typography', [
             'type'     => Controls::GROUP_TYPOGRAPHY,
             'label'    => __('Typography', 'dragwyb-form-builder'),
-            'selector' => '{{WRAPPER}} .dragwyb-btn',
+            'selector' => '{{WRAPPER}}.dragwyb-button-field',
+            'prefix' => 'btn'
+        ]);
+
+        $this->add_control('button_width', [
+            'type' => Controls::SLIDER,
+            'label' => __('Button Width', 'dragwyb-form-builder'),
+            'units' => ['px'],
+            'range' => [
+                'px' => [
+                    'min' => 0,
+                    'max' => 500,
+                ],
+            ],
+            'selectors' => [
+                '{{WRAPPER}}.dragwyb-button-field' => '--dragwyb-btn-width: {{VALUE}}{{UNIT}};',
+            ],
         ]);
 
         $this->end_section();
