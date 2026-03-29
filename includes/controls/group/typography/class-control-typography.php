@@ -387,7 +387,7 @@ class Control_Typography extends Group_Control_Base
             'line_height' => array('--dragwyb-' . $prefix . '-typography-lh' => '{{VALUE}}{{UNIT}}'),
             'letter_spacing' => array('--dragwyb-' . $prefix . '-typography-ls' => '{{VALUE}}{{UNIT}}'),
             'word_spacing' => array('--dragwyb-' . $prefix . '-typography-ws' => '{{VALUE}}{{UNIT}}'),
-            'align' => array('--dragwyb-' . $prefix . '-typography-align' => '{{VALUE}}'),
+            'alignment' => array('--dragwyb-' . $prefix . '-typography-align' => '{{VALUE}}'),
         ];
 
         // 2. Control Map
