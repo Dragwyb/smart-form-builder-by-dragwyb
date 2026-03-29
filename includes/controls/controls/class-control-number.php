@@ -26,6 +26,6 @@ class Control_Number extends Control_Base
 
     protected function sanitize_control($value)
     {
-        return sanitize_text_field($value);
+        return absint($value);
     }
 }
