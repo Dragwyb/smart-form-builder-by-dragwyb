@@ -90,7 +90,7 @@ const RenderControl = ({
                 const selectedSetting = selectedTab && '' !== selectedTab && selectedTab !== selectedToolbar ? selectedTab : false;
                 const uniqueSelector = `${selectedToolbar}${selectedSetting ? '_' + selectedSetting : ''}_${controlKey}`;
 
-                Utils.deleteStyleSelectors({ key: uniqueSelector });
+                Utils.deleteStyleSelectors({ key: uniqueSelector, responsiveType: settings.responsive_type });
             }
         } else {
             if (value && settings.selectors && renderStyleSelector && !isStyleSelectorAdd) {

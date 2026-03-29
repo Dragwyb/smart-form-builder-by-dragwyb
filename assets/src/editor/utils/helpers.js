@@ -373,6 +373,12 @@ export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, p
         }
 
         const cssCache = {};
+
+        if (Object.keys(placeholders).length === 0) {
+            dispatch(deleteStyleSelectorsAction(key, responsiveType))
+            return;
+        }
+
         Object.keys(selectors).forEach((selector) => {
             let wrapperId = formId;
 
@@ -403,6 +409,38 @@ export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, p
                 }
             });
 
+            // Remove any remaining placeholders and their surrounding text until space or special characters
+            Object.keys(cssCache).forEach((selector) => {
+                if (cssCache[selector].includes('{{') && cssCache[selector].includes('}}')) {
+                    let cleanSelectors = cssCache[selector].replace(/[^\s:;"'#,()]*\{\{[A-Z0-9_]+\}\}[^\s:;"'#,()]*/g, '');
+
+                    cleanSelectors = cleanSelectors.split(';');
+
+                    let newCleanSelectors = [];
+
+                    cleanSelectors.forEach((cleanSelector) => {
+                        const splitValue = cleanSelector.split(':');
+                        let valueExist = false;
+
+                        if (splitValue && splitValue[1]) {
+                            if (splitValue[1].trim() !== '') {
+                                valueExist = splitValue.join(':');
+                            } else {
+                                valueExist = false;
+                            }
+                        }
+                        if (valueExist && valueExist.trim() !== '') {
+                            newCleanSelectors.push(valueExist);
+                        }
+                    });
+
+                    if (newCleanSelectors.length > 0) {
+                        cssCache[selector] = newCleanSelectors.join(';');
+                    } else {
+                        delete cssCache[selector];
+                    }
+                }
+            });
         });
 
         dispatch(updateStyleSelectorsAction(key, cssCache, responsiveType))
@@ -459,18 +497,16 @@ export const duplicateStyleSelectors = ({ cloneId, currentId, state, dispatch })
     }
 }
 
-export const deleteStyleSelectors = ({ dispatch, state, key }) => {
+export const deleteStyleSelectors = ({ dispatch, state, key, responsiveType = 'desktop' }) => {
     try {
-        const validatorKey = validateProp({
+        validateProp({
             key: "key",
             value: key, // invalid
             types: ["string"],
             required: true,
             functionName: "deleteStyleSelectors"
         });
-        const currentStyles = state.styleSelectors;
-
-        dispatch(deleteStyleSelectorsAction(key))
+        dispatch(deleteStyleSelectorsAction(key, responsiveType))
     } catch (e) {
         console.error("Validation failed:", e.message);
     }

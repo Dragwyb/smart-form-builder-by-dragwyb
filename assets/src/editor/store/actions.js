@@ -164,9 +164,9 @@ export const updateStyleSelectors = (key, value, responsiveType = 'desktop') => 
     payload: { key, value, responsiveType }
 })
 
-export const deleteStyleSelectors = (key) => ({
+export const deleteStyleSelectors = (key, responsiveType = 'desktop') => ({
     type: DELETE_STYLE_SELECTORS,
-    payload: { key }
+    payload: { key, responsiveType }
 })
 
 export const updateSaveState = (status) => ({

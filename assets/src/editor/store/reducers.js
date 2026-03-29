@@ -525,20 +525,27 @@ export default function reducer(state = initialState, action) {
                 styleSelectors: { ...state.styleSelectors || {}, [action.payload.key]: { ...state.styleSelectors[action.payload.key] || {}, ...action.payload.value } }
             }
 
-        case DELETE_STYLE_SELECTORS:
+        case DELETE_STYLE_SELECTORS: {
             if (!action.payload.key) return state;
+            let update = false;
 
-            if (state.styleSelectors[action.payload.key]) {
-                delete state.styleSelectors[action.payload.key];
-
-                return {
-                    ...state,
-                    styleSelectors: { ...state.styleSelectors }
+            if (action.payload.responsiveType && 'desktop' !== action.payload.responsiveType) {
+                if (state.styleSelectors[action.payload.responsiveType] && state.styleSelectors[action.payload.responsiveType][action.payload.key]) {
+                    delete state.styleSelectors[action.payload.responsiveType][action.payload.key];
+                    update = true;
                 }
+            } else if (state.styleSelectors[action.payload.key]) {
+                delete state.styleSelectors[action.payload.key];
+                update = true;
             }
 
-            return state;
+            if (!update) return state;
 
+            return {
+                ...state,
+                styleSelectors: { ...state.styleSelectors }
+            }
+        }
         case DELETE_FIELD_ID:
             return {
                 ...state,

@@ -42,14 +42,14 @@ class DragwybControlBase extends Component {
             return;
         }
 
-        if (!this.state.value && 0 !== this.state.value) {
+        if (!this.state.value && 0 !== this.state.value && !this.settings.default && this.settings.default !== 0) {
             return;
         }
 
         const selectedSetting = this.selectedSetting && '' !== this.selectedSetting && this.selectedSetting !== this.selectorKey ? this.selectedSetting : false;
         const uniqueSelector = `${this.selectorKey}${selectedSetting ? '_' + selectedSetting : ''}_${this.id}`;
 
-        const styleSelectorsData = { key: uniqueSelector, value: this.state.value, selectors: this.settings.selectors, placeholders: this.getStyleSelectorPlaceholder(this.state.value, this.settings.selectors_placeholders), toolbarType: this.selectorKey, itemId: this.selectedSetting, initialRender: true };
+        const styleSelectorsData = { key: uniqueSelector, value: this.state.value || this.settings.default, selectors: this.settings.selectors, placeholders: this.getStyleSelectorPlaceholder(this.state.value || this.settings.default, this.settings.selectors_placeholders), toolbarType: this.selectorKey, itemId: this.selectedSetting, initialRender: true };
 
         if (this?.settings?.responsive_control && this?.settings?.responsive_type) {
             styleSelectorsData.responsiveType = this.settings.responsive_type;

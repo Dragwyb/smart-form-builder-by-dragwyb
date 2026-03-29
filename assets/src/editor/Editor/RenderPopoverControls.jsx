@@ -89,34 +89,36 @@ const RenderPopoverControls = ({
             }
 
             return <div className="dragwyb-popover-wrapper active" data-popover-key={firstControlKey}>
-                <div className="dragwyb-popover">
-                    {PopoverTitle && <div className="dragwyb-popover__title">
-                        {PopoverTitle}
-                        <span onClick={resetControlsValues}>
-                            <FaUndo size={12} title={__('Reset to Default', 'dragwyb-form-builder')} />
-                        </span>
-                    </div>}
-                    {
-                        PopoverControls.map((key) => {
-                            return (
-                                <RenderControl
-                                    key={key}
-                                    selectedToolbar={selectedToolbar}
-                                    selectedTab={selectedTab}
-                                    controlKey={key}
-                                    settings={toolbarSettings.controls[key]}
-                                    toolbarSettings={toolbarSettings}
-                                    fieldValue={fieldValue}
-                                    handleChange={handleChange}
-                                    defautlActiveTab={defautlActiveTab}
-                                    defautlActiveSection={defautlActiveSection}
-                                    popOverStatus={true}
-                                    setResetControlEvent={setResetControlEventHandler}
-                                    setValueChangedCheck={setValueChangedCheckHandler}
-                                />
-                            )
-                        })
-                    }
+                <div className="dragwyb-popover-container">
+                    <div className="dragwyb-popover">
+                        {PopoverTitle && <div className="dragwyb-popover__title">
+                            {PopoverTitle}
+                            <span onClick={resetControlsValues}>
+                                <FaUndo size={12} title={__('Reset to Default', 'dragwyb-form-builder')} />
+                            </span>
+                        </div>}
+                        {
+                            PopoverControls.map((key) => {
+                                return (
+                                    <RenderControl
+                                        key={key}
+                                        selectedToolbar={selectedToolbar}
+                                        selectedTab={selectedTab}
+                                        controlKey={key}
+                                        settings={toolbarSettings.controls[key]}
+                                        toolbarSettings={toolbarSettings}
+                                        fieldValue={fieldValue}
+                                        handleChange={handleChange}
+                                        defautlActiveTab={defautlActiveTab}
+                                        defautlActiveSection={defautlActiveSection}
+                                        popOverStatus={true}
+                                        setResetControlEvent={setResetControlEventHandler}
+                                        setValueChangedCheck={setValueChangedCheckHandler}
+                                    />
+                                )
+                            })
+                        }
+                    </div>
                 </div>
             </div>;
         };
