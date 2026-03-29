@@ -1,5 +1,5 @@
 === Dragwyb Form Builder ===
-Contributors: dragwyb
+Contributors: aniketji007, dragwyb
 Tags: form builder, contact form, custom forms, drag and drop
 Requires at least: 5.8
 Tested up to: 6.9
@@ -41,3 +41,9 @@ We are constantly working to improve Dragwyb Form Builder. Here are some of the 
 *   Radio Image
 *   Step Field
 *   And much more!
+
+== Changelog ==
+
+= 1.0.0 30 March 2026 =
+*   Initial release
+
