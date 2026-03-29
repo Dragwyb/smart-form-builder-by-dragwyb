@@ -95,16 +95,21 @@ export const updateActiveRootContainer = ({ state, dispatch, rootContainerId, ac
 }
 
 export const resetActiveRootContainer = ({ state, dispatch }) => {
+    const activeRootContainer = state.activeRootContainer;
+
+    if (!activeRootContainer || (!activeRootContainer.rootContainerId && !activeRootContainer.activeColumnIndex)) {
+        return;
+    }
+
     dispatch(resetActiveRootContainerAction());
 }
 
-export const AddField = ({ state, type, dispatch, Utils, index = null, attributes = {} }) => {
+export const AddField = ({ state, type, dispatch, Utils, index = null, parentContainer = null, attributes = {} }) => {
     let field = {
         _id: Utils.generateId(),
         type,
     };
-
-    const activeRootContainer = state.activeRootContainer;
+    const activeRootContainer = parentContainer || state.activeRootContainer;
 
     const existingFields = state?.form?.fields || {};
 
@@ -138,18 +143,67 @@ export const AddField = ({ state, type, dispatch, Utils, index = null, attribute
     if (!fieldData.is_root_container) {
         if (activeRootContainer) {
             const activeParentId = activeRootContainer.rootContainerId;
+            const parentField = existingFields[activeParentId];
+            const totalColumns = parentField.attributes.columns;
+            const totalChildre = parentField.children?.length || 0;
+            const lastIndex = Math.max(totalColumns, totalChildre);
+
             index = activeRootContainer.activeColumnIndex;
             field.parentId = activeParentId;
-            Utils.resetActiveRootContainer();
+
+            let isResetActiveRootContainer = true;
+
+            if (lastIndex && lastIndex > (index + 1)) {
+                isResetActiveRootContainer = false;
+            }
+
+            if (isResetActiveRootContainer) {
+                Utils.resetActiveRootContainer();
+            } else {
+                let activeColumnIndex = index + 1;
+
+                if (parentField?.children) {
+                    for (let i = activeColumnIndex; i < lastIndex; i++) {
+                        if (!parentField.children[i]) {
+                            activeColumnIndex = i;
+                            break;
+                        } else if (parentField.children[i]) {
+                            activeColumnIndex = null;
+                        }
+                    }
+                }
+
+                if (activeColumnIndex !== null) {
+                    Utils.updateActiveRootContainer({ rootContainerId: activeParentId, activeColumnIndex: activeColumnIndex });
+                } else {
+                    Utils.resetActiveRootContainer();
+                }
+            }
         } else {
-            const rootContainerId = AddField({ state, type: 'row', dispatch, Utils });
-            field.parentId = rootContainerId['_id'];
+            const buttonRootContainer = state.form.rootContainers[state.form.rootContainers.length - 1];
+            const secondLastRootContainer = state.form.rootContainers[state.form.rootContainers.length - 2];
+
+            let parentId = false;
+
+            if (buttonRootContainer && existingFields[buttonRootContainer].is_root_container === true && (!existingFields[buttonRootContainer].children || existingFields[buttonRootContainer].children.length < 1)) {
+                parentId = buttonRootContainer;
+            } else if (secondLastRootContainer && existingFields[secondLastRootContainer].is_root_container === true && (!existingFields[secondLastRootContainer].children || existingFields[secondLastRootContainer].children.length < 1)) {
+                parentId = secondLastRootContainer;
+            }
+
+            if (!parentId) {
+                const rootContainerId = AddField({ state, type: 'row', dispatch, Utils, index: index });
+                field.parentId = rootContainerId['_id'];
+            } else {
+                Utils.updateActiveRootContainer({ rootContainerId: parentId });
+                field.parentId = parentId;
+            }
+
             index = 0;
         }
     }
 
     field = DragwybBuilder.Hooks.applyFilter(`Dragwyb/Editor/AddField/${type}`, field, Utils);
-
 
     dispatch(addField({ field, index }));
     setSelectedSettingId({ dispatch, value: field._id });

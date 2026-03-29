@@ -53,7 +53,7 @@ const Header = () => {
     return (
         <div className="dragwyb-editor__header">
             <div className="dragwyb-editor__details">
-                <img src={pluginUrl + 'assets/img/logo.png'} alt="Dragwyb Form Builder" width={40} />
+                <img src={pluginUrl + 'assets/img/logo-new.png'} alt="Dragwyb Form Builder" width={40} />
                 <h2>Dragwyb Form Builder</h2>
                 <div className="dragwyb-editor__status" data-status={formStatus} onClick={() => setActiveTabHandler('advance')}>
                     {statusHtml}
@@ -70,7 +70,7 @@ const Header = () => {
                     onClick={toggleTheme}
                     title={themeMode === 'light' ? __('Switch to Dark Mode', 'dragwyb-form-builder') : __('Switch to Light Mode', 'dragwyb-form-builder')}                >
                     <div>
-                        {themeMode === 'light' ? <FaMoon color='black' /> : <FaSun color="#f39c12" />}
+                        {themeMode === 'light' ? <FaMoon color='#fff' /> : <FaSun color="#f39c12" />}
                     </div>
                 </div>
                 <a href={escUrl(DragwybEditor.previewUrl)} className='dragwyb-editor__preview-toggle' target="_blank">

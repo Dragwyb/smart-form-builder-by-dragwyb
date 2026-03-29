@@ -117,9 +117,9 @@ export const deleteField = (fieldId) => ({
     payload: fieldId
 });
 
-export const updateFieldOrder = (targetId, afterId) => ({
+export const updateFieldOrder = (currentId, targetId, index) => ({
     type: UPDATE_FIELD_ORDER,
-    payload: { targetId, afterId }
+    payload: { currentId, targetId, index }
 });
 
 export const updateFieldValues = (fieldId, value) => ({

@@ -169,7 +169,7 @@ export default function reducer(state = initialState, action) {
                 state.form.fields = {};
             }
 
-            const index = null === fieldIndex ? (field.is_root_container ? Object.keys(state.form.fields).length : Object.keys(state.form.fields[field.parentId].children).length) : fieldIndex;
+            const index = null === fieldIndex ? (field.is_root_container ? Object.keys(state.form.fields).length : (state.form.fields[field.parentId].children ? Object.keys(state.form.fields[field.parentId].children).length : 0)) : fieldIndex;
             const fieldId = field._id;
 
             let childrens = [];
@@ -192,12 +192,16 @@ export default function reducer(state = initialState, action) {
 
             const rootContainers = state.form.rootContainers;
 
-            if (lastField && lastField.type === 'button' && !fieldIndex) {
+            if (lastField && lastField.type === 'button') {
                 const rootContainer = lastField.parentId;
                 const newFieldIndex = newFields.findIndex(([key]) => key === rootContainer);
 
                 if (field.is_root_container && !rootContainers.includes(fieldId)) {
-                    const rootContainerIndex = rootContainers.findIndex((key) => key === rootContainer);
+                    let rootContainerIndex = rootContainers.findIndex((key) => key === rootContainer);
+                    if (null !== fieldIndex && fieldIndex >= 0 && fieldIndex < rootContainerIndex) {
+                        rootContainerIndex = fieldIndex;
+                    }
+
                     rootContainers.splice(rootContainerIndex, 0, fieldId);
                 }
 
@@ -209,7 +213,11 @@ export default function reducer(state = initialState, action) {
             }
 
             if (field.is_root_container && !rootContainers.includes(fieldId)) {
-                rootContainers.push(fieldId);
+                if (null !== fieldIndex && fieldIndex >= 0) {
+                    rootContainers.splice(fieldIndex, 0, fieldId);
+                } else {
+                    rootContainers.push(fieldId);
+                }
             }
 
             const fields = Object.fromEntries(newFields);
@@ -217,8 +225,7 @@ export default function reducer(state = initialState, action) {
             if (field.parentId) {
                 fields[field.parentId] = {
                     ...fields[field.parentId],
-                    children: childrens,
-                    rootContainers
+                    children: childrens
                 };
             }
 
@@ -305,45 +312,57 @@ export default function reducer(state = initialState, action) {
         }
 
         // AD changes pending
-        case UPDATE_FIELD_ORDER:
+        case UPDATE_FIELD_ORDER: {
+            const { currentId, targetId, index } = action.payload;
             const fields = { ...state.form.fields };
-            const { targetId, afterId } = action.payload;
 
-            const targetIndex = Object.keys(fields).findIndex(fieldId => fieldId === targetId);
-            let afterIndex = 0;
+            if (targetId === 'root') {
+                const rootContainers = [...state.form.rootContainers];
+                const currentIndex = rootContainers.indexOf(currentId);
 
-            if (!targetId && !afterId) {
-                return state;
-            }
-
-            if (targetId === afterId) {
-                return state;
-            }
-
-            if (afterId) {
-                afterIndex = Object.keys(fields).findIndex(fieldId => fieldId === afterId);
-            }
-
-            if (targetIndex === -1 || afterIndex === -1) {
-                return state;
-            }
-
-            let rootContainers = [...state.form.rootContainers];
-            if (fields[targetId].is_root_container) {
-                const newRootIndex = rootContainers.findIndex(rootContainer => rootContainer === afterId);
-                const currentRootIndex = rootContainers.findIndex(rootContainer => rootContainer === targetId);
-                rootContainers.splice(currentRootIndex, 1);
-                rootContainers.splice(newRootIndex, 0, targetId);
-            }
-
-            return {
-                ...state,
-                form: {
-                    ...state.form,
-                    fields,
-                    rootContainers
+                if (currentIndex !== -1) {
+                    rootContainers.splice(currentIndex, 1);
                 }
-            };
+
+                rootContainers.splice(index, 0, currentId);
+
+                return {
+                    ...state,
+                    form: {
+                        ...state.form,
+                        fields,
+                        rootContainers
+                    }
+                };
+            }
+
+            if (fields[targetId]) {
+                const children = [...(fields[targetId].children || [])];
+                const currentIndex = children.indexOf(currentId);
+
+                if (currentIndex !== -1) {
+                    children.splice(currentIndex, 1);
+                }
+
+                children.splice(index, 0, currentId);
+
+                return {
+                    ...state,
+                    form: {
+                        ...state.form,
+                        fields: {
+                            ...fields,
+                            [targetId]: {
+                                ...fields[targetId],
+                                children
+                            }
+                        }
+                    }
+                };
+            }
+
+            return state;
+        }
 
         case UPDATE_FIELD_VALUES:
             return {
@@ -449,6 +468,14 @@ export default function reducer(state = initialState, action) {
         case UPDATE_SELECTED_SETTING_ID:
 
             if (state.selectedSettingId === action.payload) return state;
+
+            if (state?.activeRootContainer && state?.activeRootContainer.rootContainerId && state.form.fields[action.payload] && state.form.fields[action.payload].parentId && state.form.fields[action.payload].parentId !== state.activeRootContainer.rootContainerId) {
+                return {
+                    ...state,
+                    selectedSettingId: action.payload,
+                    activeRootContainer: null
+                }
+            }
 
             return {
                 ...state,

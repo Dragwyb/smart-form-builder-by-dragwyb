@@ -89,6 +89,11 @@ html {
             display: flex;
             justify-content: center;
             align-items: center;
+
+            &:hover {
+                border-color: hsl(var(--dragwyb-primary) / var(--dragwyb-border-opacity, 1));
+                color: hsl(var(--dragwyb-primary) / var(--dragwyb-border-opacity, 1));
+            }
         }
     }
 
@@ -151,7 +156,7 @@ html {
         display: block;
         background-color: hsl(var(--dragwyb-primary)/12%);
         animation: indicatorVisible 150ms ease-out forwards;
-        position: absolute;
+        // position: absolute;
     }
 
     @keyframes indicatorVisible {

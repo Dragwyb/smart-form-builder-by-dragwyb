@@ -6,7 +6,7 @@ class rowField extends DragwybEditor.editor.extends.FieldBase {
     bind() {
         if (!this.shouldRender()) return <></>;
         const children = this.children;
-        const childrenIds = this.childrenIds;
+        const childrenIds = this.childrenIds || [];
         const totalColumns = this.attributes?.columns || 1;
 
         const missingColumns = totalColumns - childrenIds.length;
@@ -29,23 +29,5 @@ class rowField extends DragwybEditor.editor.extends.FieldBase {
         </>
     }
 }
-
-const intializeRow = (field, Utils) => {
-
-    if (!field?.children) {
-        const columns = field?.attributes?.columns || 1;
-
-        field.children = [];
-        for (let i = 0; i < columns; i++) {
-            field.children.push(null);
-        }
-    }
-
-    return field;
-}
-
-jQuery(document).on('Dragwyb:editorInit', () => {
-    DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/AddField/row', intializeRow, Utils);
-});
 
 export default rowField;

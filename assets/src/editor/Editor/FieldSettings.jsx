@@ -1,13 +1,12 @@
-import React, { act, useEffect, useState } from 'react';
+import React from 'react';
 import { useDispatch, useStore } from 'react-redux';
 import { updateSectionSettings, resetSectionSettings } from '../store/actions';
-import { Panel } from '../components/Common';
 import DragwybControlBase from '../controlBase'
 import RenderControl from './RenderControls';
 import Scrollbar from '../components/Scrollbar';
 import RenderPopoverControls from './RenderPopoverControls';
 
-const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingChange, onClose, setUpdateToolbarValue }) => {
+const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingChange, setUpdateToolbarValue }) => {
     const dispatch = useDispatch();
 
     const getSectionSettings = () => {
@@ -76,61 +75,67 @@ const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingCh
     };
 
     return (
-        <Panel
-            title={toolbarSettings.panelHeading}
-            onClose={onClose}
-        >
-            {toolbarSettings?.controls?.header_controls &&
-                <div className='field-header_controls'>
-                    <RenderControl
-                        key={toolbarSettings.id}
-                        selectedToolbar={selectedTab}
-                        selectedTab={toolbarSettings.id}
-                        controlKey={'header_controls'}
-                        settings={toolbarSettings.controls.header_controls}
-                        toolbarSettings={toolbarSettings}
-                        fieldValue={toolbarValue}
-                        handleChange={handleChange}
-                        defautlActiveSection={defautlActiveSection}
-                        defautlActiveTab={defautlActiveTab}
-                    />
+        <div className="dragwyb-panel">
+            {selectedTab !== 'fields' &&
+                <div className="dragwyb-panel__header">
+                    <h3>
+                        {toolbarSettings?.panelHeading}
+                    </h3>
                 </div>
             }
-            <div className="dragwyb-panel__settings">
-                <Scrollbar>
-                    {Object.keys(toolbarSettings.controls).map(key => (
-                        <>
-                            {key === 'header_controls' ? null
-                                : toolbarSettings.controls[key].popover
-                                    ? <RenderPopoverControls
-                                        key={toolbarSettings.id + '_' + key}
-                                        selectedToolbar={selectedTab}
-                                        selectedTab={toolbarSettings.id}
-                                        controlKey={key}
-                                        settings={toolbarSettings.controls[key]}
-                                        toolbarSettings={toolbarSettings}
-                                        fieldValue={toolbarValue}
-                                        handleChange={handleChange}
-                                        defautlActiveSection={defautlActiveSection}
-                                        defautlActiveTab={defautlActiveTab}
-                                    />
-                                    : <RenderControl
-                                        key={toolbarSettings.id + '_' + key}
-                                        selectedToolbar={selectedTab}
-                                        selectedTab={toolbarSettings.id}
-                                        controlKey={key}
-                                        settings={toolbarSettings.controls[key]}
-                                        toolbarSettings={toolbarSettings}
-                                        fieldValue={toolbarValue}
-                                        handleChange={handleChange}
-                                        defautlActiveSection={defautlActiveSection}
-                                        defautlActiveTab={defautlActiveTab}
-                                    />}
-                        </>
-                    ))}
-                </Scrollbar>
+            <div className="dragwyb-panel__content">
+                {toolbarSettings?.controls?.header_controls &&
+                    <div className='field-header_controls'>
+                        <RenderControl
+                            key={toolbarSettings.id}
+                            selectedToolbar={selectedTab}
+                            selectedTab={toolbarSettings.id}
+                            controlKey={'header_controls'}
+                            settings={toolbarSettings.controls.header_controls}
+                            toolbarSettings={toolbarSettings}
+                            fieldValue={toolbarValue}
+                            handleChange={handleChange}
+                            defautlActiveSection={defautlActiveSection}
+                            defautlActiveTab={defautlActiveTab}
+                        />
+                    </div>
+                }
+                <div className="dragwyb-panel__settings">
+                    <Scrollbar>
+                        {Object.keys(toolbarSettings.controls).map(key => (
+                            <>
+                                {key === 'header_controls' ? null
+                                    : toolbarSettings.controls[key].popover
+                                        ? <RenderPopoverControls
+                                            key={toolbarSettings.id + '_' + key}
+                                            selectedToolbar={selectedTab}
+                                            selectedTab={toolbarSettings.id}
+                                            controlKey={key}
+                                            settings={toolbarSettings.controls[key]}
+                                            toolbarSettings={toolbarSettings}
+                                            fieldValue={toolbarValue}
+                                            handleChange={handleChange}
+                                            defautlActiveSection={defautlActiveSection}
+                                            defautlActiveTab={defautlActiveTab}
+                                        />
+                                        : <RenderControl
+                                            key={toolbarSettings.id + '_' + key}
+                                            selectedToolbar={selectedTab}
+                                            selectedTab={toolbarSettings.id}
+                                            controlKey={key}
+                                            settings={toolbarSettings.controls[key]}
+                                            toolbarSettings={toolbarSettings}
+                                            fieldValue={toolbarValue}
+                                            handleChange={handleChange}
+                                            defautlActiveSection={defautlActiveSection}
+                                            defautlActiveTab={defautlActiveTab}
+                                        />}
+                            </>
+                        ))}
+                    </Scrollbar>
+                </div>
             </div>
-        </Panel>
+        </div>
     );
 };
 

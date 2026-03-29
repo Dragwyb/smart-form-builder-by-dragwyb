@@ -79,6 +79,10 @@ html {
   justify-content: center;
   align-items: center;
 }
+.dragwyb-canvas .dragwyb-row .dragwyb-field__add-column:hover {
+  border-color: hsl(var(--dragwyb-primary)/var(--dragwyb-border-opacity, 1));
+  color: hsl(var(--dragwyb-primary)/var(--dragwyb-border-opacity, 1));
+}
 .dragwyb-canvas__add-field {
   width: 100%;
 }
@@ -131,7 +135,6 @@ html {
   display: block;
   background-color: hsl(var(--dragwyb-primary)/12%);
   animation: indicatorVisible 150ms ease-out forwards;
-  position: absolute;
 }
 @keyframes indicatorVisible {
   0% {

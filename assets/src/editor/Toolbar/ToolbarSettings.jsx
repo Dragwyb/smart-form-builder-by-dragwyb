@@ -8,7 +8,6 @@ import FieldSettings from "../Editor/FieldSettings";
 import DragwybToolbarBase from "../toolbarBase"
 import { Utils as Helper } from '../components/Utils';
 import { useDraggable, useDroppable } from "../components/Common";
-import { GiConsoleController } from "react-icons/gi";
 
 const ToolbarSettings = ({ setActiveTab, position }) => {
   const setting = useSelector(state => state.activeToolbar);
@@ -119,13 +118,12 @@ const ToolbarSettings = ({ setActiveTab, position }) => {
   toolbarRef.current = toolBarObject;
 
   return <div className="dragwyb-editor__sidebar" ref={sidebarRef} >
-    {toolbarHTML && <div className="dragwyb-controls" id={`dragwyb-controls__${setting}`}>{toolbarHTML}</div>}
+    {toolbarHTML && toolbarHTML}
     {settings && settings.controls && <div className="dragwyb-editor__settings">
       <FieldSettings
         selectedTab={setting}
         toolbarValue={!toolbarValue || Object.keys(toolbarValue).length === 0 ? getToolbarValue() : toolbarValue}
         toolbarSettings={settings}
-        onClose={() => setActiveTab('fields')}
         onSettingChange={onSettingChangeHandler}
         setUpdateToolbarValue={setUpdateToolbarValueHandler}
       />
