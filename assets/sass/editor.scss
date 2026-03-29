@@ -1362,7 +1362,7 @@ $dropdown-max-height: 250px;
     animation: slideIn 0.3s ease;
     background-color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
     position: relative;
-    border: 1px solid hsl(var(--dragwyb-primary)/var(--dragwyb-border-opacity, 1));
+    border: 1px solid var(--wp-admin-theme-color, #2271b1);
     box-shadow: 1px 1px 7px hsl(var(--dragwyb-foreground)/0.2);
     border-radius: 0 100px 100px 0;
     font-weight: 600;
