@@ -159,7 +159,8 @@ class List_Table extends WP_List_Table
 
     private function css_cache_exist($form_id)
     {
-        $file_name = 'form-' . $form_id . '.css';
+        $unique_id = get_post_meta($form_id, 'dragwyb_form_assets_id', true);
+        $file_name = 'form-' . $form_id . '-' . sanitize_text_field($unique_id) . '.css';
         $file_path = $this->upload_dir . $file_name;
         return file_exists($file_path);
     }

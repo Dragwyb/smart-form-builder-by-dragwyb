@@ -18,6 +18,7 @@ class CSS_Manager
     private Frontend_Render $frontend;
     private static $instance = null;
     private static $google_fonts_cache = [];
+    private static $unique_id = [];
 
     public static function instance(): self
     {
@@ -57,17 +58,32 @@ class CSS_Manager
             return;
         }
 
-        $file_name = 'form-' . $form_id . '.css';
+        $unique_id = get_post_meta($form_id, 'dragwyb_form_assets_id', true);
+
+        $file_name = 'form-' . $form_id . '-' . $unique_id . '.css';
         $file_path = $this->upload_dir . $file_name;
         $file_url  = $this->upload_url . $file_name;
         $this->frontend = $frontend;
 
         // 1. Check if file exists
-        if (!file_exists($file_path)) {
+        if (!file_exists($file_path) || !isset($unique_id) || $unique_id === '') {
             // 2. If missing, generate it
             $style_content = $this->generate_css_content();
             $google_fonts = $style_content['google_fonts'];
             $css_content = $style_content['css'];
+
+            // Generate uniqueid based on current time & date.
+            $unique_id = time();
+
+            // Convert uniqueid to string.
+            $unique_id = (string) $unique_id;
+
+            $file_name = 'form-' . $form_id . '-' . $unique_id . '.css';
+            $file_path = $this->upload_dir . $file_name;
+            $file_url  = $this->upload_url . $file_name;
+
+            // Update uniqueid in post meta.
+            update_post_meta($form_id, 'dragwyb_form_assets_id', $unique_id);
 
             if ($css_content && !empty($css_content)) {
                 $this->write_file($file_path, $css_content);
@@ -84,7 +100,7 @@ class CSS_Manager
                 'dragwyb-form-' . $form_id,
                 esc_url($file_url),
                 [],
-                filemtime($file_path) // Version based on file modification time
+                esc_attr(DRAGWYB_FORM_BUILDER_VERSION) // Version based on file modification time
             );
         }
     }
@@ -154,7 +170,8 @@ class CSS_Manager
 
     private function delete_cache_file(int $id)
     {
-        $file_name = 'form-' . $id . '.css';
+        $unique_id = get_post_meta($id, 'dragwyb_form_assets_id', true);
+        $file_name = 'form-' . $id . '-' . sanitize_text_field($unique_id) . '.css';
         $file_path = $this->upload_dir . $file_name;
         if (file_exists($file_path)) {
             wp_delete_file($file_path);

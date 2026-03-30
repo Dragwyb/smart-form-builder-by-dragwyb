@@ -382,11 +382,42 @@ class Frontend_Render
 
 
         if (defined('DRAGWYB_FORM_PREVIEW') && true === DRAGWYB_FORM_PREVIEW && function_exists('wp_add_inline_style')) {
-            $style_content = self::instance()->get_generated_css();
-            wp_add_inline_style('dragwyb-form-builder', $style_content['css']);
+            $form_id = self::$form_id;
+            $unique_id = get_post_meta($form_id, 'dragwyb_form_assets_id', true);
+            $atfp_style_exist = false;
+
+            if ($unique_id && $unique_id !== '') {
+                $dragwyb_upload_info = wp_upload_dir();
+
+                // Create a specific folder for your plugin's CSS
+                $atfp_upload_dir = $dragwyb_upload_info['basedir'] . '/dragwyb-forms/css/';
+                $atfp_upload_url = self::get_upload_dir_url($dragwyb_upload_info['baseurl']) . '/dragwyb-forms/css/';
+
+                $atfp_file_name = 'form-' . $form_id . '-' . $unique_id . '.css';
+                $atfp_file_path = $atfp_upload_dir . $atfp_file_name;
+                $atfp_file_url = $atfp_upload_url . $atfp_file_name;
+
+                if (file_exists($atfp_file_path)) {
+                    wp_enqueue_style('dragwyb-form-' . $form_id, esc_url($atfp_file_url), [], esc_attr(DRAGWYB_FORM_BUILDER_VERSION));
+                    $atfp_style_exist = true;
+                }
+            }
+
+            if (!$atfp_style_exist) {
+                $style_content = self::instance()->get_generated_css();
+                wp_add_inline_style('dragwyb-form-builder', $style_content['css']);
+            }
         }
 
         do_action('Dragwyb/Frontend/After_Render/Enqueue_Static_Assets');
+    }
+
+    /**
+     * Filter and return url based on ssl protocol form start
+     */
+    private static function get_upload_dir_url(string $url): string
+    {
+        return is_ssl() ? preg_replace('/^http:/', 'https:', $url) : $url;
     }
 
     /**
