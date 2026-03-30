@@ -50,8 +50,5 @@ class After_SUbmission extends Toolbar_Base
         return Settings::class;
     }
 
-    protected function update_toolbar(): void
-    {
-        // var_dump($this->get_toolbar_data());
-    }
+    protected function update_toolbar(): void {}
 }

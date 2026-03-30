@@ -14,10 +14,12 @@ class Controls
     const DIMENSIONS = 'dimensions';
     const FONTS = 'fonts';
     const GALLERY = 'gallery';
+    const HEADING = 'heading';
     const ICON = 'icon';
     const NUMBER = 'number';
     const POPOVER_TOGGLE = 'popover-toggle';
     const RADIO = 'radio';
+    const RAW_HTML = 'raw_html';
     const REPEATER = 'repeater';
     const SECTION = 'section';
     const SELECT = 'select';

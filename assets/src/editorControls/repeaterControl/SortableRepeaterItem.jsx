@@ -22,7 +22,7 @@ const renderControls = ({
     return <></>;
   }
 
-  const shouldRender = shouldRenderField(settings, repeaterValue);
+  const shouldRender = shouldRenderField(settings, repeaterValue, settings);
 
   if (!shouldRender) {
     return;

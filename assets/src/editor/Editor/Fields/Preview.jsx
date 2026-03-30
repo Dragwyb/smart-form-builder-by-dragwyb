@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { updateFieldValue } from '../../utils/helpers'
 import DragwybFieldBase from '../../fieldBase';
 
-const Preview = ({ fields, values, errors }) => {
+const Preview = ({ fields, values, errors, children, childrens, Utils }) => {
     const dispatch = useDispatch();
 
     const onChangeHandler = ({ fieldId, fieldObject }) => {
@@ -23,7 +23,11 @@ const Preview = ({ fields, values, errors }) => {
                     value={values[field._id] || ''}
                     onChange={({ fieldObject }) => onChangeHandler({ fieldId: field._id, fieldObject })}
                     errors={errors[field.name] || []}
-                />
+                    childrens={childrens}
+                    Utils={Utils}
+                >
+                    {children}
+                </Field>
             </>
         ))
     );

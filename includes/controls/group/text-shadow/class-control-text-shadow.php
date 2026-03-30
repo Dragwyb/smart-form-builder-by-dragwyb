@@ -4,25 +4,17 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Controls\Group\Text_Shadow;
 
-use Dragwyb\Form_Builder\Includes\Controls\Controls\Control_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
+use Dragwyb\Form_Builder\Includes\Controls\Group\Group_Control_Base;
 
-class Control_Text_Shadow extends Control_Base
+class Control_Text_Shadow extends Group_Control_Base
 {
-    private string $id = '';
-    private array $data = [];
-    private string $icon = '';
 
     protected function init(): void
     {
         $this->type = 'text_shadow';
         $this->name = __('Text Shadow', 'dragwyb-form-builder');
         $this->icon = 'fas fa-pencil-alt';
-    }
-
-    public function get_icon(): string
-    {
-        return $this->icon;
     }
 
     protected function register_settings(): array
@@ -34,16 +26,17 @@ class Control_Text_Shadow extends Control_Base
         ];
     }
 
-    protected function default_setting(): array
+    protected function valid_default_settings(): array
     {
-        return [
-            'color'      => 'rgba(0,0,0,0.3)',
-            'horizontal' => ['size' => 0, 'unit' => 'px'],
-            'vertical'   => ['size' => 0, 'unit' => 'px'],
-            'blur'       => ['size' => 10, 'unit' => 'px'],
-            // Added default selector
-            'selector'   => ''
-        ];
+        return array_merge(array_keys($this->default_setting()), [
+            'color',
+            'selector',
+            'horizontal',
+            'vertical',
+            'blur',
+            'conditions',
+            'prefix'
+        ]);
     }
 
     protected function settings_setting_sanitize($value)
@@ -82,15 +75,9 @@ class Control_Text_Shadow extends Control_Base
         return sanitize_text_field($val);
     }
 
-    final public function register_controls(string $id, array $data = []): void
-    {
-        $this->id = $this->string_sanitize($id);
-        $this->data = $data;
-    }
-
     private function get_display_settings(): array
     {
-        $defaults = $this->default_setting();
+        $valid_settings = $this->valid_default_settings();
         $user_data = isset($this->data['settings']) && is_array($this->data['settings'])
             ? $this->data['settings']
             : $this->data;
@@ -98,65 +85,86 @@ class Control_Text_Shadow extends Control_Base
         // Handle root selector fallback
         if (isset($this->data['selector']) && empty($user_data['selector'])) {
             $user_data['selector'] = $this->data['selector'];
+        }        // Only valid keys from defaults
+        $valid_user_data = [];
+
+        foreach ($valid_settings as $key) {
+            if (!array_key_exists($key, $user_data)) {
+                continue;
+            }
+
+            if (isset($user_data[$key])) {
+                $valid_user_data[$key] = $user_data[$key];
+            }
         }
 
-        $valid_user_data = array_intersect_key($user_data, $defaults);
-        return array_replace_recursive($defaults, $valid_user_data);
+        return $valid_user_data;
     }
 
-    final public function get_controls(): array
+    protected function register_group_controls(): void
     {
         $settings = $this->get_display_settings();
         $id = $this->string_sanitize($this->id);
         $selector = isset($settings['selector']) && !empty($settings['selector']) ? $settings['selector'] : false;
+        $prefix = isset($settings['prefix']) && !empty($settings['prefix']) ? $settings['prefix'] : 'form';
 
         $selectors = [
-            'color' => array('property' => '--dragwyb-form-text-shadow-color', 'placeholder' => '{{VALUE}}'),
-            'horizontal' => array('property' => '--dragwyb-form-text-shadow-h', 'placeholder' => '{{VALUE}}{{UNIT}}'),
-            'vertical' => array('property' => '--dragwyb-form-text-shadow-v', 'placeholder' => '{{VALUE}}{{UNIT}}'),
-            'blur' => array('property' => '--dragwyb-form-text-shadow-blur', 'placeholder' => '{{VALUE}}{{UNIT}}'),
+            'color' => array('--dragwyb-' . $prefix . '-text-shadow-color' => '{{VALUE}}'),
+            'horizontal' => array('--dragwyb-' . $prefix . '-text-shadow-h' => '{{VALUE}}{{UNIT}}'),
+            'vertical' => array('--dragwyb-' . $prefix . '-text-shadow-v' => '{{VALUE}}{{UNIT}}'),
+            'blur' => array('--dragwyb-' . $prefix . '-text-shadow-blur' => '{{VALUE}}{{UNIT}}'),
         ];
 
-        $controls = [];
 
-        $controls[$id . '_color'] = [
-            'type'    => Controls::COLOR,
-            'label'   => __('Color', 'dragwyb-form-builder'),
-            'default' => $settings['color'],
+        // 2. Control Map
+        $map = [
+            'color'         => ['type' => Controls::COLOR, 'label' => __('Color', 'dragwyb-form-builder')],
+            'horizontal'    => ['type' => Controls::SLIDER, 'label' => __('Horizontal', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]], 'units' => ['px'], 'responsive' => true],
+            'vertical'      => ['type' => Controls::SLIDER, 'label' => __('Vertical', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]], 'units' => ['px'], 'responsive' => true],
+            'blur'          => ['type' => Controls::SLIDER, 'label' => __('Blur', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => 0, 'max' => 100, 'step' => 1]], 'units' => ['px'], 'responsive' => true],
         ];
 
-        $controls[$id . '_horizontal'] = [
-            'type'    => Controls::SLIDER,
-            'label'   => __('Horizontal', 'dragwyb-form-builder'),
-            'range'   => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]],
-            'default' => $settings['horizontal'],
-        ];
+        // 3. Generate Controls
+        foreach ($map as $key => $meta) {
+            $config = isset($settings[$key]) ? $settings[$key] : array();
 
-        $controls[$id . '_vertical'] = [
-            'type'    => Controls::SLIDER,
-            'label'   => __('Vertical', 'dragwyb-form-builder'),
-            'range'   => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]],
-            'default' => $settings['vertical'],
-        ];
+            $control_args = array_filter($meta, function ($key, $value) {
+                return $key !== 'responsive';
+            }, ARRAY_FILTER_USE_BOTH);
 
-        $controls[$id . '_blur'] = [
-            'type'    => Controls::SLIDER,
-            'label'   => __('Blur', 'dragwyb-form-builder'),
-            'range'   => ['px' => ['min' => 0, 'max' => 100, 'step' => 1]],
-            'default' => $settings['blur'],
-        ];
+            if (isset($config['default'])) {
+                $control_args['default'] = $config['default'];
+            }
 
-        // Inject Selector
-        if ($selector) {
-            foreach ($selectors as $key => $style) {
-                if (isset($controls[$id . '_' . $key])) {
-                    $controls[$id . '_' . $key]['selectors'] = [
-                        $selector => $style['property'] . ':' . $style['placeholder'],
-                    ];
+            if ($settings['conditions'] && !empty($settings['conditions'])) {
+                $control_args['conditions'] = $settings['conditions'];
+            }
+
+            if ($meta['type'] === Controls::SLIDER) {
+                if (isset($config['range'])) {
+                    $control_args['range'] = $config['range'];
+                }
+                if (isset($config['units'])) {
+                    $control_args['units'] = $config['units'];
                 }
             }
-        }
 
-        return $controls;
+            if (isset($selectors[$key]) && is_array($selectors[$key])) {
+                $selector_style = '';
+                foreach ($selectors[$key] as $selector_key => $selector_value) {
+                    $selector_style .= $selector_key . ':' . $selector_value . ';';
+                }
+
+                if (!empty($selector_style)) {
+                    $control_args['selectors'][$selector] = $selector_style;
+                }
+            }
+
+            if (isset($meta['responsive']) && $meta['responsive']) {
+                $this->add_responsive_control($id . '_' . $key, $control_args);
+            } else {
+                $this->add_control($id . '_' . $key, $control_args);
+            }
+        }
     }
 }

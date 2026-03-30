@@ -1,25 +1,24 @@
 
-import React, {Component} from "react";
+import React, { Component } from "react";
 
 class DragwybToolbarBase extends Component {
     #updateValue = () => { }
 
-    bind(){}
+    bind() { }
 
-    toolBarName=(name)=>{return name};
+    toolBarName = (name) => { return name };
 
     constructor(args) {
         super();
 
-        this.state = { test: 'world' }; // ✅ init state properly
         this.bind();
         this.toolBarName = this.toolBarName(args?.[1]);
         this.#setDisplaySetting(args);
     }
-    
+
     #renderToolbar(args) {
-        this.setState({'test': 'world'})
-        if(!this.toolBarName){
+        this.setState({ 'test': 'world' })
+        if (!this.toolBarName) {
             return;
         }
 
@@ -38,34 +37,47 @@ class DragwybToolbarBase extends Component {
         this.toolbarData = args[3] || {};
         this.settings = args[4];
         this.#updateValue = args[5];
-        this.Utils=args[6];
+        this.Utils = args[6];
     }
 
-    render(){
+    render() {
         return this.html;
     }
 
-    getToolbarSettings(){
-        this.settings.id=this.id;
-        this.settings.panelHeading=this.settings.label ?? this.toolBarName;
+    getToolbarSettings() {
+        this.settings.id = this.id;
+        this.settings.panelHeading = this.settings.label ?? this.toolBarName;
         return this.settings;
     }
 
-    getToolbarValue(){
+    getToolbarValue() {
         return this.toolbarData;
     }
 
-    updateToolbarHandler=(key, value)=> {
-        this.toolbarData[key]=value;
+    updateToolbarHandler = (key, value) => {
+        this.toolbarData[key] = value;
+
+        if (typeof this.toolbarData === 'object') {
+            this.toolbarData = { ...this.toolbarData };
+        }
+
+        if (value === undefined) {
+            delete this.toolbarData[key];
+        } else if (typeof this?.settings?.controls?.[key]?.default === 'object' && this.Utils.compareTwoObjects({ obj1: this?.settings?.controls?.[key]?.default, obj2: value || {} })) {
+            delete this.toolbarData[key];
+        } else if (this?.settings?.controls?.[key]?.default === value) {
+            delete this.toolbarData[key];
+        }
+
         this.updateToolbar();
     }
 
-    updateToolbar=()=>{
+    updateToolbar = () => {
         this.#triggerOnChange();
     }
 
     #triggerOnChange() {
-        this.#updateValue({key: this.id, value: this.toolbarData, toolbarObj: this});
+        this.#updateValue({ key: this.id, value: this.toolbarData, toolbarObj: this });
     }
 
     /**

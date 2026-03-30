@@ -56,7 +56,18 @@ if (!class_exists('Sanitize_Data')) {
                 $control_obj->set_value($value, $id, self::$toolbar_controls[$id]);
                 $filtered_value = $control_obj->get_value();
 
-                if ($filtered_value && !isset(self::$filtered_data[$id])) {
+                $default_value = '';
+
+                if (isset(self::$toolbar_controls[$id]['default'])) {
+                    $control_obj->set_value(self::$toolbar_controls[$id]['default'], $id, self::$toolbar_controls[$id]);
+                    $default_value = $control_obj->get_value();
+
+                    if ($filtered_value === $default_value) {
+                        continue;
+                    }
+                }
+
+                if (isset($filtered_value) && !isset(self::$filtered_data[$id]) && $filtered_value !== $default_value) {
                     self::$filtered_data[$id] = $filtered_value;
                 }
             }

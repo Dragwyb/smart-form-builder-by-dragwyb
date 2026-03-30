@@ -33,17 +33,17 @@ class Control_Text extends Control_Base
         parent::__construct();
         wp_register_script(
             'dragwyb-editor-controls',
-            DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editorControls/editorControls.js',
+            esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editorControls/editorControls.js'),
             ['dragwyb-form-editor'],
-            DRAGWYB_FORM_BUILDER_VERSION,
+            esc_attr(DRAGWYB_FORM_BUILDER_VERSION),
             true
         );
 
         wp_register_style(
             'dragwyb-editor-controls',
-            DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editorControls/editorControls.css',
+            esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editorControls/editorControls.css'),
             [],
-            DRAGWYB_FORM_BUILDER_VERSION,
+            esc_attr(DRAGWYB_FORM_BUILDER_VERSION),
         );
     }
 

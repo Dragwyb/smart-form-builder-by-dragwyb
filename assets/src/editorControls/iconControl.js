@@ -158,10 +158,7 @@ export default class IconControl extends DragwybEditor.editor.extends.ControlBas
 
         return (
             <div className="dragwyb-control dragwyb-control--icon" id={`control-${id}`} ref={this.wrapperRef}>
-                {settings.label && (
-                    <label className="dragwyb-control__label">{settings.label}</label>
-                )}
-
+                <this.RenderLabel />
                 <div className="dragwyb-icon-selector">
                     {/* PREVIEW BUTTON */}
                     <div className="dragwyb-icon-preview" onClick={() => this.setState({ isOpen: !isOpen })}>

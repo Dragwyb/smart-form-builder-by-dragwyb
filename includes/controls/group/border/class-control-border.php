@@ -4,25 +4,16 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Controls\Group\Border;
 
-use Dragwyb\Form_Builder\Includes\Controls\Controls\Control_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
+use Dragwyb\Form_Builder\Includes\Controls\Group\Group_Control_Base;
 
-class Control_Border extends Control_Base
+class Control_Border extends Group_Control_Base
 {
-    private string $id = '';
-    private array $data = [];
-    private string $icon = '';
-
     protected function init(): void
     {
         $this->type = 'border';
         $this->name = __('Border', 'dragwyb-form-builder');
         $this->icon = 'fas fa-border-all';
-    }
-
-    public function get_icon(): string
-    {
-        return $this->icon;
     }
 
     protected function register_settings(): array
@@ -48,26 +39,20 @@ class Control_Border extends Control_Base
                     'groove' => __('Groove', 'dragwyb-form-builder'),
                 ],
                 'default' => 'solid',
-            ],
-            'width' => [
-                'unit' => 'px',
-                'top' => '',
-                'right' => '',
-                'bottom' => '',
-                'left' => '',
-                'isLinked' => true,
-            ],
-            'color' => '#333333',
-            'radius' => [
-                'unit' => 'px',
-                'top' => '',
-                'right' => '',
-                'bottom' => '',
-                'left' => '',
-                'isLinked' => true,
-            ],
-            // Added default selector
-            'selector' => ''
+            ]
+        ];
+    }
+
+    protected function valid_default_settings(): array
+    {
+        return [
+            'style',
+            'width',
+            'radius',
+            'color',
+            'selector',
+            'conditions',
+            'prefix'
         ];
     }
 
@@ -120,17 +105,10 @@ class Control_Border extends Control_Base
         return sanitize_text_field($val);
     }
 
-    // --- Output ---
-
-    final public function register_controls(string $id, array $data = []): void
-    {
-        $this->id = $this->string_sanitize($id);
-        $this->data = $data;
-    }
-
     private function get_display_settings(): array
     {
         $defaults = $this->default_setting();
+        $valid_settings = $this->valid_default_settings();
         // Extract settings safely
         $user_data = isset($this->data['settings']) && is_array($this->data['settings'])
             ? $this->data['settings']
@@ -141,75 +119,97 @@ class Control_Border extends Control_Base
             $user_data['selector'] = $this->data['selector'];
         }
 
-        $valid_user_data = array_intersect_key($user_data, $defaults);
-        return array_replace_recursive($defaults, $valid_user_data);
+        $user_data = array_replace_recursive($defaults, $user_data);
+
+        // Only valid keys from defaults
+        $valid_user_data = [];
+
+        foreach ($valid_settings as $key) {
+            if (!array_key_exists($key, $user_data)) {
+                continue;
+            }
+
+            if (isset($user_data[$key])) {
+                $valid_user_data[$key] = $user_data[$key];
+            }
+        }
+
+        return $valid_user_data;
     }
 
-    final public function get_controls(): array
+    protected function register_group_controls(): void
     {
         $settings = $this->get_display_settings();
         $id = $this->string_sanitize($this->id);
         $selector = isset($settings['selector']) && !empty($settings['selector']) ? $settings['selector'] : false;
-
-        $controls = [];
+        $prefix = isset($settings['prefix']) && !empty($settings['prefix']) ? $settings['prefix'] : 'form';
 
         // Definition of selectors map
         // Note: Dimensions (width/radius) use specific placeholders {{TOP}}, {{RIGHT}}, etc.
         $selectors = [
-            'style'  => ['property' => '--dragwyb-form-border-style',  'placeholder' => '{{VALUE}}'],
-            'color'  => ['property' => '--dragwyb-form-border-color',  'placeholder' => '{{VALUE}}'],
-            'width'  => ['property' => '--dragwyb-form-border-width',  'placeholder' => '{{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}'],
-            'radius' => ['property' => '--dragwyb-form-border-radius', 'placeholder' => '{{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}'],
+            'style'  => array('--dragwyb-' . $prefix . '-border-style' => '{{VALUE}}'),
+            'color'  => array('--dragwyb-' . $prefix . '-border-color' => '{{VALUE}}'),
+            'width'  => array('--dragwyb-' . $prefix . '-border-top-width' => '{{TOP}}{{UNIT}}', '--dragwyb-' . $prefix . '-border-bottom-width' => '{{BOTTOM}}{{UNIT}}', '--dragwyb-' . $prefix . '-border-right-width' => '{{RIGHT}}{{UNIT}}', '--dragwyb-' . $prefix . '-border-left-width' => '{{LEFT}}{{UNIT}}'),
+            'radius' => array('--dragwyb-' . $prefix . '-border-top-radius' => '{{TOP}}{{UNIT}}', '--dragwyb-' . $prefix . '-border-bottom-radius' => '{{BOTTOM}}{{UNIT}}', '--dragwyb-' . $prefix . '-border-right-radius' => '{{RIGHT}}{{UNIT}}', '--dragwyb-' . $prefix . '-border-left-radius' => '{{LEFT}}{{UNIT}}'),
         ];
 
-        // 1. Border Style
-        $controls[$id . '_style'] = [
-            'type'         => Controls::SELECT,
-            'label'        => __('Border Style', 'dragwyb-form-builder'),
-            'options'      => $settings['style']['options'],
-            'default'      => $settings['style']['default'],
-            'label_inline' => true,
-        ];
 
-        // 2. Border Width
-        $controls[$id . '_width'] = [
-            'type'       => Controls::DIMENSIONS,
-            'label'      => __('Width', 'dragwyb-form-builder'),
-            'size_units' => ['px', 'em', '%'],
-            'default'    => $settings['width'],
-            'condition'  => [
+        // 2. Control Map
+        $map = [
+            'style'         => ['type' => Controls::SELECT, 'label' => __('Style', 'dragwyb-form-builder'), 'options' => ['' => __('None', 'dragwyb-form-builder'), 'solid' => __('Solid', 'dragwyb-form-builder'), 'double' => __('Double', 'dragwyb-form-builder'), 'dotted' => __('Dotted', 'dragwyb-form-builder'), 'dashed' => __('Dashed', 'dragwyb-form-builder'), 'groove' => __('Groove', 'dragwyb-form-builder'), 'ridge' => __('Ridge', 'dragwyb-form-builder'), 'inset' => __('Inset', 'dragwyb-form-builder'), 'outset' => __('Outset', 'dragwyb-form-builder')], 'label_inline' => true],
+            'color'         => ['type' => Controls::COLOR, 'label' => __('Color', 'dragwyb-form-builder'), 'conditions' => [
                 $id . '_style!' => ['none', '']
-            ]
-        ];
-
-        // 3. Border Color
-        $controls[$id . '_color'] = [
-            'type'      => Controls::COLOR,
-            'label'     => __('Color', 'dragwyb-form-builder'),
-            'default'   => $settings['color'],
-            'condition' => [
+            ]],
+            'width'         => ['type' => Controls::DIMENSIONS, 'label' => __('Width', 'dragwyb-form-builder'), 'units' => ['px', 'em', '%'], 'conditions' => [
                 $id . '_style!' => ['none', '']
-            ]
+            ], 'responsive' => true],
+            'radius'        => ['type' => Controls::DIMENSIONS, 'label' => __('Radius', 'dragwyb-form-builder'), 'units' => ['px', 'em', '%'], 'responsive' => true],
         ];
 
-        // 4. Border Radius
-        $controls[$id . '_radius'] = [
-            'type'       => Controls::DIMENSIONS,
-            'label'      => __('Border Radius', 'dragwyb-form-builder'),
-            'size_units' => ['px', 'em', '%'],
-            'default'    => $settings['radius'],
-        ];
+        if (isset($settings['style']['options'])) $map['style']['options'] = $settings['style']['options'];
 
-        if ($selector) {
-            foreach ($selectors as $key => $style) {
-                if (isset($controls[$id . '_' . $key])) {
-                    $controls[$id . '_' . $key]['selectors'] = [
-                        $selector => $style['property'] . ':' . $style['placeholder'],
-                    ];
+        // 3. Generate Controls
+        foreach ($map as $key => $meta) {
+            $config = isset($settings[$key]) ? $settings[$key] : array();
+
+            $control_args = array_filter($meta, function ($key, $value) {
+                return $key !== 'responsive';
+            }, ARRAY_FILTER_USE_BOTH);
+
+            if (isset($config['default'])) {
+                $control_args['default'] = $config['default'];
+            }
+
+            if ($settings['conditions'] && !empty($settings['conditions'])) {
+                $control_args['conditions'] = isset($control_args['conditions']) ? array_merge($control_args['conditions'], $settings['conditions']) : $settings['conditions'];
+            }
+
+            if ($meta['type'] === Controls::SELECT) {
+                if (isset($config['options'])) {
+                    $control_args['options'] = $config['options'];
+                }
+            } elseif ($meta['type'] === Controls::DIMENSIONS) {
+                if (isset($config['units'])) {
+                    $control_args['units'] = $config['units'];
                 }
             }
-        }
 
-        return $controls;
+            if (isset($selectors[$key]) && is_array($selectors[$key])) {
+                $selector_style = '';
+                foreach ($selectors[$key] as $selector_key => $selector_value) {
+                    $selector_style .= $selector_key . ':' . $selector_value . ';';
+                }
+
+                if (!empty($selector_style)) {
+                    $control_args['selectors'][$selector] = $selector_style;
+                }
+            }
+
+            if (isset($meta['responsive']) && $meta['responsive']) {
+                $this->add_responsive_control($id . '_' . $key, $control_args);
+            } else {
+                $this->add_control($id . '_' . $key, $control_args);
+            }
+        }
     }
 }

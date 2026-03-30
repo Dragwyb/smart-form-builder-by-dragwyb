@@ -1,16 +1,20 @@
 import { __, sprintf } from "@wordpress/i18n";
+import { useState } from "react";
 import { useEffect, useRef } from "react";
 import { useStore, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import { useSelector } from 'react-redux';
 import FieldSettings from "../Editor/FieldSettings";
 import DragwybToolbarBase from "../toolbarBase"
-import { Utils as Helper, AddField } from '../components/Utils';
+import { Utils as Helper } from '../components/Utils';
 import { useDraggable, useDroppable } from "../components/Common";
 
 const ToolbarSettings = ({ setActiveTab, position }) => {
   const setting = useSelector(state => state.activeToolbar);
   const selectedToolbar = useSelector(state => state.selectedSettingId);
+  const [toolbarValue, setToolbarValue] = useState({});
+  const [isToolbarSet, setIsToolbarSet] = useState(false);
+  const toolbarRef = useRef(null);
 
   if (!setting) {
     return null;
@@ -33,7 +37,6 @@ const ToolbarSettings = ({ setActiveTab, position }) => {
   const formData = state.form;
   const toolbarData = selectedToolbar && formData[setting];
   const toolbarSettings = DragwybEditor[setting];
-  const sectionSettings = state.sectionSettings;
 
   useEffect(() => {
     const $sidebar = window.jQuery(sidebarRef.current);
@@ -64,7 +67,6 @@ const ToolbarSettings = ({ setActiveTab, position }) => {
   }, []);
 
   const updateToolBar = ({ key, value, toolbarObj }) => {
-
     if (!DragwybEditor.EditorToolbars || !DragwybEditor.EditorToolbars.toolbars || !DragwybEditor.EditorToolbars.toolbars[key]) {
       return;
     }
@@ -77,22 +79,53 @@ const ToolbarSettings = ({ setActiveTab, position }) => {
   let toolBarObject = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/toolbarRender/' + setting, toolBarHtml, setting, selectedToolbar, toolbarData, toolbarSettings, updateToolBar, { ...Utils, ...extensibleUtils });
 
   if (!(toolBarObject instanceof DragwybToolbarBase || toolBarObject instanceof DragwybEditor.editor.extends.ToolbarBase)) {
-    toolBarHtml = <></>;
+    toolBarHtml = false;
     toolBarObject = new DragwybToolbarBase([toolBarHtml, setting, selectedToolbar, toolbarData, toolbarSettings, updateToolBar, { ...Utils, ...extensibleUtils }]);
   }
 
-  const toolbarValue = toolBarObject.getToolbarValue();
+  useEffect(() => {
+    if (selectedToolbar) {
+      setToolbarValue(toolBarObject.getToolbarValue());
+    }
+  }, [selectedToolbar])
+
+  const setUpdateToolbarValueHandler = () => {
+    setToolbarValue(toolBarObject.getToolbarValue());
+  }
+
   const settings = toolBarObject.getToolbarSettings();
+  const toolbarHTML = toolBarObject.render();
+
+  const onSettingChangeHandler = (key, value) => {
+    toolbarRef.current.updateToolbarHandler(key, value);
+  }
+
+  const getToolbarValue = () => {
+    let toolbarValue = {};
+
+    if (!isToolbarSet) {
+      toolbarValue = toolBarObject.getToolbarValue();
+
+      if (toolbarValue) {
+        setToolbarValue(toolbarValue);
+        setIsToolbarSet(true);
+      }
+    }
+
+    return toolbarValue;
+  }
+
+  toolbarRef.current = toolBarObject;
 
   return <div className="dragwyb-editor__sidebar" ref={sidebarRef} >
-    <div className="dragwyb-controls" id={`dragwyb-controls__${setting}`}>{toolBarObject.render()}</div>
+    {toolbarHTML && toolbarHTML}
     {settings && settings.controls && <div className="dragwyb-editor__settings">
       <FieldSettings
         selectedTab={setting}
-        toolbarValue={toolbarValue}
+        toolbarValue={!toolbarValue || Object.keys(toolbarValue).length === 0 ? getToolbarValue() : toolbarValue}
         toolbarSettings={settings}
-        onClose={() => setActiveTab(setting)}
-        onSettingChange={toolBarObject.updateToolbarHandler}
+        onSettingChange={onSettingChangeHandler}
+        setUpdateToolbarValue={setUpdateToolbarValueHandler}
       />
     </div>}
   </div>

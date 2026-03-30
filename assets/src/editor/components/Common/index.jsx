@@ -3,7 +3,6 @@ import Button from './Button';
 import ConfirmDialog from './ConfirmDialog';
 import Modal from './Modal';
 import Notice from './Notice';
-import Panel from './Panel';
 import SearchInput from './SearchInput';
 import Spinner from './Spinner';
 import Tabs from './Tabs';
@@ -18,7 +17,6 @@ export {
     ConfirmDialog,
     Modal,
     Notice,
-    Panel,
     SearchInput,
     Spinner,
     Tabs,

@@ -9,6 +9,7 @@ export default class SwitcherControl extends DragwybEditor.editor.extends.Contro
         const { settings, id } = this;
         const { value = settings.default } = this.state;
         const returnValue = settings.return_value;
+        const disabled = settings.disabled || false;
 
         const changeHandler = () => {
             const updatedValue = value === returnValue ? null : returnValue;
@@ -21,14 +22,11 @@ export default class SwitcherControl extends DragwybEditor.editor.extends.Contro
                 data-control="switcher"
                 id={`control-${id}`}
             >
-                {settings.label && (
-                    <label
-                        className="dragwyb-control__label"
-                        htmlFor={id}
-                    >
-                        {settings.label}
-                    </label>
-                )}
+                <this.RenderLabel
+                    attr={
+                        { htmlFor: id }
+                    }
+                />
 
                 <label className="dragwyb-switcher">
                     <input
@@ -37,6 +35,7 @@ export default class SwitcherControl extends DragwybEditor.editor.extends.Contro
                         name={id}
                         checked={value === returnValue}
                         onChange={changeHandler}
+                        disabled={disabled}
                     />
                     <span className="dragwyb-switcher__slider">
                         {settings.show_label === true && (value === returnValue ? settings.on_label : settings.off_label)}

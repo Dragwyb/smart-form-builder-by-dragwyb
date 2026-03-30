@@ -69,7 +69,7 @@ class Control_Repeater extends Control_Base
                 continue;
             }
 
-            $data[$index] = array('_id' => $item['_id']);
+            $data[$index] = array('_id' => sanitize_text_field($item['_id']));
 
             if (!isset($this->repeater_data) || !is_array($this->repeater_data) || count($this->repeater_data) <= 0) {
                 continue;
@@ -113,7 +113,7 @@ class Control_Repeater extends Control_Base
                 $filtered_value = $control_obj->get_value();
 
                 if (isset($filtered_value) && $filtered_value) {
-                    $data[$index]['attributes'][$field] = $value;
+                    $data[$index]['attributes'][sanitize_text_field($field)] = $value;
                 }
             }
         }

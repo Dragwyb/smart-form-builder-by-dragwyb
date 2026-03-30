@@ -35,26 +35,19 @@ class Control_Dimensions extends Control_Base
 
     /**
      * Sanitize control value
-     *
-     * Expected structure:
-     * [
-     *   'top'    => int,
-     *   'right'  => int,
-     *   'bottom' => int,
-     *   'left'   => int,
-     *   'linked' => bool,
-     *   'unit'   => string
-     * ]
      */
     protected function sanitize_control($value)
     {
-        $defaults   = $this->default_setting_sanitize(array());
         $allowed    = ['top', 'right', 'bottom', 'left', 'linked', 'unit'];
-        $sanitized  = $defaults;
+        $sanitized  = [];
 
         if (!is_array($value)) {
-            return $defaults;
+            return '';
         }
+
+        if ((!isset($value['top']) || empty($value['top'])) && (!isset($value['right']) || empty($value['right'])) && (!isset($value['bottom']) || empty($value['bottom'])) && (!isset($value['left']) || empty($value['left']))) {
+            return [];
+        };
 
         foreach ($allowed as $key) {
             if (!array_key_exists($key, $value)) {
@@ -83,10 +76,6 @@ class Control_Dimensions extends Control_Base
     protected function default_setting_sanitize($value)
     {
         $default = [
-            'top'    => 0,
-            'right'  => 0,
-            'bottom' => 0,
-            'left'   => 0,
             'linked' => true,
             'unit'   => 'px',
         ];

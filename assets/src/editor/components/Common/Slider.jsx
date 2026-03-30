@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 
 const Slider = ({
-    value = 0,
+    value = "",
     min = 0,
     max = 100,
     step = 1,
@@ -108,6 +108,19 @@ const Slider = ({
         // Handle empty string from number input
         if (val === "") {
             setLocalValue("");
+            if (onChange) onChange("");
+            return;
+        }
+
+        if (val < min) {
+            setLocalValue(min);
+            if (onChange) onChange(min);
+            return;
+        }
+
+        if (val > max) {
+            setLocalValue(max);
+            if (onChange) onChange(max);
             return;
         }
 

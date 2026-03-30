@@ -13,10 +13,7 @@ export default class GalleryControl extends DragwybEditor.editor.extends.Control
 
         return (
             <div className="dragwyb-control dragwyb-control--gallery" id={`control-${id}`}>
-                {settings.label && (
-                    <label className="dragwyb-control__label">{settings.label}</label>
-                )}
-
+                <this.RenderLabel />
                 <div className="dragwyb-gallery-box">
                     {/* Image Grid Preview */}
                     <div className="dragwyb-gallery-grid">

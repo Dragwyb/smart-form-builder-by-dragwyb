@@ -1,7 +1,6 @@
 import UnitSelector from './common/UnitSelector';
 import Slider from '../editor/components/Common/Slider';
 import Reset from '../editor/components/Common/Reset';
-import ObjectCompare from './common/ObjectCompare';
 
 export default class SliderControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
@@ -14,6 +13,7 @@ export default class SliderControl extends DragwybEditor.editor.extends.ControlB
         const { settings, id } = this;
         const { label, range, default: defaultValue = {} } = settings;
         const { value = {} } = this.state;
+
         // Fallback to default value if no value is set
         // const currentValue = value || defaultValue || { unit: "px", size: 0 };
         const currentValue = { size: this.getValidValue(value.size, defaultValue.size, 0), unit: this.getValidValue(value.unit, defaultValue.unit, 'px') }
@@ -37,7 +37,7 @@ export default class SliderControl extends DragwybEditor.editor.extends.ControlB
         };
 
         const updateSize = (newSize) => {
-            const newValue = { ...currentValue, size: Number(newSize) };
+            const newValue = { ...currentValue, size: '' !== newSize ? Number(newSize) : '' };
             this.updateControlHandler(id, newValue);
         };
 
@@ -51,10 +51,11 @@ export default class SliderControl extends DragwybEditor.editor.extends.ControlB
             >
                 {label && (
                     <div className="dragwyb-control__header dragwyb-label-inline">
-                        <label className="dragwyb-control__label" htmlFor={id}>
-                            {label}
-                        </label>
-                        <Reset handler={this.resetControl.bind(this)} disabled={!this.valueChanged()} />
+                        <this.RenderLabel
+                            attr={
+                                { htmlFor: id }
+                            }
+                        />
                         {units && Object.keys(units).length > 1 &&
                             <UnitSelector
                                 units={units}
@@ -78,26 +79,14 @@ export default class SliderControl extends DragwybEditor.editor.extends.ControlB
         );
     }
 
-    resetControl() {
-        const { id, settings } = this;
-        const { default: defaultValue = {} } = settings;
-
-        const resetValue = {
-            size: this.getValidValue(defaultValue.size, ""),
-            unit: this.getValidValue(defaultValue.unit, "px")
-        };
-
-        this.updateControlHandler(id, resetValue);
-    };
-
     valueChanged() {
         const { default: defaultValue = {} } = this.settings;
         const { value = {} } = this.state;
 
-        const currentValue = { size: this.getValidValue(value.size, defaultValue.size, 0), unit: this.getValidValue(value.unit, defaultValue.unit, 'px') }
+        const currentValue = { size: this.getValidValue(value.size, defaultValue.size, ""), unit: this.getValidValue(value.unit, defaultValue.unit, 'px') }
 
-        let defaultVal = { size: this.getValidValue(defaultValue.size, "", 0), unit: this.getValidValue(defaultValue.unit, "px", 'px') }
+        let defaultVal = { size: this.getValidValue(defaultValue.size, ""), unit: this.getValidValue(defaultValue.unit, "px") }
 
-        return !ObjectCompare(defaultVal, currentValue);
+        return !this.Utils.compareTwoObjects({ obj1: defaultVal, obj2: currentValue });
     }
 }

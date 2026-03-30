@@ -14,6 +14,7 @@ abstract class Toolbar_Base
     private array $data = [];
     private static int $form_id = 0;
     protected $toolbar_settings = null;
+    private $root_containers = [];
 
     public function __construct()
     {
@@ -38,9 +39,9 @@ abstract class Toolbar_Base
     {
         wp_register_script(
             'dragwyb-editor-toolbars',
-            DRAGWYB_FORM_BUILDER_URL . 'assets/dist/toolbars/toolbars.js',
+            esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/toolbars/toolbars.js'),
             ['dragwyb-form-editor'],
-            DRAGWYB_FORM_BUILDER_VERSION,
+            esc_attr(DRAGWYB_FORM_BUILDER_VERSION),
             true
         );
 
@@ -80,7 +81,8 @@ abstract class Toolbar_Base
         if ($settings instanceof $setting_instance) {
             $settings->set_form_id($form_id);
             $conrols = $settings->render_controls();
-            $data['label'] = sprintf(esc_html__('%s Settings'), sanitize_text_field($this->get_name()));
+            // translators: %s is the name of the toolbar
+            $data['label'] = sprintf(esc_html__('%s Settings', 'dragwyb-form-builder'), sanitize_text_field($this->get_name()));
 
             if ($conrols && count($conrols) > 0) {
                 $data['controls'] = $conrols;
@@ -126,6 +128,13 @@ abstract class Toolbar_Base
     public function get_toolbar_data(): array
     {
         return $this->data;
+    }
+
+    public function get_root_containers(): array
+    {
+        return (is_array($this->root_containers) && count($this->root_containers) > 0)
+            ? $this->root_containers
+            : array();
     }
 
     /**

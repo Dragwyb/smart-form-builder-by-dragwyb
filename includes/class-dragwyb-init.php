@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes;
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 use Dragwyb\Form_Builder\Includes\Dragwyb_Form_Builder_Ajax;
-use Dragwyb\Form_Builder\Includes\Dragwyb_Form_Builder_Editor;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Pages;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Editor\Dragwyb_Builder_Editor;
@@ -31,17 +34,11 @@ class Dragwyb_Init
     {
         // Initialize admin
         if (is_admin()) {
-            // new Dragwyb_Form_Builder_Admin();
             new Dragwyb_Builder_Editor();
-            // new Dragwyb_Form_Builder_Editor();
             new Dragwyb_Pages();
-            // Initialize post type
             new Dragwyb_Post();
-            // Initialize AJAX handler
             new Dragwyb_Form_Builder_Ajax();
-            // Initialize Frontend Render
             Frontend_Render::instance();
-            // Initialize Frontend Preview
         }
 
         Form_Preview::instance();
@@ -49,6 +46,9 @@ class Dragwyb_Init
         Shortcode_Handler::instance();
 
         add_action('admin_init', [$this, 'initial_files']);
+
+        // Enqueue admin assets
+        add_action('admin_enqueue_scripts', [$this, 'admin_assets']);
     }
 
     public function initial_files()
@@ -64,9 +64,9 @@ class Dragwyb_Init
         // Enqueue React and dependencies
         wp_register_script(
             'dragwyb-form-core',
-            DRAGWYB_FORM_BUILDER_URL . 'assets/dist/core/core.js',
+            esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/core/core.js'),
             ['wp-element', 'wp-components', 'wp-i18n', 'jquery'],
-            DRAGWYB_FORM_BUILDER_VERSION,
+            esc_attr(DRAGWYB_FORM_BUILDER_VERSION),
             true
         );
 
@@ -89,6 +89,18 @@ class Dragwyb_Init
         $data = apply_filters('Dragwyb_Localize_Core_Script', $data);
         // Localize data
         wp_localize_script('dragwyb-form-core', 'DragwybBuilder', $data);
+    }
+
+    public function admin_assets()
+    {
+        // Enqueue admin styles
+        wp_enqueue_style(
+            'dragwyb-form-admin',
+            esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/css/admin.css'),
+            array(),
+            esc_attr(DRAGWYB_FORM_BUILDER_VERSION),
+            'all'
+        );
     }
 
     private function get_translations()

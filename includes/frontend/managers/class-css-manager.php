@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Frontend\Managers;
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 use Dragwyb\Form_Builder\Includes\Frontend\Frontend_Render;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
 
@@ -26,12 +30,21 @@ class CSS_Manager
 
     public function __construct()
     {
-        $upload_info = wp_upload_dir();
+        $dragwyb_upload_info = wp_upload_dir();
+
         // Create a specific folder for your plugin's CSS
-        $this->upload_dir = $upload_info['basedir'] . '/dragwyb-forms/css/';
-        $this->upload_url = $upload_info['baseurl'] . '/dragwyb-forms/css/';
+        $this->upload_dir = $dragwyb_upload_info['basedir'] . '/dragwyb-forms/css/';
+        $this->upload_url = $this->get_upload_dir_url($dragwyb_upload_info['baseurl']) . '/dragwyb-forms/css/';
 
         add_action('wp_ajax_dragwyb_clean_form_cache', [$this, 'clean_cache_request']);
+    }
+
+    /**
+     * Filter and return url based on ssl protocol form start
+     */
+    private function get_upload_dir_url(string $url): string
+    {
+        return is_ssl() ? preg_replace('/^http:/', 'https:', $url) : $url;
     }
 
     /**
@@ -69,44 +82,10 @@ class CSS_Manager
         if (file_exists($file_path)) {
             wp_enqueue_style(
                 'dragwyb-form-' . $form_id,
-                $file_url,
+                esc_url($file_url),
                 [],
                 filemtime($file_path) // Version based on file modification time
             );
-
-            $this->load_google_fonts($form_id);
-        }
-    }
-
-    private function load_google_fonts(int $form_id): void
-    {
-        $google_fonts = get_post_meta($form_id, 'dragwyb_form_google_fonts', true);
-
-        if ($google_fonts && !empty($google_fonts) && is_array($google_fonts)) {
-            $font_url = "https://fonts.googleapis.com/css2?";
-
-            $fontFamilies = [];
-
-            foreach ($google_fonts as $fontName) {
-                if (in_array($fontName, self::$google_fonts_cache)) {
-                    continue;
-                }
-
-                self::$google_fonts_cache[] = $fontName;
-
-                $fontName = str_replace(' ', '+', $fontName);
-
-                $fontFamilies[] = $fontName;
-            }
-
-
-            if (count($fontFamilies) < 1) {
-                return;
-            }
-
-            $font_url .= "family=" . implode('&family=', $fontFamilies);
-
-            wp_enqueue_style('dragwyb-form-google-fonts', 'https://fonts.googleapis.com/css2?' . $font_url, [], DRAGWYB_FORM_BUILDER_VERSION);
         }
     }
 
@@ -157,7 +136,7 @@ class CSS_Manager
 
         $nonce_key = $post_type . $form_id . '-clean-cache';
 
-        if (!isset($_POST['nonce']) || !wp_verify_nonce(wp_unslash($_POST['nonce']), $nonce_key)) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), $nonce_key)) {
             wp_send_json_error('Invalid nonce');
         }
 
@@ -178,7 +157,7 @@ class CSS_Manager
         $file_name = 'form-' . $id . '.css';
         $file_path = $this->upload_dir . $file_name;
         if (file_exists($file_path)) {
-            unlink($file_path);
+            wp_delete_file($file_path);
         }
 
         delete_post_meta($id, 'dragwyb_form_google_fonts');

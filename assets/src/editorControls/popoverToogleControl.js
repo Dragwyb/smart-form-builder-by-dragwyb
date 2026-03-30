@@ -3,27 +3,55 @@ export default class PopoverToggleControl extends DragwybEditor.editor.extends.C
         return "popover-toggle";
     }
 
+    constructor(props) {
+        super(props);
+
+        this.boundClickHandler = this.documentClickHandler.bind(this);
+    }
+
+    documentClickHandler(e) {
+        const parentToogle = e?.target?.closest(`#control-${this.id}`);
+        const ToogleEle = e?.target?.id === `control-${this.id}`;
+        const activePopOver = e?.target?.closest('.dragwyb-popover-wrapper');
+        const responsiveComponent = e?.target?.closest('.dragwyb-editor__responsive-devices');
+
+        const isEditorClick = e?.target?.closest('#dragwyb-form-builder-editor-wrapper');
+
+        if (parentToogle || ToogleEle || responsiveComponent || !isEditorClick) {
+            return;
+        }
+
+        if (activePopOver) {
+            if (activePopOver.classList.contains('active')) {
+                return;
+            }
+        }
+
+        document.removeEventListener('click', this.boundClickHandler);
+        this.Utils.updateactivePopoverKey({ activePopoverKey: false });
+    }
+
     bind() {
         if (!this.shouldRender()) return <></>;
 
-        const { settings, id } = this;
+        const { settings, id, Utils } = this;
         const { value } = this.state;
         const isActive = id === value;
         const labelInline = settings.label_inline || true;
 
         const clickHandler = (e) => {
+            document.removeEventListener('click', this.boundClickHandler);
             const ele = e.target;
-            const popoverWrp = jQuery(ele).closest('.dragwyb-setting-row').next('.dragwyb-popover');
+            const popoverWrp = jQuery(ele).closest('.dragwyb-setting-row').next('.dragwyb-popover-wrapper');
+            const popoverKey = popoverWrp.data('popover-key');
 
-            const status = popoverWrp.css('display') === 'none';
-
-            jQuery('.dragwyb-popover').hide();
-
-            if (status) {
-                popoverWrp.show();
-            } else {
-                popoverWrp.hide();
+            if (popoverWrp.hasClass('active')) {
+                Utils.updateactivePopoverKey({ activePopoverKey: false });
+                return;
             }
+
+            Utils.updateactivePopoverKey({ activePopoverKey: popoverKey });
+            document.addEventListener('click', this.boundClickHandler);
         }
 
         return (
@@ -35,16 +63,16 @@ export default class PopoverToggleControl extends DragwybEditor.editor.extends.C
                     aria-pressed={isActive}
                     onClick={clickHandler}
                 >
-                    {settings.label && (
-                        <label className="dragwyb-control__label">
-                            {settings.label}
-                        </label>
-                    )}
+                    <this.RenderLabel />
                     {settings.icon && (
                         <i className={`dragwyb-popover-toggle__icon ${settings.icon}`} aria-hidden="true" />
                     )}
                 </div>
             </div>
         );
+    }
+
+    onDestroy() {
+        document.removeEventListener('click', this.boundClickHandler);
     }
 }

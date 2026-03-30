@@ -5,8 +5,8 @@ import SelectControl from './selectControl';
 import TextareaControl from './textareaControl';
 import SwitcherControl from './switcherControl';
 import DimensionsControl from './dimensionsControl';
-import RadioControl from './RadioControl';
-import SliderControl from './SliderControl';
+import RadioControl from './radioControl';
+import SliderControl from './sliderControl';
 import NumberControl from './numberControl';
 import ColorControl from './colorControl';
 import TabsControl from './tabsControl';
@@ -18,6 +18,8 @@ import ChooseControl from './chooseControl';
 import UrlControl from './urlControl';
 import GalleryControl from './galleryControl';
 import IconControl from './iconControl';
+import HeadingControl from './headingControl';
+import RawHtmlControl from './rawHtmlControl';
 
 const initializeControls = () => {
     const defaultControls = {
@@ -27,6 +29,7 @@ const initializeControls = () => {
         'switcher': SwitcherControl,
         'dimensions': DimensionsControl,
         'radio': RadioControl,
+        'raw_html': RawHtmlControl,
         'slider': SliderControl,
         'number': NumberControl,
         'color': ColorControl,
@@ -38,7 +41,8 @@ const initializeControls = () => {
         'choose': ChooseControl,
         'url': UrlControl,
         'gallery': GalleryControl,
-        'icon': IconControl
+        'icon': IconControl,
+        'heading': HeadingControl
     }
 
     Object.keys(defaultControls).map(key => DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/ControlRender/' + key, () => { return defaultControls[key] }))

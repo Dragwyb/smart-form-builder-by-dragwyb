@@ -31,7 +31,7 @@ export default class ColorControl extends DragwybEditor.editor.extends.ControlBa
         this.pickr = Pickr.create({
             el: `.dragwyb-color__preview[data-id="${id}"]`,
             theme: 'monolith',
-            default: value || defaultColor,
+            default: value || defaultColor || '',
             comparison: false,
             appClass: 'dragwyb-color__pickr',
 
@@ -63,6 +63,10 @@ export default class ColorControl extends DragwybEditor.editor.extends.ControlBa
             this.pickr.hide();
         });
 
+        this.pickr.on('clear', () => {
+            this.resetControl();
+        })
+
         this.pickr.show();
     }
 
@@ -75,11 +79,11 @@ export default class ColorControl extends DragwybEditor.editor.extends.ControlBa
 
         return (
             <div className="dragwyb-control dragwyb-control--color" data-control="color" id={`control-${id}`}>
-
-                <label className="dragwyb-control__label" htmlFor={id}>
-                    {label}
-                    <Reset handler={this.resetControl.bind(this)} disabled={value === defaultColor} />
-                </label>
+                <this.RenderLabel
+                    attr={
+                        { htmlFor: id }
+                    }
+                />
                 <div className="dragwyb-color__wrapper" onClick={() => this.initPickr()}>
 
                     {/* Hidden input so your PHP receives value */}
@@ -113,6 +117,7 @@ export default class ColorControl extends DragwybEditor.editor.extends.ControlBa
         if (this.pickr) {
             this.pickr.setColor(value);
         }
-        this.updateControlHandler(id, value);
+
+        this.updateControlHandler(id, '');
     }
 }

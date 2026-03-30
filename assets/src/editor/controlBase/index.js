@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+import { Field } from "../Editor/Fields";
+import ResponsiveDevices from "../../editor/components/Common/ResponsiveDevices";
+import { Value } from "sass";
 
 class DragwybControlBase extends Component {
     #updateValue = () => { }
@@ -8,8 +11,11 @@ class DragwybControlBase extends Component {
         this.state = {
             value: props.value
         }
+        this.styleRender = props.styleRender || false;
+
         this.controlName = this.controlName() || props.settings.type;
         this.onInit();
+        this.RenderLabel = this.RenderLabel.bind(this);
         this.#renderContent(props);
     }
 
@@ -20,7 +26,36 @@ class DragwybControlBase extends Component {
     }
 
     componentDidMount = () => {
+        this.renderStyleSelector();
         this.onRender();
+    }
+
+    renderStyleSelector() {
+        const controlType = this.controlName;
+        const designControls = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/DesignControls', ['section', 'tabs']);
+
+        if (!designControls || !Array.isArray(designControls) || designControls.includes(controlType)) {
+            return;
+        }
+
+        if (!this?.settings?.selectors || !this?.settings?.selectors_placeholders || Object.keys(this?.settings?.selectors).length === 0 || Object.keys(this?.settings?.selectors_placeholders).length === 0) {
+            return;
+        }
+
+        if (!this.state.value && 0 !== this.state.value && !this.settings.default && this.settings.default !== 0) {
+            return;
+        }
+
+        const selectedSetting = this.selectedSetting && '' !== this.selectedSetting && this.selectedSetting !== this.selectorKey ? this.selectedSetting : false;
+        const uniqueSelector = `${this.selectorKey}${selectedSetting ? '_' + selectedSetting : ''}_${this.id}`;
+
+        const styleSelectorsData = { key: uniqueSelector, value: this.state.value || this.settings.default, selectors: this.settings.selectors, placeholders: this.getStyleSelectorPlaceholder(this.state.value || this.settings.default, this.settings.selectors_placeholders), toolbarType: this.selectorKey, itemId: this.selectedSetting, initialRender: true };
+
+        if (this?.settings?.responsive_control && this?.settings?.responsive_type) {
+            styleSelectorsData.responsiveType = this.settings.responsive_type;
+        }
+
+        this.Utils.updateStyleSelectors(styleSelectorsData);
     }
 
     componentDidUpdate = (prevProps, prevState) => {
@@ -54,6 +89,22 @@ class DragwybControlBase extends Component {
         return this.bind();
     }
 
+    RenderLabel({ label = null, className = '', attr = {}, children = null }) {
+        label = label || this.settings.label;
+
+        if (!label) {
+            return null;
+        }
+
+        return (
+            <label className={`dragwyb-control__label${className !== '' ? ' ' + className : ''}`} {...attr}>
+                {label}
+                {this.settings.responsive_control && this.settings.responsive_type && <ResponsiveDevices Utils={this.Utils} style='dropdown' />}
+                {children}
+            </label>
+        );
+    }
+
     #setDisplaySetting(props) {
         this.id = props.id;
         this.settings = props.settings;
@@ -66,16 +117,11 @@ class DragwybControlBase extends Component {
             props.resetControlEventLifting(this.resetControl.bind(this));
             props.valueChangedCheckLifting(this.valueChanged.bind(this));
         }
-
-        if (props.selectedSetting && '' !== props.selectedSetting) {
-            this.selectorKey += '_' + props.selectedSetting;
-        }
     }
 
     resetControl() {
-        const value = this.settings && [undefined, null].includes(this.settings.default) ? '' : this.settings.default;
-        this.setState({ value: value });
-        this.updateControls(this.id, value);
+        this.setState({ value: undefined });
+        this.updateControls(this.id, undefined);
     }
 
     valueChanged() {
@@ -107,8 +153,23 @@ class DragwybControlBase extends Component {
 
     #updateStyleSelector(key, value) {
         if (this.settings && this.settings.type && this.settings.selectors && this.settings.selectors_placeholders) {
-            const uniqueSelector = this.selectorKey + '_' + key;
-            this.Utils.updateStyleSelectors({ key: uniqueSelector, value: value, selectors: this.settings.selectors, placeholders: this.getStyleSelectorPlaceholder(value, this.settings.selectors_placeholders) });
+            const selectedSetting = this.selectedSetting && '' !== this.selectedSetting && this.selectedSetting !== this.selectorKey ? this.selectedSetting : false;
+            const uniqueSelector = `${this.selectorKey}${selectedSetting ? '_' + selectedSetting : ''}_${key}`;
+
+            if (value === undefined || value === null || value === '') {
+                const defaultValue = this?.settings?.default;
+
+                this.Utils.deleteStyleSelectors({ key: uniqueSelector });
+            } else {
+
+                const styleSelectorsData = { key: uniqueSelector, value: value, selectors: this.settings.selectors, placeholders: this.getStyleSelectorPlaceholder(value, this.settings.selectors_placeholders), toolbarType: this.selectorKey, itemId: this.selectedSetting };
+
+                if (this?.settings?.responsive_control && this?.settings?.responsive_type) {
+                    styleSelectorsData.responsiveType = this.settings.responsive_type;
+                }
+
+                this.Utils.updateStyleSelectors(styleSelectorsData);
+            }
         }
     }
 
@@ -116,7 +177,7 @@ class DragwybControlBase extends Component {
      * ✅ Shared method: Check if this control should renfder based on settings.type
      */
     shouldRender() {
-        return this.settings?.type === this.controlName && DragwybEditor.controlTypes[this.settings.type];
+        return (this.settings?.type === this.controlName && DragwybEditor.controlTypes[this.settings.type]) || this.styleRender;
     }
 
     getValidValue(...args) {

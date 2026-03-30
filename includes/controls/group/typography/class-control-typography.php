@@ -4,26 +4,16 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Controls\Group\Typography;
 
-use Dragwyb\Form_Builder\Includes\Controls\Controls\Control_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
-use Dragwyb\Form_Builder\Includes\Controls\Fonts\Fonts_Helper;
+use Dragwyb\Form_Builder\Includes\Controls\Group\Group_Control_Base;
 
-class Control_Typography extends Control_Base
+class Control_Typography extends Group_Control_Base
 {
-    private string $id = '';
-    private array $data = [];
-    private string $icon = '';
-
     protected function init(): void
     {
         $this->type = 'typography';
         $this->name = __('Typography', 'dragwyb-form-builder');
         $this->icon = 'fas fa-pen';
-    }
-
-    public function get_icon(): string
-    {
-        return $this->icon;
     }
 
     protected function register_settings(): array
@@ -159,7 +149,24 @@ class Control_Typography extends Control_Base
         ];
     }
 
-    // --- Sanitization Methods ---
+    protected function valid_default_settings(): array
+    {
+        return [
+            'font',
+            'size',
+            'weight',
+            'transform',
+            'style',
+            'decoration',
+            'line_height',
+            'letter_spacing',
+            'word_spacing',
+            'alignment',
+            'selector',
+            'conditions',
+            'prefix'
+        ];
+    }
 
     /**
      * Entry point for sanitizing the control settings array.
@@ -314,11 +321,7 @@ class Control_Typography extends Control_Base
 
     // --- Control Registration ---
 
-    final public function register_controls(string $id, array $data = []): void
-    {
-        $this->id = $this->string_sanitize($id);
-        $this->data = $data;
-    }
+
 
     /**
      * Merge defaults with user data, supporting the 'settings' nesting
@@ -326,6 +329,7 @@ class Control_Typography extends Control_Base
     private function get_display_settings(): array
     {
         $defaults = $this->default_setting();
+        $valid_settings = $this->valid_default_settings();
 
         // 1. Determine where the overrides are coming from
         // If 'settings' key exists and is an array, use it. Otherwise use root data.
@@ -335,15 +339,17 @@ class Control_Typography extends Control_Base
 
 
         // 2. Security: Only allow keys that exist in our defaults
-        $valid_user_data = array_intersect_key($user_data, $defaults);
+        foreach ($valid_settings as $key) {
+            if (!array_key_exists($key, $user_data)) {
+                continue;
+            }
 
-        foreach ($valid_user_data as $key => $value) {
-            if (is_array($value) && in_array($key, ['range', 'units'])) {
+            if (is_array($user_data[$key]) && in_array($key, ['range', 'units'])) {
                 $defaults[$key] = $user_data[$key];
-            } else if (is_array($value)) {
-                $this->merge_array_settings($value, $user_data[$key], $defaults[$key]);
+            } else if (is_array($user_data[$key])) {
+                $this->merge_array_settings($user_data[$key], $user_data[$key], $defaults[$key]);
             } else {
-                $defaults[$key] = $value;
+                $defaults[$key] = $user_data[$key];
             }
         }
 
@@ -363,91 +369,94 @@ class Control_Typography extends Control_Base
         }
     }
 
-    final public function get_controls(): array
+    protected function register_group_controls(): void
     {
         $settings = $this->get_display_settings();
+
         $id = $this->string_sanitize($this->id);
         $selector = isset($settings['selector']) && !empty($settings['selector']) ? $settings['selector'] : false;
-        $controls = [];
+        $prefix = isset($settings['prefix']) && !empty($settings['prefix']) ? $settings['prefix'] : 'form';
 
         $selectors = [
-            'family' => array('property' => '--dragwyb-form-typography-family', 'placeholder' => '{{VALUE}}'),
-            'size' => array('property' => '--dragwyb-form-typography-size', 'placeholder' => '{{VALUE}}{{UNIT}}'),
-            'weight' => array('property' => '--dragwyb-form-typography-wt', 'placeholder' => '{{VALUE}}'),
-            'transform' => array('property' => '--dragwyb-form-typography-ts', 'placeholder' => '{{VALUE}}'),
-            'style' => array('property' => '--dragwyb-form-typography-st', 'placeholder' => '{{VALUE}}'),
-            'decoration' => array('property' => '--dragwyb-form-typography-dt', 'placeholder' => '{{VALUE}}'),
-            'line_height' => array('property' => '--dragwyb-form-typography-lh', 'placeholder' => '{{VALUE}}{{UNIT}}'),
-            'letter_spacing' => array('property' => '--dragwyb-form-typography-ls', 'placeholder' => '{{VALUE}}{{UNIT}}'),
-            'word_spacing' => array('property' => '--dragwyb-form-typography-ws', 'placeholder' => '{{VALUE}}{{UNIT}}'),
-            'align' => array('property' => '--dragwyb-form-typography-align', 'placeholder' => '{{VALUE}}'),
+            'family' => array('--dragwyb-' . $prefix . '-typography-family' => '{{VALUE}}'),
+            'size' => array('--dragwyb-' . $prefix . '-typography-size' => '{{VALUE}}{{UNIT}}'),
+            'weight' => array('--dragwyb-' . $prefix . '-typography-wt' => '{{VALUE}}'),
+            'transform' => array('--dragwyb-' . $prefix . '-typography-ts' => '{{VALUE}}'),
+            'style' => array('--dragwyb-' . $prefix . '-typography-st' => '{{VALUE}}'),
+            'decoration' => array('--dragwyb-' . $prefix . '-typography-dt' => '{{VALUE}}'),
+            'line_height' => array('--dragwyb-' . $prefix . '-typography-lh' => '{{VALUE}}{{UNIT}}'),
+            'letter_spacing' => array('--dragwyb-' . $prefix . '-typography-ls' => '{{VALUE}}{{UNIT}}'),
+            'word_spacing' => array('--dragwyb-' . $prefix . '-typography-ws' => '{{VALUE}}{{UNIT}}'),
+            'alignment' => array('--dragwyb-' . $prefix . '-typography-align' => '{{VALUE}}'),
         ];
-
-        // 1. Font Family Control
-        $font_control_args = [
-            'type'    => Controls::FONTS,
-            'label'   => __('Typography Family', 'dragwyb-form-builder'),
-            'default' => 'Default',
-        ];
-
-        // Access nested 'font' settings safely
-        if (!empty($settings['font']['exclude_fonts'])) $font_control_args['exclude_fonts'] = $settings['font']['exclude_fonts'];
-        if (!empty($settings['font']['fonts_group']))   $font_control_args['groups']        = $settings['font']['fonts_group'];
-        if (!empty($settings['conditions']))            $font_control_args['conditions']    = $settings['conditions'];
-
-        $controls[$id . '_family'] = $font_control_args;
 
         // 2. Control Map
         $map = [
-            'size'           => ['type' => Controls::SLIDER, 'label' => __('Font Size', 'dragwyb-form-builder')],
+            'family'         => ['type' => Controls::FONTS, 'label' => __('Family', 'dragwyb-form-builder'), 'default' => 'Default'],
+            'size'           => ['type' => Controls::SLIDER, 'label' => __('Font Size', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => 0, 'max' => 100, 'step' => 1]], 'units' => ['px'], 'responsive' => true],
             'weight'         => ['type' => Controls::SELECT, 'label' => __('Weight', 'dragwyb-form-builder'), 'label_inline' => true],
             'transform'      => ['type' => Controls::SELECT, 'label' => __('Transform', 'dragwyb-form-builder'), 'label_inline' => true],
             'style'          => ['type' => Controls::SELECT, 'label' => __('Style', 'dragwyb-form-builder'), 'label_inline' => true],
             'decoration'     => ['type' => Controls::SELECT, 'label' => __('Decoration', 'dragwyb-form-builder'), 'label_inline' => true],
-            'line_height'    => ['type' => Controls::SLIDER, 'label' => __('Line Height', 'dragwyb-form-builder')],
-            'letter_spacing' => ['type' => Controls::SLIDER, 'label' => __('Letter Spacing', 'dragwyb-form-builder')],
-            'word_spacing'   => ['type' => Controls::SLIDER, 'label' => __('Word Spacing', 'dragwyb-form-builder')],
+            'line_height'    => ['type' => Controls::SLIDER, 'label' => __('Line Height', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => 0, 'max' => 100, 'step' => 1]], 'responsive' => true],
+            'letter_spacing' => ['type' => Controls::SLIDER, 'label' => __('Letter Spacing', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => 0, 'max' => 100, 'step' => 1]], 'units' => ['px'], 'responsive' => true],
+            'word_spacing'   => ['type' => Controls::SLIDER, 'label' => __('Word Spacing', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => 0, 'max' => 100, 'step' => 1]], 'units' => ['px'], 'responsive' => true],
             'alignment'      => ['type' => Controls::CHOOSE, 'label' => __('Alignment', 'dragwyb-form-builder'), 'label_inline' => true],
         ];
 
+        // Access nested 'font' settings safely
+        if (!empty($settings['font']['exclude_fonts'])) $map['family']['exclude_fonts'] = $settings['font']['exclude_fonts'];
+        if (!empty($settings['font']['fonts_group']))   $map['family']['groups']        = $settings['font']['fonts_group'];
+
         // 3. Generate Controls
         foreach ($map as $key => $meta) {
-            if (!isset($settings[$key])) continue;
+            $config = $key === 'family' ? $settings['font'] : (isset($settings[$key]) ? $settings[$key] : array());
 
-            $config = $settings[$key];
+            $control_args = array_filter($meta, function ($key, $value) {
+                return $key !== 'responsive';
+            }, ARRAY_FILTER_USE_BOTH);
 
-            $control_args = [
-                'type'    => $meta['type'],
-                'label'   => $meta['label'],
-                'default' => $config['default'] ?? '',
-            ];
+            if (isset($config['default'])) {
+                $control_args['default'] = $config['default'];
+            }
 
-            if (isset($meta['label_inline'])) {
-                $control_args['label_inline'] = $meta['label_inline'];
+            if ($settings['conditions'] && !empty($settings['conditions'])) {
+                $control_args['conditions'] = $settings['conditions'];
             }
 
             if ($meta['type'] === Controls::SLIDER) {
-                $control_args['range'] = $config['range'] ?? [];
-                $control_args['units'] = $config['units'] ?? ['px'];
+                if (isset($config['range'])) {
+                    $control_args['range'] = $config['range'];
+                }
+                if (isset($config['units'])) {
+                    $control_args['units'] = $config['units'];
+                }
             } elseif ($meta['type'] === Controls::SELECT) {
-                $control_args['options'] = $config['options'] ?? [];
+                if (isset($config['options'])) {
+                    $control_args['options'] = $config['options'];
+                }
             } elseif ($meta['type'] === Controls::CHOOSE) {
-                $control_args['options'] = $config['options'] ?? [];
-            }
-
-            $controls[$id . '_' . $key] = $control_args;
-        }
-
-        if ($selector) {
-            foreach ($selectors as $key => $style) {
-                if (isset($controls[$id . '_' . $key])) {
-                    $controls[$id . '_' . $key]['selectors'] = [
-                        $selector => $style['property'] . ':' . $style['placeholder'],
-                    ];
+                if (isset($config['options'])) {
+                    $control_args['options'] = $config['options'];
                 }
             }
-        }
 
-        return $controls;
+            if (isset($selectors[$key]) && is_array($selectors[$key])) {
+                $selector_style = '';
+                foreach ($selectors[$key] as $selector_key => $selector_value) {
+                    $selector_style .= $selector_key . ':' . $selector_value . ';';
+                }
+
+                if (!empty($selector_style)) {
+                    $control_args['selectors'][$selector] = $selector_style;
+                }
+            }
+
+            if (isset($meta['responsive']) && $meta['responsive']) {
+                $this->add_responsive_control($id . '_' . $key, $control_args);
+            } else {
+                $this->add_control($id . '_' . $key, $control_args);
+            }
+        }
     }
 }

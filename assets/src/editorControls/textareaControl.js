@@ -7,15 +7,15 @@ export default class TextareaControl extends DragwybEditor.editor.extends.Contro
         if (!this.shouldRender()) return <></>;
 
         const { settings, id } = this;
-        const { value } = this.state;
+        const { value = settings.default } = this.state;
 
         return (
             <div className="dragwyb-control dragwyb-control--textarea" data-control="textarea" id={`control-${id}`}>
-                {settings.label && (
-                    <label className="dragwyb-control__label" htmlFor={id}>
-                        {settings.label}
-                    </label>
-                )}
+                <this.RenderLabel
+                    attr={
+                        { htmlFor: id }
+                    }
+                />
                 <textarea
                     id={id}
                     name={id}

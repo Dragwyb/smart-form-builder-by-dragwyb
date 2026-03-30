@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector, useStore } from "react-redux";
-import { updatePopoverControls, resetPopoverControls, updatePopoverInitStatus } from "../store/actions";
 import shouldRenderField from './shouldRenderField';
 import DragwybControlBase from '../controlBase'
 import { Utils as Helper } from '../components/Utils';
@@ -13,11 +12,15 @@ const RenderControl = ({
     selectedToolbar,
     controlKey,
     settings,
+    toolbarSettings,
     fieldValue,
     handleChange,
     defautlActiveSection,
     defautlActiveTab,
+    setResetControlEvent = () => { },
+    setValueChangedCheck = () => { }
 }) => {
+    const [isStyleSelectorAdd, setIsStyleSelectorAdd] = useState(false);
     // 🔹 Validate settings early
     if (!settings || typeof settings !== "object") {
         console.error(`[RenderControl] Invalid settings for key: ${controlKey}`);
@@ -44,45 +47,13 @@ const RenderControl = ({
     // 🔹 Merge values: section + field-level
     const shouldRenderSettings = { ...fieldValue, ...getSectionSettings() };
 
-    const [shouldRender, setShouldRender] = useState(shouldRenderField(settings, shouldRenderSettings))
-    const [resetControlEvent, setResetControlEvent] = useState(null);
-    const [valueChangedCheck, setValueChangedCheck] = useState(false);
+    const [shouldRender, setShouldRender] = useState(shouldRenderField(settings, shouldRenderSettings, toolbarSettings?.controls))
+
+
     const dispatch = useDispatch();
     const store = useStore();
     const state = store.getState();
     const Utils = Helper(state, dispatch);
-
-    const conditionUpdateHandler = (value) => {
-        if (shouldRender !== value) {
-            setShouldRender(value);
-        }
-    }
-
-
-    if (!shouldRender) {
-        return <ControlsConditions
-            controlKey={controlKey}
-            conditions={settings.conditions}
-            updateHandler={conditionUpdateHandler}
-        />;
-    }
-
-    // 🔹 Handle "section" & "tabs" special cases
-    if (settings.type === "section") {
-        defautlActiveSection(controlKey, settings, settings.conditions);
-    }
-
-    if (settings.type === "tabs") {
-        defautlActiveTab(controlKey, settings);
-    }
-
-    const selectedSettings = { ...fieldValue, ...getSectionSettings() };
-
-    // 🔹 Resolve current value
-    let fieldVal = selectedSettings[controlKey];
-    if (settings.type === "section" && !fieldVal) {
-        fieldVal = selectedSettings["section"];
-    }
 
     // 🔹 Control lookup via filter
     let Control = DragwybBuilder.Hooks.applyFilter(
@@ -104,11 +75,67 @@ const RenderControl = ({
     }
 
     const resetControlEventLifting = (event) => {
-        setResetControlEvent(() => event);
+        setResetControlEvent(controlKey, event);
     }
 
     const valueChangedCheckLifting = (event) => {
-        setValueChangedCheck(() => event);
+        setValueChangedCheck(controlKey, event);
+    }
+
+    const conditionUpdateHandler = (value, renderStyleSelector = true) => {
+        if (shouldRender !== value) {
+            setShouldRender(value);
+
+            if (!value && settings.selectors && !renderStyleSelector) {
+                const selectedSetting = selectedTab && '' !== selectedTab && selectedTab !== selectedToolbar ? selectedTab : false;
+                const uniqueSelector = `${selectedToolbar}${selectedSetting ? '_' + selectedSetting : ''}_${controlKey}`;
+
+                Utils.deleteStyleSelectors({ key: uniqueSelector, responsiveType: settings.responsive_type });
+            }
+        } else {
+            if (value && settings.selectors && renderStyleSelector && !isStyleSelectorAdd) {
+                setIsStyleSelectorAdd(true);
+                <Control
+                    key={selectedTab}
+                    id={controlKey}
+                    toolbarId={selectedToolbar}
+                    selectedSetting={selectedTab}
+                    settings={settings}
+                    value={shouldRenderSettings[controlKey]}
+                    handleChange={handleChange}
+                    Utils={Utils}
+                    resetControlEventLifting={resetControlEventLifting}
+                    valueChangedCheckLifting={valueChangedCheckLifting}
+                />
+            }
+        }
+    }
+
+    if (!shouldRender) {
+        return <ControlsConditions
+            controlKey={controlKey}
+            conditions={settings.conditions}
+            updateHandler={conditionUpdateHandler}
+            isResponsiveControl={settings.responsive_control}
+            responsiveType={settings.responsive_type}
+        />;
+    }
+
+    // 🔹 Handle "section" & "tabs" special cases
+    if (settings.type === "section") {
+        defautlActiveSection(controlKey, settings, settings.conditions);
+    }
+
+    if (settings.type === "tabs") {
+        defautlActiveTab(controlKey, settings);
+    }
+
+    const selectedSettings = { ...fieldValue, ...getSectionSettings() };
+
+    // 🔹 Resolve current value
+    let fieldVal = selectedSettings[controlKey];
+    if (settings.type === "section" && !fieldVal) {
+        fieldVal = selectedSettings["section"];
     }
 
     // 🔹 Build control element
@@ -117,11 +144,13 @@ const RenderControl = ({
             <ControlsConditions
                 controlKey={controlKey}
                 conditions={settings.conditions}
+                responsiveType={settings.responsive_type}
+                isResponsiveControl={settings.responsive_control}
                 updateHandler={conditionUpdateHandler}
             />
             <div key={controlKey} className="dragwyb-setting-row" data-type={settings.type}>
                 <Control
-                    key={controlKey}
+                    key={selectedTab}
                     id={controlKey}
                     toolbarId={selectedToolbar}
                     selectedSetting={selectedTab}
@@ -135,67 +164,6 @@ const RenderControl = ({
             </div>
         </>
     );
-
-    if (settings.popover) {
-        const popOverStatus = settings.popover;
-
-        if (popOverStatus.end === true) {
-            const PopoverControls = Utils.PopoverControls();
-            const PopoverTitle = popOverStatus.title;
-
-            const controlElements = [];
-            const resetControlEvents = [];
-            const valueChanged = [];
-            let popoverUpdate = false;
-
-            dispatch(resetPopoverControls());
-            dispatch(updatePopoverInitStatus(false));
-
-            if (!PopoverControls && typeof PopoverControls !== 'object') {
-                return;
-            }
-
-            PopoverControls[controlKey] = { control: ControlElement, resetControlEvent, valueChangedCheck };
-
-            Object.values(PopoverControls).forEach((control) => {
-                controlElements.push(control.control);
-                resetControlEvents.push(control.resetControlEvent);
-                valueChanged.push(control.valueChangedCheck);
-            });
-
-            valueChanged.forEach((check) => {
-                if (popoverUpdate === true) {
-                    return;
-                }
-
-                if (typeof check === 'function') {
-                    popoverUpdate = check();
-                }
-            });
-
-            const resetControlsValues = () => {
-                resetControlEvents.forEach((event) => {
-                    if (typeof event === 'function') {
-                        event();
-                    }
-                });
-            }
-
-            return <div className="dragwyb-popover" style={{ display: "none" }}>
-                {PopoverTitle && <div className="dragwyb-popover__title">
-                    {PopoverTitle}
-                    <span onClick={resetControlsValues}>
-                        <FaUndo size={12} title={__('Reset to Default', 'dragwyb-form-builder')} />
-                    </span>
-                </div>}
-                <div className="dragwyb-popover__container">{controlElements}</div>
-            </div>;
-        };
-
-        dispatch(updatePopoverControls(controlKey, ControlElement, resetControlEvent, valueChangedCheck, popOverStatus))
-
-        return null;
-    }
 
     return ControlElement;
 };

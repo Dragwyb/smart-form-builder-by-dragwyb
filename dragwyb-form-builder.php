@@ -5,8 +5,10 @@
  * Description: Drag and drop form builder for WordPress
  * Version: 1.0.0
  * Author: Dragwyb
- * Author URI:  dragwyb.com
+ * Author URI:  https://dragwyb.com/
  * Text Domain: dragwyb-form-builder
+ * License: GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
 
 declare(strict_types=1);
@@ -74,7 +76,6 @@ final class Dragwyb_Form_Builder
     private function init_hooks(): void
     {
         $this->init_plugin();
-        add_action('init', [$this, 'load_textdomain']);
     }
 
     /**
@@ -85,18 +86,6 @@ final class Dragwyb_Form_Builder
 
         $dragwyb = Dragwyb_Init::instance();
         $dragwyb->init();
-    }
-
-    /**
-     * Load plugin textdomain
-     */
-    public function load_textdomain(): void
-    {
-        load_plugin_textdomain(
-            'dragwyb-form-builder',
-            false,
-            dirname(plugin_basename(__FILE__)) . '/languages'
-        );
     }
 }
 

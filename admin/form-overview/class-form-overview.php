@@ -43,7 +43,7 @@ if (!class_exists('Form_Overview')) {
 
         private function enqueue_admin_assets(): void
         {
-            wp_enqueue_script(DRAGWYB_PREFIX . '-overview-assets', esc_url(DRAGWYB_FORM_BUILDER_URL . '/assets/js/dragwyb-oveview-assets.js'), array('jquery'), DRAGWYB_FORM_BUILDER_VERSION, true);
+            wp_enqueue_script(DRAGWYB_PREFIX . '-overview-assets', esc_url(DRAGWYB_FORM_BUILDER_URL . '/assets/js/dragwyb-oveview-assets.js'), array('jquery'), esc_attr(DRAGWYB_FORM_BUILDER_VERSION), true);
 
             wp_localize_script(DRAGWYB_PREFIX . '-overview-assets', 'DragwybOverviewPage', array(
                 'ajaxurl' => admin_url('admin-ajax.php'),
@@ -67,7 +67,8 @@ if (!class_exists('Form_Overview')) {
             <div class="wrap">
                 <h1 class="wp-heading-inline"><?php esc_html_e('Form Builder Overview', 'dragwyb-form-builder'); ?></h1>
                 <ul class="subsubsub">
-                    <?php echo implode(' | ', $form_table->get_views()); ?>
+                    <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WP_List_Table::get_views() returns safe HTML with proper escaping
+                    echo implode(' | ', $form_table->get_views()); ?>
                 </ul>
                 <form method="get">
                     <!-- Necessary hidden fields for WP_List_Table -->

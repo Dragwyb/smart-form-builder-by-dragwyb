@@ -1,7 +1,7 @@
 
 import React, { useRef, useEffect } from "react";
-import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updateFieldValues, updateToolbarSettings, updateSectionSettings, updateStyleSelectors as updateStyleSelectorsAction } from "../store/actions";
-import PropTypes from "prop-types";
+import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updateFieldValues, updateToolbarSettings, updateSectionSettings, updateStyleSelectors as updateStyleSelectorsAction, deleteStyleSelectors as deleteStyleSelectorsAction, updateResponsiveType as updateResponsiveTypeAction, updateactivePopoverKey as updateactivePopoverKeyAction, updateActiveRootContainer as updateActiveRootContainerAction, resetActiveRootContainer as resetActiveRootContainerAction } from "../store/actions";
+import PropTypes, { number } from "prop-types";
 import { Placeholder } from "@wordpress/components";
 
 /**
@@ -33,18 +33,94 @@ export const generateId = ({ state, dispatch }) => {
     return id;
 };
 
+export const updateResponsiveType = ({ state, dispatch, responsiveType }) => {
+    try {
+        const validatorResponsiveType = validateProp({
+            key: "responsiveType",
+            value: responsiveType, // invalid
+            types: [number],
+            required: true,
+            functionName: "updateResponsiveType"
+        });
+
+        dispatch(updateResponsiveTypeAction(responsiveType));
+    } catch (e) {
+        console.error("Validation failed:", e.message);
+    }
+}
+
+export const updateactivePopoverKey = ({ dispatch, activePopoverKey }) => {
+    try {
+        const validatorPopoverControls = validateProp({
+            key: "activePopoverKey",
+            value: activePopoverKey, // invalid
+            types: ["string", "bool", "null"],
+            required: true,
+            functionName: "updateactivePopoverKey"
+        });
+
+        dispatch(updateactivePopoverKeyAction(activePopoverKey));
+    } catch (e) {
+        console.error("Validation failed:", e.message);
+    }
+}
+
 export const PopoverControls = ({ state, dispatch }) => {
     return state.popoverControls;
 }
 
-export const AddField = ({ type, dispatch, Utils, index = null }) => {
-    const field = {
+export const updateActiveRootContainer = ({ state, dispatch, rootContainerId, activeColumnIndex = null }) => {
+    try {
+        const validatorRootContainerId = validateProp({
+            key: "rootContainerId",
+            value: rootContainerId, // invalid
+            types: ["string"],
+            required: true,
+            functionName: "updateActiveRootContainer"
+        });
+        if (null !== activeColumnIndex) {
+            const validatorActiveColumnIndex = validateProp({
+                key: "activeColumnIndex",
+                value: activeColumnIndex, // invalid
+                types: ["number"],
+                required: false,
+                functionName: "updateActiveRootContainer"
+            });
+        }
+
+        dispatch(updateActiveRootContainerAction(rootContainerId, activeColumnIndex));
+    } catch (e) {
+        console.error("Validation failed:", e.message);
+    }
+}
+
+export const resetActiveRootContainer = ({ state, dispatch }) => {
+    const activeRootContainer = state.activeRootContainer;
+
+    if (!activeRootContainer || (!activeRootContainer.rootContainerId && !activeRootContainer.activeColumnIndex)) {
+        return;
+    }
+
+    dispatch(resetActiveRootContainerAction());
+}
+
+export const AddField = ({ state, type, dispatch, Utils, index = null, parentContainer = null, attributes = {} }) => {
+    let field = {
         _id: Utils.generateId(),
         type,
     };
+    const activeRootContainer = parentContainer || state.activeRootContainer;
 
-    if (DragwybEditor.fields.fields[type] && DragwybEditor.fields.fields[type].controls) {
-        const fieldControls = DragwybEditor.fields.fields[type].controls;
+    const existingFields = state?.form?.fields || {};
+
+    const fieldData = DragwybEditor.fields.fields[type] || {};
+
+    if (fieldData.is_root_container === true) {
+        field.is_root_container = true;
+    }
+
+    if (fieldData.controls) {
+        const fieldControls = fieldData.controls;
         field.attributes = {};
         Object.keys(fieldControls).forEach(id => {
             if (!['tabs', 'tab', 'section'].includes(fieldControls[id].type)) {
@@ -56,11 +132,101 @@ export const AddField = ({ type, dispatch, Utils, index = null }) => {
                 field.attributes[id] = defaultValue;
             }
         })
+
+        field.attributes = { ...field.attributes, ...attributes };
+
+        if (fieldControls.field_id) {
+            field.attributes.field_id = `field_${field._id}`;
+        }
     }
+
+    if (!fieldData.is_root_container) {
+        if (activeRootContainer) {
+            const activeParentId = activeRootContainer.rootContainerId;
+            const parentField = existingFields[activeParentId];
+            const totalColumns = parentField.attributes.columns;
+            const totalChildre = parentField.children?.length || 0;
+            const lastIndex = Math.max(totalColumns, totalChildre);
+
+            index = activeRootContainer.activeColumnIndex;
+            field.parentId = activeParentId;
+
+            let isResetActiveRootContainer = true;
+
+            if (lastIndex && lastIndex > (index + 1)) {
+                isResetActiveRootContainer = false;
+            }
+
+            if (isResetActiveRootContainer) {
+                Utils.resetActiveRootContainer();
+            } else {
+                let activeColumnIndex = index + 1;
+
+                if (parentField?.children) {
+                    for (let i = activeColumnIndex; i < lastIndex; i++) {
+                        if (!parentField.children[i]) {
+                            activeColumnIndex = i;
+                            break;
+                        } else if (parentField.children[i]) {
+                            activeColumnIndex = null;
+                        }
+                    }
+                }
+
+                if (activeColumnIndex !== null) {
+                    Utils.updateActiveRootContainer({ rootContainerId: activeParentId, activeColumnIndex: activeColumnIndex });
+                } else {
+                    Utils.resetActiveRootContainer();
+                }
+            }
+        } else {
+            const buttonRootContainer = state.form.rootContainers[state.form.rootContainers.length - 1];
+            const secondLastRootContainer = state.form.rootContainers[state.form.rootContainers.length - 2];
+
+            let parentId = false;
+
+            if (buttonRootContainer && existingFields[buttonRootContainer].is_root_container === true && (!existingFields[buttonRootContainer].children || existingFields[buttonRootContainer].children.length < 1)) {
+                parentId = buttonRootContainer;
+            } else if (secondLastRootContainer && existingFields[secondLastRootContainer].is_root_container === true && (!existingFields[secondLastRootContainer].children || existingFields[secondLastRootContainer].children.length < 1)) {
+                parentId = secondLastRootContainer;
+            }
+
+            if (!parentId) {
+                const rootContainerId = AddField({ state, type: 'row', dispatch, Utils, index: index });
+                field.parentId = rootContainerId['_id'];
+            } else {
+                Utils.updateActiveRootContainer({ rootContainerId: parentId });
+                field.parentId = parentId;
+            }
+
+            index = 0;
+        }
+    }
+
+    field = DragwybBuilder.Hooks.applyFilter(`Dragwyb/Editor/AddField/${type}`, field, Utils);
 
     dispatch(addField({ field, index }));
     setSelectedSettingId({ dispatch, value: field._id });
     setActiveTab({ dispatch, value: 'fields' });
+
+    if (!state.form.hasOwnProperty('fields')) {
+        state.form.fields = {}
+    }
+
+    if (Object.keys(state.form.fields).length < 1) {
+        state.form.fields[field._id] = field;
+    }
+
+    if (Object.keys(existingFields).length === 0 && type !== 'button') {
+        const buttonAddStatus = DragwybEditor?.formData?.addSubmitButton;
+
+        if (buttonAddStatus === true) {
+            AddField({ state, type: 'button', dispatch, Utils, attributes: { text: 'Submit', field_id: 'submit' } });
+            delete DragwybEditor.formData.addSubmitButton;
+
+            setSelectedSettingId({ dispatch, value: field._id });
+        }
+    }
 
     return field;
 };
@@ -167,7 +333,8 @@ export const updateSectionSetting = ({ dispatch, key, value }) => {
     }
 }
 
-export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, placeholders, currentItem }) => {
+export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, placeholders, toolbarType, itemId, currentItemId, responsiveType = 'desktop', initialRender = false }) => {
+
     try {
         const validatorKey = validateProp({
             key: "key",
@@ -198,12 +365,41 @@ export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, p
             functionName: "updateStyleSelectors"
         });
 
-        const wrapperId = state.form.id;
+        const existSelectors = state.styleSelectors;
+        const formId = state.form.id;
+
+        if (initialRender && existSelectors[key]) {
+            return;
+        }
 
         const cssCache = {};
+
+        if (Object.keys(placeholders).length === 0) {
+            dispatch(deleteStyleSelectorsAction(key, responsiveType))
+            return;
+        }
+
         Object.keys(selectors).forEach((selector) => {
+            let wrapperId = formId;
+
+            if (toolbarType === 'fields' && itemId && itemId !== '') {
+                const fieldData = state.form.fields[itemId];
+
+                if (fieldData.type === 'row') {
+                    wrapperId += ' #dragwyb-row-' + itemId;
+                } else {
+                    wrapperId += ' #dragwyb-field-wrapper-' + itemId;
+                }
+            }
+
             const targetSelector = selector.replaceAll("{{WRAPPER}}", `#dragwyb-form-wrapper-${wrapperId}`);
+
             cssCache[targetSelector] = selectors[selector];
+
+            if (currentItemId && '' !== currentItemId && targetSelector.includes('{{CURRENT_ITEM}}')) {
+                cssCache[targetSelector] = cssCache[targetSelector].replaceAll('{{CURRENT_ITEM}}', currentItemId);
+            }
+
 
             Object.keys(placeholders).forEach((placeholder) => {
                 if (placeholder === 'VALUE' && placeholders[placeholder] === true && ['string', 'number', 'BigInt'].includes(typeof value)) {
@@ -212,12 +408,119 @@ export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, p
                     cssCache[targetSelector] = cssCache[targetSelector].replaceAll("{{" + placeholder + "}}", value[placeholders[placeholder]]);
                 }
             });
+
+            // Remove any remaining placeholders and their surrounding text until space or special characters
+            Object.keys(cssCache).forEach((selector) => {
+                if (cssCache[selector].includes('{{') && cssCache[selector].includes('}}')) {
+                    let cleanSelectors = cssCache[selector].replace(/[^\s:;"'#,()]*\{\{[A-Z0-9_]+\}\}[^\s:;"'#,()]*/g, '');
+
+                    cleanSelectors = cleanSelectors.split(';');
+
+                    let newCleanSelectors = [];
+
+                    cleanSelectors.forEach((cleanSelector) => {
+                        const splitValue = cleanSelector.split(':');
+                        let valueExist = false;
+
+                        if (splitValue && splitValue[1]) {
+                            if (splitValue[1].trim() !== '') {
+                                valueExist = splitValue.join(':');
+                            } else {
+                                valueExist = false;
+                            }
+                        }
+                        if (valueExist && valueExist.trim() !== '') {
+                            newCleanSelectors.push(valueExist);
+                        }
+                    });
+
+                    if (newCleanSelectors.length > 0) {
+                        cssCache[selector] = newCleanSelectors.join(';');
+                    } else {
+                        delete cssCache[selector];
+                    }
+                }
+            });
         });
 
-        dispatch(updateStyleSelectorsAction(key, cssCache))
+        dispatch(updateStyleSelectorsAction(key, cssCache, responsiveType))
     } catch (e) {
         console.error("Validation failed:", e.message);
     }
+}
+
+export const duplicateStyleSelectors = ({ cloneId, currentId, state, dispatch }) => {
+    try {
+        validateProp({
+            key: "cloneId",
+            value: cloneId, // invalid
+            types: ["string"],
+            required: true,
+            functionName: "duplicateStyleSelectors"
+        });
+
+        validateProp({
+            key: "currentId",
+            value: currentId, // invalid
+            types: ["string"],
+            required: true,
+            functionName: "duplicateStyleSelectors"
+        });
+
+        const refStyles = { ...state.styleSelectors };
+
+        Object.keys(refStyles).forEach((key) => {
+            if (key.startsWith(`fields_${currentId}`)) {
+                let newKey = key.replaceAll(currentId, cloneId);
+                let newStyleSelectors = JSON.stringify(refStyles[key]);
+                newStyleSelectors = newStyleSelectors.replaceAll(currentId, cloneId);
+                dispatch(updateStyleSelectorsAction(newKey, JSON.parse(newStyleSelectors)))
+            }
+        });
+
+        const responsiveDevices = ['desktop', 'tablet', 'mobile'];
+
+        responsiveDevices.forEach((device) => {
+            if (refStyles[device]) {
+                Object.keys(refStyles[device]).forEach((key) => {
+                    if (key.startsWith(`fields_${currentId}`)) {
+                        let newKey = key.replaceAll(currentId, cloneId);
+                        let newStyleSelectors = JSON.stringify(refStyles[device][key]);
+                        newStyleSelectors = newStyleSelectors.replaceAll(currentId, cloneId);
+                        dispatch(updateStyleSelectorsAction(newKey, JSON.parse(newStyleSelectors), device))
+                    }
+                });
+            }
+        });
+    } catch (e) {
+        console.error("Validation failed:", e.message);
+    }
+}
+
+export const deleteStyleSelectors = ({ dispatch, state, key, responsiveType = 'desktop' }) => {
+    try {
+        validateProp({
+            key: "key",
+            value: key, // invalid
+            types: ["string"],
+            required: true,
+            functionName: "deleteStyleSelectors"
+        });
+        dispatch(deleteStyleSelectorsAction(key, responsiveType))
+    } catch (e) {
+        console.error("Validation failed:", e.message);
+    }
+}
+
+export const compareTwoObjects = ({ obj1, obj2 }) => {
+    const keys = Object.keys(obj1);
+    let isvalueChanged = true;
+    for (let i = 0; i < keys.length; i++) {
+        if (obj1[keys[i]] !== obj2[keys[i]]) {
+            isvalueChanged = false;
+        }
+    }
+    return isvalueChanged;
 }
 
 /**

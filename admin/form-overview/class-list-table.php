@@ -236,14 +236,29 @@ class List_Table extends WP_List_Table
     {
         $actions = [];
 
-        $actions['edit'] = '<a href="?page=dragwyb-form-builder&form_id=' . (int) esc_attr($form->ID) . '">Edit</a>';
-        $actions['view'] = '<a href="' . esc_url($this->get_preview_url($form->ID)) . '" target="_blank">View</a>';
-        $actions['delete'] = sprintf(
-            '<a href="%s" class="submitdelete" onclick="return confirm(\'Are you sure you want to delete %s form?\');">%s</a>',
-            esc_url(wp_nonce_url("post.php?action=trash&post={$form->ID}", 'trash-post_' . $form->ID)),
-            $form->post_title . '(' . $form->ID . ')',
-            __('Delete Permanently')
-        );
+        if ('trash' === $form->post_status) {
+            $actions['untrash'] = sprintf(
+                '<a href="%s" class="submitdelete" onclick="return confirm(\'Are you sure you want to delete %s form?\');">%s</a>',
+                esc_url(wp_nonce_url("post.php?action=untrash&post={$form->ID}", 'untrash-post_' . $form->ID)),
+                $form->post_title . '(' . $form->ID . ')',
+                __('Restore', 'dragwyb-form-builder')
+            );
+            $actions['delete'] = sprintf(
+                '<a href="%s" class="submitdelete" onclick="return confirm(\'Are you sure you want to delete %s form?\');">%s</a>',
+                esc_url(wp_nonce_url("post.php?action=delete&post={$form->ID}", 'delete-post_' . $form->ID)),
+                $form->post_title . '(' . $form->ID . ')',
+                __('Delete', 'dragwyb-form-builder')
+            );
+        } else {
+            $actions['edit'] = '<a href="?page=dragwyb-form-builder&form_id=' . (int) esc_attr($form->ID) . '">Edit</a>';
+            $actions['view'] = '<a href="' . esc_url($this->get_preview_url($form->ID)) . '" target="_blank">View</a>';
+            $actions['trash'] = sprintf(
+                '<a href="%s" class="submitdelete" onclick="return confirm(\'Are you sure you want to delete %s form?\');">%s</a>',
+                esc_url(wp_nonce_url("post.php?action=trash&post={$form->ID}", 'trash-post_' . $form->ID)),
+                $form->post_title . '(' . $form->ID . ')',
+                __('Trash', 'dragwyb-form-builder')
+            );
+        }
 
         // Add more actions if necessary, such as delete, etc.
 
@@ -259,6 +274,7 @@ class List_Table extends WP_List_Table
      */
     public function get_bulk_actions()
     {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- for post status check
         if (isset($_REQUEST['post_status']) && $_REQUEST['post_status'] === 'trash') {
             return [
                 'delete' => 'Delete Permanently',
@@ -282,7 +298,8 @@ class List_Table extends WP_List_Table
         ];
 
         $views = [];
-        $current = isset($_REQUEST['post_status']) ? sanitize_text_field($_REQUEST['post_status']) : 'all';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- for post status check
+        $current = isset($_REQUEST['post_status']) ? sanitize_text_field(wp_unslash($_REQUEST['post_status'])) : 'all';
 
         // Get post counts
         $post_counts = wp_count_posts(Dragwyb_Post::POST_TYPE);
@@ -305,7 +322,7 @@ class List_Table extends WP_List_Table
                     esc_url($url),
                     $current === $key ? ' class="current"' : '',
                     esc_html($val['label']),
-                    $count
+                    absint($count)
                 );
             }
         }
@@ -334,11 +351,16 @@ class List_Table extends WP_List_Table
         // 2. Setup pagination, sorting, and status filters
         $current_page = $this->get_pagenum();
         $per_page     = $this->get_items_per_page('dragwyb_forms_per_page', $this->per_page);
-        $orderby      = sanitize_key($_GET['orderby'] ?? 'ID');
-        $order        = strtoupper($_GET['order'] ?? 'DESC');
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- for order check
+        $orderby      = sanitize_key(wp_unslash($_GET['orderby'] ?? 'ID'));
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- for order check
+        $order        = strtoupper(sanitize_text_field(wp_unslash($_GET['order'] ?? 'DESC')));
         $order        = in_array($order, ['ASC', 'DESC'], true) ? $order : 'DESC';
 
-        $status = sanitize_key($_GET['post_status'] ?? 'all');
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- for post status check
+        $status = isset($_GET['post_status']) ? sanitize_key($_GET['post_status']) : 'all';
 
         switch ($status) {
             case 'publish':

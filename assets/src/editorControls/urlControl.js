@@ -25,11 +25,11 @@ export default class UrlControl extends DragwybEditor.editor.extends.ControlBase
         return (
             <div className="dragwyb-control dragwyb-control--url" id={`control-${id}`}>
 
-                {settings.label && (
-                    <label className="dragwyb-control__label" htmlFor={id}>
-                        {settings.label}
-                    </label>
-                )}
+                <this.RenderLabel
+                    attr={
+                        { htmlFor: id }
+                    }
+                />
 
                 <div className="dragwyb-control__content">
                     <div className="dragwyb-url-input-wrapper">

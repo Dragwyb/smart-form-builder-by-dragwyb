@@ -23,12 +23,11 @@ const Notice = () => {
                     className={`dragwyb-notice ${notice.type}`}
                 >
                     {notice.message}
-                    <button
-                        className="notice-dismiss"
+                    <span
+                        className="dragwyb-notice-dismiss"
                         onClick={() => dispatch(hideNotice(notice.id))}
                     >
-                        ×
-                    </button>
+                    </span>
                 </div>
             ))}
         </div>
