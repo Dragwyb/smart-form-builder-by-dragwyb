@@ -221,7 +221,13 @@ export const AddField = ({ state, type, dispatch, Utils, index = null, parentCon
         const buttonAddStatus = DragwybEditor?.formData?.addSubmitButton;
 
         if (buttonAddStatus === true) {
-            AddField({ state, type: 'button', dispatch, Utils, attributes: { text: 'Submit', field_id: 'submit' } });
+            const buttonRow = AddField({ state, type: 'row', dispatch, attributes: { columns: 1 }, Utils, index: 1 });
+
+            const deepCloneState = JSON.parse(JSON.stringify(state));
+            deepCloneState.form.fields[buttonRow._id] = buttonRow;
+            deepCloneState.form.rootContainers.push(buttonRow._id);
+
+            AddField({ state: deepCloneState, type: 'button', dispatch, Utils, attributes: { text: 'Submit', field_id: 'submit' }, parentContainer: { rootContainerId: buttonRow._id, activeColumnIndex: 0 } });
             delete DragwybEditor.formData.addSubmitButton;
 
             setSelectedSettingId({ dispatch, value: field._id });

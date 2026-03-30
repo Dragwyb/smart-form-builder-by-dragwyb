@@ -154,12 +154,16 @@ const RenderItem = ({
                                 <span className="dashicons dashicons-menu"></span>
                             </button>
                             <button
-                                title={__("Delete", "dragwyb-form-builder")}
-                                className="delete"
+                                title={isButtonContainer ? __("Cannot delete button", "dragwyb-form-builder") : __("Delete", "dragwyb-form-builder")}
+                                className={`delete ${isButtonContainer ? 'disabled' : ''}`}
                                 onClick={(e) => {
+                                    if (isButtonContainer) {
+                                        return;
+                                    }
                                     e.stopPropagation();
                                     onDelete(field._id);
                                 }}
+                                disabled={isButtonContainer}
                             >
                                 <span className="dashicons dashicons-trash"></span>
                             </button>
