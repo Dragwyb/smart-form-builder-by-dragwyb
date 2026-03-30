@@ -52,8 +52,10 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
         {
             if (gettype($screen) === 'object' && $screen(self::Current_Page)) {
 
+                // Update page title
                 add_action('admin_enqueue_scripts', [$this, 'enqueue_editor_assets']);
-                add_action('Dragwyb_Menu_Page', [$this, 'render_entries'], 1);
+                add_action('Dragwyb_Menu_Page', [$this, 'render_editor'], 1);
+                add_filter('admin_title', [$this, 'update_page_title']);
                 add_action('admin_head', [$this, 'remove_default_wp_content']);
             }
         }
@@ -63,11 +65,22 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             return array_merge([self::Current_Page], $pages);
         }
 
-        public function render_entries($screen)
+        public function render_editor($screen)
         {
             if (gettype($screen) === 'object' && $screen(self::Current_Page)) {
                 $this->builder_output();
             }
+        }
+
+        public function update_page_title($title)
+        {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for form id check
+            $form_id = isset($_GET['form_id']) ? absint($_GET['form_id']) : 0;
+
+            if (isset($form_id) && $form_id && is_numeric($form_id) && function_exists('get_the_title')) {
+                return get_the_title((int) $form_id);
+            }
+            return $title;
         }
 
         public function builder_output()
