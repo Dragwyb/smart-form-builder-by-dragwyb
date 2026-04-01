@@ -95,18 +95,14 @@ const RenderControl = ({
         } else {
             if (value && settings.selectors && renderStyleSelector && !isStyleSelectorAdd) {
                 setIsStyleSelectorAdd(true);
-                <Control
-                    key={selectedTab}
-                    id={controlKey}
-                    toolbarId={selectedToolbar}
-                    selectedSetting={selectedTab}
-                    settings={settings}
-                    value={shouldRenderSettings[controlKey]}
-                    handleChange={handleChange}
-                    Utils={Utils}
-                    resetControlEventLifting={resetControlEventLifting}
-                    valueChangedCheckLifting={valueChangedCheckLifting}
-                />
+                new Control({
+                    id: controlKey,
+                    toolbarId: selectedToolbar,
+                    selectedSetting: selectedTab,
+                    settings: settings,
+                    value: shouldRenderSettings[controlKey],
+                    Utils: Utils,
+                }).renderStyleSelector();
             }
         }
     }

@@ -55,6 +55,8 @@ class DragwybControlBase extends Component {
             styleSelectorsData.responsiveType = this.settings.responsive_type;
         }
 
+        // console.log(styleSelectorsData)
+
         this.Utils.updateStyleSelectors(styleSelectorsData);
     }
 
@@ -114,8 +116,8 @@ class DragwybControlBase extends Component {
         this.selectorKey = props.toolbarId;
 
         if (this.settings.popover) {
-            props.resetControlEventLifting(this.resetControl.bind(this));
-            props.valueChangedCheckLifting(this.valueChanged.bind(this));
+            props?.resetControlEventLifting?.(this.resetControl.bind(this));
+            props?.valueChangedCheckLifting?.(this.valueChanged.bind(this));
         }
     }
 

@@ -228,10 +228,11 @@ html {
             left: 50%;
             z-index: 9999;
             display: none;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -12px);
             border-radius: 4px;
             padding: 0;
             overflow: hidden;
+            height: 23px;
 
             button {
                 padding: 3px 4px;
@@ -244,7 +245,14 @@ html {
                 border-radius: 0;
 
                 &:hover {
-                    background: hsl(var(--dragwyb-primary-hover)/var(--dragwyb-bg-opacity, 1));
+                    background: hsl(var(--dragwyb-primary-hover)/var(--dragwyb-bg-opacity, 1)) !important;
+                }
+
+                &:disabled {
+                    // opacity: 0.5;
+                    cursor: not-allowed;
+                    background-color: hsl(var(--dragwyb-muted)) !important;
+                    color: hsl(var(--dragwyb-muted-foreground)) !important;
                 }
 
                 .dashicons {
@@ -261,7 +269,10 @@ html {
         &:hover .field-actions {
             display: flex;
             position: absolute;
-            background: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
+
+            button {
+                background: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
+            }
         }
     }
 
