@@ -223,8 +223,8 @@ abstract class Control_Base
     {
 
         // 1. Check if it's a valid number (accepts "10", 10, 10.5, "10.5")
-        if (!is_numeric($value)) {
-            return 0;
+        if (!is_numeric($value) || $value === '') {
+            return '';
         }
 
         // 2. Check if it's a float
