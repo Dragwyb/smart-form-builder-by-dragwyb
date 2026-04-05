@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import shouldRenderField from './shouldRenderField';
 import DragwybControlBase from '../controlBase'
@@ -37,52 +37,58 @@ const RenderControl = ({
         return null;
     }
 
-    const getSectionSettings = () => {
-        const store = useStore();
-        const state = store.getState();
-
-        return state.sectionSettings || {};
-    }
+    // Proper useSelector at top level instead of useStore().getState() in helper
+    const sectionSettings = useSelector((state) => state.sectionSettings || {});
 
     // 🔹 Merge values: section + field-level
-    const shouldRenderSettings = { ...fieldValue, ...getSectionSettings() };
+    const shouldRenderSettings = useMemo(
+        () => ({ ...fieldValue, ...sectionSettings }),
+        [fieldValue, sectionSettings]
+    );
 
     const [shouldRender, setShouldRender] = useState(shouldRenderField(settings, shouldRenderSettings, toolbarSettings?.controls))
 
-
     const dispatch = useDispatch();
     const store = useStore();
-    const state = store.getState();
-    const Utils = Helper(state, dispatch);
 
-    // 🔹 Control lookup via filter
-    let Control = DragwybBuilder.Hooks.applyFilter(
-        "Dragwyb/Editor/ControlRender/" + settings.type,
-        false
-    );
+    // Memoize Utils to avoid recreation on every render
+    const Utils = useMemo(() => {
+        const state = store.getState();
+        return Helper(state, dispatch);
+    }, [store, dispatch]);
 
-    // 🔹 Validate Control class
-    const isValidControl =
-        Control &&
-        (Control.prototype instanceof DragwybControlBase ||
-            Control.prototype instanceof DragwybEditor.editor.extends.ControlBase);
-
-    if (!isValidControl) {
-        console.warn(
-            `[RenderControl] Invalid or missing Control for type "${settings.type}". Falling back to ControlBase.`
+    // 🔹 Control lookup via filter (memoized — type doesn't change per instance)
+    const Control = useMemo(() => {
+        let Ctrl = DragwybBuilder.Hooks.applyFilter(
+            "Dragwyb/Editor/ControlRender/" + settings.type,
+            false
         );
-        Control = DragwybEditor.editor.extends.ControlBase;
-    }
 
-    const resetControlEventLifting = (event) => {
+        // 🔹 Validate Control class
+        const isValidControl =
+            Ctrl &&
+            (Ctrl.prototype instanceof DragwybControlBase ||
+                Ctrl.prototype instanceof DragwybEditor.editor.extends.ControlBase);
+
+        if (!isValidControl) {
+            console.warn(
+                `[RenderControl] Invalid or missing Control for type "${settings.type}". Falling back to ControlBase.`
+            );
+            Ctrl = DragwybEditor.editor.extends.ControlBase;
+        }
+
+        return Ctrl;
+    }, [settings.type]);
+
+    const resetControlEventLifting = useCallback((event) => {
         setResetControlEvent(controlKey, event);
-    }
+    }, [controlKey, setResetControlEvent]);
 
-    const valueChangedCheckLifting = (event) => {
+    const valueChangedCheckLifting = useCallback((event) => {
         setValueChangedCheck(controlKey, event);
-    }
+    }, [controlKey, setValueChangedCheck]);
 
-    const conditionUpdateHandler = (value, renderStyleSelector = true) => {
+    const conditionUpdateHandler = useCallback((value, renderStyleSelector = true) => {
         if (shouldRender !== value) {
             setShouldRender(value);
 
@@ -105,7 +111,7 @@ const RenderControl = ({
                 }).renderStyleSelector();
             }
         }
-    }
+    }, [shouldRender, settings, selectedToolbar, selectedTab, controlKey, Utils, isStyleSelectorAdd, Control, shouldRenderSettings]);
 
     if (!shouldRender) {
         return <ControlsConditions
@@ -126,7 +132,7 @@ const RenderControl = ({
         defautlActiveTab(controlKey, settings);
     }
 
-    const selectedSettings = { ...fieldValue, ...getSectionSettings() };
+    const selectedSettings = { ...fieldValue, ...sectionSettings };
 
     // 🔹 Resolve current value
     let fieldVal = selectedSettings[controlKey];

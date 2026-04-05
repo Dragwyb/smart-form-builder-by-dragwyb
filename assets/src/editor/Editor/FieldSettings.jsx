@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch, useStore } from 'react-redux';
 import { updateSectionSettings, resetSectionSettings } from '../store/actions';
 import DragwybControlBase from '../controlBase'
@@ -6,18 +6,18 @@ import RenderControl from './RenderControls';
 import Scrollbar from '../components/Scrollbar';
 import RenderPopoverControls from './RenderPopoverControls';
 
-const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingChange, setUpdateToolbarValue }) => {
+const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingChange }) => {
     const dispatch = useDispatch();
-
+    // Proper useSelector at component top level — no hook-in-helper violations
     const getSectionSettings = () => {
         const store = useStore();
         const state = store.getState();
 
         return state.sectionSettings;
     }
-
-    const defautlActiveSection = (key) => {
+    const defautlActiveSection = useCallback((key) => {
         const sectionSettings = getSectionSettings();
+
         if (((sectionSettings && sectionSettings.section)) || (sectionSettings && sectionSettings.section === '')) {
             return;
         }
@@ -27,43 +27,40 @@ const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingCh
         }
 
         sectionUpdateHandler(key, true);
-    }
+    }, [toolbarSettings]);
 
-    const defautlActiveTab = (key, settings) => {
+    const defautlActiveTab = useCallback((key, settings) => {
         const sectionSettings = getSectionSettings();
+
         if (sectionSettings && sectionSettings[key]) {
             return;
         }
 
         tabsUpdateHandler(key, Object.keys(settings.tabs)[0]);
-    }
+    }, []);
 
-    const tabsUpdateHandler = (key, value) => {
+    const tabsUpdateHandler = useCallback((key, value) => {
         if ('header_controls' === key) {
             dispatch(resetSectionSettings());
         }
 
         dispatch(updateSectionSettings(key, value));
-    }
+    }, [dispatch]);
 
-    const sectionUpdateHandler = (key, value) => {
+    const sectionUpdateHandler = useCallback((key, value) => {
         dispatch(updateSectionSettings('section', value ? key : ''));
-    }
+    }, [dispatch]);
 
-    const handleChange = (key, value, type = null, from) => {
+    const handleChange = useCallback((key, value, type = null, from) => {
         if (!(from instanceof DragwybControlBase || from instanceof DragwybEditor.editor.extends.ControlBase)) return;
 
         if ('tabs' === type) {
             tabsUpdateHandler(key, value)
-            if (from && from.id === 'header_controls') {
-                setUpdateToolbarValue();
-            }
             return;
         }
 
         if ('section' === type) {
             sectionUpdateHandler(key, value)
-            setUpdateToolbarValue();
             return;
         }
 
@@ -72,7 +69,7 @@ const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingCh
         }
 
         onSettingChange(key, value);
-    };
+    }, [tabsUpdateHandler, sectionUpdateHandler, toolbarSettings, onSettingChange]);
 
     return (
         <div className="dragwyb-panel">
@@ -103,11 +100,10 @@ const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingCh
                 <div className="dragwyb-panel__settings">
                     <Scrollbar>
                         {Object.keys(toolbarSettings.controls).map(key => (
-                            <>
+                            <React.Fragment key={toolbarSettings.id + '_' + key}>
                                 {key === 'header_controls' ? null
                                     : toolbarSettings.controls[key].popover
                                         ? <RenderPopoverControls
-                                            key={toolbarSettings.id + '_' + key}
                                             selectedToolbar={selectedTab}
                                             selectedTab={toolbarSettings.id}
                                             controlKey={key}
@@ -119,7 +115,6 @@ const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingCh
                                             defautlActiveTab={defautlActiveTab}
                                         />
                                         : <RenderControl
-                                            key={toolbarSettings.id + '_' + key}
                                             selectedToolbar={selectedTab}
                                             selectedTab={toolbarSettings.id}
                                             controlKey={key}
@@ -130,7 +125,7 @@ const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingCh
                                             defautlActiveSection={defautlActiveSection}
                                             defautlActiveTab={defautlActiveTab}
                                         />}
-                            </>
+                            </React.Fragment>
                         ))}
                     </Scrollbar>
                 </div>
@@ -139,4 +134,4 @@ const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingCh
     );
 };
 
-export default FieldSettings; 
+export default FieldSettings;

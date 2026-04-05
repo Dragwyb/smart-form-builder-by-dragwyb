@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useStore, useDispatch } from 'react-redux';
 import { Utils as Helper } from '../../components/Utils';
 import { SaveBtn } from '../../components/Common';
@@ -19,8 +19,12 @@ const Header = () => {
 
     const dispatch = useDispatch();
     const store = useStore();
-    const state = store.getState();
-    const Utils = Helper(state, dispatch);
+
+    // Memoize Utils
+    const Utils = useMemo(() => {
+        const state = store.getState();
+        return Helper(state, dispatch);
+    }, [store, dispatch]);
 
     useEffect(() => {
         const bodyEleCls = document.body.classList;
@@ -37,14 +41,14 @@ const Header = () => {
     }, [themeMode, iframeEle]);
 
     // Apply the theme to the body tag whenever the state changes
-    const toggleTheme = () => {
+    const toggleTheme = useCallback(() => {
         dispatch(updateThemeMode(themeMode === 'light' ? 'dark' : 'light'));
-    };
+    }, [dispatch, themeMode]);
 
-    const setActiveTabHandler = (value) => {
+    const setActiveTabHandler = useCallback((value) => {
         Utils.setSelectedSettingId({ value: value });
         Utils.setActiveTab({ value: value });
-    }
+    }, [Utils]);
 
     const statusHtml = <>
         <p>{formStatus.charAt(0).toUpperCase() + formStatus.slice(1)}</p>

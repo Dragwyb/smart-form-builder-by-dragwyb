@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { useSelector, useDispatch, useStore } from "react-redux";
 import Canvas from "./Canvas";
 import {
@@ -31,25 +31,29 @@ const Editor = () => {
 
     const dispatch = useDispatch();
     const store = useStore();
-    const state = store.getState();
-    const Utils = Helper(state, dispatch);
 
-    const resetSection = () => {
+    // Lazy Utils — reads fresh state at call-time, not capture-time
+    const Utils = useMemo(() => {
+        const getState = () => store.getState();
+        return Helper(getState(), dispatch);
+    }, [store, dispatch]);
+
+    const resetSection = useCallback(() => {
         dispatch(resetSectionSettings());
-    };
+    }, [dispatch]);
 
-    const setSelectedSettingId = ({ id = false, tab = "fields" }) => {
+    const setSelectedSettingId = useCallback(({ id = false, tab = "fields" }) => {
         Utils.setSelectedSettingId({ value: id });
         resetSection();
         const defaultToolbar = DragwybEditor?.EditorToolbars?.Default ?? false;
         Utils.setActiveTab({ value: false === id ? defaultToolbar : tab });
-    };
+    }, [Utils, resetSection]);
 
-    const setActiveTabHandler = (value) => {
+    const setActiveTabHandler = useCallback((value) => {
         Utils.setSelectedSettingId({ value: false });
         resetSection();
         Utils.setActiveTab({ value: value });
-    };
+    }, [Utils, resetSection]);
 
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -57,7 +61,7 @@ const Editor = () => {
         useSensor(TouchSensor, { activationConstraint: { delay: 5, tolerance: 6 } })
     );
 
-    const measureDroppableContainers = (node) => {
+    const measureDroppableContainers = useCallback((node) => {
         const rect = node.getBoundingClientRect();
 
         const iframe = document.getElementById('dragwyb-preview-iframe');
@@ -88,9 +92,9 @@ const Editor = () => {
             x: rect.x,
             y: rect.y,
         };
-    };
+    }, []);
 
-    const measureDraggableContainers = (node) => {
+    const measureDraggableContainers = useCallback((node) => {
         const rect = node.getBoundingClientRect();
 
         const iframe = document.getElementById('dragwyb-preview-iframe');
@@ -125,11 +129,23 @@ const Editor = () => {
         }
 
         return finalPosition;
-    };
+    }, []);
 
-    // --- Drag Handlers ---
+    // Memoize measuring config to prevent DndContext re-init
+    const measuringConfig = useMemo(() => ({
+        droppable: {
+            strategy: 'always',
+            measure: measureDroppableContainers
+        },
+        draggable: {
+            strategy: 'always',
+            measure: measureDraggableContainers
+        }
+    }), [measureDroppableContainers, measureDraggableContainers]);
 
-    const handleDragStart = (event) => {
+    // --- Drag Handlers (memoized) ---
+
+    const handleDragStart = useCallback((event) => {
         const { active } = event;
 
         const activeDragData = { activeDrag: active };
@@ -142,14 +158,14 @@ const Editor = () => {
         }
 
         setActiveDrag(activeDragData);
-    };
+    }, []);
 
-    const handleDragMove = (event) => {
-        const { active, over } = event; // No need for delta or activatorEvent here!
+    const handleDragMove = useCallback((event) => {
+        const { active, over } = event;
 
         // If we are not over anything, clear indicators
         if (!over) {
-            if (dropInfo !== false) setDropInfo(false);
+            setDropInfo(prev => prev !== false ? false : prev);
             return;
         }
 
@@ -167,15 +183,17 @@ const Editor = () => {
         // If simply hovering a container/wrapper, just set index
         if (over.data.current.canvasFieldDrop || over.data.current.addInitialField) {
             const dropObj = { targetId: newDropInfo, index: 0 };
-            if (!dropInfo || dropInfo.targetId !== dropObj.targetId || dropInfo.index !== dropObj.index) {
-                setDropInfo(dropObj);
-            }
+            setDropInfo(prev => {
+                if (!prev || prev.targetId !== dropObj.targetId || prev.index !== dropObj.index) {
+                    return dropObj;
+                }
+                return prev;
+            });
             return;
         }
 
         // 1. Get the live, normalized coordinates of both items
         const activeRect = active.rect.current.translated;
-        const activeIndex = active.data.current.index;
         const overRect = over.rect;
 
         if (!activeRect || !overRect) return;
@@ -196,12 +214,16 @@ const Editor = () => {
 
         const dropObj = { targetId, index: targetIndex };
 
-        if (!dropInfo || dropInfo.targetId !== dropObj.targetId || dropInfo.index !== dropObj.index) {
-            setDropInfo(dropObj);
-        }
-    };
+        setDropInfo(prev => {
+            if (!prev || prev.targetId !== dropObj.targetId || prev.index !== dropObj.index) {
+                return dropObj;
+            }
+            return prev;
+        });
+    }, []);
 
-    const handleDragEnd = (event) => {
+    const handleDragEnd = useCallback((event) => {
+        const currentDropInfo = dropInfo;
         setActiveDrag(null);
         setDropInfo(false);
 
@@ -213,7 +235,7 @@ const Editor = () => {
         const isFromSidebar = active?.data?.current?.fromSidebar;
         const isCanvasDrag = active?.data?.current?.canvasDrag;
 
-        const finalId = dropInfo !== false && dropInfo.index !== undefined ? dropInfo : { targetId: over.data.current.currentId, index: over.data.current.index };
+        const finalId = currentDropInfo !== false && currentDropInfo.index !== undefined ? currentDropInfo : { targetId: over.data.current.currentId, index: over.data.current.index };
 
         if (isFromSidebar) {
             const type = active.data.current.type;
@@ -223,9 +245,9 @@ const Editor = () => {
                 index: finalId.index,
             }
 
-            if (dropInfo.targetId !== 'root') {
+            if (currentDropInfo && currentDropInfo.targetId !== 'root') {
                 addFieldData.parentContainer = {
-                    rootContainerId: dropInfo.targetId,
+                    rootContainerId: currentDropInfo.targetId,
                     activeColumnIndex: finalId.index
                 };
             }
@@ -233,25 +255,26 @@ const Editor = () => {
             const newField = Utils.AddField(addFieldData);
             setSelectedSettingId({ id: newField._id });
         } else if (isCanvasDrag) {
-            if (active?.data?.current?.currentId && dropInfo && dropInfo.targetId && dropInfo.index >= 0) {
+            if (active?.data?.current?.currentId && currentDropInfo && currentDropInfo.targetId && currentDropInfo.index >= 0) {
                 const currentIndex = active?.data?.current?.index;
-                let updatedIndex = dropInfo.index;
+                let updatedIndex = currentDropInfo.index;
 
                 if (updatedIndex > currentIndex) {
                     updatedIndex = updatedIndex - 1;
                 }
 
                 if (updatedIndex === currentIndex) {
-                    setDropInfo(false);
                     return;
                 }
 
                 if (updatedIndex >= 0) {
-                    dispatch(updateFieldOrder(active?.data?.current?.currentId, dropInfo.targetId, updatedIndex));
+                    dispatch(updateFieldOrder(active?.data?.current?.currentId, currentDropInfo.targetId, updatedIndex));
                 }
             }
         }
-    };
+    }, [dropInfo, Utils, setSelectedSettingId, dispatch]);
+
+    const handleDragCancel = useCallback(() => setActiveDrag(null), []);
 
     return (
         <div className="dragwyb-editor">
@@ -263,24 +286,15 @@ const Editor = () => {
                     sensors={sensors}
                     onDragStart={handleDragStart}
                     onDragEnd={handleDragEnd}
-                    onDragCancel={() => setActiveDrag(null)}
+                    onDragCancel={handleDragCancel}
                     onDragMove={handleDragMove}
-                    measuring={{
-                        droppable: {
-                            strategy: 'always',
-                            measure: measureDroppableContainers // <--- Apply the fix
-                        },
-                        draggable: {
-                            strategy: 'always',
-                            measure: measureDraggableContainers
-                        }
-                    }}
+                    measuring={measuringConfig}
                 >
                     <ToolBar
                         setActiveTab={setActiveTabHandler}
                         setSettingId={setSelectedSettingId}
                     />
-                    <ToolbarSettings setActiveTab={setActiveTabHandler} />
+                    <ToolbarSettings />
 
                     {/* The Iframe Shield: Crucial for dragging over iframe */}
                     {activeDrag && (

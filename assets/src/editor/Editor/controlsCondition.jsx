@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import DragwybToolbarBase from "../toolbarBase";
 import shouldRenderField from "./shouldRenderField";
 
@@ -12,20 +12,22 @@ const ControlsConditions = ({ conditions, updateHandler, controlKey, isResponsiv
     const responsiveType = useSelector(state => state.responsiveType);
 
     const prevConditions = useRef(null);
-
     const debounceTimer = useRef(null);
-    // Ref to store the previous data for comparison
+    // Ref to store the previous data for comparison (shallow keys only)
     const prevDataRef = useRef(null);
+    // Cache for activeToolbarData to avoid re-stringifying
+    const prevToolbarDataRef = useRef(null);
 
-    const getResponsiveDevice = (size) => (
+    const getResponsiveDevice = useCallback((size) => (
         size < 768 ? 'mobile' : size < 1024 ? 'tablet' : 'desktop'
-    );
+    ), []);
 
     if (!prevDataRef.current) {
-        prevDataRef.current = { setting, selectedToolbar, activeToolbarData: JSON.parse(JSON.stringify(activeToolbarData)), controlKey, conditions, sectionSettings };
+        prevDataRef.current = { setting, selectedToolbar, controlKey, conditions, sectionSettings };
+        prevToolbarDataRef.current = activeToolbarData;
     }
 
-    const shouldRenderCallback = (timer, styleRender = true, responsiveCheck = false) => {
+    const shouldRenderCallback = useCallback((timer, styleRender = true) => {
         if (debounceTimer.current) {
             clearTimeout(debounceTimer.current);
         }
@@ -57,7 +59,7 @@ const ControlsConditions = ({ conditions, updateHandler, controlKey, isResponsiv
 
             let shouldRenderStyleSelector = true;
             if (settings.controls[controlKey].selectors && Object.keys(settings.controls[controlKey].selectors).length > 0 && styleRender) {
-                const styleConditions = JSON.parse(JSON.stringify(settings.controls[controlKey].conditions));
+                const styleConditions = { ...settings.controls[controlKey].conditions };
                 delete styleConditions.section;
 
                 Object.keys(styleConditions).forEach((key) => {
@@ -67,8 +69,7 @@ const ControlsConditions = ({ conditions, updateHandler, controlKey, isResponsiv
                 });
 
                 if (Object.keys(styleConditions).length > 0) {
-                    const cloneField = JSON.parse(JSON.stringify(settings.controls[controlKey]));
-                    cloneField.conditions = styleConditions;
+                    const cloneField = { ...settings.controls[controlKey], conditions: styleConditions };
                     shouldRenderStyleSelector = shouldRenderField(cloneField, toolbarValue, settings.controls, true);
                 }
             }
@@ -88,22 +89,22 @@ const ControlsConditions = ({ conditions, updateHandler, controlKey, isResponsiv
             prevConditions.current = { shouldRender, shouldRenderStyleSelector }
             updateHandler(shouldRender, shouldRenderStyleSelector);
         }, timer);
-    };
+    }, [setting, selectedToolbar, formData, controlKey, sectionSettings, isResponsiveControl, responsiveType, controlResponsiveType, getResponsiveDevice, updateHandler]);
 
     useEffect(() => {
         if (!setting || !conditions || Object.keys(conditions).length === 0) {
             return;
         }
 
-        const activeToolbarData = formData?.[setting] || {};
+        const prev = prevDataRef.current;
 
-        // Check if the primary toolbar data has changed
+        // Shallow key-level comparison instead of JSON.stringify
         const hasToolbarChanged =
-            JSON.stringify(prevDataRef.current.activeToolbarData) !== JSON.stringify(activeToolbarData) ||
-            prevDataRef.current.setting !== setting ||
-            prevDataRef.current.selectedToolbar !== selectedToolbar ||
-            prevDataRef.current.controlKey !== controlKey ||
-            prevDataRef.current.conditions !== conditions;
+            prev.setting !== setting ||
+            prev.selectedToolbar !== selectedToolbar ||
+            prev.controlKey !== controlKey ||
+            prev.conditions !== conditions ||
+            prevToolbarDataRef.current !== activeToolbarData; // Reference comparison — Redux gives new ref on change
 
         if (hasToolbarChanged) {
             // Priority 1: Heavy change (e.g. Color Picker) -> 100ms debounce
@@ -113,21 +114,29 @@ const ControlsConditions = ({ conditions, updateHandler, controlKey, isResponsiv
             shouldRenderCallback(0, false);
         }
 
-        // Update ref for the next render
-        prevDataRef.current = { setting, selectedToolbar, activeToolbarData: JSON.parse(JSON.stringify(activeToolbarData)), controlKey, conditions, sectionSettings };
+        // Update refs for the next render (no JSON.stringify needed)
+        prevDataRef.current = { setting, selectedToolbar, controlKey, conditions, sectionSettings };
+        prevToolbarDataRef.current = activeToolbarData;
 
         return () => clearTimeout(debounceTimer.current);
-    }, [setting, selectedToolbar, formData, controlKey, conditions, sectionSettings]);
+    }, [setting, selectedToolbar, formData, controlKey, conditions, sectionSettings, activeToolbarData, shouldRenderCallback]);
 
     useEffect(() => {
-        const activeToolbarData = formData?.[setting] || {};
+        const prev = prevDataRef.current;
 
-        const noChanges = JSON.stringify(prevDataRef.current) === JSON.stringify({ setting, selectedToolbar, activeToolbarData, controlKey, conditions, sectionSettings });
+        // Shallow comparison instead of JSON.stringify
+        const noChanges =
+            prev.setting === setting &&
+            prev.selectedToolbar === selectedToolbar &&
+            prev.controlKey === controlKey &&
+            prev.conditions === conditions &&
+            prev.sectionSettings === sectionSettings &&
+            prevToolbarDataRef.current === activeToolbarData;
 
         if (noChanges) {
             if (isResponsiveControl) {
                 if (!prevConditions.current) prevConditions.current = {};
-                const { shouldRender = true, shouldRenderStyleSelector = true } = prevConditions.current;
+                const { shouldRender = true } = prevConditions.current;
                 const deviceType = getResponsiveDevice(responsiveType);
                 const conditionMatched = controlResponsiveType === deviceType;
 
@@ -135,9 +144,9 @@ const ControlsConditions = ({ conditions, updateHandler, controlKey, isResponsiv
                     shouldRenderCallback(0, true);
                 }
             }
-            return
+            return;
         };
-    }, [responsiveType])
+    }, [responsiveType, setting, selectedToolbar, controlKey, conditions, sectionSettings, activeToolbarData, isResponsiveControl, controlResponsiveType, getResponsiveDevice, shouldRenderCallback]);
 
     return null;
 };

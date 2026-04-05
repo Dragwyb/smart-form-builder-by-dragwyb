@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { updatePopoverControls, resetPopoverControls, updatePopoverInitStatus } from "../store/actions";
 import { FaUndo } from "react-icons/fa";
@@ -21,26 +21,33 @@ const RenderPopoverControls = ({
     const activePopoverControlKey = useSelector((state) => state.activePopoverKey);
     const dispatch = useDispatch();
     const store = useStore();
-    const state = store.getState();
-    const Utils = Helper(state, dispatch);
+
+    // Memoize Utils
+    const Utils = useMemo(() => {
+        const state = store.getState();
+        return Helper(state, dispatch);
+    }, [store, dispatch]);
 
     const [resetControlsEvent, setResetControlsEvent] = useState({});
     const [valuesChangedCheck, setValuesChangedCheck] = useState({});
 
-    const setResetControlEventHandler = (controlKey, event) => {
+    const setResetControlEventHandler = useCallback((controlKey, event) => {
         setResetControlsEvent(prev => ({
             ...prev,
             [controlKey]: event
         }));
-    };
+    }, []);
 
-    const setValueChangedCheckHandler = (controlKey, event) => {
+    const setValueChangedCheckHandler = useCallback((controlKey, event) => {
         setValuesChangedCheck(prev => ({
             ...prev,
             [controlKey]: event
         }));
-    };
+    }, []);
 
+    // Popover coordination requires synchronous dispatch during render
+    // because multiple popover controls render in sequence and need to see
+    // each other's state updates immediately (before React re-renders).
     const popOverControl = (settings) => {
         let popOverStatus = settings.popover;
 
@@ -64,7 +71,6 @@ const RenderPopoverControls = ({
             PopoverControls = [...PopoverControls || [], controlKey];
 
             let popoverUpdate = false;
-
 
             if (valuesChangedCheck && Object.keys(valuesChangedCheck).length > 0) {
                 Object.keys(valuesChangedCheck).forEach((key) => {

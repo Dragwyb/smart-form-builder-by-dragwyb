@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { useDraggable, useDroppable } from "../components/Common";
 import * as Fields from "./Fields";
-import { duplicateField, addField } from "../store/actions";
+import { addField } from "../store/actions";
 import { __, sprintf } from "@wordpress/i18n";
 
-const RenderItem = ({
+const RenderItem = React.memo(({
     fieldId,
     values,
     index,
@@ -17,7 +17,21 @@ const RenderItem = ({
     Utils,
     isButtonContainer = false
 }) => {
-    const field = useSelector((state) => state.form.fields[fieldId]);
+
+    const attributesRef = useRef(null);
+
+    function isFieldEqual(prevProps, nextProps) {
+        if (null === attributesRef.current) {
+            return prevProps.fields[fieldId].attributes === nextProps.fields[fieldId].attributes;
+        }
+
+        return JSON.stringify(attributesRef.current) === JSON.stringify({ ...nextProps.fields[fieldId].attributes });
+    }
+
+    const formData = useSelector((state) => state.form, isFieldEqual);
+    const field = formData.fields[fieldId];
+
+    attributesRef.current = field.attributes ? { ...field.attributes } : [];
 
     if (!field) {
         return null;
@@ -56,11 +70,11 @@ const RenderItem = ({
     }) : {};
 
     // Combine refs
-    const setNodeRef = (Node) => {
+    const setNodeRef = useCallback((Node) => {
         if (!Node) return;
         if (dropRef) dropRef(Node);
         if (dragRef) dragRef(Node);
-    };
+    }, [dropRef, dragRef]);
 
     let wrapperClass = `dragwyb-field-wrapper dragwyb-${field.type}-field${field.css_classes || ''}`;
     let id = `dragwyb-field-wrapper-${field._id}`;
@@ -78,7 +92,7 @@ const RenderItem = ({
         wrapperClass += " selected";
     }
 
-    const onRootContainerSelect = () => {
+    const onRootContainerSelect = useCallback(() => {
         const id = field._id;
 
         if (!id || selectedField === id) {
@@ -86,9 +100,9 @@ const RenderItem = ({
         }
 
         onFieldSelect({ id });
-    }
+    }, [field._id, selectedField, onFieldSelect]);
 
-    const onFieldSelectHandler = () => {
+    const onFieldSelectHandler = useCallback(() => {
         const id = field._id;
 
         if (!id || isRootContainer || selectedField === id) {
@@ -96,7 +110,7 @@ const RenderItem = ({
         }
 
         onFieldSelect({ id });
-    };
+    }, [field._id, isRootContainer, selectedField, onFieldSelect]);
 
     return (
         <>
@@ -115,11 +129,10 @@ const RenderItem = ({
                     <Fields.Preview fields={[field]} values={values} errors={errors} childrens={childrens} Utils={Utils}>
                         {childrens && childrens.length > 0 && (
                             childrens.map((childId, childIndex) => (
-                                <>
+                                <React.Fragment key={childId || `empty-${childIndex}`}>
                                     {!childId ? null :
                                         <RenderItem
-                                            key={childId} // Use ID as key, not the whole object
-                                            fieldId={childId} // Pass ID instead of the full object
+                                            fieldId={childId}
                                             index={childIndex}
                                             dropInfo={dropInfo}
                                             onFieldSelect={onFieldSelect}
@@ -130,7 +143,7 @@ const RenderItem = ({
                                             Utils={Utils}
                                         />
                                     }
-                                </>
+                                </React.Fragment>
                             ))
                         )}
                     </Fields.Preview>
@@ -173,9 +186,11 @@ const RenderItem = ({
             }
         </>
     );
-};
+});
 
-const AddFieldMsg = ({ setActiveTab, isOver, updateFieldSelect }) => {
+RenderItem.displayName = 'RenderItem';
+
+const AddFieldMsg = React.memo(({ setActiveTab, isOver, updateFieldSelect }) => {
     const activeTab = useSelector((state) => state.activeToolbar);
     let emptyMessage = __("Add field", "dragwyb-form-builder");
 
@@ -200,7 +215,9 @@ const AddFieldMsg = ({ setActiveTab, isOver, updateFieldSelect }) => {
             </div>
         </div>
     );
-};
+});
+
+AddFieldMsg.displayName = 'AddFieldMsg';
 
 const Canvas = ({
     onFieldSelect,
@@ -209,9 +226,10 @@ const Canvas = ({
     setActiveTab
 }) => {
     const values = useSelector((state) => state.values);
-    const formData = useSelector((state) => state.form);
     const errors = useSelector((state) => state.errors);
     const rootContainers = useSelector((state) => state.form.rootContainers);
+    // Granular selector — only subscribe to fields object reference
+    const formFields = useSelector((state) => state.form.fields);
     const dispatch = useDispatch();
     const store = useStore();
 
@@ -225,7 +243,8 @@ const Canvas = ({
         },
     });
 
-    const handleDuplicateField = (field, index, parentID = null) => {
+    const handleDuplicateField = useCallback((field, index, parentID = null) => {
+        const formData = store.getState().form;
         let deepClone = JSON.parse(JSON.stringify(field));
         const id = Utils.generateId();
         deepClone._id = id;
@@ -268,34 +287,34 @@ const Canvas = ({
                 handleDuplicateField(formData.fields[childId], childIndex - 1, deepClone._id);
             })
         }
-    };
+    }, [Utils, dispatch, onFieldSelect, store]);
 
-    const handleDeleteField = (id) => {
+    const handleDeleteField = useCallback((id) => {
         onFieldSelect({ id: false });
         dispatch({ type: "DELETE_FIELD", payload: id });
-    };
+    }, [dispatch, onFieldSelect]);
 
     let canvasCls = "dragwyb-canvas";
     if (!rootContainers || rootContainers.length === 0) {
         canvasCls += " canvas-empty";
     }
 
-    const isButtonContainer = (fieldKey) => {
-        const field = formData.fields[fieldKey];
-        let status = false;
+    // Memoize isButtonContainer check
+    const isButtonContainer = useCallback((fieldKey) => {
+        const field = formFields[fieldKey];
+        if (!field || !field.is_root_container || !field.children || field.children.length === 0) {
+            return false;
+        }
 
-        if (field.is_root_container && field.children.length > 0) {
-            for (let i = 0; i < field.children.length; i++) {
-                const childField = formData.fields[field.children[i]];
-                if (childField.type === 'button') {
-                    status = true;
-                    break;
-                }
+        for (let i = 0; i < field.children.length; i++) {
+            const childField = formFields[field.children[i]];
+            if (childField && childField.type === 'button') {
+                return true;
             }
         }
 
-        return status;
-    }
+        return false;
+    }, [formFields]);
 
     return (
         <div className="dragwyb-editor__main">
@@ -326,7 +345,7 @@ const Canvas = ({
                                 </>
                             )}
                         </form>
-                        {!rootContainers || rootContainers.length === 0 && (
+                        {(!rootContainers || rootContainers.length === 0) && (
                             <AddFieldMsg
                                 setActiveTab={setActiveTab}
                                 updateFieldSelect={onFieldSelect}

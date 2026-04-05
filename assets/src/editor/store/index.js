@@ -14,6 +14,7 @@ const initialState = {
     notices: [],
     errors: [],
     values: {},
+    sectionSettings: {},
     activePopoverKey: false,
     fieldIds,
     selectedSettingId: null,

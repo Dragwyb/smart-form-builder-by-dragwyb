@@ -31,7 +31,7 @@ export const UPDATE_THEME_MODE = 'UPDATE_THEME_MODE';
 export const UPDATE_IFRAME_NODE = 'UPDATE_IFRAME_NODE';
 export const UPDATE_RESPONSIVE_TYPE = 'UPDATE_RESPONSIVE_TYPE';
 export const ADD_ROOT_CONTAINERS = 'ADD_ROOT_CONTAINERS';
-export const DELETE_ROOT_CONTAINERS = 'DELETE_ROOT_CONTAINERS';
+export const DELETE_ROOT_CONTAINER = 'DELETE_ROOT_CONTAINER';
 export const UPDATE_ACTIVE_ROOT_CONTAINER = 'UPDATE_ACTIVE_ROOT_CONTAINER';
 export const RESET_ACTIVE_ROOT_CONTAINER = 'RESET_ACTIVE_ROOT_CONTAINER';
 
@@ -55,8 +55,8 @@ export const addRootContainers = (rootContainerId) => ({
     payload: { rootContainerId }
 })
 
-export const deleteRootContainers = (rootContainerId) => ({
-    type: DELETE_ROOT_CONTAINERS,
+export const deleteRootContainer = (rootContainerId) => ({
+    type: DELETE_ROOT_CONTAINER,
     payload: { rootContainerId }
 })
 
@@ -200,13 +200,3 @@ export const addError = (message) => ({
     type: ERROR_NOTICE,
     payload: { message, type: 'error' }
 });
-
-// Example usage in a component
-const handleSave = async () => {
-    try {
-        await api.saveForm(formData);
-        // Handle success
-    } catch (error) {
-        // Handle error
-    }
-};
