@@ -50,12 +50,12 @@ const RenderControl = ({
 
     const dispatch = useDispatch();
     const store = useStore();
+    const state = store.getState();
 
     // Memoize Utils to avoid recreation on every render
     const Utils = useMemo(() => {
-        const state = store.getState();
         return Helper(state, dispatch);
-    }, [store, dispatch]);
+    }, [state, dispatch]);
 
     // 🔹 Control lookup via filter (memoized — type doesn't change per instance)
     const Control = useMemo(() => {
@@ -96,6 +96,7 @@ const RenderControl = ({
                 const selectedSetting = selectedTab && '' !== selectedTab && selectedTab !== selectedToolbar ? selectedTab : false;
                 const uniqueSelector = `${selectedToolbar}${selectedSetting ? '_' + selectedSetting : ''}_${controlKey}`;
 
+                setIsStyleSelectorAdd(false);
                 Utils.deleteStyleSelectors({ key: uniqueSelector, responsiveType: settings.responsive_type });
             }
         } else {

@@ -55,8 +55,6 @@ class DragwybControlBase extends Component {
             styleSelectorsData.responsiveType = this.settings.responsive_type;
         }
 
-        // console.log(styleSelectorsData)
-
         this.Utils.updateStyleSelectors(styleSelectorsData);
     }
 
