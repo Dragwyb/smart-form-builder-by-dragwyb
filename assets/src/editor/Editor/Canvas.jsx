@@ -21,6 +21,14 @@ const RenderItem = React.memo(({
     const attributesRef = useRef(null);
 
     function isFieldEqual(prevProps, nextProps) {
+        if (nextProps.fields[fieldId].is_root_container && prevProps.fields[fieldId].children.length !== nextProps.fields[fieldId].children.length) {
+            return false;
+        }
+
+        if (prevProps.fields[fieldId].attributes !== nextProps.fields[fieldId].attributes) {
+            return false;
+        }
+
         if (null === attributesRef.current) {
             return prevProps.fields[fieldId].attributes === nextProps.fields[fieldId].attributes;
         }

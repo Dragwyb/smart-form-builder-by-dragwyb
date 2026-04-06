@@ -21,12 +21,12 @@ const ToolbarSettings = () => {
 
   const dispatch = useDispatch();
   const store = useStore();
+  const state = store.getState();
 
   // Memoize Utils to avoid recreation on every render
   const Utils = useMemo(() => {
-    const state = store.getState();
     return Helper(state, dispatch);
-  }, [store, dispatch]);
+  }, [state, dispatch]);
 
   const extensibleUtils = useMemo(() => {
     const utils = {};

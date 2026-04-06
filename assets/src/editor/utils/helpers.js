@@ -89,6 +89,7 @@ export const updateActiveRootContainer = ({ state, dispatch, rootContainerId, ac
             });
         }
 
+        console.log(rootContainerId, activeColumnIndex);
         dispatch(updateActiveRootContainerAction(rootContainerId, activeColumnIndex));
     } catch (e) {
         console.error("Validation failed:", e.message);
