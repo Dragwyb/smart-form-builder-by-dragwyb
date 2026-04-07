@@ -314,7 +314,6 @@ const Editor = () => {
                     <PreviewIframe url={PREVIEW_URL}>
                         <Canvas
                             onFieldSelect={setSelectedSettingId}
-                            Utils={Utils}
                             dropInfo={dropInfo}
                             setActiveTab={setActiveTabHandler}
                         />

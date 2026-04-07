@@ -4,6 +4,7 @@ import { useDraggable, useDroppable } from "../components/Common";
 import * as Fields from "./Fields";
 import { addField } from "../store/actions";
 import { __, sprintf } from "@wordpress/i18n";
+import { Utils as Helper } from '../components/Utils';
 
 const RenderItem = React.memo(({
     fieldId,
@@ -19,14 +20,20 @@ const RenderItem = React.memo(({
 }) => {
 
     const attributesRef = useRef(null);
+    const totalChildrensRef = useRef(0);
 
     function isFieldEqual(prevProps, nextProps) {
-        if (nextProps.fields[fieldId].is_root_container && prevProps.fields[fieldId].children.length !== nextProps.fields[fieldId].children.length) {
-            return false;
-        }
 
         if (prevProps.fields[fieldId].attributes !== nextProps.fields[fieldId].attributes) {
             return false;
+        }
+
+        if (nextProps.fields[fieldId].is_root_container) {
+            if (prevProps.fields[fieldId].children.length !== nextProps.fields[fieldId].children.length) {
+                return false;
+            } else if (nextProps.fields[fieldId].children && totalChildrensRef !== nextProps.fields[fieldId].children.length) {
+                return false;
+            }
         }
 
         if (null === attributesRef.current) {
@@ -40,6 +47,7 @@ const RenderItem = React.memo(({
     const field = formData.fields[fieldId];
 
     attributesRef.current = field.attributes ? { ...field.attributes } : [];
+    totalChildrensRef.current = field?.children?.length || 0;
 
     if (!field) {
         return null;
@@ -229,7 +237,6 @@ AddFieldMsg.displayName = 'AddFieldMsg';
 
 const Canvas = ({
     onFieldSelect,
-    Utils,
     dropInfo,
     setActiveTab
 }) => {
@@ -240,6 +247,12 @@ const Canvas = ({
     const formFields = useSelector((state) => state.form.fields);
     const dispatch = useDispatch();
     const store = useStore();
+    const state = store.getState();
+
+    // Memoize Utils to avoid recreation on every render
+    const Utils = useMemo(() => {
+        return Helper(state, dispatch);
+    }, [state, dispatch]);
 
     // Main Droppable Wrapper (for dropping into empty list or at end)
     const { setNodeRef, isOver } = useDroppable({

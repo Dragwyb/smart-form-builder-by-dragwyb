@@ -89,7 +89,6 @@ export const updateActiveRootContainer = ({ state, dispatch, rootContainerId, ac
             });
         }
 
-        console.log(rootContainerId, activeColumnIndex);
         dispatch(updateActiveRootContainerAction(rootContainerId, activeColumnIndex));
     } catch (e) {
         console.error("Validation failed:", e.message);
@@ -206,7 +205,6 @@ export const AddField = ({ state, type, dispatch, Utils, index = null, parentCon
     }
 
     field = DragwybBuilder.Hooks.applyFilter(`Dragwyb/Editor/AddField/${type}`, field, Utils);
-
     dispatch(addField({ field, index }));
     setSelectedSettingId({ dispatch, value: field._id });
     setActiveTab({ dispatch, value: 'fields' });
