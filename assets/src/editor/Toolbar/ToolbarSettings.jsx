@@ -106,8 +106,4 @@ const ToolbarSettings = () => {
   </div>
 };
 
-ToolbarSettings.propTypes = {
-  setting: PropTypes.string.isRequired, // only allows string
-};
-
 export default ToolbarSettings;
