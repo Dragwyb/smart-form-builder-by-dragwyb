@@ -25,7 +25,7 @@ const SearchInput = ({
 
     return (
         <div className={`dragwyb-search-input ${className}`}>
-            <label for={id} title={__('Search', 'dragwyb-form-builder')}>
+            <label htmlFor={id} title={__('Search', 'dragwyb-form-builder')}>
                 <span className="search-icon">
                     <FaMagnifyingGlass />
                 </span>
