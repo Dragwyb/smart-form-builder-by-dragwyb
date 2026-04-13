@@ -3,7 +3,7 @@ Contributors: dragwyb, aniketji007
 Tags: form builder, contact form, custom forms, drag and drop
 Requires at least: 5.8
 Tested up to: 6.9
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
