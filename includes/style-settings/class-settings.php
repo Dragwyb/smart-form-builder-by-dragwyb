@@ -25,12 +25,12 @@ class Settings extends Register_Controls_Base
     {
         // SECTION 1: FORM CONTAINER
         $this->start_section('section_form_container', [
-            'label' => __('Form Container', 'dragwyb-form-builder'),
+            'label' => __('Form Container', 'smart-form-builder-by-dragwyb'),
         ]);
 
         $this->add_control('form_bg_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Background Color', 'dragwyb-form-builder'),
+            'label'     => __('Background Color', 'smart-form-builder-by-dragwyb'),
             'default'   => '#ffffff',
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-form-bg: {{VALUE}};',
@@ -39,19 +39,19 @@ class Settings extends Register_Controls_Base
 
         $this->add_group_control('form_border', [
             'type'      => Controls::GROUP_BORDER,
-            'label'     => __('Border', 'dragwyb-form-builder'),
+            'label'     => __('Border', 'smart-form-builder-by-dragwyb'),
             'selector'  => '{{WRAPPER}}',
         ]);
 
         $this->add_group_control('form_box_shadow', [
             'type'      => Controls::GROUP_BOX_SHADOW,
-            'label'     => __('Box Shadow', 'dragwyb-form-builder'),
+            'label'     => __('Box Shadow', 'smart-form-builder-by-dragwyb'),
             'selector'  => '{{WRAPPER}}',
         ]);
 
         $this->add_control('form_justify_content', [
             'type'      => Controls::CHOOSE,
-            'label'     => __('Justify Content', 'dragwyb-form-builder'),
+            'label'     => __('Justify Content', 'smart-form-builder-by-dragwyb'),
             'default'   => 'center',
             'options' => [
                 'left'   => ['title' => 'Left',   'icon' => 'fa fa-align-left'],
@@ -66,7 +66,7 @@ class Settings extends Register_Controls_Base
 
         $this->add_responsive_control('form_margin', [
             'type'       => Controls::DIMENSIONS,
-            'label'      => __('Margin', 'dragwyb-form-builder'),
+            'label'      => __('Margin', 'smart-form-builder-by-dragwyb'),
             'units'      => ['px', 'em', '%'],
             'selectors'  => [
                 '{{WRAPPER}}' => '--dragwyb-form-mt: {{TOP}}{{UNIT}}; --dragwyb-form-mr: {{RIGHT}}{{UNIT}}; --dragwyb-form-mb: {{BOTTOM}}{{UNIT}}; --dragwyb-form-ml: {{LEFT}}{{UNIT}};',
@@ -75,7 +75,7 @@ class Settings extends Register_Controls_Base
 
         $this->add_responsive_control('form_padding', [
             'type'       => Controls::DIMENSIONS,
-            'label'      => __('Padding', 'dragwyb-form-builder'),
+            'label'      => __('Padding', 'smart-form-builder-by-dragwyb'),
             'units'      => ['px', 'em', '%'],
             'default'    => ['top' => 20, 'right' => 20, 'bottom' => 20, 'left' => 20, 'unit' => 'px', 'linked' => false],
             'selectors'  => [
@@ -85,7 +85,7 @@ class Settings extends Register_Controls_Base
 
         $this->add_responsive_control('field_spacing', [
             'type'      => Controls::SLIDER,
-            'label'     => __('Rows Gap', 'dragwyb-form-builder'),
+            'label'     => __('Rows Gap', 'smart-form-builder-by-dragwyb'),
             'default'   => ['size' => 20, 'unit' => 'px'],
             'range'     => ['px' => ['min' => 0, 'max' => 100]],
             'units'     => ['px', '%'],
@@ -98,17 +98,17 @@ class Settings extends Register_Controls_Base
 
         // SECTION 2: LABELS & HELP TEXT
         $this->start_section('section_label_style', [
-            'label' => __('Labels & Help Text', 'dragwyb-form-builder'),
+            'label' => __('Labels & Help Text', 'smart-form-builder-by-dragwyb'),
         ]);
 
         $this->add_control('label_position', [
             'type'    => Controls::SELECT,
-            'label'   => __('Label Layout', 'dragwyb-form-builder'),
+            'label'   => __('Label Layout', 'smart-form-builder-by-dragwyb'),
             'options' => [
-                'top'       => __('Top Aligned (Standard)', 'dragwyb-form-builder'),
-                'left'      => __('Left Aligned (Horizontal)', 'dragwyb-form-builder'),
-                'floating'  => __('Floating Label (Modern)', 'dragwyb-form-builder'),
-                'hidden'    => __('Hidden (Screen Reader Only)', 'dragwyb-form-builder'),
+                'top'       => __('Top Aligned (Standard)', 'smart-form-builder-by-dragwyb'),
+                'left'      => __('Left Aligned (Horizontal)', 'smart-form-builder-by-dragwyb'),
+                'floating'  => __('Floating Label (Modern)', 'smart-form-builder-by-dragwyb'),
+                'hidden'    => __('Hidden (Screen Reader Only)', 'smart-form-builder-by-dragwyb'),
             ],
             'default' => 'top',
             'label_inline' => true,
@@ -116,10 +116,10 @@ class Settings extends Register_Controls_Base
 
         $this->add_control('floating_style', [
             'type'    => Controls::SELECT,
-            'label'   => __('Floating Style', 'dragwyb-form-builder'),
+            'label'   => __('Floating Style', 'smart-form-builder-by-dragwyb'),
             'options' => [
-                'outlined' => __('Outlined (On Border)', 'dragwyb-form-builder'),
-                'inside'   => __('Inside (Filled / Box)', 'dragwyb-form-builder'),
+                'outlined' => __('Outlined (On Border)', 'smart-form-builder-by-dragwyb'),
+                'inside'   => __('Inside (Filled / Box)', 'smart-form-builder-by-dragwyb'),
             ],
             'default' => 'outlined',
             'label_inline' => true,
@@ -130,7 +130,7 @@ class Settings extends Register_Controls_Base
 
         $this->add_control('floating_active_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Focus Border Color', 'dragwyb-form-builder'),
+            'label'     => __('Focus Border Color', 'smart-form-builder-by-dragwyb'),
             'default'   => '#1d4ed8', // Default blue
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-float-active: {{VALUE}};',
@@ -143,7 +143,7 @@ class Settings extends Register_Controls_Base
 
         $this->add_control('label_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Label Color', 'dragwyb-form-builder'),
+            'label'     => __('Label Color', 'smart-form-builder-by-dragwyb'),
             'default'   => '#374151',
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-label-color: {{VALUE}};',
@@ -152,7 +152,7 @@ class Settings extends Register_Controls_Base
 
         $this->add_control('required_asterisk_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Required Asterisk Color', 'dragwyb-form-builder'),
+            'label'     => __('Required Asterisk Color', 'smart-form-builder-by-dragwyb'),
             'default'   => '#ef4444',
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-asterisk-color: {{VALUE}};',
@@ -161,7 +161,7 @@ class Settings extends Register_Controls_Base
 
         $this->add_control('help_text_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Help Text Color', 'dragwyb-form-builder'),
+            'label'     => __('Help Text Color', 'smart-form-builder-by-dragwyb'),
             'default'   => '#6b7280',
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-help-color: {{VALUE}};',
@@ -170,14 +170,14 @@ class Settings extends Register_Controls_Base
 
         $this->add_group_control('label_typography', [
             'type'     => Controls::GROUP_TYPOGRAPHY,
-            'label'    => __('Typography', 'dragwyb-form-builder'),
+            'label'    => __('Typography', 'smart-form-builder-by-dragwyb'),
             'selector' => '{{WRAPPER}} label',
             'prefix'   => 'label',
         ]);
 
         $this->add_responsive_control('label_spacing', [
             'type'      => Controls::SLIDER,
-            'label'     => __('Spacing (Bottom)', 'dragwyb-form-builder'),
+            'label'     => __('Spacing (Bottom)', 'smart-form-builder-by-dragwyb'),
             'default'   => ['size' => 6, 'unit' => 'px'],
             'range'     => ['px' => ['min' => 0, 'max' => 50]],
             'selectors' => [
@@ -187,7 +187,7 @@ class Settings extends Register_Controls_Base
 
         $this->add_group_control('help_typography', [
             'type'     => Controls::GROUP_TYPOGRAPHY,
-            'label'    => __('Help Text Typography', 'dragwyb-form-builder'),
+            'label'    => __('Help Text Typography', 'smart-form-builder-by-dragwyb'),
             'selector' => '{{WRAPPER}} .dragwyb-field-description',
             'prefix'   => 'help-text',
         ]);
@@ -196,12 +196,12 @@ class Settings extends Register_Controls_Base
 
         // SECTION 3: INPUT FIELDS
         $this->start_section('section_input_style', [
-            'label' => __('Input Fields', 'dragwyb-form-builder'),
+            'label' => __('Input Fields', 'smart-form-builder-by-dragwyb'),
         ]);
 
         $this->add_control('input_bg_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Background Color', 'dragwyb-form-builder'),
+            'label'     => __('Background Color', 'smart-form-builder-by-dragwyb'),
             'default'   => '#ffffff',
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-input-bg: {{VALUE}};',
@@ -210,7 +210,7 @@ class Settings extends Register_Controls_Base
 
         $this->add_control('input_text_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Text Color', 'dragwyb-form-builder'),
+            'label'     => __('Text Color', 'smart-form-builder-by-dragwyb'),
             'default'   => '#111827',
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-input-color: {{VALUE}};',
@@ -219,7 +219,7 @@ class Settings extends Register_Controls_Base
 
         $this->add_control('input_placeholder_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Placeholder Color', 'dragwyb-form-builder'),
+            'label'     => __('Placeholder Color', 'smart-form-builder-by-dragwyb'),
             'default'   => '#9ca3af',
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-input-placeholder: {{VALUE}};',
@@ -228,14 +228,14 @@ class Settings extends Register_Controls_Base
 
         $this->add_group_control('input_typography', [
             'type'     => Controls::GROUP_TYPOGRAPHY,
-            'label'    => __('Typography', 'dragwyb-form-builder'),
+            'label'    => __('Typography', 'smart-form-builder-by-dragwyb'),
             'selector' => '{{WRAPPER}} input, {{WRAPPER}} textarea, {{WRAPPER}} select',
             'prefix'   => 'input',
         ]);
 
         $this->add_responsive_control('input_padding', [
             'type'       => Controls::DIMENSIONS,
-            'label'      => __('Padding', 'dragwyb-form-builder'),
+            'label'      => __('Padding', 'smart-form-builder-by-dragwyb'),
             'units'      => ['px', 'em'],
             'selectors'  => [
                 '{{WRAPPER}}' => '--dragwyb-input-pt: {{TOP}}{{UNIT}}; --dragwyb-input-pr: {{RIGHT}}{{UNIT}}; --dragwyb-input-pb: {{BOTTOM}}{{UNIT}}; --dragwyb-input-pl: {{LEFT}}{{UNIT}};',
@@ -244,21 +244,21 @@ class Settings extends Register_Controls_Base
 
         $this->add_group_control('input_border', [
             'type'     => Controls::GROUP_BORDER,
-            'label'    => __('Border', 'dragwyb-form-builder'),
+            'label'    => __('Border', 'smart-form-builder-by-dragwyb'),
             'selector' => '{{WRAPPER}} input, {{WRAPPER}} textarea, {{WRAPPER}} select',
             'prefix'   => 'input',
         ]);
 
         $this->start_tabs('tabs_input_states');
 
-        $this->start_tab('tab_input_normal', ['label' => __('Normal', 'dragwyb-form-builder')]);
+        $this->start_tab('tab_input_normal', ['label' => __('Normal', 'smart-form-builder-by-dragwyb')]);
         $this->end_tab();
 
-        $this->start_tab('tab_input_focus', ['label' => __('Focus', 'dragwyb-form-builder')]);
+        $this->start_tab('tab_input_focus', ['label' => __('Focus', 'smart-form-builder-by-dragwyb')]);
 
         $this->add_control('input_focus_bg_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Background Color', 'dragwyb-form-builder'),
+            'label'     => __('Background Color', 'smart-form-builder-by-dragwyb'),
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-input-focus-bg: {{VALUE}};',
             ],
@@ -266,7 +266,7 @@ class Settings extends Register_Controls_Base
 
         $this->add_control('input_focus_border_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Border Color', 'dragwyb-form-builder'),
+            'label'     => __('Border Color', 'smart-form-builder-by-dragwyb'),
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-input-focus-border: {{VALUE}};',
             ],
@@ -274,7 +274,7 @@ class Settings extends Register_Controls_Base
 
         $this->add_group_control('input_focus_box_shadow', [
             'type'     => Controls::GROUP_BOX_SHADOW,
-            'label'    => __('Box Shadow', 'dragwyb-form-builder'),
+            'label'    => __('Box Shadow', 'smart-form-builder-by-dragwyb'),
             'selector' => '{{WRAPPER}} input:focus, {{WRAPPER}} textarea:focus, {{WRAPPER}} select:focus',
             'prefix'   => 'input',
         ]);
@@ -285,12 +285,12 @@ class Settings extends Register_Controls_Base
 
         // SECTION 4: BUTTON
         $this->start_section('section_button_style', [
-            'label' => __('Button', 'dragwyb-form-builder'),
+            'label' => __('Button', 'smart-form-builder-by-dragwyb'),
         ]);
 
         $this->add_control('button_width_type', [
             'type'    => Controls::SELECT,
-            'label'   => __('Width Type', 'dragwyb-form-builder'),
+            'label'   => __('Width Type', 'smart-form-builder-by-dragwyb'),
             'options' => [
                 'auto' => 'Auto',
                 'custom' => 'Custom',
@@ -301,7 +301,7 @@ class Settings extends Register_Controls_Base
 
         $this->add_responsive_control('button_width', [
             'type'    => Controls::SLIDER,
-            'label'   => __('Width', 'dragwyb-form-builder'),
+            'label'   => __('Width', 'smart-form-builder-by-dragwyb'),
             'units' => ['px', '%'],
             'range' => [
                 'px' => [
@@ -327,11 +327,11 @@ class Settings extends Register_Controls_Base
 
         $this->add_control('button_alignment', [
             'type'      => Controls::CHOOSE,
-            'label'     => __('Alignment', 'dragwyb-form-builder'),
+            'label'     => __('Alignment', 'smart-form-builder-by-dragwyb'),
             'options'   => [
-                'left'    => ['title' => __('Left', 'dragwyb-form-builder'), 'icon' => 'fa fa-align-left'],
-                'center'  => ['title' => __('Center', 'dragwyb-form-builder'), 'icon' => 'fa fa-align-center'],
-                'right'   => ['title' => __('Right', 'dragwyb-form-builder'), 'icon' => 'fa fa-align-right'],
+                'left'    => ['title' => __('Left', 'smart-form-builder-by-dragwyb'), 'icon' => 'fa fa-align-left'],
+                'center'  => ['title' => __('Center', 'smart-form-builder-by-dragwyb'), 'icon' => 'fa fa-align-center'],
+                'right'   => ['title' => __('Right', 'smart-form-builder-by-dragwyb'), 'icon' => 'fa fa-align-right'],
             ],
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-btn-align: {{VALUE}};',
@@ -340,18 +340,18 @@ class Settings extends Register_Controls_Base
 
         $this->add_group_control('button_typography', [
             'type'     => Controls::GROUP_TYPOGRAPHY,
-            'label'    => __('Typography', 'dragwyb-form-builder'),
+            'label'    => __('Typography', 'smart-form-builder-by-dragwyb'),
             'selector' => '{{WRAPPER}} button[type="submit"]',
             'prefix'   => 'btn',
         ]);
 
         $this->start_tabs('tabs_button_style');
 
-        $this->start_tab('tab_button_normal', ['label' => __('Normal', 'dragwyb-form-builder')]);
+        $this->start_tab('tab_button_normal', ['label' => __('Normal', 'smart-form-builder-by-dragwyb')]);
 
         $this->add_control('button_text_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Text Color', 'dragwyb-form-builder'),
+            'label'     => __('Text Color', 'smart-form-builder-by-dragwyb'),
             'default'   => '#ffffff',
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-btn-color: {{VALUE}};',
@@ -360,7 +360,7 @@ class Settings extends Register_Controls_Base
 
         $this->add_control('button_bg_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Background Color', 'dragwyb-form-builder'),
+            'label'     => __('Background Color', 'smart-form-builder-by-dragwyb'),
             'default'   => '#1d4ed8',
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-btn-bg: {{VALUE}};',
@@ -369,11 +369,11 @@ class Settings extends Register_Controls_Base
 
         $this->end_tab();
 
-        $this->start_tab('tab_button_hover', ['label' => __('Hover', 'dragwyb-form-builder')]);
+        $this->start_tab('tab_button_hover', ['label' => __('Hover', 'smart-form-builder-by-dragwyb')]);
 
         $this->add_control('button_hover_text_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Text Color', 'dragwyb-form-builder'),
+            'label'     => __('Text Color', 'smart-form-builder-by-dragwyb'),
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-btn-hover-color: {{VALUE}};',
             ],
@@ -381,7 +381,7 @@ class Settings extends Register_Controls_Base
 
         $this->add_control('button_hover_bg_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Background Color', 'dragwyb-form-builder'),
+            'label'     => __('Background Color', 'smart-form-builder-by-dragwyb'),
             'default'   => '#1e40af',
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-btn-hover-bg: {{VALUE}};',
@@ -393,7 +393,7 @@ class Settings extends Register_Controls_Base
 
         $this->add_responsive_control('button_padding', [
             'type'       => Controls::DIMENSIONS,
-            'label'      => __('Padding', 'dragwyb-form-builder'),
+            'label'      => __('Padding', 'smart-form-builder-by-dragwyb'),
             'units'      => ['px', 'em'],
             'selectors'  => [
                 '{{WRAPPER}}' => '--dragwyb-btn-pt: {{TOP}}{{UNIT}}; --dragwyb-btn-pr: {{RIGHT}}{{UNIT}}; --dragwyb-btn-pb: {{BOTTOM}}{{UNIT}}; --dragwyb-btn-pl: {{LEFT}}{{UNIT}};',
@@ -402,14 +402,14 @@ class Settings extends Register_Controls_Base
 
         $this->add_group_control('button_border', [
             'type'     => Controls::GROUP_BORDER,
-            'label'    => __('Border', 'dragwyb-form-builder'),
+            'label'    => __('Border', 'smart-form-builder-by-dragwyb'),
             'selector' => '{{WRAPPER}} button[type="submit"]',
             'prefix'   => 'btn',
         ]);
 
         $this->add_group_control('button_box_shadow', [
             'type'     => Controls::GROUP_BOX_SHADOW,
-            'label'    => __('Box Shadow', 'dragwyb-form-builder'),
+            'label'    => __('Box Shadow', 'smart-form-builder-by-dragwyb'),
             'selector' => '{{WRAPPER}} button[type="submit"]',
             'prefix'   => 'btn',
         ]);
@@ -418,12 +418,12 @@ class Settings extends Register_Controls_Base
 
         // SECTION 5: MESSAGES & VALIDATION (Often ignored in free versions)
         $this->start_section('section_message_style', [
-            'label' => __('Messages & Validation', 'dragwyb-form-builder'),
+            'label' => __('Messages & Validation', 'smart-form-builder-by-dragwyb'),
         ]);
 
         $this->add_control('success_text_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Success Text Color', 'dragwyb-form-builder'),
+            'label'     => __('Success Text Color', 'smart-form-builder-by-dragwyb'),
             'default'   => '#15803d',
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-success-color: {{VALUE}};',
@@ -432,7 +432,7 @@ class Settings extends Register_Controls_Base
 
         $this->add_control('success_bg_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Background Color', 'dragwyb-form-builder'),
+            'label'     => __('Background Color', 'smart-form-builder-by-dragwyb'),
             'default'   => '#dcfce7',
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-success-bg: {{VALUE}};',
@@ -441,7 +441,7 @@ class Settings extends Register_Controls_Base
 
         $this->add_control('error_text_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Error / Validation Color', 'dragwyb-form-builder'),
+            'label'     => __('Error / Validation Color', 'smart-form-builder-by-dragwyb'),
             'default'   => '#b91c1c',
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-error-color: {{VALUE}};',
@@ -450,7 +450,7 @@ class Settings extends Register_Controls_Base
 
         $this->add_control('error_bg_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Background Color', 'dragwyb-form-builder'),
+            'label'     => __('Background Color', 'smart-form-builder-by-dragwyb'),
             'default'   => '#fee2e2',
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-error-bg: {{VALUE}};',

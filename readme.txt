@@ -1,5 +1,5 @@
 === Smart Form Builder by Dragwyb ===
-Contributors: aniketji007, dragwyb
+Contributors: dragwyb, aniketji007
 Tags: form builder, contact form, custom forms, drag and drop
 Requires at least: 5.8
 Tested up to: 6.9
@@ -16,7 +16,7 @@ Smart Form Builder by Dragwyb is a powerful, flexible, and intuitive drag & drop
 
 == Installation ==
 
-1. Upload the plugin files to the `/wp-content/plugins/dragwyb-form-builder` directory, or install the plugin through the WordPress plugins screen directly.
+1. Upload the plugin files to the `/wp-content/plugins/smart-form-builder-by-dragwyb` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress.
 3. Navigate to the Smart Form Builder by Dragwyb menu in your WordPress dashboard to start creating your forms.
 
@@ -44,6 +44,11 @@ We are constantly working to improve Smart Form Builder by Dragwyb. Here are som
 
 == Changelog ==
 
+= 1.0.1 13 April 2026 =
+
+*   Update plugin name and slug
+
 = 1.0.0 30 March 2026 =
+
 *   Initial release
 

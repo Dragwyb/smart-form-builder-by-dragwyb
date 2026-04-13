@@ -65,7 +65,7 @@ if (!class_exists('Form_Overview')) {
 
 ?>
             <div class="wrap">
-                <h1 class="wp-heading-inline"><?php esc_html_e('Form Builder Overview', 'dragwyb-form-builder'); ?></h1>
+                <h1 class="wp-heading-inline"><?php esc_html_e('Form Builder Overview', 'smart-form-builder-by-dragwyb'); ?></h1>
                 <ul class="subsubsub">
                     <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WP_List_Table::get_views() returns safe HTML with proper escaping
                     echo implode(' | ', $form_table->get_views()); ?>

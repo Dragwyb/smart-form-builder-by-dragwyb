@@ -28,14 +28,14 @@ class Control_Repeater extends Control_Base
     protected function default_setting(): array
     {
         return array(
-            'add_item' => __('Add Item', 'dragwyb-form-builder')
+            'add_item' => __('Add Item', 'smart-form-builder-by-dragwyb')
         );
     }
 
     protected function init(): void
     {
         $this->type = 'repeater';
-        $this->name = __('Repeater', 'dragwyb-form-builder');
+        $this->name = __('Repeater', 'smart-form-builder-by-dragwyb');
     }
 
     public function set_value($data, string $control_id, $repeater_data = null): void

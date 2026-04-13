@@ -11,7 +11,7 @@ class Field_Button extends Field_Base
     protected function init(): void
     {
         $this->type = 'button';
-        $this->name = __('Button', 'dragwyb-form-builder');
+        $this->name = __('Button', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fa fa-mouse-pointer';
         $this->category = 'structure';
     }
@@ -29,24 +29,24 @@ class Field_Button extends Field_Base
         // ==============================================================
 
         $this->start_section('section_content', [
-            'label' => __('Button Settings', 'dragwyb-form-builder'),
+            'label' => __('Button Settings', 'smart-form-builder-by-dragwyb'),
             'tab'   => self::ContentTab,
         ]);
 
         // The text displayed on the button
         $this->add_control('text', [
             'type'    => Controls::TEXT,
-            'label'   => __('Label', 'dragwyb-form-builder'),
-            'default' => __('Submit', 'dragwyb-form-builder'),
+            'label'   => __('Label', 'smart-form-builder-by-dragwyb'),
+            'default' => __('Submit', 'smart-form-builder-by-dragwyb'),
         ]);
 
         // Determines if the button submits the form or clears the inputs
         $this->add_control('button_action', [
             'type'    => Controls::SELECT,
-            'label'   => __('Action Type', 'dragwyb-form-builder'),
+            'label'   => __('Action Type', 'smart-form-builder-by-dragwyb'),
             'options' => [
-                'submit' => __('Submit Form', 'dragwyb-form-builder'),
-                'reset'  => __('Clear / Reset', 'dragwyb-form-builder'),
+                'submit' => __('Submit Form', 'smart-form-builder-by-dragwyb'),
+                'reset'  => __('Clear / Reset', 'smart-form-builder-by-dragwyb'),
             ],
             'label_inline' => true,
             'default' => 'submit',
@@ -55,7 +55,7 @@ class Field_Button extends Field_Base
         // Set the alignment of the button within its container
         $this->add_control('alignment', [
             'type'    => Controls::CHOOSE,
-            'label'   => __('Alignment', 'dragwyb-form-builder'),
+            'label'   => __('Alignment', 'smart-form-builder-by-dragwyb'),
             'options' => [
                 'left'   => ['title' => 'Left',   'icon' => 'fa fa-align-left'],
                 'center' => ['title' => 'Center', 'icon' => 'fa fa-align-center'],
@@ -74,7 +74,7 @@ class Field_Button extends Field_Base
         // ==============================================================
 
         $this->start_section('section_style', [
-            'label' => __('Button Style', 'dragwyb-form-builder'),
+            'label' => __('Button Style', 'smart-form-builder-by-dragwyb'),
             'tab'   => self::StyleTab,
         ]);
 
@@ -82,23 +82,23 @@ class Field_Button extends Field_Base
         $this->start_tabs('tabs_button_style');
 
         // -- Normal State --
-        $this->start_tab('tab_btn_normal', ['label' => __('Normal', 'dragwyb-form-builder')]);
+        $this->start_tab('tab_btn_normal', ['label' => __('Normal', 'smart-form-builder-by-dragwyb')]);
 
         $this->add_control('bg_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Background Color', 'dragwyb-form-builder'),
+            'label'     => __('Background Color', 'smart-form-builder-by-dragwyb'),
             'selectors' => ['{{WRAPPER}} button' => '--dragwyb-btn-bg: {{VALUE}};'],
         ]);
 
         $this->add_control('text_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Text Color', 'dragwyb-form-builder'),
+            'label'     => __('Text Color', 'smart-form-builder-by-dragwyb'),
             'selectors' => ['{{WRAPPER}} button' => '--dragwyb-btn-color: {{VALUE}};'],
         ]);
 
         $this->add_group_control('border', [
             'type'     => Controls::GROUP_BORDER,
-            'label'    => __('Border', 'dragwyb-form-builder'),
+            'label'    => __('Border', 'smart-form-builder-by-dragwyb'),
             'selector' => '{{WRAPPER}} button',
             'prefix' => 'btn'
         ]);
@@ -106,23 +106,23 @@ class Field_Button extends Field_Base
         $this->end_tab();
 
         // -- Hover State --
-        $this->start_tab('tab_btn_hover', ['label' => __('Hover', 'dragwyb-form-builder')]);
+        $this->start_tab('tab_btn_hover', ['label' => __('Hover', 'smart-form-builder-by-dragwyb')]);
 
         $this->add_control('hover_bg_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Background Color', 'dragwyb-form-builder'),
+            'label'     => __('Background Color', 'smart-form-builder-by-dragwyb'),
             'selectors' => ['{{WRAPPER}} button:hover' => '--dragwyb-btn-bg: {{VALUE}};'],
         ]);
 
         $this->add_control('hover_text_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Text Color', 'dragwyb-form-builder'),
+            'label'     => __('Text Color', 'smart-form-builder-by-dragwyb'),
             'selectors' => ['{{WRAPPER}} button:hover' => '--dragwyb-btn-color: {{VALUE}};'],
         ]);
 
         $this->add_control('hover_border_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Border Color', 'dragwyb-form-builder'),
+            'label'     => __('Border Color', 'smart-form-builder-by-dragwyb'),
             'selectors' => ['{{WRAPPER}} button:hover' => '--dragwyb-btn-border-color: {{VALUE}};'],
         ]);
 
@@ -132,7 +132,7 @@ class Field_Button extends Field_Base
         // Controls for padding and border radius affect both states
         $this->add_control('padding', [
             'type'       => Controls::DIMENSIONS,
-            'label'      => __('Padding', 'dragwyb-form-builder'),
+            'label'      => __('Padding', 'smart-form-builder-by-dragwyb'),
             'size_units' => ['px', 'em', '%'],
             'selectors'  => ['{{WRAPPER}}.dragwyb-button-field' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'],
             'separator'  => 'before',
@@ -140,14 +140,14 @@ class Field_Button extends Field_Base
 
         $this->add_group_control('typography', [
             'type'     => Controls::GROUP_TYPOGRAPHY,
-            'label'    => __('Typography', 'dragwyb-form-builder'),
+            'label'    => __('Typography', 'smart-form-builder-by-dragwyb'),
             'selector' => '{{WRAPPER}}.dragwyb-button-field',
             'prefix' => 'btn'
         ]);
 
         $this->add_control('button_width', [
             'type' => Controls::SLIDER,
-            'label' => __('Button Width', 'dragwyb-form-builder'),
+            'label' => __('Button Width', 'smart-form-builder-by-dragwyb'),
             'units' => ['px'],
             'range' => [
                 'px' => [

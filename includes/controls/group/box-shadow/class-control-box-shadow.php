@@ -12,7 +12,7 @@ class Control_Box_Shadow extends Group_Control_Base
     protected function init(): void
     {
         $this->type = 'box-shadow';
-        $this->name = __('Box Shadow', 'dragwyb-form-builder');
+        $this->name = __('Box Shadow', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-clone';
     }
 
@@ -127,12 +127,12 @@ class Control_Box_Shadow extends Group_Control_Base
 
         // 2. Control Map
         $map = [
-            'color'         => ['type' => Controls::COLOR, 'label' => __('Color', 'dragwyb-form-builder')],
-            'horizontal'    => ['type' => Controls::SLIDER, 'label' => __('Horizontal', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]], 'responsive' => true],
-            'vertical'      => ['type' => Controls::SLIDER, 'label' => __('Vertical', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]], 'responsive' => true],
-            'blur'          => ['type' => Controls::SLIDER, 'label' => __('Blur', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => 0, 'max' => 100, 'step' => 1]], 'responsive' => true],
-            'spread'        => ['type' => Controls::SLIDER, 'label' => __('Spread', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]], 'responsive' => true],
-            'position'      => ['type' => Controls::SELECT, 'label' => __('Position', 'dragwyb-form-builder'), 'options' => ['' => __('Default', 'dragwyb-form-builder'), 'inset' => __('Inset', 'dragwyb-form-builder')], 'label_inline' => true],
+            'color'         => ['type' => Controls::COLOR, 'label' => __('Color', 'smart-form-builder-by-dragwyb')],
+            'horizontal'    => ['type' => Controls::SLIDER, 'label' => __('Horizontal', 'smart-form-builder-by-dragwyb'), 'range' => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]], 'responsive' => true],
+            'vertical'      => ['type' => Controls::SLIDER, 'label' => __('Vertical', 'smart-form-builder-by-dragwyb'), 'range' => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]], 'responsive' => true],
+            'blur'          => ['type' => Controls::SLIDER, 'label' => __('Blur', 'smart-form-builder-by-dragwyb'), 'range' => ['px' => ['min' => 0, 'max' => 100, 'step' => 1]], 'responsive' => true],
+            'spread'        => ['type' => Controls::SLIDER, 'label' => __('Spread', 'smart-form-builder-by-dragwyb'), 'range' => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]], 'responsive' => true],
+            'position'      => ['type' => Controls::SELECT, 'label' => __('Position', 'smart-form-builder-by-dragwyb'), 'options' => ['' => __('Default', 'smart-form-builder-by-dragwyb'), 'inset' => __('Inset', 'smart-form-builder-by-dragwyb')], 'label_inline' => true],
         ];
 
         // 3. Generate Controls

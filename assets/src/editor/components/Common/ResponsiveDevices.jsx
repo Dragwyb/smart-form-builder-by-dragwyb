@@ -30,9 +30,9 @@ const ResponsiveDevices = ({ Utils, style = 'default' }) => {
 
     return (
         <div className={`dragwyb-editor__responsive-devices responsive-devices-${style}`}>
-            <button className={responsiveType >= 1024 ? 'active' : ''} onClick={() => setWidth('desktop')} title={__('Desktop', 'dragwyb-form-builder')}><IoTvOutline /></button>
-            <button className={responsiveType >= 768 && responsiveType < 1024 ? 'active' : ''} onClick={() => setWidth('tablet')} title={__('Tablet', 'dragwyb-form-builder')}><IoIosTabletPortrait /></button>
-            <button className={responsiveType < 768 ? 'active' : ''} onClick={() => setWidth('mobile')} title={__('Mobile', 'dragwyb-form-builder')}><CiMobile3 /></button>
+            <button className={responsiveType >= 1024 ? 'active' : ''} onClick={() => setWidth('desktop')} title={__('Desktop', 'smart-form-builder-by-dragwyb')}><IoTvOutline /></button>
+            <button className={responsiveType >= 768 && responsiveType < 1024 ? 'active' : ''} onClick={() => setWidth('tablet')} title={__('Tablet', 'smart-form-builder-by-dragwyb')}><IoIosTabletPortrait /></button>
+            <button className={responsiveType < 768 ? 'active' : ''} onClick={() => setWidth('mobile')} title={__('Mobile', 'smart-form-builder-by-dragwyb')}><CiMobile3 /></button>
         </div>
     );
 };

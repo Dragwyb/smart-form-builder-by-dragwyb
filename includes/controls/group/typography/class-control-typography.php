@@ -12,7 +12,7 @@ class Control_Typography extends Group_Control_Base
     protected function init(): void
     {
         $this->type = 'typography';
-        $this->name = __('Typography', 'dragwyb-form-builder');
+        $this->name = __('Typography', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-pen';
     }
 
@@ -64,9 +64,9 @@ class Control_Typography extends Group_Control_Base
             // --- Weight ---
             'weight' => [
                 'options' => [
-                    'default' => __('Default', 'dragwyb-form-builder'),
-                    'normal'  => __('Normal', 'dragwyb-form-builder'),
-                    'bold'    => __('Bold', 'dragwyb-form-builder'),
+                    'default' => __('Default', 'smart-form-builder-by-dragwyb'),
+                    'normal'  => __('Normal', 'smart-form-builder-by-dragwyb'),
+                    'bold'    => __('Bold', 'smart-form-builder-by-dragwyb'),
                     '100'     => '100',
                     '200'     => '200',
                     '300'     => '300',
@@ -82,32 +82,32 @@ class Control_Typography extends Group_Control_Base
             // --- Transform ---
             'transform' => [
                 'options' => [
-                    ''           => __('Default', 'dragwyb-form-builder'),
-                    'none'       => __('None', 'dragwyb-form-builder'),
-                    'uppercase'  => __('Uppercase', 'dragwyb-form-builder'),
-                    'lowercase'  => __('Lowercase', 'dragwyb-form-builder'),
-                    'capitalize' => __('Capitalize', 'dragwyb-form-builder'),
+                    ''           => __('Default', 'smart-form-builder-by-dragwyb'),
+                    'none'       => __('None', 'smart-form-builder-by-dragwyb'),
+                    'uppercase'  => __('Uppercase', 'smart-form-builder-by-dragwyb'),
+                    'lowercase'  => __('Lowercase', 'smart-form-builder-by-dragwyb'),
+                    'capitalize' => __('Capitalize', 'smart-form-builder-by-dragwyb'),
                 ],
                 'default' => '',
             ],
             // --- Style ---
             'style' => [
                 'options' => [
-                    ''        => __('Default', 'dragwyb-form-builder'),
-                    'normal'  => __('Normal', 'dragwyb-form-builder'),
-                    'italic'  => __('Italic', 'dragwyb-form-builder'),
-                    'oblique' => __('Oblique', 'dragwyb-form-builder'),
+                    ''        => __('Default', 'smart-form-builder-by-dragwyb'),
+                    'normal'  => __('Normal', 'smart-form-builder-by-dragwyb'),
+                    'italic'  => __('Italic', 'smart-form-builder-by-dragwyb'),
+                    'oblique' => __('Oblique', 'smart-form-builder-by-dragwyb'),
                 ],
                 'default' => '',
             ],
             // --- Decoration ---
             'decoration' => [
                 'options' => [
-                    ''             => __('Default', 'dragwyb-form-builder'),
-                    'none'         => __('None', 'dragwyb-form-builder'),
-                    'underline'    => __('Underline', 'dragwyb-form-builder'),
-                    'overline'     => __('Overline', 'dragwyb-form-builder'),
-                    'line-through' => __('Line Through', 'dragwyb-form-builder'),
+                    ''             => __('Default', 'smart-form-builder-by-dragwyb'),
+                    'none'         => __('None', 'smart-form-builder-by-dragwyb'),
+                    'underline'    => __('Underline', 'smart-form-builder-by-dragwyb'),
+                    'overline'     => __('Overline', 'smart-form-builder-by-dragwyb'),
+                    'line-through' => __('Line Through', 'smart-form-builder-by-dragwyb'),
                 ],
                 'default' => '',
             ],
@@ -131,15 +131,15 @@ class Control_Typography extends Group_Control_Base
             'alignment' => [
                 'options' => [
                     'left' => [
-                        'title' => __('Left', 'dragwyb-form-builder'),
+                        'title' => __('Left', 'smart-form-builder-by-dragwyb'),
                         'icon'  => 'fa fa-align-left',
                     ],
                     'center' => [
-                        'title' => __('Center', 'dragwyb-form-builder'),
+                        'title' => __('Center', 'smart-form-builder-by-dragwyb'),
                         'icon'  => 'fa fa-align-center',
                     ],
                     'right' => [
-                        'title' => __('Right', 'dragwyb-form-builder'),
+                        'title' => __('Right', 'smart-form-builder-by-dragwyb'),
                         'icon'  => 'fa fa-align-right',
                     ],
                 ],
@@ -392,16 +392,16 @@ class Control_Typography extends Group_Control_Base
 
         // 2. Control Map
         $map = [
-            'family'         => ['type' => Controls::FONTS, 'label' => __('Family', 'dragwyb-form-builder'), 'default' => 'Default'],
-            'size'           => ['type' => Controls::SLIDER, 'label' => __('Font Size', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => 0, 'max' => 100, 'step' => 1]], 'units' => ['px'], 'responsive' => true],
-            'weight'         => ['type' => Controls::SELECT, 'label' => __('Weight', 'dragwyb-form-builder'), 'label_inline' => true],
-            'transform'      => ['type' => Controls::SELECT, 'label' => __('Transform', 'dragwyb-form-builder'), 'label_inline' => true],
-            'style'          => ['type' => Controls::SELECT, 'label' => __('Style', 'dragwyb-form-builder'), 'label_inline' => true],
-            'decoration'     => ['type' => Controls::SELECT, 'label' => __('Decoration', 'dragwyb-form-builder'), 'label_inline' => true],
-            'line_height'    => ['type' => Controls::SLIDER, 'label' => __('Line Height', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => 0, 'max' => 100, 'step' => 1]], 'responsive' => true],
-            'letter_spacing' => ['type' => Controls::SLIDER, 'label' => __('Letter Spacing', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => 0, 'max' => 100, 'step' => 1]], 'units' => ['px'], 'responsive' => true],
-            'word_spacing'   => ['type' => Controls::SLIDER, 'label' => __('Word Spacing', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => 0, 'max' => 100, 'step' => 1]], 'units' => ['px'], 'responsive' => true],
-            'alignment'      => ['type' => Controls::CHOOSE, 'label' => __('Alignment', 'dragwyb-form-builder'), 'label_inline' => true],
+            'family'         => ['type' => Controls::FONTS, 'label' => __('Family', 'smart-form-builder-by-dragwyb'), 'default' => 'Default'],
+            'size'           => ['type' => Controls::SLIDER, 'label' => __('Font Size', 'smart-form-builder-by-dragwyb'), 'range' => ['px' => ['min' => 0, 'max' => 100, 'step' => 1]], 'units' => ['px'], 'responsive' => true],
+            'weight'         => ['type' => Controls::SELECT, 'label' => __('Weight', 'smart-form-builder-by-dragwyb'), 'label_inline' => true],
+            'transform'      => ['type' => Controls::SELECT, 'label' => __('Transform', 'smart-form-builder-by-dragwyb'), 'label_inline' => true],
+            'style'          => ['type' => Controls::SELECT, 'label' => __('Style', 'smart-form-builder-by-dragwyb'), 'label_inline' => true],
+            'decoration'     => ['type' => Controls::SELECT, 'label' => __('Decoration', 'smart-form-builder-by-dragwyb'), 'label_inline' => true],
+            'line_height'    => ['type' => Controls::SLIDER, 'label' => __('Line Height', 'smart-form-builder-by-dragwyb'), 'range' => ['px' => ['min' => 0, 'max' => 100, 'step' => 1]], 'responsive' => true],
+            'letter_spacing' => ['type' => Controls::SLIDER, 'label' => __('Letter Spacing', 'smart-form-builder-by-dragwyb'), 'range' => ['px' => ['min' => 0, 'max' => 100, 'step' => 1]], 'units' => ['px'], 'responsive' => true],
+            'word_spacing'   => ['type' => Controls::SLIDER, 'label' => __('Word Spacing', 'smart-form-builder-by-dragwyb'), 'range' => ['px' => ['min' => 0, 'max' => 100, 'step' => 1]], 'units' => ['px'], 'responsive' => true],
+            'alignment'      => ['type' => Controls::CHOOSE, 'label' => __('Alignment', 'smart-form-builder-by-dragwyb'), 'label_inline' => true],
         ];
 
         // Access nested 'font' settings safely

@@ -137,7 +137,7 @@ const RenderItem = ({
                     {isRootContainer && false === dropInfo && (
                         <div className="field-actions">
                             <button
-                                title={__("Duplicate", "dragwyb-form-builder")}
+                                title={__("Duplicate", "smart-form-builder-by-dragwyb")}
                                 className="duplicate"
                                 onClick={(e) => {
                                     e.stopPropagation();
@@ -147,14 +147,14 @@ const RenderItem = ({
                                 <span className="dashicons dashicons-admin-page"></span>
                             </button>
                             <button
-                                title={sprintf(__('%s Settings', 'dragwyb-form-builder'), fieldSettings.label)}
+                                title={sprintf(__('%s Settings', 'smart-form-builder-by-dragwyb'), fieldSettings.label)}
                                 className="settings"
                                 onClick={onRootContainerSelect}
                             >
                                 <span className="dashicons dashicons-menu"></span>
                             </button>
                             <button
-                                title={__("Delete", "dragwyb-form-builder")}
+                                title={__("Delete", "smart-form-builder-by-dragwyb")}
                                 className="delete"
                                 onClick={(e) => {
                                     e.stopPropagation();
@@ -173,10 +173,10 @@ const RenderItem = ({
 
 const AddFieldMsg = ({ setActiveTab, isOver, updateFieldSelect }) => {
     const activeTab = useSelector((state) => state.activeToolbar);
-    let emptyMessage = __("Add field", "dragwyb-form-builder");
+    let emptyMessage = __("Add field", "smart-form-builder-by-dragwyb");
 
     if (isOver) {
-        emptyMessage = __("Drag field here.", "dragwyb-form-builder");
+        emptyMessage = __("Drag field here.", "smart-form-builder-by-dragwyb");
     }
 
     return (

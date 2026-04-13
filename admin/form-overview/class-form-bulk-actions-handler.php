@@ -112,7 +112,7 @@ class Form_Bulk_Actions_Handler
         }
 
         if (! wp_trash_post($post_id)) {
-            wp_die(esc_html__('Error in moving the item to Trash.', 'dragwyb-form-builder'));
+            wp_die(esc_html__('Error in moving the item to Trash.', 'smart-form-builder-by-dragwyb'));
         }
 
         ++$this->trashed;
@@ -121,11 +121,11 @@ class Form_Bulk_Actions_Handler
     protected function delete_post($post_id)
     {
         if (! current_user_can('delete_post', $post_id)) {
-            wp_die(esc_html__('Sorry, you are not allowed to delete this item.', 'dragwyb-form-builder'));
+            wp_die(esc_html__('Sorry, you are not allowed to delete this item.', 'smart-form-builder-by-dragwyb'));
         }
 
         if (! wp_delete_post($post_id)) {
-            wp_die(esc_html__('Error in deleting the item.', 'dragwyb-form-builder'));
+            wp_die(esc_html__('Error in deleting the item.', 'smart-form-builder-by-dragwyb'));
         }
 
         ++$this->deleted;
@@ -134,11 +134,11 @@ class Form_Bulk_Actions_Handler
     protected function untrash_post($post_id)
     {
         if (! current_user_can('delete_post', $post_id)) {
-            wp_die(esc_html__('Sorry, you are not allowed to restore this item from the Trash.', 'dragwyb-form-builder'));
+            wp_die(esc_html__('Sorry, you are not allowed to restore this item from the Trash.', 'smart-form-builder-by-dragwyb'));
         }
 
         if (! wp_untrash_post($post_id)) {
-            wp_die(esc_html__('Error in restoring the item from Trash.', 'dragwyb-form-builder'));
+            wp_die(esc_html__('Error in restoring the item from Trash.', 'smart-form-builder-by-dragwyb'));
         }
 
         ++$this->untrashed;

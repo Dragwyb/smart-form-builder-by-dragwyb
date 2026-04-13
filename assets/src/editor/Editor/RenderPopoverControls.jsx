@@ -94,7 +94,7 @@ const RenderPopoverControls = ({
                         {PopoverTitle && <div className="dragwyb-popover__title">
                             {PopoverTitle}
                             <span onClick={resetControlsValues}>
-                                <FaUndo size={12} title={__('Reset to Default', 'dragwyb-form-builder')} />
+                                <FaUndo size={12} title={__('Reset to Default', 'smart-form-builder-by-dragwyb')} />
                             </span>
                         </div>}
                         {

@@ -82,7 +82,7 @@ abstract class Toolbar_Base
             $settings->set_form_id($form_id);
             $conrols = $settings->render_controls();
             // translators: %s is the name of the toolbar
-            $data['label'] = sprintf(esc_html__('%s Settings', 'dragwyb-form-builder'), sanitize_text_field($this->get_name()));
+            $data['label'] = sprintf(esc_html__('%s Settings', 'smart-form-builder-by-dragwyb'), sanitize_text_field($this->get_name()));
 
             if ($conrols && count($conrols) > 0) {
                 $data['controls'] = $conrols;

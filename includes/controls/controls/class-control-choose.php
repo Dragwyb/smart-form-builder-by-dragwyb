@@ -32,7 +32,7 @@ class Control_Choose extends Control_Base
     protected function init(): void
     {
         $this->type = 'choose';
-        $this->name = __('Choose', 'dragwyb-form-builder');
+        $this->name = __('Choose', 'smart-form-builder-by-dragwyb');
     }
 
     protected function default_setting(): array

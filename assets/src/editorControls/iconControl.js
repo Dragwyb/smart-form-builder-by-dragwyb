@@ -197,10 +197,10 @@ export default class IconControl extends DragwybEditor.editor.extends.ControlBas
                             <div className="dragwyb-icon-panel">
                                 <div className="dragwyb-icon-panel__inner">
                                     {/* Close Icon */}
-                                    <span className="dragwyb-icon-panel__close" onClick={() => this.setState({ isOpen: false })} title={__('Close', 'dragwyb-form-builder')}>
+                                    <span className="dragwyb-icon-panel__close" onClick={() => this.setState({ isOpen: false })} title={__('Close', 'smart-form-builder-by-dragwyb')}>
                                         <FaXmark size={20} />
                                     </span>
-                                    <h2 className="dragwyb-icon-panel__title">{__('Icon Library', 'dragwyb-form-builder')}</h2>
+                                    <h2 className="dragwyb-icon-panel__title">{__('Icon Library', 'smart-form-builder-by-dragwyb')}</h2>
                                     {/* Search Bar */}
                                     <div className="dragwyb-icon-search-wrapper">
                                         <SearchInput
@@ -234,7 +234,7 @@ export default class IconControl extends DragwybEditor.editor.extends.ControlBas
                                             </>
                                             :
                                             <div className="dragwyb-icon-item empty">
-                                                {__('No icons found', 'dragwyb-form-builder')}
+                                                {__('No icons found', 'smart-form-builder-by-dragwyb')}
                                             </div>
                                         }
                                     </div>

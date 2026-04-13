@@ -18,7 +18,7 @@ class Control_Textarea extends Control_Base
     protected function init(): void
     {
         $this->type = 'textarea';
-        $this->name = __('Textarea', 'dragwyb-form-builder');
+        $this->name = __('Textarea', 'smart-form-builder-by-dragwyb');
     }
 
     protected function sanitize_control($value)

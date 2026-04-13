@@ -19,7 +19,7 @@ class Control_Tabs extends Control_Base
     protected function init(): void
     {
         $this->type = 'tabs';
-        $this->name = __('Tabs', 'dragwyb-form-builder');
+        $this->name = __('Tabs', 'smart-form-builder-by-dragwyb');
     }
 
     protected function sanitize_control($value)

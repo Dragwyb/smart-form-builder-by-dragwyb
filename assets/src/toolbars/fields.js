@@ -153,10 +153,10 @@ class Fields extends DragwybEditor.editor.extends.ToolbarBase {
       return <div className='dragwyb-fields-settings'>
         <div className='dragwyb-fields-settings__tabs'>
           <div className='dragwyb-fields-settings__tab' onClick={() => Utils.setSelectedSettingId({ value: false })}>
-            <p>{__('Add Fields', 'dragwyb-form-builder')}</p>
+            <p>{__('Add Fields', 'smart-form-builder-by-dragwyb')}</p>
           </div>
           <div className='dragwyb-fields-settings__tab active'>
-            <p>{__('Field Settings', 'dragwyb-form-builder')}</p>
+            <p>{__('Field Settings', 'smart-form-builder-by-dragwyb')}</p>
           </div>
         </div>
       </div>
@@ -177,7 +177,7 @@ class Fields extends DragwybEditor.editor.extends.ToolbarBase {
 
     if (setting.fields && selectedField.type && setting.fields[selectedField.type]) {
       selectedFieldSettings = setting.fields[selectedField.type];
-      selectedFieldSettings.panelHeading = <>{__('Field Settings', 'dragwyb-form-builder')} <span>{selectedFieldSettings.label}</span></>;
+      selectedFieldSettings.panelHeading = <>{__('Field Settings', 'smart-form-builder-by-dragwyb')} <span>{selectedFieldSettings.label}</span></>;
     }
 
     selectedFieldSettings.id = key;

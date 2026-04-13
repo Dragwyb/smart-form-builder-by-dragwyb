@@ -10,7 +10,7 @@ class Control_Box_Shadow extends Control_Base
     protected function init(): void
     {
         $this->type = 'box_shadow';
-        $this->name = __('Box Shadow', 'dragwyb-form-builder');
+        $this->name = __('Box Shadow', 'smart-form-builder-by-dragwyb');
     }
 
     protected function register_settings()

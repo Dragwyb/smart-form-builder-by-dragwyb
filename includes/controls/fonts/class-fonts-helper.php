@@ -59,12 +59,12 @@ class Fonts_Helper
 	{
 		if (null === self::$font_groups) {
 			$font_groups = [
-				self::SYSTEM => esc_html__('System', 'dragwyb-form-builder'),
+				self::SYSTEM => esc_html__('System', 'smart-form-builder-by-dragwyb'),
 			];
 
 			if (static::google_fonts_enabled()) {
 				$font_groups = array_merge($font_groups, [
-					self::GOOGLE => esc_html__('Google', 'dragwyb-form-builder'),
+					self::GOOGLE => esc_html__('Google', 'smart-form-builder-by-dragwyb'),
 				]);
 			}
 

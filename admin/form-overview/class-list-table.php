@@ -241,13 +241,13 @@ class List_Table extends WP_List_Table
                 '<a href="%s" class="submitdelete" onclick="return confirm(\'Are you sure you want to delete %s form?\');">%s</a>',
                 esc_url(wp_nonce_url("post.php?action=untrash&post={$form->ID}", 'untrash-post_' . $form->ID)),
                 $form->post_title . '(' . $form->ID . ')',
-                __('Restore', 'dragwyb-form-builder')
+                __('Restore', 'smart-form-builder-by-dragwyb')
             );
             $actions['delete'] = sprintf(
                 '<a href="%s" class="submitdelete" onclick="return confirm(\'Are you sure you want to delete %s form?\');">%s</a>',
                 esc_url(wp_nonce_url("post.php?action=delete&post={$form->ID}", 'delete-post_' . $form->ID)),
                 $form->post_title . '(' . $form->ID . ')',
-                __('Delete', 'dragwyb-form-builder')
+                __('Delete', 'smart-form-builder-by-dragwyb')
             );
         } else {
             $actions['edit'] = '<a href="?page=dragwyb-form-builder&form_id=' . (int) esc_attr($form->ID) . '">Edit</a>';
@@ -256,7 +256,7 @@ class List_Table extends WP_List_Table
                 '<a href="%s" class="submitdelete" onclick="return confirm(\'Are you sure you want to delete %s form?\');">%s</a>',
                 esc_url(wp_nonce_url("post.php?action=trash&post={$form->ID}", 'trash-post_' . $form->ID)),
                 $form->post_title . '(' . $form->ID . ')',
-                __('Trash', 'dragwyb-form-builder')
+                __('Trash', 'smart-form-builder-by-dragwyb')
             );
         }
 
@@ -430,6 +430,6 @@ class List_Table extends WP_List_Table
      */
     public function no_items()
     {
-        esc_html_e('No forms found.', 'dragwyb-form-builder');
+        esc_html_e('No forms found.', 'smart-form-builder-by-dragwyb');
     }
 }

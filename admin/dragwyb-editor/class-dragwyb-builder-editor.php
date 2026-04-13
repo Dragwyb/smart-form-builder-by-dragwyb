@@ -80,7 +80,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 printf(
                     '<h1>%s</h1>',
                     // translators: %s is the post type name
-                    sprintf(esc_html__('Failed to create the %s.', 'dragwyb-form-builder'), esc_html($post_type))
+                    sprintf(esc_html__('Failed to create the %s.', 'smart-form-builder-by-dragwyb'), esc_html($post_type))
                 );
             }
         }
@@ -416,25 +416,25 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
         public function localize_i18n_strings($strings): array
         {
             $localize_strings = [
-                'fields' => __('Fields', 'dragwyb-form-builder'),
-                'fieldSettings' => __('Field Settings', 'dragwyb-form-builder'),
-                'formSettings' => __('Form Settings', 'dragwyb-form-builder'),
-                'save' => __('Save Form', 'dragwyb-form-builder'),
-                'preview' => __('Preview', 'dragwyb-form-builder'),
-                'formTitle' => __('Form Title', 'dragwyb-form-builder'),
-                'settings' => __('Settings', 'dragwyb-form-builder'),
-                'general' => __('General', 'dragwyb-form-builder'),
-                'style' => __('Style', 'dragwyb-form-builder'),
-                'advance' => __('Advance', 'dragwyb-form-builder'),
-                'display' => __('Display', 'dragwyb-form-builder'),
-                'validation' => __('Validation', 'dragwyb-form-builder'),
-                'notifications' => __('Notifications', 'dragwyb-form-builder'),
-                'confirmations' => __('Confirmations', 'dragwyb-form-builder'),
-                'confirmation_email' => __('Confirmation Email', 'dragwyb-form-builder'),
-                'confirmation_message' => __('Confirmation Message', 'dragwyb-form-builder'),
-                'confirmation_subject' => __('Confirmation Subject', 'dragwyb-form-builder'),
-                'confirmation_message' => __('Confirmation Message', 'dragwyb-form-builder'),
-                'emptyForm' => __("Start building your form by dragging fields from the sidebar or simply click to add them.", 'dragwyb-form-builder')
+                'fields' => __('Fields', 'smart-form-builder-by-dragwyb'),
+                'fieldSettings' => __('Field Settings', 'smart-form-builder-by-dragwyb'),
+                'formSettings' => __('Form Settings', 'smart-form-builder-by-dragwyb'),
+                'save' => __('Save Form', 'smart-form-builder-by-dragwyb'),
+                'preview' => __('Preview', 'smart-form-builder-by-dragwyb'),
+                'formTitle' => __('Form Title', 'smart-form-builder-by-dragwyb'),
+                'settings' => __('Settings', 'smart-form-builder-by-dragwyb'),
+                'general' => __('General', 'smart-form-builder-by-dragwyb'),
+                'style' => __('Style', 'smart-form-builder-by-dragwyb'),
+                'advance' => __('Advance', 'smart-form-builder-by-dragwyb'),
+                'display' => __('Display', 'smart-form-builder-by-dragwyb'),
+                'validation' => __('Validation', 'smart-form-builder-by-dragwyb'),
+                'notifications' => __('Notifications', 'smart-form-builder-by-dragwyb'),
+                'confirmations' => __('Confirmations', 'smart-form-builder-by-dragwyb'),
+                'confirmation_email' => __('Confirmation Email', 'smart-form-builder-by-dragwyb'),
+                'confirmation_message' => __('Confirmation Message', 'smart-form-builder-by-dragwyb'),
+                'confirmation_subject' => __('Confirmation Subject', 'smart-form-builder-by-dragwyb'),
+                'confirmation_message' => __('Confirmation Message', 'smart-form-builder-by-dragwyb'),
+                'emptyForm' => __("Start building your form by dragging fields from the sidebar or simply click to add them.", 'smart-form-builder-by-dragwyb')
             ];
 
             return array_merge($localize_strings, $strings);

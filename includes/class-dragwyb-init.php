@@ -106,8 +106,8 @@ class Dragwyb_Init
     private function get_translations()
     {
         $localize_strings = [
-            'exit' => __('Exit', 'dragwyb-form-builder'),
-            'submit' => __('Submit', 'dragwyb-form-builder'),
+            'exit' => __('Exit', 'smart-form-builder-by-dragwyb'),
+            'submit' => __('Submit', 'smart-form-builder-by-dragwyb'),
         ];
 
         return apply_filters('Dragwyb_i18n', $localize_strings);

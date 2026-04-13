@@ -25,8 +25,8 @@ class Control_Switcher extends Control_Base
     protected function default_setting(): array
     {
         return array(
-            'on_label' => __('Yes', 'dragwyb-form-builder'),
-            'off_label' => __('No', 'dragwyb-form-builder'),
+            'on_label' => __('Yes', 'smart-form-builder-by-dragwyb'),
+            'off_label' => __('No', 'smart-form-builder-by-dragwyb'),
             'return_value' => 'yes',
             'default' => 'no',
             'show_label' => true
@@ -36,7 +36,7 @@ class Control_Switcher extends Control_Base
     protected function init(): void
     {
         $this->type = 'switcher';
-        $this->name = __('Switcher', 'dragwyb-form-builder');
+        $this->name = __('Switcher', 'smart-form-builder-by-dragwyb');
     }
 
     protected function sanitize_control($value)

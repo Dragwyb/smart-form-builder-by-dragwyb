@@ -20,7 +20,7 @@ class Control_Raw_Html extends Control_Base
     protected function init(): void
     {
         $this->type = 'raw_html';
-        $this->name = __('Raw HTML', 'dragwyb-form-builder');
+        $this->name = __('Raw HTML', 'smart-form-builder-by-dragwyb');
     }
 
     protected function raw_setting_sanitize($value)

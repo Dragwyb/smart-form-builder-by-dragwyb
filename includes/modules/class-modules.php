@@ -32,7 +32,7 @@ class Modules extends Toolbar_Base
 
     protected function get_name(): string
     {
-        return __('Field', 'dragwyb-form-builder');
+        return __('Field', 'smart-form-builder-by-dragwyb');
     }
 
     protected function get_icon(): string
@@ -95,7 +95,7 @@ class Modules extends Toolbar_Base
         $form_id = absint($this->get_form_id());
         $data = array();
         // translators: %s is the name of the module
-        $data['label'] = sprintf(esc_html__('%s Settings', 'dragwyb-form-builder'), sanitize_text_field($this->get_name()));
+        $data['label'] = sprintf(esc_html__('%s Settings', 'smart-form-builder-by-dragwyb'), sanitize_text_field($this->get_name()));
         $fields = [];
 
         $categories_object = Categories::instance();

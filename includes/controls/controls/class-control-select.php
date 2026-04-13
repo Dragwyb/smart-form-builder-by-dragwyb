@@ -20,7 +20,7 @@ class Control_Select extends Control_Base
     protected function init(): void
     {
         $this->type = 'select';
-        $this->name = __('Select', 'dragwyb-form-builder');
+        $this->name = __('Select', 'smart-form-builder-by-dragwyb');
     }
 
     protected function sanitize_control($value)

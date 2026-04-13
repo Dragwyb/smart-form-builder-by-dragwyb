@@ -43,8 +43,8 @@ class Dragwyb_Pages
     public function add_main_menu_page(): void
     {
         add_menu_page(
-            __('Dragwyb Form', 'dragwyb-form-builder'),
-            __('Dragwyb Form', 'dragwyb-form-builder'),
+            __('Dragwyb Form', 'smart-form-builder-by-dragwyb'),
+            __('Dragwyb Form', 'smart-form-builder-by-dragwyb'),
             'manage_options',
             DRAGWYB_PREFIX . '-form-overview',
             [$this, 'dragwyb_render_page'],
@@ -55,8 +55,8 @@ class Dragwyb_Pages
         // Add submenu page for adding a form
         add_submenu_page(
             DRAGWYB_PREFIX . '-form-overview',
-            __('Add Form', 'dragwyb-form-builder'),
-            __('Add Form', 'dragwyb-form-builder'),
+            __('Add Form', 'smart-form-builder-by-dragwyb'),
+            __('Add Form', 'smart-form-builder-by-dragwyb'),
             'manage_options',
             DRAGWYB_PREFIX . '-form-builder',
             [$this, 'dragwyb_render_page']

@@ -26,7 +26,7 @@ class Advance_Settings extends Toolbar_Base
 
     protected function get_name(): string
     {
-        return __('Advance', 'dragwyb-form-builder');
+        return __('Advance', 'smart-form-builder-by-dragwyb');
     }
 
     protected function get_icon(): string

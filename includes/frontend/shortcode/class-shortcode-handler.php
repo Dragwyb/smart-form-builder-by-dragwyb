@@ -49,14 +49,14 @@ class Shortcode_Handler
 
         $form_id = absint($atts['id']);
         if (!$form_id || get_post_type($form_id) !== Dragwyb_Post::POST_TYPE) {
-            return '<p>' . esc_html__('Form not found or invalid.', 'dragwyb-form-builder') . '</p>';
+            return '<p>' . esc_html__('Form not found or invalid.', 'smart-form-builder-by-dragwyb') . '</p>';
         }
 
         // Load form data from post meta
         $form_settings = get_post_meta($form_id, '_dragwyb_form_data', true);
 
         if (empty($form_settings) || !is_array($form_settings) || !isset($form_settings['fields']) || count($form_settings) < 1) {
-            return '<p>' . esc_html__('No fields found in this form.', 'dragwyb-form-builder') . '</p>';
+            return '<p>' . esc_html__('No fields found in this form.', 'smart-form-builder-by-dragwyb') . '</p>';
         }
 
         self::$frontend_render = Frontend_Render::instance();

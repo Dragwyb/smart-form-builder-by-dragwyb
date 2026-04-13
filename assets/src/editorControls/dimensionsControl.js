@@ -13,7 +13,7 @@ export default class DimensionsControl extends DragwybEditor.editor.extends
 
         const { settings, id } = this;
         const {
-            label = __("Dimension", "dragwyb-form-builder"),
+            label = __("Dimension", "smart-form-builder-by-dragwyb"),
             units = ["px", "%", "em", "rem"],
             default: defaultValue = {},
         } = settings;

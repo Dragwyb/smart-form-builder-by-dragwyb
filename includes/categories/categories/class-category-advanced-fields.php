@@ -9,7 +9,7 @@ class Category_Advanced_Fields extends Category_Base
     protected function init(): void
     {
         $this->id = 'advanced-fields';
-        $this->name = __('Advanced Fields', 'dragwyb-form-builder');
+        $this->name = __('Advanced Fields', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-magic';
     }
 }

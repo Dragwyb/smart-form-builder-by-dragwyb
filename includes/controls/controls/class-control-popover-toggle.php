@@ -9,7 +9,7 @@ class Control_Popover_Toggle extends Control_Base
     protected function init(): void
     {
         $this->type = 'popover-toggle';
-        $this->name = __('Popover Toogle', 'dragwyb-form-builder');
+        $this->name = __('Popover Toogle', 'smart-form-builder-by-dragwyb');
     }
 
     protected function register_settings()

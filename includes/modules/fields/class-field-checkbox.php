@@ -12,7 +12,7 @@ class Field_Checkbox extends Field_Base
     protected function init(): void
     {
         $this->type = 'checkbox';
-        $this->name = __('Checkbox Group', 'dragwyb-form-builder');
+        $this->name = __('Checkbox Group', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-check-square';
     }
 
@@ -20,32 +20,32 @@ class Field_Checkbox extends Field_Base
     {
         // --- Content Tab ---
         $this->start_section('section_content', [
-            'label' => __('General Settings', 'dragwyb-form-builder'),
+            'label' => __('General Settings', 'smart-form-builder-by-dragwyb'),
             'tab'   => self::ContentTab,
         ]);
 
         $this->add_control('label', [
             'type'    => Controls::TEXT,
-            'label'   => __('Label', 'dragwyb-form-builder'),
-            'default' => __('Select Options', 'dragwyb-form-builder'),
+            'label'   => __('Label', 'smart-form-builder-by-dragwyb'),
+            'default' => __('Select Options', 'smart-form-builder-by-dragwyb'),
         ]);
 
         // Repeater for Checkbox Options
         $repeater = new Repeater();
         $repeater->add_control('option_label', [
             'type'    => Controls::TEXT,
-            'label'   => __('Label', 'dragwyb-form-builder'),
+            'label'   => __('Label', 'smart-form-builder-by-dragwyb'),
             'default' => 'Option 1',
         ]);
         $repeater->add_control('option_value', [
             'type'    => Controls::TEXT,
-            'label'   => __('Value', 'dragwyb-form-builder'),
+            'label'   => __('Value', 'smart-form-builder-by-dragwyb'),
             'default' => 'val_1',
         ]);
 
         $this->add_control('options_list', [
             'type'        => Controls::REPEATER,
-            'label'       => __('Options', 'dragwyb-form-builder'),
+            'label'       => __('Options', 'smart-form-builder-by-dragwyb'),
             'items'      => $repeater->get_settings(),
             'default'     => [
                 ['option_label' => 'Choice 1', 'option_value' => 'c1'],
@@ -56,61 +56,61 @@ class Field_Checkbox extends Field_Base
 
         $this->add_control('layout', [
             'type'    => Controls::SELECT,
-            'label'   => __('Layout', 'dragwyb-form-builder'),
+            'label'   => __('Layout', 'smart-form-builder-by-dragwyb'),
             'options' => [
-                'block'  => __('Vertical (List)', 'dragwyb-form-builder'),
-                'inline' => __('Horizontal (Inline)', 'dragwyb-form-builder'),
+                'block'  => __('Vertical (List)', 'smart-form-builder-by-dragwyb'),
+                'inline' => __('Horizontal (Inline)', 'smart-form-builder-by-dragwyb'),
             ],
             'default' => 'block',
         ]);
 
         $this->add_control('help_text', [
             'type'  => Controls::TEXTAREA,
-            'label' => __('Help Text', 'dragwyb-form-builder'),
+            'label' => __('Help Text', 'smart-form-builder-by-dragwyb'),
             'rows'  => 3,
         ]);
 
         $this->add_control('required', [
             'type'  => Controls::SWITCHER,
-            'label' => __('Required', 'dragwyb-form-builder'),
+            'label' => __('Required', 'smart-form-builder-by-dragwyb'),
         ]);
 
         $this->end_section();
 
         // --- Style Tab ---
         $this->start_section('section_style_label', [
-            'label' => __('Label', 'dragwyb-form-builder'),
+            'label' => __('Label', 'smart-form-builder-by-dragwyb'),
             'tab'   => self::StyleTab,
         ]);
 
         $this->add_control('label_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Text Color', 'dragwyb-form-builder'),
+            'label'     => __('Text Color', 'smart-form-builder-by-dragwyb'),
             'selectors' => ['{{WRAPPER}} .dragwyb-field-label' => 'color: {{VALUE}};'],
         ]);
 
         $this->add_group_control('label_typography', [
             'type'     => Controls::GROUP_TYPOGRAPHY,
-            'label'    => __('Typography', 'dragwyb-form-builder'),
+            'label'    => __('Typography', 'smart-form-builder-by-dragwyb'),
             'selector' => '{{WRAPPER}} .dragwyb-field-label',
         ]);
 
         $this->end_section();
 
         $this->start_section('section_style_options', [
-            'label' => __('Checkbox Options', 'dragwyb-form-builder'),
+            'label' => __('Checkbox Options', 'smart-form-builder-by-dragwyb'),
             'tab'   => self::StyleTab,
         ]);
 
         $this->add_control('option_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Text Color', 'dragwyb-form-builder'),
+            'label'     => __('Text Color', 'smart-form-builder-by-dragwyb'),
             'selectors' => ['{{WRAPPER}} .dragwyb-radio-label' => 'color: {{VALUE}};'],
         ]);
 
         $this->add_group_control('option_typography', [
             'type'     => Controls::GROUP_TYPOGRAPHY,
-            'label'    => __('Typography', 'dragwyb-form-builder'),
+            'label'    => __('Typography', 'smart-form-builder-by-dragwyb'),
             'selector' => '{{WRAPPER}} .dragwyb-radio-label',
         ]);
 
