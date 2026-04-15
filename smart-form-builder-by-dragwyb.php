@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Smart Form Builder by Dragwyb
  * Description: Drag and drop form builder for WordPress
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: dragwyb
  * Author URI:  https://dragwyb.com/
  * Text Domain: smart-form-builder-by-dragwyb
@@ -25,7 +25,7 @@ final class Dragwyb_Form_Builder
     /**
      * Plugin version
      */
-    const VERSION = '1.0.1';
+    const VERSION = '1.0.2';
 
     /**
      * Plugin instance
