@@ -122,11 +122,21 @@ class CSS_Manager
     public function clean_cache_request(): void
     {
 
+        if (!isset($_POST['delete_cache_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['delete_cache_nonce'])), 'delete_cache_nonce')) {
+            wp_send_json_error('Invalid nonce');
+        }
+
         if (!isset($_POST['form_id'])) {
             wp_send_json_error('Invalid form id 1');
         }
 
-        $form_id = absint($_POST['form_id']);
+        // 1. Check Permission
+        if (! current_user_can('manage_options')) {
+            wp_die('Unauthorized');
+        }
+
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized use it for get form id and below use nonce verification based on form ID.
+        $form_id = absint(sanitize_text_field(wp_unslash($_POST['form_id'])));
 
         if ($form_id <= 0) {
             wp_send_json_error('Invalid form id 2');
