@@ -30,7 +30,6 @@ class Form_Preview
     public function __construct()
     {
         add_action('template_redirect', [$this, 'init']);
-        add_action('wp_head', [$this, 'render_dynamic_style_container']);
         add_action('Dragwyb/Editor/Preview/Init', [$this, 'init_iframe']);
     }
 
@@ -94,14 +93,6 @@ class Form_Preview
             [],
             '5.15.4'
         );
-    }
-
-    public function render_dynamic_style_container()
-    {
-        if (!self::$form_id || !self::$is_iframe_mode) {
-            return;
-        }
-        echo '<style id="dragwyb-form-' . absint(self::$form_id) . '"></style>';
     }
 
     public function enqueue_editor_preview_styles()
