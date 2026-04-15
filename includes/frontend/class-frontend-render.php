@@ -383,7 +383,8 @@ class Frontend_Render
 
         if (defined('DRAGWYB_FORM_PREVIEW') && true === DRAGWYB_FORM_PREVIEW && function_exists('wp_add_inline_style')) {
             $style_content = self::instance()->get_generated_css();
-            wp_add_inline_style('smart-form-builder-by-dragwyb', $style_content['css']);
+            $style_content = wp_strip_all_tags($style_content['css']);
+            wp_add_inline_style('smart-form-builder-by-dragwyb', wp_kses_post($style_content));
         }
 
         do_action('Dragwyb/Frontend/After_Render/Enqueue_Static_Assets');
