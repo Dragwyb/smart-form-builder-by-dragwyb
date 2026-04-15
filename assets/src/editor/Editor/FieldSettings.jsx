@@ -8,12 +8,10 @@ import RenderPopoverControls from './RenderPopoverControls';
 
 const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingChange }) => {
     const dispatch = useDispatch();
-    // Proper useSelector at component top level — no hook-in-helper violations
-    const getSectionSettings = () => {
-        const store = useStore();
-        const state = store.getState();
+    const store = useStore();
 
-        return state.sectionSettings;
+    const getSectionSettings = () => {
+        return store.getState().sectionSettings;
     }
     const defautlActiveSection = useCallback((key) => {
         const sectionSettings = getSectionSettings();

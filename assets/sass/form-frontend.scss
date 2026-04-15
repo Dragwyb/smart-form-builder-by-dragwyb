@@ -11,8 +11,21 @@
     --dragwyb-form-typography-ls: 0px;
     --dragwyb-form-typography-ws: 0px;
     --dragwyb-form-typography-align: left;
-    --dragwyb-form-bg: #ffffff;
-    --dragwyb-form-bg-filled: #f3f4f6;
+    --dragwyb-form-bg-color: #ffffff;
+    --dragwyb-form-bg-color-b: #ffffff;
+    --dragwyb-form-bg-color-stop: 0%;
+    --dragwyb-form-bg-color-b-stop: 100%;
+    --dragwyb-form-bg-gradient-angle: 180deg;
+    --dragwyb-form-bg-gradient-position: center center;
+    --dragwyb-form-bg-position: center center;
+    --dragwyb-form-bg-attachment: scroll;
+    --dragwyb-form-bg-repeat: no-repeat;
+    --dragwyb-form-bg-size: auto;
+    --dragwyb-form-filter-blur: 0px;
+    --dragwyb-form-filter-brightness: 100%;
+    --dragwyb-form-filter-contrast: 100%;
+    --dragwyb-form-filter-saturate: 100%;
+    --dragwyb-form-filter-hue: 0deg;
     --dragwyb-form-width: clamp(50%, 600px, 80%);
     --dragwyb-form-pt: 40px;
     --dragwyb-form-pr: 40px;
@@ -304,7 +317,8 @@
     width: var(--dragwyb-form-width);
     margin: var(--dragwyb-form-mt) var(--dragwyb-form-mr, auto) var(--dragwyb-form-mb) var(--dragwyb-form-ml, auto);
     padding: var(--dragwyb-form-pt) var(--dragwyb-form-pr) var(--dragwyb-form-pb) var(--dragwyb-form-pl);
-    background-color: var(--dragwyb-form-bg);
+    background: var(--dragwyb-form-bg-color);
+    backdrop-filter: brightness(var(--dragwyb-form-filter-brightness, 100%)) contrast(var(--dragwyb-form-filter-contrast, 100%)) saturate(var(--dragwyb-form-filter-saturate, 100%)) blur(var(--dragwyb-form-filter-blur, 0px)) hue-rotate(var(--dragwyb-form-filter-hue, 0deg));
     border: 0px var(--dragwyb-form-border-style) var(--dragwyb-form-border-color);
     border-top-width: var(--dragwyb-form-border-top-width);
     border-bottom-width: var(--dragwyb-form-border-bottom-width);
@@ -313,6 +327,18 @@
     border-radius: var(--dragwyb-form-border-left-radius) var(--dragwyb-form-border-top-radius) var(--dragwyb-form-border-right-radius) var(--dragwyb-form-border-bottom-radius);
     box-shadow: var(--dragwyb-form-box-shadow-position) var(--dragwyb-form-box-shadow-h) var(--dragwyb-form-box-shadow-v) var(--dragwyb-form-box-shadow-blur) var(--dragwyb-form-box-shadow-spread) var(--dragwyb-form-box-shadow-color);
     text-shadow: var(--dragwyb-form-text-shadow-h) var(--dragwyb-form-text-shadow-v) var(--dragwyb-form-text-shadow-blur) var(--dragwyb-form-text-shadow-color);
+
+    &.dragwyb-bg-image {
+        background-image: var(--dragwyb-form-bg-image, none);
+        background-position: var(--dragwyb-form-bg-position);
+        background-attachment: var(--dragwyb-form-bg-attachment);
+        background-repeat: var(--dragwyb-form-bg-repeat);
+        background-size: var(--dragwyb-form-bg-size);
+    }
+
+    &.dragwyb-bg-gradient {
+        background: linear-gradient(var(--dragwyb-form-bg-gradient-angle), var(--dragwyb-form-bg-color) var(--dragwyb-form-bg-color-stop), var(--dragwyb-form-bg-color-b) var(--dragwyb-form-bg-color-b-stop));
+    }
 
     /* Grid */
     .dragwyb-row {

@@ -44,11 +44,19 @@ const shouldRenderField = (field, fieldValues, settings, skipSections = false) =
         const actual = fieldValues[cleanKey];
 
         if (isNot) {
-            if (actual === expected) {
+            if (typeof expected === 'object') {
+                if (expected.includes(actual)) {
+                    return false;
+                }
+            } else if (actual === expected) {
                 return false; // 🚫 fail if equal
             }
         } else {
-            if (actual !== expected) {
+            if (typeof expected === 'object') {
+                if (!expected.includes(actual)) {
+                    return false;
+                }
+            } else if (actual !== expected) {
                 return false; // 🚫 fail if not equal
             }
         }

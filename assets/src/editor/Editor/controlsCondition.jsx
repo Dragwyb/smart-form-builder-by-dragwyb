@@ -27,7 +27,7 @@ const ControlsConditions = ({ conditions, updateHandler, controlKey, isResponsiv
         prevToolbarDataRef.current = activeToolbarData;
     }
 
-    const shouldRenderCallback = useCallback((timer, styleRender = true) => {
+    const shouldRenderCallback = useCallback((timer) => {
         if (debounceTimer.current) {
             clearTimeout(debounceTimer.current);
         }
@@ -58,7 +58,7 @@ const ControlsConditions = ({ conditions, updateHandler, controlKey, isResponsiv
             const selectedSettings = { ...toolbarValue, ...sectionSettings };
 
             let shouldRenderStyleSelector = true;
-            if (settings.controls[controlKey].selectors && Object.keys(settings.controls[controlKey].selectors).length > 0 && styleRender) {
+            if (settings.controls[controlKey].selectors && Object.keys(settings.controls[controlKey].selectors).length > 0) {
                 const styleConditions = { ...settings.controls[controlKey].conditions };
                 delete styleConditions.section;
 
@@ -108,10 +108,10 @@ const ControlsConditions = ({ conditions, updateHandler, controlKey, isResponsiv
 
         if (hasToolbarChanged) {
             // Priority 1: Heavy change (e.g. Color Picker) -> 100ms debounce
-            shouldRenderCallback(100, true);
+            shouldRenderCallback(100);
         } else {
             // Priority 2: Only sectionSettings changed -> 0ms immediate
-            shouldRenderCallback(0, false);
+            shouldRenderCallback(0);
         }
 
         // Update refs for the next render (no JSON.stringify needed)
@@ -141,7 +141,7 @@ const ControlsConditions = ({ conditions, updateHandler, controlKey, isResponsiv
                 const conditionMatched = controlResponsiveType === deviceType;
 
                 if (conditionMatched !== shouldRender) {
-                    shouldRenderCallback(0, true);
+                    shouldRenderCallback(0);
                 }
             }
             return;

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import shouldRenderField from './shouldRenderField';
 import DragwybControlBase from '../controlBase'
@@ -21,24 +21,12 @@ const RenderControl = ({
     setValueChangedCheck = () => { }
 }) => {
     const [isStyleSelectorAdd, setIsStyleSelectorAdd] = useState(false);
-    // 🔹 Validate settings early
-    if (!settings || typeof settings !== "object") {
-        console.error(`[RenderControl] Invalid settings for key: ${controlKey}`);
-        return null;
-    }
-
-    if (!settings.type) {
-        console.error(`[RenderControl] Missing "type" in settings for key: ${controlKey}`);
-        return null;
-    }
-
-    if (!DragwybEditor.controlTypes[settings.type]) {
-        console.error(`[RenderControl] Unknown control type "${settings.type}" for key: ${controlKey}`);
-        return null;
-    }
 
     // Proper useSelector at top level instead of useStore().getState() in helper
     const sectionSettings = useSelector((state) => state.sectionSettings || {});
+
+    // Determine validity upfront (no early returns before hooks)
+    const isValid = settings && typeof settings === "object" && settings.type && DragwybEditor.controlTypes?.[settings.type];
 
     // 🔹 Merge values: section + field-level
     const shouldRenderSettings = useMemo(
@@ -46,7 +34,9 @@ const RenderControl = ({
         [fieldValue, sectionSettings]
     );
 
-    const [shouldRender, setShouldRender] = useState(shouldRenderField(settings, shouldRenderSettings, toolbarSettings?.controls))
+    const [shouldRender, setShouldRender] = useState(() =>
+        isValid ? shouldRenderField(settings, { ...fieldValue, ...sectionSettings }, toolbarSettings?.controls) : false
+    );
 
     const dispatch = useDispatch();
     const store = useStore();
@@ -59,6 +49,8 @@ const RenderControl = ({
 
     // 🔹 Control lookup via filter (memoized — type doesn't change per instance)
     const Control = useMemo(() => {
+        if (!isValid) return null;
+
         let Ctrl = DragwybBuilder.Hooks.applyFilter(
             "Dragwyb/Editor/ControlRender/" + settings.type,
             false
@@ -78,7 +70,7 @@ const RenderControl = ({
         }
 
         return Ctrl;
-    }, [settings.type]);
+    }, [isValid, settings?.type]);
 
     const resetControlEventLifting = useCallback((event) => {
         setResetControlEvent(controlKey, event);
@@ -92,7 +84,7 @@ const RenderControl = ({
         if (shouldRender !== value) {
             setShouldRender(value);
 
-            if (!value && settings.selectors && !renderStyleSelector) {
+            if (!value && settings?.selectors && !renderStyleSelector) {
                 const selectedSetting = selectedTab && '' !== selectedTab && selectedTab !== selectedToolbar ? selectedTab : false;
                 const uniqueSelector = `${selectedToolbar}${selectedSetting ? '_' + selectedSetting : ''}_${controlKey}`;
 
@@ -100,7 +92,7 @@ const RenderControl = ({
                 Utils.deleteStyleSelectors({ key: uniqueSelector, responsiveType: settings.responsive_type });
             }
         } else {
-            if (value && settings.selectors && renderStyleSelector && !isStyleSelectorAdd) {
+            if (value && settings?.selectors && renderStyleSelector && !isStyleSelectorAdd) {
                 setIsStyleSelectorAdd(true);
                 new Control({
                     id: controlKey,
@@ -114,6 +106,31 @@ const RenderControl = ({
         }
     }, [shouldRender, settings, selectedToolbar, selectedTab, controlKey, Utils, isStyleSelectorAdd, Control, shouldRenderSettings]);
 
+    // 🔹 Handle "section" & "tabs" special cases — deferred to avoid setState-during-render
+    useEffect(() => {
+        if (!isValid || !shouldRender) return;
+
+        if (settings.type === "section") {
+            defautlActiveSection(controlKey, settings, settings.conditions);
+        }
+
+        if (settings.type === "tabs") {
+            defautlActiveTab(controlKey, settings);
+        }
+    }, [isValid, shouldRender, settings?.type, controlKey, settings?.conditions, defautlActiveSection, defautlActiveTab]);
+
+    // 🔹 Validate settings — return after all hooks
+    if (!isValid) {
+        if (!settings || typeof settings !== "object") {
+            console.error(`[RenderControl] Invalid settings for key: ${controlKey}`);
+        } else if (!settings.type) {
+            console.error(`[RenderControl] Missing "type" in settings for key: ${controlKey}`);
+        } else {
+            console.error(`[RenderControl] Unknown control type "${settings.type}" for key: ${controlKey}`);
+        }
+        return null;
+    }
+
     if (!shouldRender) {
         return <ControlsConditions
             controlKey={controlKey}
@@ -122,15 +139,6 @@ const RenderControl = ({
             isResponsiveControl={settings.responsive_control}
             responsiveType={settings.responsive_type}
         />;
-    }
-
-    // 🔹 Handle "section" & "tabs" special cases
-    if (settings.type === "section") {
-        defautlActiveSection(controlKey, settings, settings.conditions);
-    }
-
-    if (settings.type === "tabs") {
-        defautlActiveTab(controlKey, settings);
     }
 
     const selectedSettings = { ...fieldValue, ...sectionSettings };

@@ -133,9 +133,15 @@ const Slider = ({
 
     // --- RENDER HELPERS ---
     const percentage = useMemo(() => {
-        if (localValue === "") return 0;
         const val = Number(localValue);
-        return ((val - min) * 100) / (max - min);
+
+        if (localValue === "" || isNaN(val)) return 0;
+
+        if (max === min) return 0;
+
+        const rawPercentage = ((val - min) * 100) / (max - min);
+
+        return Math.min(Math.max(rawPercentage, 0), 100);
     }, [localValue, min, max]);
 
     return (
