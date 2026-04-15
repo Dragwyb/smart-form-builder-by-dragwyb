@@ -28,13 +28,16 @@ class Settings extends Register_Controls_Base
             'label' => __('Form Container', 'dragwyb-form-builder'),
         ]);
 
-        $this->add_control('form_bg_color', [
-            'type'      => Controls::COLOR,
-            'label'     => __('Background Color', 'dragwyb-form-builder'),
-            'default'   => '#ffffff',
-            'selectors' => [
-                '{{WRAPPER}}' => '--dragwyb-form-bg: {{VALUE}};',
-            ],
+        $this->add_group_control('form_container_bg', [
+            'type'      => Controls::GROUP_BACKGROUND,
+            'label'     => __('Background', 'dragwyb-form-builder'),
+            'selector'  => '{{WRAPPER}}',
+        ]);
+
+        $this->add_group_control('form_css_filter', [
+            'type'      => Controls::GROUP_CSS_FILTER,
+            'label'     => __('CSS Filter', 'dragwyb-form-builder'),
+            'selector'  => '{{WRAPPER}}',
         ]);
 
         $this->add_group_control('form_border', [
