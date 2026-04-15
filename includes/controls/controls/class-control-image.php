@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Controls\Controls;
 
-class Control_Gallery extends Control_Base
+class Control_Image extends Control_Base
 {
     protected function register_settings()
     {
         return array(
             'label'   => 'string',
-            'default' => 'gallery', // Custom sanitizer
+            'default' => 'image', // Custom sanitizer
         );
     }
 
     protected function init(): void
     {
-        $this->type = 'gallery';
-        $this->name = __('Gallery', 'dragwyb-form-builder');
+        $this->type = 'image';
+        $this->name = __('Image', 'dragwyb-form-builder');
     }
 
     /**
@@ -33,31 +33,23 @@ class Control_Gallery extends Control_Base
     }
 
     /**
-     * Sanitize Gallery Data
-     * Expected format: Array of objects [ {id: 1, url: '...'}, {id: 2, url: '...'} ]
+     * Sanitize Image Data
+     * Expected format: Object {id: 1, url: '...'}
      */
     protected function sanitize_control($value)
     {
         if (!is_array($value)) {
-            return array();
+            return array('id' => '', 'url' => '');
         }
 
-        $gallery = array();
-
-        foreach ($value as $image) {
-            if (isset($image['id'])) {
-                $gallery[] = array(
-                    'id'  => absint($image['id']),
-                    'url' => isset($image['url']) ? esc_url_raw($image['url']) : '',
-                );
-            }
-        }
-
-        return $gallery;
+        return array(
+            'id'  => isset($value['id']) ? absint($value['id']) : '',
+            'url' => isset($value['url']) ? esc_url_raw($value['url']) : '',
+        );
     }
 
     // Default sanitizer for the setting
-    protected function gallery_setting_sanitize($value)
+    protected function image_setting_sanitize($value)
     {
         return $this->sanitize_control($value);
     }

@@ -20,7 +20,7 @@ export default class TabsControl extends DragwybEditor.editor.extends.ControlBas
                 <div className="dragwyb-tabs__nav">
                     {Object.keys(options)?.map((option) => (
                         <button
-                            key={options[option].value}
+                            key={option}
                             type="button"
                             className={`dragwyb-tabs__nav-item ${value === option ? 'is-active' : ''}`}
                             onClick={() => this.updateControlHandler(id, option)}

@@ -34,7 +34,7 @@ const renderControls = ({
     Control = DragwybEditor.editor.extends.ControlBase;
   }
 
-  return <div key={key} className="dragwyb-setting-row" dataType={settings.type}><Control
+  return <div key={key} className="dragwyb-setting-row" data-type={settings.type}><Control
     key={key}
     id={key}
     settings={settings}

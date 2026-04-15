@@ -20,6 +20,7 @@ import GalleryControl from './galleryControl';
 import IconControl from './iconControl';
 import HeadingControl from './headingControl';
 import RawHtmlControl from './rawHtmlControl';
+import ImageControl from './imageControl';
 
 const initializeControls = () => {
     const defaultControls = {
@@ -41,6 +42,7 @@ const initializeControls = () => {
         'choose': ChooseControl,
         'url': UrlControl,
         'gallery': GalleryControl,
+        'image': ImageControl,
         'icon': IconControl,
         'heading': HeadingControl
     }

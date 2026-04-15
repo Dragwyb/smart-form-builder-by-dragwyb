@@ -791,7 +791,8 @@
   }
 }
 
-.dragwyb-control--gallery {
+.dragwyb-control--gallery,
+.dragwyb-control--image {
 
   .dragwyb-gallery-box {
     background: hsl(var(--dragwyb-background));
@@ -878,6 +879,12 @@
       border-color: hsl(var(--dragwyb-primary));
       color: hsl(var(--dragwyb-primary));
     }
+  }
+}
+
+.dragwyb-control--image {
+  .dragwyb-gallery-grid {
+    grid-template-columns: 1fr;
   }
 }
 
