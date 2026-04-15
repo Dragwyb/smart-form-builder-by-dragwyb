@@ -144,7 +144,7 @@ class List_Table extends WP_List_Table
 
             case 'clean_cache':
                 if ($this->css_cache_exist($form->ID)) {
-                    $value = '<button type="button" id="clean-cache-' . (int)$form->ID . '" data-key="' . wp_create_nonce(sanitize_text_field($form->post_type) . (int)$form->ID . '-clean-cache') . '" class="button">Clean Cache</button>';
+                    $value = '<button type="button" id="clean-cache-' . (int)$form->ID . '" data-key="' . wp_create_nonce(sanitize_text_field($form->post_type) . (int)$form->ID . '-clean-cache') . '" data-clean-key="' . wp_create_nonce('delete_cache_nonce') . '" class="button">Clean Cache</button>';
                 } else {
                     $value = '<button type="button" id="clean-cache-' . (int)$form->ID . '" disabled class="button">Clean Cache</button>';
                 }

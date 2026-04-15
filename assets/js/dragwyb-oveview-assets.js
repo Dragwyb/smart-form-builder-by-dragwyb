@@ -22,11 +22,13 @@ jQuery(document).ready(function ($) {
             }
 
             const nonce = $(this).data('key');
+            const cleanCacheNonce = $(this).data('clean-key')
 
             const data = {
                 action: 'dragwyb_clean_form_cache',
                 form_id: formId,
                 nonce: nonce,
+                delete_cache_nonce: cleanCacheNonce,
             };
 
             $.ajax({
