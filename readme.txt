@@ -14,11 +14,24 @@ Drag and drop form builder for WordPress. Create beautiful, responsive forms wit
 
 Smart Form Builder by Dragwyb is a powerful, flexible, and intuitive drag & drop form builder plugin for WordPress. It allows you to create custom forms easily without any coding knowledge. Build simple contact forms, complex surveys, and everything in between simply by dragging and dropping fields into your form.
 
-== Source Code ==
-This plugin uses build tools to generate production-ready assets. In compliance with WordPress.org guidelines, the non-minified, human-readable source code is included within the plugin package.
+== External Services ==
 
-* **Source Location:** The original React, SCSS, and JavaScript source files are located in the `/assets/src/` folder.
-* **GitHub Repository:** [https://github.com/Aniketji007/smart-form-builder-by-dragwyb/](https://github.com/Aniketji007/smart-form-builder-by-dragwyb/)
+This plugin utilizes the following third-party libraries:
+
+* **Redux State Management:** Used for managing the state of the form editor. The library files contain static links to `redux.js.org` for developer documentation and error references. No user data is transmitted to this domain.
+* **Pickr:** A high-performance color picker library. Used for design customization features.
+    * **Source:** https://github.com/Simonwep/pickr
+    * **Local Paths:** `assets/lib/pickr/css/index.css`, `assets/lib/pickr/js/index.js`
+* **Font Awesome (Free):** Used for providing iconography within the editor and frontend forms.
+    * **Source/License:** https://fontawesome.com/license/free
+    * **Local Path:** `assets/font-awesome/v5/all.min.css`
+
+== Source Code ==
+
+The human-readable source code for this plugin is available in our public repository. This includes the unminified React, Redux, and SCSS files used to build the production assets.
+
+* **Repository:** https://github.com/Aniketji007/smart-form-builder-by-dragwyb/
+* **Development Path:** All original source files are located in `/assets/src/` and `/assets/sass/`.
 
 == Installation ==
 
