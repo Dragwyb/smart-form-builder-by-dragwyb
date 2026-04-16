@@ -11,7 +11,7 @@ class Field_Hidden extends Field_Base
     protected function init(): void
     {
         $this->type = 'hidden';
-        $this->name = __('Hidden Field', 'dragwyb-form-builder');
+        $this->name = __('Hidden Field', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-eye-slash';
         $this->category = 'advanced-fields';
     }
@@ -51,14 +51,14 @@ class Field_Hidden extends Field_Base
 
         $this->add_control('field_id', [
             'type'        => Controls::TEXT,
-            'label'       => __('Field Name / ID', 'dragwyb-form-builder'),
-            'description' => __('The name attribute used to identify this data (e.g., source_id).', 'dragwyb-form-builder'),
+            'label'       => __('Field Name / ID', 'smart-form-builder-by-dragwyb'),
+            'description' => __('The name attribute used to identify this data (e.g., source_id).', 'smart-form-builder-by-dragwyb'),
             'default'     => uniqid('hidden_'),
         ]);
 
         $this->add_control('default_value', [
             'type'    => Controls::TEXT,
-            'label'   => __('Default Value', 'dragwyb-form-builder'),
+            'label'   => __('Default Value', 'smart-form-builder-by-dragwyb'),
             'default' => '',
         ]);
 

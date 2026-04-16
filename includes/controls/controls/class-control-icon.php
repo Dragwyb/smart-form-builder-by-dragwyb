@@ -21,7 +21,7 @@ class Control_Icon extends Control_Base
     protected function init(): void
     {
         $this->type = 'icon';
-        $this->name = __('Icon', 'dragwyb-form-builder');
+        $this->name = __('Icon', 'smart-form-builder-by-dragwyb');
     }
 
 

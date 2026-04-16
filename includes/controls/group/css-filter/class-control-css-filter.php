@@ -12,7 +12,7 @@ class Control_Css_Filter extends Group_Control_Base
     protected function init(): void
     {
         $this->type = 'css-filter';
-        $this->name = __('CSS Filter', 'dragwyb-form-builder');
+        $this->name = __('CSS Filter', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-filter';
     }
 
@@ -121,11 +121,11 @@ class Control_Css_Filter extends Group_Control_Base
         }
 
         $map = [
-            'blur'       => ['type' => Controls::SLIDER, 'label' => __('Blur', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => 0, 'max' => 10, 'step' => 0.1]], 'default' => ['size' => 0], 'responsive' => true],
-            'brightness' => ['type' => Controls::SLIDER, 'label' => __('Brightness', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => 0, 'max' => 200]], 'default' => ['size' => 100], 'responsive' => true],
-            'contrast'   => ['type' => Controls::SLIDER, 'label' => __('Contrast', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => 0, 'max' => 200]], 'default' => ['size' => 100], 'responsive' => true],
-            'saturate'   => ['type' => Controls::SLIDER, 'label' => __('Saturation', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => 0, 'max' => 200]], 'default' => ['size' => 100], 'responsive' => true],
-            'hue'        => ['type' => Controls::SLIDER, 'label' => __('Hue', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => 0, 'max' => 360]], 'default' => ['size' => 0], 'responsive' => true],
+            'blur'       => ['type' => Controls::SLIDER, 'label' => __('Blur', 'smart-form-builder-by-dragwyb'), 'range' => ['px' => ['min' => 0, 'max' => 10, 'step' => 0.1]], 'default' => ['size' => 0], 'responsive' => true],
+            'brightness' => ['type' => Controls::SLIDER, 'label' => __('Brightness', 'smart-form-builder-by-dragwyb'), 'range' => ['px' => ['min' => 0, 'max' => 200]], 'default' => ['size' => 100], 'responsive' => true],
+            'contrast'   => ['type' => Controls::SLIDER, 'label' => __('Contrast', 'smart-form-builder-by-dragwyb'), 'range' => ['px' => ['min' => 0, 'max' => 200]], 'default' => ['size' => 100], 'responsive' => true],
+            'saturate'   => ['type' => Controls::SLIDER, 'label' => __('Saturation', 'smart-form-builder-by-dragwyb'), 'range' => ['px' => ['min' => 0, 'max' => 200]], 'default' => ['size' => 100], 'responsive' => true],
+            'hue'        => ['type' => Controls::SLIDER, 'label' => __('Hue', 'smart-form-builder-by-dragwyb'), 'range' => ['px' => ['min' => 0, 'max' => 360]], 'default' => ['size' => 0], 'responsive' => true],
         ];
 
         foreach ($map as $key => $meta) {

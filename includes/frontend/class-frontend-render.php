@@ -183,7 +183,7 @@ class Frontend_Render
         ob_start();
 
         if (count(self::$root_containers) < 1) {
-            echo '<p>' . esc_html__('No fields found in this form.', 'dragwyb-form-builder') . '</p>';
+            echo '<p>' . esc_html__('No fields found in this form.', 'smart-form-builder-by-dragwyb') . '</p>';
             return ob_get_clean();
         }
 
@@ -378,7 +378,7 @@ class Frontend_Render
     {
         do_action('Dragwyb/Frontend/Before_Render/Enqueue_Static_Assets');
 
-        wp_enqueue_style('dragwyb-form-builder', esc_url(DRAGWYB_FORM_BUILDER_URL . '/assets/css/form-frontend.css'), [], esc_attr(DRAGWYB_FORM_BUILDER_VERSION));
+        wp_enqueue_style('smart-form-builder-by-dragwyb', esc_url(DRAGWYB_FORM_BUILDER_URL . '/assets/css/form-frontend.css'), [], esc_attr(DRAGWYB_FORM_BUILDER_VERSION));
 
 
         if (defined('DRAGWYB_FORM_PREVIEW') && true === DRAGWYB_FORM_PREVIEW && function_exists('wp_add_inline_style')) {
@@ -405,7 +405,7 @@ class Frontend_Render
 
             if (!$atfp_style_exist) {
                 $style_content = self::instance()->get_generated_css();
-                wp_add_inline_style('dragwyb-form-builder', $style_content['css']);
+                wp_add_inline_style('smart-form-builder-by-dragwyb', $style_content['css']);
             }
         }
 

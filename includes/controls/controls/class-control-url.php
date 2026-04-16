@@ -32,7 +32,7 @@ class Control_Url extends Control_Base
     protected function init(): void
     {
         $this->type = 'url';
-        $this->name = __('URL', 'dragwyb-form-builder');
+        $this->name = __('URL', 'smart-form-builder-by-dragwyb');
     }
 
     /**

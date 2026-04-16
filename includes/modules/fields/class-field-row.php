@@ -41,7 +41,7 @@ class Field_Row extends Field_Base
     protected function init(): void
     {
         $this->type = 'row';
-        $this->name = __('Row', 'dragwyb-form-builder');
+        $this->name = __('Row', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-border-all';
         $this->category = Categories::STRUCTURE;
         $this->allow_child = true;
@@ -51,13 +51,13 @@ class Field_Row extends Field_Base
     protected function register_field_controls(): void
     {
         $this->start_section('section_content_general', [
-            'label' => __('Row Settings', 'dragwyb-form-builder'),
+            'label' => __('Row Settings', 'smart-form-builder-by-dragwyb'),
             'tab'   => self::ContentTab,
         ]);
 
         $this->add_responsive_control('columns', [
             'type'    => Controls::NUMBER,
-            'label'   => __('Columns', 'dragwyb-form-builder'),
+            'label'   => __('Columns', 'smart-form-builder-by-dragwyb'),
             'default' => 1,
             'min'     => 1,
             'max'     => 12,
@@ -68,7 +68,7 @@ class Field_Row extends Field_Base
 
         $this->add_responsive_control('rows', [
             'type'    => Controls::NUMBER,
-            'label'   => __('Rows', 'dragwyb-form-builder'),
+            'label'   => __('Rows', 'smart-form-builder-by-dragwyb'),
             'default' => 1,
             'min'     => 1,
             'max'     => 100,
@@ -79,7 +79,7 @@ class Field_Row extends Field_Base
 
         $this->add_control('gap', [
             'type'      => Controls::SLIDER,
-            'label'     => __('Gap', 'dragwyb-form-builder'),
+            'label'     => __('Gap', 'smart-form-builder-by-dragwyb'),
             'range'     => ['px' => ['min' => 0, 'max' => 100]],
             'default'   => ['size' => 20, 'unit' => 'px'],
             'selectors' => [
@@ -90,13 +90,13 @@ class Field_Row extends Field_Base
         $this->end_section();
 
         $this->start_section('section_style_row', [
-            'label' => __('Row Style', 'dragwyb-form-builder'),
+            'label' => __('Row Style', 'smart-form-builder-by-dragwyb'),
             'tab'   => self::StyleTab,
         ]);
 
         $this->add_control('row_bg_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Background Color', 'dragwyb-form-builder'),
+            'label'     => __('Background Color', 'smart-form-builder-by-dragwyb'),
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-row-bg-color: {{VALUE}};',
             ],
@@ -104,7 +104,7 @@ class Field_Row extends Field_Base
 
         $this->add_control('row_padding', [
             'type'       => Controls::DIMENSIONS,
-            'label'      => __('Padding', 'dragwyb-form-builder'),
+            'label'      => __('Padding', 'smart-form-builder-by-dragwyb'),
             'size_units' => ['px', 'em', '%'],
             'selectors'  => [
                 '{{WRAPPER}}' => '--dragwyb-row-padding-top: {{TOP}}{{UNIT}}; --dragwyb-row-padding-right: {{RIGHT}}{{UNIT}}; --dragwyb-row-padding-bottom: {{BOTTOM}}{{UNIT}}; --dragwyb-row-padding-left: {{LEFT}}{{UNIT}};',
@@ -113,14 +113,14 @@ class Field_Row extends Field_Base
 
         $this->add_group_control('row_border', [
             'type'     => Controls::GROUP_BORDER,
-            'label'    => __('Border', 'dragwyb-form-builder'),
+            'label'    => __('Border', 'smart-form-builder-by-dragwyb'),
             'selector' => '{{WRAPPER}}',
             'prefix' => 'row'
         ]);
 
         $this->add_control('row_radius', [
             'type'       => Controls::DIMENSIONS,
-            'label'      => __('Border Radius', 'dragwyb-form-builder'),
+            'label'      => __('Border Radius', 'smart-form-builder-by-dragwyb'),
             'size_units' => ['px', '%'],
             'selectors'  => [
                 '{{WRAPPER}}' => '--dragwyb-row-border-radius-top: {{TOP}}{{UNIT}}; --dragwyb-row-border-radius-right: {{RIGHT}}{{UNIT}}; --dragwyb-row-border-radius-bottom: {{BOTTOM}}{{UNIT}}; --dragwyb-row-border-radius-left: {{LEFT}}{{UNIT}};',
@@ -133,13 +133,13 @@ class Field_Row extends Field_Base
     protected function layout_id_controls(): void
     {
         $this->start_section('section_advance_layout', [
-            'label' => __('Layout', 'dragwyb-form-builder'),
+            'label' => __('Layout', 'smart-form-builder-by-dragwyb'),
             'tab'   => self::AdvanceTab,
         ]);
 
         $this->add_responsive_control('field_width', [
             'type'        => Controls::SLIDER,
-            'label'       => __('Row Width', 'dragwyb-form-builder'),
+            'label'       => __('Row Width', 'smart-form-builder-by-dragwyb'),
             'range' => [
                 'px' => [
                     'min' => 1,
@@ -170,8 +170,8 @@ class Field_Row extends Field_Base
 
         $this->add_control('css_classes', [
             'type'        => Controls::TEXT,
-            'label'       => __('Custom CSS Classes', 'dragwyb-form-builder'),
-            'description' => __('Add custom classes to the wrapper.', 'dragwyb-form-builder'),
+            'label'       => __('Custom CSS Classes', 'smart-form-builder-by-dragwyb'),
+            'description' => __('Add custom classes to the wrapper.', 'smart-form-builder-by-dragwyb'),
         ]);
 
         $this->end_section();

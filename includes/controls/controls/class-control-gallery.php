@@ -17,7 +17,7 @@ class Control_Gallery extends Control_Base
     protected function init(): void
     {
         $this->type = 'gallery';
-        $this->name = __('Gallery', 'dragwyb-form-builder');
+        $this->name = __('Gallery', 'smart-form-builder-by-dragwyb');
     }
 
     /**

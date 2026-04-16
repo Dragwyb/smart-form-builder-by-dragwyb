@@ -99,10 +99,10 @@ class Dragwyb_Post
     {
         $new_columns = [
             'cb'        => $columns['cb'],
-            'title'     => __('Form Name', 'dragwyb-form-builder'),
-            'type'      => __('Form Type', 'dragwyb-form-builder'),
-            'shortcode' => __('Shortcode', 'dragwyb-form-builder'),
-            'entries'   => __('Entries', 'dragwyb-form-builder'),
+            'title'     => __('Form Name', 'smart-form-builder-by-dragwyb'),
+            'type'      => __('Form Type', 'smart-form-builder-by-dragwyb'),
+            'shortcode' => __('Shortcode', 'smart-form-builder-by-dragwyb'),
+            'entries'   => __('Entries', 'smart-form-builder-by-dragwyb'),
             'date'      => $columns['date'],
         ];
         return $new_columns;
@@ -203,7 +203,7 @@ class Dragwyb_Post
             printf(
                 '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
                 // translators: %s is the number of forms moved to the trash
-                sprintf(esc_html('%s form moved to the Trash.', 'dragwyb-form-builder'), absint($count))
+                sprintf(esc_html('%s form moved to the Trash.', 'smart-form-builder-by-dragwyb'), absint($count))
             );
         }
 
@@ -212,7 +212,7 @@ class Dragwyb_Post
             printf(
                 '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
                 // translators: %s is the number of forms permanently deleted
-                sprintf(esc_html('%s form permanently deleted.', 'dragwyb-form-builder'), absint($count))
+                sprintf(esc_html('%s form permanently deleted.', 'smart-form-builder-by-dragwyb'), absint($count))
             );
         }
 
@@ -222,7 +222,7 @@ class Dragwyb_Post
             printf(
                 '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
                 // translators: %s is the number of forms restored from trash
-                sprintf(esc_html('%s form restored from Trash.', 'dragwyb-form-builder'), absint($count))
+                sprintf(esc_html('%s form restored from Trash.', 'smart-form-builder-by-dragwyb'), absint($count))
             );
         }
     }

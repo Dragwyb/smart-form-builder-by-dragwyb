@@ -13,7 +13,7 @@ class Control_Text_Shadow extends Group_Control_Base
     protected function init(): void
     {
         $this->type = 'text_shadow';
-        $this->name = __('Text Shadow', 'dragwyb-form-builder');
+        $this->name = __('Text Shadow', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-pencil-alt';
     }
 
@@ -118,10 +118,10 @@ class Control_Text_Shadow extends Group_Control_Base
 
         // 2. Control Map
         $map = [
-            'color'         => ['type' => Controls::COLOR, 'label' => __('Color', 'dragwyb-form-builder')],
-            'horizontal'    => ['type' => Controls::SLIDER, 'label' => __('Horizontal', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]], 'units' => ['px'], 'responsive' => true],
-            'vertical'      => ['type' => Controls::SLIDER, 'label' => __('Vertical', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]], 'units' => ['px'], 'responsive' => true],
-            'blur'          => ['type' => Controls::SLIDER, 'label' => __('Blur', 'dragwyb-form-builder'), 'range' => ['px' => ['min' => 0, 'max' => 100, 'step' => 1]], 'units' => ['px'], 'responsive' => true],
+            'color'         => ['type' => Controls::COLOR, 'label' => __('Color', 'smart-form-builder-by-dragwyb')],
+            'horizontal'    => ['type' => Controls::SLIDER, 'label' => __('Horizontal', 'smart-form-builder-by-dragwyb'), 'range' => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]], 'units' => ['px'], 'responsive' => true],
+            'vertical'      => ['type' => Controls::SLIDER, 'label' => __('Vertical', 'smart-form-builder-by-dragwyb'), 'range' => ['px' => ['min' => -100, 'max' => 100, 'step' => 1]], 'units' => ['px'], 'responsive' => true],
+            'blur'          => ['type' => Controls::SLIDER, 'label' => __('Blur', 'smart-form-builder-by-dragwyb'), 'range' => ['px' => ['min' => 0, 'max' => 100, 'step' => 1]], 'units' => ['px'], 'responsive' => true],
         ];
 
         // 3. Generate Controls

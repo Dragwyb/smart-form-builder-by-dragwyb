@@ -11,7 +11,7 @@ class Field_Number extends Field_Base
     protected function init(): void
     {
         $this->type = 'number';
-        $this->name = __('Number', 'dragwyb-form-builder');
+        $this->name = __('Number', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-sort-numeric-up';
     }
 
@@ -22,35 +22,35 @@ class Field_Number extends Field_Base
 
         $this->add_control('label', [
             'type' => Controls::TEXT,
-            'label' => __('Label', 'dragwyb-form-builder'),
-            'default' => __('Number', 'dragwyb-form-builder'),
+            'label' => __('Label', 'smart-form-builder-by-dragwyb'),
+            'default' => __('Number', 'smart-form-builder-by-dragwyb'),
         ]);
 
         $this->add_control('placeholder', [
             'type' => Controls::TEXT,
-            'label' => __('Placeholder', 'dragwyb-form-builder'),
+            'label' => __('Placeholder', 'smart-form-builder-by-dragwyb'),
             'default' => '',
         ]);
 
         $this->add_control('min_val', [
             'type' => Controls::NUMBER,
-            'label' => __('Min Value', 'dragwyb-form-builder'),
+            'label' => __('Min Value', 'smart-form-builder-by-dragwyb'),
         ]);
 
         $this->add_control('max_val', [
             'type' => Controls::NUMBER,
-            'label' => __('Max Value', 'dragwyb-form-builder'),
+            'label' => __('Max Value', 'smart-form-builder-by-dragwyb'),
         ]);
 
         $this->add_control('step', [
             'type' => Controls::NUMBER,
-            'label' => __('Step', 'dragwyb-form-builder'),
+            'label' => __('Step', 'smart-form-builder-by-dragwyb'),
             'default' => 1,
         ]);
 
         $this->add_control('required', [
             'type' => Controls::SWITCHER,
-            'label' => __('Required', 'dragwyb-form-builder'),
+            'label' => __('Required', 'smart-form-builder-by-dragwyb'),
         ]);
 
         $this->end_section();

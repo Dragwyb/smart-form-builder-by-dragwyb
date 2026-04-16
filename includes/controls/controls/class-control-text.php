@@ -50,7 +50,7 @@ class Control_Text extends Control_Base
     protected function init(): void
     {
         $this->type = 'text';
-        $this->name = __('Text', 'dragwyb-form-builder');
+        $this->name = __('Text', 'smart-form-builder-by-dragwyb');
     }
 
     protected function sanitize_control($value)

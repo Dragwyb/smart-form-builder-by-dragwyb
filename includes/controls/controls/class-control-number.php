@@ -21,7 +21,7 @@ class Control_Number extends Control_Base
     protected function init(): void
     {
         $this->type = 'number';
-        $this->name = __('Number', 'dragwyb-form-builder');
+        $this->name = __('Number', 'smart-form-builder-by-dragwyb');
     }
 
     protected function sanitize_control($value)

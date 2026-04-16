@@ -26,44 +26,44 @@ class Field_Date extends Field_Base
         // ==============================================================
 
         $this->start_section('section_content_general', [
-            'label' => __('General Settings', 'dragwyb-form-builder'),
+            'label' => __('General Settings', 'smart-form-builder-by-dragwyb'),
             'tab'   => self::ContentTab,
         ]);
 
         $this->add_control('label', [
             'type'    => Controls::TEXT,
-            'label'   => __('Label', 'dragwyb-form-builder'),
-            'default' => __('Select Date', 'dragwyb-form-builder'),
+            'label'   => __('Label', 'smart-form-builder-by-dragwyb'),
+            'default' => __('Select Date', 'smart-form-builder-by-dragwyb'),
         ]);
 
         $this->add_control('placeholder', [
             'type'    => Controls::TEXT,
-            'label'   => __('Placeholder', 'dragwyb-form-builder'),
+            'label'   => __('Placeholder', 'smart-form-builder-by-dragwyb'),
             'default' => 'YYYY-MM-DD',
         ]);
 
         // Set a date range limit
         $this->add_control('min_date', [
             'type'        => Controls::TEXT,
-            'label'       => __('Min Date', 'dragwyb-form-builder'),
-            'description' => __('Earliest allowed date.', 'dragwyb-form-builder'),
+            'label'       => __('Min Date', 'smart-form-builder-by-dragwyb'),
+            'description' => __('Earliest allowed date.', 'smart-form-builder-by-dragwyb'),
         ]);
 
         $this->add_control('max_date', [
             'type'        => Controls::TEXT,
-            'label'       => __('Max Date', 'dragwyb-form-builder'),
-            'description' => __('Latest allowed date.', 'dragwyb-form-builder'),
+            'label'       => __('Max Date', 'smart-form-builder-by-dragwyb'),
+            'description' => __('Latest allowed date.', 'smart-form-builder-by-dragwyb'),
         ]);
 
         $this->add_control('help_text', [
             'type'        => Controls::TEXTAREA,
-            'label'       => __('Help Text', 'dragwyb-form-builder'),
+            'label'       => __('Help Text', 'smart-form-builder-by-dragwyb'),
             'rows'        => 3,
         ]);
 
         $this->add_control('required', [
             'type'  => Controls::SWITCHER,
-            'label' => __('Required', 'dragwyb-form-builder'),
+            'label' => __('Required', 'smart-form-builder-by-dragwyb'),
         ]);
 
         $this->end_section();
@@ -73,50 +73,50 @@ class Field_Date extends Field_Base
         // ==============================================================
 
         $this->start_section('section_style_label', [
-            'label' => __('Label', 'dragwyb-form-builder'),
+            'label' => __('Label', 'smart-form-builder-by-dragwyb'),
             'tab'   => self::StyleTab,
         ]);
 
         $this->add_control('label_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Text Color', 'dragwyb-form-builder'),
+            'label'     => __('Text Color', 'smart-form-builder-by-dragwyb'),
             'selectors' => ['{{WRAPPER}} .dragwyb-field-label' => 'color: {{VALUE}};'],
         ]);
 
         $this->add_group_control('label_typography', [
             'type'     => Controls::GROUP_TYPOGRAPHY,
-            'label'    => __('Typography', 'dragwyb-form-builder'),
+            'label'    => __('Typography', 'smart-form-builder-by-dragwyb'),
             'selector' => '{{WRAPPER}} .dragwyb-field-label',
         ]);
 
         $this->end_section();
 
         $this->start_section('section_style_input', [
-            'label' => __('Input Field', 'dragwyb-form-builder'),
+            'label' => __('Input Field', 'smart-form-builder-by-dragwyb'),
             'tab'   => self::StyleTab,
         ]);
 
         $this->add_control('input_bg_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Background', 'dragwyb-form-builder'),
+            'label'     => __('Background', 'smart-form-builder-by-dragwyb'),
             'selectors' => ['{{WRAPPER}} input.dragwyb-field-input' => 'background-color: {{VALUE}};'],
         ]);
 
         $this->add_control('input_text_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Text Color', 'dragwyb-form-builder'),
+            'label'     => __('Text Color', 'smart-form-builder-by-dragwyb'),
             'selectors' => ['{{WRAPPER}} input.dragwyb-field-input' => 'color: {{VALUE}};'],
         ]);
 
         $this->add_group_control('input_border', [
             'type'     => Controls::GROUP_BORDER,
-            'label'    => __('Border', 'dragwyb-form-builder'),
+            'label'    => __('Border', 'smart-form-builder-by-dragwyb'),
             'selector' => '{{WRAPPER}} input.dragwyb-field-input',
         ]);
 
         $this->add_control('input_padding', [
             'type'       => Controls::DIMENSIONS,
-            'label'      => __('Padding', 'dragwyb-form-builder'),
+            'label'      => __('Padding', 'smart-form-builder-by-dragwyb'),
             'selectors'  => ['{{WRAPPER}} input.dragwyb-field-input' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'],
         ]);
 
@@ -126,7 +126,7 @@ class Field_Date extends Field_Base
     protected function init(): void
     {
         $this->type = 'date';
-        $this->name = __('Date Field', 'dragwyb-form-builder');
+        $this->name = __('Date Field', 'smart-form-builder-by-dragwyb');
         $this->icon = 'far fa-calendar';
         $this->category = 'advanced-fields';
     }

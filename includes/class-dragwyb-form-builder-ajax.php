@@ -31,7 +31,7 @@ class Dragwyb_Form_Builder_Ajax
         check_ajax_referer('dragwyb_editor');
 
         if (!current_user_can('edit_posts')) {
-            wp_send_json_error(['message' => __('Permission denied', 'dragwyb-form-builder')]);
+            wp_send_json_error(['message' => __('Permission denied', 'smart-form-builder-by-dragwyb')]);
         }
 
         $form_id = absint($_POST['form_id'] ?? 0);
@@ -39,7 +39,7 @@ class Dragwyb_Form_Builder_Ajax
         $form_data = json_decode(wp_unslash($_POST['form_data'] ?? ''), true);
 
         if (!$form_id || !is_array($form_data)) {
-            wp_send_json_error(['message' => __('Invalid form data', 'dragwyb-form-builder')]);
+            wp_send_json_error(['message' => __('Invalid form data', 'smart-form-builder-by-dragwyb')]);
         }
 
         $sanitized_data = $this->sanitize_form_data($form_data, $form_id);
@@ -51,7 +51,7 @@ class Dragwyb_Form_Builder_Ajax
         $css_manager->clean_cache($form_id);
 
         wp_send_json_success([
-            'message' => __('Form saved successfully', 'dragwyb-form-builder')
+            'message' => __('Form saved successfully', 'smart-form-builder-by-dragwyb')
         ]);
     }
 

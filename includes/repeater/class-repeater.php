@@ -27,7 +27,7 @@ class Repeater
     {
         if (!is_string($id) || !preg_match('/^[A-Za-z0-9_]+$/', $id)) {
             // translators: %s is the type of the control
-            throw new \Exception(sprintf(esc_html__('%s ID must only contain letters, numbers, and underscores.', 'dragwyb-form-builder'), esc_html($type)));
+            throw new \Exception(sprintf(esc_html__('%s ID must only contain letters, numbers, and underscores.', 'smart-form-builder-by-dragwyb'), esc_html($type)));
 
             return false;
         }
@@ -40,7 +40,7 @@ class Repeater
         if (!$id = self::validate_id($id, 'Tabs')) return;
 
         if ($this->current_tabs !== null) {
-            throw new \Exception(esc_html__('Tabs are already started.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('Tabs are already started.', 'smart-form-builder-by-dragwyb'));
         }
 
         $this->current_tabs = $id; // Assuming type is the tabs identifier  
@@ -61,7 +61,7 @@ class Repeater
     final public function end_tabs(): void
     {
         if ($this->current_tabs === null) {
-            throw new \Exception(esc_html__('No tabs are currently open.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('No tabs are currently open.', 'smart-form-builder-by-dragwyb'));
         }
 
         $this->current_section_stack[$this->current_tabs]['tabs'] = $this->current_tabs_stack;
@@ -79,15 +79,15 @@ class Repeater
         if (!$id = self::validate_id($id, 'Tab')) return;
 
         if ($this->current_tabs === null) {
-            throw new \Exception(esc_html__('Tabs must be started before a tab can be opened.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('Tabs must be started before a tab can be opened.', 'smart-form-builder-by-dragwyb'));
         }
 
         if ($this->current_tabs_stack && isset($this->current_tabs_stack[$id])) {
-            throw new \Exception(esc_html__('Do not use duplicate tab ID use unique Id.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('Do not use duplicate tab ID use unique Id.', 'smart-form-builder-by-dragwyb'));
         }
 
         if ($this->current_tab !== null) {
-            throw new \Exception(esc_html__('Tab are already started.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('Tab are already started.', 'smart-form-builder-by-dragwyb'));
         }
         $this->current_tab = $id; // Assuming type is the tabs identifier
 
@@ -97,7 +97,7 @@ class Repeater
     final public function end_tab(): void
     {
         if ($this->current_tab === null) {
-            throw new \Exception(esc_html__('No tab are currently open.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('No tab are currently open.', 'smart-form-builder-by-dragwyb'));
         }
 
         $this->current_tab = null;
@@ -108,7 +108,7 @@ class Repeater
         if (!$id = self::validate_id($id, 'Control')) return;
 
         if (isset($this->settings_arr[$id]) || isset($this->current_control_stack[$id])) {
-            throw new \Exception(esc_html__('Do not use duplicate control ID use unique Id.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('Do not use duplicate control ID use unique Id.', 'smart-form-builder-by-dragwyb'));
         }
 
         if (!isset($data['name'])) {

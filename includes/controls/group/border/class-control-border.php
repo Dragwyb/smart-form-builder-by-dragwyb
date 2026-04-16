@@ -12,7 +12,7 @@ class Control_Border extends Group_Control_Base
     protected function init(): void
     {
         $this->type = 'border';
-        $this->name = __('Border', 'dragwyb-form-builder');
+        $this->name = __('Border', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-border-all';
     }
 
@@ -30,13 +30,13 @@ class Control_Border extends Group_Control_Base
         return [
             'style' => [
                 'options' => [
-                    ''       => __('Default', 'dragwyb-form-builder'),
-                    'none'   => __('None', 'dragwyb-form-builder'),
-                    'solid'  => __('Solid', 'dragwyb-form-builder'),
-                    'double' => __('Double', 'dragwyb-form-builder'),
-                    'dotted' => __('Dotted', 'dragwyb-form-builder'),
-                    'dashed' => __('Dashed', 'dragwyb-form-builder'),
-                    'groove' => __('Groove', 'dragwyb-form-builder'),
+                    ''       => __('Default', 'smart-form-builder-by-dragwyb'),
+                    'none'   => __('None', 'smart-form-builder-by-dragwyb'),
+                    'solid'  => __('Solid', 'smart-form-builder-by-dragwyb'),
+                    'double' => __('Double', 'smart-form-builder-by-dragwyb'),
+                    'dotted' => __('Dotted', 'smart-form-builder-by-dragwyb'),
+                    'dashed' => __('Dashed', 'smart-form-builder-by-dragwyb'),
+                    'groove' => __('Groove', 'smart-form-builder-by-dragwyb'),
                 ],
                 'default' => 'solid',
             ]
@@ -156,14 +156,14 @@ class Control_Border extends Group_Control_Base
 
         // 2. Control Map
         $map = [
-            'style'         => ['type' => Controls::SELECT, 'label' => __('Style', 'dragwyb-form-builder'), 'options' => ['' => __('None', 'dragwyb-form-builder'), 'solid' => __('Solid', 'dragwyb-form-builder'), 'double' => __('Double', 'dragwyb-form-builder'), 'dotted' => __('Dotted', 'dragwyb-form-builder'), 'dashed' => __('Dashed', 'dragwyb-form-builder'), 'groove' => __('Groove', 'dragwyb-form-builder'), 'ridge' => __('Ridge', 'dragwyb-form-builder'), 'inset' => __('Inset', 'dragwyb-form-builder'), 'outset' => __('Outset', 'dragwyb-form-builder')], 'label_inline' => true],
-            'color'         => ['type' => Controls::COLOR, 'label' => __('Color', 'dragwyb-form-builder'), 'conditions' => [
+            'style'         => ['type' => Controls::SELECT, 'label' => __('Style', 'smart-form-builder-by-dragwyb'), 'options' => ['' => __('None', 'smart-form-builder-by-dragwyb'), 'solid' => __('Solid', 'smart-form-builder-by-dragwyb'), 'double' => __('Double', 'smart-form-builder-by-dragwyb'), 'dotted' => __('Dotted', 'smart-form-builder-by-dragwyb'), 'dashed' => __('Dashed', 'smart-form-builder-by-dragwyb'), 'groove' => __('Groove', 'smart-form-builder-by-dragwyb'), 'ridge' => __('Ridge', 'smart-form-builder-by-dragwyb'), 'inset' => __('Inset', 'smart-form-builder-by-dragwyb'), 'outset' => __('Outset', 'smart-form-builder-by-dragwyb')], 'label_inline' => true],
+            'color'         => ['type' => Controls::COLOR, 'label' => __('Color', 'smart-form-builder-by-dragwyb'), 'conditions' => [
                 $id . '_style!' => ['none', '']
             ]],
-            'width'         => ['type' => Controls::DIMENSIONS, 'label' => __('Width', 'dragwyb-form-builder'), 'units' => ['px', 'em', '%'], 'conditions' => [
+            'width'         => ['type' => Controls::DIMENSIONS, 'label' => __('Width', 'smart-form-builder-by-dragwyb'), 'units' => ['px', 'em', '%'], 'conditions' => [
                 $id . '_style!' => ['none', '']
             ], 'responsive' => true],
-            'radius'        => ['type' => Controls::DIMENSIONS, 'label' => __('Radius', 'dragwyb-form-builder'), 'units' => ['px', 'em', '%'], 'responsive' => true],
+            'radius'        => ['type' => Controls::DIMENSIONS, 'label' => __('Radius', 'smart-form-builder-by-dragwyb'), 'units' => ['px', 'em', '%'], 'responsive' => true],
         ];
 
         if (isset($settings['style']['options'])) $map['style']['options'] = $settings['style']['options'];

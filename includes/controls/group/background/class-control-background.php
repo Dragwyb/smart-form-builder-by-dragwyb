@@ -12,7 +12,7 @@ class Control_Background extends Group_Control_Base
     protected function init(): void
     {
         $this->type = 'background';
-        $this->name = __('Background', 'dragwyb-form-builder');
+        $this->name = __('Background', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-image';
     }
 
@@ -147,26 +147,26 @@ class Control_Background extends Group_Control_Base
         $fields = [];
 
         $fields['background'] = [
-            'label' => __('Background Type', 'dragwyb-form-builder'),
+            'label' => __('Background Type', 'smart-form-builder-by-dragwyb'),
             'type' => Controls::CHOOSE,
             'options' => [
-                'classic' => ['title' => __('Classic', 'dragwyb-form-builder'), 'icon' => 'fa fa-paint-brush'],
-                'image' => ['title' => __('Image', 'dragwyb-form-builder'), 'icon' => 'fa fa-image'],
-                'gradient' => ['title' => __('Gradient', 'dragwyb-form-builder'), 'icon' => 'fa fa-barcode'],
+                'classic' => ['title' => __('Classic', 'smart-form-builder-by-dragwyb'), 'icon' => 'fa fa-paint-brush'],
+                'image' => ['title' => __('Image', 'smart-form-builder-by-dragwyb'), 'icon' => 'fa fa-image'],
+                'gradient' => ['title' => __('Gradient', 'smart-form-builder-by-dragwyb'), 'icon' => 'fa fa-barcode'],
             ],
             'default' => 'classic'
         ];
 
         $fields['gradient_notice'] = [
             'type' => Controls::RAW_HTML,
-            'raw' => '<p class="dragwyb-alert dragwyb-alert-warning">' . __('Set locations and angle for each breakpoint to ensure the gradient adapts to different screen sizes.', 'dragwyb-form-builder') . '</p>',
+            'raw' => '<p class="dragwyb-alert dragwyb-alert-warning">' . __('Set locations and angle for each breakpoint to ensure the gradient adapts to different screen sizes.', 'smart-form-builder-by-dragwyb') . '</p>',
             'conditions' => [
                 $id . '_background' => ['gradient'],
             ],
         ];
 
         $fields['color'] = [
-            'label' => __('Color', 'dragwyb-form-builder'),
+            'label' => __('Color', 'smart-form-builder-by-dragwyb'),
             'type' => Controls::COLOR,
             'default' => '',
             'conditions' => [
@@ -175,7 +175,7 @@ class Control_Background extends Group_Control_Base
         ];
 
         $fields['color_stop'] = [
-            'label' => __('Location', 'dragwyb-form-builder'),
+            'label' => __('Location', 'smart-form-builder-by-dragwyb'),
             'type' => Controls::SLIDER,
             'units' => ['%', 'px'],
             'default' => [
@@ -189,7 +189,7 @@ class Control_Background extends Group_Control_Base
         ];
 
         $fields['color_b'] = [
-            'label' => __('Second Color', 'dragwyb-form-builder'),
+            'label' => __('Second Color', 'smart-form-builder-by-dragwyb'),
             'type' => Controls::COLOR,
             'default' => '#f2295b',
             'conditions' => [
@@ -198,7 +198,7 @@ class Control_Background extends Group_Control_Base
         ];
 
         $fields['color_b_stop'] = [
-            'label' => __('Location', 'dragwyb-form-builder'),
+            'label' => __('Location', 'smart-form-builder-by-dragwyb'),
             'type' => Controls::SLIDER,
             'units' => ['%', 'px'],
             'default' => [
@@ -212,12 +212,12 @@ class Control_Background extends Group_Control_Base
         ];
 
         $fields['gradient_type'] = [
-            'label' => __('Type', 'dragwyb-form-builder'),
+            'label' => __('Type', 'smart-form-builder-by-dragwyb'),
             'type' => Controls::SELECT,
             'label_inline' => true,
             'options' => [
-                'linear' => __('Linear', 'dragwyb-form-builder'),
-                'radial' => __('Radial', 'dragwyb-form-builder'),
+                'linear' => __('Linear', 'smart-form-builder-by-dragwyb'),
+                'radial' => __('Radial', 'smart-form-builder-by-dragwyb'),
             ],
             'default' => 'linear',
             'conditions' => [
@@ -226,7 +226,7 @@ class Control_Background extends Group_Control_Base
         ];
 
         $fields['gradient_angle'] = [
-            'label' => __('Angle', 'dragwyb-form-builder'),
+            'label' => __('Angle', 'smart-form-builder-by-dragwyb'),
             'type' => Controls::SLIDER,
             'units' => ['deg', 'rad', 'turn'],
             'default' => [
@@ -255,19 +255,19 @@ class Control_Background extends Group_Control_Base
         ];
 
         $fields['gradient_position'] = [
-            'label' => __('Position', 'dragwyb-form-builder'),
+            'label' => __('Position', 'smart-form-builder-by-dragwyb'),
             'type' => Controls::SELECT,
             'label_inline' => true,
             'options' => [
-                'center center' => __('Center Center', 'dragwyb-form-builder'),
-                'center left' => __('Center Left', 'dragwyb-form-builder'),
-                'center right' => __('Center Right', 'dragwyb-form-builder'),
-                'top center' => __('Top Center', 'dragwyb-form-builder'),
-                'top left' => __('Top Left', 'dragwyb-form-builder'),
-                'top right' => __('Top Right', 'dragwyb-form-builder'),
-                'bottom center' => __('Bottom Center', 'dragwyb-form-builder'),
-                'bottom left' => __('Bottom Left', 'dragwyb-form-builder'),
-                'bottom right' => __('Bottom Right', 'dragwyb-form-builder'),
+                'center center' => __('Center Center', 'smart-form-builder-by-dragwyb'),
+                'center left' => __('Center Left', 'smart-form-builder-by-dragwyb'),
+                'center right' => __('Center Right', 'smart-form-builder-by-dragwyb'),
+                'top center' => __('Top Center', 'smart-form-builder-by-dragwyb'),
+                'top left' => __('Top Left', 'smart-form-builder-by-dragwyb'),
+                'top right' => __('Top Right', 'smart-form-builder-by-dragwyb'),
+                'bottom center' => __('Bottom Center', 'smart-form-builder-by-dragwyb'),
+                'bottom left' => __('Bottom Left', 'smart-form-builder-by-dragwyb'),
+                'bottom right' => __('Bottom Right', 'smart-form-builder-by-dragwyb'),
             ],
             'default' => 'center center',
             'responsive' => true,
@@ -278,7 +278,7 @@ class Control_Background extends Group_Control_Base
         ];
 
         $fields['image'] = [
-            'label' => __('Image', 'dragwyb-form-builder'),
+            'label' => __('Image', 'smart-form-builder-by-dragwyb'),
             'type' => Controls::IMAGE,
             'responsive' => true,
             'conditions' => [
@@ -287,22 +287,22 @@ class Control_Background extends Group_Control_Base
         ];
 
         $fields['position'] = [
-            'label' => __('Position', 'dragwyb-form-builder'),
+            'label' => __('Position', 'smart-form-builder-by-dragwyb'),
             'type' => Controls::SELECT,
             'label_inline' => true,
             'default' => 'center center',
             'responsive' => true,
             'options' => [
-                'center center' => __('Center Center', 'dragwyb-form-builder'),
-                'center left' => __('Center Left', 'dragwyb-form-builder'),
-                'center right' => __('Center Right', 'dragwyb-form-builder'),
-                'top center' => __('Top Center', 'dragwyb-form-builder'),
-                'top left' => __('Top Left', 'dragwyb-form-builder'),
-                'top right' => __('Top Right', 'dragwyb-form-builder'),
-                'bottom center' => __('Bottom Center', 'dragwyb-form-builder'),
-                'bottom left' => __('Bottom Left', 'dragwyb-form-builder'),
-                'bottom right' => __('Bottom Right', 'dragwyb-form-builder'),
-                'initial' => __('Custom', 'dragwyb-form-builder'),
+                'center center' => __('Center Center', 'smart-form-builder-by-dragwyb'),
+                'center left' => __('Center Left', 'smart-form-builder-by-dragwyb'),
+                'center right' => __('Center Right', 'smart-form-builder-by-dragwyb'),
+                'top center' => __('Top Center', 'smart-form-builder-by-dragwyb'),
+                'top left' => __('Top Left', 'smart-form-builder-by-dragwyb'),
+                'top right' => __('Top Right', 'smart-form-builder-by-dragwyb'),
+                'bottom center' => __('Bottom Center', 'smart-form-builder-by-dragwyb'),
+                'bottom left' => __('Bottom Left', 'smart-form-builder-by-dragwyb'),
+                'bottom right' => __('Bottom Right', 'smart-form-builder-by-dragwyb'),
+                'initial' => __('Custom', 'smart-form-builder-by-dragwyb'),
             ],
             'conditions' => [
                 $id . '_background' => ['image'],
@@ -310,7 +310,7 @@ class Control_Background extends Group_Control_Base
         ];
 
         $fields['xpos'] = [
-            'label' => __('X Position', 'dragwyb-form-builder'),
+            'label' => __('X Position', 'smart-form-builder-by-dragwyb'),
             'type' => Controls::SLIDER,
             'responsive' => true,
             'units' => ['px', '%', 'em', 'vw'],
@@ -342,7 +342,7 @@ class Control_Background extends Group_Control_Base
         ];
 
         $fields['ypos'] = [
-            'label' => __('Y Position', 'dragwyb-form-builder'),
+            'label' => __('Y Position', 'smart-form-builder-by-dragwyb'),
             'type' => Controls::SLIDER,
             'responsive' => true,
             'units' => ['px', '%', 'em', 'vh'],
@@ -374,14 +374,14 @@ class Control_Background extends Group_Control_Base
         ];
 
         $fields['attachment'] = [
-            'label' => __('Attachment', 'dragwyb-form-builder'),
+            'label' => __('Attachment', 'smart-form-builder-by-dragwyb'),
             'type' => Controls::SELECT,
             'label_inline' => true,
             'default' => '',
             'options' => [
-                '' => __('Default', 'dragwyb-form-builder'),
-                'scroll' => __('Scroll', 'dragwyb-form-builder'),
-                'fixed' => __('Fixed', 'dragwyb-form-builder'),
+                '' => __('Default', 'smart-form-builder-by-dragwyb'),
+                'scroll' => __('Scroll', 'smart-form-builder-by-dragwyb'),
+                'fixed' => __('Fixed', 'smart-form-builder-by-dragwyb'),
             ],
             'conditions' => [
                 $id . '_background' => ['image'],
@@ -390,7 +390,7 @@ class Control_Background extends Group_Control_Base
 
         $fields['attachment_alert'] = [
             'type' => Controls::RAW_HTML,
-            'raw' => '<p class="dragwyb-control-field-description">' . __('Note: Attachment Fixed works only on desktop.', 'dragwyb-form-builder') . '</p>',
+            'raw' => '<p class="dragwyb-control-field-description">' . __('Note: Attachment Fixed works only on desktop.', 'smart-form-builder-by-dragwyb') . '</p>',
             'conditions' => [
                 $id . '_background' => ['image'],
                 $id . '_attachment' => 'fixed',
@@ -398,16 +398,16 @@ class Control_Background extends Group_Control_Base
         ];
 
         $fields['repeat'] = [
-            'label' => __('Repeat', 'dragwyb-form-builder'),
+            'label' => __('Repeat', 'smart-form-builder-by-dragwyb'),
             'type' => Controls::SELECT,
             'label_inline' => true,
             'default' => 'no-repeat',
             'responsive' => true,
             'options' => [
-                'no-repeat' => __('No-repeat', 'dragwyb-form-builder'),
-                'repeat' => __('Repeat', 'dragwyb-form-builder'),
-                'repeat-x' => __('Repeat-x', 'dragwyb-form-builder'),
-                'repeat-y' => __('Repeat-y', 'dragwyb-form-builder'),
+                'no-repeat' => __('No-repeat', 'smart-form-builder-by-dragwyb'),
+                'repeat' => __('Repeat', 'smart-form-builder-by-dragwyb'),
+                'repeat-x' => __('Repeat-x', 'smart-form-builder-by-dragwyb'),
+                'repeat-y' => __('Repeat-y', 'smart-form-builder-by-dragwyb'),
             ],
             'conditions' => [
                 $id . '_background' => ['image'],
@@ -415,16 +415,16 @@ class Control_Background extends Group_Control_Base
         ];
 
         $fields['size'] = [
-            'label' => __('Display Size', 'dragwyb-form-builder'),
+            'label' => __('Display Size', 'smart-form-builder-by-dragwyb'),
             'type' => Controls::SELECT,
             'label_inline' => true,
             'responsive' => true,
             'default' => 'cover',
             'options' => [
-                'auto' => __('Auto', 'dragwyb-form-builder'),
-                'cover' => __('Cover', 'dragwyb-form-builder'),
-                'contain' => __('Contain', 'dragwyb-form-builder'),
-                'initial' => __('Custom', 'dragwyb-form-builder'),
+                'auto' => __('Auto', 'smart-form-builder-by-dragwyb'),
+                'cover' => __('Cover', 'smart-form-builder-by-dragwyb'),
+                'contain' => __('Contain', 'smart-form-builder-by-dragwyb'),
+                'initial' => __('Custom', 'smart-form-builder-by-dragwyb'),
             ],
             'conditions' => [
                 $id . '_background' => ['image'],
@@ -432,7 +432,7 @@ class Control_Background extends Group_Control_Base
         ];
 
         $fields['bg_width'] = [
-            'label' => __('Width', 'dragwyb-form-builder'),
+            'label' => __('Width', 'smart-form-builder-by-dragwyb'),
             'type' => Controls::SLIDER,
             'responsive' => true,
             'units' => ['px', '%', 'em', 'vw'],

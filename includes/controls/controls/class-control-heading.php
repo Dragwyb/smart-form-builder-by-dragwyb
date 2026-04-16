@@ -16,7 +16,7 @@ class Control_Heading extends Control_Base
     protected function init(): void
     {
         $this->type = 'heading';
-        $this->name = __('Heading', 'dragwyb-form-builder');
+        $this->name = __('Heading', 'smart-form-builder-by-dragwyb');
     }
 
     /**

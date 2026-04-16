@@ -20,7 +20,7 @@ class Control_Radio extends Control_Base
     protected function init(): void
     {
         $this->type = 'radio';
-        $this->name = __('Radio', 'dragwyb-form-builder');
+        $this->name = __('Radio', 'smart-form-builder-by-dragwyb');
     }
 
     protected function sanitize_control($value)

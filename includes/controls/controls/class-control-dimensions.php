@@ -30,7 +30,7 @@ class Control_Dimensions extends Control_Base
     protected function init(): void
     {
         $this->type = 'dimensions';
-        $this->name = __('Dimensions', 'dragwyb-form-builder');
+        $this->name = __('Dimensions', 'smart-form-builder-by-dragwyb');
     }
 
     /**

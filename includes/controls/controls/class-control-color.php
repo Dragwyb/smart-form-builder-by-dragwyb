@@ -19,7 +19,7 @@ class Control_Color extends Control_Base
     protected function init(): void
     {
         $this->type = 'color';
-        $this->name = __('Color', 'dragwyb-form-builder');
+        $this->name = __('Color', 'smart-form-builder-by-dragwyb');
     }
 
     protected function sanitize_control($value)

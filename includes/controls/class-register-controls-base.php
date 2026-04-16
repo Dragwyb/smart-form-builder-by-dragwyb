@@ -55,7 +55,7 @@ abstract class Register_Controls_Base
     {
         if (!is_string($id) || !preg_match('/^[A-Za-z0-9_]+$/', $id)) {
             // translators: %s is the type of the control
-            throw new \Exception(sprintf(esc_html__('%s ID must only contain letters, numbers, and underscores.', 'dragwyb-form-builder'), esc_html($type)));
+            throw new \Exception(sprintf(esc_html__('%s ID must only contain letters, numbers, and underscores.', 'smart-form-builder-by-dragwyb'), esc_html($type)));
 
             return false;
         }
@@ -68,11 +68,11 @@ abstract class Register_Controls_Base
         if (!$id = self::validate_id($id, 'Section')) return;
 
         if ($this->current_section !== null) {
-            throw new \Exception(esc_html__('A section is already started.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('A section is already started.', 'smart-form-builder-by-dragwyb'));
         }
 
         if (isset($this->settings_arr[$id])) {
-            throw new \Exception(esc_html__('Do not use duplicate section ID use unique Id.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('Do not use duplicate section ID use unique Id.', 'smart-form-builder-by-dragwyb'));
         }
 
         do_action('Dragwyb/Editor/before_section_start/' . sanitize_text_field($id), $data);
@@ -91,7 +91,7 @@ abstract class Register_Controls_Base
     final protected function end_section(): void
     {
         if ($this->current_section === null) {
-            throw new \Exception(esc_html__('No section is currently open.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('No section is currently open.', 'smart-form-builder-by-dragwyb'));
         }
 
         do_action('Dragwyb/Editor/before_section_end/' . sanitize_text_field($this->current_section), $this->settings_arr[$this->current_section]);
@@ -111,15 +111,15 @@ abstract class Register_Controls_Base
         if (!$id = self::validate_id($id, 'Tabs')) return;
 
         if ($this->current_section === null) {
-            throw new \Exception(esc_html__('No section is currently open.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('No section is currently open.', 'smart-form-builder-by-dragwyb'));
         }
 
         if ($this->current_tabs !== null) {
-            throw new \Exception(esc_html__('Tabs are already started.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('Tabs are already started.', 'smart-form-builder-by-dragwyb'));
         }
 
         if ($this->current_section_stack && isset($this->current_section_stack[$id])) {
-            throw new \Exception(esc_html__('Do not use duplicate tabs ID use unique Id.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('Do not use duplicate tabs ID use unique Id.', 'smart-form-builder-by-dragwyb'));
         }
 
         $this->current_tabs = $id; // Assuming type is the tabs identifier  
@@ -137,7 +137,7 @@ abstract class Register_Controls_Base
     final protected function end_tabs(): void
     {
         if ($this->current_tabs === null) {
-            throw new \Exception(esc_html__('No tabs are currently open.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('No tabs are currently open.', 'smart-form-builder-by-dragwyb'));
         }
 
         $this->current_section_stack[$this->current_tabs]['tabs'] = $this->current_tabs_stack;
@@ -154,19 +154,19 @@ abstract class Register_Controls_Base
         if (!$id = self::validate_id($id, 'Tab')) return;
 
         if ($this->current_section === null) {
-            throw new \Exception(esc_html__('No section is currently open.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('No section is currently open.', 'smart-form-builder-by-dragwyb'));
         }
 
         if ($this->current_tabs === null) {
-            throw new \Exception(esc_html__('Tabs must be started before a tab can be opened.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('Tabs must be started before a tab can be opened.', 'smart-form-builder-by-dragwyb'));
         }
 
         if ($this->current_tabs_stack && isset($this->current_tabs_stack[$id])) {
-            throw new \Exception(esc_html__('Do not use duplicate tab ID use unique Id.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('Do not use duplicate tab ID use unique Id.', 'smart-form-builder-by-dragwyb'));
         }
 
         if ($this->current_tab !== null) {
-            throw new \Exception(esc_html__('Tab are already started.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('Tab are already started.', 'smart-form-builder-by-dragwyb'));
         }
         $this->current_tab = $id; // Assuming type is the tabs identifier
 
@@ -176,7 +176,7 @@ abstract class Register_Controls_Base
     final protected function end_tab(): void
     {
         if ($this->current_tab === null) {
-            throw new \Exception(esc_html__('No tab are currently open.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('No tab are currently open.', 'smart-form-builder-by-dragwyb'));
         }
 
         $this->current_tab = null;
@@ -185,11 +185,11 @@ abstract class Register_Controls_Base
     final protected function start_popover(array $data = array()): void
     {
         if ($this->current_section === null) {
-            throw new \Exception(esc_html__('No section is currently open.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('No section is currently open.', 'smart-form-builder-by-dragwyb'));
         }
 
         if (isset($this->current_popover['initialize'])) {
-            throw new \Exception(esc_html__('Popover are already started.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('Popover are already started.', 'smart-form-builder-by-dragwyb'));
         }
 
         $this->current_popover['initialize'] = false;
@@ -202,7 +202,7 @@ abstract class Register_Controls_Base
     final protected function end_popover(): void
     {
         if (!isset($this->current_popover['initialize'])) {
-            throw new \Exception(esc_html__('No popover are currently open.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('No popover are currently open.', 'smart-form-builder-by-dragwyb'));
         }
 
         $last_control = $this->get_last_control();
@@ -223,12 +223,12 @@ abstract class Register_Controls_Base
         if (!$id = self::validate_id($id, 'Control')) return;
 
         if ($this->current_section === null) {
-            throw new \Exception(esc_html__('No section is currently open to add controls.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('No section is currently open to add controls.', 'smart-form-builder-by-dragwyb'));
         }
 
         if (isset($this->settings_arr[$id]) || isset($this->current_control_stack[$id])) {
             // translators: %s is the id of the control
-            throw new \Exception(sprintf(esc_html__("Do not use duplicate %s ID use unique Id.", 'dragwyb-form-builder'), esc_html($id)));
+            throw new \Exception(sprintf(esc_html__("Do not use duplicate %s ID use unique Id.", 'smart-form-builder-by-dragwyb'), esc_html($id)));
         }
 
         do_action('Dragwyb/Editor/before_add_control/' . sanitize_text_field($id), $data);
@@ -264,13 +264,13 @@ abstract class Register_Controls_Base
     final protected function add_group_control(string $id = '', array $data = array()): void
     {
         if ($this->current_section === null) {
-            throw new \Exception(esc_html__('No section is currently open to add controls.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('No section is currently open to add controls.', 'smart-form-builder-by-dragwyb'));
         }
 
         $id = sanitize_text_field($id);
 
         if (isset($this->settings_arr[$id]) || isset($this->current_control_stack[$id])) {
-            throw new \Exception(esc_html__('Do not use duplicate control ID use unique Id.', 'dragwyb-form-builder'));
+            throw new \Exception(esc_html__('Do not use duplicate control ID use unique Id.', 'smart-form-builder-by-dragwyb'));
         }
 
         $conditions = isset($data['conditions']) ? $data['conditions'] : array();
@@ -288,7 +288,7 @@ abstract class Register_Controls_Base
 
         $this->add_control($id . '_popover_toggle', [
             'type' => Controls::POPOVER_TOGGLE,
-            'label' => isset($control_data['name']) ? sanitize_text_field($control_data['name']) : __('Popover Toggle', 'dragwyb-form-builder'),
+            'label' => isset($control_data['name']) ? sanitize_text_field($control_data['name']) : __('Popover Toggle', 'smart-form-builder-by-dragwyb'),
             'icon' => isset($control_data['icon']) ? $control_data['icon'] : 'fas fa-pen'
         ]);
 

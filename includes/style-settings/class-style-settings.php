@@ -27,7 +27,7 @@ class Style_Settings extends Toolbar_Base
 
     protected function get_name(): string
     {
-        return __('Style', 'dragwyb-form-builder');
+        return __('Style', 'smart-form-builder-by-dragwyb');
     }
 
     protected function get_icon(): string

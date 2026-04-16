@@ -14,7 +14,7 @@ class Control_Fonts extends Control_Base
     protected function init(): void
     {
         $this->type = 'fonts';
-        $this->name = __('Font Family', 'dragwyb-form-builder');
+        $this->name = __('Font Family', 'smart-form-builder-by-dragwyb');
     }
 
     protected function register_settings()

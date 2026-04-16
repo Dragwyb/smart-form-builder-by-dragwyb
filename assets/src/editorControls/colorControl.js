@@ -74,7 +74,7 @@ export default class ColorControl extends DragwybEditor.editor.extends.ControlBa
         if (!this.shouldRender()) return <></>;
 
         const { id, settings } = this;
-        const { label = __('Color', 'dragwyb-form-builder'), default: defaultColor = '' } = settings;
+        const { label = __('Color', 'smart-form-builder-by-dragwyb'), default: defaultColor = '' } = settings;
         const { value = defaultColor } = this.state;
 
         return (

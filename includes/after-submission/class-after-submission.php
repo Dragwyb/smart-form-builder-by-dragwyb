@@ -26,7 +26,7 @@ class After_SUbmission extends Toolbar_Base
 
     protected function get_name(): string
     {
-        return __('Submission', 'dragwyb-form-builder');
+        return __('Submission', 'smart-form-builder-by-dragwyb');
     }
 
     protected function get_icon(): string

@@ -6,7 +6,7 @@
  * Version: 1.0.0
  * Author: Dragwyb
  * Author URI:  https://dragwyb.com/
- * Text Domain: dragwyb-form-builder
+ * Text Domain: smart-form-builder-by-dragwyb
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */

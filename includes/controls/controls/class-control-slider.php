@@ -29,7 +29,7 @@ class Control_Slider extends Control_Base
     protected function init(): void
     {
         $this->type = 'slider';
-        $this->name = __('Slider', 'dragwyb-form-builder');
+        $this->name = __('Slider', 'smart-form-builder-by-dragwyb');
     }
 
     protected function sanitize_control($value)

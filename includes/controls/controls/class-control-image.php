@@ -17,7 +17,7 @@ class Control_Image extends Control_Base
     protected function init(): void
     {
         $this->type = 'image';
-        $this->name = __('Image', 'dragwyb-form-builder');
+        $this->name = __('Image', 'smart-form-builder-by-dragwyb');
     }
 
     /**

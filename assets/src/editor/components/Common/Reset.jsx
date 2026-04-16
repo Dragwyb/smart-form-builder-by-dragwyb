@@ -8,7 +8,7 @@ const Reset = ({ handler, disabled }) => {
         handler();
     }
 
-    const title = disabled ? '' : __('Reset to default', 'dragwyb-form-builder')
+    const title = disabled ? '' : __('Reset to default', 'smart-form-builder-by-dragwyb')
 
     return (
         <div className={`dragwyb-control_reset${disabled ? ' disabled' : ''}`} onClick={onClickHandler} title={title}>

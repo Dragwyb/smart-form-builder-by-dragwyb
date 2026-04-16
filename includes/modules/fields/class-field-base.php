@@ -229,22 +229,22 @@ abstract class Field_Base extends Register_Controls_Base
     protected function layout_id_controls(): void
     {
         $this->start_section('section_advance_layout', [
-            'label' => __('Layout & ID', 'dragwyb-form-builder'),
+            'label' => __('Layout & ID', 'smart-form-builder-by-dragwyb'),
             'tab'   => self::AdvanceTab,
         ]);
 
         // The Field ID is a unique identifier used for saving data and logic
         $this->add_control('field_id', [
             'type'        => Controls::TEXT,
-            'label'       => __('Field ID', 'dragwyb-form-builder'),
-            'description' => __('Unique ID for logic and emails (e.g., text_field_1).', 'dragwyb-form-builder'),
+            'label'       => __('Field ID', 'smart-form-builder-by-dragwyb'),
+            'description' => __('Unique ID for logic and emails (e.g., text_field_1).', 'smart-form-builder-by-dragwyb'),
             'dynamic'     => ['active' => false],
         ]);
 
         // column span
         $this->add_responsive_control('column_span', [
             'type'        => Controls::SLIDER,
-            'label'       => __('Column Span', 'dragwyb-form-builder'),
+            'label'       => __('Column Span', 'smart-form-builder-by-dragwyb'),
             'range' => [
                 'px' => [
                     'min' => 1,
@@ -261,7 +261,7 @@ abstract class Field_Base extends Register_Controls_Base
 
         $this->add_responsive_control('field_width', [
             'type'        => Controls::SLIDER,
-            'label'       => __('Width', 'dragwyb-form-builder'),
+            'label'       => __('Width', 'smart-form-builder-by-dragwyb'),
             'range' => [
                 'px' => [
                     'min' => 1,
@@ -292,20 +292,20 @@ abstract class Field_Base extends Register_Controls_Base
 
         $this->add_control('css_classes', [
             'type'        => Controls::TEXT,
-            'label'       => __('Custom CSS Classes', 'dragwyb-form-builder'),
-            'description' => __('Add custom classes to the wrapper.', 'dragwyb-form-builder'),
+            'label'       => __('Custom CSS Classes', 'smart-form-builder-by-dragwyb'),
+            'description' => __('Add custom classes to the wrapper.', 'smart-form-builder-by-dragwyb'),
         ]);
 
         $this->end_section();
 
         $this->start_section('section_advance_logic', [
-            'label' => __('Conditional Logic', 'dragwyb-form-builder'),
+            'label' => __('Conditional Logic', 'smart-form-builder-by-dragwyb'),
             'tab'   => self::AdvanceTab,
         ]);
 
         $this->add_control('enable_logic', [
             'type'         => Controls::SWITCHER,
-            'label'        => __('Enable Logic', 'dragwyb-form-builder'),
+            'label'        => __('Enable Logic', 'smart-form-builder-by-dragwyb'),
             'default'      => '',
             'return_value' => '',
             'disabled'     => true,
@@ -314,7 +314,7 @@ abstract class Field_Base extends Register_Controls_Base
         $this->add_control('logic_msg', [
             'type' => Controls::RAW_HTML,
             // translators: %1$s is the opening bold tag, %2$s is the closing bold tag
-            'raw'  => '<div style="color: hsl(var(--dragwyb-sidebar-foreground)/var(--dragwyb-text-opacity, 1)); font-size: 12px; padding: 10px 0;">' . sprintf(__('%1$sComing Soon%2$s: Advanced Conditional Logic is in development. This feature will allow you to dynamically show or hide fields based on user input.', 'dragwyb-form-builder'), '<strong>', '</strong>') . '</div>',
+            'raw'  => '<div style="color: hsl(var(--dragwyb-sidebar-foreground)/var(--dragwyb-text-opacity, 1)); font-size: 12px; padding: 10px 0;">' . sprintf(__('%1$sComing Soon%2$s: Advanced Conditional Logic is in development. This feature will allow you to dynamically show or hide fields based on user input.', 'smart-form-builder-by-dragwyb'), '<strong>', '</strong>') . '</div>',
             'condition' => [
                 'enable_logic' => 'yes',
             ],

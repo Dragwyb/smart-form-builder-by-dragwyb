@@ -25,7 +25,7 @@ const SearchInput = ({
 
     return (
         <div className={`dragwyb-search-input ${className}`}>
-            <label htmlFor={id} title={__('Search', 'dragwyb-form-builder')}>
+            <label htmlFor={id} title={__('Search', 'smart-form-builder-by-dragwyb')}>
                 <span className="search-icon">
                     <FaMagnifyingGlass />
                 </span>
@@ -42,7 +42,7 @@ const SearchInput = ({
                     className="dragwyb-search-input__clear"
                     onClick={() => { onChangeHandler('') }}
                     type="button"
-                    title={__('Clear', 'dragwyb-form-builder')}
+                    title={__('Clear', 'smart-form-builder-by-dragwyb')}
                 >
                     <span><FaXmark /></span>
                 </button>
