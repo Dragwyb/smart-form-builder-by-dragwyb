@@ -405,7 +405,8 @@ class Frontend_Render
 
             if (!$atfp_style_exist) {
                 $style_content = self::instance()->get_generated_css();
-                wp_add_inline_style('smart-form-builder-by-dragwyb', $style_content['css']);
+                $style_content = wp_strip_all_tags($style_content['css']);
+                wp_add_inline_style('smart-form-builder-by-dragwyb', wp_kses_post($style_content));
             }
         }
 
