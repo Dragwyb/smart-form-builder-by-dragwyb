@@ -57,8 +57,8 @@ const Header = () => {
     return (
         <div className="dragwyb-editor__header">
             <div className="dragwyb-editor__details">
-                <img src={pluginUrl + 'assets/img/logo.png'} alt="Dragwyb Form Builder" width={40} />
-                <h2>Dragwyb Form Builder</h2>
+                <img src={pluginUrl + 'assets/img/logo.png'} alt="Smart Form Builder by Dragwyb" width={40} />
+                <h2>Smart Form Builder by Dragwyb</h2>
                 <div className="dragwyb-editor__status" data-status={formStatus} onClick={() => setActiveTabHandler('advance')}>
                     {statusHtml}
                 </div>

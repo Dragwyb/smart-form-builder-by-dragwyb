@@ -7,10 +7,10 @@ if (! defined('ABSPATH')) {
 }
 
 /**
- * Dragwyb Form Builder Fonts_Helper.
+ * Smart Form Builder by Dragwyb Fonts_Helper.
  *
- * Dragwyb Form Builder fonts List handler class is responsible for registering the supported
- * Fonts_Helper used by Dragwyb form builder.
+ * Smart Form Builder by Dragwyb fonts List handler class is responsible for registering the supported
+ * Fonts_Helper used by Smart Form Builder by Dragwyb.
  *
  * @since 0.0.0
  */
@@ -97,7 +97,7 @@ class Fonts_Helper
 	}
 
 	/**
-	 * Get Dragwyb Form Builder native fonts.
+	 * Get Smart Form Builder by Dragwyb native fonts.
 	 *
 	 * Retrieve the list of supported fonts.
 	 *

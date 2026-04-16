@@ -23,7 +23,7 @@ const PreviewLoading = () => {
                     </svg>
 
                     <div className="dragwyb-editor-loader-form-preview">
-                        <img src={pluginUrl + 'assets/img/logo.png'} alt="Dragwyb Form Builder" />
+                        <img src={pluginUrl + 'assets/img/logo.png'} alt="Smart Form Builder by Dragwyb" />
                     </div>
                 </div>
 
