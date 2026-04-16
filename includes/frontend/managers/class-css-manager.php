@@ -141,6 +141,10 @@ class CSS_Manager
             wp_send_json_error('Invalid nonce');
         }
 
+        if (!isset($_POST['delete_cache_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['delete_cache_nonce'])), 'delete_cache_nonce')) {
+            wp_send_json_error('Invalid nonce');
+        }
+
         if (!isset($_POST['form_id'])) {
             wp_send_json_error('Invalid form id 1');
         }
