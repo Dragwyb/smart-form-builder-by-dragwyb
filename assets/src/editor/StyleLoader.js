@@ -60,9 +60,21 @@ const StyleLoader = () => {
                     }`;
                 }
 
-                // Lazy-initialize the DOM ref once
-                if (!styleWrapperRef.current && '' !== cssString) {
-                    styleWrapperRef.current = iframeEle.getElementById('dragwyb-form-' + formId);
+                if (!styleWrapper && cssString !== '' && iframeEle) {
+                    const styleId = `dragwyb-form-${formId}`;
+
+                    // Attempt to find the existing style tag
+                    const existingStyle = iframeEle.getElementById(styleId);
+
+                    if (existingStyle) {
+                        setStyleWrapper(existingStyle);
+                    } else {
+                        // Fallback: If it doesn't exist, create it properly
+                        const newStyle = iframeEle.createElement('style');
+                        newStyle.id = styleId;
+                        iframeEle.head.appendChild(newStyle);
+                        setStyleWrapper(newStyle);
+                    }
                 }
 
                 if (styleWrapperRef.current) {
