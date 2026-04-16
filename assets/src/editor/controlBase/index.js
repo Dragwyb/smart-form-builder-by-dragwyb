@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Field } from "../Editor/Fields";
 import ResponsiveDevices from "../../editor/components/Common/ResponsiveDevices";
-import { Value } from "sass";
 
 class DragwybControlBase extends Component {
     #updateValue = () => { }
