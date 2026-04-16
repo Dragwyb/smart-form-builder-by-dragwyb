@@ -49,7 +49,7 @@ class Dragwyb_Pages
             DRAGWYB_PREFIX . '-form-overview',
             [$this, 'dragwyb_render_page'],
             esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/img/menu-logo.svg'),
-            20
+            58
         );
 
         // Add submenu page for adding a form
