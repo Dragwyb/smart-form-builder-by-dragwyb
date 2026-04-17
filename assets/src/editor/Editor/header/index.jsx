@@ -13,6 +13,7 @@ import { FaSun, FaMoon } from 'react-icons/fa';
 const Header = () => {
     // Existing Selectors
     const formStatus = useSelector(state => state?.form?.advance?.form_status || DragwybEditor.formData.status);
+    const formTitle = useSelector(state => state?.form?.advance?.form_title || DragwybEditor.formData.title);
     const themeMode = useSelector(state => state?.themeMode || 'light');
     const iframeEle = useSelector(state => state.iframeEle);
     const pluginUrl = DragwybEditor.pluginUrl;
@@ -58,7 +59,7 @@ const Header = () => {
         <div className="dragwyb-editor__header">
             <div className="dragwyb-editor__details">
                 <img src={pluginUrl + 'assets/img/logo.png'} alt="Smart Form Builder by Dragwyb" width={40} />
-                <h2>Smart Form Builder by Dragwyb</h2>
+                <h2 onClick={() => setActiveTabHandler('advance')}>{formTitle}</h2>
                 <div className="dragwyb-editor__status" data-status={formStatus} onClick={() => setActiveTabHandler('advance')}>
                     {statusHtml}
                 </div>
