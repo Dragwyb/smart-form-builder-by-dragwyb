@@ -168,7 +168,6 @@ class Control_Background extends Group_Control_Base
         $fields['color'] = [
             'label' => __('Color', 'smart-form-builder-by-dragwyb'),
             'type' => Controls::COLOR,
-            'default' => '',
             'conditions' => [
                 $id . '_background' => ['classic', 'gradient'],
             ],
@@ -191,7 +190,6 @@ class Control_Background extends Group_Control_Base
         $fields['color_b'] = [
             'label' => __('Second Color', 'smart-form-builder-by-dragwyb'),
             'type' => Controls::COLOR,
-            'default' => '#f2295b',
             'conditions' => [
                 $id . '_background' => ['gradient'],
             ],
