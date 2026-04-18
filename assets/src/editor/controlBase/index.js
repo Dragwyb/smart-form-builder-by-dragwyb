@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import ResponsiveDevices from "../../editor/components/Common/ResponsiveDevices";
+import { FaUndo } from "react-icons/fa";
+import { __ } from '@wordpress/i18n';
 
 class DragwybControlBase extends Component {
     #updateValue = () => { }
@@ -95,11 +97,16 @@ class DragwybControlBase extends Component {
         }
 
         return (
-            <label className={`dragwyb-control__label${className !== '' ? ' ' + className : ''}`} {...attr}>
-                {label}
-                {this.settings.responsive_control && this.settings.responsive_type && <ResponsiveDevices Utils={this.Utils} style='dropdown' />}
-                {children}
-            </label>
+            <>
+                <label className={`dragwyb-control__label${className !== '' ? ' ' + className : ''}`} {...attr}>
+                    {label}
+                    {this.settings.responsive_control && this.settings.responsive_type && <ResponsiveDevices Utils={this.Utils} style='dropdown' />}
+                    {children}
+                    {this.state.value && <span className="dragwyb-control__reset" onClick={this.resetControl.bind(this)}>
+                        <FaUndo size={12} title={__('Reset to Default', 'smart-form-builder-by-dragwyb')} />
+                    </span>}
+                </label>
+            </>
         );
     }
 
@@ -155,8 +162,6 @@ class DragwybControlBase extends Component {
             const uniqueSelector = `${this.selectorKey}${selectedSetting ? '_' + selectedSetting : ''}_${key}`;
 
             if (value === undefined || value === null || value === '') {
-                const defaultValue = this?.settings?.default;
-
                 this.Utils.deleteStyleSelectors({ key: uniqueSelector });
             } else {
 
