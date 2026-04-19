@@ -454,8 +454,6 @@ class Frontend_Render
 
             if (isset($settings[$control_id])) {
                 $setting_value = $settings[$control_id];
-            } else if (isset($control_settings['default'])) {
-                $setting_value = $control_settings['default'];
             }
 
             if (!isset($setting_value)) {
