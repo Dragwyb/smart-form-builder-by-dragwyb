@@ -30,20 +30,20 @@ if (!class_exists('Dragwyb_Form_Builder_Autoload')) {
             }
         }
 
-        public function autoload($class)
+        public function autoload($class_name)
         {
-            if (0 !== strpos($class, __NAMESPACE__)) {
+            if (0 !== strpos($class_name, __NAMESPACE__)) {
                 return;
             }
 
-            $has_class_alias = isset($this->classes_aliases[$class]);
+            $has_class_alias = isset($this->classes_aliases[$class_name]);
 
             // Backward Compatibility: Save old class name for set an alias after the new class is loaded
             if ($has_class_alias) {
-                $class_alias_name = $this->classes_aliases[$class];
+                $class_alias_name = $this->classes_aliases[$class_name];
                 $class_to_load = $class_alias_name;
             } else {
-                $class_to_load = $class;
+                $class_to_load = $class_name;
             }
 
             if (! class_exists($class_to_load)) {
@@ -65,14 +65,16 @@ if (!class_exists('Dragwyb_Form_Builder_Autoload')) {
                     )
                 );
 
-                $parts = explode('\\', $filename);
+                $slash = preg_match('/\//', $filename) ? '/' : '\\';;
+
+                $parts = explode($slash, $filename);
 
                 if (count($parts) > 1) {
                     $last_index = count($parts) - 1;
                     $parts[$last_index] = 'class-' . $parts[$last_index];
                 }
 
-                $filename = implode('\\', $parts);
+                $filename = implode($slash, $parts);
 
 
                 $filename = trailingslashit(DRAGWYB_FORM_BUILDER_PATH) . $filename . '.php';
