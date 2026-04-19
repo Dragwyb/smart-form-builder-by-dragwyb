@@ -237,18 +237,18 @@ abstract class Field_Base extends Register_Controls_Base
         $this->add_control('field_id', [
             'type'        => Controls::TEXT,
             'label'       => __('Field ID', 'smart-form-builder-by-dragwyb'),
-            'description' => __('Unique ID for logic and emails (e.g., text_field_1).', 'smart-form-builder-by-dragwyb'),
+            'description' => __('Use this ID for custom scripts or logic.', 'smart-form-builder-by-dragwyb'),
             'dynamic'     => ['active' => false],
         ]);
 
         // column span
         $this->add_responsive_control('column_span', [
             'type'        => Controls::SLIDER,
-            'label'       => __('Column Span', 'smart-form-builder-by-dragwyb'),
+            'label'       => __('Grid Column Span', 'smart-form-builder-by-dragwyb'),
             'range' => [
                 'px' => [
                     'min' => 1,
-                    'max' => 30,
+                    'max' => 12,
                 ],
             ],
             'default' => [
