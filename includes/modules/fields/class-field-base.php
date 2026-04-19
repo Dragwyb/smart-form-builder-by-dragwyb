@@ -50,14 +50,19 @@ abstract class Field_Base extends Register_Controls_Base
         $scripts = $this->register_scripts();
         $styles = $this->register_style();
 
-        foreach ($scripts as $script) {
-            if (!wp_script_is($script, 'enqueued')) {
-                wp_enqueue_script($script);
+        if (is_array($scripts)) {
+            foreach ($scripts as $script) {
+                if (!wp_script_is($script, 'enqueued')) {
+                    wp_enqueue_script($script);
+                }
             }
         }
-        foreach ($styles as $style) {
-            if (!wp_style_is($style, 'enqueued')) {
-                wp_enqueue_style($style);
+
+        if (is_array($styles)) {
+            foreach ($styles as $style) {
+                if (!wp_style_is($style, 'enqueued')) {
+                    wp_enqueue_style($style);
+                }
             }
         }
     }
