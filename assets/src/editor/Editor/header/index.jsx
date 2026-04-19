@@ -13,7 +13,7 @@ import { FaSun, FaMoon } from 'react-icons/fa';
 const Header = () => {
     // Existing Selectors
     const formStatus = useSelector(state => state?.form?.advance?.form_status || DragwybEditor.formData.status);
-    const formTitle = useSelector(state => state?.form?.advance?.form_title || DragwybEditor.formData.title);
+    const formTitle = useSelector(state => state?.form?.advance?.form_name || DragwybEditor.formData.title);
     const themeMode = useSelector(state => state?.themeMode || 'light');
     const iframeEle = useSelector(state => state.iframeEle);
     const pluginUrl = DragwybEditor.pluginUrl;

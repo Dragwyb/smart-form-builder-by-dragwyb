@@ -28,10 +28,11 @@ const RenderItem = React.memo(({
             return false;
         }
 
-        if (nextProps.fields[fieldId].is_root_container) {
-            if (prevProps.fields[fieldId].children.length !== nextProps.fields[fieldId].children.length) {
+
+        if (nextProps.fields[fieldId].is_root_container && nextProps.fields[fieldId].children) {
+            if (prevProps.fields[fieldId].children?.length !== nextProps.fields[fieldId].children?.length) {
                 return false;
-            } else if (nextProps.fields[fieldId].children && totalChildrensRef !== nextProps.fields[fieldId].children.length) {
+            } else if (nextProps.fields[fieldId]?.children && totalChildrensRef !== nextProps.fields[fieldId].children?.length) {
                 return false;
             }
         }

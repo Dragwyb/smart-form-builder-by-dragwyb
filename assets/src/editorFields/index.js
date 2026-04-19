@@ -177,17 +177,11 @@ class radioField extends DragwybEditor.editor.extends.FieldBase {
         const options = s.options_list || [];
         const defaultLabel = DragwybEditor?.fields?.fields?.[this.fieldName]?.controls?.label?.default;
         const label = s.label || defaultLabel;
-        const layoutClass = s.layout === 'inline' ? 'dragwyb-inline' : '';
+        const layoutClass = s.layout === 'inline' ? 'dragwyb-inline-options' : '';
 
         return (
             <>
                 <div className="dragwyb-input-group">
-                    {label && (
-                        <label htmlFor={fieldId} className="dragwyb-field-label">
-                            {label}
-                            {s.required === 'yes' && <span className="dragwyb-required">*</span>}
-                        </label>
-                    )}
                     <div className={`dragwyb-options-container ${layoutClass}`}>
                         {options.map((opt, i) => (
                             !opt.attributes ? null :
@@ -198,6 +192,12 @@ class radioField extends DragwybEditor.editor.extends.FieldBase {
                                 </label>
                         ))}
                     </div>
+                    {label && (
+                        <label htmlFor={fieldId} className="dragwyb-field-label">
+                            {label}
+                            {s.required === 'yes' && <span className="dragwyb-required">*</span>}
+                        </label>
+                    )}
                 </div>
                 {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
             </>
