@@ -51,6 +51,7 @@ class Register_Toolbar
             }
 
             $dir   = dirname($dragwyb_name_space);
+            $dir = str_replace('/', '\\', $dir);
 
             $class = $dir . '\\' . ucfirst($toolbar) . '\\' . ucfirst($toolbar);
 
