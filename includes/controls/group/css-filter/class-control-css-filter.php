@@ -111,15 +111,6 @@ class Control_Css_Filter extends Group_Control_Base
             'hue'        => array('--dragwyb-' . $prefix . '-filter-hue' => '{{VALUE}}deg'),
         ];
 
-        // Ensure the filter property is actually applied when controls change
-        if ($selector) {
-            $filter_string = 'brightness(var(--dragwyb-' . $prefix . '-brightness, 100%)) contrast(var(--dragwyb-' . $prefix . '-contrast, 100%)) saturate(var(--dragwyb-' . $prefix . '-saturate, 100%)) blur(var(--dragwyb-' . $prefix . '-blur, 0px)) hue-rotate(var(--dragwyb-' . $prefix . '-hue, 0deg))';
-
-            foreach ($selectors as $key => $style) {
-                $selectors[$key] = array_merge($style, ['filter' => $filter_string]);
-            }
-        }
-
         $map = [
             'blur'       => ['type' => Controls::SLIDER, 'label' => __('Blur', 'smart-form-builder-by-dragwyb'), 'range' => ['px' => ['min' => 0, 'max' => 10, 'step' => 0.1]], 'default' => ['size' => 0], 'responsive' => true],
             'brightness' => ['type' => Controls::SLIDER, 'label' => __('Brightness', 'smart-form-builder-by-dragwyb'), 'range' => ['px' => ['min' => 0, 'max' => 200]], 'default' => ['size' => 100], 'responsive' => true],
