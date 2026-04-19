@@ -88,7 +88,7 @@ class Settings extends Register_Controls_Base
         $this->add_responsive_control('field_spacing', [
             'type'      => Controls::SLIDER,
             'label'     => __('Row Gap', 'smart-form-builder-by-dragwyb'),
-            'default'   => ['size' => 20, 'unit' => 'px'],
+            'default'   => ['size' => 15, 'unit' => 'px'],
             'range'     => ['px' => ['min' => 0, 'max' => 100]],
             'units'     => ['px', '%'],
             'selectors' => [
