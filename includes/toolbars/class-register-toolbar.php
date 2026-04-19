@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Toolbars;
 
+use Dragwyb\Form_Builder\Includes\Helper\Helper;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
 use Dragwyb\Form_Builder\Includes\Modules\Modules;
 
@@ -43,7 +44,13 @@ class Register_Toolbar
     private function register_default_toolbars(): void
     {
         foreach ($this->default_toolbars as $toolbar) {
-            $dir   = dirname(__NAMESPACE__);
+            $seperator = Helper::directory_separator();
+            $dragwyb_name_space = __NAMESPACE__;
+            if (!strpos($dragwyb_name_space, $seperator)) {
+                $dragwyb_name_space = str_replace('\\', $seperator, $dragwyb_name_space);
+            }
+
+            $dir   = dirname($dragwyb_name_space);
 
             $class = $dir . '\\' . ucfirst($toolbar) . '\\' . ucfirst($toolbar);
 
