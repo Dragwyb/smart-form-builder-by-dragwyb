@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Controls\Register;
 
+use Dragwyb\Form_Builder\Includes\Helper\Helper;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
-
 use Dragwyb\Form_Builder\Includes\Controls\Controls\Control_Base;
 
 class Register_Controls
@@ -41,7 +41,10 @@ class Register_Controls
     {
         foreach ($this->default_controls as $control) {
 
-            $dir = dirname(__NAMESPACE__);
+            $dragwyb_name_space = Helper::namespace_into_dir_path(__NAMESPACE__);
+            $dir   = dirname($dragwyb_name_space);
+            $dir = Helper::dir_path_into_namespace($dir);
+
             $control = $this->captialize_class_name($control);
             $class = $dir . '\Controls\Control_' . ucfirst(esc_html($control));
 
@@ -55,7 +58,10 @@ class Register_Controls
     {
         foreach ($this->default_group_controls as $control) {
 
-            $dir = dirname(__NAMESPACE__);
+            $dragwyb_name_space = Helper::namespace_into_dir_path(__NAMESPACE__);
+            $dir   = dirname($dragwyb_name_space);
+            $dir = Helper::dir_path_into_namespace($dir);
+
             $control = $this->captialize_class_name($control);
             $class = $dir . '\Group\\' . $control . '\\Control_' . ucfirst(esc_html($control));
 

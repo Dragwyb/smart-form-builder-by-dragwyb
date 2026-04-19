@@ -44,14 +44,9 @@ class Register_Toolbar
     private function register_default_toolbars(): void
     {
         foreach ($this->default_toolbars as $toolbar) {
-            $seperator = Helper::directory_separator();
-            $dragwyb_name_space = __NAMESPACE__;
-            if (!strpos($dragwyb_name_space, $seperator)) {
-                $dragwyb_name_space = str_replace('\\', $seperator, $dragwyb_name_space);
-            }
-
+            $dragwyb_name_space = Helper::namespace_into_dir_path(__NAMESPACE__);
             $dir   = dirname($dragwyb_name_space);
-            $dir = str_replace('/', '\\', $dir);
+            $dir = Helper::dir_path_into_namespace($dir);
 
             $class = $dir . '\\' . ucfirst($toolbar) . '\\' . ucfirst($toolbar);
 

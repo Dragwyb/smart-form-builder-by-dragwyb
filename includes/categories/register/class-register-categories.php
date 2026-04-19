@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Categories\Register;
 
+use Dragwyb\Form_Builder\Includes\Helper\Helper;
 use Dragwyb\Form_Builder\Includes\Categories\Categories;
 use Dragwyb\Form_Builder\Includes\Categories\Categories\Category_Base;
 
@@ -38,7 +39,10 @@ class Register_Categories
     {
         foreach ($this->default_categories as $category) {
 
-            $dir = dirname(__NAMESPACE__); // Dragwyb\Form_Builder\Includes\Categories
+            $dragwyb_name_space = Helper::namespace_into_dir_path(__NAMESPACE__);
+            $dir   = dirname($dragwyb_name_space);
+            $dir = Helper::dir_path_into_namespace($dir);
+
             // Convert kebab-case to CamelCase (e.g. standard-fields -> Standard_Fields)
             $class_name = $this->kebab_to_camel($category);
 

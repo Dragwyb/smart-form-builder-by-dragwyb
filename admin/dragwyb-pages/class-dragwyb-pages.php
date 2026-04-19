@@ -8,6 +8,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+use Dragwyb\Form_Builder\Includes\Helper\Helper;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Editor\Dragwyb_Builder_Editor;
 use Dragwyb\Form_Builder\Admin\Form_Overview\Form_Overview;
 
@@ -74,7 +75,9 @@ class Dragwyb_Pages
     private function form_admin_page(): void
     {
         $default_pages_names = array('form-overview', 'add-form');
-        $dir = dirname(__NAMESPACE__);
+        $dragwyb_name_space = Helper::namespace_into_dir_path(__NAMESPACE__);
+        $dir   = dirname($dragwyb_name_space);
+        $dir = Helper::dir_path_into_namespace($dir);
 
         $default_page = array();
 
