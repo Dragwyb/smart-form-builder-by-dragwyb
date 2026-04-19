@@ -102,7 +102,7 @@ class DragwybControlBase extends Component {
                     {label}
                     {this.settings.responsive_control && this.settings.responsive_type && <ResponsiveDevices Utils={this.Utils} style='dropdown' />}
                     {children}
-                    {this.state.value && <span className="dragwyb-control__reset" onClick={this.resetControl.bind(this)}>
+                    {this.state.value && <span className="dragwyb-control__reset" onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.resetControl(); }}>
                         <FaUndo size={12} title={__('Reset to Default', 'smart-form-builder-by-dragwyb')} />
                     </span>}
                 </label>

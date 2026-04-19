@@ -197,6 +197,7 @@
     position: relative;
     display: inline-block;
     cursor: pointer;
+    width: unset;
 
     input {
       display: none;
@@ -564,6 +565,14 @@
 
     button.pcr-button {
       border: 1px solid hsl(var(--dragwyb-border)/var(--dragwyb-border-opacity, 1));
+
+      &.clear {
+        --pcr-color: transparent !important;
+
+        &::before {
+          opacity: 1;
+        }
+      }
     }
   }
 

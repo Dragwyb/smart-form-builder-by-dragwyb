@@ -20,6 +20,7 @@ export default class ColorControl extends DragwybEditor.editor.extends.ControlBa
         const { id } = this;
         const { value } = this.state;
         const { default: defaultColor } = this.settings;
+        this.resetApply = false;
 
         // Already initialized
         if (this.pickr) {
@@ -63,7 +64,7 @@ export default class ColorControl extends DragwybEditor.editor.extends.ControlBa
             this.pickr.hide();
         });
 
-        this.pickr.on('clear', () => {
+        this.pickr.on('clear', (e) => {
             this.resetControl();
         })
 
@@ -110,14 +111,19 @@ export default class ColorControl extends DragwybEditor.editor.extends.ControlBa
     }
 
     resetControl() {
+        if (this.resetApply === true) return;
+
         const { id, settings } = this;
-        const { default: defaultValue = '' } = settings;
-        const value = this.getValidValue(defaultValue, '');
+        const { default: defaultValue = null } = settings;
+        const value = this.getValidValue(defaultValue);
+        this.resetApply = true;
+
+        this.updateControlHandler(id, '');
 
         if (this.pickr) {
             this.pickr.setColor(value);
         }
 
-        this.updateControlHandler(id, '');
+        this.resetApply = false;
     }
 }
