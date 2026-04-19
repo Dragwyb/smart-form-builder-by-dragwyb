@@ -55,12 +55,11 @@ class Settings extends Register_Controls_Base
         $this->add_control('form_justify_content', [
             'type'      => Controls::CHOOSE,
             'label'     => __('Justify Content', 'smart-form-builder-by-dragwyb'),
-            'default'   => 'center',
+            'default'   => 'left',
             'options' => [
-                'left'   => ['title' => 'Left',   'icon' => 'fa fa-align-left'],
-                'center' => ['title' => 'Center', 'icon' => 'fa fa-align-center'],
-                'right'  => ['title' => 'Right',  'icon' => 'fa fa-align-right'],
-                'space-between' => ['title' => 'Space Between', 'icon' => 'fa fa-align-justify'],
+                'left' => ['title' => 'Left',   'icon' => 'fa fa-align-left'],
+                'center'     => ['title' => 'Center', 'icon' => 'fa fa-align-center'],
+                'right'   => ['title' => 'Right',  'icon' => 'fa fa-align-right'],
             ],
             'selectors' => [
                 '{{WRAPPER}}' => '--dragwyb-form-justify-content: {{VALUE}};',
@@ -88,7 +87,7 @@ class Settings extends Register_Controls_Base
 
         $this->add_responsive_control('field_spacing', [
             'type'      => Controls::SLIDER,
-            'label'     => __('Rows Gap', 'smart-form-builder-by-dragwyb'),
+            'label'     => __('Row Gap', 'smart-form-builder-by-dragwyb'),
             'default'   => ['size' => 20, 'unit' => 'px'],
             'range'     => ['px' => ['min' => 0, 'max' => 100]],
             'units'     => ['px', '%'],
@@ -174,7 +173,7 @@ class Settings extends Register_Controls_Base
         $this->add_group_control('label_typography', [
             'type'     => Controls::GROUP_TYPOGRAPHY,
             'label'    => __('Typography', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}} label',
+            'selector' => '{{WRAPPER}}',
             'prefix'   => 'label',
         ]);
 
@@ -191,7 +190,7 @@ class Settings extends Register_Controls_Base
         $this->add_group_control('help_typography', [
             'type'     => Controls::GROUP_TYPOGRAPHY,
             'label'    => __('Help Text Typography', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}} .dragwyb-field-description',
+            'selector' => '{{WRAPPER}}',
             'prefix'   => 'help-text',
         ]);
 
@@ -232,7 +231,7 @@ class Settings extends Register_Controls_Base
         $this->add_group_control('input_typography', [
             'type'     => Controls::GROUP_TYPOGRAPHY,
             'label'    => __('Typography', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}} input, {{WRAPPER}} textarea, {{WRAPPER}} select',
+            'selector' => '{{WRAPPER}}',
             'prefix'   => 'input',
         ]);
 
@@ -248,7 +247,7 @@ class Settings extends Register_Controls_Base
         $this->add_group_control('input_border', [
             'type'     => Controls::GROUP_BORDER,
             'label'    => __('Border', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}} input, {{WRAPPER}} textarea, {{WRAPPER}} select',
+            'selector' => '{{WRAPPER}}',
             'prefix'   => 'input',
         ]);
 
@@ -278,7 +277,7 @@ class Settings extends Register_Controls_Base
         $this->add_group_control('input_focus_box_shadow', [
             'type'     => Controls::GROUP_BOX_SHADOW,
             'label'    => __('Box Shadow', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}} input:focus, {{WRAPPER}} textarea:focus, {{WRAPPER}} select:focus',
+            'selector' => '{{WRAPPER}}',
             'prefix'   => 'input',
         ]);
 
@@ -324,7 +323,7 @@ class Settings extends Register_Controls_Base
                 'button_width_type' => 'custom',
             ],
             'selectors' => [
-                '{{WRAPPER}}' => '--dragwyb-btn-width: {{VALUE}};',
+                '{{WRAPPER}}' => '--dragwyb-btn-width: {{VALUE}}{{UNIT}};',
             ],
         ]);
 
@@ -344,7 +343,7 @@ class Settings extends Register_Controls_Base
         $this->add_group_control('button_typography', [
             'type'     => Controls::GROUP_TYPOGRAPHY,
             'label'    => __('Typography', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}} button[type="submit"]',
+            'selector' => '{{WRAPPER}}',
             'prefix'   => 'btn',
         ]);
 
@@ -406,14 +405,14 @@ class Settings extends Register_Controls_Base
         $this->add_group_control('button_border', [
             'type'     => Controls::GROUP_BORDER,
             'label'    => __('Border', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}} button[type="submit"]',
+            'selector' => '{{WRAPPER}}',
             'prefix'   => 'btn',
         ]);
 
         $this->add_group_control('button_box_shadow', [
             'type'     => Controls::GROUP_BOX_SHADOW,
             'label'    => __('Box Shadow', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}} button[type="submit"]',
+            'selector' => '{{WRAPPER}}',
             'prefix'   => 'btn',
         ]);
 
