@@ -131,7 +131,8 @@ abstract class Register_Controls_Base
             $conditions = array_merge($conditions, $this->settings_arr[$this->current_section]['conditions']);
         }
 
-        $this->current_section_stack[$this->current_tabs] = $this->controller_settings(array_merge($data, array('type' => 'tabs', 'conditions' => $conditions)));
+        $this->current_control_stack[$this->current_tabs] = $this->controller_settings(array_merge($data, array('type' => 'tabs', 'conditions' => $conditions)));
+        $this->current_section_stack[$this->current_tabs] = array('type' => 'tabs', 'conditions' => $conditions);
     }
 
     final protected function end_tabs(): void
@@ -140,13 +141,11 @@ abstract class Register_Controls_Base
             throw new \Exception(esc_html__('No tabs are currently open.', 'smart-form-builder-by-dragwyb'));
         }
 
-        $this->current_section_stack[$this->current_tabs]['tabs'] = $this->current_tabs_stack;
+        $this->current_control_stack[$this->current_tabs]['tabs'] = $this->current_tabs_stack;
 
-        $this->current_section_stack = array_merge($this->current_section_stack, $this->current_control_stack);
-
-        $this->current_tabs = null;
         $this->current_tabs_stack = array();
-        unset($this->current_control_stack[$this->current_tabs]);
+        unset($this->current_section_stack[$this->current_tabs]);
+        $this->current_tabs = null;
     }
 
     final protected function start_tab(string $id = '', array $data = array()): void
