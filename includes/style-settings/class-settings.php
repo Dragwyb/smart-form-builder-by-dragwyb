@@ -201,6 +201,10 @@ class Settings extends Register_Controls_Base
             'label' => __('Input Fields', 'smart-form-builder-by-dragwyb'),
         ]);
 
+        $this->start_tabs('tabs_input_states');
+
+        $this->start_tab('tab_input_normal', ['label' => __('Normal', 'smart-form-builder-by-dragwyb')]);
+
         $this->add_control('input_bg_color', [
             'type'      => Controls::COLOR,
             'label'     => __('Background Color', 'smart-form-builder-by-dragwyb'),
@@ -224,36 +228,10 @@ class Settings extends Register_Controls_Base
             'label'     => __('Placeholder Color', 'smart-form-builder-by-dragwyb'),
             'default'   => '#9ca3af',
             'selectors' => [
-                '{{WRAPPER}}' => '--dragwyb-input-placeholder: {{VALUE}};',
+                '{{WRAPPER}}' => '--dragwyb-input-placeholder-color: {{VALUE}};',
             ],
         ]);
 
-        $this->add_group_control('input_typography', [
-            'type'     => Controls::GROUP_TYPOGRAPHY,
-            'label'    => __('Typography', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}}',
-            'prefix'   => 'input',
-        ]);
-
-        $this->add_responsive_control('input_padding', [
-            'type'       => Controls::DIMENSIONS,
-            'label'      => __('Padding', 'smart-form-builder-by-dragwyb'),
-            'units'      => ['px', 'em'],
-            'selectors'  => [
-                '{{WRAPPER}}' => '--dragwyb-input-pt: {{TOP}}{{UNIT}}; --dragwyb-input-pr: {{RIGHT}}{{UNIT}}; --dragwyb-input-pb: {{BOTTOM}}{{UNIT}}; --dragwyb-input-pl: {{LEFT}}{{UNIT}};',
-            ],
-        ]);
-
-        $this->add_group_control('input_border', [
-            'type'     => Controls::GROUP_BORDER,
-            'label'    => __('Border', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}}',
-            'prefix'   => 'input',
-        ]);
-
-        $this->start_tabs('tabs_input_states');
-
-        $this->start_tab('tab_input_normal', ['label' => __('Normal', 'smart-form-builder-by-dragwyb')]);
         $this->end_tab();
 
         $this->start_tab('tab_input_focus', ['label' => __('Focus', 'smart-form-builder-by-dragwyb')]);
@@ -283,6 +261,30 @@ class Settings extends Register_Controls_Base
 
         $this->end_tab();
         $this->end_tabs();
+
+        $this->add_group_control('input_typography', [
+            'type'     => Controls::GROUP_TYPOGRAPHY,
+            'label'    => __('Typography', 'smart-form-builder-by-dragwyb'),
+            'selector' => '{{WRAPPER}}',
+            'prefix'   => 'input',
+        ]);
+
+        $this->add_responsive_control('input_padding', [
+            'type'       => Controls::DIMENSIONS,
+            'label'      => __('Padding', 'smart-form-builder-by-dragwyb'),
+            'units'      => ['px', 'em'],
+            'selectors'  => [
+                '{{WRAPPER}}' => '--dragwyb-input-pt: {{TOP}}{{UNIT}}; --dragwyb-input-pr: {{RIGHT}}{{UNIT}}; --dragwyb-input-pb: {{BOTTOM}}{{UNIT}}; --dragwyb-input-pl: {{LEFT}}{{UNIT}};',
+            ],
+        ]);
+
+        $this->add_group_control('input_border', [
+            'type'     => Controls::GROUP_BORDER,
+            'label'    => __('Border', 'smart-form-builder-by-dragwyb'),
+            'selector' => '{{WRAPPER}}',
+            'prefix'   => 'input',
+        ]);
+
         $this->end_section();
 
         // SECTION 4: BUTTON
@@ -304,11 +306,11 @@ class Settings extends Register_Controls_Base
         $this->add_responsive_control('button_width', [
             'type'    => Controls::SLIDER,
             'label'   => __('Width', 'smart-form-builder-by-dragwyb'),
-            'units' => ['px', '%'],
+            'units' => ['px', '%', 'em', 'rem'],
             'range' => [
                 'px' => [
                     'min' => 0,
-                    'max' => 200,
+                    'max' => 1000,
                     'step' => 5,
                 ],
                 '%' => [
@@ -316,6 +318,16 @@ class Settings extends Register_Controls_Base
                     'max' => 100,
                     'step' => 5
                 ],
+                'em' => [
+                    'min' => 0,
+                    'max' => 100,
+                    'step' => 5
+                ],
+                'rem' => [
+                    'min' => 0,
+                    'max' => 100,
+                    'step' => 5
+                ]
             ],
             'default' => ['size' => '100', 'unit' => '%'],
             'label_inline' => true,
