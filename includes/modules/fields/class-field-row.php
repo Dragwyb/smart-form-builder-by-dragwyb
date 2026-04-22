@@ -107,7 +107,7 @@ class Field_Row extends Field_Base
             'label'      => __('Padding', 'smart-form-builder-by-dragwyb'),
             'size_units' => ['px', 'em', '%'],
             'selectors'  => [
-                '{{WRAPPER}}' => '--dragwyb-row-padding-top: {{TOP}}{{UNIT}}; --dragwyb-row-padding-right: {{RIGHT}}{{UNIT}}; --dragwyb-row-padding-bottom: {{BOTTOM}}{{UNIT}}; --dragwyb-row-padding-left: {{LEFT}}{{UNIT}};',
+                '{{WRAPPER}}' => '--dragwyb-row-pt: {{TOP}}{{UNIT}}; --dragwyb-row-pr: {{RIGHT}}{{UNIT}}; --dragwyb-row-pb: {{BOTTOM}}{{UNIT}}; --dragwyb-row-pl: {{LEFT}}{{UNIT}};',
             ],
         ]);
 
@@ -116,15 +116,6 @@ class Field_Row extends Field_Base
             'label'    => __('Border', 'smart-form-builder-by-dragwyb'),
             'selector' => '{{WRAPPER}}',
             'prefix' => 'row'
-        ]);
-
-        $this->add_control('row_radius', [
-            'type'       => Controls::DIMENSIONS,
-            'label'      => __('Border Radius', 'smart-form-builder-by-dragwyb'),
-            'size_units' => ['px', '%'],
-            'selectors'  => [
-                '{{WRAPPER}}' => '--dragwyb-row-border-radius-top: {{TOP}}{{UNIT}}; --dragwyb-row-border-radius-right: {{RIGHT}}{{UNIT}}; --dragwyb-row-border-radius-bottom: {{BOTTOM}}{{UNIT}}; --dragwyb-row-border-radius-left: {{LEFT}}{{UNIT}};',
-            ],
         ]);
 
         $this->end_section();

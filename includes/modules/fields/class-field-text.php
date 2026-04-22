@@ -27,225 +27,160 @@ class Field_Text extends Field_Base
     public function __construct()
     {
         parent::__construct();
-        wp_register_script('dragwyb_editor_fields', esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editorFields/editorFields.js'), array(), esc_attr(DRAGWYB_FORM_BUILDER_VERSION), true);
+        wp_register_script(
+            'dragwyb_editor_fields',
+            esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editorFields/editorFields.js'),
+            array(),
+            esc_attr(DRAGWYB_FORM_BUILDER_VERSION),
+            true
+        );
     }
 
     protected function init(): void
     {
         $this->type = 'text';
-        $this->name = __('Text', 'smart-form-builder-by-dragwyb');
+        $this->name = __('Text Field', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-font';
     }
 
     protected function register_field_controls(): void
     {
-        // This section defines the main content settings for the field
-
-        // Start the General Settings section where users define the core field properties
+        /**
+         * TAB: CONTENT
+         */
         $this->start_section('section_content_general', [
-            'label' => __('General Settings', 'smart-form-builder-by-dragwyb'),
+            'label' => __('Basic Settings', 'smart-form-builder-by-dragwyb'),
             'tab'   => self::ContentTab,
         ]);
 
-        // Add a text control for the field label that appears above the input
         $this->add_control('label', [
             'type'    => Controls::TEXT,
-            'label'   => __('Label', 'smart-form-builder-by-dragwyb'),
+            'label'   => __('Field Label', 'smart-form-builder-by-dragwyb'),
             'default' => __('Text Field', 'smart-form-builder-by-dragwyb'),
             'dynamic' => ['active' => true],
         ]);
 
-        // This control sets the placeholder text shown inside the input before typing
         $this->add_control('placeholder', [
             'type'    => Controls::TEXT,
-            'label'   => __('Placeholder', 'smart-form-builder-by-dragwyb'),
+            'label'   => __('Placeholder Text', 'smart-form-builder-by-dragwyb'),
             'default' => __('Enter text...', 'smart-form-builder-by-dragwyb'),
         ]);
 
-        // Allow the user to set a default value that pre-fills the field
         $this->add_control('default_value', [
             'type'    => Controls::TEXT,
             'label'   => __('Default Value', 'smart-form-builder-by-dragwyb'),
-            'default' => '',
+            'description' => __('Pre-fill the field for the user.', 'smart-form-builder-by-dragwyb'),
         ]);
 
-        // Add a textarea for a short description or help text displayed below the field
         $this->add_control('help_text', [
             'type'        => Controls::TEXTAREA,
-            'label'       => __('Help Text', 'smart-form-builder-by-dragwyb'),
+            'label'       => __('Instructional Text', 'smart-form-builder-by-dragwyb'),
             'rows'        => 3,
-            'description' => __('Text that appears below the field to guide the user.', 'smart-form-builder-by-dragwyb'),
-        ]);
-
-        // A switcher control to mark this field as mandatory for validation
-        $this->add_control('required', [
-            'type'         => Controls::SWITCHER,
-            'label'        => __('Required Field', 'smart-form-builder-by-dragwyb'),
-            'return_value' => 'yes',
-            'default'      => 'no',
+            'description' => __('A short hint displayed below the input.', 'smart-form-builder-by-dragwyb'),
         ]);
 
         $this->end_section();
 
-        // This section handles the visual styling of the field elements
+        $this->start_section('section_content_validation', [
+            'label' => __('Validation Rules', 'smart-form-builder-by-dragwyb'),
+            'tab'   => self::ContentTab,
+        ]);
 
-        // Start the section for styling the field label
+        $this->add_control('required', [
+            'type'         => Controls::SWITCHER,
+            'label'        => __('Is Required?', 'smart-form-builder-by-dragwyb'),
+            'return_value' => 'yes',
+            'default'      => 'no',
+        ]);
+
+        $this->add_control('min_length', [
+            'type'  => Controls::NUMBER,
+            'label' => __('Minimum Length', 'smart-form-builder-by-dragwyb'),
+            'min'   => 0,
+        ]);
+
+        $this->add_control('max_length', [
+            'type'  => Controls::NUMBER,
+            'label' => __('Maximum Length', 'smart-form-builder-by-dragwyb'),
+            'min'   => 1,
+        ]);
+
+        $this->end_section();
+
+        // Label Style
         $this->start_section('section_style_label', [
-            'label' => __('Label', 'smart-form-builder-by-dragwyb'),
+            'label' => __('Label Appearance', 'smart-form-builder-by-dragwyb'),
             'tab'   => self::StyleTab,
         ]);
 
         $this->add_control('label_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Text Color', 'smart-form-builder-by-dragwyb'),
-            'selectors' => [
-                '{{WRAPPER}} .dragwyb-field-label' => 'color: {{VALUE}};',
-            ],
+            'label'     => __('Color', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-label-color: {{VALUE}};'],
         ]);
 
-        $this->add_group_control('label_typography', [
-            'type'     => Controls::GROUP_TYPOGRAPHY,
-            'label'    => __('Typography', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}} .dragwyb-field-label',
-        ]);
-
-        // Control the bottom spacing to separate the label from the input field
         $this->add_control('label_spacing', [
             'type'      => Controls::SLIDER,
-            'label'     => __('Spacing (Bottom)', 'smart-form-builder-by-dragwyb'),
+            'label'     => __('Bottom Margin', 'smart-form-builder-by-dragwyb'),
             'range'     => ['px' => ['min' => 0, 'max' => 50]],
-            'selectors' => [
-                '{{WRAPPER}} .dragwyb-field-label' => 'margin-bottom: {{SIZE}}{{UNIT}};',
-            ],
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-label-spacing: {{VALUE}}{{UNIT}};'],
         ]);
 
         $this->end_section();
 
-        // Start the section for styling the actual input box
         $this->start_section('section_style_input', [
-            'label' => __('Input Field', 'smart-form-builder-by-dragwyb'),
+            'label' => __('Input Box Style', 'smart-form-builder-by-dragwyb'),
             'tab'   => self::StyleTab,
         ]);
 
-        // Use tabs to separate styles for the Normal state and the Focus state
         $this->start_tabs('tabs_input_style');
 
-        // Define styles for the Normal state
         $this->start_tab('tab_input_normal', ['label' => __('Normal', 'smart-form-builder-by-dragwyb')]);
 
         $this->add_control('input_bg_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Background', 'smart-form-builder-by-dragwyb'),
-            'selectors' => [
-                '{{WRAPPER}} input.dragwyb-field-input' => 'background-color: {{VALUE}};',
-            ],
+            'label'     => __('Background Color', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-input-bg: {{VALUE}};'],
+        ]);
+
+        $this->add_control('input_placeholder_color', [
+            'type'      => Controls::COLOR,
+            'label'     => __('Placeholder Color', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-input-placeholder-color: {{VALUE}};'],
         ]);
 
         $this->add_control('input_text_color', [
             'type'      => Controls::COLOR,
             'label'     => __('Text Color', 'smart-form-builder-by-dragwyb'),
-            'selectors' => [
-                '{{WRAPPER}} input.dragwyb-field-input' => 'color: {{VALUE}};',
-            ],
-        ]);
-
-        $this->add_control('input_placeholder_color', [
-            'type'      => Controls::COLOR,
-            'label'     => __('Placeholder', 'smart-form-builder-by-dragwyb'),
-            'selectors' => [
-                '{{WRAPPER}} input.dragwyb-field-input::placeholder' => 'color: {{VALUE}};',
-            ],
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-input-color: {{VALUE}};'],
         ]);
 
         $this->add_group_control('input_border', [
             'type'     => Controls::GROUP_BORDER,
-            'label'    => __('Border', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}} input.dragwyb-field-input',
-        ]);
-
-        $this->add_group_control('input_box_shadow', [
-            'type'     => Controls::GROUP_BOX_SHADOW,
-            'label'    => __('Box Shadow', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}} input.dragwyb-field-input',
+            'selector' => '{{WRAPPER}}',
+            'prefix'   => 'input',
         ]);
 
         $this->end_tab();
 
-        // Define styles for the Focus state when the user clicks inside the input
         $this->start_tab('tab_input_focus', ['label' => __('Focus', 'smart-form-builder-by-dragwyb')]);
-
-        $this->add_control('input_focus_bg_color', [
-            'type'      => Controls::COLOR,
-            'label'     => __('Background', 'smart-form-builder-by-dragwyb'),
-            'selectors' => [
-                '{{WRAPPER}} input.dragwyb-field-input:focus' => 'background-color: {{VALUE}};',
-            ],
-        ]);
 
         $this->add_control('input_focus_border_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Border Color', 'smart-form-builder-by-dragwyb'),
-            'selectors' => [
-                '{{WRAPPER}} input.dragwyb-field-input:focus' => 'border-color: {{VALUE}};',
-            ],
-        ]);
-
-        $this->add_group_control('input_focus_box_shadow', [
-            'type'     => Controls::GROUP_BOX_SHADOW,
-            'label'    => __('Box Shadow', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}} input.dragwyb-field-input:focus',
+            'label'     => __('Active Border Color', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-input-focus-border: {{VALUE}};'],
         ]);
 
         $this->end_tab();
+
         $this->end_tabs();
 
-        // Set the internal padding for the input text
         $this->add_control('input_padding', [
             'type'       => Controls::DIMENSIONS,
-            'label'      => __('Padding', 'smart-form-builder-by-dragwyb'),
+            'label'      => __('Inner Padding', 'smart-form-builder-by-dragwyb'),
             'size_units' => ['px', 'em', '%'],
-            'selectors'  => [
-                '{{WRAPPER}} input.dragwyb-field-input' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-            ],
+            'selectors'  => ['{{WRAPPER}}' => '--dragwyb-input-pt: {{TOP}}{{UNIT}}; --dragwyb-input-pr: {{RIGHT}}{{UNIT}}; --dragwyb-input-pb: {{BOTTOM}}{{UNIT}}; --dragwyb-input-pl: {{LEFT}}{{UNIT}};'],
             'separator'  => 'before',
-        ]);
-
-        // Set border radius to make the input corners rounded
-        $this->add_control('input_radius', [
-            'type'       => Controls::DIMENSIONS,
-            'label'      => __('Border Radius', 'smart-form-builder-by-dragwyb'),
-            'size_units' => ['px', '%'],
-            'selectors'  => [
-                '{{WRAPPER}} input.dragwyb-field-input' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-            ],
-        ]);
-
-        $this->add_group_control('input_typography', [
-            'type'     => Controls::GROUP_TYPOGRAPHY,
-            'label'    => __('Typography', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}} input.dragwyb-field-input',
-        ]);
-
-        $this->end_section();
-
-        // Start the section for styling the help text description
-        $this->start_section('section_style_help', [
-            'label' => __('Help Text', 'smart-form-builder-by-dragwyb'),
-            'tab'   => self::StyleTab,
-        ]);
-
-        $this->add_control('help_text_color', [
-            'type'      => Controls::COLOR,
-            'label'     => __('Color', 'smart-form-builder-by-dragwyb'),
-            'selectors' => [
-                '{{WRAPPER}} .dragwyb-field-help' => 'color: {{VALUE}};',
-            ],
-        ]);
-
-        $this->add_group_control('help_text_typography', [
-            'type'     => Controls::GROUP_TYPOGRAPHY,
-            'label'    => __('Typography', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}} .dragwyb-field-help',
         ]);
 
         $this->end_section();

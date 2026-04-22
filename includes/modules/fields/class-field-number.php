@@ -54,6 +54,79 @@ class Field_Number extends Field_Base
         ]);
 
         $this->end_section();
+
+        // Label Style
+        $this->start_section('section_style_label', [
+            'label' => __('Label Appearance', 'smart-form-builder-by-dragwyb'),
+            'tab'   => self::StyleTab,
+        ]);
+
+        $this->add_control('label_color', [
+            'type'      => Controls::COLOR,
+            'label'     => __('Color', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-label-color: {{VALUE}};'],
+        ]);
+
+        $this->add_control('label_spacing', [
+            'type'      => Controls::SLIDER,
+            'label'     => __('Bottom Margin', 'smart-form-builder-by-dragwyb'),
+            'range'     => ['px' => ['min' => 0, 'max' => 50]],
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-label-spacing: {{VALUE}}{{UNIT}};'],
+        ]);
+
+        $this->end_section();
+
+        // Input Style
+        $this->start_section('section_style_input', [
+            'label' => __('Input Box Style', 'smart-form-builder-by-dragwyb'),
+            'tab'   => self::StyleTab,
+        ]);
+
+        $this->start_tabs('tabs_input_style');
+
+        $this->start_tab('tab_input_normal', ['label' => __('Normal', 'smart-form-builder-by-dragwyb')]);
+
+        $this->add_control('input_bg_color', [
+            'type'      => Controls::COLOR,
+            'label'     => __('Background Color', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-input-bg: {{VALUE}};'],
+        ]);
+
+        $this->add_control('input_text_color', [
+            'type'      => Controls::COLOR,
+            'label'     => __('Text Color', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-input-color: {{VALUE}};'],
+        ]);
+
+        $this->add_group_control('input_border', [
+            'type'     => Controls::GROUP_BORDER,
+            'selector' => '{{WRAPPER}}',
+            'prefix'   => 'input',
+        ]);
+
+        $this->end_tab();
+
+        $this->start_tab('tab_input_focus', ['label' => __('Focus', 'smart-form-builder-by-dragwyb')]);
+
+        $this->add_control('input_focus_border_color', [
+            'type'      => Controls::COLOR,
+            'label'     => __('Active Border Color', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-input-focus-border: {{VALUE}};'],
+        ]);
+
+        $this->end_tab();
+
+        $this->end_tabs();
+
+        $this->add_control('input_padding', [
+            'type'       => Controls::DIMENSIONS,
+            'label'      => __('Inner Padding', 'smart-form-builder-by-dragwyb'),
+            'size_units' => ['px', 'em', '%'],
+            'selectors'  => ['{{WRAPPER}}' => '--dragwyb-input-pt: {{TOP}}{{UNIT}}; --dragwyb-input-pr: {{RIGHT}}{{UNIT}}; --dragwyb-input-pb: {{BOTTOM}}{{UNIT}}; --dragwyb-input-pl: {{LEFT}}{{UNIT}};'],
+            'separator'  => 'before',
+        ]);
+
+        $this->end_section();
     }
 
     protected function render_field()
