@@ -21,6 +21,9 @@
     --dragwyb-form-bg-attachment: scroll;
     --dragwyb-form-bg-repeat: no-repeat;
     --dragwyb-form-bg-size: auto;
+    --dragwyb-form-bg-xpos: 0px;
+    --dragwyb-form-bg-ypos: 0px;
+    --dragwyb-form-bg-width: 100%;
     --dragwyb-form-filter-blur: 0px;
     --dragwyb-form-filter-brightness: 100%;
     --dragwyb-form-filter-contrast: 100%;
@@ -33,8 +36,8 @@
     --dragwyb-form-pl: 40px;
     --dragwyb-form-mt: 20px;
     --dragwyb-form-mb: 20px;
-    --dragwyb-field-gap: 20px;
-    --dragwyb-field-width: 100;
+    --dragwyb-field-gap: 15px;
+    --dragwyb-field-width: 100%;
     --dragwyb-form-border-top-width: 0px;
     --dragwyb-form-border-right-width: 0px;
     --dragwyb-form-border-bottom-width: 0px;
@@ -51,6 +54,14 @@
     --dragwyb-form-box-shadow-spread: -5px;
     --dragwyb-form-box-shadow-color: rgba(0, 0, 0, 0.1);
     --dragwyb-form-box-shadow-position: ;
+    --dragwyb-float-active: #1d4ed8;
+    --dragwyb-asterisk-color: #ef4444;
+    --dragwyb-help-color: #6b7280;
+    --dragwyb-success-color: #15803d;
+    --dragwyb-success-bg: #dcfce7;
+    --dragwyb-error-color: #b91c1c;
+    --dragwyb-error-bg: #fee2e2;
+    --dragwyb-btn-hover-color: #ffffff;
     --dragwyb-form-text-shadow-h: 0px;
     --dragwyb-form-text-shadow-v: 0px;
     --dragwyb-form-text-shadow-blur: 0px;
@@ -68,8 +79,6 @@
     --dragwyb-label-typography-ws: 0px;
     --dragwyb-label-typography-align: left;
     --dragwyb-label-color: #374151;
-    --dragwyb-label-fs: 14px;
-    --dragwyb-label-fw: 600;
     --dragwyb-label-spacing: 6px;
     --dragwyb-label-width: 120px;
 
@@ -84,7 +93,7 @@
     --dragwyb-help-text-typography-ls: 0px;
     --dragwyb-help-text-typography-ws: 0px;
     --dragwyb-help-text-typography-align: left;
-    --dragwyb-help-text-color: #646970;
+    --dragwyb-help-color: #6b7280;
 
     // Input
     --dragwyb-input-typography-family: inherit;
@@ -99,7 +108,7 @@
     --dragwyb-input-typography-align: left;
     --dragwyb-input-bg: #ffffff;
     --dragwyb-input-color: #111827;
-    --dragwyb-input-placeholder: #9ca3af;
+    --dragwyb-input-placeholder-color: #9ca3af;
     --dragwyb-input-border-top-width: 1px;
     --dragwyb-input-border-right-width: 1px;
     --dragwyb-input-border-bottom-width: 1px;
@@ -116,6 +125,12 @@
     --dragwyb-input-pl: 14px;
     --dragwyb-input-focus-bg: #ffffff;
     --dragwyb-input-focus-border: #1d4ed8;
+    --dragwyb-input-box-shadow-h: 0px;
+    --dragwyb-input-box-shadow-v: 0px;
+    --dragwyb-input-box-shadow-blur: 0px;
+    --dragwyb-input-box-shadow-spread: 0px;
+    --dragwyb-input-box-shadow-color: transparent;
+    --dragwyb-input-box-shadow-position: ;
 
     // Button
     --dragwyb-btn-typography-family: inherit;
@@ -154,6 +169,12 @@
     --dragwyb-btn-box-shadow-position: ;
 
     --dragwyb-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    // Toggle (Checkbox & Radio)
+    --dragwyb-toggle-size: 16px;
+    --dragwyb-toggle-primary-color: #1d4ed8;
+    --dragwyb-toggle-border-color: #d1d5db;
+    --dragwyb-toggle-spacing: 8px;
 }
 
 .dragwyb-form {
@@ -161,7 +182,7 @@
     gap: var(--dragwyb-field-gap);
     flex-wrap: wrap;
     box-sizing: border-box;
-    justify-content: var(--dragwyb-form-justify-content);
+    justify-content: var(--dragwyb-form-justify-content, left);
     margin: 0;
 }
 
@@ -174,7 +195,6 @@
         .dragwyb-input-group {
             display: flex;
             flex-direction: column-reverse;
-            gap: 6px;
         }
     }
 
@@ -223,7 +243,7 @@
                 margin: 0;
                 pointer-events: none;
                 background-color: transparent;
-                color: var(--dragwyb-input-placeholder);
+                color: var(--dragwyb-input-placeholder-color);
                 transition: all 0.2s ease-out;
                 transform-origin: left center;
             }
@@ -263,7 +283,7 @@
             &:not(:placeholder-shown)~.dragwyb-field-label {
                 padding: 0 4px;
                 margin-left: -4px;
-                background-color: var(--dragwyb-input-bg);
+                background: linear-gradient(to bottom, var(--dragwyb-form-bg-color) 50%, var(--dragwyb-input-focus-bg) 50%);
             }
         }
 
@@ -277,7 +297,7 @@
             &:focus {
                 background-color: #e5e7eb;
                 box-shadow: none;
-                border-color: var(--dragwyb-input-focus-border);
+                border-color: var(--dragwyb-float-active, var(--dragwyb-input-focus-border));
             }
 
             &:focus~.dragwyb-field-label,
@@ -296,7 +316,7 @@
 
         .dragwyb-field-input::placeholder {
             opacity: 1 !important;
-            color: var(--dragwyb-input-placeholder) !important;
+            color: var(--dragwyb-input-placeholder-color) !important;
         }
     }
 }
@@ -347,6 +367,14 @@
         grid-template-rows: repeat(var(--dragwyb-row-rows, 1), 1fr);
         gap: var(--dragwyb-row-gap, 20px);
         width: var(--dragwyb-row-width, 100%);
+        padding: var(--dragwyb-row-pt, 0) var(--dragwyb-row-pr, 0) var(--dragwyb-row-pb, 0) var(--dragwyb-row-pl, 0);
+        background: var(--dragwyb-row-bg-color, transparent);
+        border: 0px var(--dragwyb-row-border-style, solid) var(--dragwyb-row-border-color, transparent);
+        border-top-width: var(--dragwyb-row-border-top-width, 0);
+        border-bottom-width: var(--dragwyb-row-border-bottom-width, 0);
+        border-left-width: var(--dragwyb-row-border-left-width, 0);
+        border-right-width: var(--dragwyb-row-border-right-width, 0);
+        border-radius: var(--dragwyb-row-border-top-radius, 0) var(--dragwyb-row-border-right-radius, 0) var(--dragwyb-row-border-bottom-radius, 0) var(--dragwyb-row-border-left-radius, 0);
     }
 
     .dragwyb-button-field {
@@ -357,7 +385,7 @@
     .dragwyb-field-wrapper {
         position: relative;
         box-sizing: border-box;
-        width: var(--dragwyb-field-width, 100%);
+        width: var(--dragwyb-field-width);
         flex: 0 0 calc((var(--dragwyb-field-width) * 1%) - (var(--dragwyb-field-gap) * (1 - var(--dragwyb-field-width) / 100)));
         grid-column: span var(--dragwyb-column-span, 1);
 
@@ -376,24 +404,29 @@
             width: fit-content;
             color: var(--dragwyb-label-color);
             margin-bottom: var(--dragwyb-label-spacing);
-            font-size: var(--dragwyb-label-fs);
-            font-weight: var(--dragwyb-label-fw);
             cursor: pointer;
             transition: var(--dragwyb-transition);
 
             .dragwyb-required {
-                color: #ef4444;
-                margin-left: 3px;
-                font-weight: bold;
+                color: var(--dragwyb-asterisk-color);
             }
         }
 
         .dragwyb-field-help {
-            font-size: 0.85em;
-            color: #6b7280;
+            font-family: var(--dragwyb-help-text-typography-family);
+            font-size: var(--dragwyb-help-text-typography-size, 0.85em);
+            font-weight: var(--dragwyb-help-text-typography-wt);
+            font-style: var(--dragwyb-help-text-typography-st);
+            text-transform: var(--dragwyb-help-text-typography-ts);
+            text-decoration: var(--dragwyb-help-text-typography-dt);
+            line-height: var(--dragwyb-help-text-typography-lh, 1.4);
+            letter-spacing: var(--dragwyb-help-text-typography-ls);
+            word-spacing: var(--dragwyb-help-text-typography-ws);
+            text-align: var(--dragwyb-help-text-typography-align);
+            color: var(--dragwyb-help-color);
             margin-top: 4px;
-            line-height: 1.4;
         }
+
 
         /* Core Inputs */
         input.dragwyb-field-input,
@@ -424,14 +457,14 @@
             transition: border-color 0.2s, box-shadow 0.2s;
 
             &::placeholder {
-                color: var(--dragwyb-input-placeholder);
+                color: var(--dragwyb-input-placeholder-color);
                 opacity: 1;
             }
 
             &:focus {
                 background-color: var(--dragwyb-input-focus-bg);
                 border-color: var(--dragwyb-input-focus-border);
-                box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+                box-shadow: var(--dragwyb-input-box-shadow-position) var(--dragwyb-input-box-shadow-h) var(--dragwyb-input-box-shadow-v) var(--dragwyb-input-box-shadow-blur) var(--dragwyb-input-box-shadow-spread) var(--dragwyb-input-box-shadow-color, rgba(37, 99, 235, 0.1));
             }
         }
 
@@ -466,13 +499,15 @@
             .dragwyb-option-item {
                 display: flex;
                 align-items: center;
-                gap: 8px;
+                gap: var(--dragwyb-toggle-spacing, 8px);
                 cursor: pointer;
 
                 input {
-                    width: auto;
+                    width: var(--dragwyb-toggle-size, 16px);
+                    height: var(--dragwyb-toggle-size, 16px);
                     margin: 0;
-                    accent-color: var(--dragwyb-btn-bg);
+                    accent-color: var(--dragwyb-toggle-primary-color, var(--dragwyb-btn-bg));
+                    border-color: var(--dragwyb-toggle-border-color, #d1d5db);
                 }
 
                 .dragwyb-radio-label {
@@ -487,6 +522,7 @@
                     word-spacing: var(--dragwyb-label-typography-ws);
                     text-align: var(--dragwyb-label-typography-align);
                     color: var(--dragwyb-input-color);
+                    margin-left: var(--dragwyb-toggle-spacing, 8px);
                 }
             }
         }
@@ -520,6 +556,7 @@
             &:hover {
                 color: var(--dragwyb-btn-hover-color, var(--dragwyb-btn-color));
                 background-color: var(--dragwyb-btn-hover-bg, var(--dragwyb-btn-bg));
+                border-color: var(--dragwyb-btn-hover-border-color, var(--dragwyb-btn-border-color));
             }
 
             &-block {
@@ -538,5 +575,36 @@
                 }
             }
         }
+    }
+
+    /* Messages & Validation */
+    .dragwyb-message {
+        padding: 12px 16px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: inherit;
+
+        &.dragwyb-success {
+            color: var(--dragwyb-success-color);
+            background-color: var(--dragwyb-success-bg);
+            border: 1px solid var(--dragwyb-success-color);
+        }
+
+        &.dragwyb-error {
+            color: var(--dragwyb-error-color);
+            background-color: var(--dragwyb-error-bg);
+            border: 1px solid var(--dragwyb-error-color);
+        }
+    }
+
+    .dragwyb-field-validation-error {
+        color: var(--dragwyb-error-color);
+        font-size: 0.85em;
+        margin-top: 5px;
+        display: block;
     }
 }

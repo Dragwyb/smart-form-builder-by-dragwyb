@@ -64,16 +64,14 @@ html {
     }
 }
 
-.dragwyb-editor {
-    &__main {
-        flex: 1;
-        padding: 20px;
-        background-color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
-        height: unset;
-        background-image: radial-gradient(hsl(var(--dragwyb-card-foreground)/0.2) 1px, transparent 1px);
-        background-size: 24px 24px;
-        min-height: 100%;
-    }
+.dragwyb-editor__main {
+    flex: 1;
+    padding: 20px;
+    background-color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
+    height: unset;
+    background-image: radial-gradient(hsl(var(--dragwyb-card-foreground)/0.2) 1px, transparent 1px);
+    background-size: 24px 24px;
+    min-height: 100%;
 }
 
 .dragwyb-canvas {
@@ -174,9 +172,16 @@ html {
 
     .dragwyb-has-actions {
         position: relative;
-        border: 1px solid transparent;
-        border-radius: 4px;
         transition: all 0.2s ease;
+        --dragwyb-row-border-top-width: 1px;
+        --dragwyb-row-border-bottom-width: 1px;
+        --dragwyb-row-border-left-width: 1px;
+        --dragwyb-row-border-right-width: 1px;
+        --dragwyb-row-border-style: solid;
+        --dragwyb-row-border-top-radius: 4px;
+        --dragwyb-row-border-right-radius: 4px;
+        --dragwyb-row-border-bottom-radius: 4px;
+        --dragwyb-row-border-left-radius: 4px;
 
         &.indicator-top::after,
         &.indicator-bottom::after {
