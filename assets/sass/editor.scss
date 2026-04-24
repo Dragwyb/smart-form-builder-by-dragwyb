@@ -785,13 +785,8 @@ body {
                     background-color: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
                 }
 
-                span.dragwyb-editor__toolbar-item-icon {
-                    background-color: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
-                }
-
                 i {
-                    color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
-                    transform: scale(0.8);
+                    color: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
                 }
             }
 
@@ -889,7 +884,7 @@ body {
             align-items: center;
             gap: 10px;
             padding-block: 2px;
-            color: hsl(var(--dragwyb-muted-foreground)/var(--dragwyb-text-opacity, 1));
+            color: hsl(var(--dragwyb-card-foreground)/var(--dragwyb-text-opacity, 1));
             position: relative;
             cursor: pointer;
 
@@ -916,7 +911,7 @@ body {
                 line-height: 0;
 
                 svg {
-                    fill: hsl(var(--dragwyb-muted-foreground)/var(--dragwyb-text-opacity, 1));
+                    fill: hsl(var(--dragwyb-card-foreground)/var(--dragwyb-text-opacity, 1));
                 }
             }
         }
@@ -938,7 +933,7 @@ body {
                 align-items: center;
                 padding: 10px;
                 gap: 13px;
-                color: hsl(var(--dragwyb-muted-foreground)/var(--dragwyb-text-opacity, 1));
+                color: hsl(var(--dragwyb-card-foreground)/var(--dragwyb-text-opacity, 1));
                 border-radius: 4px;
 
                 &:hover {
@@ -1010,7 +1005,7 @@ body {
     }
 
     &__content {
-        font-family: "Segoe UI", Tahoma, sans-serif;
+        font-family: Roboto, Arial, Helvetica, sans-serif;
         height: calc(100% - 55px);
 
         &::-webkit-scrollbar {
@@ -1166,7 +1161,7 @@ $dropdown-max-height: 250px;
 
             &:focus {
                 border-color: $select-highlight-color;
-                box-shadow: 0 0 0 1px lighten($select-highlight-color, 30%);
+                box-shadow: 0 0 0 1px hsl(var(--dragwyb-primary)/0.3);
             }
         }
     }

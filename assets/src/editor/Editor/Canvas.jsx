@@ -50,10 +50,6 @@ const RenderItem = React.memo(({
     attributesRef.current = field.attributes ? { ...field.attributes } : [];
     totalChildrensRef.current = field?.children?.length || 0;
 
-    if (!field) {
-        return null;
-    }
-
     const selectedField = useSelector((state) => state.selectedSettingId);
     const fieldSettings = DragwybEditor.fields.fields[field.type];
     const allowedChildren = fieldSettings?.allow_child || false;
@@ -129,6 +125,10 @@ const RenderItem = React.memo(({
         onFieldSelect({ id });
     }, [field._id, isRootContainer, selectedField, onFieldSelect]);
 
+    if (!field) {
+        return null;
+    }
+
     return (
         <>
             {dropInfo && dropInfo.index === index && (dropInfo.targetId === fieldId || (isRootContainer && dropInfo.targetId === 'root')) && (
@@ -177,7 +177,7 @@ const RenderItem = React.memo(({
                                 <span className="dashicons dashicons-admin-page"></span>
                             </button>
                             <button
-                                title={sprintf(__('%s Settings', 'smart-form-builder-by-dragwyb'), fieldSettings.label)}
+                                title={sprintf(__('Edit %s', 'smart-form-builder-by-dragwyb'), fieldSettings.label)}
                                 className="settings"
                                 onClick={onRootContainerSelect}
                             >

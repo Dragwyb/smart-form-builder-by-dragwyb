@@ -12,7 +12,7 @@ const SearchInput = ({
     className = '',
     id = Math.random(99999)
 }) => {
-    const [searchValue, setSearchValue] = useState(value);
+    const [searchValue, setSearchValue] = useState(value || '');
     const debouncedSearch = useDebouncedCallback((val) => {
         onChange(val);
     }, debounceTime);
