@@ -12,6 +12,9 @@ import {
     PointerSensor,
     MouseSensor,
     TouchSensor,
+    pointerWithin,
+    rectIntersection,
+    getFirstCollision,
 } from "@dnd-kit/core";
 
 import SidebarFieldOverlay from "../components/SidebarFieldOverlay";
@@ -61,7 +64,17 @@ const Editor = () => {
         useSensor(TouchSensor, { activationConstraint: { delay: 5, tolerance: 6 } })
     );
 
-    const measureDroppableContainers = useCallback((node) => {
+    const customCollisionDetection = useCallback((args) => {
+        const pointerCollisions = pointerWithin(args);
+
+        if (pointerCollisions.length > 0) {
+            return pointerCollisions;
+        }
+
+        return rectIntersection(args);
+    }, []);
+
+    const measureDroppableContainers = (node) => {
         const rect = node.getBoundingClientRect();
 
         const iframe = document.getElementById('dragwyb-preview-iframe');
@@ -70,7 +83,7 @@ const Editor = () => {
             const iframeRect = iframe.getBoundingClientRect();
 
             return {
-                top: rect.top + iframeRect.top - 10,
+                top: rect.top + iframeRect.top,
                 left: rect.left + iframeRect.left,
                 bottom: rect.bottom + iframeRect.top,
                 right: rect.right + iframeRect.left,
@@ -92,14 +105,29 @@ const Editor = () => {
             x: rect.x,
             y: rect.y,
         };
-    }, []);
+    };
 
     const measureDraggableContainers = useCallback((node) => {
         const rect = node.getBoundingClientRect();
 
         const iframe = document.getElementById('dragwyb-preview-iframe');
 
-        const finalPosition = {
+        if (iframe && node.ownerDocument === iframe.contentDocument) {
+            const iframeRect = iframe.getBoundingClientRect();
+
+            return {
+                top: rect.top + iframeRect.top,
+                left: rect.left + iframeRect.left,
+                bottom: rect.bottom + iframeRect.top,
+                right: rect.right + iframeRect.left,
+                width: rect.width,
+                height: rect.height,
+                x: rect.x + iframeRect.left,
+                y: rect.y + iframeRect.top,
+            };
+        }
+
+        return {
             top: rect.top,
             left: rect.left,
             bottom: rect.bottom,
@@ -109,26 +137,6 @@ const Editor = () => {
             x: rect.x,
             y: rect.y,
         };
-
-        const iframeRect = iframe.getBoundingClientRect();
-
-        if (iframe && node.ownerDocument !== document) {
-            finalPosition.top = rect.top + iframeRect.top;
-            finalPosition.left = rect.left + iframeRect.left;
-            finalPosition.bottom = rect.bottom + iframeRect.top;
-            finalPosition.right = rect.right + iframeRect.left;
-            finalPosition.width = rect.width;
-            finalPosition.height = rect.height;
-            finalPosition.x = rect.x + iframeRect.left;
-            finalPosition.y = rect.y + iframeRect.top;
-        } else {
-            finalPosition.top = rect.top + iframeRect.top;
-            finalPosition.bottom = rect.bottom + iframeRect.top;
-            finalPosition.height = rect.height;
-            finalPosition.y = rect.y + iframeRect.top;
-        }
-
-        return finalPosition;
     }, []);
 
     // Memoize measuring config to prevent DndContext re-init
@@ -165,6 +173,11 @@ const Editor = () => {
 
         // If we are not over anything, clear indicators
         if (!over) {
+            setDropInfo(prev => prev !== false ? false : prev);
+            return;
+        }
+
+        if (over.data.current.rowDropColumn) {
             setDropInfo(prev => prev !== false ? false : prev);
             return;
         }
@@ -223,7 +236,7 @@ const Editor = () => {
     }, []);
 
     const handleDragEnd = useCallback((event) => {
-        const currentDropInfo = dropInfo;
+        let currentDropInfo = dropInfo;
         setActiveDrag(null);
         setDropInfo(false);
 
@@ -234,6 +247,17 @@ const Editor = () => {
 
         const isFromSidebar = active?.data?.current?.fromSidebar;
         const isCanvasDrag = active?.data?.current?.canvasDrag;
+        const isDropColumn = over?.data?.current?.rowDropColumn;
+
+        if (isDropColumn) {
+            const targetId = over.data.current.parentId;
+            const targetColIndex = over.data.current.index;
+
+            currentDropInfo = {
+                targetId,
+                index: targetColIndex
+            }
+        }
 
         const finalId = currentDropInfo !== false && currentDropInfo.index !== undefined ? currentDropInfo : { targetId: over.data.current.currentId, index: over.data.current.index };
 
@@ -284,6 +308,7 @@ const Editor = () => {
             <div className="dragwyb-editor__body">
                 <DndContext
                     sensors={sensors}
+                    collisionDetection={customCollisionDetection}
                     onDragStart={handleDragStart}
                     onDragEnd={handleDragEnd}
                     onDragCancel={handleDragCancel}

@@ -4,16 +4,16 @@ const DroppableColumnZone = ({ index, onClick, Utils, parentId }) => {
     const { setNodeRef, isOver } = Utils.useDroppable({
         id: `canvas-drop-column-${parentId}-${index}`, // Unique ID for each column
         data: {
-            canvasFieldDrop: true,
-            parentId: parentId,
-            columnIndex: index, // Pass the index so you know WHICH column was dropped into
+            rowDropColumn: true,
+            parentId,
+            index, // Pass the index so you know WHICH column was dropped into
         },
     });
 
     return (
         <div
             ref={setNodeRef}
-            className='dragwyb-field__add-column'
+            className={`dragwyb-field__add-column${isOver ? ' drag-over' : ''}`}
             onClick={onClick}
             data-index={index}
         >
