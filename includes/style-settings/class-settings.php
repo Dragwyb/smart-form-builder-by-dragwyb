@@ -66,6 +66,32 @@ class Settings extends Register_Controls_Base
             ],
         ]);
 
+        $this->add_responsive_control('form_width', [
+            'type'       => Controls::SLIDER,
+            'label'      => __('Width', 'smart-form-builder-by-dragwyb'),
+            'units'      => ['px', 'em', '%'],
+            'range' => [
+                'px' => [
+                    'min' => 0,
+                    'max' => 2000,
+                    'step' => 5,
+                ],
+                '%' => [
+                    'min' => 0,
+                    'max' => 100,
+                    'step' => 5
+                ],
+                'em' => [
+                    'min' => 0,
+                    'max' => 100,
+                    'step' => 5
+                ]
+            ],
+            'selectors'  => [
+                '{{WRAPPER}}' => '--dragwyb-form-width: {{VALUE}}{{UNIT}};',
+            ],
+        ]);
+
         $this->add_responsive_control('form_margin', [
             'type'       => Controls::DIMENSIONS,
             'label'      => __('Margin', 'smart-form-builder-by-dragwyb'),
