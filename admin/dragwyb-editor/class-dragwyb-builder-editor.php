@@ -429,6 +429,8 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
         public function localize_i18n_strings($strings): array
         {
             $localize_strings = [
+                'exit' => __('Exit', 'smart-form-builder-by-dragwyb'),
+                'submit' => __('Submit', 'smart-form-builder-by-dragwyb'),
                 'fields' => __('Fields', 'smart-form-builder-by-dragwyb'),
                 'fieldSettings' => __('Field Settings', 'smart-form-builder-by-dragwyb'),
                 'formSettings' => __('Form Settings', 'smart-form-builder-by-dragwyb'),
