@@ -4,7 +4,7 @@ class FormBuilderAPI {
     constructor() {
         this.nonce = window.DragwybEditor?.nonce || '';
         this.ajaxUrl = window.DragwybEditor?.ajaxUrl || '/wp-admin/admin-ajax.php';
-        this.formId = window.DragwybBuilder?.formId || null;
+        this.formId = window.DragwybEditor?.formId || null;
     }
 
     /**
