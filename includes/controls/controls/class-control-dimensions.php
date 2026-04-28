@@ -41,11 +41,12 @@ class Control_Dimensions extends Control_Base
         $allowed    = ['top', 'right', 'bottom', 'left', 'linked', 'unit'];
         $sanitized  = [];
 
+
         if (!is_array($value)) {
             return '';
         }
 
-        if ((!isset($value['top']) || empty($value['top'])) && (!isset($value['right']) || empty($value['right'])) && (!isset($value['bottom']) || empty($value['bottom'])) && (!isset($value['left']) || empty($value['left']))) {
+        if ((!isset($value['top']) || (empty($value['top']) && 0 !== $value['top'])) && (!isset($value['right']) || (empty($value['right']) && 0 !== $value['right'])) && (!isset($value['bottom']) || (empty($value['bottom']) && 0 !== $value['bottom'])) && (!isset($value['left']) || (empty($value['left']) && 0 !== $value['left']))) {
             return [];
         };
 

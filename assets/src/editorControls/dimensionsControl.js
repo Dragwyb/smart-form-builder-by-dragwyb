@@ -162,7 +162,7 @@ export default class DimensionsControl extends DragwybEditor.editor.extends
                 "" === value[placeholders[placeholder]]
             ) {
                 delete placeholders[placeholder];
-            } else if (value[placeholders[placeholder]] && valueExists === false && placeholder !== 'UNIT') {
+            } else if ((value[placeholders[placeholder]] || 0 === value[placeholders[placeholder]]) && valueExists === false && placeholder !== 'UNIT') {
                 valueExists = true;
             }
         });
@@ -170,6 +170,7 @@ export default class DimensionsControl extends DragwybEditor.editor.extends
         if (!valueExists) {
             placeholders = {};
         }
+
         return placeholders;
     }
 
