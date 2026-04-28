@@ -12,7 +12,7 @@ class Hooks {
         this.#addUserCallback(handle, callback, priority, this.Actions);
     }
 
-    addFilter = (handle = false, callback = () => {}, priority = 10) => {
+    addFilter = (handle = false, callback = () => { }, priority = 10) => {
         if (!handle || !callback) {
             console.error('Error: addFilter requires a handle and a callback.');
             return;
@@ -26,7 +26,7 @@ class Hooks {
     }
 
     applyFilter = (handle = false, ...args) => {
-        if (!handle) return args[0]; 
+        if (!handle) return args[0];
 
         // Pass true to indicate this is a filter chain
         const result = this.#usercallBack(handle, this.Filters, args, true);
@@ -81,7 +81,7 @@ class Hooks {
         if (callbackToRemove) {
             const initialLength = object[normalized].length;
             object[normalized] = object[normalized].filter(item => item.callback !== callbackToRemove);
-            
+
             if (object[normalized].length === 0) {
                 delete object[normalized];
             }
@@ -97,7 +97,7 @@ class Hooks {
         if (!object[normalized]) {
             object[normalized] = [];
         }
-        
+
         object[normalized].push({ callback, priority });
         // Sort by priority (ascending)
         object[normalized].sort((a, b) => a.priority - b.priority);
@@ -105,7 +105,7 @@ class Hooks {
 
     #usercallBack = (handle, object, args = [], isFilter = false) => {
         const normalized = this.#getHandle(handle);
-        let value = args[0]; 
+        let value = args[0];
 
         if (!object[normalized]) {
             return { status: false, value: value };
@@ -119,9 +119,9 @@ class Hooks {
                 } else {
                     callback(...args);
                 }
-            } 
+            }
             else if (typeof callback === 'string' && typeof window[callback] === 'function') {
-                 if (isFilter) {
+                if (isFilter) {
                     value = window[callback](value, ...args.slice(1));
                 } else {
                     window[callback](...args);
