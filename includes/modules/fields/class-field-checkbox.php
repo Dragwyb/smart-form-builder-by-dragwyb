@@ -6,7 +6,7 @@ namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Repeater\Repeater;
-use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Error_Handler;
+use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
 
 class Field_Checkbox extends Field_Base
 {
@@ -175,7 +175,7 @@ class Field_Checkbox extends Field_Base
 <?php
     }
 
-    public function validate($value, $field_id, $settings, Form_Error_Handler $error_handler): void
+    public function validate($value, $field_id, $settings, Form_Submission_Handler $error_handler): void
     {
         $value = (array) $value;
         $options = $settings['options_list']['value'];
