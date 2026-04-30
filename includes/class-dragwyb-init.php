@@ -16,6 +16,7 @@ use Dragwyb\Form_Builder\Includes\Frontend\Shortcode\Shortcode_Handler;
 use Dragwyb\Form_Builder\Includes\Frontend\Frontend_Render;
 use Dragwyb\Form_Builder\Includes\Frontend\Form_Preview;
 use Dragwyb\Form_Builder\Includes\Frontend\Managers\CSS_Manager;
+use Dragwyb\Form_Builder\Includes\Rest_Routes\Dragwyb_Frontend_Route;
 
 class Dragwyb_Init
 {
@@ -41,8 +42,8 @@ class Dragwyb_Init
             Frontend_Render::instance();
         }
 
+        new Dragwyb_Frontend_Route();
         Form_Preview::instance();
-
         Shortcode_Handler::instance();
 
         add_action('admin_init', [$this, 'initial_files']);
@@ -82,8 +83,6 @@ class Dragwyb_Init
         $data = array(
             'ajaxUrl' => admin_url('admin-ajax.php'),
             'i18n' => $this->get_translations(),
-            // 'nonce' => wp_create_nonce('dragwyb_editor'),
-            'formId' => $form_id
         );
 
         $data = apply_filters('Dragwyb_Localize_Core_Script', $data);
@@ -105,10 +104,7 @@ class Dragwyb_Init
 
     private function get_translations()
     {
-        $localize_strings = [
-            'exit' => __('Exit', 'smart-form-builder-by-dragwyb'),
-            'submit' => __('Submit', 'smart-form-builder-by-dragwyb'),
-        ];
+        $localize_strings = [];
 
         return apply_filters('Dragwyb_i18n', $localize_strings);
     }
