@@ -6,6 +6,7 @@ namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Repeater\Repeater;
+use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Error_Handler;
 
 class Field_Checkbox extends Field_Base
 {
@@ -153,10 +154,16 @@ class Field_Checkbox extends Field_Base
                 <?php endif; ?>
 
                 <div class="dragwyb-options-container <?php echo esc_attr($layout_class); ?>">
-                    <?php foreach ($options as $index => $opt) : $opt_id = $field_id . '_' . $index; ?>
+                    <?php foreach ($options as $index => $opt) : $opt_id = $field_id . '_' . $index;
+                        if (!isset($opt['option_value'])) {
+                            continue;
+                        }
+
+                        $label_text = isset($opt['option_label']) ? $opt['option_label'] : '';
+                    ?>
                         <label class="dragwyb-option-item" for="<?php echo esc_attr($opt_id); ?>">
-                            <input type="checkbox" id="<?php echo esc_attr($opt_id); ?>" name="<?php echo esc_attr($field_id); ?>[]" value="<?php echo esc_attr($opt['option_value']); ?>">
-                            <span class="dragwyb-radio-label"><?php echo esc_html($opt['option_label']); ?></span>
+                            <input type="checkbox" id="<?php echo esc_attr($opt_id); ?>" name="<?php echo esc_attr($field_id); ?>[]" value="<?php echo isset($opt['option_value']) ? esc_attr($opt['option_value']) : ''; ?>">
+                            <span class="dragwyb-radio-label"><?php echo esc_html($label_text); ?></span>
                         </label>
                     <?php endforeach; ?>
                 </div>
@@ -168,10 +175,26 @@ class Field_Checkbox extends Field_Base
 <?php
     }
 
-    public function validate($value): bool
+    public function validate($value, $field_id, $settings, Form_Error_Handler $error_handler): void
     {
-        return true;
-    } // Basic
+        $value = (array) $value;
+        $options = $settings['options_list']['value'];
+        $valid_values = [];
+
+        foreach ($options as $option) {
+            $valid_values[] = $option['value'];
+        }
+
+        if (empty($value) && !empty($settings['required']['value'])) {
+            $error_handler->add_error($field_id, __('This field is required', 'smart-form-builder-by-dragwyb'));
+        }
+
+        foreach ($value as $val) {
+            if (!in_array($val, $valid_values)) {
+                $error_handler->add_error($field_id, __('Invalid value', 'smart-form-builder-by-dragwyb'));
+            }
+        }
+    }
     public function sanitize($value)
     {
         return $value;

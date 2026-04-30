@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
+use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Error_Handler;
 
 class Field_Textarea extends Field_Base
 {
@@ -180,17 +181,17 @@ class Field_Textarea extends Field_Base
 <?php
     }
 
-    public function validate($value): bool
+    public function validate($value, $field_id, $settings, Form_Error_Handler $error_handler): void
     {
-        if (empty($value) && !empty($this->settings['required']['value'])) {
-            return false;
+        if (empty($value) && !empty($settings['required']['value'])) {
+            $error_handler->add_error($field_id, __('This field is required', 'smart-form-builder-by-dragwyb'));
+            return;
         }
 
-        $max_length = (int) ($this->settings['max_length']['value'] ?? 0);
+        $max_length = (int) ($settings['max_length']['value'] ?? 0);
+
         if ($max_length && strlen($value) > $max_length) {
-            return false;
+            $error_handler->add_error($field_id, __('This field exceeds the maximum length', 'smart-form-builder-by-dragwyb'));
         }
-
-        return true;
     }
 }

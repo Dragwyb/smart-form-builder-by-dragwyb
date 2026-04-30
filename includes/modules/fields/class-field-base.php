@@ -8,6 +8,7 @@ use Dragwyb\Form_Builder\Includes\Controls\Register_Controls_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Categories\Categories;
 use Dragwyb\Form_Builder\Includes\Frontend\Frontend_Render;
+use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Error_Handler;
 
 abstract class Field_Base extends Register_Controls_Base
 {
@@ -189,7 +190,17 @@ abstract class Field_Base extends Register_Controls_Base
     }
 
     abstract protected function render_field();
-    abstract public function validate($value): bool;
+
+    /**
+     * Validate the field value.
+     *
+     * @param string|array $value The value to validate.
+     * @param string $field_id The ID of the field.
+     * @param array $settings The settings of the field.
+     * @param Form_Error_Handler $error_handler The Error handler.
+     * @return void
+     */
+    abstract public function validate($value, $field_id, $settings, Form_Error_Handler $error_handler): void;
 
     public function render()
     {

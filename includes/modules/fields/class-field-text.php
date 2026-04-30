@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
+use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Error_Handler;
 
 class Field_Text extends Field_Base
 {
@@ -222,24 +223,25 @@ class Field_Text extends Field_Base
 <?php
     }
 
-    public function validate($value): bool
+    public function validate($value, $field_id, $settings, Form_Error_Handler $error_handler): void
     {
         if (empty($value) && !empty($this->settings['required']['value'])) {
-            return false;
+            $error_handler->add_error($field_id, __('This field is required.', 'smart-form-builder-by-dragwyb'));
+            return;
         }
 
         $min_length = (int) ($this->settings['min_length']['value'] ?? 0);
         $max_length = (int) ($this->settings['max_length']['value'] ?? 0);
 
         if ($min_length && strlen($value) < $min_length) {
-            return false;
+            $error_handler->add_error($field_id, sprintf(__('This field requires at least %d characters.', 'smart-form-builder-by-dragwyb'), $min_length));
+            return;
         }
 
         if ($max_length && strlen($value) > $max_length) {
-            return false;
+            $error_handler->add_error($field_id, sprintf(__('This field requires at most %d characters.', 'smart-form-builder-by-dragwyb'), $max_length));
+            return;
         }
-
-        return true;
     }
 
     public function sanitize($value)

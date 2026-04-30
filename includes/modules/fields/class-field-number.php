@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
+use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Error_Handler;
 
 class Field_Number extends Field_Base
 {
@@ -167,14 +168,36 @@ class Field_Number extends Field_Base
 <?php
     }
 
-    public function validate($value): bool
+    public function validate($value, $field_id, $settings, Form_Error_Handler $error_handler): void
     {
-        return true;
+        if (empty($value) && !empty($settings['required']['value'])) {
+            $error_handler->add_error($field_id, __('This field is required', 'smart-form-builder-by-dragwyb'));
+            return;
+        }
+
+        $num = (float) $value;
+
+        if (isset($settings['min_val']['value'])) {
+            $min = (float) $settings['min_val']['value'];
+            if ($num < $min) {
+                $error_handler->add_error($field_id, __('Value is below minimum', 'smart-form-builder-by-dragwyb'));
+                return;
+            }
+        }
+
+        if (isset($settings['max_val']['value'])) {
+            $max = (float) $settings['max_val']['value'];
+            if ($num > $max) {
+                $error_handler->add_error($field_id, __('Value exceeds maximum', 'smart-form-builder-by-dragwyb'));
+                return;
+            }
+        }
     }
     public function sanitize($value)
     {
         return floatval($value);
     }
+
     protected function register_scripts()
     {
         return [];

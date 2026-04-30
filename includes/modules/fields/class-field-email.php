@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
+use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Error_Handler;
 
 class Field_Email extends Field_Base
 {
@@ -182,13 +183,16 @@ class Field_Email extends Field_Base
 <?php
     }
 
-    public function validate($value): bool
+    public function validate($value, $field_id, $settings, Form_Error_Handler $error_handler): void
     {
-        if (empty($value) && !empty($this->settings['required']['value'])) {
-            return false;
+        if (empty($value) && !empty($settings['required']['value'])) {
+            $error_handler->add_error($field_id, __('This field is required', 'smart-form-builder-by-dragwyb'));
+            return;
         }
 
-        return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
+        if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
+            $error_handler->add_error($field_id, __('Invalid email address', 'smart-form-builder-by-dragwyb'));
+        }
     }
 
     public function sanitize($value)
