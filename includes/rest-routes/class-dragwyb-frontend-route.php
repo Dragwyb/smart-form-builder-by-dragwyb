@@ -6,6 +6,7 @@ namespace Dragwyb\Form_Builder\Includes\Rest_Routes;
 
 use Dragwyb\Form_Builder\Includes\Core\Helpers;
 use Dragwyb\Form_Builder\Includes\Frontend\Frontend_Render;
+use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
 
 if (! defined('ABSPATH')) {
     exit; // Exit if accessed directly.
@@ -92,43 +93,37 @@ class Dragwyb_Frontend_Route
         // check_ajax_referer('dragwyb_frontend', 'nonce');
 
         if (!$form_id) {
-            wp_send_json_error(['message' => __('Invalid form ID.', 'smart-form-builder-by-dragwyb')]);
+            return new \WP_Error('invalid_form', __('Invalid form ID.', 'smart-form-builder-by-dragwyb'), ['status' => 400]);
         }
+
+        if (defined('DRAGWYB_FORM_SUBMISSION_REQUEST')) {
+            return new \WP_Error('form_submission_already_running', __('Form submission is already running.', 'smart-form-builder-by-dragwyb'), ['status' => 400]);
+        }
+
+        define('DRAGWYB_FORM_SUBMISSION_REQUEST', true);
 
         $form_id = intval($form_id);
 
-        $form_data = Frontend_Render::instance();
-        $form_data->init($form_id);
+        // Instantiate the submission handler
+        $handler = new Form_Submission_Handler($form_id, (array) $fields);
 
-        $fields_settings = $form_data->get_fields_values();
+        // If there are validation errors, return them as a JSON response
+        if ($handler->has_errors()) {
+            return rest_ensure_response([
+                'success' => false,
+                'message' => __('Form submission failed due to validation errors.', 'smart-form-builder-by-dragwyb'),
+                'errors'  => $handler->get_errors(),
+            ]);
+        }
 
-        var_dump($fields_settings);
-
-        // Allow other plugins/extensions to hook into submission
-        do_action('dragwyb/frontend/form/before_submit_processing', $form_id);
-
-        // TODO: Extract values, validate, send emails, save to DB etc.
-        // For now, return a placeholder success message.
-
-        $response_message = apply_filters(
-            'dragwyb/frontend/form/success_message',
-            __('Form submitted successfully!', 'smart-form-builder-by-dragwyb'),
-            $form_id
-        );
-
-        wp_send_json_success([
-            'message' => $response_message
-        ]);
-
-        // @todo: Implement the actual form submission logic, e.g., saving data, sending emails, etc.
-
+        // Return a successful JSON response
         return rest_ensure_response(
             [
                 'success' => true,
                 'message' => __('Form submitted successfully.', 'smart-form-builder-by-dragwyb'),
                 'data'    => [
-                    'form_id' => $form_id,
-                    'fields'  => $fields,
+                    'form_id'        => $form_id,
+                    // 'sanitized_data' => $handler->get_sanitized_data(),
                 ],
             ]
         );
