@@ -51,35 +51,8 @@ class Settings extends Register_Controls_Base
                 'draft'   => __('Draft', 'smart-form-builder-by-dragwyb'),
                 'publish'  => __('Published', 'smart-form-builder-by-dragwyb'),
             ],
-            'default' => sanitize_text_field($form_status),
+            'default' => 'draft',
             'label_inline' => true,
-        ]);
-
-        $this->end_section();
-
-        // Performance & Behavior
-        $this->start_section('performance', [
-            'label' => __('Performance & Behavior', 'smart-form-builder-by-dragwyb'),
-        ]);
-
-        $this->add_control('ajax_submit', [
-            'type'    => Controls::SWITCHER,
-            'label'   => __('Enable AJAX Submission', 'smart-form-builder-by-dragwyb'),
-            'default' => 'yes',
-            'description' => __('Submit form without reloading the page.', 'smart-form-builder-by-dragwyb'),
-        ]);
-
-        $this->add_control('reset_after_submit', [
-            'type'    => Controls::SWITCHER,
-            'label'   => __('Reset Form After Submit', 'smart-form-builder-by-dragwyb'),
-            'default' => 'yes',
-        ]);
-
-        $this->add_control('save_progress', [
-            'type'    => Controls::SWITCHER,
-            'label'   => __('Auto-Save Progress (Local)', 'smart-form-builder-by-dragwyb'),
-            'default' => 'no',
-            'description' => __('Saves inputs to browser storage so data isn\'t lost on refresh.', 'smart-form-builder-by-dragwyb'),
         ]);
 
         $this->end_section();
