@@ -203,5 +203,12 @@ class Field_Button extends Field_Base
 
     public function validate($value, $field_id, $settings, Form_Submission_Handler $error_handler): void {}
 
-    public function sanitize($value) {}
+    /**
+     * Sanitize the field value.
+     *
+     * @param string $default The default value.
+     * @param mixed $value The value to sanitize.
+     * @return mixed Sanitized value.
+     */
+    public function sanitize($default = '', $value = null) {}
 }

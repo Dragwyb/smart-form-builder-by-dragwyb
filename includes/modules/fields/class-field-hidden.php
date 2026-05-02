@@ -78,12 +78,35 @@ class Field_Hidden extends Field_Base
 <?php
     }
 
-    public function validate($value, $field_id, $settings, Form_Submission_Handler $error_handler): void {}
-
-    public function sanitize($value)
+    public function validate($value, $field_id, $form_config, Form_Submission_Handler $error_handler): void
     {
-        return sanitize_text_field($value);
+        if (!isset($form_config['fields'][$field_id])) {
+            $error_handler->add_error($field_id, __('Invalid field.', 'smart-form-builder-by-dragwyb'));
+            return;
+        }
+
+        if (empty($value)) {
+            $error_handler->add_error($field_id, __('This field is required', 'smart-form-builder-by-dragwyb'));
+            return;
+        }
     }
+
+    /**
+     * Sanitize the field value.
+     *
+     * @param string $default The default value.
+     * @param mixed $value The value to sanitize.
+     * @return mixed Sanitized value.
+     */
+    public function sanitize($default = '', $value = null)
+    {
+        if ($value && is_string($value)) {
+            return sanitize_text_field($value);
+        }
+
+        return null;
+    }
+
     protected function register_scripts()
     {
         return [];

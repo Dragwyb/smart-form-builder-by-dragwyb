@@ -223,29 +223,46 @@ class Field_Text extends Field_Base
 <?php
     }
 
-    public function validate($value, $field_id, $settings, Form_Submission_Handler $error_handler): void
+    public function validate($value, $field_id, $form_config, Form_Submission_Handler $error_handler): void
     {
-        if (empty($value) && !empty($this->settings['required']['value'])) {
+        if (!isset($form_config['fields'][$field_id])) {
+            $error_handler->add_error($field_id, __('Invalid field.', 'smart-form-builder-by-dragwyb'));
+            return;
+        }
+        $field_attr = isset($form_config['fields'][$field_id]['attributes']) ? $form_config['fields'][$field_id]['attributes'] : array();
+
+        if (empty($value) && (isset($field_attr['required']) && $field_attr['required'] == 'yes')) {
             $error_handler->add_error($field_id, __('This field is required.', 'smart-form-builder-by-dragwyb'));
             return;
         }
 
-        $min_length = (int) ($this->settings['min_length']['value'] ?? 0);
-        $max_length = (int) ($this->settings['max_length']['value'] ?? 0);
+        $min_length = isset($field_attr['min_length']) ? (int) $field_attr['min_length'] : null;
+        $max_length = isset($field_attr['max_length']) ? (int) $field_attr['max_length'] : null;
 
-        if ($min_length && strlen($value) < $min_length) {
+        if (isset($min_length) && strlen($value) < $min_length) {
             $error_handler->add_error($field_id, sprintf(__('This field requires at least %d characters.', 'smart-form-builder-by-dragwyb'), $min_length));
             return;
         }
 
-        if ($max_length && strlen($value) > $max_length) {
+        if (isset($max_length) && strlen($value) > $max_length) {
             $error_handler->add_error($field_id, sprintf(__('This field requires at most %d characters.', 'smart-form-builder-by-dragwyb'), $max_length));
             return;
         }
     }
 
-    public function sanitize($value)
+    /**
+     * Sanitize the field value.
+     *
+     * @param string $default The default value.
+     * @param mixed $value The value to sanitize.
+     * @return mixed Sanitized value.
+     */
+    public function sanitize($default = '', $value = null)
     {
-        return sanitize_text_field($value);
+        if ($value && is_string($value)) {
+            return sanitize_text_field($value);
+        }
+
+        return null;
     }
 }

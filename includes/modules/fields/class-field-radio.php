@@ -188,22 +188,46 @@ class Field_Radio extends Field_Base
 <?php
     }
 
-    public function validate($value, $field_id, $settings, Form_Submission_Handler $error_handler): void
+    public function validate($value, $field_id, $form_config, Form_Submission_Handler $error_handler): void
     {
-        if (empty($value) && !empty($this->settings['required']['value'])) {
+        if (!isset($form_config['fields'][$field_id])) {
+            $error_handler->add_error($field_id, __('Invalid field.', 'smart-form-builder-by-dragwyb'));
+            return;
+        }
+
+        $field_attr = isset($form_config['fields'][$field_id]['attributes']) ? $form_config['fields'][$field_id]['attributes'] : array();
+
+        if (empty($value) && isset($field_attr['required']) && 'yes' == $field_attr['required']) {
             $error_handler->add_error($field_id, __('This field is required', 'smart-form-builder-by-dragwyb'));
             return;
         }
 
+        $field_options = isset($field_attr['options_list']) ? $field_attr['options_list'] : array();
+
         // Check if value exists in options
-        $valid_values = array_column($this->settings['options']['value'] ?? [], 'value');
+        $valid_values = array_column($field_options, 'option_value');
+
         if (!in_array($value, $valid_values, true)) {
             $error_handler->add_error($field_id, __('Invalid option selected', 'smart-form-builder-by-dragwyb'));
         }
     }
 
-    public function sanitize($value)
+    /**
+     * Sanitize the field value.
+     *
+     * @param string $default The default value.
+     * @param mixed $value The value to sanitize.
+     * @return mixed Sanitized value.
+     */
+    public function sanitize($default = '', $value = null)
     {
-        return sanitize_text_field($value);
+        if ($value) {
+            if (!is_array($value)) {
+                $value = [$value];
+            }
+            return array_map('sanitize_text_field', $value);
+        }
+
+        return null;
     }
 }

@@ -183,20 +183,38 @@ class Field_Email extends Field_Base
 <?php
     }
 
-    public function validate($value, $field_id, $settings, Form_Submission_Handler $error_handler): void
+    public function validate($value, $field_id, $form_config, Form_Submission_Handler $error_handler): void
     {
-        if (empty($value) && !empty($settings['required']['value'])) {
+        if (!isset($form_config['fields'][$field_id])) {
+            $error_handler->add_error($field_id, __('Invalid field.', 'smart-form-builder-by-dragwyb'));
+            return;
+        }
+
+        $field_attr = isset($form_config['fields'][$field_id]['attributes']) ? $form_config['fields'][$field_id]['attributes'] : array();
+
+        if (empty($value) && isset($field_attr['required']) && 'yes' == $field_attr['required']) {
             $error_handler->add_error($field_id, __('This field is required', 'smart-form-builder-by-dragwyb'));
             return;
         }
 
-        if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
+        if (filter_var($value, FILTER_VALIDATE_EMAIL) === false && !empty($value)) {
             $error_handler->add_error($field_id, __('Invalid email address', 'smart-form-builder-by-dragwyb'));
         }
     }
 
-    public function sanitize($value)
+    /**
+     * Sanitize the field value.
+     *
+     * @param string $default The default value.
+     * @param mixed $value The value to sanitize.
+     * @return mixed Sanitized value.
+     */
+    public function sanitize($default = '', $value = null)
     {
-        return sanitize_email($value);
+        if ($value && is_string($value)) {
+            return sanitize_email($value);
+        }
+
+        return null;
     }
 }

@@ -42,6 +42,11 @@ abstract class Field_Base extends Register_Controls_Base
     {
         $this->init();
         parent::__construct();
+
+        // Add filter for sanitizing field values.
+        add_filter('Dragwyb/Field/Value/Sanitize/' . $this->get_type(), array($this, "sanitize"), 10, 2);
+        // Add filter for validating field values.
+        add_action('Dragwyb/Field/Value/Validate/' . $this->get_type(), array($this, "validate"), 10, 4);
     }
 
     abstract protected function init(): void;
@@ -193,6 +198,7 @@ abstract class Field_Base extends Register_Controls_Base
 
     /**
      * Validate the field value.
+     * Do not return the value without sanitizing or validating.
      *
      * @param string|array $value The value to validate.
      * @param string $field_id The ID of the field.
@@ -201,6 +207,15 @@ abstract class Field_Base extends Register_Controls_Base
      * @return void
      */
     abstract public function validate($value, $field_id, $settings, Form_Submission_Handler $error_handler): void;
+
+    /**
+     * Sanitize the field value.
+     *
+     * @param string $default The default value.
+     * @param mixed $value The value to sanitize.
+     * @return mixed Sanitized value.
+     */
+    abstract public function sanitize(string $default = '', $value = null);
 
     public function render()
     {

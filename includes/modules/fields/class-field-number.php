@@ -168,35 +168,47 @@ class Field_Number extends Field_Base
 <?php
     }
 
-    public function validate($value, $field_id, $settings, Form_Submission_Handler $error_handler): void
+    public function validate($value, $field_id, $form_config, Form_Submission_Handler $error_handler): void
     {
-        if (empty($value) && !empty($settings['required']['value'])) {
+        if (!isset($form_config['fields'][$field_id])) {
+            $error_handler->add_error($field_id, __('Invalid field.', 'smart-form-builder-by-dragwyb'));
+            return;
+        }
+
+        $field_attr = isset($form_config['fields'][$field_id]['attributes']) ? $form_config['fields'][$field_id]['attributes'] : array();
+
+        if (empty($value) && isset($field_attr['required']) && 'yes' == $field_attr['required']) {
             $error_handler->add_error($field_id, __('This field is required', 'smart-form-builder-by-dragwyb'));
             return;
         }
 
         $num = (float) $value;
 
-        if (isset($settings['min_val']['value'])) {
-            $min = (float) $settings['min_val']['value'];
+        if (isset($field_attr['min_val']) && !empty($field_attr['min_val'])) {
+            $min = (float) $field_attr['min_val'];
             if ($num < $min) {
                 $error_handler->add_error($field_id, __('Value is below minimum', 'smart-form-builder-by-dragwyb'));
                 return;
             }
         }
 
-        if (isset($settings['max_val']['value'])) {
-            $max = (float) $settings['max_val']['value'];
+        if (isset($field_attr['max_val']) && !empty($field_attr['max_val'])) {
+            $max = (float) $field_attr['max_val'];
             if ($num > $max) {
                 $error_handler->add_error($field_id, __('Value exceeds maximum', 'smart-form-builder-by-dragwyb'));
                 return;
             }
         }
     }
-    public function sanitize($value)
-    {
-        return floatval($value);
-    }
+
+    /**
+     * Sanitize the field value.
+     *
+     * @param string $default The default value.
+     * @param mixed $value The value to sanitize.
+     * @return mixed Sanitized value.
+     */
+    public function sanitize($default = '', $value = null) {}
 
     protected function register_scripts()
     {

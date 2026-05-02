@@ -176,9 +176,16 @@ class Field_Date extends Field_Base
 <?php
     }
 
-    public function validate($value, $field_id, $settings, Form_Submission_Handler $error_handler): void
+    public function validate($value, $field_id, $form_config, Form_Submission_Handler $error_handler): void
     {
-        if (empty($value) && !empty($this->settings['required']['value'])) {
+        if (!isset($form_config['fields'][$field_id])) {
+            $error_handler->add_error($field_id, __('Invalid field.', 'smart-form-builder-by-dragwyb'));
+            return;
+        }
+
+        $field_attr = isset($form_config['fields'][$field_id]['attributes']) ? $form_config['fields'][$field_id]['attributes'] : array();
+
+        if (empty($value) && isset($field_attr['required']) && 'yes' == $field_attr['required']) {
             $error_handler->add_error($field_id, __('This field is required', 'smart-form-builder-by-dragwyb'));
             return;
         }
@@ -191,8 +198,8 @@ class Field_Date extends Field_Base
             }
 
             // Check min date
-            if (!empty($this->settings['min_date']['value'])) {
-                $min_date = new DateTime($this->settings['min_date']['value']);
+            if (isset($field_attr['min_date']) && !empty($field_attr['min_date'])) {
+                $min_date = new DateTime($field_attr['min_date']);
                 if ($date < $min_date) {
                     $error_handler->add_error($field_id, __('Value is below minimum', 'smart-form-builder-by-dragwyb'));
                     return;
@@ -200,8 +207,8 @@ class Field_Date extends Field_Base
             }
 
             // Check max date
-            if (!empty($this->settings['max_date']['value'])) {
-                $max_date = new DateTime($this->settings['max_date']['value']);
+            if (isset($field_attr['max_date']) && !empty($field_attr['max_date'])) {
+                $max_date = new DateTime($field_attr['max_date']);
                 if ($date > $max_date) {
                     $error_handler->add_error($field_id, __('Value exceeds maximum', 'smart-form-builder-by-dragwyb'));
                 }
@@ -209,13 +216,20 @@ class Field_Date extends Field_Base
         }
     }
 
-    public function sanitize($value)
+    /**
+     * Sanitize the field value.
+     *
+     * @param string $default The default value.
+     * @param mixed $value The value to sanitize.
+     * @return mixed Sanitized value.
+     */
+    public function sanitize($default = '', $value = null)
     {
-        if (empty($value)) {
-            return '';
+        if ($value) {
+            $date = DateTime::createFromFormat('Y-m-d', $value);
+            return $date ? $date->format($this->settings['date_format']['value']) : $default;
         }
 
-        $date = DateTime::createFromFormat('Y-m-d', $value);
-        return $date ? $date->format($this->settings['date_format']['value']) : '';
+        return null;
     }
 }

@@ -175,17 +175,27 @@ class Field_Checkbox extends Field_Base
 <?php
     }
 
-    public function validate($value, $field_id, $settings, Form_Submission_Handler $error_handler): void
+    public function validate($value, $field_id, $form_config, Form_Submission_Handler $error_handler): void
     {
+        if (!isset($form_config['fields'][$field_id])) {
+            $error_handler->add_error($field_id, __('Invalid field.', 'smart-form-builder-by-dragwyb'));
+            return;
+        }
+
+        $field_attr = isset($form_config['fields'][$field_id]['attributes']) ? $form_config['fields'][$field_id]['attributes'] : array();
+
         $value = (array) $value;
-        $options = $settings['options_list']['value'];
+        $options = isset($field_attr['options_list']) ? $field_attr['options_list'] : [];
         $valid_values = [];
 
         foreach ($options as $option) {
-            $valid_values[] = $option['value'];
+            if (!isset($option['option_value'])) {
+                continue;
+            }
+            $valid_values[] = $option['option_value'];
         }
 
-        if (empty($value) && !empty($settings['required']['value'])) {
+        if (empty($value) && isset($field_attr['required']) && 'yes' == $field_attr['required']) {
             $error_handler->add_error($field_id, __('This field is required', 'smart-form-builder-by-dragwyb'));
         }
 
@@ -195,10 +205,26 @@ class Field_Checkbox extends Field_Base
             }
         }
     }
-    public function sanitize($value)
+
+    /**
+     * Sanitize the field value.
+     *
+     * @param string $default The default value.
+     * @param mixed $value The value to sanitize.
+     * @return mixed Sanitized value.
+     */
+    public function sanitize($default = '', $value = null)
     {
-        return $value;
+        if ($value) {
+            if (!is_array($value)) {
+                $value = [$value];
+            }
+            return array_map('sanitize_text_field', $value);
+        }
+
+        return null;
     }
+
     protected function register_scripts()
     {
         return [];
