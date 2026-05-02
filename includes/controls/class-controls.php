@@ -24,6 +24,7 @@ class Controls
     const REPEATER = 'repeater';
     const SECTION = 'section';
     const SELECT = 'select';
+    const MULTISELECT = 'multiselect';
     const SLIDER = 'slider';
     const SWITCHER = 'switcher';
     const TABS = 'tabs';

@@ -4,28 +4,31 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Controls\Controls;
 
-class Control_Select extends Control_Base
+class Control_Multiselect extends Control_Base
 {
     protected function register_settings()
     {
         return array(
             'name' => 'string',
             'label' => 'string',
-            'default' => 'string',
+            'default' => 'custom',
             'options' => 'custom',
-            'label_inline' => 'boolean',
         );
     }
 
     protected function init(): void
     {
-        $this->type = 'select';
-        $this->name = __('Select', 'smart-form-builder-by-dragwyb');
+        $this->type = 'multiselect';
+        $this->name = __('Multiselect', 'smart-form-builder-by-dragwyb');
     }
 
     protected function sanitize_control($value)
     {
-        return sanitize_text_field($value);
+        if (!is_array($value)) {
+            return array();
+        }
+
+        return array_map('sanitize_text_field', $value);
     }
 
     protected function options_setting_sanitize($value)
