@@ -75,7 +75,7 @@ abstract class Register_Controls_Base
             throw new \Exception(esc_html__('Do not use duplicate section ID use unique Id.', 'smart-form-builder-by-dragwyb'));
         }
 
-        do_action('Dragwyb/Editor/before_section_start/' . sanitize_text_field($id), $data);
+        do_action('Dragwyb/Editor/before_section_start/' . sanitize_text_field($id), $this,  $this->current_section);
 
         $this->current_section = $id; // Assuming type is the section identifier
 
@@ -83,7 +83,7 @@ abstract class Register_Controls_Base
 
         $conditions = $this->tab_condition($conditions, $data);
 
-        do_action('Dragwyb/Editor/after_section_start/' . sanitize_text_field($id), $data);
+        do_action('Dragwyb/Editor/after_section_start/' . sanitize_text_field($id), $this,  $this->current_section);
 
         $this->settings_arr[$this->current_section] = $this->controller_settings(array_merge($data, array('type' => 'section', 'conditions' => $conditions)));
     }
@@ -94,16 +94,16 @@ abstract class Register_Controls_Base
             throw new \Exception(esc_html__('No section is currently open.', 'smart-form-builder-by-dragwyb'));
         }
 
-        do_action('Dragwyb/Editor/before_section_end/' . sanitize_text_field($this->current_section), $this->settings_arr[$this->current_section]);
+        do_action('Dragwyb/Editor/before_section_end/' . sanitize_text_field($this->current_section), $this,  $this->current_section, $this->settings_arr[$this->current_section]);
 
         $this->settings_arr = array_merge($this->settings_arr, $this->current_section_stack, $this->current_control_stack);
+
+        do_action('Dragwyb/Editor/after_section_end/' . sanitize_text_field($this->current_section), $this,  $this->current_section);
 
         $this->current_section = null;
 
         $this->current_control_stack = array();
         $this->current_section_stack = array();
-
-        do_action('Dragwyb/Editor/after_section_end/' . sanitize_text_field($this->current_section));
     }
 
     final protected function start_tabs(string $id = '', array $data = array()): void
@@ -230,7 +230,7 @@ abstract class Register_Controls_Base
             throw new \Exception(sprintf(esc_html__("Do not use duplicate %s ID use unique Id.", 'smart-form-builder-by-dragwyb'), esc_html($id)));
         }
 
-        do_action('Dragwyb/Editor/before_add_control/' . sanitize_text_field($id), $data);
+        do_action('Dragwyb/Editor/before_add_control/' . sanitize_text_field($id), $this, $id,  $data, $this->current_section);
 
         $conditions = isset($data['conditions']) ? $data['conditions'] : array();
 
@@ -257,7 +257,7 @@ abstract class Register_Controls_Base
 
         $this->current_control_stack[$id] = $control_data;
 
-        do_action('Dragwyb/Editor/after_add_control/' . sanitize_text_field($id), $data);
+        do_action('Dragwyb/Editor/after_add_control/' . sanitize_text_field($id), $this, $id,  $data, $this->current_section);
     }
 
     final protected function add_group_control(string $id = '', array $data = array()): void
@@ -407,6 +407,22 @@ abstract class Register_Controls_Base
         $this->register_controls();
 
         return $this->get_settings();
+    }
+
+    final public function merge_controls_from_array(array $controls): void
+    {
+        $this->settings_arr = array_merge($this->settings_arr, $controls);
+    }
+
+    final public function remove_control(string $id): void
+    {
+        unset($this->settings_arr[$id]);
+    }
+
+    final public function update_control(string $id, array $data): void
+    {
+        if (!isset($this->settings_arr[$id])) return;
+        $this->settings_arr[$id] = $this->controller_settings($data);
     }
 
     final public function get_control($id)
