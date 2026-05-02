@@ -69,4 +69,12 @@ class Toolbars
     {
         return $this->toolbars[$id] ?? null;
     }
+
+    /**
+     * Get all registered toolbar types
+     */
+    public function get_toolbar_types(): array
+    {
+        return array_keys($this->toolbars);
+    }
 }
