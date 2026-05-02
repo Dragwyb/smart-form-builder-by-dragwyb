@@ -179,6 +179,10 @@ module.exports = (env, argv) => {
         'frontend'
     ];
 
+    const frontendScssFiles = [
+        'form-frontend'
+    ];
+
     const scssFiles = [
         'editor-global',
         'form-frontend',
@@ -191,6 +195,7 @@ module.exports = (env, argv) => {
         validFolders = validFoldersFilter(editorFolders);
     } else if (env && env.type === 'frontend') {
         console.log("ℹ️  Running Webpack in *frontend* mode...");
+        validScssFiles = validScssFilesFilter(frontendScssFiles);
         validFolders = validFoldersFilter(frontendFolders);
     } else {
         console.warn("⚠️ Invalid build type provided. Use `--env type=editor` or `--env type=frontend`.");
