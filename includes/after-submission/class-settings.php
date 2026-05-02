@@ -32,7 +32,7 @@ class Settings extends Register_Controls_Base
         $this->add_control('save_to_db', [
             'type'    => Controls::SWITCHER,
             'label'   => __('Save Submissions to Database', 'smart-form-builder-by-dragwyb'),
-            'default' => 'yes',
+            'default' => 'no',
             'description' => __('View entries in WP Dashboard > Dragwyb > Submissions', 'smart-form-builder-by-dragwyb'),
         ]);
 
