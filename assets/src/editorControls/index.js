@@ -2,6 +2,7 @@
 import '../../sass/editorControls.scss';
 import TextControl from './textControl';
 import SelectControl from './selectControl';
+import MultiSelectControl from './multiSelectControl';
 import TextareaControl from './textareaControl';
 import SwitcherControl from './switcherControl';
 import DimensionsControl from './dimensionsControl';
@@ -26,6 +27,7 @@ const initializeControls = () => {
     const defaultControls = {
         'text': TextControl,
         'select': SelectControl,
+        'multiselect': MultiSelectControl,
         'textarea': TextareaControl,
         'switcher': SwitcherControl,
         'dimensions': DimensionsControl,

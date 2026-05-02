@@ -1271,3 +1271,161 @@
     }
   }
 }
+
+/* =========================
+     MultiSelect
+     ========================= */
+.dragwyb-control--multiselect {
+  .dragwyb-multiselect {
+    position: relative;
+
+    .dragwyb-multiselect-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      min-height: 2.5rem;
+      padding: 4px 6px;
+      font-size: 14px;
+      border-radius: 4px;
+      border: 1px solid hsl(var(--dragwyb-border)/var(--dragwyb-border-opacity, 1));
+      background: hsl(var(--dragwyb-background) / var(--dragwyb-bg-opacity, 1));
+      cursor: pointer;
+      transition: border-color 0.2s ease-in-out;
+
+      &:focus {
+        outline: none;
+        border-color: #0073e6;
+      }
+    }
+
+    .dragwyb-multiselect-values {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      flex: 1;
+
+      .dragwyb-multiselect-placeholder {
+        color: hsl(var(--dragwyb-sidebar-foreground)/0.5);
+        padding: 4px;
+      }
+
+      .dragwyb-multiselect-tag {
+        display: flex;
+        align-items: center;
+        background: hsl(var(--dragwyb-input)/0.5);
+        border-radius: 3px;
+        padding: 2px 6px;
+        font-size: 12px;
+
+        .dragwyb-multiselect-tag-remove {
+          margin-left: 4px;
+          cursor: pointer;
+          font-size: 12px;
+          width: 12px;
+          height: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0.7;
+
+          &:hover {
+            opacity: 1;
+            color: hsl(var(--dragwyb-destructive));
+          }
+        }
+      }
+    }
+
+    .dragwyb-multiselect-actions {
+      padding: 0 4px;
+      color: hsl(var(--dragwyb-sidebar-foreground)/0.5);
+    }
+
+    .dragwyb-multiselect-dropdown {
+      position: absolute;
+      z-index: 10000;
+      width: 100%;
+      background: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
+      border: 1px solid hsl(var(--dragwyb-border)/var(--dragwyb-border-opacity, 1));
+      border-radius: 4px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-top: 4px;
+      max-height: 250px;
+      display: flex;
+      flex-direction: column;
+
+      &.position-top {
+        bottom: 100%;
+        margin-bottom: 4px;
+        margin-top: 0;
+      }
+
+      .dragwyb-multiselect-search {
+        padding: 6px;
+        border-bottom: 1px solid hsl(var(--dragwyb-border)/var(--dragwyb-border-opacity, 1));
+
+        input {
+          width: 100%;
+          border: 1px solid hsl(var(--dragwyb-input)/var(--dragwyb-border-opacity, 1));
+          border-radius: 3px;
+          padding: 4px 8px;
+          font-size: 13px;
+          height: 30px;
+
+          &:focus {
+            outline: none;
+            border-color: #0073e6;
+          }
+        }
+      }
+
+      .dragwyb-multiselect-options {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        overflow-y: auto;
+
+        .dragwyb-option {
+          padding: 6px 10px;
+          cursor: pointer;
+          font-size: 13px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          &.highlighted {
+            background: hsl(var(--dragwyb-input)/0.5);
+          }
+
+          .dragwyb-option-checkbox {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            .dragwyb-option-checkbox-empty {
+              width: 14px;
+              height: 14px;
+              border: 1px solid hsl(var(--dragwyb-border)/var(--dragwyb-border-opacity, 1));
+              border-radius: 2px;
+            }
+
+            .dashicons-yes {
+              font-size: 16px;
+              color: hsl(var(--dragwyb-primary));
+            }
+          }
+        }
+
+        .dragwyb-no-results {
+          padding: 10px;
+          text-align: center;
+          color: hsl(var(--dragwyb-sidebar-foreground)/0.5);
+          font-size: 13px;
+        }
+      }
+    }
+  }
+}
