@@ -63,7 +63,7 @@ class Dragwyb_Form_Builder_Ajax
 
         defined('DRAGWYB_EDITOR_SAVE_AJAX') || define('DRAGWYB_EDITOR_SAVE_AJAX', true);
         $sanitize_data = array();
-        $toolbar_obj = new Toolbars();
+        $toolbar_obj = Toolbars::instance();
         $toolbars = $toolbar_obj->get_toolbars();
         $toolbars_cache = array();
 
