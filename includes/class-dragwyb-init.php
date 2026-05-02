@@ -62,12 +62,29 @@ class Dragwyb_Init
 
         $thisObj = self::instance();
 
+        $js_assets_info = array(
+            'version' => DRAGWYB_FORM_BUILDER_VERSION,
+            'dependencies' => array()
+        );
+
+        if (file_exists(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/core/core.asset.php')) {
+            $dragwyb_js_assets_info = require_once(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/core/core.asset.php');
+
+            if (isset($dragwyb_js_assets_info['dependencies'])) {
+                $js_assets_info['dependencies'] = array_merge($js_assets_info['dependencies'], $dragwyb_js_assets_info['dependencies']);
+            }
+
+            if (isset($dragwyb_js_assets_info['version'])) {
+                $js_assets_info['version'] = $dragwyb_js_assets_info['version'];
+            }
+        }
+
         // Enqueue React and dependencies
         wp_register_script(
             'dragwyb-form-core',
             esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/core/core.js'),
-            ['wp-element', 'wp-components', 'wp-i18n', 'jquery'],
-            esc_attr(DRAGWYB_FORM_BUILDER_VERSION),
+            $js_assets_info['dependencies'],
+            esc_attr($js_assets_info['version']),
             true
         );
 

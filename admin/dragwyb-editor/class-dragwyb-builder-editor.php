@@ -165,7 +165,6 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
 
             !defined("DRAGWYB_EDITOR") && define('DRAGWYB_EDITOR', true);
 
-
             Dragwyb_Init::core_script();
             $this->external_libs();
 
@@ -173,7 +172,24 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
 
             wp_enqueue_script('dragwyb-form-core');
 
-            $js_dependencies = apply_filters('Dragwyb/Editor/scripts/dependencies', array('jquery', 'dragwyb-form-core', 'jquery-ui-resizable', 'wp-element', 'wp-components', 'wp-i18n', 'clipboard'));
+            $js_assets_info = array(
+                'version' => DRAGWYB_FORM_BUILDER_VERSION,
+                'dependencies' => array('jquery', 'jquery-ui-resizable', 'clipboard')
+            );
+
+            if (file_exists(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/editor/editor.asset.php')) {
+                $dragwyb_js_assets_info = require_once(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/editor/editor.asset.php');
+
+                if (isset($dragwyb_js_assets_info['dependencies'])) {
+                    $js_assets_info['dependencies'] = array_merge($js_assets_info['dependencies'], $dragwyb_js_assets_info['dependencies']);
+                }
+
+                if (isset($dragwyb_js_assets_info['version'])) {
+                    $js_assets_info['version'] = $dragwyb_js_assets_info['version'];
+                }
+            }
+
+            $js_dependencies = apply_filters('Dragwyb/Editor/scripts/dependencies', $js_assets_info['dependencies']);
 
             $style_dependencies = apply_filters('Dragwyb/Editor/style/dependencies', array('wp-components', 'dragwyb-form-editor-global'));
 
@@ -182,7 +198,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 'dragwyb-form-editor',
                 esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editor/editor.js'),
                 $js_dependencies,
-                esc_attr(DRAGWYB_FORM_BUILDER_VERSION),
+                esc_attr($js_assets_info['version']),
                 true
             );
 
@@ -195,14 +211,14 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 'dragwyb-form-editor-global',
                 esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/css/editor-global.css'),
                 [],
-                esc_attr(DRAGWYB_FORM_BUILDER_VERSION)
+                esc_attr($js_assets_info['version'])
             );
 
             wp_enqueue_style(
                 'dragwyb-form-editor',
                 esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editor/editor.css'),
                 $style_dependencies,
-                esc_attr(DRAGWYB_FORM_BUILDER_VERSION)
+                esc_attr($js_assets_info['version'])
             );
 
             $localize_data = [

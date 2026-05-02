@@ -400,11 +400,28 @@ class Frontend_Render
 
         wp_enqueue_script('dragwyb-form-core');
 
+        $js_assets_info = array(
+            'version' => DRAGWYB_FORM_BUILDER_VERSION,
+            'dependencies' => array('jquery', 'dragwyb-form-core')
+        );
+
+        if (file_exists(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/frontend/frontend.asset.php')) {
+            $dragwyb_js_assets_info = require_once(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/frontend/frontend.asset.php');
+
+            if (isset($dragwyb_js_assets_info['dependencies'])) {
+                $js_assets_info['dependencies'] = array_merge($js_assets_info['dependencies'], $dragwyb_js_assets_info['dependencies']);
+            }
+
+            if (isset($dragwyb_js_assets_info['version'])) {
+                $js_assets_info['version'] = $dragwyb_js_assets_info['version'];
+            }
+        }
+
         wp_enqueue_script(
             'dragwyb-form-frontend',
             esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/frontend/frontend.js'),
-            ['jquery', 'dragwyb-form-core'],
-            esc_attr(DRAGWYB_FORM_BUILDER_VERSION),
+            $js_assets_info['dependencies'],
+            esc_attr($js_assets_info['version']),
             true
         );
 

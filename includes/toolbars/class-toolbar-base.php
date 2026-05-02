@@ -37,15 +37,32 @@ abstract class Toolbar_Base
 
     public function enqueue_assets()
     {
-        wp_register_script(
-            'dragwyb-editor-toolbars',
-            esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/toolbars/toolbars.js'),
-            ['dragwyb-form-editor'],
-            esc_attr(DRAGWYB_FORM_BUILDER_VERSION),
-            true
-        );
-
         if (!wp_script_is('dragwyb-editor-toolbars', 'enqueued')) {
+            $js_assets_info = array(
+                'version' => DRAGWYB_FORM_BUILDER_VERSION,
+                'dependencies' => array('dragwyb-form-editor')
+            );
+
+            if (file_exists(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/toolbars/toolbars.asset.php')) {
+                $dragwyb_js_assets_info = require_once(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/toolbars/toolbars.asset.php');
+
+                if (isset($dragwyb_js_assets_info['dependencies'])) {
+                    $js_assets_info['dependencies'] = array_merge($js_assets_info['dependencies'], $dragwyb_js_assets_info['dependencies']);
+                }
+
+                if (isset($dragwyb_js_assets_info['version'])) {
+                    $js_assets_info['version'] = $dragwyb_js_assets_info['version'];
+                }
+            }
+
+            wp_register_script(
+                'dragwyb-editor-toolbars',
+                esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/toolbars/toolbars.js'),
+                $js_assets_info['dependencies'],
+                esc_attr($js_assets_info['version']),
+                true
+            );
+
             wp_enqueue_script('dragwyb-editor-toolbars');
         }
     }

@@ -28,13 +28,6 @@ class Field_Text extends Field_Base
     public function __construct()
     {
         parent::__construct();
-        wp_register_script(
-            'dragwyb_editor_fields',
-            esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editorFields/editorFields.js'),
-            array(),
-            esc_attr(DRAGWYB_FORM_BUILDER_VERSION),
-            true
-        );
     }
 
     protected function init(): void
