@@ -11,6 +11,7 @@ use Dragwyb\Form_Builder\Includes\Controls\Controls\Control_Base;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbars;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Fonts\Fonts_Helper;
+use Dragwyb\Form_Builder\Includes\Dragwyb_Init;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -80,7 +81,7 @@ class Frontend_Render
 
     private function set_toolbar_data(): void
     {
-        $toolbar_obj = new Toolbars();
+        $toolbar_obj = Toolbars::instance();
         $toolbars = $toolbar_obj->get_toolbars();
 
         foreach (self::$form_data as $key => $value) {
@@ -249,6 +250,8 @@ class Frontend_Render
             $field_data = null;
         }
 
+        echo '</form>';
+
         return ob_get_clean();
     }
 
@@ -283,7 +286,7 @@ class Frontend_Render
 
     public function get_generated_css(): array
     {
-        $toolbar_obj = new Toolbars();
+        $toolbar_obj = Toolbars::instance();
         self::$toolbars = $toolbar_obj->get_toolbars();
 
         foreach (self::$toolbar_data as $toolbar_key => $settings) {
@@ -376,10 +379,39 @@ class Frontend_Render
 
     private static function frontend_assets()
     {
-        do_action('Dragwyb/Frontend/Before_Render/Enqueue_Static_Assets');
+        Dragwyb_Init::core_script();
+
+        self::enqueue_style_asset();
+        self::enqueue_script_asset();
+    }
+
+    private static function enqueue_style_asset()
+    {
+        do_action('Dragwyb/Frontend/Before_Enqueue/Style');
 
         wp_enqueue_style('smart-form-builder-by-dragwyb', esc_url(DRAGWYB_FORM_BUILDER_URL . '/assets/css/form-frontend.css'), [], esc_attr(DRAGWYB_FORM_BUILDER_VERSION));
 
+        do_action('Dragwyb/Frontend/After_Enqueue/Style');
+    }
+
+    private static function enqueue_script_asset()
+    {
+        do_action('Dragwyb/Frontend/Before_Enqueue/Script');
+
+        wp_enqueue_script('dragwyb-form-core');
+
+        wp_enqueue_script(
+            'dragwyb-form-frontend',
+            esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/frontend/frontend.js'),
+            ['jquery', 'dragwyb-form-core'],
+            esc_attr(DRAGWYB_FORM_BUILDER_VERSION),
+            true
+        );
+
+        wp_localize_script('dragwyb-form-frontend', 'DragwybFrontendData', [
+            'frontendRoute' => rest_url('dragwyb-form-builder/v1/'),
+            'nonce'         => wp_create_nonce('dragwyb_frontend'), // Add nonce if required later
+        ]);
 
         if (defined('DRAGWYB_FORM_PREVIEW') && true === DRAGWYB_FORM_PREVIEW && function_exists('wp_add_inline_style')) {
             $form_id = self::$form_id;
@@ -410,7 +442,7 @@ class Frontend_Render
             }
         }
 
-        do_action('Dragwyb/Frontend/After_Render/Enqueue_Static_Assets');
+        do_action('Dragwyb/Frontend/After_Enqueue/Script');
     }
 
     /**
@@ -724,6 +756,7 @@ class Frontend_Render
     {
         self::$form_id = null;
         self::$fields = array();
+        self::$root_containers = array();
         self::$module = null;
         self::$field_module_cache = null;
         self::$form_data = null;
