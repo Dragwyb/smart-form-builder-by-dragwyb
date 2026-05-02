@@ -9,6 +9,10 @@ use Dragwyb\Form_Builder\Includes\Controls\Controls;
 
 class Settings extends Register_Controls_Base
 {
+    /**
+     * Singleton instance
+     * @var Settings|null
+     */
     private static $instance = null;
 
     public static function instance(): self

@@ -24,34 +24,64 @@ const shouldRenderField = (field, fieldValues, settings, skipSections = false) =
     }
 
 
-    const getStatus = (expected, actual) => {
+    const getStatus = (expected, actual, isNot) => {
         let status = null;
 
-        if (Array.isArray(actual)) {
-            if (typeof expected === 'object') {
-                let skipLoop = null;
-                for (const exp of expected) {
-                    if (actual.includes(exp)) {
-                        skipLoop = true;
-                        break;
+        if (isNot) {
+            if (Array.isArray(actual)) {
+                if (typeof expected === 'object') {
+                    let skipLoop = null;
+                    for (const exp of expected) {
+                        if (actual.includes(exp)) {
+                            skipLoop = true;
+                            break;
+                        }
                     }
-                }
 
-                if (skipLoop !== true) {
+                    if (skipLoop !== true) {
+                        status = true;
+                    }
+
+                } else if (actual.includes(expected)) {
                     status = false;
                 }
 
-            } else if (!actual.includes(expected)) {
-                status = false;
+            } else {
+                if (typeof expected === 'object') {
+                    if (expected.includes(actual)) {
+                        status = false;
+                    }
+                } else if (actual === expected) {
+                    status = false; // 🚫 fail if not equal
+                }
             }
-
         } else {
-            if (typeof expected === 'object') {
-                if (!expected.includes(actual)) {
+            if (Array.isArray(actual)) {
+                if (typeof expected === 'object') {
+                    let skipLoop = null;
+                    for (const exp of expected) {
+                        if (actual.includes(exp)) {
+                            skipLoop = true;
+                            break;
+                        }
+                    }
+
+                    if (skipLoop !== true) {
+                        status = false;
+                    }
+
+                } else if (!actual.includes(expected)) {
                     status = false;
                 }
-            } else if (actual !== expected) {
-                status = false; // 🚫 fail if not equal
+
+            } else {
+                if (typeof expected === 'object') {
+                    if (!expected.includes(actual)) {
+                        status = false;
+                    }
+                } else if (actual !== expected) {
+                    status = false; // 🚫 fail if not equal
+                }
             }
         }
 
@@ -79,18 +109,10 @@ const shouldRenderField = (field, fieldValues, settings, skipSections = false) =
         const actual = fieldValues[cleanKey];
 
 
-        if (isNot) {
-            const status = getStatus(expected, actual);
+        const status = getStatus(expected, actual, isNot);
 
-            if (null !== status) {
-                return !status;
-            }
-        } else {
-            const status = getStatus(expected, actual);
-
-            if (null !== status) {
-                return status;
-            }
+        if (null !== status) {
+            return status;
         }
     }
 

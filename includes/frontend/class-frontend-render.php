@@ -745,28 +745,79 @@ class Frontend_Render
             }
 
             // 4. Comparison Logic
-            if ($is_not) {
-                // Logic: Fail if they ARE equal
+            $control_render_status = $this->control_render_conditions_status($expected, $actual, $is_not);
 
-                if (is_array($expected)) {
-                    if (in_array($actual, $expected)) {
-                        return false;
-                    }
-                } else if ($actual === $expected) {
-                    return false;
-                }
-            } else {
-                if (is_array($expected)) {
-                    if (!in_array($actual, $expected)) {
-                        return false;
-                    }
-                } else if ($actual !== $expected) {
-                    return false;
-                }
+            if (null !== $control_render_status) {
+                return $control_render_status;
             }
         }
 
         return true;
+    }
+
+    /**
+     * Compare the actual value with the expected value based on the condition type.
+     * @return bool|null Returns true if the condition is met, false if it's not met, and null if the type is not supported.
+     */
+    private function control_render_conditions_status($expected, $actual, $is_not)
+    {
+        $dragwyb_control_render_status = null;
+
+        if ($is_not) {
+            if (is_array($actual)) {
+                if (is_array($expected)) {
+                    $dragwyb_condition_skipLoop = null;
+                    foreach ($expected as $exp) {
+                        if (in_array($exp, $actual)) {
+                            $dragwyb_condition_skipLoop = true;
+                            break;
+                        }
+                    }
+
+                    if ($dragwyb_condition_skipLoop !== true) {
+                        $dragwyb_control_render_status = false;
+                    }
+                } else if (in_array($expected, $actual)) {
+                    $dragwyb_control_render_status = false;
+                }
+            } else {
+                if (is_array($expected)) {
+                    if (in_array($actual, $expected)) {
+                        $dragwyb_control_render_status = false;
+                    }
+                } else if ($actual === $expected) {
+                    $dragwyb_control_render_status = false;
+                }
+            }
+        } else {
+            if (is_array($actual)) {
+                if (is_array($expected)) {
+                    $dragwyb_condition_skipLoop = null;
+                    foreach ($expected as $exp) {
+                        if (in_array($exp, $actual)) {
+                            $dragwyb_condition_skipLoop = true;
+                            break;
+                        }
+                    }
+
+                    if ($dragwyb_condition_skipLoop !== true) {
+                        $dragwyb_control_render_status = false;
+                    }
+                } else if (!in_array($expected, $actual)) {
+                    $dragwyb_control_render_status = false;
+                }
+            } else {
+                if (is_array($expected)) {
+                    if (!in_array($actual, $expected)) {
+                        $dragwyb_control_render_status = false;
+                    }
+                } else if ($actual !== $expected) {
+                    $dragwyb_control_render_status = false;
+                }
+            }
+        }
+
+        return $dragwyb_control_render_status;
     }
 
     private function clean_old_data(): void
