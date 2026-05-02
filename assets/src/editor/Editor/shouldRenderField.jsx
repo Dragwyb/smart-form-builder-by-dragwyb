@@ -23,6 +23,41 @@ const shouldRenderField = (field, fieldValues, settings, skipSections = false) =
         return true;
     }
 
+
+    const getStatus = (expected, actual) => {
+        let status = null;
+
+        if (Array.isArray(actual)) {
+            if (typeof expected === 'object') {
+                let skipLoop = null;
+                for (const exp of expected) {
+                    if (actual.includes(exp)) {
+                        skipLoop = true;
+                        break;
+                    }
+                }
+
+                if (skipLoop !== true) {
+                    status = false;
+                }
+
+            } else if (!actual.includes(expected)) {
+                status = false;
+            }
+
+        } else {
+            if (typeof expected === 'object') {
+                if (!expected.includes(actual)) {
+                    status = false;
+                }
+            } else if (actual !== expected) {
+                status = false; // 🚫 fail if not equal
+            }
+        }
+
+        return status;
+    }
+
     for (const key in conditions) {
         const expected = conditions[key];
 
@@ -43,21 +78,18 @@ const shouldRenderField = (field, fieldValues, settings, skipSections = false) =
 
         const actual = fieldValues[cleanKey];
 
+
         if (isNot) {
-            if (typeof expected === 'object') {
-                if (expected.includes(actual)) {
-                    return false;
-                }
-            } else if (actual === expected) {
-                return false; // 🚫 fail if equal
+            const status = getStatus(expected, actual);
+
+            if (null !== status) {
+                return !status;
             }
         } else {
-            if (typeof expected === 'object') {
-                if (!expected.includes(actual)) {
-                    return false;
-                }
-            } else if (actual !== expected) {
-                return false; // 🚫 fail if not equal
+            const status = getStatus(expected, actual);
+
+            if (null !== status) {
+                return status;
             }
         }
     }
