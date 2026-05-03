@@ -215,6 +215,6 @@ class Field_Textarea extends Field_Base
             return sanitize_textarea_field($value);
         }
 
-        return null;
+        return sanitize_text_field($default);
     }
 }

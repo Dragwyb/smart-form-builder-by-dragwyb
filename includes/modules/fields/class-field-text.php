@@ -256,6 +256,6 @@ class Field_Text extends Field_Base
             return sanitize_text_field($value);
         }
 
-        return null;
+        return sanitize_text_field($default);
     }
 }

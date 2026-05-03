@@ -222,7 +222,7 @@ class Field_Checkbox extends Field_Base
             return array_map('sanitize_text_field', $value);
         }
 
-        return null;
+        return sanitize_text_field($default);
     }
 
     protected function register_scripts()

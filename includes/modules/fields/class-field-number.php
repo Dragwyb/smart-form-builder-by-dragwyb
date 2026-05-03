@@ -208,7 +208,14 @@ class Field_Number extends Field_Base
      * @param mixed $value The value to sanitize.
      * @return mixed Sanitized value.
      */
-    public function sanitize($default = '', $value = null) {}
+    public function sanitize($default = '', $value = null)
+    {
+        if ($value && is_string($value)) {
+            return absint($value);
+        }
+
+        return sanitize_text_field($default);
+    }
 
     protected function register_scripts()
     {

@@ -27,7 +27,7 @@ class Register_Fields
     {
         $this->register_default_fields();
 
-        do_action('Dragwyb/register_fields', $this);
+        do_action('Dragwyb/form_builder/fields/register', $this);
     }
 
 
@@ -45,7 +45,6 @@ class Register_Fields
                 $this->register_field(new $class());
             }
         }
-        // Register more fields here
     }
 
     public function register_field(Field_Base $field): void

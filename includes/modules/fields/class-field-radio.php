@@ -228,6 +228,6 @@ class Field_Radio extends Field_Base
             return array_map('sanitize_text_field', $value);
         }
 
-        return null;
+        return sanitize_text_field($default);
     }
 }

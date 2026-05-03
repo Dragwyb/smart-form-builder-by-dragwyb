@@ -215,6 +215,6 @@ class Field_Email extends Field_Base
             return sanitize_email($value);
         }
 
-        return null;
+        return sanitize_text_field($default);
     }
 }

@@ -230,6 +230,6 @@ class Field_Date extends Field_Base
             return $date ? $date->format($this->settings['date_format']['value']) : $default;
         }
 
-        return null;
+        return sanitize_text_field($default);
     }
 }
