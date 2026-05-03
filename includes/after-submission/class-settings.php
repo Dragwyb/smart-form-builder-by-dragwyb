@@ -27,7 +27,7 @@ class Settings extends Register_Controls_Base
 
     protected function register_controls(): void
     {
-        $actions = After_Submission::instance()->get_registered_actions();
+        $actions = After_Submission::instance()->get_actions();
         $options = [];
 
         foreach ($actions as $action) {

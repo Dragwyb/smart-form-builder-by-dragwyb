@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Dragwyb\Form_Builder\Includes\After_Submission;
 
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
+use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
+use Dragwyb\Form_Builder\Includes\After_Submission\Register\Register_Actions;
 
 class After_Submission extends Toolbar_Base
 {
     private static $instance = null;
+    private $actions = [];
     protected $toolbar_settings = null;
-    private $registered_actions = [];
 
     public static function instance(): self
     {
@@ -44,32 +46,41 @@ class After_Submission extends Toolbar_Base
     private function init(): void
     {
         $this->toolbar_settings = new Settings();
-        $this->get_registered_actions();
+
+        // Load and register all action types
+        $this->load_actions();
     }
 
-    public function get_registered_actions(): array
+    private function load_actions(): void
     {
-        if (empty($this->registered_actions)) {
-            $this->register_action(new Actions\Save_Submissions_Action());
-            $this->register_action(new Actions\Success_Message_Action());
-            $this->register_action(new Actions\Error_Message_Action());
-            $this->register_action(new Actions\Redirect_Action());
-            $this->register_action(new Actions\Email_Action());
-            $this->register_action(new Actions\User_Email_Action());
+        // Register action types
+        $this->register_actions();
+    }
 
-            do_action('dragwyb/form_builder/after_submission/register', $this);
-        }
-        return $this->registered_actions;
+    private function register_actions(): void
+    {
+        // Load action registrations
+        $register = Register_Actions::instance();
+        $this->actions = $register->get_actions();
+    }
+
+    public function get_actions(): array
+    {
+        return $this->actions;
+    }
+
+    public function get_action(string $type): ?Action_Base
+    {
+        return $this->actions[$type] ?? null;
     }
 
     protected function get_settings(): array
     {
-        $actions_data = $this->get_registered_actions();
+        $actions_data = $this->get_actions();
         $form_id = absint($this->get_form_id());
         $data = array();
 
         $data['label'] = sprintf(esc_html__('%s Settings', 'smart-form-builder-by-dragwyb'), sanitize_text_field($this->get_name()));
-        $actions = [];
 
         // Base toolbar settings
         $settings = $this->toolbar_settings;
@@ -95,14 +106,16 @@ class After_Submission extends Toolbar_Base
         return $data;
     }
 
-    public function register_action(Action_Base $action): void
-    {
-        $this->registered_actions[$action->get_id()] = $action;
-    }
-
     protected function get_setting_instance(): string
     {
         return Settings::class;
+    }
+
+    final public function process_submission($form_id, $form_data, $form_config, Form_Submission_Handler $form_submission): void
+    {
+        $selected_after_submission_actions = isset($form_config['style']['after_submissions']) && is_array($form_config['style']['after_submissions']) ? $form_config['style']['after_submissions'] : array();
+
+        // if(!empty())
     }
 
     protected function update_toolbar(): void {}
