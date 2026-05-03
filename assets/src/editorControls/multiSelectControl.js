@@ -12,6 +12,8 @@ export default class MultiSelectControl extends DragwybEditor.editor.extends.Con
         const { value = settings.default || [] } = this.state;
         const options = settings.options || {};
 
+
+
         let wrapperCls = 'dragwyb-control dragwyb-control--multiselect';
 
         return (

@@ -52,6 +52,8 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
 
                 if (response.success && response.data && response.data.message) {
                     this.#showMessage(response.data.message, 'success');
+                } else if (!response.success && response.errors) {
+                    this.#showInputErrors(response.errors);
                 } else if (response.data && response.data.message) {
                     this.#showMessage(response.data.message, 'error');
                 }
@@ -62,6 +64,22 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
                 this.#showMessage('An error occurred. Please try again.', 'error');
             }
         });
+    }
+
+    #showInputErrors(inputErrors) {
+        if (!inputErrors) return;
+
+        const inputIds = Object.keys(inputErrors);
+
+        if (inputIds.length < 1) return;
+
+        inputIds.forEach(id => {
+            const inputField = jQuery(`[name="${id}"]`);
+
+            if (inputField.length) {
+                inputField.closest('.dragwyb-field-wrapper').append(`<span class="dragwyb-field-validation-error">${inputErrors[id]}</span>`);
+            }
+        })
     }
 
     #showMessage(message, type = 'success') {
