@@ -16,6 +16,23 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
     bindEvents() {
         if (this.elements.$form.length) {
             this.elements.$form.on('submit', (event) => this.#onSubmit(event));
+            
+            // Validate on blur and change
+            this.elements.$form.on('blur change', 'input, select, textarea', (event) => {
+                this.handleFieldValidation(event.target);
+            });
+            
+            // Clear errors on input if field becomes valid
+            this.elements.$form.on('input', 'input, textarea', (event) => {
+                const element = event.target;
+                const $field = jQuery(element);
+                if ($field.hasClass('dragwyb-error')) {
+                    const validation = this.validateField(element);
+                    if (validation.valid) {
+                        this.clearFieldError($field);
+                    }
+                }
+            });
         }
     }
 
@@ -74,12 +91,20 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
         if (inputIds.length < 1) return;
 
         inputIds.forEach(id => {
+            // Find fields by name, use collection to apply error to radio/checkbox groups
             const inputField = jQuery(`[name="${id}"]`);
 
             if (inputField.length) {
-                inputField.closest('.dragwyb-field-wrapper').append(`<span class="dragwyb-field-validation-error">${inputErrors[id]}</span>`);
+                this.showFieldError(inputField, inputErrors[id]);
             }
-        })
+        });
+
+        // Focus first field with error
+        const firstErrorId = inputIds[0];
+        const firstField = jQuery(`[name="${firstErrorId}"]`);
+        if (firstField.length) {
+            firstField.first().focus();
+        }
     }
 
     #showMessage(message, type = 'success') {
@@ -101,68 +126,138 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
         this.clearErrors();
 
         const $fields = this.elements.$form.find('input, select, textarea').not('[type="submit"], [type="button"], [type="hidden"]');
+        const validatedGroups = new Set();
 
         $fields.each((_, el) => {
-            const $field = jQuery(el);
-            let value = $field.val();
-
-            if ($field.is(':checkbox') || $field.is(':radio')) {
-                value = $field.is(':checked') ? $field.val() : '';
+            // Only validate one radio per group to avoid redundant checks
+            if (el.type === 'radio') {
+                if (validatedGroups.has(el.name)) return;
+                validatedGroups.add(el.name);
             }
-
-            const isRequired = $field.prop('required') || $field.attr('required') === 'required' || $field.hasClass('dragwyb-required');
-
-            // Check Required
-            if (isRequired && (!value || (typeof value === 'string' && value.trim() === ''))) {
-                const requiredMsg = window.DragwybFrontendData?.required_message || window.DragwybFrontendData?.messages?.required || 'This field is required.';
-                this.showFieldError($field, requiredMsg);
+            
+            if (!this.handleFieldValidation(el)) {
                 isValid = false;
-                return true; // continue to next field
-            }
-
-            // Check Regex Pattern
-            if (value && typeof value === 'string' && value.trim() !== '') {
-                // Try to get pattern from field attribute or localize PHP
-                let pattern = $field.attr('pattern') || $field.attr('data-pattern');
-
-                if (!pattern && window.DragwybFrontendData?.regex_patterns) {
-                    const fieldName = $field.attr('name');
-                    const fieldType = $field.attr('type');
-                    pattern = window.DragwybFrontendData.regex_patterns[fieldName] || window.DragwybFrontendData.regex_patterns[fieldType];
-                }
-
-                if (pattern) {
-                    try {
-                        const regex = new RegExp(pattern);
-                        if (!regex.test(value)) {
-                            const fieldMsg = $field.attr('data-error-message') || window.DragwybFrontendData?.field_message || window.DragwybFrontendData?.messages?.invalid || 'Invalid field format.';
-                            this.showFieldError($field, fieldMsg);
-                            isValid = false;
-                        }
-                    } catch (error) {
-                        console.error('Invalid regex pattern:', pattern, error);
-                    }
-                }
             }
         });
+
+        if (!isValid) {
+            this.elements.$form.find('.dragwyb-error').first().focus();
+        }
 
         return isValid;
     }
 
-    showFieldError($field, message) {
-        $field.addClass('dragwyb-error');
-        const $errorMsg = jQuery('<div class="dragwyb-field-error-message" style="color: #dc3232; font-size: 13px; margin-top: 5px;"></div>').text(message);
+    handleFieldValidation(element) {
+        const $field = jQuery(element);
+        if ($field.is('[type="submit"], [type="button"], [type="hidden"]')) return true;
 
-        if ($field.is(':radio') || $field.is(':checkbox')) {
-            $field.parent().after($errorMsg);
+        const validation = this.validateField(element);
+        
+        if (!validation.valid) {
+            this.showFieldError($field, validation.message);
+            return false;
         } else {
-            $field.after($errorMsg);
+            this.clearFieldError($field);
+            return true;
+        }
+    }
+
+    validateField(element) {
+        const $field = jQuery(element);
+        
+        // Native HTML5 Validation
+        if (!element.checkValidity()) {
+            let message = element.validationMessage;
+            
+            if (element.validity.valueMissing) {
+                message = window.DragwybFrontendData?.required_message || window.DragwybFrontendData?.messages?.required || 'This field is required.';
+            } else if (element.validity.patternMismatch) {
+                message = $field.attr('data-pattern-error') || $field.attr('data-error-message') || window.DragwybFrontendData?.messages?.invalid || 'Invalid field format.';
+            } else if (element.validity.tooShort) {
+                message = $field.attr('data-minlength-error') || `Minimum length is ${$field.attr('minlength')}.`;
+            } else if (element.validity.tooLong) {
+                message = $field.attr('data-maxlength-error') || `Maximum length is ${$field.attr('maxlength')}.`;
+            } else if (element.validity.rangeUnderflow) {
+                message = $field.attr('data-min-error') || `Minimum value is ${$field.attr('min')}.`;
+            } else if (element.validity.rangeOverflow) {
+                message = $field.attr('data-max-error') || `Maximum value is ${$field.attr('max')}.`;
+            } else if (element.validity.typeMismatch) {
+                message = $field.attr('data-type-error') || 'Invalid value type.';
+            }
+            
+            return { valid: false, message };
+        }
+
+        // Custom manual pattern validation if no native validity errors
+        let value = $field.val();
+        if ($field.is(':checkbox') || $field.is(':radio')) {
+            if ($field.is(':radio')) {
+                value = jQuery(`[name="${element.name}"]:checked`).val() || '';
+            } else {
+                value = $field.is(':checked') ? $field.val() : '';
+            }
+        }
+
+        if (value && typeof value === 'string' && value.trim() !== '') {
+            let pattern = $field.attr('data-pattern');
+            if (!pattern && window.DragwybFrontendData?.regex_patterns) {
+                const fieldName = $field.attr('name');
+                const fieldType = $field.attr('type');
+                pattern = window.DragwybFrontendData.regex_patterns[fieldName] || window.DragwybFrontendData.regex_patterns[fieldType];
+            }
+
+            if (pattern) {
+                try {
+                    const regex = new RegExp(pattern);
+                    if (!regex.test(value)) {
+                        const fieldMsg = $field.attr('data-pattern-error') || $field.attr('data-error-message') || window.DragwybFrontendData?.field_message || window.DragwybFrontendData?.messages?.invalid || 'Invalid field format.';
+                        return { valid: false, message: fieldMsg };
+                    }
+                } catch (error) {
+                    console.error('Invalid regex pattern:', pattern, error);
+                }
+            }
+        }
+
+        return { valid: true };
+    }
+
+    showFieldError($field, message) {
+        this.clearFieldError($field);
+        
+        $field.addClass('dragwyb-error');
+        
+        // Append error message inside closest .dragwyb-field-wrapper
+        const $wrapper = $field.first().closest('.dragwyb-field-wrapper');
+        const $errorMsg = jQuery('<span class="dragwyb-field-validation-error" style="color: #dc3232; font-size: 13px; margin-top: 5px; display: block;"></span>').text(message);
+        
+        if ($wrapper.length) {
+            $wrapper.append($errorMsg);
+        } else {
+            const $targetField = $field.last();
+            if ($targetField.is(':radio') || $targetField.is(':checkbox')) {
+                $targetField.parent().after($errorMsg);
+            } else {
+                $targetField.after($errorMsg);
+            }
+        }
+    }
+
+    clearFieldError($field) {
+        const $wrapper = $field.first().closest('.dragwyb-field-wrapper');
+        if ($wrapper.length) {
+            $wrapper.find('.dragwyb-error').removeClass('dragwyb-error');
+            $wrapper.find('.dragwyb-field-validation-error, .dragwyb-field-error-message').remove();
+        } else {
+            $field.removeClass('dragwyb-error');
+            $field.parent().find('.dragwyb-field-validation-error, .dragwyb-field-error-message').remove();
+            $field.siblings('.dragwyb-field-validation-error, .dragwyb-field-error-message').remove();
         }
     }
 
     clearErrors() {
         this.elements.$form.find('.dragwyb-error').removeClass('dragwyb-error');
-        this.elements.$form.find('.dragwyb-field-error-message').remove();
+        this.elements.$form.find('.dragwyb-field-validation-error, .dragwyb-field-error-message').remove();
     }
 }
 
