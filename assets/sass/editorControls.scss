@@ -1281,7 +1281,6 @@
 
     .dragwyb-multiselect-trigger {
       display: flex;
-      align-items: center;
       justify-content: space-between;
       width: 100%;
       min-height: 2.5rem;
@@ -1302,7 +1301,7 @@
     .dragwyb-multiselect-values {
       display: flex;
       flex-wrap: wrap;
-      gap: 4px;
+      gap: 6px;
       flex: 1;
 
       .dragwyb-multiselect-placeholder {
@@ -1315,19 +1314,20 @@
         align-items: center;
         background: hsl(var(--dragwyb-input)/0.5);
         border-radius: 3px;
-        padding: 2px 6px;
+        padding: 6px;
         font-size: 12px;
 
         .dragwyb-multiselect-tag-remove {
           margin-left: 4px;
           cursor: pointer;
-          font-size: 12px;
-          width: 12px;
-          height: 12px;
+          font-size: 14px;
+          width: 10px;
+          height: 10px;
           display: flex;
           align-items: center;
           justify-content: center;
-          opacity: 0.7;
+          line-height: 1;
+          opacity: .7;
 
           &:hover {
             opacity: 1;
@@ -1340,6 +1340,9 @@
     .dragwyb-multiselect-actions {
       padding: 0 4px;
       color: hsl(var(--dragwyb-sidebar-foreground)/0.5);
+      height: auto;
+      margin-bottom: auto;
+      margin-top: 5px;
     }
 
     .dragwyb-multiselect-dropdown {
@@ -1349,7 +1352,7 @@
       background: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
       border: 1px solid hsl(var(--dragwyb-border)/var(--dragwyb-border-opacity, 1));
       border-radius: 4px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       margin-top: 4px;
       max-height: 250px;
       display: flex;
@@ -1404,7 +1407,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            
+
             .dragwyb-option-checkbox-empty {
               width: 14px;
               height: 14px;
