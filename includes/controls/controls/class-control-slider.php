@@ -32,7 +32,7 @@ class Control_Slider extends Control_Base
         $this->name = __('Slider', 'smart-form-builder-by-dragwyb');
     }
 
-    protected function sanitize_control($value)
+    protected function sanitize_control($value, $settings)
     {
         $filtered_value = $value;
         if (is_array($filtered_value) && count($filtered_value) > 1) {

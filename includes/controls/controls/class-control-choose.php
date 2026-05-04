@@ -43,7 +43,7 @@ class Control_Choose extends Control_Base
         );
     }
 
-    protected function sanitize_control($value)
+    protected function sanitize_control($value, $settings)
     {
         return sanitize_key($value);
     }

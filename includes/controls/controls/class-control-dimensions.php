@@ -36,7 +36,7 @@ class Control_Dimensions extends Control_Base
     /**
      * Sanitize control value
      */
-    protected function sanitize_control($value)
+    protected function sanitize_control($value, $settings)
     {
         $allowed    = ['top', 'right', 'bottom', 'left', 'linked', 'unit'];
         $sanitized  = [];

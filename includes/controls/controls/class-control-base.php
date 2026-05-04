@@ -21,7 +21,7 @@ abstract class Control_Base
         return array();
     }
     abstract protected function init(): void;
-    abstract protected function sanitize_control($value);
+    abstract protected function sanitize_control($value, $settings);
     abstract protected function register_settings();
 
     protected function default_setting(): array
@@ -138,12 +138,12 @@ abstract class Control_Base
     {
         $this->control_id = sanitize_text_field($control_id);
 
-        $this->set_filter_value($data);
+        $this->set_filter_value($data, $extra_data);
     }
 
-    private function set_filter_value($data): void
+    private function set_filter_value($data, $extra_data): void
     {
-        $this->value = $this->sanitize_control($data);
+        $this->value = $this->sanitize_control($data, $extra_data);
     }
 
     public function get_value()

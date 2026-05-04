@@ -22,13 +22,21 @@ class Control_Multiselect extends Control_Base
         $this->name = __('Multiselect', 'smart-form-builder-by-dragwyb');
     }
 
-    protected function sanitize_control($value)
+    protected function sanitize_control($value, $settings)
     {
         if (!is_array($value)) {
             return array();
         }
 
-        return array_map('sanitize_text_field', $value);
+        $filterd_values = array();
+
+        foreach ($value as $single_value) {
+            if (isset($settings['options'][$single_value])) {
+                $filterd_values[] = sanitize_text_field($single_value);
+            }
+        }
+
+        return $filterd_values;
     }
 
     protected function options_setting_sanitize($value)

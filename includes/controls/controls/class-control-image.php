@@ -36,7 +36,7 @@ class Control_Image extends Control_Base
      * Sanitize Image Data
      * Expected format: Object {id: 1, url: '...'}
      */
-    protected function sanitize_control($value)
+    protected function sanitize_control($value, $settings)
     {
         if (!is_array($value)) {
             return array('id' => '', 'url' => '');

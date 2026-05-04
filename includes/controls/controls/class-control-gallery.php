@@ -36,7 +36,7 @@ class Control_Gallery extends Control_Base
      * Sanitize Gallery Data
      * Expected format: Array of objects [ {id: 1, url: '...'}, {id: 2, url: '...'} ]
      */
-    protected function sanitize_control($value)
+    protected function sanitize_control($value, $settings)
     {
         if (!is_array($value)) {
             return array();

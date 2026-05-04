@@ -22,7 +22,7 @@ class Control_Color extends Control_Base
         $this->name = __('Color', 'smart-form-builder-by-dragwyb');
     }
 
-    protected function sanitize_control($value)
+    protected function sanitize_control($value, $settings)
     {
         return sanitize_text_field($value);
     }

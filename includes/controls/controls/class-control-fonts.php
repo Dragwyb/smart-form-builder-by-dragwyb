@@ -73,7 +73,7 @@ class Control_Fonts extends Control_Base
         return isset($group) && is_array($group) && count($group) > 0 ? $group : [];
     }
 
-    protected function sanitize_control($value)
+    protected function sanitize_control($value, $settings)
     {
         // Font names can contain spaces (e.g., "Open Sans")
         return sanitize_text_field($value);

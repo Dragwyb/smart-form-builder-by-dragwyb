@@ -39,7 +39,7 @@ class Control_Url extends Control_Base
      * Sanitize the main value.
      * Expected format: ['url' => '...', 'is_external' => true/false, 'nofollow' => true/false]
      */
-    protected function sanitize_control($value)
+    protected function sanitize_control($value, $settings)
     {
         if (!is_array($value)) {
             return [];
