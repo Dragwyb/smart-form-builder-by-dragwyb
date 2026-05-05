@@ -1,9 +1,11 @@
 import Fields from "./fields";
+import AfterSubmission from "./after-submission";
 
 const initializeFields = () => {
 
     const defaultFields = {
         'fields': (args) => new Fields(args),
+        'after-submission': (args) => new AfterSubmission(args),
     };
 
     Object.keys(defaultFields).forEach(key =>

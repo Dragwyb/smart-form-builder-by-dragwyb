@@ -1316,6 +1316,13 @@
         border-radius: 3px;
         padding: 6px;
         font-size: 12px;
+        cursor: grab;
+        transition: opacity 0.2s ease;
+
+        &.is-dragging {
+          opacity: 0.3;
+          cursor: grabbing;
+        }
 
         .dragwyb-multiselect-tag-remove {
           margin-left: 4px;
@@ -1334,6 +1341,15 @@
             color: hsl(var(--dragwyb-destructive));
           }
         }
+      }
+
+      .dragwyb-drag-indicator {
+        width: 3px;
+        height: 26px;
+        background: hsl(var(--dragwyb-primary));
+        border-radius: 2px;
+        margin: 0 -1px;
+        z-index: 10;
       }
     }
 

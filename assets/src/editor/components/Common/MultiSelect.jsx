@@ -12,6 +12,14 @@ const MultiSelect = ({
     const [searchQuery, setSearchQuery] = useState("");
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
+    // For drag and drop
+    const [localItems, setLocalItems] = useState(Array.isArray(value) ? value : []);
+    const dragItemIndex = useRef(null);
+
+    useEffect(() => {
+        setLocalItems(Array.isArray(value) ? value : []);
+    }, [value]);
+
     const containerRef = useRef(null);
     const inputRef = useRef(null);
     const itemRefs = useRef(new Map());
@@ -143,16 +151,66 @@ const MultiSelect = ({
     const filteredOptions = getFilteredOptions();
     const filteredOptionsCount = Object.keys(filteredOptions).length;
 
-    const selectedItems = Array.isArray(value) ? value : [];
+    const handleDragStart = (e, index) => {
+        dragItemIndex.current = index;
+        setTimeout(() => {
+            if (e.target && e.target.classList) {
+                e.target.classList.add('is-dragging');
+            }
+        }, 0);
+    };
+
+    const handleDragOver = (e, index) => {
+        e.preventDefault();
+
+        const dragIndex = dragItemIndex.current;
+        if (dragIndex === null || dragIndex === index) return;
+
+        const rect = e.currentTarget.getBoundingClientRect();
+        const mouseX = e.clientX;
+        const halfway = rect.left + rect.width / 2;
+
+        if (dragIndex < index && mouseX < halfway) {
+            return;
+        }
+        if (dragIndex > index && mouseX > halfway) {
+            return;
+        }
+
+        setLocalItems((prevItems) => {
+            const newItems = [...prevItems];
+            const draggedItem = newItems.splice(dragIndex, 1)[0];
+            newItems.splice(index, 0, draggedItem);
+            return newItems;
+        });
+
+        dragItemIndex.current = index;
+    };
+
+    const handleDragEnd = (e) => {
+        if (e.target && e.target.classList) {
+            e.target.classList.remove('is-dragging');
+        }
+
+        dragItemIndex.current = null;
+        onChange(localItems);
+    };
 
     return (
         <div className={`dragwyb-multiselect${isOpen ? " is-open" : ""} position-${dropdownPosition}${className ? " " + className : ""}`} ref={containerRef} onKeyDown={handleKeyDown}>
             <div className="dragwyb-multiselect-trigger" onClick={toggleDropdown}>
                 <div className="dragwyb-multiselect-values">
-                    {selectedItems.length > 0 ? (
-                        selectedItems.map((item) => (
+                    {localItems.length > 0 ? (
+                        localItems.map((item, index) => (
                             options[item] ?
-                                <span key={item} className="dragwyb-multiselect-tag">
+                                <span
+                                    key={item}
+                                    className="dragwyb-multiselect-tag"
+                                    draggable
+                                    onDragStart={(e) => handleDragStart(e, index)}
+                                    onDragOver={(e) => handleDragOver(e, index)}
+                                    onDragEnd={handleDragEnd}
+                                >
                                     {options[item]}
                                     <span className="dragwyb-multiselect-tag-remove dashicons dashicons-no-alt" onClick={(e) => handleRemove(e, item)}></span>
                                 </span>
@@ -187,7 +245,7 @@ const MultiSelect = ({
                     <ul className="dragwyb-multiselect-options">
                         {filteredOptionsCount > 0 ? (
                             Object.keys(filteredOptions).map((key, index) => {
-                                const isSelected = selectedItems.includes(key);
+                                const isSelected = localItems.includes(key);
                                 const isHighlighted = index === highlightedIndex;
 
                                 return (
