@@ -113,9 +113,18 @@ class After_Submission extends Toolbar_Base
 
     final public function process_submission($form_id, $form_data, $form_config, Form_Submission_Handler $form_submission): void
     {
-        $selected_after_submission_actions = isset($form_config['style']['after_submissions']) && is_array($form_config['style']['after_submissions']) ? $form_config['style']['after_submissions'] : array();
+        $after_submission_config = isset($form_config['after-submission']) && is_array($form_config['after-submission']) ? $form_config['after-submission'] : array();
+        $selected_after_submission_actions = isset($after_submission_config['after_submissions']) && is_array($after_submission_config['after_submissions']) ? $after_submission_config['after_submissions'] : array();
 
-        // if(!empty())
+        if (!empty($selected_after_submission_actions)) {
+            foreach ($selected_after_submission_actions as $selected_action) {
+                $action_base = $this->get_action($selected_action);
+
+                if ($action_base && $action_base instanceof Action_Base) {
+                    $action_base->process_submission($form_id, $form_data, $form_config, $form_submission);
+                }
+            }
+        }
     }
 
     protected function update_toolbar(): void {}

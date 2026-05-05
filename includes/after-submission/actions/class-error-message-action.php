@@ -6,6 +6,7 @@ namespace Dragwyb\Form_Builder\Includes\After_Submission\Actions;
 
 use Dragwyb\Form_Builder\Includes\After_Submission\Action_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
+use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
 
 class Error_Message_Action extends Action_Base
 {
@@ -39,8 +40,11 @@ class Error_Message_Action extends Action_Base
         $this->end_section();
     }
 
-    public function process_submission($form_data, $settings)
+    public function process_submission($form_id, $form_data, $form_config, Form_Submission_Handler $form_submission)
     {
-        // Handle error message rendering
+        $settings = $form_config['after-submission'] ?? [];
+        $message = $settings['message_text_error_message'] ?? __('Something went wrong. Please try again.', 'smart-form-builder-by-dragwyb');
+        
+        $form_submission->set_form_return_data('error_message', sanitize_textarea_field($message));
     }
 }

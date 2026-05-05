@@ -13,7 +13,7 @@ class Register_Actions
 
     private array $actions = [];
 
-    private array $default_actions = ['email', 'error-message', 'redirect', 'save-submission', 'success-message', 'user-email'];
+    private array $default_actions = ['email', 'error-message', 'redirect', 'save-submissions', 'success-message', 'user-email'];
 
     public static function instance(): self
     {

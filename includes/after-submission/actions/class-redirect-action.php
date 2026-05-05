@@ -6,6 +6,7 @@ namespace Dragwyb\Form_Builder\Includes\After_Submission\Actions;
 
 use Dragwyb\Form_Builder\Includes\After_Submission\Action_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
+use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
 
 class Redirect_Action extends Action_Base
 {
@@ -39,8 +40,13 @@ class Redirect_Action extends Action_Base
         $this->end_section();
     }
 
-    public function process_submission($form_data, $settings)
+    public function process_submission($form_id, $form_data, $form_config, Form_Submission_Handler $form_submission)
     {
-        // Handle redirection logic
+        $settings = $form_config['after-submission'] ?? [];
+        $url = $settings['url_redirect'] ?? '';
+
+        if (!empty($url)) {
+            $form_submission->set_form_return_data('redirect', esc_url_raw($url));
+        }
     }
 }
