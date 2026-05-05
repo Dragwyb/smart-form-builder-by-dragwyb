@@ -199,6 +199,10 @@ class Field_Checkbox extends Field_Base
             $error_handler->add_error($field_id, __('This field is required', 'smart-form-builder-by-dragwyb'));
         }
 
+        if (empty($value)) {
+            return;
+        }
+
         foreach ($value as $val) {
             if (!in_array($val, $valid_values)) {
                 $error_handler->add_error($field_id, __('Invalid value', 'smart-form-builder-by-dragwyb'));

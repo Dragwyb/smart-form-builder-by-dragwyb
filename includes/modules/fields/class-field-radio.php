@@ -202,6 +202,10 @@ class Field_Radio extends Field_Base
             return;
         }
 
+        if (empty($value)) {
+            return;
+        }
+
         $field_options = isset($field_attr['options_list']) ? $field_attr['options_list'] : array();
 
         // Check if value exists in options

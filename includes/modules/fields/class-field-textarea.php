@@ -195,6 +195,10 @@ class Field_Textarea extends Field_Base
             return;
         }
 
+        if (empty($value)) {
+            return;
+        }
+
         $max_length = isset($field_attr['max_length']) ? (int) $field_attr['max_length'] : null;
 
         if (isset($max_length) && strlen($value) > $max_length) {

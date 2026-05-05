@@ -229,6 +229,10 @@ class Field_Text extends Field_Base
             return;
         }
 
+        if (empty($value)) {
+            return;
+        }
+
         $min_length = isset($field_attr['min_length']) ? (int) $field_attr['min_length'] : null;
         $max_length = isset($field_attr['max_length']) ? (int) $field_attr['max_length'] : null;
 

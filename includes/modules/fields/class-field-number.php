@@ -182,6 +182,10 @@ class Field_Number extends Field_Base
             return;
         }
 
+        if (empty($value)) {
+            return;
+        }
+
         $num = (float) $value;
 
         if (isset($field_attr['min_val']) && !empty($field_attr['min_val'])) {

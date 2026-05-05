@@ -197,6 +197,10 @@ class Field_Email extends Field_Base
             return;
         }
 
+        if (empty($value)) {
+            return;
+        }
+
         if (filter_var($value, FILTER_VALIDATE_EMAIL) === false && !empty($value)) {
             $error_handler->add_error($field_id, __('Invalid email address', 'smart-form-builder-by-dragwyb'));
         }
