@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
+use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
 
 class Field_Textarea extends Field_Base
 {
@@ -62,56 +63,75 @@ class Field_Textarea extends Field_Base
 
         $this->end_section();
 
-        // ==============================================================
-        // STYLE TAB
-        // ==============================================================
-
+        // Label Style
         $this->start_section('section_style_label', [
-            'label' => __('Label', 'smart-form-builder-by-dragwyb'),
+            'label' => __('Label Appearance', 'smart-form-builder-by-dragwyb'),
             'tab'   => self::StyleTab,
         ]);
 
         $this->add_control('label_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Text Color', 'smart-form-builder-by-dragwyb'),
-            'selectors' => ['{{WRAPPER}} .dragwyb-field-label' => 'color: {{VALUE}};'],
+            'label'     => __('Color', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-label-color: {{VALUE}};'],
         ]);
 
-        $this->add_group_control('label_typography', [
-            'type'     => Controls::GROUP_TYPOGRAPHY,
-            'label'    => __('Typography', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}} .dragwyb-field-label',
+        $this->add_control('label_spacing', [
+            'type'      => Controls::SLIDER,
+            'label'     => __('Bottom Margin', 'smart-form-builder-by-dragwyb'),
+            'range'     => ['px' => ['min' => 0, 'max' => 50]],
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-label-spacing: {{VALUE}}{{UNIT}};'],
         ]);
 
         $this->end_section();
 
+        // Input Style
         $this->start_section('section_style_input', [
-            'label' => __('Input Field', 'smart-form-builder-by-dragwyb'),
+            'label' => __('Input Box Style', 'smart-form-builder-by-dragwyb'),
             'tab'   => self::StyleTab,
         ]);
 
+        $this->start_tabs('tabs_input_style');
+
+        $this->start_tab('tab_input_normal', ['label' => __('Normal', 'smart-form-builder-by-dragwyb')]);
+
         $this->add_control('input_bg_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Background', 'smart-form-builder-by-dragwyb'),
-            'selectors' => ['{{WRAPPER}} textarea.dragwyb-field-input' => 'background-color: {{VALUE}};'],
+            'label'     => __('Background Color', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-input-bg: {{VALUE}};'],
         ]);
 
         $this->add_control('input_text_color', [
             'type'      => Controls::COLOR,
             'label'     => __('Text Color', 'smart-form-builder-by-dragwyb'),
-            'selectors' => ['{{WRAPPER}} textarea.dragwyb-field-input' => 'color: {{VALUE}};'],
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-input-color: {{VALUE}};'],
         ]);
 
         $this->add_group_control('input_border', [
             'type'     => Controls::GROUP_BORDER,
-            'label'    => __('Border', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}} textarea.dragwyb-field-input',
+            'selector' => '{{WRAPPER}}',
+            'prefix'   => 'input',
         ]);
+
+        $this->end_tab();
+
+        $this->start_tab('tab_input_focus', ['label' => __('Focus', 'smart-form-builder-by-dragwyb')]);
+
+        $this->add_control('input_focus_border_color', [
+            'type'      => Controls::COLOR,
+            'label'     => __('Active Border Color', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-input-focus-border: {{VALUE}};'],
+        ]);
+
+        $this->end_tab();
+
+        $this->end_tabs();
 
         $this->add_control('input_padding', [
             'type'       => Controls::DIMENSIONS,
-            'label'      => __('Padding', 'smart-form-builder-by-dragwyb'),
-            'selectors'  => ['{{WRAPPER}} textarea.dragwyb-field-input' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'],
+            'label'      => __('Inner Padding', 'smart-form-builder-by-dragwyb'),
+            'size_units' => ['px', 'em', '%'],
+            'selectors'  => ['{{WRAPPER}}' => '--dragwyb-input-pt: {{TOP}}{{UNIT}}; --dragwyb-input-pr: {{RIGHT}}{{UNIT}}; --dragwyb-input-pb: {{BOTTOM}}{{UNIT}}; --dragwyb-input-pl: {{LEFT}}{{UNIT}};'],
+            'separator'  => 'before',
         ]);
 
         $this->end_section();
@@ -161,17 +181,44 @@ class Field_Textarea extends Field_Base
 <?php
     }
 
-    public function validate($value): bool
+    public function validate($value, $field_id, $form_config, Form_Submission_Handler $error_handler): void
     {
-        if (empty($value) && !empty($this->settings['required']['value'])) {
-            return false;
+        if (!isset($form_config['fields'][$field_id])) {
+            $error_handler->add_error($field_id, __('Invalid field.', 'smart-form-builder-by-dragwyb'));
+            return;
         }
 
-        $max_length = (int) ($this->settings['max_length']['value'] ?? 0);
-        if ($max_length && strlen($value) > $max_length) {
-            return false;
+        $field_attr = isset($form_config['fields'][$field_id]['attributes']) ? $form_config['fields'][$field_id]['attributes'] : array();
+
+        if (empty($value) && isset($field_attr['required']) && 'yes' == $field_attr['required']) {
+            $error_handler->add_error($field_id, __('This field is required', 'smart-form-builder-by-dragwyb'));
+            return;
         }
 
-        return true;
+        if (empty($value)) {
+            return;
+        }
+
+        $max_length = isset($field_attr['max_length']) ? (int) $field_attr['max_length'] : null;
+
+        if (isset($max_length) && strlen($value) > $max_length) {
+            $error_handler->add_error($field_id, __('This field exceeds the maximum length', 'smart-form-builder-by-dragwyb'));
+        }
+    }
+
+    /**
+     * Sanitize the field value.
+     *
+     * @param string $default The default value.
+     * @param mixed $value The value to sanitize.
+     * @return mixed Sanitized value.
+     */
+    public function sanitize($default = '', $value = null)
+    {
+        if ($value && is_string($value)) {
+            return sanitize_textarea_field($value);
+        }
+
+        return sanitize_text_field($default);
     }
 }

@@ -31,11 +31,29 @@ class Control_Text extends Control_Base
     public function __construct()
     {
         parent::__construct();
+
+        $js_assets_info = array(
+            'version' => DRAGWYB_FORM_BUILDER_VERSION,
+            'dependencies' => array('dragwyb-form-editor')
+        );
+
+        if (file_exists(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/editorControls/editorControls.asset.php')) {
+            $dragwyb_js_assets_info = require_once(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/editorControls/editorControls.asset.php');
+
+            if (isset($dragwyb_js_assets_info['dependencies'])) {
+                $js_assets_info['dependencies'] = array_merge($js_assets_info['dependencies'], $dragwyb_js_assets_info['dependencies']);
+            }
+
+            if (isset($dragwyb_js_assets_info['version'])) {
+                $js_assets_info['version'] = $dragwyb_js_assets_info['version'];
+            }
+        }
+
         wp_register_script(
             'dragwyb-editor-controls',
             esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editorControls/editorControls.js'),
-            ['dragwyb-form-editor'],
-            esc_attr(DRAGWYB_FORM_BUILDER_VERSION),
+            $js_assets_info['dependencies'],
+            esc_attr($js_assets_info['version']),
             true
         );
 
@@ -43,7 +61,7 @@ class Control_Text extends Control_Base
             'dragwyb-editor-controls',
             esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editorControls/editorControls.css'),
             [],
-            esc_attr(DRAGWYB_FORM_BUILDER_VERSION),
+            esc_attr($js_assets_info['version']),
         );
     }
 
@@ -53,7 +71,7 @@ class Control_Text extends Control_Base
         $this->name = __('Text', 'smart-form-builder-by-dragwyb');
     }
 
-    protected function sanitize_control($value)
+    protected function sanitize_control($value, $settings)
     {
         return sanitize_text_field($value);
     }

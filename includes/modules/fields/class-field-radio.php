@@ -6,6 +6,7 @@ namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Repeater\Repeater;
+use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
 
 class Field_Radio extends Field_Base
 {
@@ -86,29 +87,6 @@ class Field_Radio extends Field_Base
 
         $this->end_section();
 
-        // ==============================================================
-        // STYLE TAB
-        // ==============================================================
-
-        $this->start_section('section_style_label', [
-            'label' => __('Label', 'smart-form-builder-by-dragwyb'),
-            'tab'   => self::StyleTab,
-        ]);
-
-        $this->add_control('label_color', [
-            'type'      => Controls::COLOR,
-            'label'     => __('Label Color', 'smart-form-builder-by-dragwyb'),
-            'selectors' => ['{{WRAPPER}} .dragwyb-field-label' => 'color: {{VALUE}};'],
-        ]);
-
-        $this->add_group_control('label_typography', [
-            'type'     => Controls::GROUP_TYPOGRAPHY,
-            'label'    => __('Typography', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}} .dragwyb-field-label',
-        ]);
-
-        $this->end_section();
-
         // Style the individual option text
         $this->start_section('section_style_options', [
             'label' => __('Options', 'smart-form-builder-by-dragwyb'),
@@ -118,13 +96,47 @@ class Field_Radio extends Field_Base
         $this->add_control('option_color', [
             'type'      => Controls::COLOR,
             'label'     => __('Text Color', 'smart-form-builder-by-dragwyb'),
-            'selectors' => ['{{WRAPPER}} .dragwyb-radio-label' => 'color: {{VALUE}};'],
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-input-color: {{VALUE}};'],
         ]);
 
         $this->add_group_control('option_typography', [
             'type'     => Controls::GROUP_TYPOGRAPHY,
             'label'    => __('Typography', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}} .dragwyb-radio-label',
+            'selector' => '{{WRAPPER}}',
+            'prefix'   => 'option',
+        ]);
+
+        $this->end_section();
+
+        $this->start_section('section_style_toggle', [
+            'label' => __('Radio Appearance', 'smart-form-builder-by-dragwyb'),
+            'tab'   => self::StyleTab,
+        ]);
+
+        $this->add_control('toggle_size', [
+            'type'      => Controls::SLIDER,
+            'label'     => __('Size', 'smart-form-builder-by-dragwyb'),
+            'range'     => ['px' => ['min' => 10, 'max' => 50]],
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-toggle-size: {{VALUE}}{{UNIT}};'],
+        ]);
+
+        $this->add_control('toggle_primary_color', [
+            'type'      => Controls::COLOR,
+            'label'     => __('Primary Color', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-toggle-primary-color: {{VALUE}};'],
+        ]);
+
+        $this->add_control('toggle_border_color', [
+            'type'      => Controls::COLOR,
+            'label'     => __('Border Color', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-toggle-border-color: {{VALUE}};'],
+        ]);
+
+        $this->add_control('toggle_spacing', [
+            'type'      => Controls::SLIDER,
+            'label'     => __('Spacing', 'smart-form-builder-by-dragwyb'),
+            'range'     => ['px' => ['min' => 0, 'max' => 50]],
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-toggle-spacing: {{VALUE}}{{UNIT}};'],
         ]);
 
         $this->end_section();
@@ -176,19 +188,50 @@ class Field_Radio extends Field_Base
 <?php
     }
 
-    public function validate($value): bool
+    public function validate($value, $field_id, $form_config, Form_Submission_Handler $error_handler): void
     {
-        if (empty($value) && !empty($this->settings['required']['value'])) {
-            return false;
+        if (!isset($form_config['fields'][$field_id])) {
+            $error_handler->add_error($field_id, __('Invalid field.', 'smart-form-builder-by-dragwyb'));
+            return;
         }
 
+        $field_attr = isset($form_config['fields'][$field_id]['attributes']) ? $form_config['fields'][$field_id]['attributes'] : array();
+
+        if (empty($value) && isset($field_attr['required']) && 'yes' == $field_attr['required']) {
+            $error_handler->add_error($field_id, __('This field is required', 'smart-form-builder-by-dragwyb'));
+            return;
+        }
+
+        if (empty($value)) {
+            return;
+        }
+
+        $field_options = isset($field_attr['options_list']) ? $field_attr['options_list'] : array();
+
         // Check if value exists in options
-        $valid_values = array_column($this->settings['options']['value'] ?? [], 'value');
-        return in_array($value, $valid_values, true);
+        $valid_values = array_column($field_options, 'option_value');
+
+        if (!in_array($value, $valid_values, true)) {
+            $error_handler->add_error($field_id, __('Invalid option selected', 'smart-form-builder-by-dragwyb'));
+        }
     }
 
-    public function sanitize($value)
+    /**
+     * Sanitize the field value.
+     *
+     * @param string $default The default value.
+     * @param mixed $value The value to sanitize.
+     * @return mixed Sanitized value.
+     */
+    public function sanitize($default = '', $value = null)
     {
-        return sanitize_text_field($value);
+        if ($value) {
+            if (!is_array($value)) {
+                $value = [$value];
+            }
+            return array_map('sanitize_text_field', $value);
+        }
+
+        return sanitize_text_field($default);
     }
 }

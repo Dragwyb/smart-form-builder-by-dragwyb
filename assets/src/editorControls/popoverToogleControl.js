@@ -71,8 +71,4 @@ export default class PopoverToggleControl extends DragwybEditor.editor.extends.C
             </div>
         );
     }
-
-    onDestroy() {
-        document.removeEventListener('click', this.boundClickHandler);
-    }
 }

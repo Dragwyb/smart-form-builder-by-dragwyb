@@ -1,13 +1,15 @@
 import { useSelector } from "react-redux";
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useCallback } from "react";
 
 const StyleLoader = () => {
     const styleSelectors = useSelector((state) => state.styleSelectors);
     const formId = useSelector((state) => state.form.id);
-    const [styleWrapper, setStyleWrapper] = useState(null);
+    // useRef instead of useState — DOM nodes should not be stored in state
+    // because setting state with a DOM node triggers unnecessary re-renders
+    const styleWrapperRef = useRef(null);
     const iframeEle = useSelector(state => state?.iframeEle);
 
-    const generateCssStrings = (cssSelectors) => {
+    const generateCssStrings = useCallback((cssSelectors) => {
         const cssCache = {};
         let cssString = "";
 
@@ -30,7 +32,7 @@ const StyleLoader = () => {
             }
         }
         return cssString;
-    }
+    }, []);
 
     useEffect(() => {
 
@@ -58,25 +60,24 @@ const StyleLoader = () => {
                     }`;
                 }
 
-                if (!styleWrapper && cssString !== '' && iframeEle) {
+                if (!styleWrapperRef.current && cssString !== '' && iframeEle) {
                     const styleId = `dragwyb-form-${formId}`;
 
                     // Attempt to find the existing style tag
                     const existingStyle = iframeEle.getElementById(styleId);
 
                     if (existingStyle) {
-                        setStyleWrapper(existingStyle);
+                        styleWrapperRef.current = existingStyle;
                     } else {
-                        // Fallback: If it doesn't exist, create it properly
                         const newStyle = iframeEle.createElement('style');
                         newStyle.id = styleId;
                         iframeEle.head.appendChild(newStyle);
-                        setStyleWrapper(newStyle);
+                        styleWrapperRef.current = newStyle;
                     }
                 }
 
-                if (styleWrapper) {
-                    styleWrapper.innerHTML = cssString;
+                if (styleWrapperRef.current) {
+                    styleWrapperRef.current.innerHTML = cssString;
                 }
 
             }, 5);
@@ -86,8 +87,7 @@ const StyleLoader = () => {
             };
         }
 
-
-    }, [styleSelectors, styleWrapper, iframeEle]);
+    }, [styleSelectors, iframeEle, formId, generateCssStrings]);
 
     return null;
 };

@@ -32,45 +32,40 @@ import {
     RESET_ACTIVE_ROOT_CONTAINER
 } from './actions';
 
-const initialState = {
-    form: {
-        fields: [],
-        settings: {},
-        styles: {},
-        notifications: [],
-        confirmations: []
-    },
-    values: {},
-    activePopoverKey: false,
-    sectionSettings: {},
-    popoverInitialize: false,
-    popoverControls: [],
-    updateSaveState: false,
-    notices: [],
-    fieldIds: [],
-    selectedSettingId: false,
-    activeToolbar: DragwybEditor?.EditorToolbars?.Default ?? false,
-    themeMode: localStorage.getItem("DragwybEditorTheme") || 'dark',
-    responsiveType: 1024,
-    rootContainers: DragwybEditor?.formData?.fields?.rootContainers || []
+/**
+ * Collects all IDs that need to be deleted (field + all nested children).
+ * Returns a Set of field IDs — pure function, no mutation.
+ */
+const collectFieldIdsToDelete = (fields, fieldId) => {
+    const idsToDelete = new Set();
+
+    const collect = (id) => {
+        const field = fields[id];
+        if (!field) return;
+        idsToDelete.add(id);
+        if (field.children && field.children.length > 0) {
+            field.children.forEach(childId => collect(childId));
+        }
+    };
+
+    collect(fieldId);
+    return idsToDelete;
 };
 
-const deleteFieldRecursive = (fields, fieldId) => {
-    const field = fields[fieldId];
-    if (!field) return;
-
-    if (field.children && field.children.length > 0) {
-        field.children.forEach(childId => {
-            deleteFieldRecursive(fields, childId);
-        });
+/**
+ * Immutably removes a set of field IDs from the fields object.
+ */
+const removeFieldsById = (fields, idsToDelete) => {
+    const newFields = {};
+    for (const [key, value] of Object.entries(fields)) {
+        if (!idsToDelete.has(key)) {
+            newFields[key] = value;
+        }
     }
-
-    delete fields[fieldId];
-
-    return fields;
+    return newFields;
 };
 
-export default function reducer(state = initialState, action) {
+export default function reducer(state, action) {
     switch (action.type) {
 
         case UPDATE_THEME_MODE:
@@ -78,25 +73,25 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 themeMode: action.payload.themeMode
-            }
+            };
 
         case UPDATE_IFRAME_NODE:
             return {
                 ...state,
                 iframeEle: action.payload.node
-            }
+            };
 
         case UPDATE_RESPONSIVE_TYPE:
             return {
                 ...state,
                 responsiveType: action.payload.responsiveType
-            }
+            };
 
         case UPDATE_ACTIVE_POPOVER:
             return {
                 ...state,
                 activePopoverKey: action.payload.activePopoverKey
-            }
+            };
 
         case ADD_ROOT_CONTAINERS: {
             const { rootContainerId } = action.payload;
@@ -113,35 +108,22 @@ export default function reducer(state = initialState, action) {
             const { rootContainerId } = action.payload;
 
             if (!rootContainerId) return state;
+            if (!state.form.rootContainers.includes(rootContainerId)) return state;
 
-            if (!state.form.rootContainers.includes(rootContainerId)) {
-                return state;
-            }
+            // Collect all IDs to delete (root container + all nested children)
+            const idsToDelete = collectFieldIdsToDelete(state.form.fields, rootContainerId);
 
-            const childrens = state.form.fields[rootContainerId].children;
-            const fields = state.form.fields;
-
-            const deleteChildrens = (childId) => {
-                const childrens = fields[childId].children;
-                if (childrens.length > 0) {
-                    childrens.forEach(childId => {
-                        deleteChildrens(childId)
-                    })
-                }
-
-                delete fields[childId];
-            };
-
-            childrens.forEach(childId => deleteChildrens(childId));
-
-            delete fields[rootContainerId];
+            // Immutably remove all collected IDs
+            const newFields = removeFieldsById(state.form.fields, idsToDelete);
 
             return {
                 ...state,
                 form: {
                     ...state.form,
-                    rootContainers: state.form.rootContainers.filter(rootContainer => rootContainer.id !== rootContainerId),
-                    fields
+                    rootContainers: state.form.rootContainers.filter(
+                        rc => rc !== rootContainerId
+                    ),
+                    fields: newFields
                 }
             };
         }
@@ -166,16 +148,23 @@ export default function reducer(state = initialState, action) {
 
         case ADD_FIELD: {
             const { field, fieldIndex = null } = action.payload;
-            if (!state?.form?.fields) {
-                state.form.fields = {};
-            }
 
-            const index = null === fieldIndex ? (field.is_root_container ? Object.keys(state.form.fields).length : (state.form.fields[field.parentId].children ? Object.keys(state.form.fields[field.parentId].children).length : 0)) : fieldIndex;
+            // Ensure fields object exists (immutably)
+            const existingFields = state?.form?.fields || {};
+
+            const index = null === fieldIndex
+                ? (field.is_root_container
+                    ? Object.keys(existingFields).length
+                    : (existingFields[field.parentId]?.children
+                        ? Object.keys(existingFields[field.parentId].children).length
+                        : 0))
+                : fieldIndex;
+
             const fieldId = field._id;
 
             let childrens = [];
             if (field.parentId) {
-                childrens = [...(state.form.fields[field.parentId].children ?? [])];
+                childrens = [...(existingFields[field.parentId]?.children ?? [])];
 
                 if (childrens.length < index) {
                     for (let i = childrens.length; i < index; i++) {
@@ -188,10 +177,11 @@ export default function reducer(state = initialState, action) {
                 childrens[index] = fieldId;
             }
 
-            const newFields = Object.entries(state.form.fields);
-            const lastField = state.form.fields[Object.keys(state.form.fields)[Object.keys(state.form.fields).length - 1]];
+            const newFields = Object.entries(existingFields);
+            const lastField = existingFields[Object.keys(existingFields)[Object.keys(existingFields).length - 1]];
 
-            const rootContainers = state.form.rootContainers;
+            // Clone rootContainers — never mutate the original
+            const rootContainers = [...state.form.rootContainers];
 
             if (lastField && lastField.type === 'button') {
                 const rootContainer = lastField.parentId;
@@ -243,13 +233,8 @@ export default function reducer(state = initialState, action) {
         case DUPLICATE_FIELD: {
             const { field, fieldIndex = null } = action.payload;
 
-            if (!field) {
-                return state;
-            }
-
-            if (!field._id || !field.type) {
-                return state;
-            }
+            if (!field) return state;
+            if (!field._id || !field.type) return state;
 
             const duplicateId = state.form.fields[field._id];
 
@@ -276,6 +261,8 @@ export default function reducer(state = initialState, action) {
                     }
                 };
             }
+
+            return state;
         }
 
         case UPDATE_FIELD:
@@ -292,27 +279,39 @@ export default function reducer(state = initialState, action) {
             };
 
         case DELETE_FIELD: {
-            let fields = { ...state.form.fields };
+            const fieldToDelete = state.form.fields[action.payload];
+            if (!fieldToDelete) return state;
+
+            // Collect all IDs to delete (the field + all its children recursively)
+            const idsToDelete = collectFieldIdsToDelete(state.form.fields, action.payload);
+
+            // Immutably remove fields
+            let newFields = removeFieldsById(state.form.fields, idsToDelete);
+
+            // Update rootContainers
             let rootContainers = [...state.form.rootContainers];
-            let parentField = null;
-            if (fields[action.payload].is_root_container) {
-                rootContainers = rootContainers.filter(rootContainer => rootContainer !== action.payload);
-            } else if (fields[action.payload].parentId) {
-                parentField = fields[action.payload].parentId;
-                fields[parentField].children = fields[parentField].children.filter(childId => childId !== action.payload);
+            if (fieldToDelete.is_root_container) {
+                rootContainers = rootContainers.filter(rc => rc !== action.payload);
             }
 
-            if (fields[action.payload].children && fields[action.payload].children.length > 0) {
-                fields = deleteFieldRecursive(fields, action.payload);
+            // Immutably update parent's children array
+            if (fieldToDelete.parentId && newFields[fieldToDelete.parentId]) {
+                newFields = {
+                    ...newFields,
+                    [fieldToDelete.parentId]: {
+                        ...newFields[fieldToDelete.parentId],
+                        children: newFields[fieldToDelete.parentId].children.filter(
+                            childId => childId !== action.payload
+                        )
+                    }
+                };
             }
-
-            delete fields[action.payload];
 
             return {
                 ...state,
                 form: {
                     ...state.form,
-                    fields,
+                    fields: newFields,
                     rootContainers
                 }
             };
@@ -380,7 +379,7 @@ export default function reducer(state = initialState, action) {
                 }
             };
 
-        case UPDATE_TOOLBAR_SETTINGS:
+        case UPDATE_TOOLBAR_SETTINGS: {
             const toolbarId = action.payload.id;
 
             if (!DragwybEditor.EditorToolbars || !DragwybEditor.EditorToolbars.toolbars || !DragwybEditor.EditorToolbars.toolbars[toolbarId]) {
@@ -394,6 +393,7 @@ export default function reducer(state = initialState, action) {
                     [toolbarId]: action.payload.value
                 }
             };
+        }
 
         case UPDATE_SECTION_SETTINGS:
             if (state.sectionSettings && state.sectionSettings[action.payload.Id] && state.sectionSettings[action.payload.Id] === action.payload.value) {
@@ -455,10 +455,16 @@ export default function reducer(state = initialState, action) {
                     }
                 }
 
+                // Bounded array — keep max 50 entries to prevent unbounded growth
+                const existingControls = state.popoverControls || [];
+                const newControls = existingControls.length >= 50
+                    ? [...existingControls.slice(-49), action.payload.id]
+                    : [...existingControls, action.payload.id];
+
                 return {
                     ...state,
                     popoverInitialize,
-                    popoverControls: [...(state.popoverControls || []), action.payload.id]
+                    popoverControls: newControls
                 }
             }
 
@@ -516,36 +522,54 @@ export default function reducer(state = initialState, action) {
             if (action.payload.responsiveType && 'desktop' !== action.payload.responsiveType) {
                 return {
                     ...state,
-                    styleSelectors: { ...state.styleSelectors || {}, [action.payload.responsiveType]: { ...state.styleSelectors[action.payload.responsiveType] || {}, [action.payload.key]: action.payload.value } }
+                    styleSelectors: {
+                        ...state.styleSelectors || {},
+                        [action.payload.responsiveType]: {
+                            ...(state.styleSelectors?.[action.payload.responsiveType] || {}),
+                            [action.payload.key]: action.payload.value
+                        }
+                    }
                 }
             }
 
             return {
                 ...state,
-                styleSelectors: { ...state.styleSelectors || {}, [action.payload.key]: { ...state.styleSelectors[action.payload.key] || {}, ...action.payload.value } }
+                styleSelectors: {
+                    ...state.styleSelectors || {},
+                    [action.payload.key]: {
+                        ...(state.styleSelectors?.[action.payload.key] || {}),
+                        ...action.payload.value
+                    }
+                }
             }
 
         case DELETE_STYLE_SELECTORS: {
             if (!action.payload.key) return state;
-            let update = false;
 
+            // Immutable delete — clone first, then omit the key
             if (action.payload.responsiveType && 'desktop' !== action.payload.responsiveType) {
-                if (state.styleSelectors[action.payload.responsiveType] && state.styleSelectors[action.payload.responsiveType][action.payload.key]) {
-                    delete state.styleSelectors[action.payload.responsiveType][action.payload.key];
-                    update = true;
-                }
-            } else if (state.styleSelectors[action.payload.key]) {
-                delete state.styleSelectors[action.payload.key];
-                update = true;
+                const responsiveGroup = state.styleSelectors?.[action.payload.responsiveType];
+                if (!responsiveGroup || !responsiveGroup[action.payload.key]) return state;
+
+                const { [action.payload.key]: _removed, ...restResponsive } = responsiveGroup;
+                return {
+                    ...state,
+                    styleSelectors: {
+                        ...state.styleSelectors,
+                        [action.payload.responsiveType]: restResponsive
+                    }
+                };
             }
 
-            if (!update) return state;
+            if (!state.styleSelectors?.[action.payload.key]) return state;
 
+            const { [action.payload.key]: _removed, ...restSelectors } = state.styleSelectors;
             return {
                 ...state,
-                styleSelectors: { ...state.styleSelectors }
-            }
+                styleSelectors: restSelectors
+            };
         }
+
         case DELETE_FIELD_ID:
             return {
                 ...state,
@@ -576,10 +600,10 @@ export default function reducer(state = initialState, action) {
         case ERROR_NOTICE:
             return {
                 ...state,
-                errors: [...state.errors, action.payload]
+                errors: [...(state.errors || []), action.payload]
             };
 
         default:
             return state;
     }
-} 
+}

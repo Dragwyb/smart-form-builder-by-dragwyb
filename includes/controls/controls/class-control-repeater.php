@@ -48,15 +48,15 @@ class Control_Repeater extends Control_Base
 
         $this->control_id = sanitize_text_field($control_id);
 
-        $this->set_filter_value($data);
+        $this->set_filter_value($data, $repeater_data);
     }
 
-    private function set_filter_value($data): void
+    private function set_filter_value($data, $repeater_data): void
     {
-        $this->value = $this->sanitize_control($data);
+        $this->value = $this->sanitize_control($data, $repeater_data);
     }
 
-    protected function sanitize_control($items)
+    protected function sanitize_control($items, $settings)
     {
         if (!is_array($items) || count($items) <= 0 || !isset($this->control_id)) {
             return '';

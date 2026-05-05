@@ -12,7 +12,7 @@ const SearchInput = ({
     className = '',
     id = Math.random(99999)
 }) => {
-    const [searchValue, setSearchValue] = useState(value);
+    const [searchValue, setSearchValue] = useState(value || '');
     const debouncedSearch = useDebouncedCallback((val) => {
         onChange(val);
     }, debounceTime);
@@ -25,7 +25,7 @@ const SearchInput = ({
 
     return (
         <div className={`dragwyb-search-input ${className}`}>
-            <label for={id} title={__('Search', 'smart-form-builder-by-dragwyb')}>
+            <label htmlFor={id} title={__('Search', 'smart-form-builder-by-dragwyb')}>
                 <span className="search-icon">
                     <FaMagnifyingGlass />
                 </span>

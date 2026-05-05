@@ -41,7 +41,7 @@ class Control_Box_Shadow extends Control_Base
         ];
     }
 
-    protected function sanitize_control($value)
+    protected function sanitize_control($value, $settings)
     {
         if (!is_array($value)) {
             return [];

@@ -7,6 +7,7 @@ namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Categories\Categories;
 use Dragwyb\Form_Builder\Includes\Controls\Controls\Control_Base;
+use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
 
 class Field_Row extends Field_Base
 {
@@ -34,7 +35,24 @@ class Field_Row extends Field_Base
         parent::__construct();
         // The script is typically already registered by base fields, but we ensure it's there
         if (! wp_script_is('dragwyb_editor_fields', 'registered')) {
-            wp_register_script('dragwyb_editor_fields', esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editorFields/editorFields.js'), array(), esc_attr(DRAGWYB_FORM_BUILDER_VERSION), true);
+            $js_assets_info = array(
+                'version' => DRAGWYB_FORM_BUILDER_VERSION,
+                'dependencies' => array()
+            );
+
+            if (file_exists(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/editorFields/editorFields.asset.php')) {
+                $dragwyb_js_assets_info = require_once(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/editorFields/editorFields.asset.php');
+
+                if (isset($dragwyb_js_assets_info['dependencies'])) {
+                    $js_assets_info['dependencies'] = array_merge($js_assets_info['dependencies'], $dragwyb_js_assets_info['dependencies']);
+                }
+
+                if (isset($dragwyb_js_assets_info['version'])) {
+                    $js_assets_info['version'] = $dragwyb_js_assets_info['version'];
+                }
+            }
+
+            wp_register_script('dragwyb_editor_fields', esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editorFields/editorFields.js'), $js_assets_info['dependencies'], esc_attr($js_assets_info['version']), true);
         }
     }
 
@@ -107,7 +125,7 @@ class Field_Row extends Field_Base
             'label'      => __('Padding', 'smart-form-builder-by-dragwyb'),
             'size_units' => ['px', 'em', '%'],
             'selectors'  => [
-                '{{WRAPPER}}' => '--dragwyb-row-padding-top: {{TOP}}{{UNIT}}; --dragwyb-row-padding-right: {{RIGHT}}{{UNIT}}; --dragwyb-row-padding-bottom: {{BOTTOM}}{{UNIT}}; --dragwyb-row-padding-left: {{LEFT}}{{UNIT}};',
+                '{{WRAPPER}}' => '--dragwyb-row-pt: {{TOP}}{{UNIT}}; --dragwyb-row-pr: {{RIGHT}}{{UNIT}}; --dragwyb-row-pb: {{BOTTOM}}{{UNIT}}; --dragwyb-row-pl: {{LEFT}}{{UNIT}};',
             ],
         ]);
 
@@ -116,15 +134,6 @@ class Field_Row extends Field_Base
             'label'    => __('Border', 'smart-form-builder-by-dragwyb'),
             'selector' => '{{WRAPPER}}',
             'prefix' => 'row'
-        ]);
-
-        $this->add_control('row_radius', [
-            'type'       => Controls::DIMENSIONS,
-            'label'      => __('Border Radius', 'smart-form-builder-by-dragwyb'),
-            'size_units' => ['px', '%'],
-            'selectors'  => [
-                '{{WRAPPER}}' => '--dragwyb-row-border-radius-top: {{TOP}}{{UNIT}}; --dragwyb-row-border-radius-right: {{RIGHT}}{{UNIT}}; --dragwyb-row-border-radius-bottom: {{BOTTOM}}{{UNIT}}; --dragwyb-row-border-radius-left: {{LEFT}}{{UNIT}};',
-            ],
         ]);
 
         $this->end_section();
@@ -272,13 +281,14 @@ class Field_Row extends Field_Base
         }
     }
 
-    public function validate($value): bool
-    {
-        return true; // Row itself doesn't have a value to validate
-    }
+    public function validate($value, $field_id, $settings, Form_Submission_Handler $error_handler): void {}
 
-    public function sanitize($value)
-    {
-        return $value;
-    }
+    /**
+     * Sanitize the field value.
+     *
+     * @param string $default The default value.
+     * @param mixed $value The value to sanitize.
+     * @return mixed Sanitized value.
+     */
+    public function sanitize($default = '', $value = null) {}
 }

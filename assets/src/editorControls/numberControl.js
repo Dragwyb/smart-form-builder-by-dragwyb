@@ -9,8 +9,8 @@ export default class NumberControl extends DragwybEditor.editor.extends.ControlB
         if (!this.shouldRender()) return <></>;
 
         const { settings, id } = this;
-        const { value } = this.state;
         const { default: defaultValue, min = 0, max = 100, step = 1 } = settings;
+        const { value = defaultValue } = this.state;
 
         return (
             <div className="dragwyb-control dragwyb-control--number" data-control="number" id={`control-${id}`}>
@@ -27,8 +27,8 @@ export default class NumberControl extends DragwybEditor.editor.extends.ControlB
                     min={min}
                     max={max}
                     step={step}
-                    value={value || defaultValue}
-                    onChange={(e) => this.updateControlHandler(id, parseFloat(e.target.value))}
+                    value={value}
+                    onChange={(e) => this.updateControlHandler(id, e.target.value)}
                 />
             </div>
         );

@@ -79,4 +79,3 @@ We are constantly working to improve Smart Form Builder by Dragwyb. Here are som
 = 1.0.0 30 March 2026 =
 
 *   Initial release
-

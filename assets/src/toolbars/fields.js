@@ -93,7 +93,7 @@ const Sidebar = ({ Utils, addFieldHandler }) => {
         {isSearch ?
           (Object.entries(renderFields).map(([type, config]) => (
             <SidebarField
-              key={type}
+              key={'search' + type}
               addFieldHandler={(t) => addFieldHandler(t, Utils)}
               type={type}
               icon={config.icon}
@@ -103,7 +103,7 @@ const Sidebar = ({ Utils, addFieldHandler }) => {
           )))
           :
           (Object.entries(categories).map(([key, { name, icon, fields }]) => (
-            <>
+            <React.Fragment key={key}>
               <div className={`dagwyb-widget-category-section`} id={`category-section-${key}`} onClick={() => { toggleCategory(key) }}>
                 <i className={icon} />
                 <p className="dragwyb-section__title">{name}</p>
@@ -115,7 +115,7 @@ const Sidebar = ({ Utils, addFieldHandler }) => {
                 activeCategory[key] &&
                 fields.map(field => {
                   return <SidebarField
-                    key={field}
+                    key={'active' + field}
                     addFieldHandler={(t) => addFieldHandler(t, Utils)}
                     type={field}
                     icon={renderFields[field].icon}
@@ -124,7 +124,7 @@ const Sidebar = ({ Utils, addFieldHandler }) => {
                   />
                 })
               }
-            </>
+            </React.Fragment>
           )))
         }
       </Scrollbar>

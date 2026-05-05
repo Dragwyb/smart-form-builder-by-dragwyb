@@ -2,6 +2,9 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const fs = require('fs');
 
+// 1. Import the plugin at the top of your file
+const DependencyExtractionWebpackPlugin = require('@wordpress/dependency-extraction-webpack-plugin');
+
 const makeConfig = (folder) => ({
     entry: {
         [folder]: `./assets/src/${folder}/index.js`
@@ -13,7 +16,11 @@ const makeConfig = (folder) => ({
     plugins: [
         new MiniCssExtractPlugin({
             filename: `../${folder}/${folder}.css`
-        })
+        }),
+        // 2. Add the plugin here
+        new DependencyExtractionWebpackPlugin({
+            combineAssets: false, // Ensures each folder gets its own .asset.php file
+        }),
     ],
     module: {
         rules: [
@@ -46,13 +53,8 @@ const makeConfig = (folder) => ({
     resolve: {
         extensions: ['.js', '.jsx']
     },
-    externals: {
-        react: 'React',
-        'react-dom': 'ReactDOM',
-        '@wordpress/element': 'wp.element',
-        '@wordpress/components': 'wp.components',
-        '@wordpress/i18n': 'wp.i18n'
-    }
+    // 3. REMOVE the manual externals block. 
+    // The plugin will now handle this and generate the .asset.php file.
 });
 
 const makeScssConfig = (scssFile) => ({
@@ -179,6 +181,10 @@ module.exports = (env, argv) => {
         'frontend'
     ];
 
+    const frontendScssFiles = [
+        'form-frontend'
+    ];
+
     const scssFiles = [
         'editor-global',
         'form-frontend',
@@ -191,6 +197,7 @@ module.exports = (env, argv) => {
         validFolders = validFoldersFilter(editorFolders);
     } else if (env && env.type === 'frontend') {
         console.log("ℹ️  Running Webpack in *frontend* mode...");
+        validScssFiles = validScssFilesFilter(frontendScssFiles);
         validFolders = validFoldersFilter(frontendFolders);
     } else {
         console.warn("⚠️ Invalid build type provided. Use `--env type=editor` or `--env type=frontend`.");

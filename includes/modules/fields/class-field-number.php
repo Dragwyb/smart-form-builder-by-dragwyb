@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
+use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
 
 class Field_Number extends Field_Base
 {
@@ -54,6 +55,79 @@ class Field_Number extends Field_Base
         ]);
 
         $this->end_section();
+
+        // Label Style
+        $this->start_section('section_style_label', [
+            'label' => __('Label Appearance', 'smart-form-builder-by-dragwyb'),
+            'tab'   => self::StyleTab,
+        ]);
+
+        $this->add_control('label_color', [
+            'type'      => Controls::COLOR,
+            'label'     => __('Color', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-label-color: {{VALUE}};'],
+        ]);
+
+        $this->add_control('label_spacing', [
+            'type'      => Controls::SLIDER,
+            'label'     => __('Bottom Margin', 'smart-form-builder-by-dragwyb'),
+            'range'     => ['px' => ['min' => 0, 'max' => 50]],
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-label-spacing: {{VALUE}}{{UNIT}};'],
+        ]);
+
+        $this->end_section();
+
+        // Input Style
+        $this->start_section('section_style_input', [
+            'label' => __('Input Box Style', 'smart-form-builder-by-dragwyb'),
+            'tab'   => self::StyleTab,
+        ]);
+
+        $this->start_tabs('tabs_input_style');
+
+        $this->start_tab('tab_input_normal', ['label' => __('Normal', 'smart-form-builder-by-dragwyb')]);
+
+        $this->add_control('input_bg_color', [
+            'type'      => Controls::COLOR,
+            'label'     => __('Background Color', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-input-bg: {{VALUE}};'],
+        ]);
+
+        $this->add_control('input_text_color', [
+            'type'      => Controls::COLOR,
+            'label'     => __('Text Color', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-input-color: {{VALUE}};'],
+        ]);
+
+        $this->add_group_control('input_border', [
+            'type'     => Controls::GROUP_BORDER,
+            'selector' => '{{WRAPPER}}',
+            'prefix'   => 'input',
+        ]);
+
+        $this->end_tab();
+
+        $this->start_tab('tab_input_focus', ['label' => __('Focus', 'smart-form-builder-by-dragwyb')]);
+
+        $this->add_control('input_focus_border_color', [
+            'type'      => Controls::COLOR,
+            'label'     => __('Active Border Color', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-input-focus-border: {{VALUE}};'],
+        ]);
+
+        $this->end_tab();
+
+        $this->end_tabs();
+
+        $this->add_control('input_padding', [
+            'type'       => Controls::DIMENSIONS,
+            'label'      => __('Inner Padding', 'smart-form-builder-by-dragwyb'),
+            'size_units' => ['px', 'em', '%'],
+            'selectors'  => ['{{WRAPPER}}' => '--dragwyb-input-pt: {{TOP}}{{UNIT}}; --dragwyb-input-pr: {{RIGHT}}{{UNIT}}; --dragwyb-input-pb: {{BOTTOM}}{{UNIT}}; --dragwyb-input-pl: {{LEFT}}{{UNIT}};'],
+            'separator'  => 'before',
+        ]);
+
+        $this->end_section();
     }
 
     protected function render_field()
@@ -94,14 +168,59 @@ class Field_Number extends Field_Base
 <?php
     }
 
-    public function validate($value): bool
+    public function validate($value, $field_id, $form_config, Form_Submission_Handler $error_handler): void
     {
-        return true;
+        if (!isset($form_config['fields'][$field_id])) {
+            $error_handler->add_error($field_id, __('Invalid field.', 'smart-form-builder-by-dragwyb'));
+            return;
+        }
+
+        $field_attr = isset($form_config['fields'][$field_id]['attributes']) ? $form_config['fields'][$field_id]['attributes'] : array();
+
+        if (empty($value) && isset($field_attr['required']) && 'yes' == $field_attr['required']) {
+            $error_handler->add_error($field_id, __('This field is required', 'smart-form-builder-by-dragwyb'));
+            return;
+        }
+
+        if (empty($value)) {
+            return;
+        }
+
+        $num = (float) $value;
+
+        if (isset($field_attr['min_val']) && !empty($field_attr['min_val'])) {
+            $min = (float) $field_attr['min_val'];
+            if ($num < $min) {
+                $error_handler->add_error($field_id, __('Value is below minimum', 'smart-form-builder-by-dragwyb'));
+                return;
+            }
+        }
+
+        if (isset($field_attr['max_val']) && !empty($field_attr['max_val'])) {
+            $max = (float) $field_attr['max_val'];
+            if ($num > $max) {
+                $error_handler->add_error($field_id, __('Value exceeds maximum', 'smart-form-builder-by-dragwyb'));
+                return;
+            }
+        }
     }
-    public function sanitize($value)
+
+    /**
+     * Sanitize the field value.
+     *
+     * @param string $default The default value.
+     * @param mixed $value The value to sanitize.
+     * @return mixed Sanitized value.
+     */
+    public function sanitize($default = '', $value = null)
     {
-        return floatval($value);
+        if ($value && is_string($value)) {
+            return absint($value);
+        }
+
+        return sanitize_text_field($default);
     }
+
     protected function register_scripts()
     {
         return [];

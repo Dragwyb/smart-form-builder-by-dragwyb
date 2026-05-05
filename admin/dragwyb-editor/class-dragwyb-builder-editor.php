@@ -52,8 +52,10 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
         {
             if (gettype($screen) === 'object' && $screen(self::Current_Page)) {
 
+                // Update page title
                 add_action('admin_enqueue_scripts', [$this, 'enqueue_editor_assets']);
-                add_action('Dragwyb_Menu_Page', [$this, 'render_entries'], 1);
+                add_action('Dragwyb_Menu_Page', [$this, 'render_editor'], 1);
+                add_filter('admin_title', [$this, 'update_page_title']);
                 add_action('admin_head', [$this, 'remove_default_wp_content']);
             }
         }
@@ -63,11 +65,22 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             return array_merge([self::Current_Page], $pages);
         }
 
-        public function render_entries($screen)
+        public function render_editor($screen)
         {
             if (gettype($screen) === 'object' && $screen(self::Current_Page)) {
                 $this->builder_output();
             }
+        }
+
+        public function update_page_title($title)
+        {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for form id check
+            $form_id = isset($_GET['form_id']) ? absint($_GET['form_id']) : 0;
+
+            if (isset($form_id) && $form_id && is_numeric($form_id) && function_exists('get_the_title')) {
+                return get_the_title((int) $form_id);
+            }
+            return $title;
         }
 
         public function builder_output()
@@ -152,7 +165,6 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
 
             !defined("DRAGWYB_EDITOR") && define('DRAGWYB_EDITOR', true);
 
-
             Dragwyb_Init::core_script();
             $this->external_libs();
 
@@ -160,7 +172,24 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
 
             wp_enqueue_script('dragwyb-form-core');
 
-            $js_dependencies = apply_filters('Dragwyb/Editor/scripts/dependencies', array('jquery', 'dragwyb-form-core', 'jquery-ui-resizable', 'wp-element', 'wp-components', 'wp-i18n'));
+            $js_assets_info = array(
+                'version' => DRAGWYB_FORM_BUILDER_VERSION,
+                'dependencies' => array('jquery', 'jquery-ui-resizable', 'clipboard')
+            );
+
+            if (file_exists(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/editor/editor.asset.php')) {
+                $dragwyb_js_assets_info = require_once(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/editor/editor.asset.php');
+
+                if (isset($dragwyb_js_assets_info['dependencies'])) {
+                    $js_assets_info['dependencies'] = array_merge($js_assets_info['dependencies'], $dragwyb_js_assets_info['dependencies']);
+                }
+
+                if (isset($dragwyb_js_assets_info['version'])) {
+                    $js_assets_info['version'] = $dragwyb_js_assets_info['version'];
+                }
+            }
+
+            $js_dependencies = apply_filters('Dragwyb/Editor/scripts/dependencies', $js_assets_info['dependencies']);
 
             $style_dependencies = apply_filters('Dragwyb/Editor/style/dependencies', array('wp-components', 'dragwyb-form-editor-global'));
 
@@ -169,7 +198,7 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 'dragwyb-form-editor',
                 esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editor/editor.js'),
                 $js_dependencies,
-                esc_attr(DRAGWYB_FORM_BUILDER_VERSION),
+                esc_attr($js_assets_info['version']),
                 true
             );
 
@@ -182,14 +211,14 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
                 'dragwyb-form-editor-global',
                 esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/css/editor-global.css'),
                 [],
-                esc_attr(DRAGWYB_FORM_BUILDER_VERSION)
+                esc_attr($js_assets_info['version'])
             );
 
             wp_enqueue_style(
                 'dragwyb-form-editor',
                 esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editor/editor.css'),
                 $style_dependencies,
-                esc_attr(DRAGWYB_FORM_BUILDER_VERSION)
+                esc_attr($js_assets_info['version'])
             );
 
             $localize_data = [
@@ -416,6 +445,8 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
         public function localize_i18n_strings($strings): array
         {
             $localize_strings = [
+                'exit' => __('Exit', 'smart-form-builder-by-dragwyb'),
+                'submit' => __('Submit', 'smart-form-builder-by-dragwyb'),
                 'fields' => __('Fields', 'smart-form-builder-by-dragwyb'),
                 'fieldSettings' => __('Field Settings', 'smart-form-builder-by-dragwyb'),
                 'formSettings' => __('Form Settings', 'smart-form-builder-by-dragwyb'),

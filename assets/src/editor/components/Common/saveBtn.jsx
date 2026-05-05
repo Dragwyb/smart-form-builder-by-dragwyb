@@ -8,6 +8,7 @@ const SaveBtn = () => {
     const updateSaveState = useSelector(state => state.updateSaveState);
 
     const handleSave = async () => {
+        if (updateSaveState) return;
         try {
             dispatch(saveForm(formData));
         } catch (error) {

@@ -11,6 +11,7 @@ use Dragwyb\Form_Builder\Includes\Controls\Controls\Control_Base;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbars;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Fonts\Fonts_Helper;
+use Dragwyb\Form_Builder\Includes\Dragwyb_Init;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -80,7 +81,7 @@ class Frontend_Render
 
     private function set_toolbar_data(): void
     {
-        $toolbar_obj = new Toolbars();
+        $toolbar_obj = Toolbars::instance();
         $toolbars = $toolbar_obj->get_toolbars();
 
         foreach (self::$form_data as $key => $value) {
@@ -249,6 +250,8 @@ class Frontend_Render
             $field_data = null;
         }
 
+        echo '</form>';
+
         return ob_get_clean();
     }
 
@@ -283,7 +286,7 @@ class Frontend_Render
 
     public function get_generated_css(): array
     {
-        $toolbar_obj = new Toolbars();
+        $toolbar_obj = Toolbars::instance();
         self::$toolbars = $toolbar_obj->get_toolbars();
 
         foreach (self::$toolbar_data as $toolbar_key => $settings) {
@@ -376,18 +379,95 @@ class Frontend_Render
 
     private static function frontend_assets()
     {
-        do_action('Dragwyb/Frontend/Before_Render/Enqueue_Static_Assets');
+        Dragwyb_Init::core_script();
+
+        self::enqueue_style_asset();
+        self::enqueue_script_asset();
+    }
+
+    private static function enqueue_style_asset()
+    {
+        do_action('Dragwyb/Frontend/Before_Enqueue/Style');
 
         wp_enqueue_style('smart-form-builder-by-dragwyb', esc_url(DRAGWYB_FORM_BUILDER_URL . '/assets/css/form-frontend.css'), [], esc_attr(DRAGWYB_FORM_BUILDER_VERSION));
 
+        do_action('Dragwyb/Frontend/After_Enqueue/Style');
+    }
 
-        if (defined('DRAGWYB_FORM_PREVIEW') && true === DRAGWYB_FORM_PREVIEW && function_exists('wp_add_inline_style')) {
-            $style_content = self::instance()->get_generated_css();
-            $style_content = wp_strip_all_tags($style_content['css']);
-            wp_add_inline_style('smart-form-builder-by-dragwyb', wp_kses_post($style_content));
+    private static function enqueue_script_asset()
+    {
+        do_action('Dragwyb/Frontend/Before_Enqueue/Script');
+
+        wp_enqueue_script('dragwyb-form-core');
+
+        $js_assets_info = array(
+            'version' => DRAGWYB_FORM_BUILDER_VERSION,
+            'dependencies' => array('jquery', 'dragwyb-form-core')
+        );
+
+        if (file_exists(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/frontend/frontend.asset.php')) {
+            $dragwyb_js_assets_info = require_once(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/frontend/frontend.asset.php');
+
+            if (isset($dragwyb_js_assets_info['dependencies'])) {
+                $js_assets_info['dependencies'] = array_merge($js_assets_info['dependencies'], $dragwyb_js_assets_info['dependencies']);
+            }
+
+            if (isset($dragwyb_js_assets_info['version'])) {
+                $js_assets_info['version'] = $dragwyb_js_assets_info['version'];
+            }
         }
 
-        do_action('Dragwyb/Frontend/After_Render/Enqueue_Static_Assets');
+        wp_enqueue_script(
+            'dragwyb-form-frontend',
+            esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/frontend/frontend.js'),
+            $js_assets_info['dependencies'],
+            esc_attr($js_assets_info['version']),
+            true
+        );
+
+        wp_localize_script('dragwyb-form-frontend', 'DragwybFrontendData', [
+            'frontendRoute' => rest_url('dragwyb-form-builder/v1/'),
+            'nonce'         => wp_create_nonce('dragwyb_frontend'), // Add nonce if required later
+        ]);
+
+        if (defined('DRAGWYB_FORM_PREVIEW') && true === DRAGWYB_FORM_PREVIEW && function_exists('wp_add_inline_style')) {
+            $form_id = self::$form_id;
+            $unique_id = get_post_meta($form_id, 'dragwyb_form_assets_id', true);
+            $atfp_style_exist = false;
+
+            if ($unique_id && $unique_id !== '') {
+                $dragwyb_upload_info = wp_upload_dir();
+
+                // Create a specific folder for your plugin's CSS
+                $atfp_upload_dir = $dragwyb_upload_info['basedir'] . '/dragwyb-forms/css/';
+                $atfp_upload_url = self::get_upload_dir_url($dragwyb_upload_info['baseurl']) . '/dragwyb-forms/css/';
+
+                $atfp_file_name = 'form-' . $form_id . '-' . $unique_id . '.css';
+                $atfp_file_path = $atfp_upload_dir . $atfp_file_name;
+                $atfp_file_url = $atfp_upload_url . $atfp_file_name;
+
+                if (file_exists($atfp_file_path)) {
+                    wp_enqueue_style('dragwyb-form-' . $form_id, esc_url($atfp_file_url), [], esc_attr(DRAGWYB_FORM_BUILDER_VERSION));
+                    $atfp_style_exist = true;
+                }
+            }
+
+            if (!$atfp_style_exist) {
+                $style_content = self::instance()->get_generated_css();
+                $style_content = wp_strip_all_tags($style_content['css']);
+                wp_add_inline_style('smart-form-builder-by-dragwyb', wp_kses_post($style_content));
+            }
+        }
+
+        do_action('Dragwyb/Frontend/After_Enqueue/Script');
+    }
+
+    /**
+     * Filter and return url based on ssl protocol form start
+     */
+    private static function get_upload_dir_url(string $url): string
+    {
+        return is_ssl() ? preg_replace('/^http:/', 'https:', $url) : $url;
     }
 
     /**
@@ -423,8 +503,6 @@ class Frontend_Render
 
             if (isset($settings[$control_id])) {
                 $setting_value = $settings[$control_id];
-            } else if (isset($control_settings['default'])) {
-                $setting_value = $control_settings['default'];
             }
 
             if (!isset($setting_value)) {
@@ -667,34 +745,86 @@ class Frontend_Render
             }
 
             // 4. Comparison Logic
-            if ($is_not) {
-                // Logic: Fail if they ARE equal
+            $control_render_status = $this->control_render_conditions_status($expected, $actual, $is_not);
 
-                if (is_array($expected)) {
-                    if (in_array($actual, $expected)) {
-                        return false;
-                    }
-                } else if ($actual === $expected) {
-                    return false;
-                }
-            } else {
-                if (is_array($expected)) {
-                    if (!in_array($actual, $expected)) {
-                        return false;
-                    }
-                } else if ($actual !== $expected) {
-                    return false;
-                }
+            if (null !== $control_render_status) {
+                return $control_render_status;
             }
         }
 
         return true;
     }
 
+    /**
+     * Compare the actual value with the expected value based on the condition type.
+     * @return bool|null Returns true if the condition is met, false if it's not met, and null if the type is not supported.
+     */
+    private function control_render_conditions_status($expected, $actual, $is_not)
+    {
+        $dragwyb_control_render_status = null;
+
+        if ($is_not) {
+            if (is_array($actual)) {
+                if (is_array($expected)) {
+                    $dragwyb_condition_skipLoop = null;
+                    foreach ($expected as $exp) {
+                        if (in_array($exp, $actual)) {
+                            $dragwyb_condition_skipLoop = true;
+                            break;
+                        }
+                    }
+
+                    if ($dragwyb_condition_skipLoop !== true) {
+                        $dragwyb_control_render_status = false;
+                    }
+                } else if (in_array($expected, $actual)) {
+                    $dragwyb_control_render_status = false;
+                }
+            } else {
+                if (is_array($expected)) {
+                    if (in_array($actual, $expected)) {
+                        $dragwyb_control_render_status = false;
+                    }
+                } else if ($actual === $expected) {
+                    $dragwyb_control_render_status = false;
+                }
+            }
+        } else {
+            if (is_array($actual)) {
+                if (is_array($expected)) {
+                    $dragwyb_condition_skipLoop = null;
+                    foreach ($expected as $exp) {
+                        if (in_array($exp, $actual)) {
+                            $dragwyb_condition_skipLoop = true;
+                            break;
+                        }
+                    }
+
+                    if ($dragwyb_condition_skipLoop !== true) {
+                        $dragwyb_control_render_status = false;
+                    }
+                } else if (!in_array($expected, $actual)) {
+                    $dragwyb_control_render_status = false;
+                }
+            } else {
+                if (is_array($expected)) {
+                    if (!in_array($actual, $expected)) {
+                        $dragwyb_control_render_status = false;
+                    }
+                } else if ($actual !== $expected) {
+                    $dragwyb_control_render_status = false;
+                }
+            }
+        }
+
+        return $dragwyb_control_render_status;
+    }
+
     private function clean_old_data(): void
     {
         self::$form_id = null;
         self::$fields = array();
+        self::$root_containers = array();
         self::$module = null;
         self::$field_module_cache = null;
         self::$form_data = null;

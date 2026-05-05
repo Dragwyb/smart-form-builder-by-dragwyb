@@ -1,8 +1,9 @@
 
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updateFieldValues, updateToolbarSettings, updateSectionSettings, updateStyleSelectors as updateStyleSelectorsAction, deleteStyleSelectors as deleteStyleSelectorsAction, updateResponsiveType as updateResponsiveTypeAction, updateactivePopoverKey as updateactivePopoverKeyAction, updateActiveRootContainer as updateActiveRootContainerAction, resetActiveRootContainer as resetActiveRootContainerAction } from "../store/actions";
 import PropTypes, { number } from "prop-types";
 import { Placeholder } from "@wordpress/components";
+import DragwybControlBase from "../controlBase";
 
 /**
  * Generates a unique ID
@@ -204,7 +205,6 @@ export const AddField = ({ state, type, dispatch, Utils, index = null, parentCon
     }
 
     field = DragwybBuilder.Hooks.applyFilter(`Dragwyb/Editor/AddField/${type}`, field, Utils);
-
     dispatch(addField({ field, index }));
     setSelectedSettingId({ dispatch, value: field._id });
     setActiveTab({ dispatch, value: 'fields' });
@@ -221,11 +221,60 @@ export const AddField = ({ state, type, dispatch, Utils, index = null, parentCon
         const buttonAddStatus = DragwybEditor?.formData?.addSubmitButton;
 
         if (buttonAddStatus === true) {
-            AddField({ state, type: 'button', dispatch, Utils, attributes: { text: 'Submit', field_id: 'submit' } });
+            const buttonRow = AddField({ state, type: 'row', dispatch, attributes: { columns: 1 }, Utils, index: 1 });
+
+            const deepCloneState = JSON.parse(JSON.stringify(state));
+            deepCloneState.form.fields[buttonRow._id] = buttonRow;
+            deepCloneState.form.rootContainers.push(buttonRow._id);
+
+            AddField({ state: deepCloneState, type: 'button', dispatch, Utils, attributes: { text: 'Submit', field_id: 'submit' }, parentContainer: { rootContainerId: buttonRow._id, activeColumnIndex: 0 } });
             delete DragwybEditor.formData.addSubmitButton;
 
             setSelectedSettingId({ dispatch, value: field._id });
         }
+    }
+
+    const fieldType = field.type;
+    const selectedSetting = field._id;
+
+    if (state.form.fields && !state.form.fields[selectedSetting]) {
+        state.form.fields[selectedSetting] = field;
+    }
+
+    // Render styles on field add
+    if (field.attributes && typeof field.attributes === 'object') {
+        Object.keys(field.attributes).forEach(key => {
+            const value = field.attributes[key];
+
+            if (value && ((typeof value === 'string' && '' != value) || (typeof value === 'object' && Object.keys(value).length > 0)) && DragwybEditor?.fields?.fields?.[fieldType]?.controls?.[key]) {
+                const controlSettings = DragwybEditor?.fields?.fields?.[fieldType]?.controls?.[key];
+
+                if (controlSettings.selectors && Object.keys(controlSettings.selectors).length > 0) {
+                    // 🔹 Control lookup via filter
+                    let Control = DragwybBuilder.Hooks.applyFilter(
+                        "Dragwyb/Editor/ControlRender/" + controlSettings.type,
+                        false
+                    );
+
+                    // 🔹 Validate Control class
+                    const isValidControl =
+                        Control &&
+                        (Control.prototype instanceof DragwybControlBase ||
+                            Control.prototype instanceof DragwybEditor.editor.extends.ControlBase);
+
+                    if (isValidControl) {
+                        new Control({
+                            id: key,
+                            toolbarId: 'fields',
+                            selectedSetting: selectedSetting,
+                            settings: controlSettings,
+                            value: value,
+                            Utils: Utils,
+                        }).renderStyleSelector();
+                    }
+                }
+            }
+        })
     }
 
     return field;

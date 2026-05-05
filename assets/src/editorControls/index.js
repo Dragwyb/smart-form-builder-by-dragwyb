@@ -2,6 +2,7 @@
 import '../../sass/editorControls.scss';
 import TextControl from './textControl';
 import SelectControl from './selectControl';
+import MultiSelectControl from './multiSelectControl';
 import TextareaControl from './textareaControl';
 import SwitcherControl from './switcherControl';
 import DimensionsControl from './dimensionsControl';
@@ -20,11 +21,13 @@ import GalleryControl from './galleryControl';
 import IconControl from './iconControl';
 import HeadingControl from './headingControl';
 import RawHtmlControl from './rawHtmlControl';
+import ImageControl from './imageControl';
 
 const initializeControls = () => {
     const defaultControls = {
         'text': TextControl,
         'select': SelectControl,
+        'multiselect': MultiSelectControl,
         'textarea': TextareaControl,
         'switcher': SwitcherControl,
         'dimensions': DimensionsControl,
@@ -41,6 +44,7 @@ const initializeControls = () => {
         'choose': ChooseControl,
         'url': UrlControl,
         'gallery': GalleryControl,
+        'image': ImageControl,
         'icon': IconControl,
         'heading': HeadingControl
     }

@@ -143,6 +143,7 @@ if (!class_exists('Sanitize_Module_Settings')) {
         {
             self::$filtered_data = [];
             self::$form_fields = null;
+            self::$root_containers = array();
             self::$field_module = null;
             self::$module = null;
         }

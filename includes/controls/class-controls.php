@@ -14,6 +14,7 @@ class Controls
     const DIMENSIONS = 'dimensions';
     const FONTS = 'fonts';
     const GALLERY = 'gallery';
+    const IMAGE = 'image';
     const HEADING = 'heading';
     const ICON = 'icon';
     const NUMBER = 'number';
@@ -23,6 +24,7 @@ class Controls
     const REPEATER = 'repeater';
     const SECTION = 'section';
     const SELECT = 'select';
+    const MULTISELECT = 'multiselect';
     const SLIDER = 'slider';
     const SWITCHER = 'switcher';
     const TABS = 'tabs';
@@ -35,6 +37,8 @@ class Controls
     const GROUP_BORDER = 'border';
     const GROUP_BOX_SHADOW = 'box-shadow';
     const GROUP_TEXT_SHADOW = 'text-shadow';
+    const GROUP_CSS_FILTER = 'css-filter';
+    const GROUP_BACKGROUND = 'background';
 
     private static $instance = null;
     private $controls = [];

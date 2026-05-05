@@ -8,6 +8,7 @@ use Dragwyb\Form_Builder\Includes\Controls\Register_Controls_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Categories\Categories;
 use Dragwyb\Form_Builder\Includes\Frontend\Frontend_Render;
+use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
 
 abstract class Field_Base extends Register_Controls_Base
 {
@@ -41,6 +42,11 @@ abstract class Field_Base extends Register_Controls_Base
     {
         $this->init();
         parent::__construct();
+
+        // Add filter for sanitizing field values.
+        add_filter('Dragwyb/Field/Value/Sanitize/' . $this->get_type(), array($this, "sanitize"), 10, 2);
+        // Add filter for validating field values.
+        add_action('Dragwyb/Field/Value/Validate/' . $this->get_type(), array($this, "validate"), 10, 4);
     }
 
     abstract protected function init(): void;
@@ -50,14 +56,19 @@ abstract class Field_Base extends Register_Controls_Base
         $scripts = $this->register_scripts();
         $styles = $this->register_style();
 
-        foreach ($scripts as $script) {
-            if (!wp_script_is($script, 'enqueued')) {
-                wp_enqueue_script($script);
+        if (is_array($scripts)) {
+            foreach ($scripts as $script) {
+                if (!wp_script_is($script, 'enqueued')) {
+                    wp_enqueue_script($script);
+                }
             }
         }
-        foreach ($styles as $style) {
-            if (!wp_style_is($style, 'enqueued')) {
-                wp_enqueue_style($style);
+
+        if (is_array($styles)) {
+            foreach ($styles as $style) {
+                if (!wp_style_is($style, 'enqueued')) {
+                    wp_enqueue_style($style);
+                }
             }
         }
     }
@@ -184,7 +195,27 @@ abstract class Field_Base extends Register_Controls_Base
     }
 
     abstract protected function render_field();
-    abstract public function validate($value): bool;
+
+    /**
+     * Validate the field value.
+     * Do not return the value without sanitizing or validating.
+     *
+     * @param string|array $value The value to validate.
+     * @param string $field_id The ID of the field.
+     * @param array $settings The settings of the field.
+     * @param Form_Submission_Handler $error_handler The Error handler.
+     * @return void
+     */
+    abstract public function validate($value, $field_id, $settings, Form_Submission_Handler $error_handler): void;
+
+    /**
+     * Sanitize the field value.
+     *
+     * @param string $default The default value.
+     * @param mixed $value The value to sanitize.
+     * @return mixed Sanitized value.
+     */
+    abstract public function sanitize(string $default = '', $value = null);
 
     public function render()
     {
@@ -237,18 +268,18 @@ abstract class Field_Base extends Register_Controls_Base
         $this->add_control('field_id', [
             'type'        => Controls::TEXT,
             'label'       => __('Field ID', 'smart-form-builder-by-dragwyb'),
-            'description' => __('Unique ID for logic and emails (e.g., text_field_1).', 'smart-form-builder-by-dragwyb'),
+            'description' => __('Use this ID for custom scripts or logic.', 'smart-form-builder-by-dragwyb'),
             'dynamic'     => ['active' => false],
         ]);
 
         // column span
         $this->add_responsive_control('column_span', [
             'type'        => Controls::SLIDER,
-            'label'       => __('Column Span', 'smart-form-builder-by-dragwyb'),
+            'label'       => __('Grid Column Span', 'smart-form-builder-by-dragwyb'),
             'range' => [
                 'px' => [
                     'min' => 1,
-                    'max' => 30,
+                    'max' => 12,
                 ],
             ],
             'default' => [

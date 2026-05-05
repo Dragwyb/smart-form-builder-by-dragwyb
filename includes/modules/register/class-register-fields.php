@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Modules\Register;
 
+use Dragwyb\Form_Builder\Includes\Helper\Helper;
 use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Base;
 
 class Register_Fields
@@ -26,7 +27,7 @@ class Register_Fields
     {
         $this->register_default_fields();
 
-        do_action('Dragwyb/register_fields', $this);
+        do_action('Dragwyb/form_builder/fields/register', $this);
     }
 
 
@@ -34,14 +35,16 @@ class Register_Fields
     {
         foreach ($this->default_fields as $field) {
 
-            $dir = dirname(__NAMESPACE__);
+            $dragwyb_name_space = Helper::namespace_into_dir_path(__NAMESPACE__);
+            $dir   = dirname($dragwyb_name_space);
+            $dir = Helper::dir_path_into_namespace($dir);
+
             $class = $dir . '\Fields\Field_' . ucfirst(esc_html($field));
 
             if (class_exists($class)) {
                 $this->register_field(new $class());
             }
         }
-        // Register more fields here
     }
 
     public function register_field(Field_Base $field): void

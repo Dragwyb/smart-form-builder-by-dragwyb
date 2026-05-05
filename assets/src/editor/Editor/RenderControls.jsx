@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import shouldRenderField from './shouldRenderField';
 import DragwybControlBase from '../controlBase'
@@ -21,94 +21,114 @@ const RenderControl = ({
     setValueChangedCheck = () => { }
 }) => {
     const [isStyleSelectorAdd, setIsStyleSelectorAdd] = useState(false);
-    // 🔹 Validate settings early
-    if (!settings || typeof settings !== "object") {
-        console.error(`[RenderControl] Invalid settings for key: ${controlKey}`);
-        return null;
-    }
 
-    if (!settings.type) {
-        console.error(`[RenderControl] Missing "type" in settings for key: ${controlKey}`);
-        return null;
-    }
+    // Proper useSelector at top level instead of useStore().getState() in helper
+    const sectionSettings = useSelector((state) => state.sectionSettings || {});
 
-    if (!DragwybEditor.controlTypes[settings.type]) {
-        console.error(`[RenderControl] Unknown control type "${settings.type}" for key: ${controlKey}`);
-        return null;
-    }
-
-    const getSectionSettings = () => {
-        const store = useStore();
-        const state = store.getState();
-
-        return state.sectionSettings || {};
-    }
+    // Determine validity upfront (no early returns before hooks)
+    const isValid = settings && typeof settings === "object" && settings.type && DragwybEditor.controlTypes?.[settings.type];
 
     // 🔹 Merge values: section + field-level
-    const shouldRenderSettings = { ...fieldValue, ...getSectionSettings() };
+    const shouldRenderSettings = useMemo(
+        () => ({ ...fieldValue, ...sectionSettings }),
+        [fieldValue, sectionSettings]
+    );
 
-    const [shouldRender, setShouldRender] = useState(shouldRenderField(settings, shouldRenderSettings, toolbarSettings?.controls))
-
+    const [shouldRender, setShouldRender] = useState(() =>
+        isValid ? shouldRenderField(settings, { ...fieldValue, ...sectionSettings }, toolbarSettings?.controls) : false
+    );
 
     const dispatch = useDispatch();
     const store = useStore();
     const state = store.getState();
-    const Utils = Helper(state, dispatch);
 
-    // 🔹 Control lookup via filter
-    let Control = DragwybBuilder.Hooks.applyFilter(
-        "Dragwyb/Editor/ControlRender/" + settings.type,
-        false
-    );
+    // Memoize Utils to avoid recreation on every render
+    const Utils = useMemo(() => {
+        return Helper(state, dispatch);
+    }, [state, dispatch]);
 
-    // 🔹 Validate Control class
-    const isValidControl =
-        Control &&
-        (Control.prototype instanceof DragwybControlBase ||
-            Control.prototype instanceof DragwybEditor.editor.extends.ControlBase);
+    // 🔹 Control lookup via filter (memoized — type doesn't change per instance)
+    const Control = useMemo(() => {
+        if (!isValid) return null;
 
-    if (!isValidControl) {
-        console.warn(
-            `[RenderControl] Invalid or missing Control for type "${settings.type}". Falling back to ControlBase.`
+        let Ctrl = DragwybBuilder.Hooks.applyFilter(
+            "Dragwyb/Editor/ControlRender/" + settings.type,
+            false
         );
-        Control = DragwybEditor.editor.extends.ControlBase;
-    }
 
-    const resetControlEventLifting = (event) => {
+        // 🔹 Validate Control class
+        const isValidControl =
+            Ctrl &&
+            (Ctrl.prototype instanceof DragwybControlBase ||
+                Ctrl.prototype instanceof DragwybEditor.editor.extends.ControlBase);
+
+        if (!isValidControl) {
+            console.warn(
+                `[RenderControl] Invalid or missing Control for type "${settings.type}". Falling back to ControlBase.`
+            );
+            Ctrl = DragwybEditor.editor.extends.ControlBase;
+        }
+
+        return Ctrl;
+    }, [isValid, settings?.type]);
+
+    const resetControlEventLifting = useCallback((event) => {
         setResetControlEvent(controlKey, event);
-    }
+    }, [controlKey, setResetControlEvent]);
 
-    const valueChangedCheckLifting = (event) => {
+    const valueChangedCheckLifting = useCallback((event) => {
         setValueChangedCheck(controlKey, event);
-    }
+    }, [controlKey, setValueChangedCheck]);
 
-    const conditionUpdateHandler = (value, renderStyleSelector = true) => {
+    const conditionUpdateHandler = useCallback((value, renderStyleSelector = true) => {
         if (shouldRender !== value) {
             setShouldRender(value);
 
-            if (!value && settings.selectors && !renderStyleSelector) {
+            if (!value && settings?.selectors && !renderStyleSelector) {
                 const selectedSetting = selectedTab && '' !== selectedTab && selectedTab !== selectedToolbar ? selectedTab : false;
                 const uniqueSelector = `${selectedToolbar}${selectedSetting ? '_' + selectedSetting : ''}_${controlKey}`;
 
+                setIsStyleSelectorAdd(false);
                 Utils.deleteStyleSelectors({ key: uniqueSelector, responsiveType: settings.responsive_type });
             }
         } else {
-            if (value && settings.selectors && renderStyleSelector && !isStyleSelectorAdd) {
+            if (value && settings?.selectors && renderStyleSelector && !isStyleSelectorAdd) {
                 setIsStyleSelectorAdd(true);
-                <Control
-                    key={selectedTab}
-                    id={controlKey}
-                    toolbarId={selectedToolbar}
-                    selectedSetting={selectedTab}
-                    settings={settings}
-                    value={shouldRenderSettings[controlKey]}
-                    handleChange={handleChange}
-                    Utils={Utils}
-                    resetControlEventLifting={resetControlEventLifting}
-                    valueChangedCheckLifting={valueChangedCheckLifting}
-                />
+                new Control({
+                    id: controlKey,
+                    toolbarId: selectedToolbar,
+                    selectedSetting: selectedTab,
+                    settings: settings,
+                    value: shouldRenderSettings[controlKey],
+                    Utils: Utils,
+                }).renderStyleSelector();
             }
         }
+    }, [shouldRender, settings, selectedToolbar, selectedTab, controlKey, Utils, isStyleSelectorAdd, Control, shouldRenderSettings]);
+
+    // 🔹 Handle "section" & "tabs" special cases — deferred to avoid setState-during-render
+    useEffect(() => {
+        if (!isValid || !shouldRender) return;
+
+        if (settings.type === "section") {
+            defautlActiveSection(controlKey, settings, settings.conditions);
+        }
+
+        if (settings.type === "tabs") {
+            defautlActiveTab(controlKey, settings);
+        }
+    }, [isValid, shouldRender, settings?.type, controlKey, settings?.conditions, defautlActiveSection, defautlActiveTab]);
+
+    // 🔹 Validate settings — return after all hooks
+    if (!isValid) {
+        if (!settings || typeof settings !== "object") {
+            console.error(`[RenderControl] Invalid settings for key: ${controlKey}`);
+        } else if (!settings.type) {
+            console.error(`[RenderControl] Missing "type" in settings for key: ${controlKey}`);
+        } else {
+            console.error(`[RenderControl] Unknown control type "${settings.type}" for key: ${controlKey}`);
+        }
+        return null;
     }
 
     if (!shouldRender) {
@@ -121,16 +141,7 @@ const RenderControl = ({
         />;
     }
 
-    // 🔹 Handle "section" & "tabs" special cases
-    if (settings.type === "section") {
-        defautlActiveSection(controlKey, settings, settings.conditions);
-    }
-
-    if (settings.type === "tabs") {
-        defautlActiveTab(controlKey, settings);
-    }
-
-    const selectedSettings = { ...fieldValue, ...getSectionSettings() };
+    const selectedSettings = { ...fieldValue, ...sectionSettings };
 
     // 🔹 Resolve current value
     let fieldVal = selectedSettings[controlKey];

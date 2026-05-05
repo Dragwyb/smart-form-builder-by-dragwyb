@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
+use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
 
 class Field_Button extends Field_Base
 {
@@ -63,7 +64,7 @@ class Field_Button extends Field_Base
                 'justify' => ['title' => 'Justified', 'icon' => 'fa fa-align-justify'],
             ],
             'selectors' => [
-                '{{WRAPPER}}.dragwyb-button-field' => '--dragwyb-btn-align: {{VALUE}};',
+                '{{WRAPPER}}' => '--dragwyb-btn-align: {{VALUE}};',
             ],
         ]);
 
@@ -87,19 +88,19 @@ class Field_Button extends Field_Base
         $this->add_control('bg_color', [
             'type'      => Controls::COLOR,
             'label'     => __('Background Color', 'smart-form-builder-by-dragwyb'),
-            'selectors' => ['{{WRAPPER}} button' => '--dragwyb-btn-bg: {{VALUE}};'],
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-btn-bg: {{VALUE}};'],
         ]);
 
         $this->add_control('text_color', [
             'type'      => Controls::COLOR,
             'label'     => __('Text Color', 'smart-form-builder-by-dragwyb'),
-            'selectors' => ['{{WRAPPER}} button' => '--dragwyb-btn-color: {{VALUE}};'],
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-btn-color: {{VALUE}};'],
         ]);
 
         $this->add_group_control('border', [
             'type'     => Controls::GROUP_BORDER,
             'label'    => __('Border', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}} button',
+            'selector' => '{{WRAPPER}}',
             'prefix' => 'btn'
         ]);
 
@@ -111,19 +112,19 @@ class Field_Button extends Field_Base
         $this->add_control('hover_bg_color', [
             'type'      => Controls::COLOR,
             'label'     => __('Background Color', 'smart-form-builder-by-dragwyb'),
-            'selectors' => ['{{WRAPPER}} button:hover' => '--dragwyb-btn-bg: {{VALUE}};'],
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-btn-hover-bg: {{VALUE}};'],
         ]);
 
         $this->add_control('hover_text_color', [
             'type'      => Controls::COLOR,
             'label'     => __('Text Color', 'smart-form-builder-by-dragwyb'),
-            'selectors' => ['{{WRAPPER}} button:hover' => '--dragwyb-btn-color: {{VALUE}};'],
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-btn-hover-color: {{VALUE}};'],
         ]);
 
         $this->add_control('hover_border_color', [
             'type'      => Controls::COLOR,
             'label'     => __('Border Color', 'smart-form-builder-by-dragwyb'),
-            'selectors' => ['{{WRAPPER}} button:hover' => '--dragwyb-btn-border-color: {{VALUE}};'],
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-btn-hover-border-color: {{VALUE}};'],
         ]);
 
         $this->end_tab();
@@ -134,29 +135,41 @@ class Field_Button extends Field_Base
             'type'       => Controls::DIMENSIONS,
             'label'      => __('Padding', 'smart-form-builder-by-dragwyb'),
             'size_units' => ['px', 'em', '%'],
-            'selectors'  => ['{{WRAPPER}}.dragwyb-button-field' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'],
+            'selectors'  => ['{{WRAPPER}}' => '--dragwyb-btn-pt: {{TOP}}{{UNIT}}; --dragwyb-btn-pr: {{RIGHT}}{{UNIT}}; --dragwyb-btn-pb: {{BOTTOM}}{{UNIT}}; --dragwyb-btn-pl: {{LEFT}}{{UNIT}};'],
             'separator'  => 'before',
         ]);
 
         $this->add_group_control('typography', [
             'type'     => Controls::GROUP_TYPOGRAPHY,
             'label'    => __('Typography', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}}.dragwyb-button-field',
+            'selector' => '{{WRAPPER}}',
             'prefix' => 'btn'
         ]);
 
         $this->add_control('button_width', [
             'type' => Controls::SLIDER,
             'label' => __('Button Width', 'smart-form-builder-by-dragwyb'),
-            'units' => ['px'],
+            'units' => ['px', '%', 'em', 'rem', 'vw', 'vh'],
             'range' => [
                 'px' => [
                     'min' => 0,
-                    'max' => 500,
+                    'max' => 1000,
                 ],
+                '%' => [
+                    'min' => 0,
+                    'max' => 100,
+                ],
+                'em' => [
+                    'min' => 0,
+                    'max' => 100,
+                ],
+                'rem' => [
+                    'min' => 0,
+                    'max' => 100,
+                ]
             ],
             'selectors' => [
-                '{{WRAPPER}}.dragwyb-button-field' => '--dragwyb-btn-width: {{VALUE}}{{UNIT}};',
+                '{{WRAPPER}}' => '--dragwyb-btn-width: {{VALUE}}{{UNIT}};',
             ],
         ]);
 
@@ -188,8 +201,14 @@ class Field_Button extends Field_Base
 <?php
     }
 
-    public function validate($value): bool
-    {
-        return true;
-    }
+    public function validate($value, $field_id, $settings, Form_Submission_Handler $error_handler): void {}
+
+    /**
+     * Sanitize the field value.
+     *
+     * @param string $default The default value.
+     * @param mixed $value The value to sanitize.
+     * @return mixed Sanitized value.
+     */
+    public function sanitize($default = '', $value = null) {}
 }

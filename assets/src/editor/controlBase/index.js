@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Field } from "../Editor/Fields";
 import ResponsiveDevices from "../../editor/components/Common/ResponsiveDevices";
+import { FaUndo } from "react-icons/fa";
+import { __ } from '@wordpress/i18n';
 
 class DragwybControlBase extends Component {
     #updateValue = () => { }
@@ -96,11 +97,16 @@ class DragwybControlBase extends Component {
         }
 
         return (
-            <label className={`dragwyb-control__label${className !== '' ? ' ' + className : ''}`} {...attr}>
-                {label}
-                {this.settings.responsive_control && this.settings.responsive_type && <ResponsiveDevices Utils={this.Utils} style='dropdown' />}
-                {children}
-            </label>
+            <>
+                <label className={`dragwyb-control__label${className !== '' ? ' ' + className : ''}`} {...attr}>
+                    {label}
+                    {this.settings.responsive_control && this.settings.responsive_type && <ResponsiveDevices Utils={this.Utils} style='dropdown' />}
+                    {children}
+                    {this.state.value && <span className="dragwyb-control__reset" onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.resetControl(); }}>
+                        <FaUndo size={12} title={__('Reset to Default', 'smart-form-builder-by-dragwyb')} />
+                    </span>}
+                </label>
+            </>
         );
     }
 
@@ -113,8 +119,8 @@ class DragwybControlBase extends Component {
         this.selectorKey = props.toolbarId;
 
         if (this.settings.popover) {
-            props.resetControlEventLifting(this.resetControl.bind(this));
-            props.valueChangedCheckLifting(this.valueChanged.bind(this));
+            props?.resetControlEventLifting?.(this.resetControl.bind(this));
+            props?.valueChangedCheckLifting?.(this.valueChanged.bind(this));
         }
     }
 
@@ -156,8 +162,6 @@ class DragwybControlBase extends Component {
             const uniqueSelector = `${this.selectorKey}${selectedSetting ? '_' + selectedSetting : ''}_${key}`;
 
             if (value === undefined || value === null || value === '') {
-                const defaultValue = this?.settings?.default;
-
                 this.Utils.deleteStyleSelectors({ key: uniqueSelector });
             } else {
 

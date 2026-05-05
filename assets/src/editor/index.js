@@ -25,7 +25,7 @@ const formIdExist = () => {
     const params = url.searchParams;
 
     if (!params.has('form_id')) {
-        const formId = DragwybBuilder.formId;
+        const formId = DragwybEditor.formId;
         params.set('form_id', formId); // Replace '123' with your dynamic value
         url.search = params.toString();
         window.history.replaceState({}, '', url);

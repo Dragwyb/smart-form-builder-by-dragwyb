@@ -1,19 +1,16 @@
 import { __, sprintf } from "@wordpress/i18n";
-import { useState } from "react";
-import { useEffect, useRef } from "react";
-import { useStore, useDispatch } from "react-redux";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { useStore, useDispatch, useSelector } from 'react-redux';
 import PropTypes from "prop-types";
-import { useSelector } from 'react-redux';
 import FieldSettings from "../Editor/FieldSettings";
 import DragwybToolbarBase from "../toolbarBase"
 import { Utils as Helper } from '../components/Utils';
 import { useDraggable, useDroppable } from "../components/Common";
 
-const ToolbarSettings = ({ setActiveTab, position }) => {
+const ToolbarSettings = () => {
   const setting = useSelector(state => state.activeToolbar);
   const selectedToolbar = useSelector(state => state.selectedSettingId);
-  const [toolbarValue, setToolbarValue] = useState({});
-  const [isToolbarSet, setIsToolbarSet] = useState(false);
+  const formData = useSelector(state => state.form);
   const toolbarRef = useRef(null);
 
   if (!setting) {
@@ -26,15 +23,19 @@ const ToolbarSettings = ({ setActiveTab, position }) => {
   const store = useStore();
   const state = store.getState();
 
-  const Utils = Helper(state, dispatch);
+  // Memoize Utils to avoid recreation on every render
+  const Utils = useMemo(() => {
+    return Helper(state, dispatch);
+  }, [state, dispatch]);
 
-  const extensibleUtils = {};
-  extensibleUtils.useDraggable = useDraggable;
-  extensibleUtils.useDroppable = useDroppable;
+  const extensibleUtils = useMemo(() => {
+    const utils = {};
+    utils.useDraggable = useDraggable;
+    utils.useDroppable = useDroppable;
+    Object.freeze(utils);
+    return utils;
+  }, []);
 
-  Object.freeze(extensibleUtils);
-
-  const formData = state.form;
   const toolbarData = selectedToolbar && formData[setting];
   const toolbarSettings = DragwybEditor[setting];
 
@@ -66,13 +67,13 @@ const ToolbarSettings = ({ setActiveTab, position }) => {
     };
   }, []);
 
-  const updateToolBar = ({ key, value, toolbarObj }) => {
+  const updateToolBar = useCallback(({ key, value, toolbarObj }) => {
     if (!DragwybEditor.EditorToolbars || !DragwybEditor.EditorToolbars.toolbars || !DragwybEditor.EditorToolbars.toolbars[key]) {
       return;
     }
 
     Utils.updateToolbarSetting({ id: key, value });
-  }
+  }, [Utils]);
 
   let toolBarHtml = false;
 
@@ -83,37 +84,12 @@ const ToolbarSettings = ({ setActiveTab, position }) => {
     toolBarObject = new DragwybToolbarBase([toolBarHtml, setting, selectedToolbar, toolbarData, toolbarSettings, updateToolBar, { ...Utils, ...extensibleUtils }]);
   }
 
-  useEffect(() => {
-    if (selectedToolbar) {
-      setToolbarValue(toolBarObject.getToolbarValue());
-    }
-  }, [selectedToolbar])
-
-  const setUpdateToolbarValueHandler = () => {
-    setToolbarValue(toolBarObject.getToolbarValue());
-  }
-
   const settings = toolBarObject.getToolbarSettings();
   const toolbarHTML = toolBarObject.render();
 
-  const onSettingChangeHandler = (key, value) => {
+  const onSettingChangeHandler = useCallback((key, value) => {
     toolbarRef.current.updateToolbarHandler(key, value);
-  }
-
-  const getToolbarValue = () => {
-    let toolbarValue = {};
-
-    if (!isToolbarSet) {
-      toolbarValue = toolBarObject.getToolbarValue();
-
-      if (toolbarValue) {
-        setToolbarValue(toolbarValue);
-        setIsToolbarSet(true);
-      }
-    }
-
-    return toolbarValue;
-  }
+  }, []);
 
   toolbarRef.current = toolBarObject;
 
@@ -122,17 +98,12 @@ const ToolbarSettings = ({ setActiveTab, position }) => {
     {settings && settings.controls && <div className="dragwyb-editor__settings">
       <FieldSettings
         selectedTab={setting}
-        toolbarValue={!toolbarValue || Object.keys(toolbarValue).length === 0 ? getToolbarValue() : toolbarValue}
+        toolbarValue={toolbarRef.current.getToolbarValue()}
         toolbarSettings={settings}
         onSettingChange={onSettingChangeHandler}
-        setUpdateToolbarValue={setUpdateToolbarValueHandler}
       />
     </div>}
   </div>
-};
-
-ToolbarSettings.propTypes = {
-  setting: PropTypes.string.isRequired, // only allows string
 };
 
 export default ToolbarSettings;

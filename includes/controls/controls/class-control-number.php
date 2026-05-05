@@ -24,8 +24,8 @@ class Control_Number extends Control_Base
         $this->name = __('Number', 'smart-form-builder-by-dragwyb');
     }
 
-    protected function sanitize_control($value)
+    protected function sanitize_control($value, $settings)
     {
-        return absint($value);
+        return !empty($value) ? absint($value) : '';
     }
 }

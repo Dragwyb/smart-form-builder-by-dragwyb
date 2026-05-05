@@ -45,7 +45,7 @@ class Control_Box_Shadow extends Group_Control_Base
         return $this->sanitize_control($value);
     }
 
-    protected function sanitize_control($value)
+    protected function sanitize_control($value, $settings)
     {
         if (!is_array($value)) return [];
         $sanitized = [];

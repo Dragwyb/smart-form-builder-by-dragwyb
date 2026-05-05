@@ -1,7 +1,7 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useDraggable, useDroppable } from "../../components/Common";
-import { helpers } from '../../utils/helpers';
+import { Utils as helpers } from '../../components/Utils';
 
 const Field = ({ field, value = '', onChange, errors = [], disabled = false, children, childrens, Utils }) => {
 
@@ -10,15 +10,10 @@ const Field = ({ field, value = '', onChange, errors = [], disabled = false, chi
     };
 
 
-    if (['grid', 'column'].includes(field.type)) {
+    if (['row'].includes(field.type)) {
         const extensibleUtils = {};
         extensibleUtils.useDraggable = useDraggable;
         extensibleUtils.useDroppable = useDroppable;
-
-        extensibleUtils.setSelectedSettingId = helpers.setSelectedSettingId;
-        extensibleUtils.setActiveTab = helpers.setActiveTab;
-
-        Object.freeze(extensibleUtils);
 
         Utils = { ...Utils, ...extensibleUtils };
     }

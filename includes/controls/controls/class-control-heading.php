@@ -42,7 +42,7 @@ class Control_Heading extends Control_Base
     /**
      * Sanitize: Since Headings don't save values, we just return null or empty.
      */
-    protected function sanitize_control($value)
+    protected function sanitize_control($value, $settings)
     {
         return '';
     }

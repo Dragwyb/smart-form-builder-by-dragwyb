@@ -42,7 +42,7 @@ class Control_Icon extends Control_Base
         return $icons;
     }
 
-    protected function sanitize_control($value)
+    protected function sanitize_control($value, $settings)
     {
         $icon = array();
         $icon['icon'] = '';

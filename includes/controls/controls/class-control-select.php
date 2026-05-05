@@ -23,13 +23,23 @@ class Control_Select extends Control_Base
         $this->name = __('Select', 'smart-form-builder-by-dragwyb');
     }
 
-    protected function sanitize_control($value)
+    protected function sanitize_control($value, $settings)
     {
+        if (!isset($settings['options'][$value])) {
+            return false;
+        }
+
         return sanitize_text_field($value);
     }
 
     protected function options_setting_sanitize($value)
     {
-        return $value;
+        $filterd_options = array();
+        if (is_array($value)) {
+            foreach ($value as $key => $value) {
+                $filterd_options[sanitize_text_field($key)] = sanitize_text_field($value);
+            }
+        }
+        return $filterd_options;
     }
 }

@@ -6,6 +6,7 @@ namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Repeater\Repeater;
+use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
 
 class Field_Checkbox extends Field_Base
 {
@@ -77,41 +78,56 @@ class Field_Checkbox extends Field_Base
 
         $this->end_section();
 
-        // --- Style Tab ---
+        // Label Style
         $this->start_section('section_style_label', [
-            'label' => __('Label', 'smart-form-builder-by-dragwyb'),
+            'label' => __('Label Appearance', 'smart-form-builder-by-dragwyb'),
             'tab'   => self::StyleTab,
         ]);
 
         $this->add_control('label_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Text Color', 'smart-form-builder-by-dragwyb'),
-            'selectors' => ['{{WRAPPER}} .dragwyb-field-label' => 'color: {{VALUE}};'],
+            'label'     => __('Color', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-label-color: {{VALUE}};'],
         ]);
 
-        $this->add_group_control('label_typography', [
-            'type'     => Controls::GROUP_TYPOGRAPHY,
-            'label'    => __('Typography', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}} .dragwyb-field-label',
+        $this->add_control('label_spacing', [
+            'type'      => Controls::SLIDER,
+            'label'     => __('Bottom Margin', 'smart-form-builder-by-dragwyb'),
+            'range'     => ['px' => ['min' => 0, 'max' => 50]],
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-label-spacing: {{VALUE}}{{UNIT}};'],
         ]);
 
         $this->end_section();
 
-        $this->start_section('section_style_options', [
-            'label' => __('Checkbox Options', 'smart-form-builder-by-dragwyb'),
+        $this->start_section('section_style_toggle', [
+            'label' => __('Checkbox Appearance', 'smart-form-builder-by-dragwyb'),
             'tab'   => self::StyleTab,
         ]);
 
-        $this->add_control('option_color', [
-            'type'      => Controls::COLOR,
-            'label'     => __('Text Color', 'smart-form-builder-by-dragwyb'),
-            'selectors' => ['{{WRAPPER}} .dragwyb-radio-label' => 'color: {{VALUE}};'],
+        $this->add_control('toggle_size', [
+            'type'      => Controls::SLIDER,
+            'label'     => __('Size', 'smart-form-builder-by-dragwyb'),
+            'range'     => ['px' => ['min' => 10, 'max' => 50]],
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-toggle-size: {{VALUE}}{{UNIT}};'],
         ]);
 
-        $this->add_group_control('option_typography', [
-            'type'     => Controls::GROUP_TYPOGRAPHY,
-            'label'    => __('Typography', 'smart-form-builder-by-dragwyb'),
-            'selector' => '{{WRAPPER}} .dragwyb-radio-label',
+        $this->add_control('toggle_primary_color', [
+            'type'      => Controls::COLOR,
+            'label'     => __('Primary Color', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-toggle-primary-color: {{VALUE}};'],
+        ]);
+
+        $this->add_control('toggle_border_color', [
+            'type'      => Controls::COLOR,
+            'label'     => __('Border Color', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-toggle-border-color: {{VALUE}};'],
+        ]);
+
+        $this->add_control('toggle_spacing', [
+            'type'      => Controls::SLIDER,
+            'label'     => __('Spacing', 'smart-form-builder-by-dragwyb'),
+            'range'     => ['px' => ['min' => 0, 'max' => 50]],
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-toggle-spacing: {{VALUE}}{{UNIT}};'],
         ]);
 
         $this->end_section();
@@ -138,10 +154,16 @@ class Field_Checkbox extends Field_Base
                 <?php endif; ?>
 
                 <div class="dragwyb-options-container <?php echo esc_attr($layout_class); ?>">
-                    <?php foreach ($options as $index => $opt) : $opt_id = $field_id . '_' . $index; ?>
+                    <?php foreach ($options as $index => $opt) : $opt_id = $field_id . '_' . $index;
+                        if (!isset($opt['option_value'])) {
+                            continue;
+                        }
+
+                        $label_text = isset($opt['option_label']) ? $opt['option_label'] : '';
+                    ?>
                         <label class="dragwyb-option-item" for="<?php echo esc_attr($opt_id); ?>">
-                            <input type="checkbox" id="<?php echo esc_attr($opt_id); ?>" name="<?php echo esc_attr($field_id); ?>[]" value="<?php echo esc_attr($opt['option_value']); ?>">
-                            <span class="dragwyb-radio-label"><?php echo esc_html($opt['option_label']); ?></span>
+                            <input type="checkbox" id="<?php echo esc_attr($opt_id); ?>" name="<?php echo esc_attr($field_id); ?>[]" value="<?php echo isset($opt['option_value']) ? esc_attr($opt['option_value']) : ''; ?>">
+                            <span class="dragwyb-radio-label"><?php echo esc_html($label_text); ?></span>
                         </label>
                     <?php endforeach; ?>
                 </div>
@@ -153,14 +175,60 @@ class Field_Checkbox extends Field_Base
 <?php
     }
 
-    public function validate($value): bool
+    public function validate($value, $field_id, $form_config, Form_Submission_Handler $error_handler): void
     {
-        return true;
-    } // Basic
-    public function sanitize($value)
-    {
-        return $value;
+        if (!isset($form_config['fields'][$field_id])) {
+            $error_handler->add_error($field_id, __('Invalid field.', 'smart-form-builder-by-dragwyb'));
+            return;
+        }
+
+        $field_attr = isset($form_config['fields'][$field_id]['attributes']) ? $form_config['fields'][$field_id]['attributes'] : array();
+
+        $value = (array) $value;
+        $options = isset($field_attr['options_list']) ? $field_attr['options_list'] : [];
+        $valid_values = [];
+
+        foreach ($options as $option) {
+            if (!isset($option['option_value'])) {
+                continue;
+            }
+            $valid_values[] = $option['option_value'];
+        }
+
+        if (empty($value) && isset($field_attr['required']) && 'yes' == $field_attr['required']) {
+            $error_handler->add_error($field_id, __('This field is required', 'smart-form-builder-by-dragwyb'));
+        }
+
+        if (empty($value)) {
+            return;
+        }
+
+        foreach ($value as $val) {
+            if (!in_array($val, $valid_values)) {
+                $error_handler->add_error($field_id, __('Invalid value', 'smart-form-builder-by-dragwyb'));
+            }
+        }
     }
+
+    /**
+     * Sanitize the field value.
+     *
+     * @param string $default The default value.
+     * @param mixed $value The value to sanitize.
+     * @return mixed Sanitized value.
+     */
+    public function sanitize($default = '', $value = null)
+    {
+        if ($value) {
+            if (!is_array($value)) {
+                $value = [$value];
+            }
+            return array_map('sanitize_text_field', $value);
+        }
+
+        return sanitize_text_field($default);
+    }
+
     protected function register_scripts()
     {
         return [];

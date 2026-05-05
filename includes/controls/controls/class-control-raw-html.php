@@ -28,7 +28,7 @@ class Control_Raw_Html extends Control_Base
         return wp_kses_post($value);
     }
 
-    protected function sanitize_control($value)
+    protected function sanitize_control($value, $settings)
     {
         return false;
     }
