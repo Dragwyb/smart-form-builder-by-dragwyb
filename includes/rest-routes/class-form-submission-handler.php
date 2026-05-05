@@ -248,10 +248,10 @@ class Form_Submission_Handler
     /**
      * Set the form return data.
      * @param string $id The form return data ID.
-     * @param mixed $value The form return data value.
+     * @param $value The form return data value.
      * @return void
      */
-    public function set_form_return_data(string $id, mixed $value): void
+    public function set_form_return_data(string $id, $value): void
     {
         $this->form_return_data[$id] = $value;
     }
