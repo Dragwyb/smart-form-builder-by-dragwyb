@@ -35,6 +35,17 @@ class Email_Action extends Email_Action_Base
         $settings = $form_config['after-submission'] ?? [];
 
         $to = $settings['email_to_admin_email'] ?? get_option('admin_email');
+
+        if (empty($to)) {
+            $form_submission->add_error('admin_email', 'No email address found');
+            return;
+        }
+
+        if (!is_email($to)) {
+            $form_submission->add_error('admin_email', 'No valid email address found');
+            return; // Target is not a valid email after parsing
+        }
+
         $subject = $settings['email_subject_admin_email'] ?? __('New Submission: [Form Name]', 'smart-form-builder-by-dragwyb');
         $message = $settings['email_message_body_admin_email'] ?? '{all_fields}';
 
