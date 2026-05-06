@@ -199,6 +199,8 @@ class Form_Submission_Handler
      */
     private function set_fields_sanitized_values(string $field_type, string $field_orignal_key, array $field_data, $field_value, Frontend_Render $frontend): void
     {
+        $field_orignal_key = sanitize_text_field($field_orignal_key);
+
         $this->form_config['fields'][$field_orignal_key] = $field_data;
         $field_module = $frontend->get_module($field_type);
 
