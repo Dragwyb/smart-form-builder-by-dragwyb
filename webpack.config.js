@@ -188,7 +188,8 @@ module.exports = (env, argv) => {
     const scssFiles = [
         'editor-global',
         'form-frontend',
-        'editor-preview'
+        'editor-preview',
+        'entries'
     ]
 
     if (env && env.type === 'editor') {
