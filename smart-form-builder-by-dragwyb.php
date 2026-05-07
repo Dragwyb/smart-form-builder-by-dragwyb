@@ -19,6 +19,7 @@ if (!defined('ABSPATH')) {
 
 use Dragwyb\Form_Builder\Dragwyb_Form_Builder_Autoload;
 use Dragwyb\Form_Builder\Includes\Dragwyb_Init;
+use Dragwyb\Form_Builder\Admin\Db\Submission\Dragwyb_Submission_Db;
 
 final class Dragwyb_Form_Builder
 {
@@ -79,6 +80,18 @@ final class Dragwyb_Form_Builder
     }
 
     /**
+     * Check if plugin version changed, and update DB if needed.
+     */
+    private static function create_submission_db(): void
+    {
+        $db_version = get_option('dragwyb_submission_db_version', false);
+        if (!$db_version || $db_version !== Dragwyb_Submission_Db::VERSION) {
+            Dragwyb_Submission_Db::create_table();
+            update_option('dragwyb_submission_db_version', Dragwyb_Submission_Db::VERSION);
+        }
+    }
+
+    /**
      * Initialize plugin components
      */
     public function init_plugin(): void
@@ -87,7 +100,20 @@ final class Dragwyb_Form_Builder
         $dragwyb = Dragwyb_Init::instance();
         $dragwyb->init();
     }
+
+    /**
+     * Plugin activation hook
+     */
+    public static function activate(): void
+    {
+        require_once plugin_dir_path(__FILE__) . 'class-dragwyb-autoload.php';
+        Dragwyb_Form_Builder_Autoload::instance();
+
+        self::create_submission_db();
+    }
 }
+
+register_activation_hook(__FILE__, ['Dragwyb_Form_Builder', 'activate']);
 
 // Initialize plugin
 function dragwyb_form_builder()

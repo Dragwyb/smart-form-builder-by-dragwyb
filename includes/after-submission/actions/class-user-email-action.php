@@ -33,14 +33,20 @@ class User_Email_Action extends Email_Action_Base
     public function process_submission($form_id, $form_data, $form_config, Form_Submission_Handler $form_submission)
     {
         $settings = $form_config['after-submission'] ?? [];
-        
+
         $to = $settings['email_to_user_email'] ?? '';
         $subject = $settings['email_subject_user_email'] ?? __('New Submission: [Form Name]', 'smart-form-builder-by-dragwyb');
         $message = $settings['email_message_body_user_email'] ?? '{all_fields}';
 
         $to = $this->replace_shortcodes($to, $form_data, $form_config);
-        
+
+        if (empty($to)) {
+            $form_submission->add_error('user_email', 'No email address found');
+            return;
+        }
+
         if (!is_email($to)) {
+            $form_submission->add_error('user_email', 'No valid email address found');
             return; // Target is not a valid email after parsing
         }
 

@@ -11,6 +11,7 @@ if (!defined('ABSPATH')) {
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbars;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
 use Dragwyb\Form_Builder\Includes\Frontend\Managers\CSS_Manager;
+use Dragwyb\Form_Builder\Admin\Db\Submission\Dragwyb_Submission_Db;
 
 class Dragwyb_Form_Builder_Ajax
 {
@@ -20,6 +21,11 @@ class Dragwyb_Form_Builder_Ajax
     public function __construct()
     {
         add_action('wp_ajax_dragwyb_save_form', [$this, 'save_form']);
+        add_action('wp_ajax_dragwyb_get_entries', [$this, 'get_entries']);
+        add_action('wp_ajax_dragwyb_get_forms', [$this, 'get_forms']);
+        add_action('wp_ajax_dragwyb_get_entry', [$this, 'get_entry']);
+        add_action('wp_ajax_dragwyb_update_entry', [$this, 'update_entry']);
+        add_action('wp_ajax_dragwyb_delete_entry', [$this, 'delete_entry']);
     }
 
     /**
@@ -128,5 +134,199 @@ class Dragwyb_Form_Builder_Ajax
                 }
             }
         }
+    }
+
+    /**
+     * Get entries via AJAX
+     */
+    public function get_entries(): void
+    {
+        check_ajax_referer('dragwyb_admin_nonce');
+
+        if (!current_user_can('edit_posts')) {
+            wp_send_json_error(['message' => __('Permission denied', 'smart-form-builder-by-dragwyb')]);
+        }
+
+        $db = new Dragwyb_Submission_Db();
+
+        $args = [
+            'limit'   => isset($_POST['limit']) ? absint($_POST['limit']) : 20,
+            'offset'  => isset($_POST['offset']) ? absint($_POST['offset']) : 0,
+            'orderby' => isset($_POST['orderby']) ? sanitize_text_field($_POST['orderby']) : 'created_at',
+            'order'   => isset($_POST['order']) ? sanitize_text_field($_POST['order']) : 'DESC',
+            'search'  => isset($_POST['search']) ? sanitize_text_field($_POST['search']) : '',
+            'form_id' => isset($_POST['form_id']) ? absint($_POST['form_id']) : 0,
+        ];
+
+        $entries = $db->get_all($args);
+        $total   = $db->get_total_count($args);
+
+        // Process data for UI
+        foreach ($entries as &$entry) {
+            $data = json_decode($entry->submission_data, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($data)) {
+                $summary = [];
+                $count = 0;
+                foreach ($data as $key => $value) {
+                    if ($count >= 3) break;
+                    $display_val = is_array($value) ? implode(', ', $value) : (string)$value;
+                    $summary[] = sprintf('<strong>%s:</strong> %s', esc_html((string)$key), esc_html($display_val));
+                    $count++;
+                }
+                $entry->submission_data_summary = implode('<br>', $summary) . (count($data) > 3 ? '<br><em>...and more</em>' : '');
+            } else {
+                $entry->submission_data_summary = esc_html(wp_trim_words($entry->submission_data, 10, '...'));
+            }
+            $entry->created_at_formatted = wp_date(get_option('date_format') . ' ' . get_option('time_format'), strtotime($entry->created_at));
+        }
+
+        wp_send_json_success([
+            'entries'     => $entries,
+            'total_items' => $total,
+            'total_pages' => ceil($total / max(1, $args['limit'])),
+        ]);
+    }
+
+    /**
+     * Get forms list via AJAX
+     */
+    public function get_forms(): void
+    {
+        check_ajax_referer('dragwyb_admin_nonce');
+
+        if (!current_user_can('edit_posts')) {
+            wp_send_json_error(['message' => __('Permission denied', 'smart-form-builder-by-dragwyb')]);
+        }
+
+        $forms = get_posts([
+            'post_type'      => 'Dragwyb_Page', // Assuming Dragwyb_Page is the CPT based on class-dragwyb-pages.php
+            'posts_per_page' => -1,
+            'post_status'    => 'publish',
+            'orderby'        => 'title',
+            'order'          => 'ASC',
+        ]);
+
+        $options = [];
+        foreach ($forms as $form) {
+            $options[] = [
+                'id'    => $form->ID,
+                'title' => $form->post_title,
+            ];
+        }
+
+        wp_send_json_success(['forms' => $options]);
+    }
+
+    /**
+     * Get single entry
+     */
+    public function get_entry(): void
+    {
+        check_ajax_referer('dragwyb_admin_nonce');
+
+        if (!current_user_can('edit_posts')) {
+            wp_send_json_error(['message' => __('Permission denied', 'smart-form-builder-by-dragwyb')]);
+        }
+
+        $id = isset($_POST['id']) ? absint($_POST['id']) : 0;
+        if (!$id) {
+            wp_send_json_error(['message' => __('Invalid ID', 'smart-form-builder-by-dragwyb')]);
+        }
+
+        $db = new Dragwyb_Submission_Db();
+        $entry = $db->get($id);
+
+        if (!$entry) {
+            wp_send_json_error(['message' => __('Entry not found', 'smart-form-builder-by-dragwyb')]);
+        }
+
+        // Decode JSON safely for frontend usage
+        $entry->submission_data_decoded = json_decode($entry->submission_data, true);
+        if (json_last_error() !== JSON_ERROR_NONE || !is_array($entry->submission_data_decoded)) {
+            $entry->submission_data_decoded = [];
+        }
+
+        wp_send_json_success(['entry' => $entry]);
+    }
+
+    /**
+     * Update an entry (Quick Edit or Full Edit)
+     */
+    public function update_entry(): void
+    {
+        check_ajax_referer('dragwyb_admin_nonce');
+
+        if (!current_user_can('edit_posts')) {
+            wp_send_json_error(['message' => __('Permission denied', 'smart-form-builder-by-dragwyb')]);
+        }
+
+        $id = isset($_POST['id']) ? absint($_POST['id']) : 0;
+        if (!$id) {
+            wp_send_json_error(['message' => __('Invalid ID', 'smart-form-builder-by-dragwyb')]);
+        }
+
+        $data = [];
+
+        // Check if quick edit data exists
+        if (isset($_POST['status'])) {
+            $data['status'] = sanitize_text_field($_POST['status']);
+        }
+        if (isset($_POST['created_at'])) {
+            $data['created_at'] = sanitize_text_field($_POST['created_at']);
+        }
+
+        // Check if full edit data exists (JSON payload)
+        if (isset($_POST['submission_data'])) {
+            // Data is JSON string from JS, decode it, sanitize it, and encode it back to ensure validity
+            $submission_data = json_decode(wp_unslash($_POST['submission_data']), true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($submission_data)) {
+                $sanitized = [];
+                foreach ($submission_data as $key => $val) {
+                    $s_key = sanitize_text_field($key);
+                    $s_val = is_array($val) ? array_map('sanitize_textarea_field', $val) : sanitize_textarea_field((string)$val);
+                    $sanitized[$s_key] = $s_val;
+                }
+                $data['submission_data'] = wp_json_encode($sanitized);
+            }
+        }
+
+        if (empty($data)) {
+            wp_send_json_error(['message' => __('No data provided for update.', 'smart-form-builder-by-dragwyb')]);
+        }
+
+        $db = new Dragwyb_Submission_Db();
+        $updated = $db->update($id, $data);
+
+        if ($updated === false) {
+            wp_send_json_error(['message' => __('Failed to update entry.', 'smart-form-builder-by-dragwyb')]);
+        }
+
+        wp_send_json_success(['message' => __('Entry updated successfully.', 'smart-form-builder-by-dragwyb')]);
+    }
+
+    /**
+     * Delete an entry
+     */
+    public function delete_entry(): void
+    {
+        check_ajax_referer('dragwyb_admin_nonce');
+
+        if (!current_user_can('edit_posts')) {
+            wp_send_json_error(['message' => __('Permission denied', 'smart-form-builder-by-dragwyb')]);
+        }
+
+        $id = isset($_POST['id']) ? absint($_POST['id']) : 0;
+        if (!$id) {
+            wp_send_json_error(['message' => __('Invalid ID', 'smart-form-builder-by-dragwyb')]);
+        }
+
+        $db = new Dragwyb_Submission_Db();
+        $deleted = $db->delete($id);
+
+        if ($deleted === false) {
+            wp_send_json_error(['message' => __('Failed to delete entry.', 'smart-form-builder-by-dragwyb')]);
+        }
+
+        wp_send_json_success(['message' => __('Entry deleted successfully.', 'smart-form-builder-by-dragwyb')]);
     }
 }
