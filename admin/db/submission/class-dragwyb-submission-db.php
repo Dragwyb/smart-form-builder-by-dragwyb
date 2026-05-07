@@ -16,10 +16,10 @@ class Dragwyb_Submission_Db
     /**
      * Get the table name with the WP prefix.
      */
-    public static function get_table_name(): string
+    private static function get_table_name(): string
     {
         global $wpdb;
-        return $wpdb->prefix . 'dragwyb_submissions';
+        return esc_sql(sanitize_text_field($wpdb->prefix . 'dragwyb_submissions'));
     }
 
     /**
@@ -119,6 +119,129 @@ class Dragwyb_Submission_Db
 
         $sql = $wpdb->prepare("SELECT * FROM $table_name WHERE id = %d", $id);
         return $wpdb->get_row($sql);
+    }
+
+    /**
+     * Get submissions with pagination and sorting.
+     *
+     * @param array $args Query arguments (limit, offset, orderby, order, search, form_id)
+     * @return array Array of submission objects.
+     */
+    public function get_all(array $args = []): array
+    {
+        global $wpdb;
+        $table_name = self::get_table_name();
+
+        $defaults = [
+            'limit'   => 20,
+            'offset'  => 0,
+            'orderby' => 'created_at',
+            'order'   => 'DESC',
+            'search'  => '',
+            'form_id' => 0,
+        ];
+
+        $args = wp_parse_args($args, $defaults);
+
+        $allowed_orderby = ['id', 'form_id', 'ip_address', 'created_at'];
+        $orderby = in_array($args['orderby'], $allowed_orderby) ? $args['orderby'] : 'created_at';
+        $order = strtoupper($args['order']) === 'ASC' ? 'ASC' : 'DESC';
+
+        $query_params = [];
+        $where_clause = $this->build_where_clause($args, $query_params);
+
+        $query_params[] = absint($args['limit']);
+        $query_params[] = absint($args['offset']);
+
+        $sql = "SELECT * FROM $table_name $where_clause ORDER BY $orderby $order LIMIT %d OFFSET %d";
+        
+        $sql = $wpdb->prepare($sql, ...$query_params);
+
+        return $wpdb->get_results($sql);
+    }
+
+    /**
+     * Get the total count of submissions.
+     *
+     * @param array $args Query arguments (search, form_id)
+     * @return int
+     */
+    public function get_total_count(array $args = []): int
+    {
+        global $wpdb;
+        $table_name = self::get_table_name();
+
+        $query_params = [];
+        $where_clause = $this->build_where_clause($args, $query_params);
+
+        $sql = "SELECT COUNT(id) FROM $table_name $where_clause";
+
+        if (!empty($query_params)) {
+            $sql = $wpdb->prepare($sql, ...$query_params);
+        }
+
+        return (int) $wpdb->get_var($sql);
+    }
+
+    /**
+     * Helper to build WHERE clause
+     */
+    private function build_where_clause(array $args, array &$query_params): string
+    {
+        global $wpdb;
+        $where = [];
+
+        if (!empty($args['form_id'])) {
+            $where[] = 'form_id = %d';
+            $query_params[] = absint($args['form_id']);
+        }
+
+        if (!empty($args['search'])) {
+            $search = '%' . $wpdb->esc_like(sanitize_text_field($args['search'])) . '%';
+            $where[] = '(ip_address LIKE %s OR submission_data LIKE %s)';
+            $query_params[] = $search;
+            $query_params[] = $search;
+        }
+
+        return !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
+    }
+
+    /**
+     * Update an existing submission.
+     *
+     * @param int $id The submission ID.
+     * @param array $data The data to update.
+     * @return int|false The number of rows updated, or false on error.
+     */
+    public function update(int $id, array $data)
+    {
+        global $wpdb;
+        $table_name = self::get_table_name();
+
+        // Using wpdb->update which internally prepares statements safely
+        return $wpdb->update(
+            $table_name,
+            $data,
+            ['id' => $id]
+        );
+    }
+
+    /**
+     * Delete a submission.
+     *
+     * @param int $id The submission ID.
+     * @return int|false The number of rows deleted, or false on error.
+     */
+    public function delete(int $id)
+    {
+        global $wpdb;
+        $table_name = self::get_table_name();
+
+        return $wpdb->delete(
+            $table_name,
+            ['id' => $id],
+            ['%d']
+        );
     }
 
     /**
