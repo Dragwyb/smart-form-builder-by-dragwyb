@@ -64,7 +64,7 @@ class Dragwyb_Init
 
         $js_assets_info = array(
             'version' => DRAGWYB_FORM_BUILDER_VERSION,
-            'dependencies' => array()
+            'dependencies' => array('jquery')
         );
 
         if (file_exists(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/core/core.asset.php')) {
