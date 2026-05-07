@@ -43,7 +43,7 @@ class Entries
 
         wp_enqueue_script(
             DRAGWYB_PREFIX . '-entries-script',
-            esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/js/dragwyb-entries.js'),
+            esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/js/entries.js'),
             [],
             esc_attr(DRAGWYB_FORM_BUILDER_VERSION),
             true
