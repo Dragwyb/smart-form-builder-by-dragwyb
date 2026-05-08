@@ -22,6 +22,7 @@ import IconControl from './iconControl';
 import HeadingControl from './headingControl';
 import RawHtmlControl from './rawHtmlControl';
 import ImageControl from './imageControl';
+import WysiwygControl from './wysiwygControl';
 
 const initializeControls = () => {
     const defaultControls = {
@@ -29,6 +30,7 @@ const initializeControls = () => {
         'select': SelectControl,
         'multiselect': MultiSelectControl,
         'textarea': TextareaControl,
+        'wysiwyg': WysiwygControl,
         'switcher': SwitcherControl,
         'dimensions': DimensionsControl,
         'radio': RadioControl,
