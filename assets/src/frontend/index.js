@@ -1,6 +1,6 @@
-import './classes/form-frontend-base';
-import DragwybFrontend from './classes/frontend';
-import DragwybFormHandler from './classes/form-handler';
+import './handler/form-frontend-base';
+import DragwybFrontend from './frontend';
+import DragwybFormHandler from './handler/form-handler';
 
 jQuery(document).on('Dragwyb:frontendInit', () => {
     DragwybBuilder.Hooks.addAction('dragwyb/frontend/form_ready', (container, formId) => {
