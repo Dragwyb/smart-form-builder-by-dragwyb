@@ -283,7 +283,7 @@
             &:not(:placeholder-shown)~.dragwyb-field-label {
                 padding: 0 4px;
                 margin-left: -4px;
-                background: linear-gradient(to bottom, var(--dragwyb-form-bg-color) 50%, var(--dragwyb-input-focus-bg) 50%);
+                background: linear-gradient(to bottom, var(--dragwyb-row-bg-color, var(--dragwyb-form-bg-color)) 50%, var(--dragwyb-input-focus-bg) 50%);
             }
         }
 
