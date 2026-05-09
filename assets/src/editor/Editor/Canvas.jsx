@@ -42,6 +42,7 @@ const RenderItem = React.memo(({
         }
 
         return JSON.stringify(attributesRef.current) === JSON.stringify({ ...nextProps.fields[fieldId].attributes });
+
     }
 
     const formData = useSelector((state) => state.form, isFieldEqual);
@@ -51,13 +52,16 @@ const RenderItem = React.memo(({
     totalChildrensRef.current = field?.children?.length || 0;
 
     const selectedField = useSelector((state) => state.selectedSettingId);
+
+    if (!field) {
+        return null;
+    }
+
     const fieldSettings = DragwybEditor.fields.fields[field.type];
     const allowedChildren = fieldSettings?.allow_child || false;
     const isRootContainer = field?.is_root_container || false;
-
     const childrens = field.children;
 
-    // Droppable for this specific field (for sorting)
     const { setNodeRef: dropRef } = allowedChildren === true ? useDroppable({
         id: `canvas-drop-field-${field._id}`,
         data: {
@@ -67,7 +71,6 @@ const RenderItem = React.memo(({
         },
     }) : {};
 
-    // Draggable for this specific field
     const {
         attributes,
         listeners,
@@ -82,7 +85,6 @@ const RenderItem = React.memo(({
         },
     }) : {};
 
-    // Combine refs
     const setNodeRef = useCallback((Node) => {
         if (!Node) return;
         if (dropRef) dropRef(Node);
@@ -124,10 +126,6 @@ const RenderItem = React.memo(({
 
         onFieldSelect({ id });
     }, [field._id, isRootContainer, selectedField, onFieldSelect]);
-
-    if (!field) {
-        return null;
-    }
 
     return (
         <>
@@ -250,12 +248,10 @@ const Canvas = ({
     const store = useStore();
     const state = store.getState();
 
-    // Memoize Utils to avoid recreation on every render
     const Utils = useMemo(() => {
         return Helper(state, dispatch);
     }, [state, dispatch]);
 
-    // Main Droppable Wrapper (for dropping into empty list or at end)
     const { setNodeRef, isOver } = useDroppable({
         id: `canvas-drop-wrapper`,
         data: {
@@ -305,9 +301,9 @@ const Canvas = ({
         Utils.duplicateStyleSelectors({ cloneId: deepClone._id, currentId: field._id, dispatch, state: store.getState() });
 
         if (childreIds.length > 0) {
-            childreIds.map((childId, childIndex) => {
+            childreIds.forEach((childId, childIndex) => {
                 handleDuplicateField(formData.fields[childId], childIndex - 1, deepClone._id);
-            })
+            });
         }
     }, [Utils, dispatch, onFieldSelect, store]);
 
@@ -321,21 +317,16 @@ const Canvas = ({
         canvasCls += " canvas-empty";
     }
 
-    // Memoize isButtonContainer check
     const isButtonContainer = useCallback((fieldKey) => {
         const field = formFields[fieldKey];
         if (!field || !field.is_root_container || !field.children || field.children.length === 0) {
             return false;
         }
 
-        for (let i = 0; i < field.children.length; i++) {
-            const childField = formFields[field.children[i]];
-            if (childField && childField.type === 'button') {
-                return true;
-            }
-        }
-
-        return false;
+        return field.children.some(childId => {
+            const childField = formFields[childId];
+            return childField && childField.type === 'button';
+        });
     }, [formFields]);
 
     return (
