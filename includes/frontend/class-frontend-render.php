@@ -432,7 +432,7 @@ class Frontend_Render
 
         if (defined('DRAGWYB_FORM_PREVIEW') && true === DRAGWYB_FORM_PREVIEW && function_exists('wp_add_inline_style')) {
             $form_id = self::$form_id;
-            $unique_id = get_post_meta($form_id, 'dragwyb_form_assets_id', true);
+            $unique_id = get_post_meta($form_id, '_dragwyb_form_assets_id', true);
             $atfp_style_exist = false;
 
             if ($unique_id && $unique_id !== '') {
