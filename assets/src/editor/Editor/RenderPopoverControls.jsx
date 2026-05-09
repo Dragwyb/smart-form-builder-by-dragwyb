@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { updatePopoverControls, resetPopoverControls, updatePopoverInitStatus } from "../store/actions";
 import { FaUndo } from "react-icons/fa";

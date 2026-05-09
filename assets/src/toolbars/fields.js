@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { SearchInput } from '../editor/components/Common';
 import { __ } from '@wordpress/i18n';
 import Scrollbar from '../editor/components/Scrollbar';
-import { RiArrowDownSLine } from "react-icons/ri";
 import { TiArrowSortedDown } from "react-icons/ti";
 
 const SidebarField = (props) => {

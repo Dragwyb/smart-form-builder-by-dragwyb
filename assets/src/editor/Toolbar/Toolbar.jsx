@@ -1,5 +1,4 @@
 import { useSelector } from "react-redux";
-import { Button } from "../components/Common";
 
 const ToolBar = ({ setActiveTab, setSettingId }) => {
     const activeTab = useSelector(state => state.activeToolbar);

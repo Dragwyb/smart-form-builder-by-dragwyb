@@ -1,5 +1,4 @@
 import UnitSelector from "./common/UnitSelector";
-import Reset from "../editor/components/Common/Reset";
 import { RiLink, RiLinkUnlink } from "react-icons/ri";
 
 export default class DimensionsControl extends DragwybEditor.editor.extends

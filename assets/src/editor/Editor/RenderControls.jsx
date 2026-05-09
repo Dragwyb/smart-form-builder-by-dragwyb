@@ -4,7 +4,6 @@ import shouldRenderField from './shouldRenderField';
 import DragwybControlBase from '../controlBase'
 import { Utils as Helper } from '../components/Utils';
 import ControlsConditions from "./controlsCondition";
-import { FaUndo } from "react-icons/fa";
 import { __ } from "@wordpress/i18n";
 
 const RenderControl = ({
