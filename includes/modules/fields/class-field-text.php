@@ -9,22 +9,6 @@ use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
 
 class Field_Text extends Field_Base
 {
-    protected function register_scripts()
-    {
-        $scripts = array();
-
-        if (defined('DRAGWYB_EDITOR')) {
-            $scripts = array('dragwyb_editor_fields');
-        }
-
-        return $scripts;
-    }
-
-    protected function register_style()
-    {
-        return array();
-    }
-
     public function __construct()
     {
         parent::__construct();

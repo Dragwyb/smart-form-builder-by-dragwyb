@@ -10,16 +10,6 @@ use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
 
 class Field_Radio extends Field_Base
 {
-    protected function register_scripts()
-    {
-        return array();
-    }
-
-    protected function register_style()
-    {
-        return array();
-    }
-
     protected function register_field_controls(): void
     {
         // ==============================================================

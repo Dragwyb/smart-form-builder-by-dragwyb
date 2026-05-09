@@ -106,13 +106,4 @@ class Field_Hidden extends Field_Base
 
         return null;
     }
-
-    protected function register_scripts()
-    {
-        return [];
-    }
-    protected function register_style()
-    {
-        return [];
-    }
 }

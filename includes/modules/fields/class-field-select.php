@@ -10,16 +10,6 @@ use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
 
 class Field_Select extends Field_Base
 {
-    protected function register_scripts()
-    {
-        return array(); // If needed, you can enqueue custom scripts here
-    }
-
-    protected function register_style()
-    {
-        return array(); // If needed, you can enqueue custom styles here
-    }
-
     protected function register_field_controls(): void
     {
         // ==============================================================

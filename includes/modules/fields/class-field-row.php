@@ -25,11 +25,6 @@ class Field_Row extends Field_Base
         return $scripts;
     }
 
-    protected function register_style()
-    {
-        return array();
-    }
-
     public function __construct()
     {
         parent::__construct();

@@ -228,13 +228,4 @@ class Field_Checkbox extends Field_Base
 
         return sanitize_text_field($default);
     }
-
-    protected function register_scripts()
-    {
-        return [];
-    }
-    protected function register_style()
-    {
-        return [];
-    }
 }
