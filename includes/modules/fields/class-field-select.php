@@ -181,6 +181,12 @@ class Field_Select extends Field_Base
 ?>
         <div id="<?php echo esc_attr($this->field_wrapper_id($id)); ?>" class="<?php echo esc_attr($this->field_wrapper_class($classes)); ?> dragwyb-no-float">
             <div class="dragwyb-input-group">
+                <?php if (!empty($label)) : ?>
+                    <label for="<?php echo esc_attr($field_id); ?>" class="dragwyb-field-label">
+                        <?php echo esc_html($label); ?>
+                        <?php if ($required) : ?><span class="dragwyb-required">*</span><?php endif; ?>
+                    </label>
+                <?php endif; ?>
                 <select
                     id="<?php echo esc_attr($field_id); ?>"
                     name="<?php echo esc_attr($field_id); ?>"
@@ -195,12 +201,6 @@ class Field_Select extends Field_Base
                         </option>
                     <?php endforeach; ?>
                 </select>
-                <?php if (!empty($label)) : ?>
-                    <label for="<?php echo esc_attr($field_id); ?>" class="dragwyb-field-label">
-                        <?php echo esc_html($label); ?>
-                        <?php if ($required) : ?><span class="dragwyb-required">*</span><?php endif; ?>
-                    </label>
-                <?php endif; ?>
             </div>
             <?php if (!empty($help)) : ?>
                 <div class="dragwyb-field-help"><?php echo esc_html($help); ?></div>
@@ -227,12 +227,19 @@ class Field_Select extends Field_Base
             return;
         }
 
+        $option_values = array();
+
         $field_options = isset($field_attr['options_list']) ? $field_attr['options_list'] : array();
 
-        // Validate against defined options
-        $valid_values = array_column($field_options, 'option_value');
+        if (is_array($field_options)) {
+            foreach ($field_options as $field_option) {
+                if (isset($field_option['attributes']['option_value'])) {
+                    $option_values[] = $field_option['attributes']['option_value'];
+                }
+            }
+        }
 
-        if (!in_array($value, $valid_values, true)) {
+        if (!in_array($value, $option_values, true)) {
             $error_handler->add_error($field_id, __('Invalid option selected', 'smart-form-builder-by-dragwyb'));
         }
     }

@@ -206,12 +206,19 @@ class Field_Radio extends Field_Base
             return;
         }
 
+        $option_values = array();
+
         $field_options = isset($field_attr['options_list']) ? $field_attr['options_list'] : array();
 
-        // Check if value exists in options
-        $valid_values = array_column($field_options, 'option_value');
+        if (is_array($field_options)) {
+            foreach ($field_options as $field_option) {
+                if (isset($field_option['attributes']['option_value'])) {
+                    $option_values[] = $field_option['attributes']['option_value'];
+                }
+            }
+        }
 
-        if (!in_array($value, $valid_values, true)) {
+        if (!in_array($value, $option_values, true)) {
             $error_handler->add_error($field_id, __('Invalid option selected', 'smart-form-builder-by-dragwyb'));
         }
     }
