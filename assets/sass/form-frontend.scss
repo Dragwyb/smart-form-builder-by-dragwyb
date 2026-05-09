@@ -277,7 +277,7 @@
         }
 
         /* Sub-Variants */
-        &.dragwyb-float-outlined .dragwyb-field-input {
+        &.dragwyb-float-outlined .dragwyb-field-wrapper:not(.dragwyb-no-float) .dragwyb-field-input {
 
             &:focus~.dragwyb-field-label,
             &:not(:placeholder-shown)~.dragwyb-field-label {
@@ -287,7 +287,7 @@
             }
         }
 
-        &.dragwyb-float-inside .dragwyb-field-input {
+        &.dragwyb-float-inside .dragwyb-field-wrapper:not(.dragwyb-no-float) .dragwyb-field-input {
             background-color: var(--dragwyb-form-bg-filled);
             border: none;
             border-bottom: 2px solid var(--dragwyb-input-border-color);
