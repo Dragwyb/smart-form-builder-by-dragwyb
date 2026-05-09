@@ -605,6 +605,8 @@ class Frontend_Render
             $final_property = $css_property;
 
             foreach ($placeholders as $ph_key => $ph_value) {
+                $ph_key = sanitize_text_field($ph_key);
+                $ph_value = is_string($ph_value) ? sanitize_text_field($ph_value) : boolval($ph_value);
                 $css_value = '';
                 if ($ph_value === true) {
                     $css_value = sanitize_text_field($value);
@@ -612,6 +614,12 @@ class Frontend_Render
                     $css_value = isset($value[$ph_value]) ? $value[$ph_value] : '';
                 }
 
+                if ($css_value === '' && isset($placeholders['UNIT'])) {
+                    $is_unit_value = '{{' . $ph_key . '}}' . '{{UNIT}}';
+                    if (strpos($final_property, $is_unit_value) !== false) {
+                        $final_property = str_replace($is_unit_value, (string)$css_value, $final_property);
+                    }
+                }
                 $final_property = trim(str_replace('{{' . $ph_key . '}}', (string)$css_value, $final_property));
             }
 
