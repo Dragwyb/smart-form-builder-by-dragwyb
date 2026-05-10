@@ -17,7 +17,7 @@ use Dragwyb\Form_Builder\Includes\Categories\Categories;
 use Dragwyb\Form_Builder\Includes\Categories\Categories\Category_Base;
 
 if (!defined("ABSPATH")) {
-    die("You can't access this page");
+    exit;
 }
 
 
@@ -228,7 +228,6 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             $localize_data = [
                 'ajaxUrl' => admin_url('admin-ajax.php'),
                 'pluginUrl' => esc_url(DRAGWYB_FORM_BUILDER_URL),
-                'pluginPath' => DRAGWYB_FORM_BUILDER_PATH,
                 'nonce' => wp_create_nonce('dragwyb_editor'),
                 'formId' => (int) self::$form_id,
                 'editorContainer' => esc_html(self::Current_Page) . '-editor-container',
