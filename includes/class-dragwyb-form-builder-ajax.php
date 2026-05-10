@@ -149,11 +149,14 @@ class Dragwyb_Form_Builder_Ajax
         }
 
         $db = new Dragwyb_Submission_Db();
+        $allowed_orderby = ['id', 'form_id', 'ip_address', 'created_at'];
+        $orderby = isset($_POST['orderby']) ? sanitize_key(wp_unslash($_POST['orderby'])) : 'created_at';
+        $orderby = in_array($orderby, $allowed_orderby, true) ? $orderby : 'created_at';
 
         $args = [
             'limit'   => isset($_POST['limit']) ? absint(wp_unslash($_POST['limit'])) : 20,
             'offset'  => isset($_POST['offset']) ? absint(wp_unslash($_POST['offset'])) : 0,
-            'orderby' => isset($_POST['orderby']) ? sanitize_key(wp_unslash($_POST['orderby'])) : 'created_at',
+            'orderby' => $orderby,
             'order'   => isset($_POST['order']) ? sanitize_key(wp_unslash($_POST['order'])) : 'DESC',
             'search'  => isset($_POST['search']) ? sanitize_text_field(wp_unslash($_POST['search'])) : '',
             'form_id' => isset($_POST['form_id']) ? absint(wp_unslash($_POST['form_id'])) : 0,
