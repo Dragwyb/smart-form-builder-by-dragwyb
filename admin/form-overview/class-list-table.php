@@ -121,7 +121,7 @@ class List_Table extends WP_List_Table
                 break;
 
             case 'shortcode':
-                $value = '[' . DRAGWYB_PREFIX . '-form id="' . $form->ID . '"]';
+                $value = esc_html('[' . DRAGWYB_PREFIX . '-form id="' . $form->ID . '"]');
                 break;
 
             case 'created':
@@ -144,9 +144,19 @@ class List_Table extends WP_List_Table
 
             case 'clean_cache':
                 if ($this->css_cache_exist($form->ID)) {
-                    $value = '<button type="button" id="clean-cache-' . (int)$form->ID . '" data-key="' . wp_create_nonce(sanitize_text_field($form->post_type) . (int)$form->ID . '-clean-cache') . '" data-clean-key="' . wp_create_nonce('delete_cache_nonce') . '" class="button">Clean Cache</button>';
+                    $value = sprintf(
+                        '<button type="button" id="%s" data-key="%s" data-clean-key="%s" class="button">%s</button>',
+                        esc_attr('clean-cache-' . (int) $form->ID),
+                        esc_attr(wp_create_nonce(sanitize_text_field($form->post_type) . (int) $form->ID . '-clean-cache')),
+                        esc_attr(wp_create_nonce('delete_cache_nonce')),
+                        esc_html__('Clean Cache', 'smart-form-builder-by-dragwyb')
+                    );
                 } else {
-                    $value = '<button type="button" id="clean-cache-' . (int)$form->ID . '" disabled class="button">Clean Cache</button>';
+                    $value = sprintf(
+                        '<button type="button" id="%s" disabled class="button">%s</button>',
+                        esc_attr('clean-cache-' . (int) $form->ID),
+                        esc_html__('Clean Cache', 'smart-form-builder-by-dragwyb')
+                    );
                 }
                 break;
 
@@ -237,28 +247,34 @@ class List_Table extends WP_List_Table
     protected function get_column_name_row_actions($form)
     {
         $actions = [];
+        $confirm_message = sprintf(
+            /* translators: %s is the form title and ID. */
+            __('Are you sure you want to delete %s form?', 'smart-form-builder-by-dragwyb'),
+            $form->post_title . '(' . $form->ID . ')'
+        );
+        $confirm_attr = esc_attr('return confirm("' . esc_js($confirm_message) . '");');
 
         if ('trash' === $form->post_status) {
             $actions['untrash'] = sprintf(
-                '<a href="%s" class="submitdelete" onclick="return confirm(\'Are you sure you want to delete %s form?\');">%s</a>',
+                '<a href="%s" class="submitdelete" onclick="%s">%s</a>',
                 esc_url(wp_nonce_url("post.php?action=untrash&post={$form->ID}", 'untrash-post_' . $form->ID)),
-                $form->post_title . '(' . $form->ID . ')',
-                __('Restore', 'smart-form-builder-by-dragwyb')
+                $confirm_attr,
+                esc_html__('Restore', 'smart-form-builder-by-dragwyb')
             );
             $actions['delete'] = sprintf(
-                '<a href="%s" class="submitdelete" onclick="return confirm(\'Are you sure you want to delete %s form?\');">%s</a>',
+                '<a href="%s" class="submitdelete" onclick="%s">%s</a>',
                 esc_url(wp_nonce_url("post.php?action=delete&post={$form->ID}", 'delete-post_' . $form->ID)),
-                $form->post_title . '(' . $form->ID . ')',
-                __('Delete', 'smart-form-builder-by-dragwyb')
+                $confirm_attr,
+                esc_html__('Delete', 'smart-form-builder-by-dragwyb')
             );
         } else {
             $actions['edit'] = '<a href="?page=dragwyb-form-builder&form_id=' . (int) esc_attr($form->ID) . '">Edit</a>';
             $actions['view'] = '<a href="' . esc_url($this->get_preview_url($form->ID)) . '" target="_blank">View</a>';
             $actions['trash'] = sprintf(
-                '<a href="%s" class="submitdelete" onclick="return confirm(\'Are you sure you want to delete %s form?\');">%s</a>',
+                '<a href="%s" class="submitdelete" onclick="%s">%s</a>',
                 esc_url(wp_nonce_url("post.php?action=trash&post={$form->ID}", 'trash-post_' . $form->ID)),
-                $form->post_title . '(' . $form->ID . ')',
-                __('Trash', 'smart-form-builder-by-dragwyb')
+                $confirm_attr,
+                esc_html__('Trash', 'smart-form-builder-by-dragwyb')
             );
         }
 
@@ -362,7 +378,7 @@ class List_Table extends WP_List_Table
         $order        = in_array($order, ['ASC', 'DESC'], true) ? $order : 'DESC';
 
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- for post status check
-        $status = isset($_GET['post_status']) ? sanitize_key($_GET['post_status']) : 'all';
+        $status = isset($_GET['post_status']) ? sanitize_key(wp_unslash($_GET['post_status'])) : 'all';
 
         switch ($status) {
             case 'publish':

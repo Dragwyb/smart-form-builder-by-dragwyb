@@ -43,15 +43,17 @@ class Form_Preview
         $form_id = isset($_GET['p']) ? absint($_GET['p']) : 0;
         $post_type = isset($_GET['post_type']) ? sanitize_text_field(wp_unslash($_GET['post_type'])) : '';
 
-        if ($form_preview_id && $form_id && $post_type === Dragwyb_Post::POST_TYPE && wp_verify_nonce($form_preview_id, self::private_key_name($form_id))) {
+        if ($form_preview_id && $form_id && $post_type === Dragwyb_Post::POST_TYPE && $this->current_user_can_preview($form_id) && wp_verify_nonce($form_preview_id, self::private_key_name($form_id))) {
 
 
             if (function_exists('status_header')) status_header(200);
 
-            if (isset($_GET['dragwyb_iframe_mode']) && $_GET['dragwyb_iframe_mode'] === 'true') {
+            $iframe_mode = isset($_GET['dragwyb_iframe_mode']) ? sanitize_key(wp_unslash($_GET['dragwyb_iframe_mode'])) : '';
+
+            if ('true' === $iframe_mode) {
                 do_action('Dragwyb/Editor/Preview/Init');
                 $frontend_render = Frontend_Render::instance();
-                self::$form_id = absint($_GET['p']);
+                self::$form_id = $form_id;
                 self::$is_iframe_mode = true;
                 $frontend_render->init(self::$form_id);
                 $frontend_render->enqueue_static_assets();
@@ -62,7 +64,7 @@ class Form_Preview
                 exit;
             }
 
-            $post_id = absint($_GET['p']);
+            $post_id = $form_id;
 
             !defined("DRAGWYB_FORM_PREVIEW") && define('DRAGWYB_FORM_PREVIEW', true);
 
@@ -117,11 +119,16 @@ class Form_Preview
         $form_preview_id = isset($_GET['preview_id']) ? sanitize_text_field(wp_unslash($_GET['preview_id'])) : '';
         $form_id = isset($_GET['p']) ? absint($_GET['p']) : 0;
 
-        if ($form_preview_id && $form_id && wp_verify_nonce($form_preview_id, self::private_key_name($form_id))) {
+        if ($form_preview_id && $form_id && $this->current_user_can_preview($form_id) && wp_verify_nonce($form_preview_id, self::private_key_name($form_id))) {
             return get_the_title($form_id);
         }
 
         return $title;
+    }
+
+    private function current_user_can_preview(int $form_id): bool
+    {
+        return current_user_can('manage_options') || current_user_can('edit_post', $form_id);
     }
 
     private static function private_key_name(int $form_id): string

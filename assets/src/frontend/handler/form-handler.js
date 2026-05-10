@@ -50,6 +50,12 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
             fields: jQuery(this.elements.$form[0]).serializeArray()
         };
         formData.form_id = this.formId;
+        formData.nonce = window.DragwybFrontendData?.[`form_${this.formId}`]?.nonce || '';
+
+        if (!formData.nonce || '' === formData.nonce) {
+            console.warn(`Nonce not found for form ${this.formId}`);
+            return;
+        }
 
         const submissionEndpoint = window.DragwybFrontendData?.frontendRoute + 'submit';
 
@@ -59,13 +65,14 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
             data: JSON.stringify(formData),
             processData: false,
             contentType: 'application/json',
-            beforeSend: () => {
+            beforeSend: (xhr) => {
+                xhr.setRequestHeader('X-WP-Nonce', window.DragwybFrontendData?.nonce || '');
                 this.elements.$submitButton.prop('disabled', true);
-                DragwybBuilder.Hooks.doAction('dragwyb/frontend/form/submit_start' + this.formId, this);
+                DragwybBuilder.Hooks.doAction('dragwyb/frontend/form/submit_start/' + this.formId, this);
             },
             success: (response) => {
                 this.elements.$submitButton.prop('disabled', false);
-                DragwybBuilder.Hooks.doAction('dragwyb/frontend/form/submit_success' + this.formId, response, this);
+                DragwybBuilder.Hooks.doAction('dragwyb/frontend/form/submit_success/' + this.formId, response, this);
 
                 if (response.success && response.data) {
 
@@ -74,7 +81,7 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
                     // Trigger specific frontend actions returned by the backend
                     if (response.data.actions_data && typeof response.data.actions_data === 'object') {
                         Object.entries(response.data.actions_data).forEach(([actionId, actionData]) => {
-                            DragwybBuilder.Hooks.doAction(`dragwyb/frontend/action/${actionId}`, actionData, response, this);
+                            DragwybBuilder.Hooks.doAction('dragwyb/frontend/action/' + actionId + '/' + this.formId, actionData, response, this);
                         });
                     }
 
@@ -130,7 +137,7 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
         this.elements.$message
             .removeClass('dragwyb-success dragwyb-error')
             .addClass(`dragwyb-${type}`)
-            .html(message)
+            .text(message)
             .show();
     }
 

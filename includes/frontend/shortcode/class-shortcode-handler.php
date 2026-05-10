@@ -67,6 +67,8 @@ class Shortcode_Handler
             self::$frontend_render::enqueue_static_assets();
         }
 
+        self::$frontend_render::localize_form_data();
+
         $css_manager = CSS_Manager::instance();
 
         $css_manager->enqueue_form_styles($form_id, self::$frontend_render);

@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Admin\Form_Overview;
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 class Form_Bulk_Actions_Handler
 {
 
@@ -45,7 +49,7 @@ class Form_Bulk_Actions_Handler
 
         check_admin_referer('bulk-' . sanitize_text_field($this->post_type));
 
-        $post_ids = isset($_REQUEST['post']) ? array_map('absint', (array) $_REQUEST['post']) : [];
+        $post_ids = isset($_REQUEST['post']) ? array_map('absint', (array) wp_unslash($_REQUEST['post'])) : [];
 
         if (empty($post_ids)) {
             return;
@@ -101,7 +105,7 @@ class Form_Bulk_Actions_Handler
     protected function get_current_action()
     {
         check_admin_referer('bulk-' . sanitize_text_field($this->post_type));
-        return isset($_REQUEST['action']) && $_REQUEST['action'] !== '-1' ? sanitize_key($_REQUEST['action']) : (isset($_REQUEST['action2']) ? sanitize_key($_REQUEST['action2']) : '');
+        return isset($_REQUEST['action']) && $_REQUEST['action'] !== '-1' ? sanitize_key(wp_unslash($_REQUEST['action'])) : (isset($_REQUEST['action2']) ? sanitize_key(wp_unslash($_REQUEST['action2'])) : '');
     }
 
     protected function trash_post($post_id)

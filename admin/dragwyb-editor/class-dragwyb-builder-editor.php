@@ -17,7 +17,7 @@ use Dragwyb\Form_Builder\Includes\Categories\Categories;
 use Dragwyb\Form_Builder\Includes\Categories\Categories\Category_Base;
 
 if (!defined("ABSPATH")) {
-    die("You can't access this page");
+    exit;
 }
 
 
@@ -116,14 +116,15 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             $builder_page = DRAGWYB_PREFIX . '-form-builder';
             $screen_id = DRAGWYB_PREFIX . '-form_page_' . DRAGWYB_PREFIX . '-form-builder';
             $current_screen = get_current_screen();
+            $current_page = isset($_GET['page']) ? sanitize_key(wp_unslash($_GET['page'])) : '';
 
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for admin dashboard pages check
-            if (!isset($current_screen) && $current_screen->id !== $screen_id && !isset($_GET['page']) || $_GET['page'] !== $builder_page) {
+            if ((!isset($current_screen) || $current_screen->id !== $screen_id) && $current_page !== $builder_page) {
                 return;
             }
 
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for form id check
-            $form_id = isset($_GET['form_id']) ? absint($_GET['form_id']) : 0;
+            $form_id = isset($_GET['form_id']) ? absint(wp_unslash($_GET['form_id'])) : 0;
 
             $post_type = Dragwyb_Post::POST_TYPE;
 
@@ -227,7 +228,6 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             $localize_data = [
                 'ajaxUrl' => admin_url('admin-ajax.php'),
                 'pluginUrl' => esc_url(DRAGWYB_FORM_BUILDER_URL),
-                'pluginPath' => DRAGWYB_FORM_BUILDER_PATH,
                 'nonce' => wp_create_nonce('dragwyb_editor'),
                 'formId' => (int) self::$form_id,
                 'editorContainer' => esc_html(self::Current_Page) . '-editor-container',

@@ -91,7 +91,7 @@ class Error_Message_Action extends Action_Base
             $data = [
                 'title' => sanitize_text_field($title),
                 'message' => sanitize_textarea_field($message),
-                'icon' => esc_attr(Icons_Manager::get_icon_class($icon_data)),
+                'icon' => Icons_Manager::get_icon_html($icon_data),
                 'bg_color' => sanitize_text_field($bg_color),
                 'text_color' => sanitize_text_field($text_color),
             ];

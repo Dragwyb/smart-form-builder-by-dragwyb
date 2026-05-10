@@ -48,6 +48,44 @@ document.addEventListener('DOMContentLoaded', () => {
         bindEvents();
     }
 
+    function clearElement(element) {
+        while (element.firstChild) {
+            element.removeChild(element.firstChild);
+        }
+    }
+
+    function appendTextCell(row, value, className = '') {
+        const cell = document.createElement('td');
+        if (className) cell.className = className;
+        cell.textContent = value == null ? '' : String(value);
+        row.appendChild(cell);
+        return cell;
+    }
+
+    function appendStatusRow(message, options = {}) {
+        clearElement(elements.tbody);
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+        cell.colSpan = 5;
+        cell.style.textAlign = 'center';
+        cell.style.padding = '20px';
+        if (options.color) cell.style.color = options.color;
+        if (options.className) cell.className = options.className;
+        cell.textContent = message;
+        row.appendChild(cell);
+        elements.tbody.appendChild(row);
+    }
+
+    function createActionLink(label, action, id, extraClass = '') {
+        const link = document.createElement('a');
+        link.href = '#';
+        link.className = `dragwyb-row-action${extraClass ? ` ${extraClass}` : ''}`;
+        link.dataset.action = action;
+        link.dataset.id = id;
+        link.textContent = label;
+        return link;
+    }
+
     // Bind Events
     function bindEvents() {
         elements.formFilter.addEventListener('change', (e) => {
@@ -159,11 +197,19 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(res => res.json())
             .then(res => {
                 if (res.success && res.data && res.data.forms) {
-                    let options = `<option value="0">${i18n.all_forms || 'All Forms'}</option>`;
+                    clearElement(elements.formFilter);
+
+                    const defaultOption = document.createElement('option');
+                    defaultOption.value = '0';
+                    defaultOption.textContent = i18n.all_forms || 'All Forms';
+                    elements.formFilter.appendChild(defaultOption);
+
                     res.data.forms.forEach(form => {
-                        options += `<option value="${form.id}">${form.title}</option>`;
+                        const option = document.createElement('option');
+                        option.value = String(parseInt(form.id, 10) || 0);
+                        option.textContent = form.title || '';
+                        elements.formFilter.appendChild(option);
                     });
-                    elements.formFilter.innerHTML = options;
                 }
             })
             .catch(err => console.error(err));
@@ -208,31 +254,52 @@ document.addEventListener('DOMContentLoaded', () => {
     // Render Table Rows
     function renderTable(entries) {
         if (!entries || entries.length === 0) {
-            elements.tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px;">${i18n.no_entries || 'No entries found.'}</td></tr>`;
+            appendStatusRow(i18n.no_entries || 'No entries found.');
             return;
         }
 
-        let html = '';
+        clearElement(elements.tbody);
         entries.forEach(entry => {
-            html += `
-                <tr id="entry-row-${entry.id}">
-                    <td class="dragwyb-title-column">
-                        <strong>#${entry.id}</strong>
-                        <div class="row-actions">
-                            <span class="view"><a href="#" class="dragwyb-row-action" data-action="view" data-id="${entry.id}">View</a> | </span>
-                            <span class="edit"><a href="#" class="dragwyb-row-action" data-action="edit" data-id="${entry.id}">Edit</a> | </span>
-                            <span class="trash"><a href="#" class="dragwyb-row-action submitdelete" data-action="delete" data-id="${entry.id}" style="color: #a00;">Delete</a></span>
-                        </div>
-                    </td>
-                    <td>${entry.form_id}</td>
-                    <td>${entry.submission_data_summary}</td>
-                    <td>${entry.ip_address}</td>
-                    <td>${entry.created_at_formatted}</td>
-                </tr>
-            `;
-        });
+            const id = String(parseInt(entry.id, 10) || 0);
+            const row = document.createElement('tr');
+            row.id = `entry-row-${id}`;
 
-        elements.tbody.innerHTML = html;
+            const titleCell = appendTextCell(row, '', 'dragwyb-title-column');
+            const strong = document.createElement('strong');
+            strong.textContent = `#${id}`;
+            titleCell.appendChild(strong);
+
+            const actions = document.createElement('div');
+            actions.className = 'row-actions';
+
+            const view = document.createElement('span');
+            view.className = 'view';
+            view.appendChild(createActionLink('View', 'view', id));
+            view.appendChild(document.createTextNode(' | '));
+
+            const edit = document.createElement('span');
+            edit.className = 'edit';
+            edit.appendChild(createActionLink('Edit', 'edit', id));
+            edit.appendChild(document.createTextNode(' | '));
+
+            const trash = document.createElement('span');
+            trash.className = 'trash';
+            const deleteLink = createActionLink('Delete', 'delete', id, 'submitdelete');
+            deleteLink.style.color = '#a00';
+            trash.appendChild(deleteLink);
+
+            actions.appendChild(view);
+            actions.appendChild(edit);
+            actions.appendChild(trash);
+            titleCell.appendChild(actions);
+
+            appendTextCell(row, entry.form_id);
+            appendTextCell(row, entry.submission_data_summary_text || entry.submission_data_summary || '');
+            appendTextCell(row, entry.ip_address);
+            appendTextCell(row, entry.created_at_formatted);
+
+            elements.tbody.appendChild(row);
+        });
     }
 
     // Row Actions: Delete
@@ -272,8 +339,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Modals Logic
     function openViewModal(id) {
-        elements.viewModalBody.innerHTML = '<p class="dragwyb-entries-loading">Loading...</p>';
-        elements.viewModal.style.display = 'block';
+        clearElement(elements.viewModalBody);
+        const loading = document.createElement('p');
+        loading.className = 'dragwyb-entries-loading';
+        loading.textContent = 'Loading...';
+        elements.viewModalBody.appendChild(loading);
+        elements.viewModal.style.display = 'flex';
         elements.editModal.style.display = 'none';
 
         const startTime = performance.now();
@@ -284,29 +355,49 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchEntry(id).then(async entry => {
             await modalWait(startTime);
 
-            let html = '<table class="widefat striped"><tbody>';
-            html += `<tr><td><strong>ID</strong></td><td>${entry.id}</td></tr>`;
-            html += `<tr><td><strong>Form ID</strong></td><td>${entry.form_id}</td></tr>`;
-            html += `<tr><td><strong>IP Address</strong></td><td>${entry.ip_address}</td></tr>`;
-            html += `<tr><td><strong>User Agent</strong></td><td>${entry.user_agent}</td></tr>`;
-            html += `<tr><td><strong>Date</strong></td><td>${entry.created_at}</td></tr>`;
+            clearElement(elements.viewModalBody);
+            const table = document.createElement('table');
+            table.className = 'widefat striped';
+            const tbody = document.createElement('tbody');
+
+            const addDetailRow = (label, value) => {
+                const row = document.createElement('tr');
+                const labelCell = document.createElement('td');
+                const labelStrong = document.createElement('strong');
+                labelStrong.textContent = label;
+                labelCell.appendChild(labelStrong);
+                row.appendChild(labelCell);
+                appendTextCell(row, value);
+                tbody.appendChild(row);
+            };
+
+            addDetailRow('ID', entry.id);
+            addDetailRow('Form ID', entry.form_id);
+            addDetailRow('IP Address', entry.ip_address);
+            addDetailRow('User Agent', entry.user_agent);
+            addDetailRow('Date', entry.created_at);
 
             if (entry.submission_data_decoded) {
                 for (const [key, value] of Object.entries(entry.submission_data_decoded)) {
                     const displayVal = Array.isArray(value) ? value.join(', ') : value;
-                    html += `<tr><td><strong>${key}</strong></td><td>${displayVal}</td></tr>`;
+                    addDetailRow(key, displayVal);
                 }
             }
-            html += '</tbody></table>';
-            elements.viewModalBody.innerHTML = html;
+
+            table.appendChild(tbody);
+            elements.viewModalBody.appendChild(table);
         });
     }
 
     function openEditModal(id) {
-        elements.editModalBody.innerHTML = '<p class="dragwyb-entries-loading">Loading...</p>';
+        clearElement(elements.editModalBody);
+        const loading = document.createElement('p');
+        loading.className = 'dragwyb-entries-loading';
+        loading.textContent = 'Loading...';
+        elements.editModalBody.appendChild(loading);
         elements.editEntryId.value = id;
         elements.viewModal.style.display = 'none';
-        elements.editModal.style.display = 'block';
+        elements.editModal.style.display = 'flex';
         elements.editModal.querySelector('.dragwyb-modal-footer').style.display = 'none';
         const startTime = performance.now();
 
@@ -316,24 +407,35 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchEntry(id).then(async entry => {
             await modalWait(startTime);
 
-            let html = '';
+            clearElement(elements.editModalBody);
             if (entry.submission_data_decoded) {
                 for (const [key, value] of Object.entries(entry.submission_data_decoded)) {
                     // We only support editing strings/numbers easily in this basic dynamic form
                     const isArray = Array.isArray(value);
                     const displayVal = isArray ? value.join(', ') : value;
 
-                    html += `
-                        <div class="dragwyb-modal-field">
-                            <label>${key}</label>
-                            <input type="text" class="regular-text dragwyb-dynamic-input" data-key="${key}" data-is-array="${isArray}" value="${displayVal.replace(/"/g, '&quot;')}">
-                        </div>
-                    `;
+                    const field = document.createElement('div');
+                    field.className = 'dragwyb-modal-field';
+
+                    const label = document.createElement('label');
+                    label.textContent = key;
+
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'regular-text dragwyb-dynamic-input';
+                    input.dataset.key = key;
+                    input.dataset.isArray = isArray ? 'true' : 'false';
+                    input.value = displayVal == null ? '' : String(displayVal);
+
+                    field.appendChild(label);
+                    field.appendChild(input);
+                    elements.editModalBody.appendChild(field);
                 }
             } else {
-                html = '<p>No editable JSON data found.</p>';
+                const empty = document.createElement('p');
+                empty.textContent = 'No editable JSON data found.';
+                elements.editModalBody.appendChild(empty);
             }
-            elements.editModalBody.innerHTML = html;
             elements.editModal.querySelector('.dragwyb-modal-footer').style.display = 'flex';
         });
     }
@@ -431,7 +533,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showError(message) {
-        elements.tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: red; padding: 20px;">${message}</td></tr>`;
+        appendStatusRow(message, { color: 'red' });
     }
 
     init();
