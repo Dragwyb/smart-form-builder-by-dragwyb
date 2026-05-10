@@ -74,7 +74,7 @@ class Dragwyb_Post
         return $caps;
     }
 
-    function dragwyb_add_caps_to_admin()
+    public function dragwyb_add_caps_to_admin()
     {
         $role = get_role('administrator');
         if (!$role) return;
@@ -203,7 +203,7 @@ class Dragwyb_Post
             printf(
                 '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
                 // translators: %s is the number of forms moved to the trash
-                sprintf(esc_html('%s form moved to the Trash.', 'smart-form-builder-by-dragwyb'), absint($count))
+                sprintf(esc_html__('%s form moved to the Trash.', 'smart-form-builder-by-dragwyb'), absint($count))
             );
         }
 
@@ -212,7 +212,7 @@ class Dragwyb_Post
             printf(
                 '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
                 // translators: %s is the number of forms permanently deleted
-                sprintf(esc_html('%s form permanently deleted.', 'smart-form-builder-by-dragwyb'), absint($count))
+                sprintf(esc_html__('%s form permanently deleted.', 'smart-form-builder-by-dragwyb'), absint($count))
             );
         }
 
@@ -222,7 +222,7 @@ class Dragwyb_Post
             printf(
                 '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
                 // translators: %s is the number of forms restored from trash
-                sprintf(esc_html('%s form restored from Trash.', 'smart-form-builder-by-dragwyb'), absint($count))
+                sprintf(esc_html__('%s form restored from Trash.', 'smart-form-builder-by-dragwyb'), absint($count))
             );
         }
     }
