@@ -77,7 +77,7 @@ const StyleLoader = () => {
                 }
 
                 if (styleWrapperRef.current) {
-                    styleWrapperRef.current.innerHTML = cssString;
+                    styleWrapperRef.current.textContent = cssString;
                 }
 
             }, 5);
