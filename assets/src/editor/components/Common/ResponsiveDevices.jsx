@@ -1,4 +1,3 @@
-import { MdDesktopMac, MdTabletAndroid, MdPhoneAndroid } from 'react-icons/md';
 import { CiMobile3 } from "react-icons/ci";
 import { IoTvOutline } from "react-icons/io5";
 import { IoIosTabletPortrait } from "react-icons/io";

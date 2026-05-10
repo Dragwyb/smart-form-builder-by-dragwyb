@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Dashicon } from '@wordpress/components';
 import { useDebouncedCallback } from '../../utils/helpers';
 import { FaMagnifyingGlass, FaXmark } from "react-icons/fa6";
 import { __ } from '@wordpress/i18n';

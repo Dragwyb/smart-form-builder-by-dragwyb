@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from "react";
-import { useSelector, useDispatch, useStore } from "react-redux";
+import { useDispatch, useStore } from "react-redux";
 import Canvas from "./Canvas";
 import {
     resetSectionSettings,
@@ -14,7 +14,6 @@ import {
     TouchSensor,
     pointerWithin,
     rectIntersection,
-    getFirstCollision,
 } from "@dnd-kit/core";
 
 import SidebarFieldOverlay from "../components/SidebarFieldOverlay";

@@ -58,7 +58,7 @@ class CSS_Manager
             return;
         }
 
-        $unique_id = get_post_meta($form_id, 'dragwyb_form_assets_id', true);
+        $unique_id = get_post_meta($form_id, '_dragwyb_form_assets_id', true);
 
         $file_name = 'form-' . $form_id . '-' . $unique_id . '.css';
         $file_path = $this->upload_dir . $file_name;
@@ -83,7 +83,7 @@ class CSS_Manager
             $file_url  = $this->upload_url . $file_name;
 
             // Update uniqueid in post meta.
-            update_post_meta($form_id, 'dragwyb_form_assets_id', $unique_id);
+            update_post_meta($form_id, '_dragwyb_form_assets_id', $unique_id);
 
             if ($css_content && !empty($css_content)) {
                 $this->write_file($file_path, $css_content);
@@ -179,7 +179,7 @@ class CSS_Manager
 
     private function delete_cache_file(int $id)
     {
-        $unique_id = get_post_meta($id, 'dragwyb_form_assets_id', true);
+        $unique_id = get_post_meta($id, '_dragwyb_form_assets_id', true);
         $file_name = 'form-' . $id . '-' . sanitize_text_field($unique_id) . '.css';
         $file_path = $this->upload_dir . $file_name;
         if (file_exists($file_path)) {

@@ -12,7 +12,7 @@ class Control_Icon extends Control_Base
     {
         return array(
             'label'   => 'string',
-            'default' => 'string',
+            'default' => 'custom',
             'fa_lib' => 'custom',
             'label_inline' => 'boolean',
         );
@@ -33,13 +33,27 @@ class Control_Icon extends Control_Base
         );
     }
 
-    protected function fa_lib_settings_sanitize(array $value)
+    protected function fa_lib_setting_sanitize(array $value)
     {
         $icons = array_filter($value, function ($icon) {
             return in_array($icon, Icons_Helper::get_icon_groups());
         });
 
         return $icons;
+    }
+
+    protected function default_setting_sanitize(array $settings): array
+    {
+
+        if (isset($settings['icon'])) {
+            $sanitized_value['icon'] = sanitize_text_field($settings['icon']);
+        }
+
+        if (isset($settings['type']) && in_array($settings['type'], Icons_Helper::get_icon_groups())) {
+            $sanitized_value['type'] = sanitize_text_field($settings['type']);
+        }
+
+        return $sanitized_value;
     }
 
     protected function sanitize_control($value, $settings)

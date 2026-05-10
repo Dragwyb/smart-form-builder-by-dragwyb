@@ -220,13 +220,4 @@ class Field_Number extends Field_Base
 
         return sanitize_text_field($default);
     }
-
-    protected function register_scripts()
-    {
-        return [];
-    }
-    protected function register_style()
-    {
-        return [];
-    }
 }

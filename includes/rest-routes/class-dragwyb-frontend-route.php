@@ -122,8 +122,8 @@ class Dragwyb_Frontend_Route
                 'success' => true,
                 'message' => __('Form submitted successfully.', 'smart-form-builder-by-dragwyb'),
                 'data'    => [
-                    'form_id'        => $form_id,
-                    // 'sanitized_data' => $handler->get_sanitized_data(),
+                    'form_id'      => $form_id,
+                    'actions_data' => $handler->get_form_return_data(),
                 ],
             ]
         );

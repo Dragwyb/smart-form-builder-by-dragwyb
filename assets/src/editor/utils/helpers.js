@@ -2,7 +2,6 @@
 import { useRef, useEffect } from "react";
 import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updateFieldValues, updateToolbarSettings, updateSectionSettings, updateStyleSelectors as updateStyleSelectorsAction, deleteStyleSelectors as deleteStyleSelectorsAction, updateResponsiveType as updateResponsiveTypeAction, updateactivePopoverKey as updateactivePopoverKeyAction, updateActiveRootContainer as updateActiveRootContainerAction, resetActiveRootContainer as resetActiveRootContainerAction } from "../store/actions";
 import PropTypes, { number } from "prop-types";
-import { Placeholder } from "@wordpress/components";
 import DragwybControlBase from "../controlBase";
 
 /**

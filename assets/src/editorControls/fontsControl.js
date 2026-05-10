@@ -1,6 +1,3 @@
-import UnitSelector from './common/UnitSelector';
-import { RiLink, RiLinkUnlink } from "react-icons/ri";
-import Select from "../editor/components/Common/Select";
 import SelectGroup from "../editor/components/Common/SelectGroup"; // Ensure this component is updated
 
 export default class FontsControl extends DragwybEditor.editor.extends.ControlBase {

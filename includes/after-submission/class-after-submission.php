@@ -96,7 +96,13 @@ class After_Submission extends Toolbar_Base
         }
 
         foreach ($actions_data as $key => $action) {
+            if (!$action instanceof Action_Base) {
+                continue;
+            }
+
             $action->set_form_id($form_id);
+
+            $action->enqueue_assets();
 
             $conrols = $action->render_controls();
 

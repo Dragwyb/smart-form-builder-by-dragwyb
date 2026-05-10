@@ -1,6 +1,6 @@
 import UnitSelector from "./common/UnitSelector";
-import Reset from "../editor/components/Common/Reset";
 import { RiLink, RiLinkUnlink } from "react-icons/ri";
+import { __ } from "@wordpress/i18n";
 
 export default class DimensionsControl extends DragwybEditor.editor.extends
     .ControlBase {
@@ -120,21 +120,25 @@ export default class DimensionsControl extends DragwybEditor.editor.extends
                                     type="number"
                                     value={currentValue.top}
                                     onChange={(e) => updateValue("top", e.target.value)}
+                                    title={__("Top", "smart-form-builder-by-dragwyb")}
                                 />
                                 <input
                                     type="number"
                                     value={currentValue.right}
                                     onChange={(e) => updateValue("right", e.target.value)}
+                                    title={__("Right", "smart-form-builder-by-dragwyb")}
                                 />
                                 <input
                                     type="number"
                                     value={currentValue.bottom}
                                     onChange={(e) => updateValue("bottom", e.target.value)}
+                                    title={__("Bottom", "smart-form-builder-by-dragwyb")}
                                 />
                                 <input
                                     type="number"
                                     value={currentValue.left}
                                     onChange={(e) => updateValue("left", e.target.value)}
+                                    title={__("Left", "smart-form-builder-by-dragwyb")}
                                 />
                             </div>
                             <button

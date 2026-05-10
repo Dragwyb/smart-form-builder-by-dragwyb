@@ -110,10 +110,8 @@ export default function reducer(state, action) {
             if (!rootContainerId) return state;
             if (!state.form.rootContainers.includes(rootContainerId)) return state;
 
-            // Collect all IDs to delete (root container + all nested children)
             const idsToDelete = collectFieldIdsToDelete(state.form.fields, rootContainerId);
 
-            // Immutably remove all collected IDs
             const newFields = removeFieldsById(state.form.fields, idsToDelete);
 
             return {
@@ -149,7 +147,6 @@ export default function reducer(state, action) {
         case ADD_FIELD: {
             const { field, fieldIndex = null } = action.payload;
 
-            // Ensure fields object exists (immutably)
             const existingFields = state?.form?.fields || {};
 
             const index = null === fieldIndex
@@ -180,7 +177,6 @@ export default function reducer(state, action) {
             const newFields = Object.entries(existingFields);
             const lastField = existingFields[Object.keys(existingFields)[Object.keys(existingFields).length - 1]];
 
-            // Clone rootContainers — never mutate the original
             const rootContainers = [...state.form.rootContainers];
 
             if (lastField && lastField.type === 'button') {
@@ -196,7 +192,6 @@ export default function reducer(state, action) {
                     rootContainers.splice(rootContainerIndex, 0, fieldId);
                 }
 
-                // Add before button root container
                 newFields.splice(newFieldIndex - 1, 0, [fieldId, field]);
 
             } else {
@@ -266,15 +261,16 @@ export default function reducer(state, action) {
         }
 
         case UPDATE_FIELD:
+            if (!state.form.fields[action.payload.fieldId]) return state;
+
             return {
                 ...state,
                 form: {
                     ...state.form,
-                    fields: state.form.fields.map(field =>
-                        field._id === action.payload.fieldId
-                            ? action.payload.field
-                            : field
-                    )
+                    fields: {
+                        ...state.form.fields,
+                        [action.payload.fieldId]: action.payload.field
+                    }
                 }
             };
 
@@ -282,19 +278,15 @@ export default function reducer(state, action) {
             const fieldToDelete = state.form.fields[action.payload];
             if (!fieldToDelete) return state;
 
-            // Collect all IDs to delete (the field + all its children recursively)
             const idsToDelete = collectFieldIdsToDelete(state.form.fields, action.payload);
 
-            // Immutably remove fields
             let newFields = removeFieldsById(state.form.fields, idsToDelete);
 
-            // Update rootContainers
             let rootContainers = [...state.form.rootContainers];
             if (fieldToDelete.is_root_container) {
                 rootContainers = rootContainers.filter(rc => rc !== action.payload);
             }
 
-            // Immutably update parent's children array
             if (fieldToDelete.parentId && newFields[fieldToDelete.parentId]) {
                 newFields = {
                     ...newFields,
@@ -317,7 +309,6 @@ export default function reducer(state, action) {
             };
         }
 
-        // AD changes pending
         case UPDATE_FIELD_ORDER: {
             const { currentId, targetId, index } = action.payload;
             const fields = { ...state.form.fields };
@@ -409,7 +400,6 @@ export default function reducer(state, action) {
             };
 
         case RESET_SECTION_SETTINGS:
-
             if (Object.keys(state.sectionSettings || {}).length < 1) {
                 return state;
             }
@@ -455,7 +445,6 @@ export default function reducer(state, action) {
                     }
                 }
 
-                // Bounded array — keep max 50 entries to prevent unbounded growth
                 const existingControls = state.popoverControls || [];
                 const newControls = existingControls.length >= 50
                     ? [...existingControls.slice(-49), action.payload.id]
@@ -470,7 +459,7 @@ export default function reducer(state, action) {
 
         case RESET_POPOVER_CONTROLS:
             {
-                if (Object.keys(state.popoverControls).length < 1) return state;
+                if (!state.popoverControls || state.popoverControls.length === 0) return state;
 
                 return {
                     ...state,
@@ -546,7 +535,6 @@ export default function reducer(state, action) {
         case DELETE_STYLE_SELECTORS: {
             if (!action.payload.key) return state;
 
-            // Immutable delete — clone first, then omit the key
             if (action.payload.responsiveType && 'desktop' !== action.payload.responsiveType) {
                 const responsiveGroup = state.styleSelectors?.[action.payload.responsiveType];
                 if (!responsiveGroup || !responsiveGroup[action.payload.key]) return state;

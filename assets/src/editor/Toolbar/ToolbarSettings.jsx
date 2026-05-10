@@ -1,7 +1,6 @@
-import { __, sprintf } from "@wordpress/i18n";
-import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { __ } from "@wordpress/i18n";
+import { useEffect, useRef, useMemo, useCallback } from "react";
 import { useStore, useDispatch, useSelector } from 'react-redux';
-import PropTypes from "prop-types";
 import FieldSettings from "../Editor/FieldSettings";
 import DragwybToolbarBase from "../toolbarBase"
 import { Utils as Helper } from '../components/Utils';

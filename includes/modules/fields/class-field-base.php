@@ -28,8 +28,16 @@ abstract class Field_Base extends Register_Controls_Base
     const StyleTab = 'style_tab';
     const AdvanceTab = 'advance_tab';
 
-    abstract protected function register_scripts();
-    abstract protected function register_style();
+    protected function register_scripts()
+    {
+        return [];
+    }
+
+    protected function register_style()
+    {
+        return [];
+    }
+
     abstract protected function register_field_controls();
 
     final protected function register_controls(): void

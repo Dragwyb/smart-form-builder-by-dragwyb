@@ -1,6 +1,5 @@
 import { IoColorPaletteOutline } from "react-icons/io5";
 import { __ } from "@wordpress/i18n";
-import Reset from '../editor/components/Common/Reset';
 
 export default class ColorControl extends DragwybEditor.editor.extends.ControlBase {
     pickr = null;

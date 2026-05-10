@@ -1,6 +1,5 @@
 import UnitSelector from './common/UnitSelector';
 import Slider from '../editor/components/Common/Slider';
-import Reset from '../editor/components/Common/Reset';
 
 export default class SliderControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
