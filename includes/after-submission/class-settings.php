@@ -27,6 +27,18 @@ class Settings extends Register_Controls_Base
 
     protected function register_controls(): void
     {
+        add_action('Dragwyb/Editor/after_section_end/data_handling', function ($control_obj, $section_id) {
+            $control_obj->remove_control('data_handling');
+            $after_submissions = $control_obj->get_control('after_submissions');
+
+            if (!isset($after_submissions['conditions'])) {
+                return;
+            }
+
+            unset($after_submissions['conditions']);
+            $control_obj->update_control('after_submissions', $after_submissions);
+        }, 10, 2);
+
         $actions = After_Submission::instance()->get_actions();
         $options = [];
 
@@ -47,16 +59,5 @@ class Settings extends Register_Controls_Base
         ]);
 
         $this->end_section();
-
-        add_action('Dragwyb/Editor/after_section_end/data_handling', function ($control_obj, $section_id) {
-            $control_obj->remove_control('data_handling');
-            $after_submissions = $control_obj->get_control('after_submissions');
-            if (!isset($after_submissions['conditions'])) {
-                return;
-            }
-
-            unset($after_submissions['conditions']);
-            $control_obj->update_control('after_submissions', $after_submissions);
-        }, 10, 2);
     }
 }
