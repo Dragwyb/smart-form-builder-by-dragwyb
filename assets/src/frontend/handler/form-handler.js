@@ -68,6 +68,9 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
                 DragwybBuilder.Hooks.doAction('dragwyb/frontend/form/submit_success' + this.formId, response, this);
 
                 if (response.success && response.data) {
+
+                    this.clearFormData();
+
                     // Trigger specific frontend actions returned by the backend
                     if (response.data.actions_data && typeof response.data.actions_data === 'object') {
                         Object.entries(response.data.actions_data).forEach(([actionId, actionData]) => {
@@ -78,6 +81,7 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
                     if (response.data.message) {
                         this.#showMessage(response.data.message, 'success');
                     }
+
                 } else if (!response.success && response.errors) {
                     this.#showInputErrors(response.errors);
                 } else if (response.data && response.data.message) {
@@ -250,6 +254,37 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
                 $targetField.after($errorMsg);
             }
         }
+    }
+
+    clearFormData() {
+        const formFields = this.elements.$form.find('input, select, textarea');
+
+        formFields.each((_, el) => {
+            const $field = jQuery(el);
+
+            if ($field.is(':radio') || $field.is(':checkbox')) {
+                $field.prop('checked', el.defaultChecked);
+            } else if ($field.is('select')) {
+                let hasDefault = false;
+                $field.find('option').each(function () {
+                    this.selected = this.defaultSelected;
+                    if (this.defaultSelected) hasDefault = true;
+                });
+                if (!hasDefault) {
+                    if (el.multiple) {
+                        $field.val([]);
+                    } else if (el.options.length > 0) {
+                        el.selectedIndex = 0;
+                    }
+                }
+            } else if ($field.is('[type="file"]')) {
+                $field.val('');
+            } else {
+                $field.val(el.defaultValue !== undefined ? el.defaultValue : '');
+            }
+        });
+
+        this.clearErrors();
     }
 
     clearFieldError($field) {

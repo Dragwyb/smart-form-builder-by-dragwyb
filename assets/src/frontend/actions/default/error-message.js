@@ -1,4 +1,5 @@
 import DragwybActionBase from '../action-base';
+import MessageModal from '../../components/message-modal';
 
 export default class ErrorMessageAction extends DragwybActionBase {
     getActionName() {
@@ -8,18 +9,7 @@ export default class ErrorMessageAction extends DragwybActionBase {
     run(actionData, response, formHandler) {
         if (!actionData) return;
 
-        let $message = formHandler.elements.$message;
-
-        if (!$message || !$message.length) {
-            $message = jQuery('<div class="dragwyb-form-message"></div>');
-            formHandler.elements.$form.append($message);
-            formHandler.elements.$message = $message;
-        }
-
-        $message
-            .removeClass('dragwyb-success dragwyb-error')
-            .addClass('dragwyb-error')
-            .html(actionData)
-            .show();
+        // Instantiate and show the new MessageModal component
+        new MessageModal(actionData, 'error');
     }
 }
