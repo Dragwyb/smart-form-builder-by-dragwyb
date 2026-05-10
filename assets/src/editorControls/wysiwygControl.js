@@ -34,7 +34,7 @@ export default class WysiwygControl extends DragwybEditor.editor.extends.Control
                     mediaButtons: true
                 });
             }
-        }, 100);
+        });
     }
 
     onDestroy() {
@@ -72,5 +72,32 @@ export default class WysiwygControl extends DragwybEditor.editor.extends.Control
                 />
             </div>
         );
+    }
+
+    resetControl() {
+        const { id, settings } = this;
+        const { default: defaultValue = '' } = settings;
+        const value = this.getValidValue(defaultValue);
+
+        this.updateControlHandler(id, value);
+
+        if (typeof wp !== 'undefined' && wp.editor) {
+            const editorId = `dragwyb-wysiwyg-${id}`;
+
+            if (typeof window.tinyMCE !== 'undefined') {
+                const editor = window.tinyMCE.get(editorId);
+
+                if (editor) {
+                    // 2. Direct update: This is instant and doesn't flicker
+                    editor.setContent(value);
+                } else {
+                    // Fallback: If TinyMCE isn't ready or was never initialized
+                    const textarea = document.getElementById(editorId);
+                    if (textarea) {
+                        textarea.value = value;
+                    }
+                }
+            }
+        }
     }
 }
