@@ -344,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loading.className = 'dragwyb-entries-loading';
         loading.textContent = 'Loading...';
         elements.viewModalBody.appendChild(loading);
-        elements.viewModal.style.display = 'block';
+        elements.viewModal.style.display = 'flex';
         elements.editModal.style.display = 'none';
 
         const startTime = performance.now();
@@ -397,7 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.editModalBody.appendChild(loading);
         elements.editEntryId.value = id;
         elements.viewModal.style.display = 'none';
-        elements.editModal.style.display = 'block';
+        elements.editModal.style.display = 'flex';
         elements.editModal.querySelector('.dragwyb-modal-footer').style.display = 'none';
         const startTime = performance.now();
 
