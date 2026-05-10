@@ -116,14 +116,15 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
             $builder_page = DRAGWYB_PREFIX . '-form-builder';
             $screen_id = DRAGWYB_PREFIX . '-form_page_' . DRAGWYB_PREFIX . '-form-builder';
             $current_screen = get_current_screen();
+            $current_page = isset($_GET['page']) ? sanitize_key(wp_unslash($_GET['page'])) : '';
 
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for admin dashboard pages check
-            if (!isset($current_screen) && $current_screen->id !== $screen_id && !isset($_GET['page']) || $_GET['page'] !== $builder_page) {
+            if ((!isset($current_screen) || $current_screen->id !== $screen_id) && $current_page !== $builder_page) {
                 return;
             }
 
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for form id check
-            $form_id = isset($_GET['form_id']) ? absint($_GET['form_id']) : 0;
+            $form_id = isset($_GET['form_id']) ? absint(wp_unslash($_GET['form_id'])) : 0;
 
             $post_type = Dragwyb_Post::POST_TYPE;
 
