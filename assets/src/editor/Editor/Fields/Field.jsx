@@ -1,7 +1,6 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useDraggable, useDroppable } from "../../components/Common";
-import { Utils as helpers } from '../../components/Utils';
 
 const Field = ({ field, value = '', onChange, errors = [], disabled = false, children, childrens, Utils }) => {
 

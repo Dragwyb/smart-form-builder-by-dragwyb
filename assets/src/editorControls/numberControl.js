@@ -1,5 +1,3 @@
-import Reset from '../editor/components/Common/Reset';
-
 export default class NumberControl extends DragwybEditor.editor.extends.ControlBase {
     controlName() {
         return 'number';

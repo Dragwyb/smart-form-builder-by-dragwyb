@@ -7,6 +7,7 @@ namespace Dragwyb\Form_Builder\Includes\After_Submission\Actions;
 use Dragwyb\Form_Builder\Includes\After_Submission\Action_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
+use Dragwyb\Form_Builder\Includes\Controls\Icons\Icons_Manager;
 
 class Success_Message_Action extends Action_Base
 {
@@ -29,6 +30,21 @@ class Success_Message_Action extends Action_Base
             ]
         ]);
 
+        $this->add_control('message_title_success_message', [
+            'type'    => Controls::TEXT,
+            'label'   => __('Title', 'smart-form-builder-by-dragwyb'),
+            'default' => __('Success!', 'smart-form-builder-by-dragwyb'),
+        ]);
+
+        $this->add_control('message_icon_success_message', [
+            'type'    => Controls::ICON,
+            'label'   => __('Icon', 'smart-form-builder-by-dragwyb'),
+            'default' => [
+                'icon' => 'check-circle',
+                'type' => 'solid'
+            ],
+        ]);
+
         $this->add_control('message_text_success_message', [
             'type'    => Controls::TEXTAREA,
             'label'   => __('Message', 'smart-form-builder-by-dragwyb'),
@@ -37,14 +53,48 @@ class Success_Message_Action extends Action_Base
             'required' => true,
         ]);
 
+        $this->add_control('message_bg_color_success_message', [
+            'type'    => Controls::COLOR,
+            'label'   => __('Background Color', 'smart-form-builder-by-dragwyb'),
+            'default' => '#ffffff',
+        ]);
+
+        $this->add_control('message_text_color_success_message', [
+            'type'    => Controls::COLOR,
+            'label'   => __('Text Color', 'smart-form-builder-by-dragwyb'),
+            'default' => '#15803d',
+        ]);
+
         $this->end_section();
     }
 
     public function process_submission($form_id, $form_data, $form_config, Form_Submission_Handler $form_submission)
     {
         $settings = $form_config['after-submission'] ?? [];
+
+        $title = $settings['message_title_success_message'] ?? __('Success!', 'smart-form-builder-by-dragwyb');
         $message = $settings['message_text_success_message'] ?? __('Your form has been submitted successfully.', 'smart-form-builder-by-dragwyb');
 
-        $form_submission->set_form_return_data('success_message', sanitize_textarea_field($message));
+        $icon_data = [
+            'icon' => 'check-circle',
+            'type' => 'solid'
+        ];
+
+        if (isset($settings['message_icon_success_message']) && !empty($settings['message_icon_success_message']['icon'])) {
+            $icon_data = $settings['message_icon_success_message'];
+        }
+
+        $bg_color = $settings['message_bg_color_success_message'] ?? '#ffffff';
+        $text_color = $settings['message_text_color_success_message'] ?? '#15803d';
+
+        $data = [
+            'title' => sanitize_text_field($title),
+            'message' => sanitize_textarea_field($message),
+            'icon' => esc_attr(Icons_Manager::get_icon_class($icon_data)),
+            'bg_color' => sanitize_text_field($bg_color),
+            'text_color' => sanitize_text_field($text_color),
+        ];
+
+        $form_submission->set_form_return_data('success_message', $data);
     }
 }

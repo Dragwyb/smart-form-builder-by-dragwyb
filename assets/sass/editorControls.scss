@@ -1211,10 +1211,9 @@
     margin: 1rem;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 10px;
+    gap: 8px;
     max-height: calc(100% - 178px);
-    height: 100%;
+    height: auto;
     overflow-y: auto;
 
     .dragwyb-icon-item {
@@ -1229,10 +1228,12 @@
       transition: all 0.2s;
       min-width: 50px;
       padding: .5rem;
+      height: 50px;
 
       &:hover {
-        background: hsl(var(--dragwyb-input));
-        border-color: hsl(var(--dragwyb-input));
+        border-color: hsl(var(--dragwyb-primary) / 0.2);
+        background: hsl(var(--dragwyb-primary)/0.1);
+        color: hsl(var(--dragwyb-primary));
       }
 
       &.active {
@@ -1444,6 +1445,69 @@
           color: hsl(var(--dragwyb-sidebar-foreground)/0.5);
           font-size: 13px;
         }
+      }
+    }
+  }
+}
+
+
+/* =========================
+   WYSIWYG Control
+   ========================= */
+.dragwyb-control--wysiwyg {
+  .wp-editor-wrap {
+    border: 1px solid hsl(var(--dragwyb-input) / var(--dragwyb-border-opacity, 1));
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .wp-editor-container {
+    border: none;
+  }
+
+  .wp-switch-editor {
+    border-color: hsl(var(--dragwyb-input) / var(--dragwyb-border-opacity, 1));
+    color: hsl(var(--dragwyb-sidebar-foreground) / var(--dragwyb-text-opacity, 1));
+
+    &:focus {
+      box-shadow: none;
+      border-color: hsl(var(--dragwyb-primary));
+    }
+  }
+
+  .mce-toolbar-grp {
+    background: hsl(var(--dragwyb-background));
+    border-bottom: 1px solid hsl(var(--dragwyb-input) / var(--dragwyb-border-opacity, 1));
+  }
+
+  .mce-btn {
+    background: transparent;
+
+    button {
+      color: hsl(var(--dragwyb-sidebar-foreground) / var(--dragwyb-text-opacity, 1));
+
+      &:hover,
+      &:focus {
+        background: hsl(var(--dragwyb-primary) / 0.1);
+      }
+    }
+
+    &.mce-active button {
+      background: hsl(var(--dragwyb-primary) / 0.2);
+    }
+  }
+
+  .quicktags-toolbar {
+    background: hsl(var(--dragwyb-background));
+    border-bottom: 1px solid hsl(var(--dragwyb-input) / var(--dragwyb-border-opacity, 1));
+
+    input {
+      background: hsl(var(--dragwyb-background));
+      border: 1px solid hsl(var(--dragwyb-input));
+      color: hsl(var(--dragwyb-sidebar-foreground));
+
+      &:hover {
+        background: hsl(var(--dragwyb-input));
       }
     }
   }

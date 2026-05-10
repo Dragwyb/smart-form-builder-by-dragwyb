@@ -16,12 +16,12 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
     bindEvents() {
         if (this.elements.$form.length) {
             this.elements.$form.on('submit', (event) => this.#onSubmit(event));
-            
+
             // Validate on blur and change
             this.elements.$form.on('blur change', 'input, select, textarea', (event) => {
                 this.handleFieldValidation(event.target);
             });
-            
+
             // Clear errors on input if field becomes valid
             this.elements.$form.on('input', 'input, textarea', (event) => {
                 const element = event.target;
@@ -67,8 +67,21 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
                 this.elements.$submitButton.prop('disabled', false);
                 DragwybBuilder.Hooks.doAction('dragwyb/frontend/form/submit_success' + this.formId, response, this);
 
-                if (response.success && response.data && response.data.message) {
-                    this.#showMessage(response.data.message, 'success');
+                if (response.success && response.data) {
+
+                    this.clearFormData();
+
+                    // Trigger specific frontend actions returned by the backend
+                    if (response.data.actions_data && typeof response.data.actions_data === 'object') {
+                        Object.entries(response.data.actions_data).forEach(([actionId, actionData]) => {
+                            DragwybBuilder.Hooks.doAction(`dragwyb/frontend/action/${actionId}`, actionData, response, this);
+                        });
+                    }
+
+                    if (response.data.message) {
+                        this.#showMessage(response.data.message, 'success');
+                    }
+
                 } else if (!response.success && response.errors) {
                     this.#showInputErrors(response.errors);
                 } else if (response.data && response.data.message) {
@@ -134,7 +147,7 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
                 if (validatedGroups.has(el.name)) return;
                 validatedGroups.add(el.name);
             }
-            
+
             if (!this.handleFieldValidation(el)) {
                 isValid = false;
             }
@@ -152,7 +165,7 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
         if ($field.is('[type="submit"], [type="button"], [type="hidden"]')) return true;
 
         const validation = this.validateField(element);
-        
+
         if (!validation.valid) {
             this.showFieldError($field, validation.message);
             return false;
@@ -164,11 +177,11 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
 
     validateField(element) {
         const $field = jQuery(element);
-        
+
         // Native HTML5 Validation
         if (!element.checkValidity()) {
             let message = element.validationMessage;
-            
+
             if (element.validity.valueMissing) {
                 message = window.DragwybFrontendData?.required_message || window.DragwybFrontendData?.messages?.required || 'This field is required.';
             } else if (element.validity.patternMismatch) {
@@ -184,7 +197,7 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
             } else if (element.validity.typeMismatch) {
                 message = $field.attr('data-type-error') || 'Invalid value type.';
             }
-            
+
             return { valid: false, message };
         }
 
@@ -224,13 +237,13 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
 
     showFieldError($field, message) {
         this.clearFieldError($field);
-        
+
         $field.addClass('dragwyb-error');
-        
+
         // Append error message inside closest .dragwyb-field-wrapper
         const $wrapper = $field.first().closest('.dragwyb-field-wrapper');
         const $errorMsg = jQuery('<span class="dragwyb-field-validation-error" style="color: #dc3232; font-size: 13px; margin-top: 5px; display: block;"></span>').text(message);
-        
+
         if ($wrapper.length) {
             $wrapper.append($errorMsg);
         } else {
@@ -241,6 +254,37 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
                 $targetField.after($errorMsg);
             }
         }
+    }
+
+    clearFormData() {
+        const formFields = this.elements.$form.find('input, select, textarea');
+
+        formFields.each((_, el) => {
+            const $field = jQuery(el);
+
+            if ($field.is(':radio') || $field.is(':checkbox')) {
+                $field.prop('checked', el.defaultChecked);
+            } else if ($field.is('select')) {
+                let hasDefault = false;
+                $field.find('option').each(function () {
+                    this.selected = this.defaultSelected;
+                    if (this.defaultSelected) hasDefault = true;
+                });
+                if (!hasDefault) {
+                    if (el.multiple) {
+                        $field.val([]);
+                    } else if (el.options.length > 0) {
+                        el.selectedIndex = 0;
+                    }
+                }
+            } else if ($field.is('[type="file"]')) {
+                $field.val('');
+            } else {
+                $field.val(el.defaultValue !== undefined ? el.defaultValue : '');
+            }
+        });
+
+        this.clearErrors();
     }
 
     clearFieldError($field) {

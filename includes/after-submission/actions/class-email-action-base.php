@@ -40,7 +40,7 @@ abstract class Email_Action_Base extends Action_Base
         ]);
 
         $this->add_control('email_message_body_' . $prefix, [
-            'type'       => Controls::TEXTAREA,
+            'type'       => Controls::WYSIWYG,
             'label'      => __('Message Body', 'smart-form-builder-by-dragwyb'),
             'default'    => '{all_fields}', // Shortcode for all data
             'description' => __('Use {all_fields} to show all data, or use field IDs like {name}.', 'smart-form-builder-by-dragwyb'),
@@ -70,12 +70,15 @@ abstract class Email_Action_Base extends Action_Base
             foreach ($form_data as $key => $value) {
                 // Try to get field label
                 $label = $key;
-                if (isset($form_config['fields'][$key]['label']) && !empty($form_config['fields'][$key]['label'])) {
-                    $label = $form_config['fields'][$key]['label'];
+                if (isset($form_config['fields'][$key]['attributes']['label']) && !empty($form_config['fields'][$key]['attributes']['label'])) {
+                    $label = $form_config['fields'][$key]['attributes']['label'];
                 }
-                
+
                 $val_str = is_array($value) ? implode(', ', $value) : (string) $value;
-                $all_fields_text .= sprintf("<strong>%s</strong>: %s<br>\n", esc_html($label), esc_html($val_str));
+
+                if (!empty($val_str)) {
+                    $all_fields_text .= sprintf("<strong>%s</strong>: %s<br>\n", esc_html($label), esc_html($val_str));
+                }
             }
             $text = str_replace('{all_fields}', $all_fields_text, $text);
         }
@@ -102,7 +105,7 @@ abstract class Email_Action_Base extends Action_Base
     protected function send_email(string $to, string $subject, string $message, array $headers, Form_Submission_Handler $form_submission): bool
     {
         $mail_error_message = '';
-        
+
         // WP 4.4+ allows catching wp_mail errors
         $error_handler = function (\WP_Error $error) use (&$mail_error_message) {
             $mail_error_message = $error->get_error_message();

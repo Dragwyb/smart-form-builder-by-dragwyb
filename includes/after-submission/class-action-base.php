@@ -12,6 +12,38 @@ abstract class Action_Base extends Register_Controls_Base
     abstract public function get_id(): string;
     abstract public function get_name(): string;
 
+    protected function register_scripts()
+    {
+        return [];
+    }
+
+    protected function register_style()
+    {
+        return [];
+    }
+
+    public function enqueue_assets()
+    {
+        $scripts = $this->register_scripts();
+        $styles = $this->register_style();
+
+        if (is_array($scripts)) {
+            foreach ($scripts as $script) {
+                if (!wp_script_is($script, 'enqueued')) {
+                    wp_enqueue_script($script);
+                }
+            }
+        }
+
+        if (is_array($styles)) {
+            foreach ($styles as $style) {
+                if (!wp_style_is($style, 'enqueued')) {
+                    wp_enqueue_style($style);
+                }
+            }
+        }
+    }
+
     /**
      * Define the specific controls for this action.
      */

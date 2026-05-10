@@ -1,6 +1,5 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Utils as Helper } from '../components/Utils';
 
 const PreviewLoading = () => {
     const iframeEle = useSelector(state => state?.iframeEle);

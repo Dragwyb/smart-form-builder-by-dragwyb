@@ -1,5 +1,4 @@
 import React from 'react';
-import { Dashicon } from '@wordpress/components';
 
 const Button = ({
     children,
@@ -29,7 +28,6 @@ const Button = ({
             disabled={disabled || loading}
         >
             {loading && <span className="dragwyb-button__spinner" />}
-            {icon && <Dashicon icon={icon} />}
             {children && <span className="dragwyb-button__text">{children}</span>}
         </button>
     );

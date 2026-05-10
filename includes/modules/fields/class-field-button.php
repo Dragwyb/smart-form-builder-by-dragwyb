@@ -17,9 +17,6 @@ class Field_Button extends Field_Base
         $this->category = 'structure';
     }
 
-    protected function register_scripts(): void {}
-    protected function register_style(): void {}
-
     /**
      * Define settings specific to this button
      */

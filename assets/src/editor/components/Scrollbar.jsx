@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useSelector } from 'react-redux';
 
 const Scrollbar = ({ children, className = '', isIframe = false, iframeRef = false }) => {
     const contentRef = useRef(null);

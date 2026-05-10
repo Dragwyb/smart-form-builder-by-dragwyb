@@ -370,7 +370,7 @@ abstract class Register_Controls_Base
         return $value;
     }
 
-    private function group_controller_settings(string $id = '', array $data): array
+    private function group_controller_settings(string $id = '', array $data = array()): array
     {
         $id = sanitize_text_field($id);
         $controls_class = Controls::class;

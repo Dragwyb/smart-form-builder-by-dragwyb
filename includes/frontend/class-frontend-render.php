@@ -425,14 +425,22 @@ class Frontend_Render
             true
         );
 
-        wp_localize_script('dragwyb-form-frontend', 'DragwybFrontendData', [
+        $dragwyb_fontend_localize_data = array();
+
+        if (isset(self::$toolbar_data['after-submission']['after_submissions'])) {
+            $dragwyb_fontend_localize_data['actions'] = array_values(self::$toolbar_data['after-submission']['after_submissions']);
+        }
+
+        $dragwyb_fontend_localize_data = apply_filters('Dragwyb/Frontend/Localize_Settings', $dragwyb_fontend_localize_data);
+
+        wp_localize_script('dragwyb-form-frontend', 'DragwybFrontendData', array_merge(array(
             'frontendRoute' => rest_url('dragwyb-form-builder/v1/'),
             'nonce'         => wp_create_nonce('dragwyb_frontend'), // Add nonce if required later
-        ]);
+        ), $dragwyb_fontend_localize_data));
 
         if (defined('DRAGWYB_FORM_PREVIEW') && true === DRAGWYB_FORM_PREVIEW && function_exists('wp_add_inline_style')) {
             $form_id = self::$form_id;
-            $unique_id = get_post_meta($form_id, 'dragwyb_form_assets_id', true);
+            $unique_id = get_post_meta($form_id, '_dragwyb_form_assets_id', true);
             $atfp_style_exist = false;
 
             if ($unique_id && $unique_id !== '') {
@@ -605,6 +613,8 @@ class Frontend_Render
             $final_property = $css_property;
 
             foreach ($placeholders as $ph_key => $ph_value) {
+                $ph_key = sanitize_text_field($ph_key);
+                $ph_value = is_string($ph_value) ? sanitize_text_field($ph_value) : boolval($ph_value);
                 $css_value = '';
                 if ($ph_value === true) {
                     $css_value = sanitize_text_field($value);
@@ -612,6 +622,12 @@ class Frontend_Render
                     $css_value = isset($value[$ph_value]) ? $value[$ph_value] : '';
                 }
 
+                if ($css_value === '' && isset($placeholders['UNIT'])) {
+                    $is_unit_value = '{{' . $ph_key . '}}' . '{{UNIT}}';
+                    if (strpos($final_property, $is_unit_value) !== false) {
+                        $final_property = str_replace($is_unit_value, (string)$css_value, $final_property);
+                    }
+                }
                 $final_property = trim(str_replace('{{' . $ph_key . '}}', (string)$css_value, $final_property));
             }
 

@@ -172,6 +172,9 @@ if (!class_exists('Dragwyb_Builder_Editor')) {
 
             wp_enqueue_script('dragwyb-form-core');
 
+            // Load tinymce editor scripts
+            wp_enqueue_editor();
+
             $js_assets_info = array(
                 'version' => DRAGWYB_FORM_BUILDER_VERSION,
                 'dependencies' => array('jquery', 'jquery-ui-resizable', 'clipboard')
