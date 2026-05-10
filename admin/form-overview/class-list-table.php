@@ -121,7 +121,7 @@ class List_Table extends WP_List_Table
                 break;
 
             case 'shortcode':
-                $value = '[' . DRAGWYB_PREFIX . '-form id="' . $form->ID . '"]';
+                $value = esc_html('[' . DRAGWYB_PREFIX . '-form id="' . $form->ID . '"]');
                 break;
 
             case 'created':
@@ -144,9 +144,19 @@ class List_Table extends WP_List_Table
 
             case 'clean_cache':
                 if ($this->css_cache_exist($form->ID)) {
-                    $value = '<button type="button" id="clean-cache-' . (int)$form->ID . '" data-key="' . wp_create_nonce(sanitize_text_field($form->post_type) . (int)$form->ID . '-clean-cache') . '" data-clean-key="' . wp_create_nonce('delete_cache_nonce') . '" class="button">Clean Cache</button>';
+                    $value = sprintf(
+                        '<button type="button" id="%s" data-key="%s" data-clean-key="%s" class="button">%s</button>',
+                        esc_attr('clean-cache-' . (int) $form->ID),
+                        esc_attr(wp_create_nonce(sanitize_text_field($form->post_type) . (int) $form->ID . '-clean-cache')),
+                        esc_attr(wp_create_nonce('delete_cache_nonce')),
+                        esc_html__('Clean Cache', 'smart-form-builder-by-dragwyb')
+                    );
                 } else {
-                    $value = '<button type="button" id="clean-cache-' . (int)$form->ID . '" disabled class="button">Clean Cache</button>';
+                    $value = sprintf(
+                        '<button type="button" id="%s" disabled class="button">%s</button>',
+                        esc_attr('clean-cache-' . (int) $form->ID),
+                        esc_html__('Clean Cache', 'smart-form-builder-by-dragwyb')
+                    );
                 }
                 break;
 
@@ -368,7 +378,7 @@ class List_Table extends WP_List_Table
         $order        = in_array($order, ['ASC', 'DESC'], true) ? $order : 'DESC';
 
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- for post status check
-        $status = isset($_GET['post_status']) ? sanitize_key($_GET['post_status']) : 'all';
+        $status = isset($_GET['post_status']) ? sanitize_key(wp_unslash($_GET['post_status'])) : 'all';
 
         switch ($status) {
             case 'publish':
