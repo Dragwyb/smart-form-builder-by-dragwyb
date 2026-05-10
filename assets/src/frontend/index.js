@@ -6,7 +6,7 @@ import { initActions } from './actions/index';
 
 jQuery(document).on('Dragwyb:frontendInit', () => {
     window.DragwybFrontendAction = {};
-    DragwybFrontendAction.Base = actionBase;
+    window.DragwybFrontendAction.Base = actionBase;
     initActions();
     DragwybBuilder.Hooks.addAction('dragwyb/frontend/form_ready', (container, formId) => {
         new DragwybFormHandler(container, formId);

@@ -81,7 +81,12 @@ class Form_Submission_Handler
 
         $this->form_id  = absint($form_id);
         $this->generate_form_config($form_data);
-        $this->validate_fields($form_data);
+
+        $this->validate_honeypot($form_data);
+
+        if (!$this->has_errors()) {
+            $this->validate_fields($form_data);
+        }
 
         $this->process_submission();
     }
@@ -240,6 +245,28 @@ class Form_Submission_Handler
         }
 
         do_action('Dragwyb/Form/After_Validation', $form_data, $this->form_config, $this);
+    }
+
+    /**
+     * Validate the honeypot field.
+     *
+     * @param array $form_data The raw form data.
+     * @return void
+     */
+    private function validate_honeypot(array $form_data): void
+    {
+        $advance_settings = isset($this->form_config['advance']) ? $this->form_config['advance'] : [];
+
+        if (isset($advance_settings['honeypot']) && $advance_settings['honeypot'] === 'yes') {
+            foreach ($form_data as $field) {
+                if (isset($field['name']) && $field['name'] === 'dragwyb_h_email') {
+                    if (!empty($field['value'])) {
+                        $this->add_error('honeypot', __('Spam detected. Form submission rejected.', 'smart-form-builder-by-dragwyb'));
+                    }
+                    break;
+                }
+            }
+        }
     }
 
     public function get_sanitized_data(): array

@@ -101,7 +101,7 @@ class Settings extends Register_Controls_Base
         $this->add_control('honeypot', [
             'type'    => Controls::SWITCHER,
             'label'   => __('Enable Honeypot (Anti-Spam)', 'smart-form-builder-by-dragwyb'),
-            'default' => 'yes',
+            'default' => 'no',
             'description' => __('Adds an invisible field to trap bots.', 'smart-form-builder-by-dragwyb'),
         ]);
 

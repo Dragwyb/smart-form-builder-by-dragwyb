@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Dragwyb\Form_Builder\Admin\Form_Overview;
 
 if (!defined("ABSPATH")) {
-    die("You can't access this page");
+    exit;
 }
 
 
@@ -62,10 +62,12 @@ if (!class_exists('Form_Overview')) {
 
             // Prepare and display the table
             $form_table->prepare_items();
-
 ?>
+
             <div class="wrap">
-                <h1 class="wp-heading-inline"><?php esc_html_e('Form Builder Overview', 'smart-form-builder-by-dragwyb'); ?></h1>
+                <h1 class="wp-heading-inline"><?php esc_html_e('Smart Form Builder', 'smart-form-builder-by-dragwyb'); ?></h1>
+                <a href="<?php echo esc_url(admin_url('admin.php?page=' . DRAGWYB_PREFIX . '-form-builder')); ?>" class="page-title-action"><?php esc_html_e('Add Form') ?></a>
+                <hr class="wp-header-end">
                 <ul class="subsubsub">
                     <?php
                     echo wp_kses(implode(' | ', $form_table->get_views()), array('a' => array('href' => array(), 'class' => array(), 'id' => array(), 'title' => array()), 'span' => array("class" => array()))); ?>

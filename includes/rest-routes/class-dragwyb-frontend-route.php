@@ -43,10 +43,41 @@ class Dragwyb_Frontend_Route
             [
                 'methods'             => \WP_REST_Server::CREATABLE,
                 'callback'            => [$this, 'submit_form'],
-                'permission_callback' => '__return_true', // @todo: Update this based on specific security requirements.
+                'permission_callback' => [$this, 'verify_submission_permission'],
                 'args'                => $this->get_endpoint_args(),
             ]
         );
+    }
+
+    /**
+     * Verify frontend submission requests.
+     *
+     * @param \WP_REST_Request $request The REST API request object.
+     * @return bool|\WP_Error
+     */
+    public function verify_submission_permission(\WP_REST_Request $request)
+    {
+        $nonce = $request->get_param('nonce');
+        $form_id = absint($request->get_param('form_id'));
+        $action = Frontend_Render::get_submission_key($form_id);
+
+        if (empty($nonce) || !wp_verify_nonce(sanitize_text_field(wp_unslash($nonce)), $action)) {
+            return new \WP_Error(
+                'rest_forbidden',
+                __('Invalid submission token.', 'smart-form-builder-by-dragwyb'),
+                ['status' => 403]
+            );
+        }
+
+        if (!$form_id || get_post_status($form_id) === false) {
+            return new \WP_Error(
+                'invalid_form',
+                __('Invalid form ID.', 'smart-form-builder-by-dragwyb'),
+                ['status' => 400]
+            );
+        }
+
+        return true;
     }
 
     /**
@@ -89,9 +120,6 @@ class Dragwyb_Frontend_Route
         $form_id = $request->get_param('form_id');
         $fields  = $request->get_param('fields');
 
-        // Add basic security checks like nonce validation if needed
-        // check_ajax_referer('dragwyb_frontend', 'nonce');
-
         if (!$form_id) {
             return new \WP_Error('invalid_form', __('Invalid form ID.', 'smart-form-builder-by-dragwyb'), ['status' => 400]);
         }
@@ -107,12 +135,13 @@ class Dragwyb_Frontend_Route
         // Instantiate the submission handler
         $handler = new Form_Submission_Handler($form_id, (array) $fields);
 
+        $handler_errors = $handler->get_errors();
         // If there are validation errors, return them as a JSON response
         if ($handler->has_errors()) {
             return rest_ensure_response([
                 'success' => false,
-                'message' => __('Form submission failed due to validation errors.', 'smart-form-builder-by-dragwyb'),
-                'errors'  => $handler->get_errors(),
+                'message' => isset($handler_errors['honeypot']) ? $handler_errors['honeypot'] : __('Form submission failed due to validation errors.', 'smart-form-builder-by-dragwyb'),
+                'errors'  => $handler_errors,
             ]);
         }
 

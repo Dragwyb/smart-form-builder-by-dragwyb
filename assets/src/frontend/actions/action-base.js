@@ -1,5 +1,6 @@
 export default class DragwybActionBase {
-    constructor() {
+    constructor(formId) {
+        this.formId = parseInt(formId);
         this.actionName = this.getActionName();
         this.init();
     }
@@ -19,14 +20,20 @@ export default class DragwybActionBase {
             return;
         }
 
-        const selectedActions = window.DragwybFrontendData?.actions || [];
+        const formData = window.DragwybFrontendData?.[`form_${this.formId}`];
+
+        if (!formData) {
+            return;
+        }
+
+        const selectedActions = formData?.actions || [];
 
         if (!selectedActions || selectedActions.length === 0) {
             return;
         }
 
         // Register action filter/hook specifically for this action type
-        DragwybBuilder.Hooks.addAction(`dragwyb/frontend/action/${this.actionName}`, (actionData, response, formHandler) => {
+        DragwybBuilder.Hooks.addAction(`dragwyb/frontend/action/${this.actionName}/${this.formId}`, (actionData, response, formHandler) => {
             this.run(actionData, response, formHandler);
         });
     }

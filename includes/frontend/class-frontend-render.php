@@ -41,6 +41,8 @@ class Frontend_Render
 
     private static $instance = null;
 
+    private static $frontend_localize_data = array();
+
 
     public static function instance(): self
     {
@@ -180,7 +182,6 @@ class Frontend_Render
 
     private function render_fields()
     {
-
         ob_start();
 
         if (count(self::$root_containers) < 1) {
@@ -189,6 +190,13 @@ class Frontend_Render
         }
 
         echo '<form class="dragwyb-form" id="dragwyb-form-' . esc_attr(self::$form_id) . '">';
+
+        $advance_settings = $this->get_toolbars_values('advance');
+        if (isset($advance_settings['honeypot']) && $advance_settings['honeypot'] === 'yes') {
+            echo '<div class="dragwyb-field-h-dragwyb">';
+            echo '<input type="text" name="dragwyb_h_email" value="" tabindex="-1" autocomplete="off" />';
+            echo '</div>';
+        }
 
         foreach (self::$root_containers as $root_container) {
             $row_field = self::$fields[$root_container];
@@ -425,18 +433,12 @@ class Frontend_Render
             true
         );
 
-        $dragwyb_fontend_localize_data = array();
+        $dragwyb_fontend_localize_data = apply_filters('Dragwyb/Frontend/Localize_Settings', array());
 
-        if (isset(self::$toolbar_data['after-submission']['after_submissions'])) {
-            $dragwyb_fontend_localize_data['actions'] = array_values(self::$toolbar_data['after-submission']['after_submissions']);
-        }
-
-        $dragwyb_fontend_localize_data = apply_filters('Dragwyb/Frontend/Localize_Settings', $dragwyb_fontend_localize_data);
-
-        wp_localize_script('dragwyb-form-frontend', 'DragwybFrontendData', array_merge(array(
+        self::$frontend_localize_data = array_merge(array(
             'frontendRoute' => rest_url('dragwyb-form-builder/v1/'),
-            'nonce'         => wp_create_nonce('dragwyb_frontend'), // Add nonce if required later
-        ), $dragwyb_fontend_localize_data));
+            'nonce'         => wp_create_nonce('wp_rest'),
+        ), $dragwyb_fontend_localize_data);
 
         if (defined('DRAGWYB_FORM_PREVIEW') && true === DRAGWYB_FORM_PREVIEW && function_exists('wp_add_inline_style')) {
             $form_id = self::$form_id;
@@ -468,6 +470,39 @@ class Frontend_Render
         }
 
         do_action('Dragwyb/Frontend/After_Enqueue/Script');
+    }
+
+    final static function localize_form_data(): void
+    {
+        $dragwyb_fontend_localize_data = array();
+
+        if (isset(self::$toolbar_data['after-submission']['after_submissions'])) {
+            $dragwyb_fontend_localize_data['actions'] = array_values(self::$toolbar_data['after-submission']['after_submissions']);
+        }
+
+        $dragwyb_fontend_localize_data = apply_filters('Dragwyb/Frontend/Form/Localize_Settings', $dragwyb_fontend_localize_data, self::$form_id);
+
+        $dragwyb_fontend_localize_data['nonce'] = wp_create_nonce(self::get_submission_key(self::$form_id));
+
+        self::$frontend_localize_data['form_' . self::$form_id] = $dragwyb_fontend_localize_data;
+
+        if (!isset(self::$frontend_localize_data['render_forms'])) {
+            self::$frontend_localize_data['render_forms'] = array();
+        }
+
+        if (!in_array(self::$form_id, self::$frontend_localize_data['render_forms'])) {
+            self::$frontend_localize_data['render_forms'][] = self::$form_id;
+        }
+
+        wp_localize_script('dragwyb-form-frontend', 'DragwybFrontendData', self::$frontend_localize_data);
+    }
+
+    /**
+     * Get submission nonce key for a form.
+     */
+    final static function get_submission_key(int $form_id): string
+    {
+        return 'dragwyb_form_submission_' . absint($form_id);
     }
 
     /**

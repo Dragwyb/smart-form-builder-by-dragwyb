@@ -63,8 +63,8 @@ class Dragwyb_Submission_Db
         $defaults = [
             'form_id'         => 0,
             'user_id'         => get_current_user_id() ?: null,
-            'ip_address'      => $this->get_ip_address(),
-            'user_agent'      => isset($_SERVER['HTTP_USER_AGENT']) ? sanitize_textarea_field($_SERVER['HTTP_USER_AGENT']) : '',
+            'ip_address'      => null,
+            'user_agent'      => null,
             'submission_data' => '{}',
             'status'          => 'publish',
             'created_at'      => current_time('mysql'),
@@ -100,7 +100,11 @@ class Dragwyb_Submission_Db
         $inserted = $wpdb->query($sql);
 
         if (false === $inserted) {
-            return new \WP_Error('db_insert_error', $wpdb->last_error);
+            if (!empty($wpdb->last_error)) {
+                error_log('Dragwyb submission insert failed: ' . $wpdb->last_error);
+            }
+
+            return new \WP_Error('db_insert_error', __('Could not save the submission.', 'smart-form-builder-by-dragwyb'));
         }
 
         return $wpdb->insert_id;
@@ -154,7 +158,7 @@ class Dragwyb_Submission_Db
         $query_params[] = absint($args['offset']);
 
         $sql = "SELECT * FROM $table_name $where_clause ORDER BY $orderby $order LIMIT %d OFFSET %d";
-        
+
         $sql = $wpdb->prepare($sql, ...$query_params);
 
         return $wpdb->get_results($sql);
@@ -218,12 +222,27 @@ class Dragwyb_Submission_Db
         global $wpdb;
         $table_name = self::get_table_name();
 
-        // Using wpdb->update which internally prepares statements safely
-        return $wpdb->update(
-            $table_name,
-            $data,
-            ['id' => $id]
+        if (empty($data)) {
+            return false;
+        }
+
+        $set_parts = [];
+        $values    = [];
+
+        foreach ($data as $key => $value) {
+            $format      = in_array($key, ['form_id', 'user_id'], true) ? '%d' : '%s';
+            $set_parts[] = '`' . sanitize_key($key) . '` = ' . $format;
+            $values[]    = $value;
+        }
+
+        $values[] = $id;
+
+        $sql = $wpdb->prepare(
+            "UPDATE $table_name SET " . implode(', ', $set_parts) . " WHERE id = %d",
+            ...$values
         );
+
+        return $wpdb->query($sql);
     }
 
     /**
@@ -237,34 +256,8 @@ class Dragwyb_Submission_Db
         global $wpdb;
         $table_name = self::get_table_name();
 
-        return $wpdb->delete(
-            $table_name,
-            ['id' => $id],
-            ['%d']
-        );
-    }
+        $sql = $wpdb->prepare("DELETE FROM $table_name WHERE id = %d", $id);
 
-    /**
-     * Get IP address safely.
-     *
-     * @return string
-     */
-    private function get_ip_address(): string
-    {
-        $ip = '127.0.0.1';
-
-        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-            $ip = $_SERVER['HTTP_CLIENT_IP'];
-        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        } elseif (!empty($_SERVER['REMOTE_ADDR'])) {
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
-
-        // Handle multiple IPs in X-Forwarded-For
-        $ip_array = explode(',', $ip);
-        $ip = trim($ip_array[0]);
-
-        return filter_var($ip, FILTER_VALIDATE_IP) ? $ip : '127.0.0.1';
+        return $wpdb->query($sql);
     }
 }
