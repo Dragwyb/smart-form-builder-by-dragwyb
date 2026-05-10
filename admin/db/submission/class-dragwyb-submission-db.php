@@ -158,7 +158,7 @@ class Dragwyb_Submission_Db
         $query_params[] = absint($args['offset']);
 
         $sql = "SELECT * FROM $table_name $where_clause ORDER BY $orderby $order LIMIT %d OFFSET %d";
-        
+
         $sql = $wpdb->prepare($sql, ...$query_params);
 
         return $wpdb->get_results($sql);
@@ -222,12 +222,27 @@ class Dragwyb_Submission_Db
         global $wpdb;
         $table_name = self::get_table_name();
 
-        // Using wpdb->update which internally prepares statements safely
-        return $wpdb->update(
-            $table_name,
-            $data,
-            ['id' => $id]
+        if (empty($data)) {
+            return false;
+        }
+
+        $set_parts = [];
+        $values    = [];
+
+        foreach ($data as $key => $value) {
+            $format      = in_array($key, ['form_id', 'user_id'], true) ? '%d' : '%s';
+            $set_parts[] = '`' . sanitize_key($key) . '` = ' . $format;
+            $values[]    = $value;
+        }
+
+        $values[] = $id;
+
+        $sql = $wpdb->prepare(
+            "UPDATE $table_name SET " . implode(', ', $set_parts) . " WHERE id = %d",
+            ...$values
         );
+
+        return $wpdb->query($sql);
     }
 
     /**
@@ -241,11 +256,9 @@ class Dragwyb_Submission_Db
         global $wpdb;
         $table_name = self::get_table_name();
 
-        return $wpdb->delete(
-            $table_name,
-            ['id' => $id],
-            ['%d']
-        );
+        $sql = $wpdb->prepare("DELETE FROM $table_name WHERE id = %d", $id);
+
+        return $wpdb->query($sql);
     }
 
     /**
