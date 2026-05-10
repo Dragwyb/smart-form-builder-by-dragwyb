@@ -36,11 +36,12 @@ class Dragwyb_Form_Builder_Ajax
 
         check_ajax_referer('dragwyb_editor');
 
-        if (!current_user_can('edit_posts')) {
+        $form_id = isset($_POST['form_id']) ? absint(wp_unslash($_POST['form_id'])) : 0;
+
+        if (!$this->current_user_can_manage_form($form_id)) {
             wp_send_json_error(['message' => __('Permission denied', 'smart-form-builder-by-dragwyb')]);
         }
 
-        $form_id = absint($_POST['form_id'] ?? 0);
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- data properly sanitized in sanitize_form_data
         $form_data = json_decode(wp_unslash($_POST['form_data'] ?? ''), true);
 
@@ -143,19 +144,19 @@ class Dragwyb_Form_Builder_Ajax
     {
         check_ajax_referer('dragwyb_admin_nonce');
 
-        if (!current_user_can('edit_posts')) {
+        if (!$this->current_user_can_manage_entries()) {
             wp_send_json_error(['message' => __('Permission denied', 'smart-form-builder-by-dragwyb')]);
         }
 
         $db = new Dragwyb_Submission_Db();
 
         $args = [
-            'limit'   => isset($_POST['limit']) ? absint($_POST['limit']) : 20,
-            'offset'  => isset($_POST['offset']) ? absint($_POST['offset']) : 0,
-            'orderby' => isset($_POST['orderby']) ? sanitize_text_field($_POST['orderby']) : 'created_at',
-            'order'   => isset($_POST['order']) ? sanitize_text_field($_POST['order']) : 'DESC',
-            'search'  => isset($_POST['search']) ? sanitize_text_field($_POST['search']) : '',
-            'form_id' => isset($_POST['form_id']) ? absint($_POST['form_id']) : 0,
+            'limit'   => isset($_POST['limit']) ? absint(wp_unslash($_POST['limit'])) : 20,
+            'offset'  => isset($_POST['offset']) ? absint(wp_unslash($_POST['offset'])) : 0,
+            'orderby' => isset($_POST['orderby']) ? sanitize_key(wp_unslash($_POST['orderby'])) : 'created_at',
+            'order'   => isset($_POST['order']) ? sanitize_key(wp_unslash($_POST['order'])) : 'DESC',
+            'search'  => isset($_POST['search']) ? sanitize_text_field(wp_unslash($_POST['search'])) : '',
+            'form_id' => isset($_POST['form_id']) ? absint(wp_unslash($_POST['form_id'])) : 0,
         ];
 
         $entries = $db->get_all($args);
@@ -166,16 +167,20 @@ class Dragwyb_Form_Builder_Ajax
             $data = json_decode($entry->submission_data, true);
             if (json_last_error() === JSON_ERROR_NONE && is_array($data)) {
                 $summary = [];
+                $summary_text = [];
                 $count = 0;
                 foreach ($data as $key => $value) {
                     if ($count >= 3) break;
                     $display_val = is_array($value) ? implode(', ', $value) : (string)$value;
                     $summary[] = sprintf('<strong>%s:</strong> %s', esc_html((string)$key), esc_html($display_val));
+                    $summary_text[] = sprintf('%s: %s', sanitize_text_field((string)$key), sanitize_text_field($display_val));
                     $count++;
                 }
                 $entry->submission_data_summary = implode('<br>', $summary) . (count($data) > 3 ? '<br><em>...and more</em>' : '');
+                $entry->submission_data_summary_text = implode(' ', $summary_text) . (count($data) > 3 ? ' ...and more' : '');
             } else {
                 $entry->submission_data_summary = esc_html(wp_trim_words($entry->submission_data, 10, '...'));
+                $entry->submission_data_summary_text = sanitize_text_field(wp_trim_words($entry->submission_data, 10, '...'));
             }
             $entry->created_at_formatted = wp_date(get_option('date_format') . ' ' . get_option('time_format'), strtotime($entry->created_at));
         }
@@ -194,7 +199,7 @@ class Dragwyb_Form_Builder_Ajax
     {
         check_ajax_referer('dragwyb_admin_nonce');
 
-        if (!current_user_can('edit_posts')) {
+        if (!$this->current_user_can_manage_entries()) {
             wp_send_json_error(['message' => __('Permission denied', 'smart-form-builder-by-dragwyb')]);
         }
 
@@ -224,11 +229,11 @@ class Dragwyb_Form_Builder_Ajax
     {
         check_ajax_referer('dragwyb_admin_nonce');
 
-        if (!current_user_can('edit_posts')) {
+        if (!$this->current_user_can_manage_entries()) {
             wp_send_json_error(['message' => __('Permission denied', 'smart-form-builder-by-dragwyb')]);
         }
 
-        $id = isset($_POST['id']) ? absint($_POST['id']) : 0;
+        $id = isset($_POST['id']) ? absint(wp_unslash($_POST['id'])) : 0;
         if (!$id) {
             wp_send_json_error(['message' => __('Invalid ID', 'smart-form-builder-by-dragwyb')]);
         }
@@ -238,6 +243,10 @@ class Dragwyb_Form_Builder_Ajax
 
         if (!$entry) {
             wp_send_json_error(['message' => __('Entry not found', 'smart-form-builder-by-dragwyb')]);
+        }
+
+        if (!$this->current_user_can_manage_entry($entry)) {
+            wp_send_json_error(['message' => __('Permission denied', 'smart-form-builder-by-dragwyb')]);
         }
 
         // Decode JSON safely for frontend usage
@@ -256,23 +265,30 @@ class Dragwyb_Form_Builder_Ajax
     {
         check_ajax_referer('dragwyb_admin_nonce');
 
-        if (!current_user_can('edit_posts')) {
+        if (!$this->current_user_can_manage_entries()) {
             wp_send_json_error(['message' => __('Permission denied', 'smart-form-builder-by-dragwyb')]);
         }
 
-        $id = isset($_POST['id']) ? absint($_POST['id']) : 0;
+        $id = isset($_POST['id']) ? absint(wp_unslash($_POST['id'])) : 0;
         if (!$id) {
             wp_send_json_error(['message' => __('Invalid ID', 'smart-form-builder-by-dragwyb')]);
+        }
+
+        $db = new Dragwyb_Submission_Db();
+        $entry = $db->get($id);
+
+        if (!$entry || !$this->current_user_can_manage_entry($entry)) {
+            wp_send_json_error(['message' => __('Permission denied', 'smart-form-builder-by-dragwyb')]);
         }
 
         $data = [];
 
         // Check if quick edit data exists
         if (isset($_POST['status'])) {
-            $data['status'] = sanitize_text_field($_POST['status']);
+            $data['status'] = sanitize_text_field(wp_unslash($_POST['status']));
         }
         if (isset($_POST['created_at'])) {
-            $data['created_at'] = sanitize_text_field($_POST['created_at']);
+            $data['created_at'] = sanitize_text_field(wp_unslash($_POST['created_at']));
         }
 
         // Check if full edit data exists (JSON payload)
@@ -294,7 +310,6 @@ class Dragwyb_Form_Builder_Ajax
             wp_send_json_error(['message' => __('No data provided for update.', 'smart-form-builder-by-dragwyb')]);
         }
 
-        $db = new Dragwyb_Submission_Db();
         $updated = $db->update($id, $data);
 
         if ($updated === false) {
@@ -311,16 +326,22 @@ class Dragwyb_Form_Builder_Ajax
     {
         check_ajax_referer('dragwyb_admin_nonce');
 
-        if (!current_user_can('edit_posts')) {
+        if (!$this->current_user_can_manage_entries()) {
             wp_send_json_error(['message' => __('Permission denied', 'smart-form-builder-by-dragwyb')]);
         }
 
-        $id = isset($_POST['id']) ? absint($_POST['id']) : 0;
+        $id = isset($_POST['id']) ? absint(wp_unslash($_POST['id'])) : 0;
         if (!$id) {
             wp_send_json_error(['message' => __('Invalid ID', 'smart-form-builder-by-dragwyb')]);
         }
 
         $db = new Dragwyb_Submission_Db();
+        $entry = $db->get($id);
+
+        if (!$entry || !$this->current_user_can_manage_entry($entry, 'delete_post')) {
+            wp_send_json_error(['message' => __('Permission denied', 'smart-form-builder-by-dragwyb')]);
+        }
+
         $deleted = $db->delete($id);
 
         if ($deleted === false) {
@@ -328,5 +349,28 @@ class Dragwyb_Form_Builder_Ajax
         }
 
         wp_send_json_success(['message' => __('Entry deleted successfully.', 'smart-form-builder-by-dragwyb')]);
+    }
+
+    private function current_user_can_manage_form(int $form_id, string $capability = 'edit_post'): bool
+    {
+        if (current_user_can('manage_options')) {
+            return true;
+        }
+
+        return $form_id > 0 && current_user_can($capability, $form_id);
+    }
+
+    private function current_user_can_manage_entries(): bool
+    {
+        return current_user_can('manage_options');
+    }
+
+    private function current_user_can_manage_entry($entry, string $capability = 'edit_post'): bool
+    {
+        if (!$entry || empty($entry->form_id)) {
+            return false;
+        }
+
+        return $this->current_user_can_manage_form(absint($entry->form_id), $capability);
     }
 }
