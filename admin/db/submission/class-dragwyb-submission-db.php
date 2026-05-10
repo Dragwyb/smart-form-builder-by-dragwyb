@@ -64,7 +64,7 @@ class Dragwyb_Submission_Db
             'form_id'         => 0,
             'user_id'         => get_current_user_id() ?: null,
             'ip_address'      => $this->get_ip_address(),
-            'user_agent'      => isset($_SERVER['HTTP_USER_AGENT']) ? sanitize_textarea_field($_SERVER['HTTP_USER_AGENT']) : '',
+            'user_agent'      => isset($_SERVER['HTTP_USER_AGENT']) ? sanitize_textarea_field(wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '',
             'submission_data' => '{}',
             'status'          => 'publish',
             'created_at'      => current_time('mysql'),
@@ -100,7 +100,11 @@ class Dragwyb_Submission_Db
         $inserted = $wpdb->query($sql);
 
         if (false === $inserted) {
-            return new \WP_Error('db_insert_error', $wpdb->last_error);
+            if (!empty($wpdb->last_error)) {
+                error_log('Dragwyb submission insert failed: ' . $wpdb->last_error);
+            }
+
+            return new \WP_Error('db_insert_error', __('Could not save the submission.', 'smart-form-builder-by-dragwyb'));
         }
 
         return $wpdb->insert_id;
