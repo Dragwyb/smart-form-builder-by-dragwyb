@@ -63,8 +63,8 @@ class Dragwyb_Submission_Db
         $defaults = [
             'form_id'         => 0,
             'user_id'         => get_current_user_id() ?: null,
-            'ip_address'      => $this->get_ip_address(),
-            'user_agent'      => isset($_SERVER['HTTP_USER_AGENT']) ? sanitize_textarea_field(wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '',
+            'ip_address'      => '',
+            'user_agent'      => '',
             'submission_data' => '{}',
             'status'          => 'publish',
             'created_at'      => current_time('mysql'),
@@ -259,29 +259,5 @@ class Dragwyb_Submission_Db
         $sql = $wpdb->prepare("DELETE FROM $table_name WHERE id = %d", $id);
 
         return $wpdb->query($sql);
-    }
-
-    /**
-     * Get IP address safely.
-     *
-     * @return string
-     */
-    private function get_ip_address(): string
-    {
-        $ip = '127.0.0.1';
-
-        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-            $ip = $_SERVER['HTTP_CLIENT_IP'];
-        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        } elseif (!empty($_SERVER['REMOTE_ADDR'])) {
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
-
-        // Handle multiple IPs in X-Forwarded-For
-        $ip_array = explode(',', $ip);
-        $ip = trim($ip_array[0]);
-
-        return filter_var($ip, FILTER_VALIDATE_IP) ? $ip : '127.0.0.1';
     }
 }
