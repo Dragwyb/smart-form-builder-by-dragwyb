@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Dragwyb\Form_Builder\Admin\Form_Overview;
 
 if (!defined("ABSPATH")) {
-    die("You can't access this page");
+    exit;
 }
 
 
