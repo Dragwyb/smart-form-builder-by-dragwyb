@@ -95,8 +95,8 @@ class Save_Submissions_Action extends Action_Base
                 'submission_data' => $form_data,
             ];
 
-            $collect_ip = $settings['collect_user_ip'] ?? 'yes';
-            $collect_ua = $settings['collect_user_agent'] ?? 'yes';
+            $collect_ip = isset($settings['collect_user_ip']) && 'yes' === $settings['collect_user_ip'] ? 'yes' : 'no';
+            $collect_ua = isset($settings['collect_user_agent']) && 'yes' === $settings['collect_user_agent'] ? 'yes' : 'no';
 
             if ($collect_ip === 'yes') {
                 $insert_data['ip_address'] = $this->get_ip_address();
