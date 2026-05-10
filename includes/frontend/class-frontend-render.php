@@ -182,7 +182,6 @@ class Frontend_Render
 
     private function render_fields()
     {
-
         ob_start();
 
         if (count(self::$root_containers) < 1) {
@@ -191,6 +190,13 @@ class Frontend_Render
         }
 
         echo '<form class="dragwyb-form" id="dragwyb-form-' . esc_attr(self::$form_id) . '">';
+
+        $advance_settings = $this->get_toolbars_values('advance');
+        if (isset($advance_settings['honeypot']) && $advance_settings['honeypot'] === 'yes') {
+            echo '<div class="dragwyb-field-h-dragwyb">';
+            echo '<input type="text" name="dragwyb_h_email" value="" tabindex="-1" autocomplete="off" />';
+            echo '</div>';
+        }
 
         foreach (self::$root_containers as $root_container) {
             $row_field = self::$fields[$root_container];

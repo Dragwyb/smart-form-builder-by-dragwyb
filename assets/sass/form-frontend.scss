@@ -186,6 +186,10 @@
     margin: 0;
 }
 
+.dragwyb-field-h-dragwyb {
+    display: none;
+}
+
 // Layout Styling
 .dragwyb-form-wrapper {
 
@@ -629,7 +633,7 @@
     &.dragwyb-message-modal-show {
         opacity: 1;
         visibility: visible;
-        
+
         .dragwyb-message-modal {
             transform: scale(1);
             opacity: 1;
@@ -662,7 +666,7 @@
         cursor: pointer;
         padding: 5px;
         transition: color 0.2s ease;
-        
+
         &:hover {
             color: #4b5563;
         }

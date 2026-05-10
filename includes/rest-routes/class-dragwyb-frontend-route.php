@@ -135,12 +135,13 @@ class Dragwyb_Frontend_Route
         // Instantiate the submission handler
         $handler = new Form_Submission_Handler($form_id, (array) $fields);
 
+        $handler_errors = $handler->get_errors();
         // If there are validation errors, return them as a JSON response
         if ($handler->has_errors()) {
             return rest_ensure_response([
                 'success' => false,
-                'message' => __('Form submission failed due to validation errors.', 'smart-form-builder-by-dragwyb'),
-                'errors'  => $handler->get_errors(),
+                'message' => isset($handler_errors['honeypot']) ? $handler_errors['honeypot'] : __('Form submission failed due to validation errors.', 'smart-form-builder-by-dragwyb'),
+                'errors'  => $handler_errors,
             ]);
         }
 
