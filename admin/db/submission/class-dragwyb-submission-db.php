@@ -63,8 +63,8 @@ class Dragwyb_Submission_Db
         $defaults = [
             'form_id'         => 0,
             'user_id'         => get_current_user_id() ?: null,
-            'ip_address'      => '',
-            'user_agent'      => '',
+            'ip_address'      => null,
+            'user_agent'      => null,
             'submission_data' => '{}',
             'status'          => 'publish',
             'created_at'      => current_time('mysql'),
