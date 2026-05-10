@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dragwyb\Form_Builder;
 
 if (!defined('ABSPATH')) {
