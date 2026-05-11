@@ -722,8 +722,35 @@ body {
 
     &__settings {
         width: var(--panel-width);
-        height: 100%;
+        height: calc(100% - 84px);
         box-shadow: var(--dragwyb-ring-offset-shadow, 0 0 #0000), var(--dragwyb-ring-shadow, 0 0 #0000), var(--dragwyb-sm-shadow);
+
+        &__footer {
+            button {
+                padding: 8px 16px;
+                font-size: 13px;
+                font-weight: 500;
+                color: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
+                background-color: hsl(var(--dragwyb-primary)/0.1);
+                border: 1px dashed hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
+                border-radius: 6px;
+                cursor: pointer;
+                transition: background-color 0.2s ease;
+                width: 100%;
+                border-radius: 0px;
+                font-weight: 600;
+                font-size: 1rem;
+                height: 45.6px;
+
+                .dashicons {
+                    margin-right: .5rem;
+                }
+
+                &:hover {
+                    background-color: hsl(var(--dragwyb-primary)/0.2);
+                }
+            }
+        }
     }
 
     &__toolbar_settings {

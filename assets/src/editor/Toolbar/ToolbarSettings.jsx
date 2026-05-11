@@ -6,7 +6,7 @@ import DragwybToolbarBase from "../toolbarBase"
 import { Utils as Helper } from '../components/Utils';
 import { useDraggable, useDroppable } from "../components/Common";
 
-const ToolbarSettings = () => {
+const ToolbarSettings = ({ onFieldSelect }) => {
   const setting = useSelector(state => state.activeToolbar);
   const selectedToolbar = useSelector(state => state.selectedSettingId);
   const formData = useSelector(state => state.form);
@@ -74,6 +74,11 @@ const ToolbarSettings = () => {
     Utils.updateToolbarSetting({ id: key, value });
   }, [Utils]);
 
+  const handleDeleteField = useCallback((id) => {
+    onFieldSelect({ id: false });
+    dispatch({ type: "DELETE_FIELD", payload: id });
+  }, [dispatch]);
+
   let toolBarHtml = false;
 
   let toolBarObject = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/toolbarRender/' + setting, toolBarHtml, setting, selectedToolbar, toolbarData, toolbarSettings, updateToolBar, { ...Utils, ...extensibleUtils });
@@ -94,14 +99,22 @@ const ToolbarSettings = () => {
 
   return <div className="dragwyb-editor__sidebar" ref={sidebarRef} >
     {toolbarHTML && toolbarHTML}
-    {settings && settings.controls && <div className="dragwyb-editor__settings">
-      <FieldSettings
-        selectedTab={setting}
-        toolbarValue={toolbarRef.current.getToolbarValue()}
-        toolbarSettings={settings}
-        onSettingChange={onSettingChangeHandler}
-      />
-    </div>}
+    {settings && settings.controls && <>
+      <div className="dragwyb-editor__settings">
+        <FieldSettings
+          selectedTab={setting}
+          toolbarValue={toolbarRef.current.getToolbarValue()}
+          toolbarSettings={settings}
+          onSettingChange={onSettingChangeHandler}
+        />
+      </div>
+      <div className='dragwyb-editor__settings__footer'>
+        {setting === 'fields' && selectedToolbar !== 'fields' && <button onClick={() => handleDeleteField(selectedToolbar)}>
+          <span className="dashicons dashicons-trash"></span>
+          {__('Delete', 'dragwyb-form-builder')} {settings.label || ''}
+        </button>}
+      </div>
+    </>}
   </div>
 };
 
