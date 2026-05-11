@@ -63,6 +63,7 @@ class Field_Checkbox extends Field_Base
                 'inline' => __('Horizontal (Inline)', 'smart-form-builder-by-dragwyb'),
             ],
             'default' => 'block',
+            'label_inline' => true
         ]);
 
         $this->add_control('help_text', [
