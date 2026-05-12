@@ -13,7 +13,7 @@ class Register_Fields
 
     private array $fields = [];
 
-    private array $default_fields = ['button', 'checkbox', 'date', 'text', 'email', 'hidden', 'number', 'radio', 'textarea', 'select', 'row'];
+    private array $default_fields = ['button', 'checkbox', 'date', 'text', 'email', 'hidden', 'number', 'radio', 'textarea', 'select', 'row', 'html', 'section', 'url', 'phone', 'name', 'address', 'time', 'range', 'captcha', 'file'];
 
     public static function instance(): self
     {

@@ -318,7 +318,7 @@ const Editor = () => {
                         setActiveTab={setActiveTabHandler}
                         setSettingId={setSelectedSettingId}
                     />
-                    <ToolbarSettings />
+                    <ToolbarSettings onFieldSelect={setSelectedSettingId} />
 
                     {/* The Iframe Shield: Crucial for dragging over iframe */}
                     {activeDrag && (

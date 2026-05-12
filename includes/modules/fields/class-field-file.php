@@ -7,7 +7,7 @@ namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
 
-class Field_Text extends Field_Base
+class Field_File extends Field_Base
 {
     public function __construct()
     {
@@ -16,18 +16,15 @@ class Field_Text extends Field_Base
 
     protected function init(): void
     {
-        $this->type = 'text';
-        $this->name = __('Text Field', 'smart-form-builder-by-dragwyb');
-        $this->icon = 'fas fa-font';
-        $this->category = 'standard-fields';
-        $this->keywords = array('input', 'string', 'single');
+        $this->type = 'file';
+        $this->name = __('File Upload', 'smart-form-builder-by-dragwyb');
+        $this->icon = 'fas fa-upload';
+        $this->category = 'advanced-fields';
+        $this->keywords = array('upload', 'document', 'image', 'attachment');
     }
 
     protected function register_field_controls(): void
     {
-        /**
-         * TAB: CONTENT
-         */
         $this->start_section('section_content_general', [
             'label' => __('Basic Settings', 'smart-form-builder-by-dragwyb'),
             'tab'   => self::ContentTab,
@@ -36,20 +33,8 @@ class Field_Text extends Field_Base
         $this->add_control('label', [
             'type'    => Controls::TEXT,
             'label'   => __('Field Label', 'smart-form-builder-by-dragwyb'),
-            'default' => __('Text Field', 'smart-form-builder-by-dragwyb'),
+            'default' => __('Upload File', 'smart-form-builder-by-dragwyb'),
             'dynamic' => ['active' => true],
-        ]);
-
-        $this->add_control('placeholder', [
-            'type'    => Controls::TEXT,
-            'label'   => __('Placeholder Text', 'smart-form-builder-by-dragwyb'),
-            'default' => __('Enter text...', 'smart-form-builder-by-dragwyb'),
-        ]);
-
-        $this->add_control('default_value', [
-            'type'    => Controls::TEXT,
-            'label'   => __('Default Value', 'smart-form-builder-by-dragwyb'),
-            'description' => __('Pre-fill the field for the user.', 'smart-form-builder-by-dragwyb'),
         ]);
 
         $this->add_control('help_text', [
@@ -73,16 +58,14 @@ class Field_Text extends Field_Base
             'default'      => 'no',
         ]);
 
-        $this->add_control('min_length', [
-            'type'  => Controls::NUMBER,
-            'label' => __('Minimum Length', 'smart-form-builder-by-dragwyb'),
-            'min'   => 0,
-        ]);
-
-        $this->add_control('max_length', [
-            'type'  => Controls::NUMBER,
-            'label' => __('Maximum Length', 'smart-form-builder-by-dragwyb'),
-            'min'   => 1,
+        $this->add_control('free_limit_notice', [
+            'type' => Controls::RAW_HTML,
+            'raw'  => '<div style="background-color: #f0f9ff; border: 1px solid #bae6fd; padding: 10px; border-radius: 4px; font-size: 12px; margin-top: 10px;">' .
+                '<strong>Free Version Limits:</strong><br/>' .
+                '- Max File Size: 2MB<br/>' .
+                '- Allowed Extensions: jpg, jpeg, png, pdf, doc, docx, txt<br/>' .
+                '- Max Files: 1' .
+                '</div>',
         ]);
 
         $this->end_section();
@@ -123,12 +106,6 @@ class Field_Text extends Field_Base
             'selectors' => ['{{WRAPPER}}' => '--dragwyb-input-bg: {{VALUE}};'],
         ]);
 
-        $this->add_control('input_placeholder_color', [
-            'type'      => Controls::COLOR,
-            'label'     => __('Placeholder Color', 'smart-form-builder-by-dragwyb'),
-            'selectors' => ['{{WRAPPER}}' => '--dragwyb-input-placeholder-color: {{VALUE}};'],
-        ]);
-
         $this->add_control('input_text_color', [
             'type'      => Controls::COLOR,
             'label'     => __('Text Color', 'smart-form-builder-by-dragwyb'),
@@ -139,6 +116,14 @@ class Field_Text extends Field_Base
             'type'     => Controls::GROUP_BORDER,
             'selector' => '{{WRAPPER}}',
             'prefix'   => 'input',
+        ]);
+
+        $this->add_control('input_padding', [
+            'type'       => Controls::DIMENSIONS,
+            'label'      => __('Inner Padding', 'smart-form-builder-by-dragwyb'),
+            'size_units' => ['px', 'em', '%'],
+            'selectors'  => ['{{WRAPPER}}' => '--dragwyb-input-pt: {{TOP}}{{UNIT}}; --dragwyb-input-pr: {{RIGHT}}{{UNIT}}; --dragwyb-input-pb: {{BOTTOM}}{{UNIT}}; --dragwyb-input-pl: {{LEFT}}{{UNIT}};'],
+            'separator'  => 'before',
         ]);
 
         $this->end_tab();
@@ -155,14 +140,6 @@ class Field_Text extends Field_Base
 
         $this->end_tabs();
 
-        $this->add_control('input_padding', [
-            'type'       => Controls::DIMENSIONS,
-            'label'      => __('Inner Padding', 'smart-form-builder-by-dragwyb'),
-            'size_units' => ['px', 'em', '%'],
-            'selectors'  => ['{{WRAPPER}}' => '--dragwyb-input-pt: {{TOP}}{{UNIT}}; --dragwyb-input-pr: {{RIGHT}}{{UNIT}}; --dragwyb-input-pb: {{BOTTOM}}{{UNIT}}; --dragwyb-input-pl: {{LEFT}}{{UNIT}};'],
-            'separator'  => 'before',
-        ]);
-
         $this->end_section();
     }
 
@@ -170,33 +147,30 @@ class Field_Text extends Field_Base
     {
         $settings = $this->get_field_settings();
         $id = $this->get_the_id();
-        $field_id       = $this->field_key_exist($settings, 'field_id', uniqid('field_'));
-        $label    = $this->field_key_exist($settings, 'label', 'Text Field');
-        $placeholder = $this->field_key_exist($settings, 'placeholder', ' '); // Space for float logic
-        $value    = $this->field_key_exist($settings, 'default_value', '');
+        $field_id = $this->field_key_exist($settings, 'field_id', uniqid('field_'));
+        $label    = $this->field_key_exist($settings, 'label', 'Upload File');
         $help     = $this->field_key_exist($settings, 'help_text', '');
         $required = $this->field_key_exist($settings, 'required', '') === 'yes';
         $classes  = $this->field_key_exist($settings, 'css_classes', '');
 ?>
         <div id="<?php echo esc_attr($this->field_wrapper_id($id)); ?>" class="<?php echo esc_attr($this->field_wrapper_class($classes)); ?>">
-            <div class="dragwyb-input-group">
-                <input
-                    type="text"
-                    id="<?php echo esc_attr($field_id); ?>"
-                    name="<?php echo esc_attr($field_id); ?>"
-                    value="<?php echo esc_attr($value); ?>"
-                    placeholder="<?php echo esc_attr($placeholder); ?>"
-                    class="dragwyb-field-input"
-                    <?php echo $required ? 'required' : ''; ?> />
+            <div class="dragwyb-input-group dragwyb-file-upload-group">
                 <?php if (!empty($label)) : ?>
                     <label for="<?php echo esc_attr($field_id); ?>" class="dragwyb-field-label">
                         <?php echo esc_html($label); ?>
                         <?php if ($required) : ?><span class="dragwyb-required">*</span><?php endif; ?>
                     </label>
                 <?php endif; ?>
+                <input
+                    type="file"
+                    id="<?php echo esc_attr($field_id); ?>"
+                    name="<?php echo esc_attr($field_id); ?>"
+                    class="dragwyb-field-input dragwyb-file-input"
+                    accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.txt"
+                    <?php echo $required ? 'required' : ''; ?> />
             </div>
             <?php if (!empty($help)) : ?>
-                <div class="dragwyb-field-help"><?php echo esc_html($help); ?></div>
+                <div class="dragwyb-field-help"><?php echo wp_kses_post($help); ?></div>
             <?php endif; ?>
         </div>
 <?php
@@ -210,42 +184,64 @@ class Field_Text extends Field_Base
         }
         $field_attr = isset($form_config['fields'][$field_id]['attributes']) ? $form_config['fields'][$field_id]['attributes'] : array();
 
-        if (empty($value) && (isset($field_attr['required']) && $field_attr['required'] == 'yes')) {
+        // Check if file was uploaded
+        $file_exists = isset($_FILES[$field_id]) && $_FILES[$field_id]['error'] !== UPLOAD_ERR_NO_FILE;
+
+        if (!$file_exists && (isset($field_attr['required']) && $field_attr['required'] == 'yes')) {
             $error_handler->add_error($field_id, __('This field is required.', 'smart-form-builder-by-dragwyb'));
             return;
         }
 
-        if (empty($value)) {
+        if (!$file_exists) {
             return;
         }
 
-        $min_length = isset($field_attr['min_length']) ? (int) $field_attr['min_length'] : null;
-        $max_length = isset($field_attr['max_length']) ? (int) $field_attr['max_length'] : null;
+        $file = $_FILES[$field_id];
 
-        if (isset($min_length) && strlen($value) < $min_length) {
-            $error_handler->add_error($field_id, sprintf(__('This field requires at least %d characters.', 'smart-form-builder-by-dragwyb'), $min_length));
+        // 1. Check for upload errors
+        if ($file['error'] !== UPLOAD_ERR_OK) {
+            $error_handler->add_error($field_id, __('Error uploading file.', 'smart-form-builder-by-dragwyb'));
             return;
         }
 
-        if (isset($max_length) && strlen($value) > $max_length) {
-            $error_handler->add_error($field_id, sprintf(__('This field requires at most %d characters.', 'smart-form-builder-by-dragwyb'), $max_length));
+        // 2. Max File Size: 1MB (1048576 bytes)
+        $max_size = 1 * 1024 * 1024;
+        if ($file['size'] > $max_size) {
+            $error_handler->add_error($field_id, __('File size exceeds the 1MB limit for the free version.', 'smart-form-builder-by-dragwyb'));
+            return;
+        }
+
+        // 3. Allowed Extensions
+        $allowed_exts = ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx', 'txt'];
+        $file_ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+
+        if (!in_array($file_ext, $allowed_exts, true)) {
+            $error_handler->add_error($field_id, __('Invalid file type. Allowed types: jpg, jpeg, png, pdf, doc, docx, txt.', 'smart-form-builder-by-dragwyb'));
+            return;
+        }
+
+        // Mime type check for added security
+        $mime_type = mime_content_type($file['tmp_name']);
+        $allowed_mimes = [
+            'image/jpeg',
+            'image/png',
+            'application/pdf',
+            'text/plain'
+        ];
+
+        if (!in_array($mime_type, $allowed_mimes, true)) {
+            $error_handler->add_error($field_id, __('Invalid file mime type.', 'smart-form-builder-by-dragwyb'));
             return;
         }
     }
 
-    /**
-     * Sanitize the field value.
-     *
-     * @param string $default The default value.
-     * @param mixed $value The value to sanitize.
-     * @return mixed Sanitized value.
-     */
     public function sanitize($default = '', $value = null)
     {
-        if ($value && is_string($value)) {
-            return sanitize_text_field($value);
+        // For files, the sanitization and actual saving/moving usually happen during a dedicated submission step
+        // Returning the file path or name or an empty string for now
+        if (isset($value['name'])) {
+            return sanitize_file_name($value['name']);
         }
-
-        return sanitize_text_field($default);
+        return '';
     }
 }

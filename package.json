@@ -6,7 +6,9 @@
         "dev:editor": "webpack --mode development --env type=editor --watch",
         "build:editor": "webpack --mode production --env type=editor",
         "dev:frontend": "webpack --mode development --env type=frontend --watch",
-        "build:frontend": "webpack --mode production --env type=frontend"
+        "build:frontend": "webpack --mode production --env type=frontend",
+        "dev:range-slider": "webpack --mode development --env type=range-slider --watch",
+        "build:range-slider": "webpack --mode production --env type=range-slider"
     },
     "dependencies": {
         "@dnd-kit/core": "^6.3.1",

@@ -33,7 +33,7 @@ abstract class Field_Base extends Register_Controls_Base
         return [];
     }
 
-    protected function register_style()
+    protected function register_styles()
     {
         return [];
     }
@@ -62,7 +62,7 @@ abstract class Field_Base extends Register_Controls_Base
     public function enqueue_assets()
     {
         $scripts = $this->register_scripts();
-        $styles = $this->register_style();
+        $styles = $this->register_styles();
 
         if (is_array($scripts)) {
             foreach ($scripts as $script) {
@@ -227,6 +227,7 @@ abstract class Field_Base extends Register_Controls_Base
 
     public function render()
     {
+        $this->enqueue_assets();
         $this->render_field();
     }
 
