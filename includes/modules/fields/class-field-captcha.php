@@ -19,6 +19,7 @@ class Field_Captcha extends Field_Base
         $this->type = 'captcha';
         $this->name = __('Captcha', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-shield-alt';
+        $this->category = 'advanced-fields';
     }
 
     protected function register_field_controls(): void

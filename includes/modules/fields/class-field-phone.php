@@ -19,6 +19,7 @@ class Field_Phone extends Field_Base
         $this->type = 'phone';
         $this->name = __('Phone Field', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-phone';
+        $this->category = 'advanced-fields';
     }
 
     protected function register_field_controls(): void

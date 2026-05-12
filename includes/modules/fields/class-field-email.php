@@ -134,6 +134,7 @@ class Field_Email extends Field_Base
         $this->keywords = array('text');
         $this->name = __('Email Field', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-envelope';
+        $this->category = 'standard-fields';
     }
 
     protected function render_field()

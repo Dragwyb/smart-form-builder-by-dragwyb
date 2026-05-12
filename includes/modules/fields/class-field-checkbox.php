@@ -15,6 +15,7 @@ class Field_Checkbox extends Field_Base
         $this->type = 'checkbox';
         $this->name = __('Checkbox Group', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-check-square';
+        $this->category = 'standard-fields';
     }
 
     protected function register_field_controls(): void

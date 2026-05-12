@@ -19,6 +19,7 @@ class Field_Time extends Field_Base
         $this->type = 'time';
         $this->name = __('Time Field', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-clock';
+        $this->category = 'advanced-fields';
     }
 
     protected function register_field_controls(): void

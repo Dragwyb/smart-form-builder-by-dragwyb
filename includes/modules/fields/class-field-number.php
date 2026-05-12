@@ -14,6 +14,7 @@ class Field_Number extends Field_Base
         $this->type = 'number';
         $this->name = __('Number', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-sort-numeric-up';
+        $this->category = 'standard-fields';
     }
 
     protected function register_field_controls(): void

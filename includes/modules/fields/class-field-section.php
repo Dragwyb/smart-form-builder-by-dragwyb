@@ -19,6 +19,7 @@ class Field_Section extends Field_Base
         $this->type = 'section';
         $this->name = __('Section Break', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-heading';
+        $this->category = 'structure';
     }
 
     protected function register_field_controls(): void
