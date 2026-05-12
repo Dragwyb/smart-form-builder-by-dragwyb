@@ -449,10 +449,27 @@ class rangeField extends DragwybEditor.editor.extends.FieldBase {
         const fieldId = s.field_id || this.id;
         const defaultLabel = DragwybEditor?.fields?.fields?.[this.fieldName]?.controls?.label?.default;
         const label = s.label || defaultLabel;
+        const min = parseFloat(s.min_val) || 0;
+        const max = parseFloat(s.max_val) || 100;
+        const value = parseFloat(s.default_value) || 50;
+        let percentage = ((value - min) / (max - min)) * 100;
+        if (percentage < 0) percentage = 0;
+        if (percentage > 100) percentage = 100;
+        if (isNaN(percentage)) percentage = 50;
+
         return (
             <>
                 <div className="dragwyb-input-group">
-                    <input type="range" id={fieldId} className="dragwyb-field-input" min={s.min_val} max={s.max_val} step={s.step_val} defaultValue={s.default_value} onChange={(e) => this.updateField(this.id, e.target.value)} />
+                    <div className="dragwyb-custom-range-container">
+                        <div className="dragwyb-range-track">
+                            <div className="dragwyb-range-progress" style={{ width: `${percentage}%` }}></div>
+                            <div className="dragwyb-range-thumb" style={{ left: `${percentage}%` }}></div>
+                        </div>
+                        <input type="range" id={fieldId} className="dragwyb-field-input dragwyb-hidden-range" min={s.min_val} max={s.max_val} step={s.step_val} defaultValue={s.default_value} onChange={(e) => {
+                            e.target.setAttribute('value', e.target.value);
+                            this.updateField(this.id, e.target.value);
+                        }} />
+                    </div>
                     {label && (<label htmlFor={fieldId} className="dragwyb-field-label">{label}{s.required === 'yes' && <span className="dragwyb-required">*</span>}</label>)}
                 </div>
                 {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}

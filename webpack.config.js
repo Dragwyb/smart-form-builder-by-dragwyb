@@ -169,37 +169,52 @@ const validScssFilesFilter = (scssFiles) => {
 module.exports = (env, argv) => {
     let validFolders = [];
 
-    const editorFolders = [
-        'editor',
-        'core',
-        'editorFields',
-        'editorControls',
-        'toolbars',
-    ];
+    const editorFolders = {
+        Scripts: [
+            'editor',
+            'core',
+            'editorFields',
+            'editorControls',
+            'toolbars',
+        ],
+        Styles: [
+            'editor-global',
+            'form-frontend',
+            'editor-preview',
+            'entries'
+        ]
+    };
 
-    const frontendFolders = [
-        'frontend'
-    ];
+    const frontendFolders = {
+        Scripts: [
+            'frontend'
+        ],
+        Styles: [
+            'form-frontend'
+        ]
+    };
 
-    const frontendScssFiles = [
-        'form-frontend'
-    ];
-
-    const scssFiles = [
-        'editor-global',
-        'form-frontend',
-        'editor-preview',
-        'entries'
-    ]
+    const rangeSlider = {
+        Scripts: [
+            'rangeSlider'
+        ],
+        Styles: [
+            'range-slider'
+        ]
+    };
 
     if (env && env.type === 'editor') {
         console.log("ℹ️  Running Webpack in *editor* mode...");
-        validScssFiles = validScssFilesFilter(scssFiles);
-        validFolders = validFoldersFilter(editorFolders);
+        validScssFiles = validScssFilesFilter(editorFolders.Styles);
+        validFolders = validFoldersFilter(editorFolders.Scripts);
     } else if (env && env.type === 'frontend') {
         console.log("ℹ️  Running Webpack in *frontend* mode...");
-        validScssFiles = validScssFilesFilter(frontendScssFiles);
-        validFolders = validFoldersFilter(frontendFolders);
+        validScssFiles = validScssFilesFilter(frontendFolders.Styles);
+        validFolders = validFoldersFilter(frontendFolders.Scripts);
+    } else if (env && env.type === 'range-slider') {
+        console.log("ℹ️  Running Webpack in *range-slider* mode...");
+        validScssFiles = validScssFilesFilter(rangeSlider.Styles);
+        validFolders = validFoldersFilter(rangeSlider.Scripts);
     } else {
         console.warn("⚠️ Invalid build type provided. Use `--env type=editor` or `--env type=frontend`.");
         return defaultConfig;

@@ -6,12 +6,46 @@ namespace Dragwyb\Form_Builder\Includes\Modules\Fields;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
+use Override;
 
 class Field_Range extends Field_Base
 {
+
+    protected function register_scripts()
+    {
+        return ['dragwyb-range-slider'];
+    }
+
+    protected function register_styles()
+    {
+        return ['dragwyb-range-slider'];
+    }
+
     public function __construct()
     {
         parent::__construct();
+        // The script is typically already registered by range slider fields, but we ensure it's there
+        if (!wp_script_is('dragwyb-range-slider', 'registered')) {
+            $js_assets_info = array(
+                'version' => DRAGWYB_FORM_BUILDER_VERSION,
+                'dependencies' => array('jquery', 'dragwyb-form-frontend')
+            );
+
+            if (file_exists(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/rangeSlider/rangeSlider.asset.php')) {
+                $dragwyb_js_assets_info = require_once(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/rangeSlider/rangeSlider.asset.php');
+
+                if (isset($dragwyb_js_assets_info['dependencies'])) {
+                    $js_assets_info['dependencies'] = array_merge($js_assets_info['dependencies'], $dragwyb_js_assets_info['dependencies']);
+                }
+
+                if (isset($dragwyb_js_assets_info['version'])) {
+                    $js_assets_info['version'] = $dragwyb_js_assets_info['version'];
+                }
+            }
+
+            wp_register_style('dragwyb-range-slider', esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/css/range-slider.css'), array(), esc_attr($js_assets_info['version']), 'all');
+            wp_register_script('dragwyb-range-slider', esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/rangeSlider/rangeSlider.js'), $js_assets_info['dependencies'], esc_attr($js_assets_info['version']), true);
+        }
     }
 
     protected function init(): void
@@ -118,10 +152,22 @@ class Field_Range extends Field_Base
             'selectors' => ['{{WRAPPER}}' => '--dragwyb-input-bg: {{VALUE}};'],
         ]);
 
-        $this->add_control('input_text_color', [
+        $this->add_control('range_track_color', [
             'type'      => Controls::COLOR,
-            'label'     => __('Text Color', 'smart-form-builder-by-dragwyb'),
-            'selectors' => ['{{WRAPPER}}' => '--dragwyb-input-color: {{VALUE}};'],
+            'label'     => __('Track Background', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-range-track-color: {{VALUE}};'],
+        ]);
+
+        $this->add_control('range_progress_color', [
+            'type'      => Controls::COLOR,
+            'label'     => __('Fill Color', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-range-progress-color: {{VALUE}};'],
+        ]);
+
+        $this->add_control('range_thumb_color', [
+            'type'      => Controls::COLOR,
+            'label'     => __('Dot Color', 'smart-form-builder-by-dragwyb'),
+            'selectors' => ['{{WRAPPER}}' => '--dragwyb-range-thumb-color: {{VALUE}};'],
         ]);
 
         $this->add_group_control('input_border', [
@@ -171,16 +217,22 @@ class Field_Range extends Field_Base
 ?>
         <div id="<?php echo esc_attr($this->field_wrapper_id($id)); ?>" class="<?php echo esc_attr($this->field_wrapper_class($classes)); ?>">
             <div class="dragwyb-input-group">
-                <input
-                    type="range"
-                    id="<?php echo esc_attr($field_id); ?>"
-                    name="<?php echo esc_attr($field_id); ?>"
-                    value="<?php echo esc_attr($value); ?>"
-                    min="<?php echo esc_attr($min_val); ?>"
-                    max="<?php echo esc_attr($max_val); ?>"
-                    step="<?php echo esc_attr($step_val); ?>"
-                    class="dragwyb-field-input"
-                    <?php echo $required ? 'required' : ''; ?> />
+                <div class="dragwyb-custom-range-container">
+                    <div class="dragwyb-range-track">
+                        <div class="dragwyb-range-progress"></div>
+                        <div class="dragwyb-range-thumb"></div>
+                    </div>
+                    <input
+                        type="range"
+                        id="<?php echo esc_attr($field_id); ?>"
+                        name="<?php echo esc_attr($field_id); ?>"
+                        value="<?php echo esc_attr($value); ?>"
+                        min="<?php echo esc_attr($min_val); ?>"
+                        max="<?php echo esc_attr($max_val); ?>"
+                        step="<?php echo esc_attr($step_val); ?>"
+                        class="dragwyb-field-input dragwyb-hidden-range"
+                        <?php echo $required ? 'required' : ''; ?> />
+                </div>
                 <?php if (!empty($label)) : ?>
                     <label for="<?php echo esc_attr($field_id); ?>" class="dragwyb-field-label">
                         <?php echo esc_html($label); ?>

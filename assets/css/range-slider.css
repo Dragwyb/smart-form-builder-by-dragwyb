@@ -1,0 +1,53 @@
+/*!****************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[0].use[2]!./assets/sass/range-slider.scss ***!
+  \****************************************************************************************************************************************************/
+/* Custom Range Input Overlay */
+.dragwyb-custom-range-container {
+  position: relative;
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+.dragwyb-custom-range-container .dragwyb-range-track {
+  position: absolute;
+  width: 100%;
+  height: 8px;
+  background: var(--dragwyb-range-track-color, #e5e7eb);
+  border-radius: 4px;
+  z-index: 1;
+}
+.dragwyb-custom-range-container .dragwyb-range-progress {
+  position: absolute;
+  left: 0;
+  height: 100%;
+  background: var(--dragwyb-range-progress-color, var(--dragwyb-btn-bg));
+  border-radius: 4px;
+}
+.dragwyb-custom-range-container .dragwyb-range-thumb {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: var(--dragwyb-range-thumb-color, var(--dragwyb-btn-bg));
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  pointer-events: none;
+  transition: box-shadow 0.2s;
+  top: 4px;
+}
+.dragwyb-custom-range-container input.dragwyb-hidden-range {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 3;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  -webkit-appearance: none;
+}
+.dragwyb-custom-range-container.dragwyb-range-focused .dragwyb-range-thumb {
+  box-shadow: 0 0 0 3px var(--dragwyb-input-focus-border);
+}
