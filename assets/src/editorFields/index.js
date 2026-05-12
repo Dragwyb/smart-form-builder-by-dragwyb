@@ -341,6 +341,165 @@ class ButtonField extends DragwybEditor.editor.extends.FieldBase {
     }
 }
 
+class urlField extends DragwybEditor.editor.extends.FieldBase {
+    fieldName() { return 'url'; }
+    bind() {
+        if (!this.shouldRender()) return <></>;
+        const s = this.attributes;
+        const fieldId = s.field_id || this.id;
+        const defaultLabel = DragwybEditor?.fields?.fields?.[this.fieldName]?.controls?.label?.default;
+        const label = s.label || defaultLabel;
+        return (
+            <>
+                <div className="dragwyb-input-group">
+                    <input type="url" id={fieldId} className="dragwyb-field-input" placeholder={s.placeholder || ' '} defaultValue={s.default_value} onChange={(e) => this.updateField(this.id, e.target.value)} />
+                    {label && (<label htmlFor={fieldId} className="dragwyb-field-label">{label}{s.required === 'yes' && <span className="dragwyb-required">*</span>}</label>)}
+                </div>
+                {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
+            </>
+        );
+    }
+}
+
+class phoneField extends DragwybEditor.editor.extends.FieldBase {
+    fieldName() { return 'phone'; }
+    bind() {
+        if (!this.shouldRender()) return <></>;
+        const s = this.attributes;
+        const fieldId = s.field_id || this.id;
+        const defaultLabel = DragwybEditor?.fields?.fields?.[this.fieldName]?.controls?.label?.default;
+        const label = s.label || defaultLabel;
+        return (
+            <>
+                <div className="dragwyb-input-group">
+                    <input type="tel" id={fieldId} className="dragwyb-field-input" placeholder={s.placeholder || ' '} defaultValue={s.default_value} onChange={(e) => this.updateField(this.id, e.target.value)} />
+                    {label && (<label htmlFor={fieldId} className="dragwyb-field-label">{label}{s.required === 'yes' && <span className="dragwyb-required">*</span>}</label>)}
+                </div>
+                {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
+            </>
+        );
+    }
+}
+
+class nameField extends DragwybEditor.editor.extends.FieldBase {
+    fieldName() { return 'name'; }
+    bind() {
+        if (!this.shouldRender()) return <></>;
+        const s = this.attributes;
+        const fieldId = s.field_id || this.id;
+        const defaultLabel = DragwybEditor?.fields?.fields?.[this.fieldName]?.controls?.label?.default;
+        const label = s.label || defaultLabel;
+        return (
+            <>
+                <div className="dragwyb-input-group">
+                    <input type="text" id={fieldId} className="dragwyb-field-input" placeholder={s.placeholder || ' '} defaultValue={s.default_value} onChange={(e) => this.updateField(this.id, e.target.value)} />
+                    {label && (<label htmlFor={fieldId} className="dragwyb-field-label">{label}{s.required === 'yes' && <span className="dragwyb-required">*</span>}</label>)}
+                </div>
+                {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
+            </>
+        );
+    }
+}
+
+class addressField extends DragwybEditor.editor.extends.FieldBase {
+    fieldName() { return 'address'; }
+    bind() {
+        if (!this.shouldRender()) return <></>;
+        const s = this.attributes;
+        const fieldId = s.field_id || this.id;
+        const defaultLabel = DragwybEditor?.fields?.fields?.[this.fieldName]?.controls?.label?.default;
+        const label = s.label || defaultLabel;
+        return (
+            <>
+                <div className="dragwyb-input-group">
+                    <textarea id={fieldId} className="dragwyb-field-input" rows="3" placeholder={s.placeholder || ' '} defaultValue={s.default_value} onChange={(e) => this.updateField(this.id, e.target.value)}></textarea>
+                    {label && (<label htmlFor={fieldId} className="dragwyb-field-label">{label}{s.required === 'yes' && <span className="dragwyb-required">*</span>}</label>)}
+                </div>
+                {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
+            </>
+        );
+    }
+}
+
+class timeField extends DragwybEditor.editor.extends.FieldBase {
+    fieldName() { return 'time'; }
+    bind() {
+        if (!this.shouldRender()) return <></>;
+        const s = this.attributes;
+        const fieldId = s.field_id || this.id;
+        const defaultLabel = DragwybEditor?.fields?.fields?.[this.fieldName]?.controls?.label?.default;
+        const label = s.label || defaultLabel;
+        return (
+            <>
+                <div className="dragwyb-input-group">
+                    <input type="time" id={fieldId} className="dragwyb-field-input" defaultValue={s.default_value} onChange={(e) => this.updateField(this.id, e.target.value)} />
+                    {label && (<label htmlFor={fieldId} className="dragwyb-field-label">{label}{s.required === 'yes' && <span className="dragwyb-required">*</span>}</label>)}
+                </div>
+                {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
+            </>
+        );
+    }
+}
+
+class rangeField extends DragwybEditor.editor.extends.FieldBase {
+    fieldName() { return 'range'; }
+    bind() {
+        if (!this.shouldRender()) return <></>;
+        const s = this.attributes;
+        const fieldId = s.field_id || this.id;
+        const defaultLabel = DragwybEditor?.fields?.fields?.[this.fieldName]?.controls?.label?.default;
+        const label = s.label || defaultLabel;
+        return (
+            <>
+                <div className="dragwyb-input-group">
+                    <input type="range" id={fieldId} className="dragwyb-field-input" min={s.min_val} max={s.max_val} step={s.step_val} defaultValue={s.default_value} onChange={(e) => this.updateField(this.id, e.target.value)} />
+                    {label && (<label htmlFor={fieldId} className="dragwyb-field-label">{label}{s.required === 'yes' && <span className="dragwyb-required">*</span>}</label>)}
+                </div>
+                {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
+            </>
+        );
+    }
+}
+
+class htmlField extends DragwybEditor.editor.extends.FieldBase {
+    fieldName() { return 'html'; }
+    bind() {
+        if (!this.shouldRender()) return <></>;
+        const s = this.attributes;
+        return (
+            <div className="dragwyb-html-content" dangerouslySetInnerHTML={{ __html: s.raw_html || '<p>Enter your custom HTML here.</p>' }} />
+        );
+    }
+}
+
+class sectionField extends DragwybEditor.editor.extends.FieldBase {
+    fieldName() { return 'section'; }
+    bind() {
+        if (!this.shouldRender()) return <></>;
+        const s = this.attributes;
+        return (
+            <div className="dragwyb-section-break">
+                {s.title && <h3 className="dragwyb-section-title">{s.title}</h3>}
+                {s.description && <p className="dragwyb-section-description">{s.description}</p>}
+                <hr className="dragwyb-section-divider" />
+            </div>
+        );
+    }
+}
+
+class captchaField extends DragwybEditor.editor.extends.FieldBase {
+    fieldName() { return 'captcha'; }
+    bind() {
+        if (!this.shouldRender()) return <></>;
+        const s = this.attributes;
+        return (
+            <div className="dragwyb-captcha-placeholder" style={{ background: '#f9f9f9', border: '1px solid #ddd', padding: '15px', display: 'inline-block' }}>
+                [ {s.captcha_type || 'recaptcha_v2'} Placeholder ]
+            </div>
+        );
+    }
+}
+
 const initializeFields = () => {
     const defaultFields = {
         'text': (args) => new textField(args),
@@ -355,6 +514,15 @@ const initializeFields = () => {
         'hidden': (args) => new hiddenField(args),
         'button': (args) => new ButtonField(args),
         'row': (args) => new rowField(args),
+        'url': (args) => new urlField(args),
+        'phone': (args) => new phoneField(args),
+        'name': (args) => new nameField(args),
+        'address': (args) => new addressField(args),
+        'time': (args) => new timeField(args),
+        'range': (args) => new rangeField(args),
+        'html': (args) => new htmlField(args),
+        'section': (args) => new sectionField(args),
+        'captcha': (args) => new captchaField(args),
     };
 
     Object.keys(defaultFields).forEach(key =>
