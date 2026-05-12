@@ -20,6 +20,7 @@ class Field_Address extends Field_Base
         $this->name = __('Address Field', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-map-marker-alt';
         $this->category = 'advanced-fields';
+        $this->keywords = array('location', 'street', 'city', 'country', 'zip');
     }
 
     protected function register_field_controls(): void

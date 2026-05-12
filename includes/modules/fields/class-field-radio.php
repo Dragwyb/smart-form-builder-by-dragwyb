@@ -138,6 +138,7 @@ class Field_Radio extends Field_Base
         $this->name = __('Radio Button', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-dot-circle';
         $this->category = 'standard-fields';
+        $this->keywords = array('multiple', 'choices', 'options', 'single');
     }
 
     protected function render_field()

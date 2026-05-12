@@ -20,6 +20,7 @@ class Field_Time extends Field_Base
         $this->name = __('Time Field', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-clock';
         $this->category = 'advanced-fields';
+        $this->keywords = array('hour', 'minute', 'clock');
     }
 
     protected function register_field_controls(): void

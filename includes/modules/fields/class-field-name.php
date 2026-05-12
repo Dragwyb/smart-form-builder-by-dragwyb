@@ -20,6 +20,7 @@ class Field_Name extends Field_Base
         $this->name = __('Name Field', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-user';
         $this->category = 'advanced-fields';
+        $this->keywords = array('first', 'last', 'person', 'user');
     }
 
     protected function register_field_controls(): void

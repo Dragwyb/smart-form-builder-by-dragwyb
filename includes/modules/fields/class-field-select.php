@@ -150,7 +150,8 @@ class Field_Select extends Field_Base
         $this->type = 'select';
         $this->name = __('Select Dropdown', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-caret-down';
-        $this->category = 'standard-fields'; // Choose a different icon if needed
+        $this->category = 'standard-fields';
+        $this->keywords = array('dropdown', 'choices', 'options', 'list'); // Choose a different icon if needed
     }
 
     protected function render_field()

@@ -138,6 +138,7 @@ class Field_Date extends Field_Base
         $this->name = __('Date Field', 'smart-form-builder-by-dragwyb');
         $this->icon = 'far fa-calendar';
         $this->category = 'standard-fields';
+        $this->keywords = array('calendar', 'day', 'month', 'year');
     }
 
     protected function render_field()

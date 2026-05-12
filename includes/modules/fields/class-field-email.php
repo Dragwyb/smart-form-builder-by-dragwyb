@@ -131,7 +131,7 @@ class Field_Email extends Field_Base
     protected function init(): void
     {
         $this->type = 'email';
-        $this->keywords = array('text');
+        $this->keywords = array('contact', 'address', 'mail');
         $this->name = __('Email Field', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-envelope';
         $this->category = 'standard-fields';

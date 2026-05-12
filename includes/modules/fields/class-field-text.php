@@ -20,6 +20,7 @@ class Field_Text extends Field_Base
         $this->name = __('Text Field', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-font';
         $this->category = 'standard-fields';
+        $this->keywords = array('input', 'string', 'single');
     }
 
     protected function register_field_controls(): void

@@ -16,6 +16,7 @@ class Field_Checkbox extends Field_Base
         $this->name = __('Checkbox Group', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-check-square';
         $this->category = 'standard-fields';
+        $this->keywords = array('multiple', 'choices', 'options', 'tick');
     }
 
     protected function register_field_controls(): void

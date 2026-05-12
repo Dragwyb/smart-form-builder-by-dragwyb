@@ -133,7 +133,7 @@ class Field_Textarea extends Field_Base
         $this->name = __('Textarea', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-align-left';
         $this->category = 'standard-fields';
-        $this->keywords = array('text', 'wyswing');
+        $this->keywords = array('text', 'wysiwyg', 'paragraph', 'message', 'long');
     }
 
     protected function render_field()

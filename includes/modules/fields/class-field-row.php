@@ -57,6 +57,7 @@ class Field_Row extends Field_Base
         $this->name = __('Row', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-border-all';
         $this->category = 'structure';
+        $this->keywords = array('columns', 'layout', 'grid');
         $this->allow_child = true;
         $this->is_root_container = true;
     }

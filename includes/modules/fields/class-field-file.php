@@ -20,6 +20,7 @@ class Field_File extends Field_Base
         $this->name = __('File Upload', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-upload';
         $this->category = 'advanced-fields';
+        $this->keywords = array('upload', 'document', 'image', 'attachment');
     }
 
     protected function register_field_controls(): void

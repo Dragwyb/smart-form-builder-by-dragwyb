@@ -54,6 +54,7 @@ class Field_Range extends Field_Base
         $this->name = __('Range Slider', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-sliders-h';
         $this->category = 'advanced-fields';
+        $this->keywords = array('slider', 'scale', 'number');
     }
 
     protected function register_field_controls(): void

@@ -20,6 +20,7 @@ class Field_Html extends Field_Base
         $this->name = __('HTML', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-code';
         $this->category = 'structure';
+        $this->keywords = array('code', 'markup', 'custom');
     }
 
     protected function register_field_controls(): void

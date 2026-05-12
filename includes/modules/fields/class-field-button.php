@@ -15,6 +15,7 @@ class Field_Button extends Field_Base
         $this->name = __('Button', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fa fa-mouse-pointer';
         $this->category = 'structure';
+        $this->keywords = array('submit', 'send', 'action');
     }
 
     /**

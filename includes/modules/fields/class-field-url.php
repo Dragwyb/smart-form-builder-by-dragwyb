@@ -20,6 +20,7 @@ class Field_Url extends Field_Base
         $this->name = __('URL Field', 'smart-form-builder-by-dragwyb');
         $this->icon = 'fas fa-link';
         $this->category = 'advanced-fields';
+        $this->keywords = array('link', 'website', 'domain');
     }
 
     protected function register_field_controls(): void
