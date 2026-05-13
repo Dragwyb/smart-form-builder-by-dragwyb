@@ -208,6 +208,7 @@ const Editor = () => {
         const activeRect = active.rect.current.translated;
         const overRect = over.rect;
 
+
         if (!activeRect || !overRect) return;
 
         // 2. Calculate the exact vertical center of the dragged item
@@ -268,7 +269,7 @@ const Editor = () => {
                 index: finalId.index,
             }
 
-            if (currentDropInfo && currentDropInfo.targetId !== 'root') {
+            if (currentDropInfo && currentDropInfo.targetId && currentDropInfo.targetId !== 'root') {
                 addFieldData.parentContainer = {
                     rootContainerId: currentDropInfo.targetId,
                     activeColumnIndex: finalId.index
