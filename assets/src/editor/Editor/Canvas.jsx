@@ -205,17 +205,28 @@ const RenderItem = React.memo(({
 
 RenderItem.displayName = 'RenderItem';
 
-const AddFieldMsg = React.memo(({ setActiveTab, isOver, updateFieldSelect }) => {
+const AddFieldMsg = React.memo(({ setActiveTab, updateFieldSelect }) => {
     const activeTab = useSelector((state) => state.activeToolbar);
-    let emptyMessage = __("Add field", "smart-form-builder-by-dragwyb");
 
+    const { setNodeRef, isOver } = useDroppable({
+        id: `canvas-drop-`,
+        data: {
+            canvasFieldDrop: true,
+            canvasDrop: true,
+            currentId: null,
+            index: 0
+        },
+    });
+
+    let emptyMessage = __("Click or drag fields here to start building.", "smart-form-builder-by-dragwyb");
     if (isOver) {
-        emptyMessage = __("Drag field here.", "smart-form-builder-by-dragwyb");
+        emptyMessage = __("Drop field here", "smart-form-builder-by-dragwyb");
     }
 
     return (
         <div
-            className="dragwyb-canvas__add-field"
+            ref={setNodeRef}
+            className={`dragwyb-canvas__add-field${isOver ? " active" : ""}`}
             onClick={() => {
                 if (activeTab === 'fields') {
                     updateFieldSelect({ id: false });
@@ -225,7 +236,7 @@ const AddFieldMsg = React.memo(({ setActiveTab, isOver, updateFieldSelect }) => 
             }}
         >
             <div className={`dragwyb-canvas__add-field-wrapper ${isOver ? " drag-active" : ""}`}>
-                <i className="fas fa-plus" />
+                {(!isOver && activeTab !== 'fields') && <i className="fas fa-plus" />}
                 <p>{emptyMessage}</p>
             </div>
         </div>
