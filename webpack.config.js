@@ -203,6 +203,15 @@ module.exports = (env, argv) => {
         ]
     };
 
+    const settingsFolders = {
+        Scripts: [
+            'settings'
+        ],
+        Styles: [
+            'settings'
+        ]
+    };
+
     if (env && env.type === 'editor') {
         console.log("ℹ️  Running Webpack in *editor* mode...");
         validScssFiles = validScssFilesFilter(editorFolders.Styles);
@@ -215,6 +224,10 @@ module.exports = (env, argv) => {
         console.log("ℹ️  Running Webpack in *range-slider* mode...");
         validScssFiles = validScssFilesFilter(rangeSlider.Styles);
         validFolders = validFoldersFilter(rangeSlider.Scripts);
+    } else if (env && env.type === 'settings') {
+        console.log("ℹ️  Running Webpack in *settings* mode...");
+        validScssFiles = validScssFilesFilter(settingsFolders.Styles);
+        validFolders = validFoldersFilter(settingsFolders.Scripts);
     } else {
         console.warn("⚠️ Invalid build type provided. Use `--env type=editor` or `--env type=frontend`.");
         return defaultConfig;

@@ -11,12 +11,14 @@ if (!defined('ABSPATH')) {
 use Dragwyb\Form_Builder\Includes\Dragwyb_Form_Builder_Ajax;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Pages;
+use Dragwyb\Form_Builder\Admin\Settings\Dragwyb_Settings;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Editor\Dragwyb_Builder_Editor;
 use Dragwyb\Form_Builder\Includes\Frontend\Shortcode\Shortcode_Handler;
 use Dragwyb\Form_Builder\Includes\Frontend\Frontend_Render;
 use Dragwyb\Form_Builder\Includes\Frontend\Form_Preview;
 use Dragwyb\Form_Builder\Includes\Frontend\Managers\CSS_Manager;
 use Dragwyb\Form_Builder\Includes\Rest_Routes\Dragwyb_Frontend_Route;
+use Dragwyb\Form_Builder\Includes\Rest_Routes\Dragwyb_Settings_Route;
 
 class Dragwyb_Init
 {
@@ -39,10 +41,12 @@ class Dragwyb_Init
             new Dragwyb_Pages();
             new Dragwyb_Post();
             new Dragwyb_Form_Builder_Ajax();
+            Dragwyb_Settings::instance();
             Frontend_Render::instance();
         }
 
         new Dragwyb_Frontend_Route();
+        new Dragwyb_Settings_Route();
         Form_Preview::instance();
         Shortcode_Handler::instance();
 

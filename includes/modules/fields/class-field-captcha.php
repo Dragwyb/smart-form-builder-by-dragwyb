@@ -85,18 +85,34 @@ class Field_Captcha extends Field_Base
         $captcha_type = $this->field_key_exist($settings, 'captcha_type', 'recaptcha_v2');
         $site_key     = $this->field_key_exist($settings, 'site_key', '');
         $classes      = $this->field_key_exist($settings, 'css_classes', '');
+
+        if ($captcha_type === 'recaptcha_v2' && !empty($site_key)) {
+            wp_enqueue_script('google-recaptcha-v2', 'https://www.google.com/recaptcha/api.js', array(), null, true);
+        }
 ?>
         <div id="<?php echo esc_attr($this->field_wrapper_id($id)); ?>" class="<?php echo esc_attr($this->field_wrapper_class($classes)); ?>">
-            <div class="dragwyb-captcha-container" data-type="<?php echo esc_attr($captcha_type); ?>" data-sitekey="<?php echo esc_attr($site_key); ?>" id="<?php echo esc_attr($field_id); ?>">
+            <div class="dragwyb-captcha-container" data-type="<?php echo esc_attr($captcha_type); ?>" data-sitekey="<?php echo esc_attr($site_key); ?>" id="<?php echo esc_attr($field_id); ?>_container">
                 <?php if (empty($site_key)) : ?>
                     <div style="padding:10px; border:1px dashed red; color:red;">
                         <?php esc_html_e('Captcha Error: Site Key is missing. Please configure it in the field settings.', 'smart-form-builder-by-dragwyb'); ?>
                     </div>
                 <?php else : ?>
-                    <!-- Captcha will be rendered here via JS based on type and site_key -->
-                    <div class="dragwyb-captcha-placeholder" style="background:#f9f9f9; border:1px solid #ddd; padding:15px; display:inline-block;">
-                        [ <?php echo esc_html($captcha_type); ?> Placeholder ]
-                    </div>
+                    <?php if ($captcha_type === 'recaptcha_v2') : ?>
+                        <div class="g-recaptcha" data-sitekey="<?php echo esc_attr($site_key); ?>" data-callback="dragwyb_recaptcha_callback_<?php echo esc_js($field_id); ?>"></div>
+                        <input type="hidden" name="<?php echo esc_attr($field_id); ?>" id="<?php echo esc_attr($field_id); ?>_input" class="dragwyb-captcha-input" value="">
+                        <script>
+                            function dragwyb_recaptcha_callback_<?php echo esc_js($field_id); ?>(response) {
+                                var input = document.getElementById('<?php echo esc_js($field_id); ?>_input');
+                                if (input) {
+                                    input.value = response;
+                                }
+                            }
+                        </script>
+                    <?php else : ?>
+                        <div class="dragwyb-captcha-placeholder" style="background:#f9f9f9; border:1px solid #ddd; padding:15px; display:inline-block;">
+                            [ <?php echo esc_html($captcha_type); ?> Placeholder ]
+                        </div>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
         </div>
@@ -112,10 +128,10 @@ class Field_Captcha extends Field_Base
 
         $field_attr = isset($form_config['fields'][$field_id]['attributes']) ? $form_config['fields'][$field_id]['attributes'] : array();
         $secret_key = isset($field_attr['secret_key']) ? $field_attr['secret_key'] : '';
+        $captcha_type = isset($field_attr['captcha_type']) ? $field_attr['captcha_type'] : 'recaptcha_v2';
 
         if (empty($secret_key)) {
-            // Can't validate without secret key. You could return an error or skip.
-            // Skipping for now, assuming if it's empty, validation is disabled.
+            // Can't validate without secret key.
             return;
         }
 
@@ -124,8 +140,34 @@ class Field_Captcha extends Field_Base
             return;
         }
 
-        // The actual API call to Google/hCaptcha would go here.
-        // As per the implementation plan, this is stubbed for phase 1.
+        switch ($captcha_type) {
+            case 'recaptcha_v2':
+                $verify_url = 'https://www.google.com/recaptcha/api/siteverify';
+                $response = wp_remote_post($verify_url, [
+                    'body' => [
+                        'secret'   => $secret_key,
+                        'response' => sanitize_text_field($value),
+                        'remoteip' => isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])) : '',
+                    ]
+                ]);
+
+                if (is_wp_error($response)) {
+                    $error_handler->add_error($field_id, __('Unable to connect to Captcha server. Please try again later.', 'smart-form-builder-by-dragwyb'));
+                    return;
+                }
+
+                $body = wp_remote_retrieve_body($response);
+                $result = json_decode($body);
+
+                if (!$result || empty($result->success)) {
+                    $error_handler->add_error($field_id, __('Captcha verification failed. Please try again.', 'smart-form-builder-by-dragwyb'));
+                }
+                break;
+                
+            default:
+                // Other captchas are not implemented yet.
+                break;
+        }
     }
 
     public function sanitize($default = '', $value = null)
