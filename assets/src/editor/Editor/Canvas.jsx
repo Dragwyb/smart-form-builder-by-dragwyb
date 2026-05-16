@@ -22,33 +22,34 @@ const RenderItem = React.memo(({
     const attributesRef = useRef(null);
     const totalChildrensRef = useRef(0);
 
+
     function isFieldEqual(prevProps, nextProps) {
 
-        if (prevProps.fields[fieldId].attributes !== nextProps.fields[fieldId].attributes) {
+        if (prevProps.fields[fieldId]?.attributes !== nextProps.fields[fieldId]?.attributes) {
             return false;
         }
 
 
-        if (nextProps.fields[fieldId].is_root_container && nextProps.fields[fieldId].children) {
-            if (prevProps.fields[fieldId].children?.length !== nextProps.fields[fieldId].children?.length) {
+        if (nextProps.fields[fieldId]?.is_root_container && nextProps.fields[fieldId]?.children) {
+            if (prevProps.fields[fieldId]?.children?.length !== nextProps.fields[fieldId]?.children?.length) {
                 return false;
-            } else if (nextProps.fields[fieldId]?.children && totalChildrensRef !== nextProps.fields[fieldId].children?.length) {
+            } else if (nextProps.fields[fieldId]?.children && totalChildrensRef !== nextProps.fields[fieldId]?.children?.length) {
                 return false;
             }
         }
 
         if (null === attributesRef.current) {
-            return prevProps.fields[fieldId].attributes === nextProps.fields[fieldId].attributes;
+            return prevProps.fields[fieldId]?.attributes === nextProps.fields[fieldId]?.attributes;
         }
 
-        return JSON.stringify(attributesRef.current) === JSON.stringify({ ...nextProps.fields[fieldId].attributes });
+        return JSON.stringify(attributesRef.current) === JSON.stringify({ ...nextProps.fields[fieldId]?.attributes });
 
     }
 
     const formData = useSelector((state) => state.form, isFieldEqual);
     const field = formData.fields[fieldId];
 
-    attributesRef.current = field.attributes ? { ...field.attributes } : [];
+    attributesRef.current = field?.attributes ? { ...field.attributes } : [];
     totalChildrensRef.current = field?.children?.length || 0;
 
     const selectedField = useSelector((state) => state.selectedSettingId);

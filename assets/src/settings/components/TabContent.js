@@ -8,62 +8,23 @@ const TabContent = ({ activeTab, settings, handleSettingChange }) => {
         <div className="dragwyb-settings-section">
             <h2>API & Integrations</h2>
             <p className="dragwyb-settings-desc">Manage API keys for third-party services like Google reCAPTCHA.</p>
-
-            <div className="dragwyb-setting-row">
-                <div className="dragwyb-setting-info">
-                    <h4>Google reCAPTCHA v2 Site Key</h4>
-                </div>
-                <div className="dragwyb-setting-control">
-                    <input
-                        type="text"
-                        value={settings.integrations.recaptcha_v2_site_key}
-                        onChange={e => handleSettingChange('integrations', 'recaptcha_v2_site_key', e.target.value)}
-                        placeholder="Enter Site Key"
-                    />
-                </div>
-            </div>
-
-            <div className="dragwyb-setting-row">
-                <div className="dragwyb-setting-info">
-                    <h4>Google reCAPTCHA v2 Secret Key</h4>
-                </div>
-                <div className="dragwyb-setting-control">
-                    <input
-                        type="password"
-                        value={settings.integrations.recaptcha_v2_secret_key}
-                        onChange={e => handleSettingChange('integrations', 'recaptcha_v2_secret_key', e.target.value)}
-                        placeholder="Enter Secret Key"
-                    />
-                </div>
-            </div>
-
-            <div className="dragwyb-setting-row">
-                <div className="dragwyb-setting-info">
-                    <h4>hCaptcha Site Key</h4>
-                </div>
-                <div className="dragwyb-setting-control">
-                    <input
-                        type="text"
-                        value={settings.integrations.hcaptcha_site_key}
-                        onChange={e => handleSettingChange('integrations', 'hcaptcha_site_key', e.target.value)}
-                        placeholder="Enter Site Key"
-                    />
-                </div>
-            </div>
-
-            <div className="dragwyb-setting-row">
-                <div className="dragwyb-setting-info">
-                    <h4>hCaptcha Secret Key</h4>
-                </div>
-                <div className="dragwyb-setting-control">
-                    <input
-                        type="password"
-                        value={settings.integrations.hcaptcha_secret_key}
-                        onChange={e => handleSettingChange('integrations', 'hcaptcha_secret_key', e.target.value)}
-                        placeholder="Enter Secret Key"
-                    />
-                </div>
-            </div>
+            {
+                settings.integrations && Object.keys(settings.integrations).map(key => (
+                    <div key={key} className="dragwyb-setting-row">
+                        <div className="dragwyb-setting-info">
+                            <h4>{settings.integrations[key].label}</h4>
+                        </div>
+                        <div className="dragwyb-setting-control">
+                            <input
+                                type="text"
+                                value={settings.integrations[key].value}
+                                onChange={e => handleSettingChange('integrations', key, e.target.value)}
+                                placeholder="Enter API Key"
+                            />
+                        </div>
+                    </div>
+                ))
+            }
         </div>
     );
 
@@ -71,66 +32,34 @@ const TabContent = ({ activeTab, settings, handleSettingChange }) => {
         <div className="dragwyb-settings-section">
             <h2>Performance & Assets</h2>
             <p className="dragwyb-settings-desc">Control which assets are loaded on the frontend to improve page speed.</p>
-
-            <ToggleSwitch
-                label="Load Font Awesome"
-                description="Disable this if your theme already loads Font Awesome."
-                checked={settings.performance.load_font_awesome === 'yes'}
-                onChange={val => handleSettingChange('performance', 'load_font_awesome', val ? 'yes' : 'no')}
-            />
-
-            <ToggleSwitch
-                label="Load SVG icons"
-                description="Disable this if your theme already loads SVG icons."
-                checked={settings.performance.load_svg_icons === 'yes'}
-                onChange={val => handleSettingChange('performance', 'load_svg_icons', val ? 'yes' : 'no')}
-            />
-
-            <ToggleSwitch
-                label="Load Default CSS"
-                description="Disable this to completely remove default form styling (for advanced users)."
-                checked={settings.performance.load_default_css === 'yes'}
-                onChange={val => handleSettingChange('performance', 'load_default_css', val ? 'yes' : 'no')}
-            />
+            {
+                settings.performance && Object.keys(settings.performance).map(key => (
+                    <ToggleSwitch
+                        key={key}
+                        label={settings.performance[key].label}
+                        description={settings.performance[key].description}
+                        checked={(settings.performance[key]?.value && settings.performance[key]?.value === 'yes') || (!settings.performance[key]?.value && settings.performance[key]?.default === 'yes')}
+                        onChange={val => handleSettingChange('performance', key, val ? 'yes' : 'no')}
+                    />
+                ))
+            }
         </div>
     );
 
     const renderFieldsManager = () => {
-        const fields = [
-            { key: 'field_text', label: 'Text Field' },
-            { key: 'field_email', label: 'Email Field' },
-            { key: 'field_textarea', label: 'Textarea' },
-            { key: 'field_select', label: 'Select Dropdown' },
-            { key: 'field_radio', label: 'Radio Buttons' },
-            { key: 'field_checkbox', label: 'Checkboxes' },
-            { key: 'field_number', label: 'Number Field' },
-            { key: 'field_hidden', label: 'Hidden Field' },
-            { key: 'field_date', label: 'Date Picker' },
-            { key: 'field_time', label: 'Time Picker' },
-            { key: 'field_phone', label: 'Phone Field' },
-            { key: 'field_url', label: 'URL Field' },
-            { key: 'field_name', label: 'Name Field' },
-            { key: 'field_address', label: 'Address Field' },
-            { key: 'field_range', label: 'Range Slider' },
-            { key: 'field_file', label: 'File Upload' },
-            { key: 'field_captcha', label: 'Captcha Field' },
-            { key: 'field_row', label: 'Row / Columns' },
-            { key: 'field_section', label: 'Section Break' },
-            { key: 'field_html', label: 'Custom HTML' },
-            { key: 'field_button', label: 'Submit Button' },
-        ];
 
         return (
+
             <div className="dragwyb-settings-section">
                 <h2>Fields Manager</h2>
                 <p className="dragwyb-settings-desc">Enable or disable specific fields from appearing in the form builder editor.</p>
                 <div className="dragwyb-fields-grid">
-                    {fields.map(field => (
-                        <div key={field.key} className="dragwyb-field-toggle-card">
+                    {settings.fields_manager && Object.keys(settings.fields_manager).map(key => (
+                        <div key={key} className="dragwyb-field-toggle-card">
                             <ToggleSwitch
-                                label={field.label}
-                                checked={settings.fields_manager[field.key]}
-                                onChange={val => handleSettingChange('fields_manager', field.key, val)}
+                                label={settings.fields_manager[key].name}
+                                checked={(settings.fields_manager[key]?.value && settings.fields_manager[key]?.value === true) || (settings.fields_manager[key]?.value !== false && settings.fields_manager[key]?.default === true)}
+                                onChange={val => handleSettingChange('fields_manager', key, val ? true : false)}
                             />
                         </div>
                     ))}

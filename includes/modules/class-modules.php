@@ -16,6 +16,7 @@ class Modules extends Toolbar_Base
     private static $instance = null;
     private $fields = [];
     private $root_containers = [];
+    private $registered_fields = [];
 
     public static function instance(): self
     {
@@ -62,7 +63,13 @@ class Modules extends Toolbar_Base
     {
         // Load field registrations
         $register = Register_Fields::instance();
+        $this->registered_fields = $register->get_registered_fields();
         $this->fields = $register->get_fields();
+    }
+
+    public function get_registered_fields(): array
+    {
+        return $this->registered_fields;
     }
 
     public function get_fields(): array

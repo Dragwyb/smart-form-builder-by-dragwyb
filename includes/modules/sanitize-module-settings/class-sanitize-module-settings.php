@@ -46,7 +46,7 @@ if (!class_exists('Sanitize_Module_Settings')) {
         private function field_loop(): void
         {
             foreach (self::$form_fields as $index => $field) {
-                if (!isset($field['_id']) || !$field['type']) {
+                if (!isset($field['_id']) || !$field['type'] || null === self::$module->get_field($field['type'])) {
                     continue;
                 }
 

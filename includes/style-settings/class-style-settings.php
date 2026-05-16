@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Dragwyb\Form_Builder\Includes\Style_Settings;
 
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
-// use Dragwyb\Form_Builder\Includes\Modules\Sanitize_Module_Settings\Sanitize_Module_Settings;
 
 class Style_Settings extends Toolbar_Base
 {

@@ -47,7 +47,7 @@ const App = () => {
                 body: JSON.stringify(settings)
             });
             const result = await response.json();
-            
+
             if (result.status === 'success') {
                 setSettings(result.data);
                 showToast(result.message || 'Settings saved successfully', 'success');
@@ -66,7 +66,7 @@ const App = () => {
             ...prev,
             [tab]: {
                 ...prev[tab],
-                [key]: value
+                [key]: { ...prev[tab][key], value: value }
             }
         }));
     };
@@ -86,21 +86,21 @@ const App = () => {
         <div className="dragwyb-settings-dashboard">
             <div className="dragwyb-settings-header">
                 <h1>Smart Form Builder Settings</h1>
-                <button 
-                    className="dragwyb-btn-primary" 
+                <button
+                    className="dragwyb-btn-primary"
                     onClick={saveSettings}
                     disabled={isSaving}
                 >
                     {isSaving ? 'Saving...' : 'Save Settings'}
                 </button>
             </div>
-            
+
             <div className="dragwyb-settings-body">
                 <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
-                <TabContent 
-                    activeTab={activeTab} 
-                    settings={settings} 
-                    handleSettingChange={handleSettingChange} 
+                <TabContent
+                    activeTab={activeTab}
+                    settings={settings}
+                    handleSettingChange={handleSettingChange}
                 />
             </div>
 

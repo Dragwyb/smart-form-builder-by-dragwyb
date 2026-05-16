@@ -83,32 +83,32 @@ abstract class Field_Base extends Register_Controls_Base
 
     public function get_type(): string
     {
-        return $this->type;
+        return sanitize_text_field($this->type);
     }
 
     public function get_name(): string
     {
-        return $this->name;
+        return sanitize_text_field($this->name);
     }
 
     public function get_icon(): string
     {
-        return $this->icon;
+        return sanitize_text_field($this->icon);
     }
 
     public function get_category(): string
     {
-        return $this->category;
+        return sanitize_text_field($this->category);
     }
 
     public function is_root_container(): bool
     {
-        return $this->is_root_container;
+        return (bool)$this->is_root_container;
     }
 
     public function get_allow_child(): bool
     {
-        return $this->allow_child;
+        return (bool)$this->allow_child;
     }
 
     /**
@@ -118,9 +118,11 @@ abstract class Field_Base extends Register_Controls_Base
      */
     public function get_keywords()
     {
-        return (!empty($this->keywords) && is_array($this->keywords))
-            ? $this->keywords
-            : false;
+        if (!empty($this->keywords) && is_array($this->keywords)) {
+            return array_map('sanitize_text_field', $this->keywords);
+        }
+
+        return false;
     }
 
 

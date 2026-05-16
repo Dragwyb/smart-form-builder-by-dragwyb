@@ -8,6 +8,8 @@ if (! defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
+use Dragwyb\Form_Builder\Admin\Settings\Settings_Manager;
+
 /**
  * Class Dragwyb_Settings_Route
  *
@@ -18,44 +20,7 @@ class Dragwyb_Settings_Route
     /**
      * Default settings structure
      */
-    private array $default_settings = [
-        'integrations' => [
-            'recaptcha_v2_site_key'   => '',
-            'recaptcha_v2_secret_key' => '',
-            'recaptcha_v3_site_key'   => '',
-            'recaptcha_v3_secret_key' => '',
-            'hcaptcha_site_key'       => '',
-            'hcaptcha_secret_key'     => '',
-        ],
-        'performance' => [
-            'load_font_awesome' => 'yes',
-            'load_svg_icons'    => 'no',
-            'load_default_css'  => 'yes',
-        ],
-        'fields_manager' => [
-            'field_text'     => true,
-            'field_email'    => true,
-            'field_textarea' => true,
-            'field_select'   => true,
-            'field_radio'    => true,
-            'field_checkbox' => true,
-            'field_number'   => true,
-            'field_hidden'   => true,
-            'field_date'     => true,
-            'field_time'     => true,
-            'field_phone'    => true,
-            'field_url'      => true,
-            'field_name'     => true,
-            'field_address'  => true,
-            'field_range'    => true,
-            'field_file'     => true,
-            'field_captcha'  => true,
-            'field_row'      => true,
-            'field_section'  => true,
-            'field_html'     => true,
-            'field_button'   => true,
-        ]
-    ];
+    private array $default_settings = array();
 
     /**
      * Dragwyb_Settings_Route constructor.
@@ -104,19 +69,13 @@ class Dragwyb_Settings_Route
      */
     public function get_settings(): \WP_REST_Response
     {
-        $settings = get_option('dragwyb_form_settings', []);
-
-        // Merge with defaults to ensure structure is intact
-        $merged_settings = wp_parse_args($settings, $this->default_settings);
-        foreach ($this->default_settings as $tab => $keys) {
-            if (isset($settings[$tab]) && is_array($settings[$tab])) {
-                $merged_settings[$tab] = wp_parse_args($settings[$tab], $keys);
-            }
+        if (!isset($this->default_settings) || empty($this->default_settings)) {
+            $this->default_settings = Settings_Manager::instance()->get_all_settings();
         }
 
         return rest_ensure_response([
             'status' => 'success',
-            'data'   => $merged_settings,
+            'data'   => $this->default_settings,
         ]);
     }
 
@@ -136,29 +95,23 @@ class Dragwyb_Settings_Route
 
         $sanitized_settings = [];
 
+        if (!isset($this->default_settings) || empty($this->default_settings)) {
+            $this->default_settings = Settings_Manager::instance()->get_all_settings();
+        }
+
+        $default_settings = $this->default_settings;
+
+        $settings_types = ['integrations', 'performance', 'fields_manager'];
         // Sanitize Integrations Tab
-        if (isset($params['integrations']) && is_array($params['integrations'])) {
-            $sanitized_settings['integrations'] = [];
-            foreach ($this->default_settings['integrations'] as $key => $default) {
-                $sanitized_settings['integrations'][sanitize_key($key)] = isset($params['integrations'][$key]) ? sanitize_text_field($params['integrations'][$key]) : $default;
-            }
-        }
 
-        // Sanitize Performance Tab
-        if (isset($params['performance']) && is_array($params['performance'])) {
-            $sanitized_settings['performance'] = [];
-            foreach ($this->default_settings['performance'] as $key => $default) {
-                // Ensure only allowed values for performance settings, or fallback to default
-                $val = isset($params['performance'][$key]) ? sanitize_text_field($params['performance'][$key]) : $default;
-                $sanitized_settings['performance'][sanitize_key($key)] = in_array($val, ['yes', 'no', 'svg'], true) ? $val : $default;
-            }
-        }
-
-        // Sanitize Fields Manager Tab
-        if (isset($params['fields_manager']) && is_array($params['fields_manager'])) {
-            $sanitized_settings['fields_manager'] = [];
-            foreach ($this->default_settings['fields_manager'] as $key => $default) {
-                $sanitized_settings['fields_manager'][sanitize_key($key)] = isset($params['fields_manager'][$key]) ? filter_var($params['fields_manager'][$key], FILTER_VALIDATE_BOOLEAN) : $default;
+        foreach ($settings_types as $setting_type) {
+            if (isset($params[$setting_type]) && is_array($params[$setting_type])) {
+                $sanitized_settings[$setting_type] = [];
+                foreach ($this->default_settings[$setting_type] as $key => $default) {
+                    if (isset($params[$setting_type][$key])) {
+                        $this->set_sanitized_value($key, $params[$setting_type][$key], $default_settings[$setting_type][$key], $sanitized_settings[$setting_type]);
+                    }
+                }
             }
         }
 
@@ -168,7 +121,42 @@ class Dragwyb_Settings_Route
         return rest_ensure_response([
             'status'  => 'success',
             'message' => __('Settings saved successfully.', 'smart-form-builder-by-dragwyb'),
-            'data'    => $sanitized_settings,
+            'data'    => $default_settings,
         ]);
+    }
+
+    private function set_sanitized_value($key, $value, &$data, &$settings)
+    {
+        if (!isset($data['type']) || !isset($value['value'])) {
+            return;
+        }
+
+        $value = $value['value'];
+
+        if (isset($data['valid_values'])) {
+            if (in_array($value, $data['valid_values'])) {
+                $settings[$key] = $value;
+            }
+        } else {
+            $value_type = $data['type'];
+            $sanitized_value = $this->get_sanitized_value($value_type, $value);
+            $settings[$key] = $sanitized_value;
+            if (isset($data['mask']) && $data['mask'] === true) {
+                $data['value'] = Settings_Manager::mask_api_key($sanitized_value);
+            } else {
+                $data['value'] = $sanitized_value;
+            }
+        }
+    }
+
+    private function get_sanitized_value($type, $value)
+    {
+        if ($type === 'bool') {
+            return (bool) $value;
+        } elseif ($type === 'number') {
+            return (int) $value;
+        } else {
+            return sanitize_text_field($value);
+        }
     }
 }
