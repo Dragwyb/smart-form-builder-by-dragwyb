@@ -141,6 +141,9 @@ class Settings_Manager
                 $this_field_settings = Modules::instance()->get_registered_fields();
 
                 foreach ($this_field_settings as $field_type => $field_data) {
+                    if (in_array($field_type, array('row', 'button'))) {
+                        continue;
+                    }
                     $dragwyb_default_settings['fields_manager'][$field_type] = array_merge($field_data, array('default' => true, 'type' => 'bool'));
                 }
             }
