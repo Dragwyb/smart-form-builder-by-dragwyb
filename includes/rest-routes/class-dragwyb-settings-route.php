@@ -100,6 +100,7 @@ class Dragwyb_Settings_Route
         }
 
         $default_settings = $this->default_settings;
+        $existing_settings = get_option('dragwyb_form_settings', []);
 
         $settings_types = ['integrations', 'performance', 'fields_manager'];
         // Sanitize Integrations Tab
@@ -108,8 +109,15 @@ class Dragwyb_Settings_Route
             if (isset($params[$setting_type]) && is_array($params[$setting_type])) {
                 $sanitized_settings[$setting_type] = [];
                 foreach ($this->default_settings[$setting_type] as $key => $default) {
-                    if (isset($params[$setting_type][$key])) {
-                        $this->set_sanitized_value($key, $params[$setting_type][$key], $default_settings[$setting_type][$key], $sanitized_settings[$setting_type]);
+                    $current_default_settings = &$default_settings[$setting_type][$key];
+                    $current_param_settings = isset($params[$setting_type][$key]) ? $params[$setting_type][$key] : [];
+
+                    if (!empty($current_param_settings)) {
+                        if (isset($current_default_settings['value']) && isset($current_param_settings['value']) && $current_default_settings['value'] === $current_param_settings['value'] && isset($existing_settings[$setting_type][$key])) {
+                            $current_param_settings['value'] = $existing_settings[$setting_type][$key];
+                        }
+
+                        $this->set_sanitized_value($key, $current_param_settings, $current_default_settings, $sanitized_settings[$setting_type]);
                     }
                 }
             }
@@ -141,6 +149,7 @@ class Dragwyb_Settings_Route
             $value_type = $data['type'];
             $sanitized_value = $this->get_sanitized_value($value_type, $value);
             $settings[$key] = $sanitized_value;
+
             if (isset($data['mask']) && $data['mask'] === true) {
                 $data['value'] = Settings_Manager::mask_api_key($sanitized_value);
             } else {
