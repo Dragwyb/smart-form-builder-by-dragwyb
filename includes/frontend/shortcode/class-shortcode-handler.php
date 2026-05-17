@@ -73,8 +73,6 @@ class Shortcode_Handler
 
         $css_manager->enqueue_form_styles($form_id, self::$frontend_render);
 
-        // Generate form HTML
-        $form_html = self::$frontend_render->render();
         $toolbar_values = self::$frontend_render->get_toolbars_values('style');
         $label_position = isset($toolbar_values['label_position']) ? $toolbar_values['label_position'] : 'top';
         $form_bg_type = isset($toolbar_values['form_container_bg_background']) ? $toolbar_values['form_container_bg_background'] : 'color';
@@ -95,7 +93,7 @@ class Shortcode_Handler
             }
         }
 
-        return '<div class="' . esc_attr($class) . '" id="dragwyb-form-wrapper-' . esc_attr($form_id) . '">' . wp_kses($form_html, $this->allowed_html_for_form()) . '</div>';
+        return '<div class="' . esc_attr($class) . '" id="dragwyb-form-wrapper-' . esc_attr($form_id) . '">' . self::$frontend_render->render() . '</div>';
     }
 
     private function allowed_html_for_form(): array
