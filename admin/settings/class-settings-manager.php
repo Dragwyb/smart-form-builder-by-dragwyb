@@ -54,7 +54,7 @@ class Settings_Manager
     /**
      * Constructor.
      */
-    private function __construct(bool $mask = true)
+    public function __construct(bool $mask = true)
     {
         $this->set_option_settings($mask);
     }
@@ -241,9 +241,15 @@ class Settings_Manager
     final public function get_api_key(string $key, bool $mask = false): string
     {
         // Assuming API keys are stored under the 'integrations' tab based on current structure.
-        $api_key = (string) $this->get_setting('integrations', $key, '');
+        $api_settings = $this->get_setting('integrations', $key, '');
 
-        if ($mask && ! empty($api_key)) {
+        if (!isset($api_settings['value']) || empty($api_settings['value'])) {
+            return '';
+        }
+
+        $api_key = $api_settings['value'];
+
+        if ($mask) {
             return self::mask_api_key($api_key);
         }
 

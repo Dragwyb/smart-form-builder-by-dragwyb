@@ -30,6 +30,24 @@ class Field_Captcha extends Field_Base
             'tab'   => self::ContentTab,
         ]);
 
+        $this->add_control('label', [
+            'type'    => Controls::TEXT,
+            'label'   => __('Field Label', 'smart-form-builder-by-dragwyb'),
+            'default' => __('Security Check', 'smart-form-builder-by-dragwyb')
+        ]);
+
+        $this->add_control('hide_label', [
+            'type'    => Controls::SWITCHER,
+            'label'   => __('Hide Label', 'smart-form-builder-by-dragwyb'),
+            'default' => 'no'
+        ]);
+
+        $this->add_control('error_msg', [
+            'type'    => Controls::TEXT,
+            'label'   => __('Error Message', 'smart-form-builder-by-dragwyb'),
+            'default' => __('Please verify that you are human.', 'smart-form-builder-by-dragwyb')
+        ]);
+
         $this->add_control('captcha_type', [
             'type'    => Controls::SELECT,
             'label'   => __('Captcha Provider', 'smart-form-builder-by-dragwyb'),
@@ -43,11 +61,93 @@ class Field_Captcha extends Field_Base
             'label_inline' => true
         ]);
 
+        $this->add_control('theme', [
+            'type'    => Controls::SELECT,
+            'label'   => __('Theme', 'smart-form-builder-by-dragwyb'),
+            'options' => [
+                'light' => __('Light', 'smart-form-builder-by-dragwyb'),
+                'dark'  => __('Dark', 'smart-form-builder-by-dragwyb')
+            ],
+            'default' => 'light',
+            'label_inline' => true,
+            'conditions' => [
+                'captcha_type' => ['recaptcha_v2', 'hcaptcha']
+            ]
+        ]);
+
+        $this->add_control('size', [
+            'type'    => Controls::SELECT,
+            'label'   => __('Size', 'smart-form-builder-by-dragwyb'),
+            'options' => [
+                'normal'  => __('Normal', 'smart-form-builder-by-dragwyb'),
+                'compact' => __('Compact', 'smart-form-builder-by-dragwyb')
+            ],
+            'default' => 'normal',
+            'label_inline' => true,
+            'conditions' => [
+                'captcha_type' => ['recaptcha_v2', 'hcaptcha']
+            ]
+        ]);
+
+        $this->add_control('score_threshold', [
+            'type'    => Controls::NUMBER,
+            'label'   => __('Pass/Fail Score Threshold', 'smart-form-builder-by-dragwyb'),
+            'description' => __('0.0 is very likely a bot, 1.0 is very likely a good interaction. Default is 0.5.', 'smart-form-builder-by-dragwyb'),
+            'min'     => 0.1,
+            'max'     => 1.0,
+            'step'    => 0.1,
+            'default' => 0.5,
+            'conditions' => [
+                'captcha_type' => 'recaptcha_v3'
+            ]
+        ]);
+
+        $this->add_control('badge_position', [
+            'type'    => Controls::SELECT,
+            'label'   => __('Badge Position', 'smart-form-builder-by-dragwyb'),
+            'options' => [
+                'bottomright' => __('Bottom Right', 'smart-form-builder-by-dragwyb'),
+                'bottomleft'  => __('Bottom Left', 'smart-form-builder-by-dragwyb'),
+                'inline'      => __('Inline (Inside Form)', 'smart-form-builder-by-dragwyb')
+            ],
+            'default' => 'bottomright',
+            'label_inline' => true,
+            'conditions' => [
+                'captcha_type' => 'recaptcha_v3'
+            ]
+        ]);
+
         $this->end_section();
 
         $this->start_section('section_style_container', [
             'label' => __('Container Style', 'smart-form-builder-by-dragwyb'),
             'tab'   => self::StyleTab,
+        ]);
+
+        $this->add_control('container_align', [
+            'type' => Controls::CHOOSE,
+            'label' => __('Alignment', 'smart-form-builder-by-dragwyb'),
+            'options' => [
+                'left' => [
+                    'title' => __('Left', 'smart-form-builder-by-dragwyb'),
+                    'icon' => 'fas fa-align-left',
+                ],
+                'center' => [
+                    'title' => __('Center', 'smart-form-builder-by-dragwyb'),
+                    'icon' => 'fas fa-align-center',
+                ],
+                'right' => [
+                    'title' => __('Right', 'smart-form-builder-by-dragwyb'),
+                    'icon' => 'fas fa-align-right',
+                ],
+            ],
+            'default' => 'left',
+            'selectors' => [
+                '{{WRAPPER}}' => 'text-align: {{VALUE}};',
+            ],
+            'conditions' => [
+                'captcha_type' => ['recaptcha_v2', 'hcaptcha']
+            ]
         ]);
 
         $this->add_control('container_margin', [
@@ -75,7 +175,14 @@ class Field_Captcha extends Field_Base
         $captcha_type = $this->field_key_exist($settings, 'captcha_type', 'recaptcha_v2');
         $classes      = $this->field_key_exist($settings, 'css_classes', '');
 
-        $settings_manager = \Dragwyb\Form_Builder\Admin\Settings\Settings_Manager::instance();
+        $theme = $this->field_key_exist($settings, 'theme', 'light');
+        $size = $this->field_key_exist($settings, 'size', 'normal');
+        $badge_position = $this->field_key_exist($settings, 'badge_position', 'bottomright');
+
+        $label = $this->field_key_exist($settings, 'label', __('Security Check', 'smart-form-builder-by-dragwyb'));
+        $hide_label = $this->field_key_exist($settings, 'hide_label', 'no');
+
+        $settings_manager = new \Dragwyb\Form_Builder\Admin\Settings\Settings_Manager(false);
 
         if ($captcha_type === 'recaptcha_v2') {
             $site_key = $settings_manager->get_api_key('recaptcha_v2_site_key');
@@ -96,6 +203,9 @@ class Field_Captcha extends Field_Base
         }
 ?>
         <div id="<?php echo esc_attr($this->field_wrapper_id($id)); ?>" class="<?php echo esc_attr($this->field_wrapper_class($classes)); ?>">
+            <?php if ($hide_label !== 'yes' && !empty($label)) : ?>
+                <label class="dragwyb-field-label" for="<?php echo esc_attr($field_id); ?>_input"><?php echo esc_html($label); ?></label>
+            <?php endif; ?>
             <div class="dragwyb-captcha-container" data-type="<?php echo esc_attr($captcha_type); ?>" data-sitekey="<?php echo esc_attr($site_key); ?>" id="<?php echo esc_attr($field_id); ?>_container">
                 <?php if (empty($site_key)) : ?>
                     <div style="padding:10px; border:1px dashed red; color:red;">
@@ -103,7 +213,7 @@ class Field_Captcha extends Field_Base
                     </div>
                 <?php else : ?>
                     <?php if ($captcha_type === 'recaptcha_v2') : ?>
-                        <div class="g-recaptcha" data-sitekey="<?php echo esc_attr($site_key); ?>" data-callback="dragwyb_recaptcha_callback_<?php echo esc_js($field_id); ?>"></div>
+                        <div class="g-recaptcha" data-sitekey="<?php echo esc_attr($site_key); ?>" data-theme="<?php echo esc_attr($theme); ?>" data-size="<?php echo esc_attr($size); ?>" data-callback="dragwyb_recaptcha_callback_<?php echo esc_js($field_id); ?>"></div>
                         <input type="hidden" name="<?php echo esc_attr($field_id); ?>" id="<?php echo esc_attr($field_id); ?>_input" class="dragwyb-captcha-input" value="">
                         <script>
                             function dragwyb_recaptcha_callback_<?php echo esc_js($field_id); ?>(response) {
@@ -114,7 +224,7 @@ class Field_Captcha extends Field_Base
                             }
                         </script>
                     <?php elseif ($captcha_type === 'hcaptcha') : ?>
-                        <div class="h-captcha" data-sitekey="<?php echo esc_attr($site_key); ?>" data-callback="dragwyb_hcaptcha_callback_<?php echo esc_js($field_id); ?>"></div>
+                        <div class="h-captcha" data-sitekey="<?php echo esc_attr($site_key); ?>" data-theme="<?php echo esc_attr($theme); ?>" data-size="<?php echo esc_attr($size); ?>" data-callback="dragwyb_hcaptcha_callback_<?php echo esc_js($field_id); ?>"></div>
                         <input type="hidden" name="<?php echo esc_attr($field_id); ?>" id="<?php echo esc_attr($field_id); ?>_input" class="dragwyb-captcha-input" value="">
                         <script>
                             function dragwyb_hcaptcha_callback_<?php echo esc_js($field_id); ?>(response) {
@@ -126,6 +236,24 @@ class Field_Captcha extends Field_Base
                         </script>
                     <?php elseif ($captcha_type === 'recaptcha_v3') : ?>
                         <input type="hidden" name="<?php echo esc_attr($field_id); ?>" id="<?php echo esc_attr($field_id); ?>_input" class="dragwyb-captcha-input" value="">
+                        <?php if ($badge_position === 'inline') : ?>
+                            <style>
+                                .grecaptcha-badge {
+                                    position: relative !important;
+                                    right: auto !important;
+                                    bottom: auto !important;
+                                    box-shadow: none !important;
+                                    margin: 10px 0 !important;
+                                }
+                            </style>
+                        <?php elseif ($badge_position === 'bottomleft') : ?>
+                            <style>
+                                .grecaptcha-badge {
+                                    left: 14px !important;
+                                    right: auto !important;
+                                }
+                            </style>
+                        <?php endif; ?>
                         <script>
                             document.addEventListener('DOMContentLoaded', function() {
                                 if (typeof grecaptcha !== 'undefined') {
@@ -162,8 +290,10 @@ class Field_Captcha extends Field_Base
 
         $field_attr = isset($form_config['fields'][$field_id]['attributes']) ? $form_config['fields'][$field_id]['attributes'] : array();
         $captcha_type = isset($field_attr['captcha_type']) ? $field_attr['captcha_type'] : 'recaptcha_v2';
+        $score_threshold = isset($field_attr['score_threshold']) ? (float) $field_attr['score_threshold'] : 0.5;
+        $error_msg = isset($field_attr['error_msg']) && !empty($field_attr['error_msg']) ? $field_attr['error_msg'] : __('Please verify that you are human.', 'smart-form-builder-by-dragwyb');
 
-        $settings_manager = \Dragwyb\Form_Builder\Admin\Settings\Settings_Manager::instance();
+        $settings_manager = new \Dragwyb\Form_Builder\Admin\Settings\Settings_Manager(false);
 
         if ($captcha_type === 'recaptcha_v2') {
             $secret_key = $settings_manager->get_api_key('recaptcha_v2_secret_key');
@@ -181,7 +311,7 @@ class Field_Captcha extends Field_Base
         }
 
         if (empty($value)) {
-            $error_handler->add_error($field_id, __('Please complete the captcha verification.', 'smart-form-builder-by-dragwyb'));
+            $error_handler->add_error($field_id, $error_msg);
             return;
         }
 
@@ -206,10 +336,10 @@ class Field_Captcha extends Field_Base
                 $result = json_decode($body);
 
                 if (!$result || empty($result->success)) {
-                    $error_handler->add_error($field_id, __('Captcha verification failed. Please try again.', 'smart-form-builder-by-dragwyb'));
+                    $error_handler->add_error($field_id, $error_msg);
                 } elseif ($captcha_type === 'recaptcha_v3') {
-                    if (isset($result->score) && $result->score < 0.5) {
-                        $error_handler->add_error($field_id, __('Captcha verification failed. Suspicious activity detected.', 'smart-form-builder-by-dragwyb'));
+                    if (isset($result->score) && (float) $result->score < $score_threshold) {
+                        $error_handler->add_error($field_id, $error_msg);
                     }
                 }
                 break;
@@ -233,7 +363,7 @@ class Field_Captcha extends Field_Base
                 $result = json_decode($body);
 
                 if (!$result || empty($result->success)) {
-                    $error_handler->add_error($field_id, __('Captcha verification failed. Please try again.', 'smart-form-builder-by-dragwyb'));
+                    $error_handler->add_error($field_id, $error_msg);
                 }
                 break;
 
