@@ -199,7 +199,7 @@ class Field_Captcha extends Field_Base
         } elseif ($captcha_type === 'recaptcha_v3' && !empty($site_key)) {
             wp_enqueue_script('google-recaptcha-v3', 'https://www.google.com/recaptcha/api.js?render=' . esc_attr($site_key), array(), null, true);
         } elseif ($captcha_type === 'hcaptcha' && !empty($site_key)) {
-            wp_enqueue_script('hcaptcha', 'https://js.hcaptcha.com/1/api.js', array(), null, true);
+            wp_enqueue_script('hcaptcha', 'https://js.hcaptcha.com/1/api.js?recaptchacompat=off', array(), null, true);
         }
 ?>
         <div id="<?php echo esc_attr($this->field_wrapper_id($id)); ?>" class="<?php echo esc_attr($this->field_wrapper_class($classes)); ?>">
