@@ -30,24 +30,6 @@ class Field_Captcha extends Field_Base
             'tab'   => self::ContentTab,
         ]);
 
-        $this->add_control('label', [
-            'type'    => Controls::TEXT,
-            'label'   => __('Field Label', 'smart-form-builder-by-dragwyb'),
-            'default' => __('Security Check', 'smart-form-builder-by-dragwyb')
-        ]);
-
-        $this->add_control('hide_label', [
-            'type'    => Controls::SWITCHER,
-            'label'   => __('Hide Label', 'smart-form-builder-by-dragwyb'),
-            'default' => 'no'
-        ]);
-
-        $this->add_control('error_msg', [
-            'type'    => Controls::TEXT,
-            'label'   => __('Error Message', 'smart-form-builder-by-dragwyb'),
-            'default' => __('Please verify that you are human.', 'smart-form-builder-by-dragwyb')
-        ]);
-
         $this->add_control('captcha_type', [
             'type'    => Controls::SELECT,
             'label'   => __('Captcha Provider', 'smart-form-builder-by-dragwyb'),
@@ -59,6 +41,24 @@ class Field_Captcha extends Field_Base
             'default' => 'recaptcha_v2',
             'description' => __('API Keys are configured in Global Settings > Integrations.', 'smart-form-builder-by-dragwyb'),
             'label_inline' => true
+        ]);
+
+        $this->add_control('label', [
+            'type'    => Controls::TEXT,
+            'label'   => __('Field Label', 'smart-form-builder-by-dragwyb'),
+            'default' => __('Security Check', 'smart-form-builder-by-dragwyb'),
+            'conditions' => [
+                'captcha_type!' => 'recaptcha_v3'
+            ]
+        ]);
+
+        $this->add_control('hide_label', [
+            'type'    => Controls::SWITCHER,
+            'label'   => __('Hide Label', 'smart-form-builder-by-dragwyb'),
+            'conditions' => [
+                'captcha_type!' => 'recaptcha_v3'
+            ],
+            'default' => 'no'
         ]);
 
         $this->add_control('theme', [
@@ -106,15 +106,20 @@ class Field_Captcha extends Field_Base
             'type'    => Controls::SELECT,
             'label'   => __('Badge Position', 'smart-form-builder-by-dragwyb'),
             'options' => [
-                'bottomright' => __('Bottom Right', 'smart-form-builder-by-dragwyb'),
-                'bottomleft'  => __('Bottom Left', 'smart-form-builder-by-dragwyb'),
-                'inline'      => __('Inline (Inside Form)', 'smart-form-builder-by-dragwyb')
+                'bottomright' => __('Right', 'smart-form-builder-by-dragwyb'),
+                'bottomleft'  => __('Left', 'smart-form-builder-by-dragwyb'),
             ],
             'default' => 'bottomright',
             'label_inline' => true,
             'conditions' => [
                 'captcha_type' => 'recaptcha_v3'
             ]
+        ]);
+
+        $this->add_control('error_msg', [
+            'type'    => Controls::TEXT,
+            'label'   => __('Error Message', 'smart-form-builder-by-dragwyb'),
+            'default' => __('Please verify that you are human.', 'smart-form-builder-by-dragwyb')
         ]);
 
         $this->end_section();
@@ -202,7 +207,7 @@ class Field_Captcha extends Field_Base
             wp_enqueue_script('hcaptcha', 'https://js.hcaptcha.com/1/api.js?recaptchacompat=off', array(), null, true);
         }
 ?>
-        <div id="<?php echo esc_attr($this->field_wrapper_id($id)); ?>" class="<?php echo esc_attr($this->field_wrapper_class($classes)); ?>">
+        <div id="<?php echo esc_attr($this->field_wrapper_id($id)); ?>" class="<?php echo esc_attr($this->field_wrapper_class($classes)); ?> dragwyb-no-float">
             <?php if ($hide_label !== 'yes' && !empty($label)) : ?>
                 <label class="dragwyb-field-label" for="<?php echo esc_attr($field_id); ?>_input"><?php echo esc_html($label); ?></label>
             <?php endif; ?>
