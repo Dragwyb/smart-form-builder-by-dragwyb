@@ -217,8 +217,14 @@ class Field_Range extends Field_Base
         $required = $this->field_key_exist($settings, 'required', '') === 'yes';
         $classes  = $this->field_key_exist($settings, 'css_classes', '');
 ?>
-        <div id="<?php echo esc_attr($this->field_wrapper_id($id)); ?>" class="<?php echo esc_attr($this->field_wrapper_class($classes)); ?>">
+        <div id="<?php echo esc_attr($this->field_wrapper_id($id)); ?>" class="<?php echo esc_attr($this->field_wrapper_class($classes)); ?> dragwyb-no-float">
             <div class="dragwyb-input-group">
+                <?php if (!empty($label)) : ?>
+                    <label for="<?php echo esc_attr($field_id); ?>" class="dragwyb-field-label">
+                        <?php echo esc_html($label); ?>
+                        <?php if ($required) : ?><span class="dragwyb-required">*</span><?php endif; ?>
+                    </label>
+                <?php endif; ?>
                 <div class="dragwyb-custom-range-container">
                     <div class="dragwyb-range-track">
                         <div class="dragwyb-range-progress"></div>
@@ -235,12 +241,6 @@ class Field_Range extends Field_Base
                         class="dragwyb-field-input dragwyb-hidden-range"
                         <?php echo $required ? 'required' : ''; ?> />
                 </div>
-                <?php if (!empty($label)) : ?>
-                    <label for="<?php echo esc_attr($field_id); ?>" class="dragwyb-field-label">
-                        <?php echo esc_html($label); ?>
-                        <?php if ($required) : ?><span class="dragwyb-required">*</span><?php endif; ?>
-                    </label>
-                <?php endif; ?>
             </div>
             <?php if (!empty($help)) : ?>
                 <div class="dragwyb-field-help"><?php echo wp_kses_post($help); ?></div>

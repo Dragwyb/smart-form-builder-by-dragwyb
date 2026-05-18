@@ -153,7 +153,7 @@ class Field_File extends Field_Base
         $required = $this->field_key_exist($settings, 'required', '') === 'yes';
         $classes  = $this->field_key_exist($settings, 'css_classes', '');
 ?>
-        <div id="<?php echo esc_attr($this->field_wrapper_id($id)); ?>" class="<?php echo esc_attr($this->field_wrapper_class($classes)); ?>">
+        <div id="<?php echo esc_attr($this->field_wrapper_id($id)); ?>" class="<?php echo esc_attr($this->field_wrapper_class($classes)); ?> dragwyb-no-float">
             <div class="dragwyb-input-group dragwyb-file-upload-group">
                 <?php if (!empty($label)) : ?>
                     <label for="<?php echo esc_attr($field_id); ?>" class="dragwyb-field-label">
