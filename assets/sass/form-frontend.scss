@@ -296,7 +296,8 @@
             border: none;
             border-bottom: 2px solid var(--dragwyb-input-border-color);
             border-radius: 6px 6px 0 0;
-            padding-top: calc(var(--dragwyb-input-pt) + 0.8em);
+            padding-top: calc(var(--dragwyb-input-pt) + var(--dragwyb-label-typography-size));
+            height: calc(var(--dragwyb-input-pt) + var(--dragwyb-label-typography-size) + 20px + var(--dragwyb-input-typography-size) + var(--dragwyb-input-pb));
 
             &:focus {
                 background-color: #e5e7eb;
@@ -306,7 +307,7 @@
 
             &:focus~.dragwyb-field-label,
             &:not(:placeholder-shown)~.dragwyb-field-label {
-                top: 0.8em;
+                top: var(--dragwyb-input-pt);
                 transform: translateY(0) scale(0.75);
             }
         }
