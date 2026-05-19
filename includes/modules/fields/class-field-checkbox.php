@@ -33,6 +33,11 @@ class Field_Checkbox extends Field_Base
             'default' => __('Select Options', 'smart-form-builder-by-dragwyb'),
         ]);
 
+        $this->add_control('label_icon', [
+            'type'  => Controls::ICON,
+            'label' => __('Label Icon', 'smart-form-builder-by-dragwyb'),
+        ]);
+
         // Repeater for Checkbox Options
         $repeater = new Repeater();
         $repeater->add_control('option_label', [
@@ -152,9 +157,7 @@ class Field_Checkbox extends Field_Base
 ?>
         <div id="<?php echo esc_attr($this->field_wrapper_id($id)); ?>" class="<?php echo esc_attr($this->field_wrapper_class($classes)); ?> dragwyb-no-float">
             <div class="dragwyb-input-group">
-                <?php if (!empty($label)) : ?>
-                    <div class="dragwyb-field-label"><?php echo esc_html($label); ?></div>
-                <?php endif; ?>
+                <?php $this->render_field_label('', $label, isset($required) ? $required : false, $settings); ?>
 
                 <div class="dragwyb-options-container <?php echo esc_attr($layout_class); ?>">
                     <?php foreach ($options as $index => $opt) : $opt_id = $field_id . '_' . $index;

@@ -26,6 +26,11 @@ class Field_Date extends Field_Base
             'default' => __('Select Date', 'smart-form-builder-by-dragwyb'),
         ]);
 
+        $this->add_control('label_icon', [
+            'type'  => Controls::ICON,
+            'label' => __('Label Icon', 'smart-form-builder-by-dragwyb'),
+        ]);
+
         $this->add_control('placeholder', [
             'type'    => Controls::TEXT,
             'label'   => __('Placeholder', 'smart-form-builder-by-dragwyb'),

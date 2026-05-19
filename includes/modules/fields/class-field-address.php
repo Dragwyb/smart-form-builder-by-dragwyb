@@ -37,6 +37,11 @@ class Field_Address extends Field_Base
             'dynamic' => ['active' => true],
         ]);
 
+        $this->add_control('label_icon', [
+            'type'  => Controls::ICON,
+            'label' => __('Label Icon', 'smart-form-builder-by-dragwyb'),
+        ]);
+
         $this->add_control('placeholder', [
             'type'    => Controls::TEXT,
             'label'   => __('Placeholder Text', 'smart-form-builder-by-dragwyb'),
@@ -171,10 +176,7 @@ class Field_Address extends Field_Base
                     rows="3"
                     <?php echo $required ? 'required' : ''; ?>><?php echo esc_textarea($value); ?></textarea>
                 <?php if (!empty($label)) : ?>
-                    <label for="<?php echo esc_attr($field_id); ?>" class="dragwyb-field-label">
-                        <?php echo esc_html($label); ?>
-                        <?php if ($required) : ?><span class="dragwyb-required">*</span><?php endif; ?>
-                    </label>
+                    <?php $this->render_field_label($field_id, $label, $required, $settings); ?>
                 <?php endif; ?>
             </div>
             <?php if (!empty($help)) : ?>

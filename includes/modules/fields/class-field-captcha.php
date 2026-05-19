@@ -52,6 +52,11 @@ class Field_Captcha extends Field_Base
             ]
         ]);
 
+        $this->add_control('label_icon', [
+            'type'  => Controls::ICON,
+            'label' => __('Label Icon', 'smart-form-builder-by-dragwyb'),
+        ]);
+
         $this->add_control('hide_label', [
             'type'    => Controls::SWITCHER,
             'label'   => __('Hide Label', 'smart-form-builder-by-dragwyb'),
@@ -209,7 +214,7 @@ class Field_Captcha extends Field_Base
 ?>
         <div id="<?php echo esc_attr($this->field_wrapper_id($id)); ?>" class="<?php echo esc_attr($this->field_wrapper_class($classes)); ?> dragwyb-no-float">
             <?php if ($hide_label !== 'yes' && !empty($label) && $captcha_type !== 'recaptcha_v3') : ?>
-                <label class="dragwyb-field-label" for="<?php echo esc_attr($field_id); ?>_input"><?php echo esc_html($label); ?></label>
+                <?php $this->render_field_label($field_id, $label, false, $settings, $field_id . '_input'); ?>
             <?php endif; ?>
             <div class="dragwyb-captcha-container" data-type="<?php echo esc_attr($captcha_type); ?>" data-sitekey="<?php echo esc_attr($site_key); ?>" id="<?php echo esc_attr($field_id); ?>_container">
                 <?php if (empty($site_key)) : ?>

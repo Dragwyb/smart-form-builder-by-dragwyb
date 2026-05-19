@@ -27,6 +27,11 @@ class Field_Select extends Field_Base
             'default' => __('Select Option', 'smart-form-builder-by-dragwyb'),
         ]);
 
+        $this->add_control('label_icon', [
+            'type'  => Controls::ICON,
+            'label' => __('Label Icon', 'smart-form-builder-by-dragwyb'),
+        ]);
+
         // Use a Repeater control to let users add unlimited options
         $repeater = new Repeater();
 
@@ -174,10 +179,7 @@ class Field_Select extends Field_Base
         <div id="<?php echo esc_attr($this->field_wrapper_id($id)); ?>" class="<?php echo esc_attr($this->field_wrapper_class($classes)); ?> dragwyb-no-float">
             <div class="dragwyb-input-group">
                 <?php if (!empty($label)) : ?>
-                    <label for="<?php echo esc_attr($field_id); ?>" class="dragwyb-field-label">
-                        <?php echo esc_html($label); ?>
-                        <?php if ($required) : ?><span class="dragwyb-required">*</span><?php endif; ?>
-                    </label>
+                    <?php $this->render_field_label($field_id, $label, $required, $settings); ?>
                 <?php endif; ?>
                 <select
                     id="<?php echo esc_attr($field_id); ?>"

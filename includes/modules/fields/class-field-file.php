@@ -37,6 +37,11 @@ class Field_File extends Field_Base
             'dynamic' => ['active' => true],
         ]);
 
+        $this->add_control('label_icon', [
+            'type'  => Controls::ICON,
+            'label' => __('Label Icon', 'smart-form-builder-by-dragwyb'),
+        ]);
+
         $this->add_control('help_text', [
             'type'        => Controls::TEXTAREA,
             'label'       => __('Instructional Text', 'smart-form-builder-by-dragwyb'),
@@ -156,10 +161,7 @@ class Field_File extends Field_Base
         <div id="<?php echo esc_attr($this->field_wrapper_id($id)); ?>" class="<?php echo esc_attr($this->field_wrapper_class($classes)); ?> dragwyb-no-float">
             <div class="dragwyb-input-group dragwyb-file-upload-group">
                 <?php if (!empty($label)) : ?>
-                    <label for="<?php echo esc_attr($field_id); ?>" class="dragwyb-field-label">
-                        <?php echo esc_html($label); ?>
-                        <?php if ($required) : ?><span class="dragwyb-required">*</span><?php endif; ?>
-                    </label>
+                    <?php $this->render_field_label($field_id, $label, $required, $settings); ?>
                 <?php endif; ?>
                 <input
                     type="file"

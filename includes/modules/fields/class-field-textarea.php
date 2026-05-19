@@ -26,6 +26,11 @@ class Field_Textarea extends Field_Base
             'default' => __('Message', 'smart-form-builder-by-dragwyb'),
         ]);
 
+        $this->add_control('label_icon', [
+            'type'  => Controls::ICON,
+            'label' => __('Label Icon', 'smart-form-builder-by-dragwyb'),
+        ]);
+
         $this->add_control('placeholder', [
             'type'    => Controls::TEXT,
             'label'   => __('Placeholder', 'smart-form-builder-by-dragwyb'),
@@ -159,10 +164,7 @@ class Field_Textarea extends Field_Base
                     class="dragwyb-field-input"
                     <?php echo $required ? 'required' : ''; ?>></textarea>
                 <?php if (!empty($label)) : ?>
-                    <label for="<?php echo esc_attr($field_id); ?>" class="dragwyb-field-label">
-                        <?php echo esc_html($label); ?>
-                        <?php if ($required) : ?><span class="dragwyb-required">*</span><?php endif; ?>
-                    </label>
+                    <?php $this->render_field_label($field_id, $label, $required, $settings); ?>
                 <?php endif; ?>
             </div>
             <?php if (!empty($help)) : ?>

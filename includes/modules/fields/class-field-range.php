@@ -71,6 +71,11 @@ class Field_Range extends Field_Base
             'dynamic' => ['active' => true],
         ]);
 
+        $this->add_control('label_icon', [
+            'type'  => Controls::ICON,
+            'label' => __('Label Icon', 'smart-form-builder-by-dragwyb'),
+        ]);
+
         $this->add_control('default_value', [
             'type'    => Controls::NUMBER,
             'label'   => __('Default Value', 'smart-form-builder-by-dragwyb'),
@@ -220,10 +225,7 @@ class Field_Range extends Field_Base
         <div id="<?php echo esc_attr($this->field_wrapper_id($id)); ?>" class="<?php echo esc_attr($this->field_wrapper_class($classes)); ?> dragwyb-no-float">
             <div class="dragwyb-input-group">
                 <?php if (!empty($label)) : ?>
-                    <label for="<?php echo esc_attr($field_id); ?>" class="dragwyb-field-label">
-                        <?php echo esc_html($label); ?>
-                        <?php if ($required) : ?><span class="dragwyb-required">*</span><?php endif; ?>
-                    </label>
+                    <?php $this->render_field_label($field_id, $label, $required, $settings); ?>
                 <?php endif; ?>
                 <div class="dragwyb-custom-range-container">
                     <div class="dragwyb-range-track">

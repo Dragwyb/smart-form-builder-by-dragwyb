@@ -412,6 +412,12 @@
             cursor: pointer;
             transition: var(--dragwyb-transition);
 
+            svg {
+                fill: var(--dragwyb-label-color);
+                stroke: var(--dragwyb-label-color);
+                width: calc(var(--dragwyb-label-typography-size) * 1.5);
+            }
+
             .dragwyb-required {
                 color: var(--dragwyb-asterisk-color);
             }

@@ -233,6 +233,41 @@ abstract class Field_Base extends Register_Controls_Base
         $this->render_field();
     }
 
+    protected function render_field_label(string $field_id, string $label, bool $required, array $settings, string $for_id = '')
+    {
+        if (empty($label)) {
+            return;
+        }
+
+        if (empty($for_id)) {
+            $for_id = $field_id;
+        }
+
+        $toolbar_settings = $this->get_toolbars_values('style');
+
+        $global_icon_position = $this->field_key_exist($toolbar_settings, 'label_icon_position', 'before');
+
+        $field_icon = $this->field_key_exist($settings, 'label_icon', []);
+
+        $icon_to_render = !empty($field_icon['icon']) ? $field_icon : '';
+?>
+        <label for="<?php echo esc_attr($for_id); ?>" class="dragwyb-field-label">
+            <?php if ($global_icon_position === 'before') {
+                if (!empty($icon_to_render['icon'])) {
+                    \Dragwyb\Form_Builder\Includes\Controls\Icons\Icons_Manager::render_icon($icon_to_render, ['class' => 'dragwyb-label-icon', 'data-icon' => $icon_to_render['icon']]);
+                }
+            } ?>
+            <?php echo esc_html($label); ?>
+            <?php if ($global_icon_position === 'after') {
+                if (!empty($icon_to_render['icon'])) {
+                    \Dragwyb\Form_Builder\Includes\Controls\Icons\Icons_Manager::render_icon($icon_to_render, ['class' => 'dragwyb-label-icon']);
+                }
+            } ?>
+            <?php if ($required) : ?><span class="dragwyb-required">*</span><?php endif; ?>
+        </label>
+<?php
+    }
+
     protected function field_wrapper_id(string $id = '')
     {
         $wrapper_id = "dragwyb-field-wrapper-" . esc_attr($id);

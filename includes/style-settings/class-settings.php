@@ -156,6 +156,16 @@ class Settings extends Register_Controls_Base
             ],
         ]);
 
+        $this->add_control('label_icon_position', [
+            'type'    => Controls::SELECT,
+            'label'   => __('Icon Position', 'smart-form-builder-by-dragwyb'),
+            'options' => [
+                'before' => __('Before Label', 'smart-form-builder-by-dragwyb'),
+                'after'  => __('After Label', 'smart-form-builder-by-dragwyb'),
+            ],
+            'default' => 'before',
+        ]);
+
         $this->add_control('floating_active_color', [
             'type'      => Controls::COLOR,
             'label'     => __('Focus Border Color', 'smart-form-builder-by-dragwyb'),
