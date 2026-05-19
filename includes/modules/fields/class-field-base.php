@@ -250,8 +250,14 @@ abstract class Field_Base extends Register_Controls_Base
         $field_icon = $this->field_key_exist($settings, 'label_icon', []);
 
         $icon_to_render = !empty($field_icon['icon']) ? $field_icon : '';
+
+        $field_label_class = "dragwyb-field-label";
+
+        if (!empty($icon_to_render['icon'])) {
+            $field_label_class .= ' dragwyb-field-label-icon label-icon-' . esc_attr($global_icon_position);
+        }
 ?>
-        <label for="<?php echo esc_attr($for_id); ?>" class="dragwyb-field-label">
+        <label for="<?php echo esc_attr($for_id); ?>" class="<?php echo esc_attr($field_label_class); ?> ">
             <?php if ($global_icon_position === 'before') {
                 if (!empty($icon_to_render['icon'])) {
                     \Dragwyb\Form_Builder\Includes\Controls\Icons\Icons_Manager::render_icon($icon_to_render, ['class' => 'dragwyb-label-icon', 'data-icon' => $icon_to_render['icon']]);

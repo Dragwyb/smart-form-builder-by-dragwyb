@@ -296,8 +296,8 @@
             border: none;
             border-bottom: 2px solid var(--dragwyb-input-border-color);
             border-radius: 6px 6px 0 0;
-            padding-top: calc(var(--dragwyb-input-pt) + var(--dragwyb-label-typography-size));
-            height: calc(var(--dragwyb-input-pt) + var(--dragwyb-label-typography-size) + 20px + var(--dragwyb-input-typography-size) + var(--dragwyb-input-pb));
+            padding-top: calc(var(--dragwyb-input-pt) + var(--dragwyb-label-typography-size) + (var(--dragwyb-label-icon-size, var(--dragwyb-input-typography-size)) - var(--dragwyb-input-typography-size)));
+            height: calc(var(--dragwyb-input-pt) + var(--dragwyb-label-typography-size) + 20px + var(--dragwyb-input-typography-size) + (var(--dragwyb-label-icon-size, var(--dragwyb-input-typography-size)) - var(--dragwyb-input-typography-size)) + var(--dragwyb-input-pb));
 
             &:focus {
                 background-color: #e5e7eb;
@@ -412,10 +412,27 @@
             cursor: pointer;
             transition: var(--dragwyb-transition);
 
+            &:where(.dragwyb-field-label-icon) {
+                display: flex;
+                align-items: center;
+            }
+
+            &.label-icon-before {
+                svg {
+                    margin-right: var(--dragwyb-label-icon-spacing, 5px);
+                }
+            }
+
+            &.label-icon-after {
+                svg {
+                    margin-left: var(--dragwyb-label-icon-spacing, 5px);
+                }
+            }
+
             svg {
                 fill: var(--dragwyb-label-color);
                 stroke: var(--dragwyb-label-color);
-                width: calc(var(--dragwyb-label-typography-size) * 1.5);
+                width: var(--dragwyb-label-icon-size, var(--dragwyb-label-typography-size));
             }
 
             .dragwyb-required {

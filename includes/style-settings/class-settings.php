@@ -164,6 +164,50 @@ class Settings extends Register_Controls_Base
                 'after'  => __('After Label', 'smart-form-builder-by-dragwyb'),
             ],
             'default' => 'before',
+            'label_inline' => true
+        ]);
+
+        $this->add_responsive_control('label_icon_size', [
+            'type' => Controls::SLIDER,
+            'label' => __('Icon Size', 'smart-form-builder-by-dragwyb'),
+            'units' => ['px', 'em', '%'],
+            'range' => [
+                'px' => [
+                    'min' => 5,
+                    'max' => 100,
+                ],
+                'em' => [
+                    'min' => 0.1,
+                    'max' => 10,
+                    'step' => 0.1,
+                ],
+                '%' => [
+                    'min' => 10,
+                    'max' => 200,
+                    'step' => 5,
+                ],
+            ],
+            'default' => [
+                'size' => 5,
+                'unit' => 'px'
+            ],
+            'selectors' => [
+                '{{WRAPPER}}' => '--dragwyb-label-icon-size: {{VALUE}}{{UNIT}};',
+            ],
+        ]);
+
+        $this->add_responsive_control('label_icon_spacing', [
+            'type' => Controls::SLIDER,
+            'label' => __('Icon Spacing', 'smart-form-builder-by-dragwyb'),
+            'range' => [
+                'px' => [
+                    'min' => 0,
+                    'max' => 100,
+                ]
+            ],
+            'selectors' => [
+                '{{WRAPPER}}' => '--dragwyb-label-icon-spacing: {{VALUE}}{{UNIT}};',
+            ],
         ]);
 
         $this->add_control('floating_active_color', [
