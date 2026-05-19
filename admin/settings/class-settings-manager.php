@@ -228,7 +228,7 @@ class Settings_Manager
     final public function get_setting(string $type, string $key, $default = '')
     {
         $type_settings = $this->get_settings($type);
-        return isset($type_settings[$key]) ? $type_settings[$key] : $default;
+        return isset($type_settings[$key]['value']) ? $type_settings[$key]['value'] : $default;
     }
 
     /**
@@ -243,11 +243,11 @@ class Settings_Manager
         // Assuming API keys are stored under the 'integrations' tab based on current structure.
         $api_settings = $this->get_setting('integrations', $key, '');
 
-        if (!isset($api_settings['value']) || empty($api_settings['value'])) {
+        if (!isset($api_settings) || empty($api_settings)) {
             return '';
         }
 
-        $api_key = $api_settings['value'];
+        $api_key = $api_settings;
 
         if ($mask) {
             return self::mask_api_key($api_key);
