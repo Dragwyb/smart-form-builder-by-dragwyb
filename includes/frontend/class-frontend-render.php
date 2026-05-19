@@ -425,13 +425,15 @@ class Frontend_Render
             }
         }
 
-        wp_enqueue_script(
+        wp_register_script(
             'dragwyb-form-frontend',
             esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/frontend/frontend.js'),
             $js_assets_info['dependencies'],
             esc_attr($js_assets_info['version']),
             true
         );
+
+        wp_enqueue_script('dragwyb-form-frontend');
 
         $dragwyb_fontend_localize_data = apply_filters('Dragwyb/Frontend/Localize_Settings', array());
 
