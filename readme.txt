@@ -1,52 +1,64 @@
-=== Smart Form Builder by Dragwyb ===
-Contributors: dragwyb, aniketji007
-Tags: form builder, contact form, custom forms, drag and drop
-Requires at least: 5.8
-Tested up to: 6.9
-Stable tag: 1.0.3
-Requires PHP: 7.4
-License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+# Dragwyb Contact Form Builder – Drag & Drop Smart Forms
 
-Drag and drop form builder for WordPress. Create beautiful, responsive forms with ease.
+**Contributors:** dragwyb  
+**Tags:** contact form, form builder, drag and drop form, custom form, ajax form  
+**Plugin URI:** https://dragwyb.com/form-builder/
+**Author URI:** https://dragwyb.com/
+**Requires at least:** 5.8  
+**Tested up to:** 6.9  
+**Requires PHP:** 7.4  
+**Stable tag:** 1.0.0  
+**License:** GPL2  
+**License URI:** http://www.gnu.org/licenses/gpl-2.0.html
 
-== Description ==
+The fastest, zero-bloat drag and drop form builder for WordPress. Create secure contact forms, custom layouts, and AJAX forms with a React-powered visual editor and custom database tables.
 
-Smart Form Builder by Dragwyb is a powerful, flexible, and intuitive drag & drop form builder plugin for WordPress. It allows you to create custom forms easily without any coding knowledge. Build simple contact forms, complex surveys, and everything in between simply by dragging and dropping fields into your form.
+## Description
 
-== External Services ==
+Looking for the fastest **drag and drop form builder** for WordPress? **Dragwyb Contact Form Builder** is a modern, React-powered **custom form plugin** designed for maximum speed, database performance, and extreme customization.
 
-This plugin utilizes the following libraries:
+Whether you need to build a simple **contact form**, a multi-column lead generation form, or a detailed user survey, Dragwyb makes it incredibly easy. Unlike legacy **WordPress form plugins** that slow down your website by flooding the `wp_postmeta` table with individual entry data, Dragwyb uses a highly optimized **custom database table** (`dragwyb_submissions`) with JSON payloads. This guarantees your WordPress database remains lightning-fast, even with thousands of form submissions.
 
-* **Pickr:** A high-performance color picker library. Used for design customization features.
-    * **Source:** [https://github.com/Simonwep/pickr](https://github.com/Simonwep/pickr)
-    * **Local Paths:** `assets/lib/pickr/css/index.css`, `assets/lib/pickr/js/index.js`
-* **Font Awesome (Free):** Used for providing iconography within the editor and frontend forms.
-    * **Source/License:** [https://fontawesome.com/license/free](https://fontawesome.com/license/free)
-    * **Local Path:** `assets/font-awesome/v5/all.min.css`
+With an intuitive **drag-and-drop React interface**, 21 distinct form fields, deep visual styling controls, and built-in **AJAX form submissions**, Dragwyb is the ultimate tool for developers and beginners alike.
 
-== Source Code ==
+## Live Demo
 
-The human-readable source code for this plugin is available in our public repository. This includes the unminified React, Redux, and SCSS files used to build the production assets.
+Explore live examples of the **Dragwyb Contact Form Builder** in action:
 
-* **Repository:** [https://github.com/Aniketji007/smart-form-builder-by-dragwyb/](https://github.com/Aniketji007/smart-form-builder-by-dragwyb/)
-* **Development Path:** All original source files are located in `/assets/src/` and `/assets/sass/`.
+🔗 [Dragwyb Form Builder Demo](https://dragwyb.com/form-builder/?utm_source=wpplugin&utm_medium=readme&utm_campaign=dragwyb_form)
 
-== Installation ==
+👉 **Check out our other plugins:**
+* [Click To Chat](https://wordpress.org/plugins/dragwyb-click-to-chat/) – Let your customers connect with you via WhatsApp.
+* [Flipbox Addon for Elementor](https://wordpress.org/plugins/flipbox-addon-for-elementor/) – Animated 3D flip boxes.
 
-1. Upload the plugin files to the `/wp-content/plugins/smart-form-builder-by-dragwyb` directory, or install the plugin through the WordPress plugins screen directly.
-2. Activate the plugin through the 'Plugins' screen in WordPress.
-3. Navigate to the Smart Form Builder by Dragwyb menu in your WordPress dashboard to start creating your forms.
+### 🚀 Why Choose Dragwyb Form Builder? (Main Features)
 
-== Frequently Asked Questions ==
+* **⚡ React & Redux Drag-and-Drop Editor:** Experience a snappy, zero-lag **visual form builder**. Add, duplicate, delete, and reorder fields instantly without page reloads.
+* **🗄️ Zero Database Bloat (Custom Tables):** Submissions are saved as highly optimized JSON payloads in a dedicated custom table (`dragwyb_submissions`). Say goodbye to slow queries and massive `wp_postmeta` tables!
+* **🛡️ Bulletproof Anti-Spam Protection:** Keep spam out of your inbox with native support for **Google reCAPTCHA v2, reCAPTCHA v3, hCaptcha**, and an invisible built-in **Honeypot form** validation.
+* **📱 Responsive Multi-Column Layouts:** Build complex side-by-side grid layouts easily using the native "Row" structure system. Fully responsive for desktop, tablet, and mobile.
+* **🚀 AJAX & REST API Submissions:** Forms submit smoothly in the background without reloading the page, utilizing native HTML5 and customized WP REST endpoint validation.
+* **⚡ Smart Asset Caching:** Generates and caches a dedicated CSS file per form for blazing-fast frontend loading. Toggle Font Awesome and SVG icons on/off to boost your PageSpeed scores.
+* **📊 Built-in Entries Dashboard:** View, search, sort, edit, and delete user submissions directly inside your WordPress admin dashboard.
 
-= Is this plugin free to use? =
+## ⚙️ Comprehensive Form Settings & Controls
 
-Yes, the core features of the Smart Form Builder by Dragwyb are free to use.
+Dragwyb gives you granular control over every pixel and function of your **contact form**:
 
-= Do I need to know how to code to create forms? =
+### 1. Form-Level Settings
+* **Limit Entries:** Cap the maximum number of form submissions allowed.
+* **After-Submission Actions:** Trigger redirects, send custom Admin and User emails, show styled success/error messages, and save entries to the database.
+* **Email Shortcodes:** Dynamically map submitted field data directly into your email subjects and body content.
 
-No! Smart Form Builder by Dragwyb features a visual drag-and-drop interface that makes it incredibly easy to build forms without writing a single line of code.
+### 2. Global Form Styling
+* **Container Styling:** Customize form backgrounds, CSS filters, borders, box shadows, and alignment.
+* **Label & Input Styling:** Visually adjust label colors, floating label styles, required asterisks, input background colors, focus borders, and typography (integrated with Google Fonts).
+* **Button Styling:** Customize submit button width, alignment, typography, hover effects, and background colors.
+
+### 3. Field-Level Settings
+* **21 Form Fields:** Text, Email, Textarea, Number, Select Dropdown, Checkbox Group, Radio Button, Date, Time, URL, Phone, Name, Address, File Upload, Range Slider, Captcha, Hidden, HTML, Section Break, Row, and Button.
+* **Advanced Field Controls:** Set responsive grid column spans, minimum/maximum lengths, custom CSS classes, placeholder text, and default values.
+* **File Upload Limits:** Define allowed file extensions (jpg, png, pdf, doc, etc.) and file sizes.
 
 == Upcoming Features ==
 
@@ -59,6 +71,77 @@ We are constantly working to improve Smart Form Builder by Dragwyb. Here are som
 *   Radio Image
 *   Step Field
 *   And much more!
+
+## Key Features
+
+* **100% Mobile Responsive Forms:** Built-in mobile and tablet breakpoints ensure your forms look perfect on any device.
+* **Developer Friendly Hooks:** Highly extensible architecture with PHP hooks for registering custom fields, after-submission actions, and custom validation filtering.
+* **Client-Side & Server-Side Validation:** Inline field error rendering that instantly focuses on the first invalid field upon submission.
+* **Dynamic Settings Manager:** Globally enable or disable specific form fields from loading in the builder.
+
+👉 [View Live Demo](https://dragwyb.com/form-builder/?utm_source=wpplugin&utm_medium=readme&utm_campaign=dragwyb_form)
+
+## Installation
+
+### From WordPress Plugin Directory
+1. Go to your WordPress dashboard → **Plugins** → **Add New**
+2. Search for **Dragwyb Form Builder**
+3. Click **Install Now**
+4. Activate the plugin after installation
+
+### Manual Upload
+1. Download the latest ZIP file
+2. Go to **Plugins** → **Add New** → **Upload Plugin**
+3. Upload the ZIP file and click **Install Now**
+4. Activate the plugin
+
+## Screenshots
+
+1. **React Drag & Drop Builder:** The modern, fast interface for building custom forms.
+2. **Global & Field Styling:** Visual controls for typography, colors, and borders.
+3. **Form Entries Database:** Clean and searchable backend dashboard of all your form submissions.
+4. **Row & Layout Settings:** Creating multi-column responsive grid forms.
+5. **Anti-Spam Integration:** Global settings for reCAPTCHA and hCaptcha integration.
+
+## Frequently Asked Questions
+
+#### Is this WordPress contact form plugin free?
+Yes, the core **Dragwyb Form Builder** is completely free to use to build unlimited forms.
+
+#### Will this plugin slow down my website's loading speed?
+No! Dragwyb is engineered specifically for performance. We generate and cache per-form CSS files in your uploads folder, allow you to selectively disable heavy assets like Font Awesome, and process all form submissions efficiently via the REST API.
+
+#### Does it bloat the WordPress database like other form builders?
+Absolutely not. Unlike legacy plugins that save every single field as a new, separate row in the `wp_postmeta` table (which severely degrades database performance), Dragwyb uses a highly optimized custom database table and stores form submission data as a clean JSON payload.
+
+#### How do I stop spam form submissions?
+We offer multiple robust layers of defense. You can enable the invisible **Honeypot** anti-spam feature, or integrate **Google reCAPTCHA (v2 or v3)** or **hCaptcha** directly from the plugin settings.
+
+#### Can I put form fields side-by-side?
+Yes! Using the advanced "Row" structure field, you can easily create multi-column layouts and control the grid column span and gaps for complex, responsive designs.
+
+#### Where do I see my contact form submissions?
+All entries are saved securely to your local database (if the "Save Submissions" action is enabled) and can be viewed, edited, searched, or deleted from the **Entries** dashboard in the WordPress admin menu.
+
+#### Can I customize the autoresponder email sent after submission?
+Yes. You can configure both User Emails and Admin Emails, complete with shortcode replacements for dynamic content mapping, custom subjects, and fully personalized message bodies.
+
+#### Can I change the colors and typography of my forms?
+Yes, the builder features a comprehensive **Global Style Settings** and **Field-Level Settings** toolbar. You can easily modify background colors, border styles, label spacing, focus states, button hover effects, and Google Fonts typography without writing any CSS.
+
+## Recommended Plugins
+
+If you find this form builder helpful, you might also like our other optimization and marketing tools:
+* 💬 **[Click To Chat](https://wordpress.org/plugins/dragwyb-click-to-chat/)** – Connect with your website visitors instantly through WhatsApp, Telegram, and other chat platforms.
+* 🔄 **[Flipbox Addon for Elementor](https://wordpress.org/plugins/flipbox-addon-for-elementor/)** – Create interactive, 3D animated flip boxes and product showcases.
+
+## Acknowledgements
+
+Built with ❤️ by Dragwyb. Thanks to the WordPress developer community for continually pushing the boundaries of what modern form plugins can achieve.
+
+## License
+
+This plugin is licensed under the GPL2 license.
 
 == Changelog ==
 
