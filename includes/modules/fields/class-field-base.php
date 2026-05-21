@@ -260,7 +260,7 @@ abstract class Field_Base extends Register_Controls_Base
         <label for="<?php echo esc_attr($for_id); ?>" class="<?php echo esc_attr($field_label_class); ?> ">
             <?php if ($global_icon_position === 'before') {
                 if (!empty($icon_to_render['icon'])) {
-                    \Dragwyb\Form_Builder\Includes\Controls\Icons\Icons_Manager::render_icon($icon_to_render, ['class' => 'dragwyb-label-icon', 'data-icon' => $icon_to_render['icon']]);
+                    \Dragwyb\Form_Builder\Includes\Controls\Icons\Icons_Manager::render_icon($icon_to_render, ['class' => 'dragwyb-label-icon']);
                 }
             } ?>
             <?php echo esc_html($label); ?>
