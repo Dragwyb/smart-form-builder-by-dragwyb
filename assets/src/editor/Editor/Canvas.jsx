@@ -16,41 +16,31 @@ const RenderItem = React.memo(({
     onDelete,
     errors,
     Utils,
-    isButtonContainer = false
+    lastContainer = true,
+    store
 }) => {
 
-    const attributesRef = useRef(null);
-    const totalChildrensRef = useRef(0);
+    const isButtonContainerFunc = field => {
+        if (lastContainer === false) return false;
 
-
-    function isFieldEqual(prevProps, nextProps) {
-
-        if (prevProps.fields[fieldId]?.attributes !== nextProps.fields[fieldId]?.attributes) {
+        if (!field || !field.is_root_container || !field.children || field.children.length === 0) {
             return false;
         }
 
+        const state = store.getState();
+        const formFields = state.form.fields;
 
-        if (nextProps.fields[fieldId]?.is_root_container && nextProps.fields[fieldId]?.children) {
-            if (prevProps.fields[fieldId]?.children?.length !== nextProps.fields[fieldId]?.children?.length) {
-                return false;
-            } else if (nextProps.fields[fieldId]?.children && totalChildrensRef !== nextProps.fields[fieldId]?.children?.length) {
-                return false;
-            }
-        }
+        return field.children.some(childId => {
+            const childField = formFields[childId];
+            return childField && childField.type === 'button';
+        });
+    };
 
-        if (null === attributesRef.current) {
-            return prevProps.fields[fieldId]?.attributes === nextProps.fields[fieldId]?.attributes;
-        }
+    const field = useSelector((state) => state.form.fields[fieldId]);
 
-        return JSON.stringify(attributesRef.current) === JSON.stringify({ ...nextProps.fields[fieldId]?.attributes });
-
-    }
-
-    const formData = useSelector((state) => state.form, isFieldEqual);
-    const field = formData.fields[fieldId];
-
-    attributesRef.current = field?.attributes ? { ...field.attributes } : [];
-    totalChildrensRef.current = field?.children?.length || 0;
+    const isButtonContainer = useMemo(() => {
+        return isButtonContainerFunc(field);
+    }, [field])
 
     const selectedField = useSelector((state) => state.selectedSettingId);
 
@@ -254,8 +244,6 @@ const Canvas = ({
     const values = useSelector((state) => state.values);
     const errors = useSelector((state) => state.errors);
     const rootContainers = useSelector((state) => state.form.rootContainers);
-    // Granular selector — only subscribe to fields object reference
-    const formFields = useSelector((state) => state.form.fields);
     const dispatch = useDispatch();
     const store = useStore();
     const state = store.getState();
@@ -329,18 +317,6 @@ const Canvas = ({
         canvasCls += " canvas-empty";
     }
 
-    const isButtonContainer = useCallback((fieldKey) => {
-        const field = formFields[fieldKey];
-        if (!field || !field.is_root_container || !field.children || field.children.length === 0) {
-            return false;
-        }
-
-        return field.children.some(childId => {
-            const childField = formFields[childId];
-            return childField && childField.type === 'button';
-        });
-    }, [formFields]);
-
     return (
         <div className="dragwyb-editor__main">
             <div className="dragwyb-canvas-wrapper" ref={setNodeRef}>
@@ -364,7 +340,8 @@ const Canvas = ({
                                             index={index}
                                             dropInfo={dropInfo}
                                             Utils={Utils}
-                                            isButtonContainer={rootContainers.length === index + 1 ? isButtonContainer(fieldKey) : false}
+                                            lastContainer={rootContainers.length === index + 1}
+                                            store={store}
                                         />
                                     ))}
                                 </>

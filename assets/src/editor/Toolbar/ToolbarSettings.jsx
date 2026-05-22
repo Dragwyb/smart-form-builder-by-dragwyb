@@ -66,12 +66,12 @@ const ToolbarSettings = ({ onFieldSelect }) => {
     };
   }, []);
 
-  const updateToolBar = useCallback(({ key, value, toolbarObj }) => {
+  const updateToolBar = useCallback(({ key, value, selectedToolBarId, toolbarObj }) => {
     if (!DragwybEditor.EditorToolbars || !DragwybEditor.EditorToolbars.toolbars || !DragwybEditor.EditorToolbars.toolbars[key]) {
       return;
     }
 
-    Utils.updateToolbarSetting({ id: key, value });
+    Utils.updateToolbarSetting({ id: key, value, selectedToolBarId });
   }, [Utils]);
 
   const handleDeleteField = useCallback((id) => {

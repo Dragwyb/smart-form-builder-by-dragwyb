@@ -301,7 +301,7 @@ export const updateFieldValue = ({ dispatch, id, value }) => {
     }
 }
 
-export const updateToolbarSetting = ({ id, value, dispatch }) => {
+export const updateToolbarSetting = ({ id, value, selectedToolBarId, dispatch }) => {
 
     if (!DragwybEditor.EditorToolbars || !DragwybEditor.EditorToolbars.toolbars || !DragwybEditor.EditorToolbars.toolbars[id]) {
         return;
@@ -322,7 +322,7 @@ export const updateToolbarSetting = ({ id, value, dispatch }) => {
             required: true,
             functionName: "updateFieldValue"
         });
-        dispatch(updateToolbarSettings(id, value))
+        dispatch(updateToolbarSettings(id, value, selectedToolBarId))
     } catch (e) {
         console.error("Validation failed:", e.message);
     }

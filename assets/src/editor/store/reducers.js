@@ -377,6 +377,26 @@ export default function reducer(state, action) {
                 return state;
             }
 
+            if (action.payload.selectedToolBarId && action.payload.selectedToolBarId !== '' && toolbarId !== action.payload.selectedToolBarId) {
+                const newFieldData = action.payload.value[action.payload.selectedToolBarId] !== undefined
+                    ? action.payload.value[action.payload.selectedToolBarId]
+                    : action.payload.value;
+
+                return {
+                    ...state,
+                    form: {
+                        ...state.form,
+                        [toolbarId]: {
+                            ...state.form[toolbarId],
+                            [action.payload.selectedToolBarId]: {
+                                ...state.form[toolbarId][action.payload.selectedToolBarId],
+                                ...newFieldData
+                            }
+                        }
+                    }
+                };
+            }
+
             return {
                 ...state,
                 form: {
