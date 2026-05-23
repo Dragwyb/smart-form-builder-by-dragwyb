@@ -23,6 +23,7 @@ abstract class Field_Base extends Register_Controls_Base {
 	protected array $keywords        = array();
 	private ?array $display_settings = array();
 	private $field_id                = 0;
+	private array $field_attributes  = array();
 
 	const ContentTab = 'content_tab';
 	const StyleTab   = 'style_tab';
@@ -214,8 +215,79 @@ abstract class Field_Base extends Register_Controls_Base {
 	 * Added render attributes
 	 *
 	 * @param string $key type unique key
-	 * @param array  $value The attributes array
+	 * @param array  $attributes The attributes array
 	 * @return void Do not return any value
+	 */
+	protected function add_field_attributes( string $key, array $attributes ): void {
+		$safe_key  = sanitize_key( $key ); // Sanitize for use in the hook name
+		$safe_type = sanitize_text_field( $this->type );
+
+		// Filter hook to modify the attributes data before adding/storing.
+		$attributes = apply_filters( 'Dragwyb/Field/Before_Add_Attributes', $attributes, $key, $this );
+		$attributes = apply_filters( "Dragwyb/Field/Before_Add_Attributes/{$safe_type}/{$safe_key}", $attributes, $this );
+
+		if ( ! isset( $this->field_attributes[ $key ] ) ) {
+			$this->field_attributes[ $key ] = array();
+		}
+
+		foreach ( $attributes as $attr_key => $attr_value ) {
+			if ( ! isset( $this->field_attributes[ $key ][ $attr_key ] ) ) {
+				$this->field_attributes[ $key ][ $attr_key ] = array();
+			}
+			$this->field_attributes[ $key ][ $attr_key ][] = $attr_value;
+		}
+	}
+
+	/**
+	 * Render HTML attributes for a specific key.
+	 *
+	 * @param string $key The key whose attributes to render.
+	 * @return void
+	 */
+	protected function render_field_attributes( string $key ): void {
+		if ( empty( $this->field_attributes[ $key ] ) ) {
+			return;
+		}
+
+		$rendered_attributes = array();
+
+		foreach ( $this->field_attributes[ $key ] as $attribute_key => $attribute_values ) {
+			$attribute_key = sanitize_key( $attribute_key );
+
+			// SECURITY: Block all inline event handlers (onclick, onmouseover, etc.).
+			if ( str_starts_with( $attribute_key, 'on' ) ) {
+				continue;
+			}
+
+			if ( is_array( $attribute_values ) ) {
+				$attribute_values = implode( ' ', $attribute_values );
+			}
+
+			// SECURITY: Use esc_url for URI attributes, otherwise use esc_attr.
+			$uri_attributes = array( 'href', 'src', 'action', 'poster' );
+
+			if ( in_array( $attribute_key, $uri_attributes, true ) ) {
+				$safe_value = esc_url( (string) $attribute_values );
+			} else {
+				$safe_value = esc_attr( (string) $attribute_values );
+			}
+
+			$rendered_attributes[] = sprintf( '%1$s="%2$s"', esc_attr( $attribute_key ), $safe_value );
+		}
+
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- This is a safe escape as all attributes are properly escaped.
+		echo implode( ' ', $rendered_attributes );
+	}
+
+	/**
+	 * Render the field label.
+	 *
+	 * @param string $field_id The ID of the field.
+	 * @param string $label The label text.
+	 * @param bool   $required Whether the field is required.
+	 * @param array  $settings The field settings.
+	 * @param string $for_id The ID of the form element this label is for.
+	 * @return void
 	 */
 	protected function render_field_label( string $field_id, string $label, bool $required, array $settings, string $for_id = '' ) {
 		if ( empty( $label ) ) {
