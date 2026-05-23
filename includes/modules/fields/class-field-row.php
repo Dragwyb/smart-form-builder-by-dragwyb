@@ -240,9 +240,17 @@ class Field_Row extends Field_Base {
 			return;
 		}
 
+		$this->add_field_attributes(
+			'wrapper',
+			array(
+				'id'    => 'dragwyb-row-' . $id,
+				'class' => 'dragwyb-row ' . $classes,
+			)
+		);
+
 		// Render a basic row container
 		?>
-		<div id="dragwyb-row-<?php echo esc_attr( $id ); ?>" class="dragwyb-row <?php echo esc_attr( $classes ); ?>">
+		<div <?php $this->render_field_attributes( 'wrapper' ); ?>>
 			<?php foreach ( $childrens as $children ) : ?>
 				<?php $this->render_children( $children ); ?>
 			<?php endforeach; ?>
