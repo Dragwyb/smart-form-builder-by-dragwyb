@@ -241,9 +241,26 @@ class Field_Button extends Field_Base {
 
 		$type = ( $action === 'reset' ) ? 'reset' : 'submit';
 
+		$this->add_field_attributes(
+			'wrapper',
+			array(
+				'id'    => $this->field_wrapper_id( $id ),
+				'class' => $this->field_wrapper_class( $classes ) . ' dragwyb-no-float',
+			)
+		);
+
+		$this->add_field_attributes(
+			'input',
+			array(
+				'type'  => $type,
+				'id'    => $field_id,
+				'class' => $btn_class,
+			)
+		);
+
 		?>
-		<div id="<?php echo esc_attr( $this->field_wrapper_id( $id ) ); ?>" class="<?php echo esc_attr( $this->field_wrapper_class( $classes ) ); ?> dragwyb-no-float">
-			<button type="<?php echo esc_attr( $type ); ?>" id="<?php echo esc_attr( $field_id ); ?>" class="<?php echo esc_attr( $btn_class ); ?>">
+		<div <?php $this->render_field_attributes( 'wrapper' ); ?>>
+			<button <?php $this->render_field_attributes( 'input' ); ?>>
 				<?php echo esc_html( $text ); ?>
 			</button>
 		</div>
