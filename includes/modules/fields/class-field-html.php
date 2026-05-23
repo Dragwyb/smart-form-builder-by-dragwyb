@@ -88,8 +88,16 @@ class Field_Html extends Field_Base {
 		$id       = $this->get_the_id();
 		$raw_html = $this->field_key_exist( $settings, 'raw_html', '' );
 		$classes  = $this->field_key_exist( $settings, 'css_classes', '' );
+
+		$this->add_field_attributes(
+			'wrapper',
+			array(
+				'id'    => $this->field_wrapper_id( $id ),
+				'class' => $this->field_wrapper_class( $classes ),
+			)
+		);
 		?>
-		<div id="<?php echo esc_attr( $this->field_wrapper_id( $id ) ); ?>" class="<?php echo esc_attr( $this->field_wrapper_class( $classes ) ); ?>">
+		<div <?php $this->render_field_attributes( 'wrapper' ); ?>>
 			<div class="dragwyb-html-content">
 				<?php echo wp_kses_post( $raw_html ); ?>
 			</div>
