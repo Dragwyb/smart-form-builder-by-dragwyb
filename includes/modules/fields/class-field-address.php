@@ -220,16 +220,34 @@ class Field_Address extends Field_Base {
 		$help        = $this->field_key_exist( $settings, 'help_text', '' );
 		$required    = $this->field_key_exist( $settings, 'required', '' ) === 'yes';
 		$classes     = $this->field_key_exist( $settings, 'css_classes', '' );
+
+		$this->add_field_attributes(
+			'wrapper',
+			array(
+				'id'    => $this->field_wrapper_id( $id ),
+				'class' => $this->field_wrapper_class( $classes ),
+			)
+		);
+
+		$this->add_field_attributes(
+			'input',
+			array(
+				'id'          => $field_id,
+				'name'        => $field_id,
+				'placeholder' => $placeholder,
+				'class'       => 'dragwyb-field-input',
+				'rows'        => '3',
+			)
+		);
 		?>
-		<div id="<?php echo esc_attr( $this->field_wrapper_id( $id ) ); ?>" class="<?php echo esc_attr( $this->field_wrapper_class( $classes ) ); ?>">
+		<div <?php $this->render_field_attributes( 'wrapper' ); ?>>
 			<div class="dragwyb-input-group">
-				<textarea
-					id="<?php echo esc_attr( $field_id ); ?>"
-					name="<?php echo esc_attr( $field_id ); ?>"
-					placeholder="<?php echo esc_attr( $placeholder ); ?>"
-					class="dragwyb-field-input"
-					rows="3"
-					<?php echo $required ? 'required' : ''; ?>><?php echo esc_textarea( $value ); ?></textarea>
+				<textarea 
+				<?php
+				$this->render_field_attributes( 'input' );
+				echo $required ? 'required' : '';
+				?>
+				><?php echo esc_textarea( $value ); ?></textarea>
 				<?php if ( ! empty( $label ) ) : ?>
 					<?php $this->render_field_label( $field_id, $label, $required, $settings ); ?>
 				<?php endif; ?>
