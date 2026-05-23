@@ -253,18 +253,38 @@ class Field_Select extends Field_Base {
 		$multiple         = $this->field_key_exist( $settings, 'multiple', '' ) === 'yes';
 		$classes          = $this->field_key_exist( $settings, 'css_classes', '' );
 
+		$this->add_field_attributes(
+			'wrapper',
+			array(
+				'id'    => $this->field_wrapper_id( $id ),
+				'class' => $this->field_wrapper_class( $classes ) . ' dragwyb-no-float',
+			)
+		);
+
+		$this->add_field_attributes(
+			'input',
+			array(
+				'id'    => $field_id,
+				'name'  => $field_id,
+				'class' => 'dragwyb-field-input',
+			)
+		);
+
+		if ( $multiple ) {
+			$this->add_field_attributes( 'input', array( 'multiple' => 'multiple' ) );
+		}
 		?>
-		<div id="<?php echo esc_attr( $this->field_wrapper_id( $id ) ); ?>" class="<?php echo esc_attr( $this->field_wrapper_class( $classes ) ); ?> dragwyb-no-float">
+		<div <?php $this->render_field_attributes( 'wrapper' ); ?>>
 			<div class="dragwyb-input-group">
 				<?php if ( ! empty( $label ) ) : ?>
 					<?php $this->render_field_label( $field_id, $label, $required, $settings ); ?>
 				<?php endif; ?>
-				<select
-					id="<?php echo esc_attr( $field_id ); ?>"
-					name="<?php echo esc_attr( $field_id ); ?>"
-					class="dragwyb-field-input"
-					<?php echo $required ? 'required' : ''; ?>
-					<?php echo $multiple ? 'multiple' : ''; ?>>
+				<select 
+				<?php
+				$this->render_field_attributes( 'input' );
+				echo $required ? 'required' : '';
+				?>
+				>
 					<?php
 					foreach ( $repeater_options as $option ) :
 						$option = $this->field_key_exist( $option, 'attributes', array() );
