@@ -224,8 +224,16 @@ class Field_Radio extends Field_Base {
 
 		$layout_class = ( $layout === 'inline' ) ? 'dragwyb-inline' : '';
 
+		$this->add_field_attributes(
+			'wrapper',
+			array(
+				'id'    => $this->field_wrapper_id( $id ),
+				'class' => $this->field_wrapper_class( $classes ) . ' dragwyb-no-float',
+			)
+		);
+
 		?>
-		<div id="<?php echo esc_attr( $this->field_wrapper_id( $id ) ); ?>" class="<?php echo esc_attr( $this->field_wrapper_class( $classes ) ); ?> dragwyb-no-float">
+		<div <?php $this->render_field_attributes( 'wrapper' ); ?>>
 			<div class="dragwyb-input-group">
 				<?php $this->render_field_label( '', $label, isset( $required ) ? $required : false, $settings ); ?>
 
@@ -234,9 +242,19 @@ class Field_Radio extends Field_Base {
 					foreach ( $options as $index => $opt ) :
 						$opt_id = $field_id . '_' . $index;
 						$opt    = $this->field_key_exist( $opt, 'attributes', $opt );
+
+						$this->add_field_attributes(
+							"input_{$index}",
+							array(
+								'type'  => 'radio',
+								'id'    => $opt_id,
+								'name'  => $field_id,
+								'value' => $opt['option_value'],
+							)
+						);
 						?>
 						<label class="dragwyb-option-item" for="<?php echo esc_attr( $opt_id ); ?>">
-							<input type="radio" id="<?php echo esc_attr( $opt_id ); ?>" name="<?php echo esc_attr( $field_id ); ?>" value="<?php echo esc_attr( $opt['option_value'] ); ?>">
+							<input <?php $this->render_field_attributes( "input_{$index}" ); ?> />
 							<span class="dragwyb-radio-label"><?php echo esc_html( $opt['option_label'] ); ?></span>
 						</label>
 					<?php endforeach; ?>
