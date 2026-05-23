@@ -74,9 +74,18 @@ class Field_Hidden extends Field_Base {
 		$id       = $this->field_key_exist( $settings, 'field_id', uniqid( 'hidden_' ) );
 		$value    = $this->field_key_exist( $settings, 'default_value', '' );
 
+		$this->add_field_attributes(
+			'input',
+			array(
+				'type'  => 'hidden',
+				'name'  => $id,
+				'value' => $value,
+			)
+		);
+
 		// Just render the input, no wrapper needed in frontend
 		?>
-		<input type="hidden" name="<?php echo esc_attr( $id ); ?>" value="<?php echo esc_attr( $value ); ?>" />
+		<input <?php $this->render_field_attributes( 'input' ); ?> />
 		<?php
 	}
 
