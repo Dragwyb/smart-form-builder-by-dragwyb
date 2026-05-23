@@ -8,69 +8,63 @@ use Dragwyb\Form_Builder\Includes\Helper\Helper;
 use Dragwyb\Form_Builder\Includes\Categories\Categories;
 use Dragwyb\Form_Builder\Includes\Categories\Categories\Category_Base;
 
-class Register_Categories
-{
-    private static $instance = null;
+class Register_Categories {
 
-    private array $categories = [];
+	private static $instance = null;
 
-    private array $default_categories = [
-        Categories::STANDARD_FIELDS,
-        Categories::ADVANCED_FIELDS,
-        Categories::STRUCTURE
-    ];
+	private array $categories = array();
 
-    public static function instance(): self
-    {
-        if (null === self::$instance) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
+	private array $default_categories = array(
+		Categories::STANDARD_FIELDS,
+		Categories::ADVANCED_FIELDS,
+		Categories::STRUCTURE,
+	);
 
-    public function __construct()
-    {
-        $this->register_default_categories();
+	public static function instance(): self {
+		if ( null === self::$instance ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
 
-        do_action('Dragwyb/register_categories', $this);
-    }
+	public function __construct() {
+		$this->register_default_categories();
 
-    private function register_default_categories(): void
-    {
-        foreach ($this->default_categories as $category) {
+		do_action( 'Dragwyb/register_categories', $this );
+	}
 
-            $dragwyb_name_space = Helper::namespace_into_dir_path(__NAMESPACE__);
-            $dir   = dirname($dragwyb_name_space);
-            $dir = Helper::dir_path_into_namespace($dir);
+	private function register_default_categories(): void {
+		foreach ( $this->default_categories as $category ) {
 
-            // Convert kebab-case to CamelCase (e.g. standard-fields -> Standard_Fields)
-            $class_name = $this->kebab_to_camel($category);
+			$dragwyb_name_space = Helper::namespace_into_dir_path( __NAMESPACE__ );
+			$dir                = dirname( $dragwyb_name_space );
+			$dir                = Helper::dir_path_into_namespace( $dir );
 
-            // Construct full class path: ..\Categories\Category_Standard_Fields
-            $class = $dir . '\Categories\Category_' . ucfirst($class_name);
+			// Convert kebab-case to CamelCase (e.g. standard-fields -> Standard_Fields)
+			$class_name = $this->kebab_to_camel( $category );
 
-            if (class_exists($class)) {
-                $this->register_category(new $class());
-            }
-        }
-    }
+			// Construct full class path: ..\Categories\Category_Standard_Fields
+			$class = $dir . '\Categories\Category_' . ucfirst( $class_name );
 
-    private function kebab_to_camel($string)
-    {
-        // Replace hyphens with underscores
-        $string = str_replace('-', '_', $string);
-        // Capitalize words
-        $string = ucwords($string, '_');
-        return $string;
-    }
+			if ( class_exists( $class ) ) {
+				$this->register_category( new $class() );
+			}
+		}
+	}
 
-    public function register_category(Category_Base $category): void
-    {
-        $this->categories[$category->get_id()] = $category;
-    }
+	private function kebab_to_camel( $string ) {
+		// Replace hyphens with underscores
+		$string = str_replace( '-', '_', $string );
+		// Capitalize words
+		$string = ucwords( $string, '_' );
+		return $string;
+	}
 
-    public function get_categories(): array
-    {
-        return $this->categories;
-    }
+	public function register_category( Category_Base $category ): void {
+		$this->categories[ $category->get_id() ] = $category;
+	}
+
+	public function get_categories(): array {
+		return $this->categories;
+	}
 }

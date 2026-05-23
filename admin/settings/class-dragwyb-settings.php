@@ -4,103 +4,102 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Admin\Settings;
 
-if (!defined('ABSPATH')) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 use Dragwyb\Form_Builder\Includes\Helper\Helper;
 
-class Dragwyb_Settings
-{
-    private static ?self $instance = null;
+class Dragwyb_Settings {
 
-    public static function instance(): self
-    {
-        if (null === self::$instance) {
-            self::$instance = new self();
-        }
+	private static ?self $instance = null;
 
-        return self::$instance;
-    }
+	public static function instance(): self {
+		if ( null === self::$instance ) {
+			self::$instance = new self();
+		}
 
-    public function __construct()
-    {
-        add_action('admin_menu', [$this, 'register_settings_page'], 60);
-        add_action('admin_enqueue_scripts', [$this, 'enqueue_assets']);
-    }
+		return self::$instance;
+	}
 
-    public function register_settings_page(): void
-    {
-        add_submenu_page(
-            DRAGWYB_PREFIX . '-form-overview',
-            __('Settings', 'smart-form-builder-by-dragwyb'),
-            __('Settings', 'smart-form-builder-by-dragwyb'),
-            'manage_options',
-            DRAGWYB_PREFIX . '-settings',
-            [$this, 'render_settings_page']
-        );
-    }
+	public function __construct() {
+		add_action( 'admin_menu', array( $this, 'register_settings_page' ), 60 );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+	}
 
-    public function render_settings_page(): void
-    {
-        echo '<div class="wrap"><div id="dragwyb-settings-root"></div></div>';
-    }
+	public function register_settings_page(): void {
+		add_submenu_page(
+			DRAGWYB_PREFIX . '-form-overview',
+			__( 'Settings', 'smart-form-builder-by-dragwyb' ),
+			__( 'Settings', 'smart-form-builder-by-dragwyb' ),
+			'manage_options',
+			DRAGWYB_PREFIX . '-settings',
+			array( $this, 'render_settings_page' )
+		);
+	}
 
-    public function enqueue_assets(string $hook): void
-    {
-        // Only load on our settings page
-        if (strpos($hook, DRAGWYB_PREFIX . '-settings') === false) {
-            return;
-        }
+	public function render_settings_page(): void {
+		echo '<div class="wrap"><div id="dragwyb-settings-root"></div></div>';
+	}
 
-        $js_assets_info = array(
-            'version' => DRAGWYB_FORM_BUILDER_VERSION,
-            'dependencies' => array('wp-element', 'wp-i18n', 'wp-api-fetch')
-        );
+	public function enqueue_assets( string $hook ): void {
+		// Only load on our settings page
+		if ( strpos( $hook, DRAGWYB_PREFIX . '-settings' ) === false ) {
+			return;
+		}
 
-        if (file_exists(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/settings/settings.asset.php')) {
-            $dragwyb_js_assets_info = require_once(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/settings/settings.asset.php');
+		$js_assets_info = array(
+			'version'      => DRAGWYB_FORM_BUILDER_VERSION,
+			'dependencies' => array( 'wp-element', 'wp-i18n', 'wp-api-fetch' ),
+		);
 
-            if (isset($dragwyb_js_assets_info['dependencies'])) {
-                $js_assets_info['dependencies'] = array_merge($js_assets_info['dependencies'], $dragwyb_js_assets_info['dependencies']);
-            }
+		if ( file_exists( DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/settings/settings.asset.php' ) ) {
+			$dragwyb_js_assets_info = require_once DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/settings/settings.asset.php';
 
-            if (isset($dragwyb_js_assets_info['version'])) {
-                $js_assets_info['version'] = $dragwyb_js_assets_info['version'];
-            }
-        }
+			if ( isset( $dragwyb_js_assets_info['dependencies'] ) ) {
+				$js_assets_info['dependencies'] = array_merge( $js_assets_info['dependencies'], $dragwyb_js_assets_info['dependencies'] );
+			}
 
-        wp_enqueue_script(
-            'dragwyb-settings-script',
-            esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/settings/settings.js'),
-            $js_assets_info['dependencies'],
-            esc_attr($js_assets_info['version']),
-            true
-        );
+			if ( isset( $dragwyb_js_assets_info['version'] ) ) {
+				$js_assets_info['version'] = $dragwyb_js_assets_info['version'];
+			}
+		}
 
-        if (file_exists(DRAGWYB_FORM_BUILDER_PATH . 'assets/css/editor-global.css')) {
-            wp_enqueue_style(
-                'dragwyb-editor-global-style',
-                esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/css/editor-global.css'),
-                array(),
-                esc_attr($js_assets_info['version'])
-            );
-        }
+		wp_enqueue_script(
+			'dragwyb-settings-script',
+			esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/dist/settings/settings.js' ),
+			$js_assets_info['dependencies'],
+			esc_attr( $js_assets_info['version'] ),
+			true
+		);
 
-        if (file_exists(DRAGWYB_FORM_BUILDER_PATH . 'assets/css/settings.css')) {
-            wp_enqueue_style(
-                'dragwyb-settings-style',
-                esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/css/settings.css'),
-                array(),
-                esc_attr($js_assets_info['version'])
-            );
-        }
+		if ( file_exists( DRAGWYB_FORM_BUILDER_PATH . 'assets/css/editor-global.css' ) ) {
+			wp_enqueue_style(
+				'dragwyb-editor-global-style',
+				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/css/editor-global.css' ),
+				array(),
+				esc_attr( $js_assets_info['version'] )
+			);
+		}
 
-        // Localize data for React
-        wp_localize_script('dragwyb-settings-script', 'DragwybSettingsData', [
-            'restUrl'   => esc_url_raw(rest_url('dragwyb/v1/settings')),
-            'nonce'     => wp_create_nonce('wp_rest'),
-            'i18n'      => [],
-        ]);
-    }
+		if ( file_exists( DRAGWYB_FORM_BUILDER_PATH . 'assets/css/settings.css' ) ) {
+			wp_enqueue_style(
+				'dragwyb-settings-style',
+				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/css/settings.css' ),
+				array(),
+				esc_attr( $js_assets_info['version'] )
+			);
+		}
+
+		// Localize data for React
+		wp_localize_script(
+			'dragwyb-settings-script',
+			'DragwybSettingsData',
+			array(
+				'restUrl' => esc_url_raw( rest_url( 'dragwyb/v1/settings' ) ),
+				'nonce'   => wp_create_nonce( 'wp_rest' ),
+				'i18n'    => array(),
+			)
+		);
+	}
 }

@@ -4,31 +4,27 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Categories\Categories;
 
-abstract class Category_Base
-{
-    protected string $id;
-    protected string $name;
-    protected string $icon;
+abstract class Category_Base {
 
-    abstract protected function init(): void;
+	protected string $id;
+	protected string $name;
+	protected string $icon;
 
-    public function __construct()
-    {
-        $this->init();
-    }
+	abstract protected function init(): void;
 
-    public function get_id(): string
-    {
-        return $this->id;
-    }
+	public function __construct() {
+		$this->init();
+	}
 
-    public function get_name(): string
-    {
-        return $this->name;
-    }
+	public function get_id(): string {
+		return $this->id;
+	}
 
-    public function get_icon(): string
-    {
-        return $this->icon;
-    }
+	public function get_name(): string {
+		return $this->name;
+	}
+
+	public function get_icon(): string {
+		return $this->icon;
+	}
 }

@@ -6,75 +6,67 @@ namespace Dragwyb\Form_Builder\Includes\Toolbars;
 
 use Dragwyb\Form_Builder\Includes\Toolbars\Register_Toolbar;
 
-class Toolbars
-{
-    private static ?Toolbars $instance = null;
+class Toolbars {
 
-    /**
-     * All registered toolbars
-     * @var Toolbar_Base[]
-     */
-    private array $toolbars = [];
+	private static ?Toolbars $instance = null;
 
-    public static function instance(): self
-    {
-        if (self::$instance === null) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
+	/**
+	 * All registered toolbars
+	 *
+	 * @var Toolbar_Base[]
+	 */
+	private array $toolbars = array();
 
-    public function __construct()
-    {
-        $this->init();
-    }
+	public static function instance(): self {
+		if ( self::$instance === null ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
 
-    public function defaultToolbar()
-    {
-        $default = 'fields';
+	public function __construct() {
+		$this->init();
+	}
 
-        $default = apply_filters('Dragwyb/Toolbars/Default_Tab', $default);
+	public function defaultToolbar() {
+		$default = 'fields';
 
-        return $default;
-    }
+		$default = apply_filters( 'Dragwyb/Toolbars/Default_Tab', $default );
 
-    private function init(): void
-    {
-        $this->load_toolbars();
-    }
+		return $default;
+	}
 
-    private function load_toolbars(): void
-    {
-        $this->register_toolbars();
-    }
+	private function init(): void {
+		$this->load_toolbars();
+	}
 
-    private function register_toolbars(): void
-    {
-        $register = Register_Toolbar::instance();
-        $this->toolbars = $register->get_toolbars();
-    }
+	private function load_toolbars(): void {
+		$this->register_toolbars();
+	}
 
-    /**
-     * Get all toolbars
-     */
-    public function get_toolbars(): array
-    {
-        return $this->toolbars;
-    }
+	private function register_toolbars(): void {
+		$register       = Register_Toolbar::instance();
+		$this->toolbars = $register->get_toolbars();
+	}
 
-    /**
-     * Get a single toolbar by ID
-     */
-    public function get_toolbar(string $id): ?Toolbar_Base
-    {
-        return $this->toolbars[$id] ?? null;
-    }
+	/**
+	 * Get all toolbars
+	 */
+	public function get_toolbars(): array {
+		return $this->toolbars;
+	}
 
-    /**
-     * Get all registered toolbar types
-     */
-    public function get_toolbar_types(): array
-    {
-        return array_keys($this->toolbars);
-    }
+	/**
+	 * Get a single toolbar by ID
+	 */
+	public function get_toolbar( string $id ): ?Toolbar_Base {
+		return $this->toolbars[ $id ] ?? null;
+	}
+
+	/**
+	 * Get all registered toolbar types
+	 */
+	public function get_toolbar_types(): array {
+		return array_keys( $this->toolbars );
+	}
 }

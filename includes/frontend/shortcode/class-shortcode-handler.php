@@ -4,182 +4,181 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\Frontend\Shortcode;
 
-if (!defined('ABSPATH')) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
 use Dragwyb\Form_Builder\Includes\Frontend\Frontend_Render;
 use Dragwyb\Form_Builder\Includes\Frontend\Managers\CSS_Manager;
 
-class Shortcode_Handler
-{
+class Shortcode_Handler {
 
-    private static ?self $instance = null;
 
-    private static $frontend_render = null;
+	private static ?self $instance = null;
 
-    /**
-     * Whether the frontend static assets have been enqueued.
-     */
-    private static $static_assets_enqueued = false;
+	private static $frontend_render = null;
 
-    public static function instance(): self
-    {
-        if (null === self::$instance) {
-            self::$instance = new self();
-        }
+	/**
+	 * Whether the frontend static assets have been enqueued.
+	 */
+	private static $static_assets_enqueued = false;
 
-        return self::$instance;
-    }
+	public static function instance(): self {
+		if ( null === self::$instance ) {
+			self::$instance = new self();
+		}
 
-    public function __construct()
-    {
-        add_shortcode('dragwyb-form', [$this, 'render_shortcode']);
-    }
+		return self::$instance;
+	}
 
-    /**
-     * Handles the [dragwyb_form id="123"] shortcode.
-     */
-    public function render_shortcode($atts)
-    {
-        $atts = shortcode_atts([
-            'id' => 0,
-        ], $atts);
+	public function __construct() {
+		add_shortcode( 'dragwyb-form', array( $this, 'render_shortcode' ) );
+	}
 
-        $form_id = absint($atts['id']);
-        if (!$form_id || get_post_type($form_id) !== Dragwyb_Post::POST_TYPE) {
-            return '<p>' . esc_html__('Form not found or invalid.', 'smart-form-builder-by-dragwyb') . '</p>';
-        }
+	/**
+	 * Handles the [dragwyb_form id="123"] shortcode.
+	 */
+	public function render_shortcode( $atts ) {
+		$atts = shortcode_atts(
+			array(
+				'id' => 0,
+			),
+			$atts
+		);
 
-        // Load form data from post meta
-        $form_settings = get_post_meta($form_id, '_dragwyb_form_data', true);
+		$form_id = absint( $atts['id'] );
+		if ( ! $form_id || get_post_type( $form_id ) !== Dragwyb_Post::POST_TYPE ) {
+			return '<p>' . esc_html__( 'Form not found or invalid.', 'smart-form-builder-by-dragwyb' ) . '</p>';
+		}
 
-        if (empty($form_settings) || !is_array($form_settings) || !isset($form_settings['fields']) || count($form_settings) < 1) {
-            return '<p>' . esc_html__('No fields found in this form.', 'smart-form-builder-by-dragwyb') . '</p>';
-        }
+		// Load form data from post meta
+		$form_settings = get_post_meta( $form_id, '_dragwyb_form_data', true );
 
-        self::$frontend_render = Frontend_Render::instance();
-        self::$frontend_render->init($form_id);
+		if ( empty( $form_settings ) || ! is_array( $form_settings ) || ! isset( $form_settings['fields'] ) || count( $form_settings ) < 1 ) {
+			return '<p>' . esc_html__( 'No fields found in this form.', 'smart-form-builder-by-dragwyb' ) . '</p>';
+		}
 
-        if (!self::$static_assets_enqueued) {
-            self::$static_assets_enqueued = true;
-            self::$frontend_render::enqueue_static_assets();
-        }
+		self::$frontend_render = Frontend_Render::instance();
+		self::$frontend_render->init( $form_id );
 
-        self::$frontend_render::localize_form_data();
+		if ( ! self::$static_assets_enqueued ) {
+			self::$static_assets_enqueued = true;
+			self::$frontend_render::enqueue_static_assets();
+		}
 
-        $css_manager = CSS_Manager::instance();
+		self::$frontend_render::localize_form_data();
 
-        $css_manager->enqueue_form_styles($form_id, self::$frontend_render);
+		$css_manager = CSS_Manager::instance();
 
-        $toolbar_values = self::$frontend_render->get_toolbars_values('style');
-        $label_position = isset($toolbar_values['label_position']) ? $toolbar_values['label_position'] : 'top';
-        $form_bg_type = isset($toolbar_values['form_container_bg_background']) ? $toolbar_values['form_container_bg_background'] : 'color';
+		$css_manager->enqueue_form_styles( $form_id, self::$frontend_render );
 
-        $class = 'dragwyb-form-wrapper';
+		$toolbar_values = self::$frontend_render->get_toolbars_values( 'style' );
+		$label_position = isset( $toolbar_values['label_position'] ) ? $toolbar_values['label_position'] : 'top';
+		$form_bg_type   = isset( $toolbar_values['form_container_bg_background'] ) ? $toolbar_values['form_container_bg_background'] : 'color';
 
-        if (isset($label_position) && !empty($label_position)) {
-            $class .= ' dragwyb-layout-' . esc_attr($label_position);
+		$class = 'dragwyb-form-wrapper';
 
-            if (isset($form_bg_type) && !empty($form_bg_type)) {
-                $class .= ' dragwyb-bg-' . esc_attr($form_bg_type);
-            }
+		if ( isset( $label_position ) && ! empty( $label_position ) ) {
+			$class .= ' dragwyb-layout-' . esc_attr( $label_position );
 
-            if ($label_position === 'floating') {
-                $floating_style = isset($toolbar_values['floating_style']) ? $toolbar_values['floating_style'] : 'outlined';
+			if ( isset( $form_bg_type ) && ! empty( $form_bg_type ) ) {
+				$class .= ' dragwyb-bg-' . esc_attr( $form_bg_type );
+			}
 
-                $class .= ' dragwyb-float-' . esc_attr($floating_style);
-            }
-        }
+			if ( $label_position === 'floating' ) {
+				$floating_style = isset( $toolbar_values['floating_style'] ) ? $toolbar_values['floating_style'] : 'outlined';
 
-        return '<div class="' . esc_attr($class) . '" id="dragwyb-form-wrapper-' . esc_attr($form_id) . '">' . self::$frontend_render->render() . '</div>';
-    }
+				$class .= ' dragwyb-float-' . esc_attr( $floating_style );
+			}
+		}
 
-    private function allowed_html_for_form(): array
-    {
-        $allowed_html = wp_kses_allowed_html('post'); // includes basic tags like <a>, <p>, <br>, <strong>, etc.
+		return '<div class="' . esc_attr( $class ) . '" id="dragwyb-form-wrapper-' . esc_attr( $form_id ) . '">' . self::$frontend_render->render() . '</div>';
+	}
 
-        $form_tags = [
-            'form' => [
-                'action' => true,
-                'method' => true,
-                'name' => true,
-                'id' => true,
-                'class' => true,
-                'enctype' => true,
-                'target' => true,
-                'novalidate' => true,
-                'autocomplete' => true,
-            ],
-            'input' => [
-                'type' => true,
-                'name' => true,
-                'value' => true,
-                'placeholder' => true,
-                'checked' => true,
-                'disabled' => true,
-                'readonly' => true,
-                'required' => true,
-                'min' => true,
-                'max' => true,
-                'step' => true,
-                'id' => true,
-                'class' => true,
-                'size' => true,
-                'autocomplete' => true,
-            ],
-            'select' => [
-                'name' => true,
-                'id' => true,
-                'class' => true,
-                'multiple' => true,
-                'required' => true,
-            ],
-            'option' => [
-                'value' => true,
-                'selected' => true,
-            ],
-            'textarea' => [
-                'name' => true,
-                'id' => true,
-                'class' => true,
-                'placeholder' => true,
-                'rows' => true,
-                'cols' => true,
-                'maxlength' => true,
-                'required' => true,
-                'readonly' => true,
-            ],
-            'button' => [
-                'type' => true,
-                'name' => true,
-                'value' => true,
-                'id' => true,
-                'class' => true,
-            ],
-            'label' => [
-                'for' => true,
-                'class' => true,
-            ],
-            'fieldset' => [
-                'id' => true,
-                'class' => true,
-                'disabled' => true,
-            ],
-            'legend' => [
-                'class' => true,
-            ],
-            'datalist' => [
-                'id' => true,
-            ],
-        ];
+	private function allowed_html_for_form(): array {
+		$allowed_html = wp_kses_allowed_html( 'post' ); // includes basic tags like <a>, <p>, <br>, <strong>, etc.
 
-        $form_tags = array_merge_recursive($allowed_html, $form_tags);
+		$form_tags = array(
+			'form'     => array(
+				'action'       => true,
+				'method'       => true,
+				'name'         => true,
+				'id'           => true,
+				'class'        => true,
+				'enctype'      => true,
+				'target'       => true,
+				'novalidate'   => true,
+				'autocomplete' => true,
+			),
+			'input'    => array(
+				'type'         => true,
+				'name'         => true,
+				'value'        => true,
+				'placeholder'  => true,
+				'checked'      => true,
+				'disabled'     => true,
+				'readonly'     => true,
+				'required'     => true,
+				'min'          => true,
+				'max'          => true,
+				'step'         => true,
+				'id'           => true,
+				'class'        => true,
+				'size'         => true,
+				'autocomplete' => true,
+			),
+			'select'   => array(
+				'name'     => true,
+				'id'       => true,
+				'class'    => true,
+				'multiple' => true,
+				'required' => true,
+			),
+			'option'   => array(
+				'value'    => true,
+				'selected' => true,
+			),
+			'textarea' => array(
+				'name'        => true,
+				'id'          => true,
+				'class'       => true,
+				'placeholder' => true,
+				'rows'        => true,
+				'cols'        => true,
+				'maxlength'   => true,
+				'required'    => true,
+				'readonly'    => true,
+			),
+			'button'   => array(
+				'type'  => true,
+				'name'  => true,
+				'value' => true,
+				'id'    => true,
+				'class' => true,
+			),
+			'label'    => array(
+				'for'   => true,
+				'class' => true,
+			),
+			'fieldset' => array(
+				'id'       => true,
+				'class'    => true,
+				'disabled' => true,
+			),
+			'legend'   => array(
+				'class' => true,
+			),
+			'datalist' => array(
+				'id' => true,
+			),
+		);
 
-        $form_tags = apply_filters('Dragwyb/Frontend/Render/Allowed_Tags', $form_tags);
+		$form_tags = array_merge_recursive( $allowed_html, $form_tags );
 
-        // Merge with wp_kses_post default allowed tags
-        return $form_tags;
-    }
+		$form_tags = apply_filters( 'Dragwyb/Frontend/Render/Allowed_Tags', $form_tags );
+
+		// Merge with wp_kses_post default allowed tags
+		return $form_tags;
+	}
 }

@@ -11,166 +11,154 @@ use Dragwyb\Form_Builder\Includes\Modules\Sanitize_Module_Settings\Sanitize_Modu
 use Dragwyb\Form_Builder\Includes\Categories\Categories;
 use Dragwyb\Form_Builder\Includes\Categories\Categories\Category_Base;
 
-class Modules extends Toolbar_Base
-{
-    private static $instance = null;
-    private $fields = [];
-    private $root_containers = [];
-    private $registered_fields = [];
+class Modules extends Toolbar_Base {
 
-    public static function instance(): self
-    {
-        if (null === self::$instance) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
+	private static $instance   = null;
+	private $fields            = array();
+	private $root_containers   = array();
+	private $registered_fields = array();
 
-    protected function get_id(): string
-    {
-        return 'fields';
-    }
+	public static function instance(): self {
+		if ( null === self::$instance ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
 
-    protected function get_name(): string
-    {
-        return __('Field', 'smart-form-builder-by-dragwyb');
-    }
+	protected function get_id(): string {
+		return 'fields';
+	}
 
-    protected function get_icon(): string
-    {
-        return 'fas fa-plus';
-    }
+	protected function get_name(): string {
+		return __( 'Field', 'smart-form-builder-by-dragwyb' );
+	}
 
-    public function __construct()
-    {
-        parent::__construct();
-        $this->init();
-    }
+	protected function get_icon(): string {
+		return 'fas fa-plus';
+	}
 
-    private function init(): void
-    {
-        // Load and register all field types
-        $this->load_fields();
-    }
+	public function __construct() {
+		parent::__construct();
+		$this->init();
+	}
 
-    private function load_fields(): void
-    {
-        // Register field types
-        $this->register_fields();
-    }
+	private function init(): void {
+		// Load and register all field types
+		$this->load_fields();
+	}
 
-    private function register_fields(): void
-    {
-        // Load field registrations
-        $register = Register_Fields::instance();
-        $this->registered_fields = $register->get_registered_fields();
-        $this->fields = $register->get_fields();
-    }
+	private function load_fields(): void {
+		// Register field types
+		$this->register_fields();
+	}
 
-    public function get_registered_fields(): array
-    {
-        return $this->registered_fields;
-    }
+	private function register_fields(): void {
+		// Load field registrations
+		$register                = Register_Fields::instance();
+		$this->registered_fields = $register->get_registered_fields();
+		$this->fields            = $register->get_fields();
+	}
 
-    public function get_fields(): array
-    {
-        return $this->fields;
-    }
+	public function get_registered_fields(): array {
+		return $this->registered_fields;
+	}
 
-    public function get_field($type): ?Field_Base
-    {
-        return $this->fields[$type] ?? null;
-    }
+	public function get_fields(): array {
+		return $this->fields;
+	}
+
+	public function get_field( $type ): ?Field_Base {
+		return $this->fields[ $type ] ?? null;
+	}
 
 
-    protected function sanitize_data(array $data): array
-    {
-        $sanitize_module_data = new Sanitize_Module_Settings($data);
-        $sanitize_data = $sanitize_module_data->get_data();
-        $this->root_containers = $sanitize_module_data->get_root_containers();
+	protected function sanitize_data( array $data ): array {
+		$sanitize_module_data  = new Sanitize_Module_Settings( $data );
+		$sanitize_data         = $sanitize_module_data->get_data();
+		$this->root_containers = $sanitize_module_data->get_root_containers();
 
-        if ($sanitize_data && is_array($sanitize_data) && count($sanitize_data) > 0) {
-            return $sanitize_data;
-        }
+		if ( $sanitize_data && is_array( $sanitize_data ) && count( $sanitize_data ) > 0 ) {
+			return $sanitize_data;
+		}
 
-        return array();
-    }
+		return array();
+	}
 
-    protected function get_settings(): array
-    {
-        $fields_data = $this->get_fields();
-        $form_id = absint($this->get_form_id());
-        $data = array();
-        // translators: %s is the name of the module
-        $data['label'] = sprintf(esc_html__('%s Settings', 'smart-form-builder-by-dragwyb'), sanitize_text_field($this->get_name()));
-        $fields = [];
+	protected function get_settings(): array {
+		$fields_data = $this->get_fields();
+		$form_id     = absint( $this->get_form_id() );
+		$data        = array();
+		// translators: %s is the name of the module
+		$data['label'] = sprintf( esc_html__( '%s Settings', 'smart-form-builder-by-dragwyb' ), sanitize_text_field( $this->get_name() ) );
+		$fields        = array();
 
-        $categories_object = Categories::instance();
+		$categories_object = Categories::instance();
 
-        $register_categories = $categories_object->get_categories();
+		$register_categories = $categories_object->get_categories();
 
-        $field_categories = array();
+		$field_categories = array();
 
-        foreach ($register_categories as $key => $category) {
-            if (!isset($category) || !$category instanceof Category_Base) {
-                continue;
-            }
+		foreach ( $register_categories as $key => $category ) {
+			if ( ! isset( $category ) || ! $category instanceof Category_Base ) {
+				continue;
+			}
 
-            $field_categories[$key] = array('name' => $category->get_name(), 'icon' => $category->get_icon(), 'fields' => array());
-        }
+			$field_categories[ $key ] = array(
+				'name'   => $category->get_name(),
+				'icon'   => $category->get_icon(),
+				'fields' => array(),
+			);
+		}
 
-        foreach ($fields_data as $key => $field) {
-            $field_category = $field->get_category();
+		foreach ( $fields_data as $key => $field ) {
+			$field_category = $field->get_category();
 
-            if (!isset($field_categories[$field_category])) {
-                continue;
-            }
+			if ( ! isset( $field_categories[ $field_category ] ) ) {
+				continue;
+			}
 
+			$field->set_form_id( $form_id );
+			$field->enqueue_assets();
 
-            $field->set_form_id($form_id);
-            $field->enqueue_assets();
+			$name              = $field->get_name();
+			$conrols           = $field->render_controls();
+			$icon              = $field->get_icon();
+			$keywords          = $field->get_keywords();
+			$is_root_container = $field->is_root_container();
+			$allow_child       = $field->get_allow_child();
 
-            $name = $field->get_name();
-            $conrols = $field->render_controls();
-            $icon = $field->get_icon();
-            $keywords = $field->get_keywords();
-            $is_root_container = $field->is_root_container();
-            $allow_child = $field->get_allow_child();
+			array_push( $field_categories[ $field_category ]['fields'], $key );
 
-            array_push($field_categories[$field_category]['fields'], $key);
+			$fields[ $key ]['label']    = esc_html( $name );
+			$fields[ $key ]['icon']     = esc_attr( $icon );
+			$fields[ $key ]['controls'] = $conrols;
 
-            $fields[$key]['label'] = esc_html($name);
-            $fields[$key]['icon'] = esc_attr($icon);
-            $fields[$key]['controls'] = $conrols;
+			if ( $is_root_container === true ) {
+				$fields[ $key ]['is_root_container'] = true;
+			}
 
-            if ($is_root_container === true) {
-                $fields[$key]['is_root_container'] = true;
-            }
+			if ( $allow_child === true ) {
+				$fields[ $key ]['allow_child'] = true;
+			}
 
-            if ($allow_child === true) {
-                $fields[$key]['allow_child'] = true;
-            }
+			if ( $keywords && count( $keywords ) > 0 ) {
+				$fields[ $key ]['keywords'] = $keywords;
+			}
+		}
 
-            if ($keywords && count($keywords) > 0) {
-                $fields[$key]['keywords'] = $keywords;
-            }
-        }
+		$data['fields']     = $fields;
+		$data['categories'] = $field_categories;
 
-        $data['fields'] = $fields;
-        $data['categories'] = $field_categories;
+		return $data;
+	}
 
-        return $data;
-    }
+	protected function get_setting_instance(): string {
+		return Settings::class;
+	}
 
-    protected function get_setting_instance(): string
-    {
-        return Settings::class;
-    }
-
-    public function get_root_containers(): array
-    {
-        return (is_array($this->root_containers) && count($this->root_containers) > 0)
-            ? $this->root_containers
-            : array();
-    }
+	public function get_root_containers(): array {
+		return ( is_array( $this->root_containers ) && count( $this->root_containers ) > 0 )
+			? $this->root_containers
+			: array();
+	}
 }

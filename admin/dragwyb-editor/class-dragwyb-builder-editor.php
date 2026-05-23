@@ -16,462 +16,470 @@ use Dragwyb\Form_Builder\Includes\Frontend\Frontend_Render;
 use Dragwyb\Form_Builder\Includes\Categories\Categories;
 use Dragwyb\Form_Builder\Includes\Categories\Categories\Category_Base;
 
-if (!defined("ABSPATH")) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 
-if (!class_exists('Dragwyb_Builder_Editor')) {
-    class Dragwyb_Builder_Editor
-    {
-        private static $form_id = null;
-        private const Current_Page = DRAGWYB_PREFIX . '-form-builder';
-        private static ?self $instance = null;
-        private static $initial_load = false;
-        private static $style_cache = [];
-        private static $google_fonts = [];
+if ( ! class_exists( 'Dragwyb_Builder_Editor' ) ) {
+	class Dragwyb_Builder_Editor {
 
-        public static function instance(): self
-        {
-            if (null === self::$instance) {
-                self::$instance = new self();
-            }
+		private static $form_id        = null;
+		private const Current_Page     = DRAGWYB_PREFIX . '-form-builder';
+		private static ?self $instance = null;
+		private static $initial_load   = false;
+		private static $style_cache    = array();
+		private static $google_fonts   = array();
 
-            return self::$instance;
-        }
-        public function __construct()
-        {
-            add_filter('Dragwyb_allowed_pages', [$this, 'allowed_page']);
-            add_filter('Dragwyb_Admin_Pages', [$this, 'allowed_page']);
-            add_action('Dragwyb_Current_Screen', [$this, 'init'], 1);
-            add_filter('Dragwyb_i18n', [$this, 'localize_i18n_strings']);
-            add_filter('Dragwyb/Editor/Localize_Settings', [$this, 'editor_toolbars_localize']);
-        }
+		public static function instance(): self {
+			if ( null === self::$instance ) {
+				self::$instance = new self();
+			}
 
-        public function init($screen)
-        {
-            if (gettype($screen) === 'object' && $screen(self::Current_Page)) {
+			return self::$instance;
+		}
+		public function __construct() {
+			add_filter( 'Dragwyb_allowed_pages', array( $this, 'allowed_page' ) );
+			add_filter( 'Dragwyb_Admin_Pages', array( $this, 'allowed_page' ) );
+			add_action( 'Dragwyb_Current_Screen', array( $this, 'init' ), 1 );
+			add_filter( 'Dragwyb_i18n', array( $this, 'localize_i18n_strings' ) );
+			add_filter( 'Dragwyb/Editor/Localize_Settings', array( $this, 'editor_toolbars_localize' ) );
+		}
 
-                // Update page title
-                add_action('admin_enqueue_scripts', [$this, 'enqueue_editor_assets']);
-                add_action('Dragwyb_Menu_Page', [$this, 'render_editor'], 1);
-                add_filter('admin_title', [$this, 'update_page_title']);
-                add_action('admin_head', [$this, 'remove_default_wp_content']);
-            }
-        }
+		public function init( $screen ) {
+			if ( gettype( $screen ) === 'object' && $screen( self::Current_Page ) ) {
 
-        public function allowed_page($pages)
-        {
-            return array_merge([self::Current_Page], $pages);
-        }
+				// Update page title
+				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_editor_assets' ) );
+				add_action( 'Dragwyb_Menu_Page', array( $this, 'render_editor' ), 1 );
+				add_filter( 'admin_title', array( $this, 'update_page_title' ) );
+				add_action( 'admin_head', array( $this, 'remove_default_wp_content' ) );
+			}
+		}
 
-        public function render_editor($screen)
-        {
-            if (gettype($screen) === 'object' && $screen(self::Current_Page)) {
-                $this->builder_output();
-            }
-        }
+		public function allowed_page( $pages ) {
+			return array_merge( array( self::Current_Page ), $pages );
+		}
 
-        public function update_page_title($title)
-        {
+		public function render_editor( $screen ) {
+			if ( gettype( $screen ) === 'object' && $screen( self::Current_Page ) ) {
+				$this->builder_output();
+			}
+		}
+
+		public function update_page_title( $title ) {
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for form id check
-            $form_id = isset($_GET['form_id']) ? absint($_GET['form_id']) : 0;
+			$form_id = isset( $_GET['form_id'] ) ? absint( $_GET['form_id'] ) : 0;
 
-            if (isset($form_id) && $form_id && is_numeric($form_id) && function_exists('get_the_title')) {
-                return get_the_title((int) $form_id);
-            }
-            return $title;
-        }
+			if ( isset( $form_id ) && $form_id && is_numeric( $form_id ) && function_exists( 'get_the_title' ) ) {
+				return get_the_title( (int) $form_id );
+			}
+			return $title;
+		}
 
-        public function builder_output()
-        {
-            if (isset(self::$form_id) && self::$form_id) {
-                echo '<div id="' . esc_attr(self::Current_Page) . '-editor-wrapper" ><div id="' . esc_attr(self::Current_Page) . '-editor-container" ></div></div>';
-            } else {
-                $post_type = Dragwyb_Post::POST_TYPE;
+		public function builder_output() {
+			if ( isset( self::$form_id ) && self::$form_id ) {
+				echo '<div id="' . esc_attr( self::Current_Page ) . '-editor-wrapper" ><div id="' . esc_attr( self::Current_Page ) . '-editor-container" ></div></div>';
+			} else {
+				$post_type = Dragwyb_Post::POST_TYPE;
 
-                printf(
-                    '<h1>%s</h1>',
-                    // translators: %s is the post type name
-                    sprintf(esc_html__('Failed to create the %s.', 'smart-form-builder-by-dragwyb'), esc_html($post_type))
-                );
-            }
-        }
+				printf(
+					'<h1>%s</h1>',
+					// translators: %s is the post type name
+					sprintf( esc_html__( 'Failed to create the %s.', 'smart-form-builder-by-dragwyb' ), esc_html( $post_type ) )
+				);
+			}
+		}
 
-        public function remove_default_wp_content()
-        {
-            // Remove the sidebar and top nav bar
-            remove_action('admin_bar_menu', 'wp_admin_bar_my_account_menu', 25);
-            remove_action('admin_menu', 'remove_menu_pages');
-            remove_action('wp_footer', 'wp_admin_bar_render', 100);
+		public function remove_default_wp_content() {
+			// Remove the sidebar and top nav bar
+			remove_action( 'admin_bar_menu', 'wp_admin_bar_my_account_menu', 25 );
+			remove_action( 'admin_menu', 'remove_menu_pages' );
+			remove_action( 'wp_footer', 'wp_admin_bar_render', 100 );
 
-            // Remove notices
-            remove_all_actions('admin_notices'); // Remove all admin notices
-            remove_all_actions('all_admin_notices'); // Remove all admin notices globally
-            remove_all_actions('user_admin_notices'); // Remove user-specific notices
-        }
+			// Remove notices
+			remove_all_actions( 'admin_notices' ); // Remove all admin notices
+			remove_all_actions( 'all_admin_notices' ); // Remove all admin notices globally
+			remove_all_actions( 'user_admin_notices' ); // Remove user-specific notices
+		}
 
-        public function enqueue_editor_assets()
-        {
-            $builder_page = DRAGWYB_PREFIX . '-form-builder';
-            $screen_id = DRAGWYB_PREFIX . '-form_page_' . DRAGWYB_PREFIX . '-form-builder';
-            $current_screen = get_current_screen();
-            $current_page = isset($_GET['page']) ? sanitize_key(wp_unslash($_GET['page'])) : '';
+		public function enqueue_editor_assets() {
+			$builder_page   = DRAGWYB_PREFIX . '-form-builder';
+			$screen_id      = DRAGWYB_PREFIX . '-form_page_' . DRAGWYB_PREFIX . '-form-builder';
+			$current_screen = get_current_screen();
+			$current_page   = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
 
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for admin dashboard pages check
-            if ((!isset($current_screen) || $current_screen->id !== $screen_id) && $current_page !== $builder_page) {
-                return;
-            }
+			if ( ( ! isset( $current_screen ) || $current_screen->id !== $screen_id ) && $current_page !== $builder_page ) {
+				return;
+			}
 
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for form id check
-            $form_id = isset($_GET['form_id']) ? absint(wp_unslash($_GET['form_id'])) : 0;
+			$form_id = isset( $_GET['form_id'] ) ? absint( wp_unslash( $_GET['form_id'] ) ) : 0;
 
-            $post_type = Dragwyb_Post::POST_TYPE;
+			$post_type = Dragwyb_Post::POST_TYPE;
 
-            if (!isset($form_id) || !$form_id) {
-                $post_id = wp_insert_post([
-                    'post_status'  => 'draft',
-                    'post_type'    => $post_type,
-                    'post_author'  => get_current_user_id(),
-                ]);
+			if ( ! isset( $form_id ) || ! $form_id ) {
+				$post_id = wp_insert_post(
+					array(
+						'post_status' => 'draft',
+						'post_type'   => $post_type,
+						'post_author' => get_current_user_id(),
+					)
+				);
 
-                self::$initial_load = true;
-                self::$form_id = $post_id;
+				self::$initial_load = true;
+				self::$form_id      = $post_id;
 
-                wp_update_post([
-                    'ID' => $post_id,
-                    'post_title' => 'Form #' . $post_id,
-                ]);
-            } else {
-                $form = get_post((int) $form_id);
+				wp_update_post(
+					array(
+						'ID'         => $post_id,
+						'post_title' => 'Form #' . $post_id,
+					)
+				);
+			} else {
+				$form = get_post( (int) $form_id );
 
-                if (!isset($form) || !isset($form->post_type)) {
-                    self::$form_id = false;
-                } else if ($form->post_type !== $post_type) {
-                    self::$form_id = false;
-                } else {
-                    self::$form_id = (int) $form_id;
-                }
-            }
+				if ( ! isset( $form ) || ! isset( $form->post_type ) ) {
+					self::$form_id = false;
+				} elseif ( $form->post_type !== $post_type ) {
+					self::$form_id = false;
+				} else {
+					self::$form_id = (int) $form_id;
+				}
+			}
 
-            if (!isset(self::$form_id) || !self::$form_id) {
-                return;
-            } else {
-                global $post;
+			if ( ! isset( self::$form_id ) || ! self::$form_id ) {
+				return;
+			} else {
+				global $post;
 
-                $post = get_post((int) self::$form_id);
+				$post = get_post( (int) self::$form_id );
 
-                setup_postdata($post);
-            }
+				setup_postdata( $post );
+			}
 
-            !defined("DRAGWYB_EDITOR") && define('DRAGWYB_EDITOR', true);
+			! defined( 'DRAGWYB_EDITOR' ) && define( 'DRAGWYB_EDITOR', true );
 
-            Dragwyb_Init::core_script();
-            $this->external_libs();
+			Dragwyb_Init::core_script();
+			$this->external_libs();
 
-            do_action('Dragwyb/before_enqueue/editor_scripts');
+			do_action( 'Dragwyb/before_enqueue/editor_scripts' );
 
-            wp_enqueue_script('dragwyb-form-core');
+			wp_enqueue_script( 'dragwyb-form-core' );
 
-            // Load tinymce editor scripts
-            wp_enqueue_editor();
+			// Load tinymce editor scripts
+			wp_enqueue_editor();
 
-            $js_assets_info = array(
-                'version' => DRAGWYB_FORM_BUILDER_VERSION,
-                'dependencies' => array('jquery', 'jquery-ui-resizable', 'clipboard')
-            );
+			$js_assets_info = array(
+				'version'      => DRAGWYB_FORM_BUILDER_VERSION,
+				'dependencies' => array( 'jquery', 'jquery-ui-resizable', 'clipboard' ),
+			);
 
-            if (file_exists(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/editor/editor.asset.php')) {
-                $dragwyb_js_assets_info = require_once(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/editor/editor.asset.php');
+			if ( file_exists( DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/editor/editor.asset.php' ) ) {
+				$dragwyb_js_assets_info = require_once DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/editor/editor.asset.php';
 
-                if (isset($dragwyb_js_assets_info['dependencies'])) {
-                    $js_assets_info['dependencies'] = array_merge($js_assets_info['dependencies'], $dragwyb_js_assets_info['dependencies']);
-                }
+				if ( isset( $dragwyb_js_assets_info['dependencies'] ) ) {
+					$js_assets_info['dependencies'] = array_merge( $js_assets_info['dependencies'], $dragwyb_js_assets_info['dependencies'] );
+				}
 
-                if (isset($dragwyb_js_assets_info['version'])) {
-                    $js_assets_info['version'] = $dragwyb_js_assets_info['version'];
-                }
-            }
+				if ( isset( $dragwyb_js_assets_info['version'] ) ) {
+					$js_assets_info['version'] = $dragwyb_js_assets_info['version'];
+				}
+			}
 
-            $js_dependencies = apply_filters('Dragwyb/Editor/scripts/dependencies', $js_assets_info['dependencies']);
+			$js_dependencies = apply_filters( 'Dragwyb/Editor/scripts/dependencies', $js_assets_info['dependencies'] );
 
-            $style_dependencies = apply_filters('Dragwyb/Editor/style/dependencies', array('wp-components', 'dragwyb-form-editor-global'));
+			$style_dependencies = apply_filters( 'Dragwyb/Editor/style/dependencies', array( 'wp-components', 'dragwyb-form-editor-global' ) );
 
-            // Enqueue React and dependencies
-            wp_enqueue_script(
-                'dragwyb-form-editor',
-                esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editor/editor.js'),
-                $js_dependencies,
-                esc_attr($js_assets_info['version']),
-                true
-            );
+			// Enqueue React and dependencies
+			wp_enqueue_script(
+				'dragwyb-form-editor',
+				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editor/editor.js' ),
+				$js_dependencies,
+				esc_attr( $js_assets_info['version'] ),
+				true
+			);
 
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for iframe mode check already returned with this check
-            if (isset($_GET['dragwyb_iframe_mode'])) {
-                return;
-            }
+			if ( isset( $_GET['dragwyb_iframe_mode'] ) ) {
+				return;
+			}
 
-            wp_enqueue_style(
-                'dragwyb-form-editor-global',
-                esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/css/editor-global.css'),
-                [],
-                esc_attr($js_assets_info['version'])
-            );
+			wp_enqueue_style(
+				'dragwyb-form-editor-global',
+				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/css/editor-global.css' ),
+				array(),
+				esc_attr( $js_assets_info['version'] )
+			);
 
-            wp_enqueue_style(
-                'dragwyb-form-editor',
-                esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editor/editor.css'),
-                $style_dependencies,
-                esc_attr($js_assets_info['version'])
-            );
+			wp_enqueue_style(
+				'dragwyb-form-editor',
+				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editor/editor.css' ),
+				$style_dependencies,
+				esc_attr( $js_assets_info['version'] )
+			);
 
-            $localize_data = [
-                'ajaxUrl' => admin_url('admin-ajax.php'),
-                'pluginUrl' => esc_url(DRAGWYB_FORM_BUILDER_URL),
-                'nonce' => wp_create_nonce('dragwyb_editor'),
-                'formId' => (int) self::$form_id,
-                'editorContainer' => esc_html(self::Current_Page) . '-editor-container',
-                'formData' => $this->get_form_data((int) self::$form_id),
-                'controlTypes' => $this->get_control_types(),
-                'fieldCategories' => $this->get_registered_categories(),
-                'adminUrl' => admin_url('admin.php?page=dragwyb-form-overview'),
-                'faIconsList' => $this->get_fa_icons_list(),
-                'previewUrl' => home_url('/?post_type=' . Dragwyb_Post::POST_TYPE . '&p=' . self::$form_id . '&preview_id=' . Form_Preview::generate_key(self::$form_id)),
-            ];
+			$localize_data = array(
+				'ajaxUrl'         => admin_url( 'admin-ajax.php' ),
+				'pluginUrl'       => esc_url( DRAGWYB_FORM_BUILDER_URL ),
+				'nonce'           => wp_create_nonce( 'dragwyb_editor' ),
+				'formId'          => (int) self::$form_id,
+				'editorContainer' => esc_html( self::Current_Page ) . '-editor-container',
+				'formData'        => $this->get_form_data( (int) self::$form_id ),
+				'controlTypes'    => $this->get_control_types(),
+				'fieldCategories' => $this->get_registered_categories(),
+				'adminUrl'        => admin_url( 'admin.php?page=dragwyb-form-overview' ),
+				'faIconsList'     => $this->get_fa_icons_list(),
+				'previewUrl'      => home_url( '/?post_type=' . Dragwyb_Post::POST_TYPE . '&p=' . self::$form_id . '&preview_id=' . Form_Preview::generate_key( self::$form_id ) ),
+			);
 
-            $localize_data = apply_filters('Dragwyb/Editor/Localize_Settings', $localize_data);
-            // Localize data
-            wp_localize_script('dragwyb-form-editor', 'DragwybEditor', $localize_data);
+			$localize_data = apply_filters( 'Dragwyb/Editor/Localize_Settings', $localize_data );
+			// Localize data
+			wp_localize_script( 'dragwyb-form-editor', 'DragwybEditor', $localize_data );
 
-            do_action('Dragwyb/after_enqueue/editor_scripts');
-        }
+			do_action( 'Dragwyb/after_enqueue/editor_scripts' );
+		}
 
-        private function get_fa_icons_list(): array
-        {
-            $icons = Icons_Helper::get_icons_list_group();
+		private function get_fa_icons_list(): array {
+			$icons = Icons_Helper::get_icons_list_group();
 
-            return $icons;
-        }
+			return $icons;
+		}
 
-        private function external_libs(): void
-        {
-            // font-awesome@5.15.4
-            wp_enqueue_style(
-                'dragwyb-font-awesome',
-                esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/font-awesome/v5/all.min.css'),
-                [],
-                '5.15.4'
-            );
+		private function external_libs(): void {
+			// font-awesome@5.15.4
+			wp_enqueue_style(
+				'dragwyb-font-awesome',
+				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/font-awesome/v5/all.min.css' ),
+				array(),
+				'5.15.4'
+			);
 
-            // @simonwep/pickr@1.9.1 style
-            wp_enqueue_style(
-                'dragwyb-pickr',
-                esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/lib/pickr/css/index.css'),
-                [],
-                '1.9.1'
-            );
+			// @simonwep/pickr@1.9.1 style
+			wp_enqueue_style(
+				'dragwyb-pickr',
+				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/lib/pickr/css/index.css' ),
+				array(),
+				'1.9.1'
+			);
 
-            // @simonwep/pickr@1.9.1 script
-            wp_enqueue_script(
-                'dragwyb-pickr',
-                esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/lib/pickr/js/index.js'),
-                [],
-                '1.9.1',
-                true
-            );
+			// @simonwep/pickr@1.9.1 script
+			wp_enqueue_script(
+				'dragwyb-pickr',
+				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/lib/pickr/js/index.js' ),
+				array(),
+				'1.9.1',
+				true
+			);
 
-            add_filter('Dragwyb/Editor/scripts/dependencies', function ($dependencies) {
-                $dependencies[] = 'dragwyb-pickr';
+			add_filter(
+				'Dragwyb/Editor/scripts/dependencies',
+				function ( $dependencies ) {
+					$dependencies[] = 'dragwyb-pickr';
 
-                return $dependencies;
-            });
+					return $dependencies;
+				}
+			);
 
-            add_filter('Dragwyb/Editor/style/dependencies', function ($dependencies) {
-                $dependencies[] = 'dragwyb-pickr';
+			add_filter(
+				'Dragwyb/Editor/style/dependencies',
+				function ( $dependencies ) {
+					$dependencies[] = 'dragwyb-pickr';
 
-                return $dependencies;
-            });
-        }
+					return $dependencies;
+				}
+			);
+		}
 
-        /**
-         * Get form data
-         */
-        private function get_form_data(int $form_id): array
-        {
-            $form = get_post($form_id);
+		/**
+		 * Get form data
+		 */
+		private function get_form_data( int $form_id ): array {
+			$form = get_post( $form_id );
 
-            $form_data = [
-                'id' => $form_id,
-                'title' => $form ? $form->post_title : '',
-                'status' => $form ? $form->post_status : '',
-            ];
+			$form_data = array(
+				'id'     => $form_id,
+				'title'  => $form ? $form->post_title : '',
+				'status' => $form ? $form->post_status : '',
+			);
 
-            if (self::$initial_load === true) {
-                $form_data['addSubmitButton'] = true;
-            } else {
-                $form_saved_data = get_post_meta($form_id, '_dragwyb_form_data', true);
+			if ( self::$initial_load === true ) {
+				$form_data['addSubmitButton'] = true;
+			} else {
+				$form_saved_data = get_post_meta( $form_id, '_dragwyb_form_data', true );
 
-                if (empty($form_saved_data)) {
-                    $form_data['addSubmitButton'] = true;
-                }
-            }
+				if ( empty( $form_saved_data ) ) {
+					$form_data['addSubmitButton'] = true;
+				}
+			}
 
-            return $form_data;
-        }
+			return $form_data;
+		}
 
-        public function editor_toolbars_localize($data): array
-        {
-            $form_id = isset($data['formId']) ? absint($data['formId']) : 0;
+		public function editor_toolbars_localize( $data ): array {
+			$form_id = isset( $data['formId'] ) ? absint( $data['formId'] ) : 0;
 
-            if (!$form_id) {
-                return $data;
-            }
+			if ( ! $form_id ) {
+				return $data;
+			}
 
-            if (!isset($data['formData'])) $data['formData'] = array();
-            if (!isset($data['EditorToolbars'])) $data['EditorToolbars'] = array();
-            if (!isset($data['EditorToolbars'])) $data['EditorToolbars'] = array();
-            if (!isset($data['frontendInitialData'])) $data['frontendInitialData'] = array();
+			if ( ! isset( $data['formData'] ) ) {
+				$data['formData'] = array();
+			}
+			if ( ! isset( $data['EditorToolbars'] ) ) {
+				$data['EditorToolbars'] = array();
+			}
+			if ( ! isset( $data['EditorToolbars'] ) ) {
+				$data['EditorToolbars'] = array();
+			}
+			if ( ! isset( $data['frontendInitialData'] ) ) {
+				$data['frontendInitialData'] = array();
+			}
 
-            $data['formData']['rootContainers'] = array();
+			$data['formData']['rootContainers'] = array();
 
-            $frontend = Frontend_Render::instance();
-            $frontend->init($form_id);
-            $style_cache = $frontend->get_generated_css();
-            $root_containers = $frontend->get_root_containers();
+			$frontend = Frontend_Render::instance();
+			$frontend->init( $form_id );
+			$style_cache     = $frontend->get_generated_css();
+			$root_containers = $frontend->get_root_containers();
 
-            $toolbar_obj = Toolbars::instance();
-            $default_toolbar = $toolbar_obj->defaultToolbar();
-            $toolbars = $toolbar_obj->get_toolbars();
+			$toolbar_obj     = Toolbars::instance();
+			$default_toolbar = $toolbar_obj->defaultToolbar();
+			$toolbars        = $toolbar_obj->get_toolbars();
 
-            if (isset($style_cache['css']) && is_array($style_cache['css']) && !empty($style_cache['css'])) {
-                $data['frontendInitialData']['css'] = $style_cache['css'];
-            }
+			if ( isset( $style_cache['css'] ) && is_array( $style_cache['css'] ) && ! empty( $style_cache['css'] ) ) {
+				$data['frontendInitialData']['css'] = $style_cache['css'];
+			}
 
-            if (isset($style_cache['google_fonts']) && is_array($style_cache['google_fonts']) && !empty($style_cache['google_fonts'])) {
-                $data['frontendInitialData']['googleFonts'] = $style_cache['google_fonts'];
-            }
+			if ( isset( $style_cache['google_fonts'] ) && is_array( $style_cache['google_fonts'] ) && ! empty( $style_cache['google_fonts'] ) ) {
+				$data['frontendInitialData']['googleFonts'] = $style_cache['google_fonts'];
+			}
 
-            if ($toolbars && !empty($toolbars)) {
-                $toolbars_keys = array_keys($toolbars);
+			if ( $toolbars && ! empty( $toolbars ) ) {
+				$toolbars_keys = array_keys( $toolbars );
 
-                foreach ($toolbars_keys as $key) {
-                    if (isset($data['formData'][$key]) || isset($data[$key])) {
-                        continue;
-                    }
+				foreach ( $toolbars_keys as $key ) {
+					if ( isset( $data['formData'][ $key ] ) || isset( $data[ $key ] ) ) {
+						continue;
+					}
 
-                    $toolbars[$key]->enqueue_assets();
+					$toolbars[ $key ]->enqueue_assets();
 
-                    if (!isset($data['EditorToolbars']['toolbars'])) {
-                        $data['EditorToolbars']['toolbars'] = array();
-                    }
+					if ( ! isset( $data['EditorToolbars']['toolbars'] ) ) {
+						$data['EditorToolbars']['toolbars'] = array();
+					}
 
-                    if (!isset($data['EditorToolbars']['toolbars'][$key])) {
-                        $data['EditorToolbars']['toolbars'][$key] = array('name' => $toolbars[$key]->get_toolbar_name(), 'icon' => $toolbars[$key]->get_toolbar_icon());
-                    }
+					if ( ! isset( $data['EditorToolbars']['toolbars'][ $key ] ) ) {
+						$data['EditorToolbars']['toolbars'][ $key ] = array(
+							'name' => $toolbars[ $key ]->get_toolbar_name(),
+							'icon' => $toolbars[ $key ]->get_toolbar_icon(),
+						);
+					}
 
-                    $toolbar_data = array();
+					$toolbar_data = array();
 
-                    if ($key === 'fields') {
-                        $toolbar_data = $frontend->get_fields_values();
-                    } else {
-                        $toolbar_data = $frontend->get_toolbars_values($key);
-                    }
+					if ( $key === 'fields' ) {
+						$toolbar_data = $frontend->get_fields_values();
+					} else {
+						$toolbar_data = $frontend->get_toolbars_values( $key );
+					}
 
-                    $toolbar_settings = $frontend->get_toolbar_data($key);
+					$toolbar_settings = $frontend->get_toolbar_data( $key );
 
-                    if (!empty($toolbar_data)) {
-                        $data['formData'][$key] = $toolbar_data;
-                    }
+					if ( ! empty( $toolbar_data ) ) {
+						$data['formData'][ $key ] = $toolbar_data;
+					}
 
-                    if (!empty($toolbar_settings)) {
-                        $data[$key] = $toolbar_settings;
-                    }
-                }
-            }
+					if ( ! empty( $toolbar_settings ) ) {
+						$data[ $key ] = $toolbar_settings;
+					}
+				}
+			}
 
-            if (isset($data['EditorToolbars']['toolbars'][$default_toolbar])) {
-                $data['EditorToolbars']['Default'] = sanitize_text_field($default_toolbar);
-            }
+			if ( isset( $data['EditorToolbars']['toolbars'][ $default_toolbar ] ) ) {
+				$data['EditorToolbars']['Default'] = sanitize_text_field( $default_toolbar );
+			}
 
-            if ($root_containers && !empty($root_containers) && is_array($root_containers)) {
-                $data['formData']['rootContainers'] = $root_containers;
-            }
+			if ( $root_containers && ! empty( $root_containers ) && is_array( $root_containers ) ) {
+				$data['formData']['rootContainers'] = $root_containers;
+			}
 
-            return $data;
-        }
+			return $data;
+		}
 
-        /**
-         * Get field types configuration
-         */
-        private function get_control_types(): array
-        {
-            $controls = new Controls();
+		/**
+		 * Get field types configuration
+		 */
+		private function get_control_types(): array {
+			$controls = new Controls();
 
-            $controls_data = $controls->get_controls();
+			$controls_data = $controls->get_controls();
 
-            $controls = [];
+			$controls = array();
 
-            foreach ($controls_data as $key => $control) {
-                $control->enqueue_assets();
+			foreach ( $controls_data as $key => $control ) {
+				$control->enqueue_assets();
 
-                $name = $control->get_name();
+				$name = $control->get_name();
 
-                $controls[$key] = ['label' => esc_html($name)];
-            }
+				$controls[ $key ] = array( 'label' => esc_html( $name ) );
+			}
 
-            return $controls;
-        }
+			return $controls;
+		}
 
-        private function get_registered_categories(): array
-        {
-            $categories_object = Categories::instance();
+		private function get_registered_categories(): array {
+			$categories_object = Categories::instance();
 
-            $categories = $categories_object->get_categories();
+			$categories = $categories_object->get_categories();
 
-            $reigster_categories = array();
+			$reigster_categories = array();
 
-            foreach ($categories as $categorie) {
-                if (!$categorie instanceof Category_Base) {
-                    continue;
-                }
+			foreach ( $categories as $categorie ) {
+				if ( ! $categorie instanceof Category_Base ) {
+					continue;
+				}
 
-                $categorie_id = $categorie->get_id();
-                $categorie_name = $categorie->get_name();
-                $categorie_icon = $categorie->get_icon();
+				$categorie_id   = $categorie->get_id();
+				$categorie_name = $categorie->get_name();
+				$categorie_icon = $categorie->get_icon();
 
-                $reigster_categories[$categorie_id] = array('name' => $categorie_name, 'icon' => $categorie_icon);
-            }
+				$reigster_categories[ $categorie_id ] = array(
+					'name' => $categorie_name,
+					'icon' => $categorie_icon,
+				);
+			}
 
-            return $reigster_categories;
-        }
+			return $reigster_categories;
+		}
 
-        public function localize_i18n_strings($strings): array
-        {
-            $localize_strings = [
-                'exit' => __('Exit', 'smart-form-builder-by-dragwyb'),
-                'submit' => __('Submit', 'smart-form-builder-by-dragwyb'),
-                'fields' => __('Fields', 'smart-form-builder-by-dragwyb'),
-                'fieldSettings' => __('Field Settings', 'smart-form-builder-by-dragwyb'),
-                'formSettings' => __('Form Settings', 'smart-form-builder-by-dragwyb'),
-                'save' => __('Save Form', 'smart-form-builder-by-dragwyb'),
-                'preview' => __('Preview', 'smart-form-builder-by-dragwyb'),
-                'formTitle' => __('Form Title', 'smart-form-builder-by-dragwyb'),
-                'settings' => __('Settings', 'smart-form-builder-by-dragwyb'),
-                'general' => __('General', 'smart-form-builder-by-dragwyb'),
-                'style' => __('Style', 'smart-form-builder-by-dragwyb'),
-                'advance' => __('Advance', 'smart-form-builder-by-dragwyb'),
-                'display' => __('Display', 'smart-form-builder-by-dragwyb'),
-                'validation' => __('Validation', 'smart-form-builder-by-dragwyb'),
-                'notifications' => __('Notifications', 'smart-form-builder-by-dragwyb'),
-                'confirmations' => __('Confirmations', 'smart-form-builder-by-dragwyb'),
-                'confirmation_email' => __('Confirmation Email', 'smart-form-builder-by-dragwyb'),
-                'confirmation_message' => __('Confirmation Message', 'smart-form-builder-by-dragwyb'),
-                'confirmation_subject' => __('Confirmation Subject', 'smart-form-builder-by-dragwyb'),
-                'confirmation_message' => __('Confirmation Message', 'smart-form-builder-by-dragwyb'),
-                'emptyForm' => __("Start building your form by dragging fields from the sidebar or simply click to add them.", 'smart-form-builder-by-dragwyb')
-            ];
+		public function localize_i18n_strings( $strings ): array {
+			$localize_strings = array(
+				'exit'                 => __( 'Exit', 'smart-form-builder-by-dragwyb' ),
+				'submit'               => __( 'Submit', 'smart-form-builder-by-dragwyb' ),
+				'fields'               => __( 'Fields', 'smart-form-builder-by-dragwyb' ),
+				'fieldSettings'        => __( 'Field Settings', 'smart-form-builder-by-dragwyb' ),
+				'formSettings'         => __( 'Form Settings', 'smart-form-builder-by-dragwyb' ),
+				'save'                 => __( 'Save Form', 'smart-form-builder-by-dragwyb' ),
+				'preview'              => __( 'Preview', 'smart-form-builder-by-dragwyb' ),
+				'formTitle'            => __( 'Form Title', 'smart-form-builder-by-dragwyb' ),
+				'settings'             => __( 'Settings', 'smart-form-builder-by-dragwyb' ),
+				'general'              => __( 'General', 'smart-form-builder-by-dragwyb' ),
+				'style'                => __( 'Style', 'smart-form-builder-by-dragwyb' ),
+				'advance'              => __( 'Advance', 'smart-form-builder-by-dragwyb' ),
+				'display'              => __( 'Display', 'smart-form-builder-by-dragwyb' ),
+				'validation'           => __( 'Validation', 'smart-form-builder-by-dragwyb' ),
+				'notifications'        => __( 'Notifications', 'smart-form-builder-by-dragwyb' ),
+				'confirmations'        => __( 'Confirmations', 'smart-form-builder-by-dragwyb' ),
+				'confirmation_email'   => __( 'Confirmation Email', 'smart-form-builder-by-dragwyb' ),
+				'confirmation_message' => __( 'Confirmation Message', 'smart-form-builder-by-dragwyb' ),
+				'confirmation_subject' => __( 'Confirmation Subject', 'smart-form-builder-by-dragwyb' ),
+				'confirmation_message' => __( 'Confirmation Message', 'smart-form-builder-by-dragwyb' ),
+				'emptyForm'            => __( 'Start building your form by dragging fields from the sidebar or simply click to add them.', 'smart-form-builder-by-dragwyb' ),
+			);
 
-            return array_merge($localize_strings, $strings);
-        }
-    }
+			return array_merge( $localize_strings, $strings );
+		}
+	}
 }

@@ -15,439 +15,426 @@ use Dragwyb\Form_Builder\Includes\Frontend\Form_Preview;
  *
  * @since 1.8.6
  */
-class List_Table extends WP_List_Table
-{
+class List_Table extends WP_List_Table {
 
-    public $per_page;
-    private $count;
-    private $view;
-    private string $upload_dir;
 
-    /**
-     * Primary class constructor.
-     *
-     * @since 1.8.6
-     */
-    public function __construct()
-    {
-        parent::__construct(
-            [
-                'singular' => 'dragwyb-form',
-                'plural'   => 'dragwyb-forms',
-                'ajax'     => false,
-            ]
-        );
+	public $per_page;
+	private $count;
+	private $view;
+	private string $upload_dir;
 
-        $this->per_page = (int) apply_filters(DRAGWYB_PREFIX . '_overview_per_page', 20);
+	/**
+	 * Primary class constructor.
+	 *
+	 * @since 1.8.6
+	 */
+	public function __construct() {
+		parent::__construct(
+			array(
+				'singular' => 'dragwyb-form',
+				'plural'   => 'dragwyb-forms',
+				'ajax'     => false,
+			)
+		);
 
-        $upload_info = wp_upload_dir();
-        // Create a specific folder for your plugin's CSS
-        $this->upload_dir = $upload_info['basedir'] . '/dragwyb-forms/css/';
-    }
+		$this->per_page = (int) apply_filters( DRAGWYB_PREFIX . '_overview_per_page', 20 );
 
-    /**
-     * Get the instance of a class and store it in itself.
-     *
-     * @since 1.8.6
-     */
-    public static function get_instance()
-    {
-        static $instance;
+		$upload_info = wp_upload_dir();
+		// Create a specific folder for your plugin's CSS
+		$this->upload_dir = $upload_info['basedir'] . '/dragwyb-forms/css/';
+	}
 
-        if (! $instance) {
-            $instance = new self();
-        }
+	/**
+	 * Get the instance of a class and store it in itself.
+	 *
+	 * @since 1.8.6
+	 */
+	public static function get_instance() {
+		static $instance;
 
-        return $instance;
-    }
+		if ( ! $instance ) {
+			$instance = new self();
+		}
 
-    /**
-     * Retrieve the table columns.
-     *
-     * @since 1.8.6
-     *
-     * @return array
-     */
-    public function get_columns()
-    {
-        $columns = array(
-            'cb'       => '<input type="checkbox" />', // Required for bulk actions
-            'name' => 'Name',
-            'author' => 'Author',
-            'shortcode' => 'Shortcode',
-            'id' => 'ID',
-            'clean_cache' => 'Clean Cache',
-            'date' => 'Date'
-        );
+		return $instance;
+	}
 
-        // Modify columns via a filter
-        $columns = apply_filters('dragwyb_form_overview_columns', $columns);
+	/**
+	 * Retrieve the table columns.
+	 *
+	 * @since 1.8.6
+	 *
+	 * @return array
+	 */
+	public function get_columns() {
+		$columns = array(
+			'cb'          => '<input type="checkbox" />', // Required for bulk actions
+			'name'        => 'Name',
+			'author'      => 'Author',
+			'shortcode'   => 'Shortcode',
+			'id'          => 'ID',
+			'clean_cache' => 'Clean Cache',
+			'date'        => 'Date',
+		);
 
-        return $columns;
-    }
+		// Modify columns via a filter
+		$columns = apply_filters( 'dragwyb_form_overview_columns', $columns );
 
-    /**
-     * Render the checkbox column.
-     *
-     * @since 1.8.6
-     *
-     * @param WP_Post $form Form.
-     *
-     * @return string
-     */
-    public function column_cb($form)
-    {
-        return sprintf(
-            '<input type="checkbox" name="post[]" value="%d" />',
-            $form->ID
-        );
-    }
+		return $columns;
+	}
 
-    /**
-     * Render the columns.
-     *
-     * @since 1.8.6
-     *
-     * @param WP_Post $form        CPT object as a form representation.
-     * @param string  $column_name Column Name.
-     *
-     * @return string
-     */
-    public function column_default($form, $column_name)
-    {
-        switch ($column_name) {
-            case 'id':
-                $value = $form->ID;
-                break;
+	/**
+	 * Render the checkbox column.
+	 *
+	 * @since 1.8.6
+	 *
+	 * @param WP_Post $form Form.
+	 *
+	 * @return string
+	 */
+	public function column_cb( $form ) {
+		return sprintf(
+			'<input type="checkbox" name="post[]" value="%d" />',
+			$form->ID
+		);
+	}
 
-            case 'shortcode':
-                $value = esc_html('[' . DRAGWYB_PREFIX . '-form id="' . $form->ID . '"]');
-                break;
+	/**
+	 * Render the columns.
+	 *
+	 * @since 1.8.6
+	 *
+	 * @param WP_Post $form        CPT object as a form representation.
+	 * @param string  $column_name Column Name.
+	 *
+	 * @return string
+	 */
+	public function column_default( $form, $column_name ) {
+		switch ( $column_name ) {
+			case 'id':
+				$value = $form->ID;
+				break;
 
-            case 'created':
-                $value = get_the_date('Y-m-d', $form);
-                break;
+			case 'shortcode':
+				$value = esc_html( '[' . DRAGWYB_PREFIX . '-form id="' . $form->ID . '"]' );
+				break;
 
-            case 'entries':
-                $entry_count = get_post_meta($form->ID, '_form_entries_count', true) ?: 0;
-                $value = '<span class="form-entries-count">' . esc_html($entry_count) . '</span>';
-                break;
+			case 'created':
+				$value = get_the_date( 'Y-m-d', $form );
+				break;
 
-            case 'date':
-                $value = get_the_modified_date('Y-m-d', $form);
-                break;
+			case 'entries':
+				$entry_count = get_post_meta( $form->ID, '_form_entries_count', true ) ?: 0;
+				$value       = '<span class="form-entries-count">' . esc_html( $entry_count ) . '</span>';
+				break;
 
-            case 'author':
-                $author = get_user_by('ID', $form->post_author);
-                $value = $author ? esc_html($author->display_name) : '';
-                break;
+			case 'date':
+				$value = get_the_modified_date( 'Y-m-d', $form );
+				break;
 
-            case 'clean_cache':
-                if ($this->css_cache_exist($form->ID)) {
-                    $value = sprintf(
-                        '<button type="button" id="%s" data-key="%s" data-clean-key="%s" class="button">%s</button>',
-                        esc_attr('clean-cache-' . (int) $form->ID),
-                        esc_attr(wp_create_nonce(sanitize_text_field($form->post_type) . (int) $form->ID . '-clean-cache')),
-                        esc_attr(wp_create_nonce('delete_cache_nonce')),
-                        esc_html__('Clean Cache', 'smart-form-builder-by-dragwyb')
-                    );
-                } else {
-                    $value = sprintf(
-                        '<button type="button" id="%s" disabled class="button">%s</button>',
-                        esc_attr('clean-cache-' . (int) $form->ID),
-                        esc_html__('Clean Cache', 'smart-form-builder-by-dragwyb')
-                    );
-                }
-                break;
+			case 'author':
+				$author = get_user_by( 'ID', $form->post_author );
+				$value  = $author ? esc_html( $author->display_name ) : '';
+				break;
 
-            default:
-                $value = '';
-        }
+			case 'clean_cache':
+				if ( $this->css_cache_exist( $form->ID ) ) {
+					$value = sprintf(
+						'<button type="button" id="%s" data-key="%s" data-clean-key="%s" class="button">%s</button>',
+						esc_attr( 'clean-cache-' . (int) $form->ID ),
+						esc_attr( wp_create_nonce( sanitize_text_field( $form->post_type ) . (int) $form->ID . '-clean-cache' ) ),
+						esc_attr( wp_create_nonce( 'delete_cache_nonce' ) ),
+						esc_html__( 'Clean Cache', 'smart-form-builder-by-dragwyb' )
+					);
+				} else {
+					$value = sprintf(
+						'<button type="button" id="%s" disabled class="button">%s</button>',
+						esc_attr( 'clean-cache-' . (int) $form->ID ),
+						esc_html__( 'Clean Cache', 'smart-form-builder-by-dragwyb' )
+					);
+				}
+				break;
 
-        return apply_filters('dragwyb_form_overview_column_value', $value, $form, $column_name);
-    }
+			default:
+				$value = '';
+		}
 
-    private function css_cache_exist($form_id)
-    {
-        $unique = get_post_meta($form_id, '_dragwyb_form_assets_id', true) ?: 0;
-        $file_name = 'form-' . $form_id . '-' . $unique . '.css';
+		return apply_filters( 'dragwyb_form_overview_column_value', $value, $form, $column_name );
+	}
 
-        $file_path = $this->upload_dir . $file_name;
-        return file_exists($file_path);
-    }
+	private function css_cache_exist( $form_id ) {
+		$unique    = get_post_meta( $form_id, '_dragwyb_form_assets_id', true ) ?: 0;
+		$file_name = 'form-' . $form_id . '-' . $unique . '.css';
 
-    /**
-     * Render the form name column with action links.
-     *
-     * @since 1.8.6
-     *
-     * @param WP_Post $form Form.
-     *
-     * @return string
-     */
-    public function column_name($form)
-    {
-        $title = $this->get_column_name_title($form);
-        $states = _post_states($form, false);
-        $actions = $this->get_column_name_row_actions($form);
+		$file_path = $this->upload_dir . $file_name;
+		return file_exists( $file_path );
+	}
 
-        return $title . $states . $actions;
-    }
+	/**
+	 * Render the form name column with action links.
+	 *
+	 * @since 1.8.6
+	 *
+	 * @param WP_Post $form Form.
+	 *
+	 * @return string
+	 */
+	public function column_name( $form ) {
+		$title   = $this->get_column_name_title( $form );
+		$states  = _post_states( $form, false );
+		$actions = $this->get_column_name_row_actions( $form );
 
-    /**
-     * Get the form name HTML for the form name column.
-     *
-     * @since 1.8.6
-     *
-     * @param WP_Post $form Form object.
-     *
-     * @return string
-     */
-    protected function get_column_name_title($form)
-    {
-        $title = ! empty($form->post_title) ? $form->post_title : $form->post_name;
+		return $title . $states . $actions;
+	}
 
-        if ($this->view === 'trash') {
-            return esc_html($title);
-        }
+	/**
+	 * Get the form name HTML for the form name column.
+	 *
+	 * @since 1.8.6
+	 *
+	 * @param WP_Post $form Form object.
+	 *
+	 * @return string
+	 */
+	protected function get_column_name_title( $form ) {
+		$title = ! empty( $form->post_title ) ? $form->post_title : $form->post_name;
 
-        // Generate preview and edit links for users with appropriate permissions
-        $edit_url = get_edit_post_link($form->ID);
-        $value = sprintf(
-            '<a href="%s" target="_blank">%s</a>',
-            esc_url($this->get_preview_url($form->ID)),
-            esc_html($title)
-        );
+		if ( $this->view === 'trash' ) {
+			return esc_html( $title );
+		}
 
-        if (current_user_can('edit_post', $form->ID)) {
-            $value = sprintf(
-                '<a href="%s" target="_blank">%s</a>',
-                esc_url($edit_url),
-                esc_html($title)
-            );
-        }
+		// Generate preview and edit links for users with appropriate permissions
+		$edit_url = get_edit_post_link( $form->ID );
+		$value    = sprintf(
+			'<a href="%s" target="_blank">%s</a>',
+			esc_url( $this->get_preview_url( $form->ID ) ),
+			esc_html( $title )
+		);
 
-        return $value;
-    }
+		if ( current_user_can( 'edit_post', $form->ID ) ) {
+			$value = sprintf(
+				'<a href="%s" target="_blank">%s</a>',
+				esc_url( $edit_url ),
+				esc_html( $title )
+			);
+		}
 
-    private function get_preview_url(int $id)
-    {
-        return home_url('/?post_type=' . sanitize_text_field(Dragwyb_Post::POST_TYPE) . '&p=' . $id . '&preview_id=' . Form_Preview::generate_key($id));
-    }
+		return $value;
+	}
 
-    /**
-     * Get the row actions HTML for the form name column.
-     *
-     * @since 1.8.6
-     *
-     * @param WP_Post $form Form object.
-     *
-     * @return string
-     */
-    protected function get_column_name_row_actions($form)
-    {
-        $actions = [];
-        $confirm_message = sprintf(
-            /* translators: %s is the form title and ID. */
-            __('Are you sure you want to delete %s form?', 'smart-form-builder-by-dragwyb'),
-            $form->post_title . '(' . $form->ID . ')'
-        );
-        $confirm_attr = esc_attr('return confirm("' . esc_js($confirm_message) . '");');
+	private function get_preview_url( int $id ) {
+		return home_url( '/?post_type=' . sanitize_text_field( Dragwyb_Post::POST_TYPE ) . '&p=' . $id . '&preview_id=' . Form_Preview::generate_key( $id ) );
+	}
 
-        if ('trash' === $form->post_status) {
-            $actions['untrash'] = sprintf(
-                '<a href="%s" class="submitdelete" onclick="%s">%s</a>',
-                esc_url(wp_nonce_url("post.php?action=untrash&post={$form->ID}", 'untrash-post_' . $form->ID)),
-                $confirm_attr,
-                esc_html__('Restore', 'smart-form-builder-by-dragwyb')
-            );
-            $actions['delete'] = sprintf(
-                '<a href="%s" class="submitdelete" onclick="%s">%s</a>',
-                esc_url(wp_nonce_url("post.php?action=delete&post={$form->ID}", 'delete-post_' . $form->ID)),
-                $confirm_attr,
-                esc_html__('Delete', 'smart-form-builder-by-dragwyb')
-            );
-        } else {
-            $actions['edit'] = '<a href="?page=dragwyb-form-builder&form_id=' . (int) esc_attr($form->ID) . '">Edit</a>';
-            $actions['view'] = '<a href="' . esc_url($this->get_preview_url($form->ID)) . '" target="_blank">View</a>';
-            $actions['trash'] = sprintf(
-                '<a href="%s" class="submitdelete" onclick="%s">%s</a>',
-                esc_url(wp_nonce_url("post.php?action=trash&post={$form->ID}", 'trash-post_' . $form->ID)),
-                $confirm_attr,
-                esc_html__('Trash', 'smart-form-builder-by-dragwyb')
-            );
-        }
+	/**
+	 * Get the row actions HTML for the form name column.
+	 *
+	 * @since 1.8.6
+	 *
+	 * @param WP_Post $form Form object.
+	 *
+	 * @return string
+	 */
+	protected function get_column_name_row_actions( $form ) {
+		$actions         = array();
+		$confirm_message = sprintf(
+			/* translators: %s is the form title and ID. */
+			__( 'Are you sure you want to delete %s form?', 'smart-form-builder-by-dragwyb' ),
+			$form->post_title . '(' . $form->ID . ')'
+		);
+		$confirm_attr = esc_attr( 'return confirm("' . esc_js( $confirm_message ) . '");' );
 
-        // Add more actions if necessary, such as delete, etc.
+		if ( 'trash' === $form->post_status ) {
+			$actions['untrash'] = sprintf(
+				'<a href="%s" class="submitdelete" onclick="%s">%s</a>',
+				esc_url( wp_nonce_url( "post.php?action=untrash&post={$form->ID}", 'untrash-post_' . $form->ID ) ),
+				$confirm_attr,
+				esc_html__( 'Restore', 'smart-form-builder-by-dragwyb' )
+			);
+			$actions['delete']  = sprintf(
+				'<a href="%s" class="submitdelete" onclick="%s">%s</a>',
+				esc_url( wp_nonce_url( "post.php?action=delete&post={$form->ID}", 'delete-post_' . $form->ID ) ),
+				$confirm_attr,
+				esc_html__( 'Delete', 'smart-form-builder-by-dragwyb' )
+			);
+		} else {
+			$actions['edit']  = '<a href="?page=dragwyb-form-builder&form_id=' . (int) esc_attr( $form->ID ) . '">Edit</a>';
+			$actions['view']  = '<a href="' . esc_url( $this->get_preview_url( $form->ID ) ) . '" target="_blank">View</a>';
+			$actions['trash'] = sprintf(
+				'<a href="%s" class="submitdelete" onclick="%s">%s</a>',
+				esc_url( wp_nonce_url( "post.php?action=trash&post={$form->ID}", 'trash-post_' . $form->ID ) ),
+				$confirm_attr,
+				esc_html__( 'Trash', 'smart-form-builder-by-dragwyb' )
+			);
+		}
 
-        return $this->row_actions($actions);
-    }
+		// Add more actions if necessary, such as delete, etc.
 
-    /**
-     * Define bulk actions available for our table listing.
-     *
-     * @since 1.8.6
-     *
-     * @return array
-     */
-    public function get_bulk_actions()
-    {
+		return $this->row_actions( $actions );
+	}
+
+	/**
+	 * Define bulk actions available for our table listing.
+	 *
+	 * @since 1.8.6
+	 *
+	 * @return array
+	 */
+	public function get_bulk_actions() {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- for post status check
-        if (isset($_REQUEST['post_status']) && $_REQUEST['post_status'] === 'trash') {
-            return [
-                'delete' => 'Delete Permanently',
-                'untrash' => 'Restore',
-            ];
-        }
+		if ( isset( $_REQUEST['post_status'] ) && $_REQUEST['post_status'] === 'trash' ) {
+			return array(
+				'delete'  => 'Delete Permanently',
+				'untrash' => 'Restore',
+			);
+		}
 
-        return [
-            'trash' => 'Move to Trash',
-        ];
-    }
+		return array(
+			'trash' => 'Move to Trash',
+		);
+	}
 
 
-    public function get_views()
-    {
-        $statuses = [
-            'all'      => ['label' => 'All'],
-            'publish'  => ['label' => 'Published'],
-            'draft'    => ['label' => 'Draft'],
-            'trash'    => ['label' => 'Trash'],
-        ];
+	public function get_views() {
+		$statuses = array(
+			'all'     => array( 'label' => 'All' ),
+			'publish' => array( 'label' => 'Published' ),
+			'draft'   => array( 'label' => 'Draft' ),
+			'trash'   => array( 'label' => 'Trash' ),
+		);
 
-        $views = [];
+		$views = array();
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- for post status check
-        $current = isset($_REQUEST['post_status']) ? sanitize_text_field(wp_unslash($_REQUEST['post_status'])) : 'all';
+		$current = isset( $_REQUEST['post_status'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['post_status'] ) ) : 'all';
 
-        // Get post counts
-        $post_counts = wp_count_posts(Dragwyb_Post::POST_TYPE);
+		// Get post counts
+		$post_counts = wp_count_posts( Dragwyb_Post::POST_TYPE );
 
-        // Build each view link
-        foreach ($statuses as $key => $val) {
-            // Get the count for the status
-            if ($key === 'all') {
-                $count = ($post_counts->publish ?? 0) + ($post_counts->draft ?? 0);
-                $url = remove_query_arg(array('post_status', 'paged', 's'));
-            } else {
-                $count = $post_counts->{$key} ?? 0;
-                $url = add_query_arg('post_status', $key);
-                $url = remove_query_arg(array('paged', 's'), $url);
-            }
+		// Build each view link
+		foreach ( $statuses as $key => $val ) {
+			// Get the count for the status
+			if ( $key === 'all' ) {
+				$count = ( $post_counts->publish ?? 0 ) + ( $post_counts->draft ?? 0 );
+				$url   = remove_query_arg( array( 'post_status', 'paged', 's' ) );
+			} else {
+				$count = $post_counts->{$key} ?? 0;
+				$url   = add_query_arg( 'post_status', $key );
+				$url   = remove_query_arg( array( 'paged', 's' ), $url );
+			}
 
-            if ($count > 0) {
-                $views[$key] = sprintf(
-                    '<a href="%s"%s>%s <span class="count">(%d)</span></a>',
-                    esc_url($url),
-                    $current === $key ? ' class="current"' : '',
-                    esc_html($val['label']),
-                    absint($count)
-                );
-            }
-        }
+			if ( $count > 0 ) {
+				$views[ $key ] = sprintf(
+					'<a href="%s"%s>%s <span class="count">(%d)</span></a>',
+					esc_url( $url ),
+					$current === $key ? ' class="current"' : '',
+					esc_html( $val['label'] ),
+					absint( $count )
+				);
+			}
+		}
 
-        return $views;
-    }
+		return $views;
+	}
 
-    /**
-     * Fetch and set up the final data for the table.
-     *
-     * @since 1.8.6
-     */
-    public function prepare_items()
-    {
-        // 1. Setup columns
-        $columns  = $this->get_columns();
-        $hidden   = get_hidden_columns($this->screen);
-        $sortable = [
-            'id'      => ['ID', false],
-            'name'    => ['title', false],
-            'author'  => ['author', false],
-            'created' => ['date', false],
-        ];
-        $this->_column_headers = [$columns, $hidden, $sortable];
+	/**
+	 * Fetch and set up the final data for the table.
+	 *
+	 * @since 1.8.6
+	 */
+	public function prepare_items() {
+		// 1. Setup columns
+		$columns               = $this->get_columns();
+		$hidden                = get_hidden_columns( $this->screen );
+		$sortable              = array(
+			'id'      => array( 'ID', false ),
+			'name'    => array( 'title', false ),
+			'author'  => array( 'author', false ),
+			'created' => array( 'date', false ),
+		);
+		$this->_column_headers = array( $columns, $hidden, $sortable );
 
-        // 2. Setup pagination, sorting, and status filters
-        $current_page = $this->get_pagenum();
-        $per_page     = $this->get_items_per_page('dragwyb_forms_per_page', $this->per_page);
+		// 2. Setup pagination, sorting, and status filters
+		$current_page = $this->get_pagenum();
+		$per_page     = $this->get_items_per_page( 'dragwyb_forms_per_page', $this->per_page );
 
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- for order check
-        $orderby      = sanitize_key(wp_unslash($_GET['orderby'] ?? 'ID'));
+		$orderby = sanitize_key( wp_unslash( $_GET['orderby'] ?? 'ID' ) );
 
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- for order check
-        $order        = strtoupper(sanitize_text_field(wp_unslash($_GET['order'] ?? 'DESC')));
-        $order        = in_array($order, ['ASC', 'DESC'], true) ? $order : 'DESC';
+		$order = strtoupper( sanitize_text_field( wp_unslash( $_GET['order'] ?? 'DESC' ) ) );
+		$order = in_array( $order, array( 'ASC', 'DESC' ), true ) ? $order : 'DESC';
 
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- for post status check
-        $status = isset($_GET['post_status']) ? sanitize_key(wp_unslash($_GET['post_status'])) : 'all';
+		$status = isset( $_GET['post_status'] ) ? sanitize_key( wp_unslash( $_GET['post_status'] ) ) : 'all';
 
-        switch ($status) {
-            case 'publish':
-            case 'draft':
-            case 'trash':
-                $post_status = $status;
-                break;
+		switch ( $status ) {
+			case 'publish':
+			case 'draft':
+			case 'trash':
+				$post_status = $status;
+				break;
 
-            default:
-                $post_status = array('publish', 'draft'); // ✅ Compatible syntax for all versions
-                break;
-        }
+			default:
+				$post_status = array( 'publish', 'draft' ); // ✅ Compatible syntax for all versions
+				break;
+		}
 
-        // 4. Query the forms
-        $args = [
-            'post_type'      => Dragwyb_Post::POST_TYPE,
-            'post_status'    => $post_status,
-            'orderby'        => $orderby,
-            'order'          => $order,
-            'paged'          => $current_page,
-            'posts_per_page' => $per_page,
-            'no_found_rows'  => false, // needed for pagination
-        ];
+		// 4. Query the forms
+		$args = array(
+			'post_type'      => Dragwyb_Post::POST_TYPE,
+			'post_status'    => $post_status,
+			'orderby'        => $orderby,
+			'order'          => $order,
+			'paged'          => $current_page,
+			'posts_per_page' => $per_page,
+			'no_found_rows'  => false, // needed for pagination
+		);
 
-        $this->items = get_posts($args);
+		$this->items = get_posts( $args );
 
-        $post_counts = wp_count_posts(Dragwyb_Post::POST_TYPE);
+		$post_counts = wp_count_posts( Dragwyb_Post::POST_TYPE );
 
-        $total_items = 0;
+		$total_items = 0;
 
-        switch ($status) {
-            case 'all':
-                $total_items = ($post_counts->publish ?? 0) + ($post_counts->draft ?? 0);
-                break;
-            default:
-                $total_items = $post_counts->{$status} ?? 0;
-                break;
-        }
+		switch ( $status ) {
+			case 'all':
+				$total_items = ( $post_counts->publish ?? 0 ) + ( $post_counts->draft ?? 0 );
+				break;
+			default:
+				$total_items = $post_counts->{$status} ?? 0;
+				break;
+		}
 
-        $this->set_pagination_args([
-            'total_items' => $total_items,
-            'per_page'    => $per_page,
-            'total_pages' => ceil($total_items / $per_page),
-        ]);
-    }
+		$this->set_pagination_args(
+			array(
+				'total_items' => $total_items,
+				'per_page'    => $per_page,
+				'total_pages' => ceil( $total_items / $per_page ),
+			)
+		);
+	}
 
-    /**
-     * Display the pagination.
-     *
-     * @since 1.8.6
-     *
-     * @param string $which The location of the table pagination: 'top' or 'bottom'.
-     */
-    protected function pagination($which)
-    {
-        if ($this->has_items()) {
-            parent::pagination($which);
-        } else {
-            echo '<div class="tablenav-pages one-page"><span class="displaying-num">0 items</span></div>';
-        }
-    }
+	/**
+	 * Display the pagination.
+	 *
+	 * @since 1.8.6
+	 *
+	 * @param string $which The location of the table pagination: 'top' or 'bottom'.
+	 */
+	protected function pagination( $which ) {
+		if ( $this->has_items() ) {
+			parent::pagination( $which );
+		} else {
+			echo '<div class="tablenav-pages one-page"><span class="displaying-num">0 items</span></div>';
+		}
+	}
 
-    /**
-     * Message to be displayed when there are no forms.
-     *
-     * @since 1.8.6
-     */
-    public function no_items()
-    {
-        esc_html_e('No forms found.', 'smart-form-builder-by-dragwyb');
-    }
+	/**
+	 * Message to be displayed when there are no forms.
+	 *
+	 * @since 1.8.6
+	 */
+	public function no_items() {
+		esc_html_e( 'No forms found.', 'smart-form-builder-by-dragwyb' );
+	}
 }
