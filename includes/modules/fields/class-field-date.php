@@ -201,27 +201,49 @@ class Field_Date extends Field_Base {
 	}
 
 	protected function render_field() {
-		$settings   = $this->get_field_settings();
-		$field_data = $this->get_field_settings();
-		$id         = $this->get_the_id();
-		$field_id   = $this->field_key_exist( $settings, 'field_id', uniqid( 'date_' ) );
-		$required   = ! empty( $field_data['required'] );
+		$settings    = $this->get_field_settings();
+		$id          = $this->get_the_id();
+		$field_id    = $this->field_key_exist( $settings, 'field_id', uniqid( 'date_' ) );
+		$label       = $this->field_key_exist( $settings, 'label', 'Select Date' );
+		$placeholder = $this->field_key_exist( $settings, 'placeholder', 'YYYY-MM-DD' );
+		$required    = $this->field_key_exist( $settings, 'required', '' ) === 'yes';
+		$classes     = $this->field_key_exist( $settings, 'css_classes', '' );
+
+		$this->add_field_attributes(
+			'wrapper',
+			array(
+				'id'    => $this->field_wrapper_id( $id ),
+				'class' => $this->field_wrapper_class( $classes ) . ' dragwyb-no-float',
+			)
+		);
+
+		$this->add_field_attributes(
+			'input',
+			array(
+				'type'        => 'date',
+				'id'          => $field_id,
+				'name'        => $field_id,
+				'placeholder' => $placeholder,
+				'class'       => 'dragwyb-input',
+			)
+		);
 		?>
-		<div id="<?php echo esc_attr( $this->field_wrapper_id( $id ) ); ?>" class="<?php echo esc_attr( $this->field_wrapper_class( $classes ) ); ?> dragwyb-no-float">
+		<div <?php $this->render_field_attributes( 'wrapper' ); ?>>
 			<?php if ( ! empty( $label ) ) : ?>
 				<label for="<?php echo esc_attr( $field_id ); ?>" class="dragwyb-label">
 					<?php echo esc_html( $label ); ?>
-					<?php
-					if ( $required ) :
-						?>
-						<span class="required">*</span><?php endif; ?>
+					<?php if ( $required ) : ?>
+						<span class="required">*</span>
+					<?php endif; ?>
 				</label>
 			<?php endif; ?>
 
-			<input type="date" id="<?php echo esc_attr( $field_id ); ?>" name="<?php echo esc_attr( $field_id ); ?>"
-				placeholder="<?php echo esc_attr( $placeholder ); ?>"
-				<?php echo $required ? 'required' : ''; ?>
-				class="dragwyb-input" />
+			<input 
+			<?php
+			$this->render_field_attributes( 'input' );
+			echo $required ? 'required' : '';
+			?>
+			/>
 		</div>
 
 		<?php
