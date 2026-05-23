@@ -249,8 +249,27 @@ class Field_Captcha extends Field_Base {
 		} elseif ( $captcha_type === 'hcaptcha' && ! empty( $site_key ) ) {
 			wp_enqueue_script( 'hcaptcha', 'https://js.hcaptcha.com/1/api.js?recaptchacompat=off', array(), null, true );
 		}
+
+		$this->add_field_attributes(
+			'wrapper',
+			array(
+				'id'    => $this->field_wrapper_id( $id ),
+				'class' => $this->field_wrapper_class( $classes ) . ' dragwyb-no-float',
+			)
+		);
+
+		$this->add_field_attributes(
+			'input',
+			array(
+				'type'  => 'hidden',
+				'name'  => $field_id,
+				'id'    => $field_id . '_input',
+				'class' => 'dragwyb-captcha-input',
+				'value' => '',
+			)
+		);
 		?>
-		<div id="<?php echo esc_attr( $this->field_wrapper_id( $id ) ); ?>" class="<?php echo esc_attr( $this->field_wrapper_class( $classes ) ); ?> dragwyb-no-float">
+		<div <?php $this->render_field_attributes( 'wrapper' ); ?>>
 			<?php if ( $hide_label !== 'yes' && ! empty( $label ) && $captcha_type !== 'recaptcha_v3' ) : ?>
 				<?php $this->render_field_label( $field_id, $label, false, $settings, $field_id . '_input' ); ?>
 			<?php endif; ?>
@@ -262,7 +281,7 @@ class Field_Captcha extends Field_Base {
 				<?php else : ?>
 					<?php if ( $captcha_type === 'recaptcha_v2' ) : ?>
 						<div class="g-recaptcha" data-sitekey="<?php echo esc_attr( $site_key ); ?>" data-theme="<?php echo esc_attr( $theme ); ?>" data-size="<?php echo esc_attr( $size ); ?>" data-callback="dragwyb_recaptcha_callback_<?php echo esc_js( $field_id ); ?>"></div>
-						<input type="hidden" name="<?php echo esc_attr( $field_id ); ?>" id="<?php echo esc_attr( $field_id ); ?>_input" class="dragwyb-captcha-input" value="">
+						<input <?php $this->render_field_attributes( 'input' ); ?> />
 						<script>
 							function dragwyb_recaptcha_callback_<?php echo esc_js( $field_id ); ?>(response) {
 								var input = document.getElementById('<?php echo esc_js( $field_id ); ?>_input');
@@ -273,7 +292,7 @@ class Field_Captcha extends Field_Base {
 						</script>
 					<?php elseif ( $captcha_type === 'hcaptcha' ) : ?>
 						<div class="h-captcha" data-sitekey="<?php echo esc_attr( $site_key ); ?>" data-theme="<?php echo esc_attr( $theme ); ?>" data-size="<?php echo esc_attr( $size ); ?>" data-callback="dragwyb_hcaptcha_callback_<?php echo esc_js( $field_id ); ?>"></div>
-						<input type="hidden" name="<?php echo esc_attr( $field_id ); ?>" id="<?php echo esc_attr( $field_id ); ?>_input" class="dragwyb-captcha-input" value="">
+						<input <?php $this->render_field_attributes( 'input' ); ?> />
 						<script>
 							function dragwyb_hcaptcha_callback_<?php echo esc_js( $field_id ); ?>(response) {
 								var input = document.getElementById('<?php echo esc_js( $field_id ); ?>_input');
@@ -283,7 +302,7 @@ class Field_Captcha extends Field_Base {
 							}
 						</script>
 					<?php elseif ( $captcha_type === 'recaptcha_v3' ) : ?>
-						<input type="hidden" name="<?php echo esc_attr( $field_id ); ?>" id="<?php echo esc_attr( $field_id ); ?>_input" class="dragwyb-captcha-input" value="">
+						<input <?php $this->render_field_attributes( 'input' ); ?> />
 						<?php if ( $badge_position === 'inline' ) : ?>
 							<style>
 								.grecaptcha-badge {
