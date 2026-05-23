@@ -135,8 +135,16 @@ class Field_Section extends Field_Base {
 		$title       = $this->field_key_exist( $settings, 'title', 'Section Title' );
 		$description = $this->field_key_exist( $settings, 'description', '' );
 		$classes     = $this->field_key_exist( $settings, 'css_classes', '' );
+
+		$this->add_field_attributes(
+			'wrapper',
+			array(
+				'id'    => $this->field_wrapper_id( $id ),
+				'class' => $this->field_wrapper_class( $classes ),
+			)
+		);
 		?>
-		<div id="<?php echo esc_attr( $this->field_wrapper_id( $id ) ); ?>" class="<?php echo esc_attr( $this->field_wrapper_class( $classes ) ); ?>">
+		<div <?php $this->render_field_attributes( 'wrapper' ); ?>>
 			<div class="dragwyb-section-break">
 				<?php if ( ! empty( $title ) ) : ?>
 					<h3 class="dragwyb-section-title"><?php echo esc_html( $title ); ?></h3>
