@@ -239,12 +239,14 @@ class Field_Checkbox extends Field_Base {
 				<div class="dragwyb-options-container <?php echo esc_attr( $layout_class ); ?>">
 					<?php
 					foreach ( $options as $index => $opt ) :
-						$opt_id = $field_id . '_' . $index;
-						if ( ! isset( $opt['option_value'] ) ) {
+						$opt_id   = $field_id . '_' . $index;
+						$opt_attr = $this->field_key_exist( $opt, 'attributes', array() );
+
+						if ( ! isset( $opt_attr['option_value'] ) ) {
 							continue;
 						}
 
-						$label_text = isset( $opt['option_label'] ) ? $opt['option_label'] : '';
+						$label_text = isset( $opt_attr['option_label'] ) ? $opt_attr['option_label'] : '';
 
 						$this->add_field_attributes(
 							"input_{$index}",
@@ -252,7 +254,7 @@ class Field_Checkbox extends Field_Base {
 								'type'  => 'checkbox',
 								'id'    => $opt_id,
 								'name'  => $field_id . '[]',
-								'value' => $opt['option_value'],
+								'value' => $opt_attr['option_value'],
 							)
 						);
 						?>
