@@ -206,19 +206,37 @@ class Field_File extends Field_Base {
 		$help     = $this->field_key_exist( $settings, 'help_text', '' );
 		$required = $this->field_key_exist( $settings, 'required', '' ) === 'yes';
 		$classes  = $this->field_key_exist( $settings, 'css_classes', '' );
+
+		$this->add_field_attributes(
+			'wrapper',
+			array(
+				'id'    => $this->field_wrapper_id( $id ),
+				'class' => $this->field_wrapper_class( $classes ) . ' dragwyb-no-float',
+			)
+		);
+
+		$this->add_field_attributes(
+			'input',
+			array(
+				'type'   => 'file',
+				'id'     => $field_id,
+				'name'   => $field_id,
+				'class'  => 'dragwyb-field-input dragwyb-file-input',
+				'accept' => '.jpg,.jpeg,.png,.pdf,.doc,.docx,.txt',
+			)
+		);
 		?>
-		<div id="<?php echo esc_attr( $this->field_wrapper_id( $id ) ); ?>" class="<?php echo esc_attr( $this->field_wrapper_class( $classes ) ); ?> dragwyb-no-float">
+		<div <?php $this->render_field_attributes( 'wrapper' ); ?>>
 			<div class="dragwyb-input-group dragwyb-file-upload-group">
 				<?php if ( ! empty( $label ) ) : ?>
 					<?php $this->render_field_label( $field_id, $label, $required, $settings ); ?>
 				<?php endif; ?>
-				<input
-					type="file"
-					id="<?php echo esc_attr( $field_id ); ?>"
-					name="<?php echo esc_attr( $field_id ); ?>"
-					class="dragwyb-field-input dragwyb-file-input"
-					accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.txt"
-					<?php echo $required ? 'required' : ''; ?> />
+				<input 
+				<?php
+				$this->render_field_attributes( 'input' );
+				echo $required ? 'required' : '';
+				?>
+				/>
 			</div>
 			<?php if ( ! empty( $help ) ) : ?>
 				<div class="dragwyb-field-help"><?php echo wp_kses_post( $help ); ?></div>
