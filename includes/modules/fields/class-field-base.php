@@ -234,7 +234,12 @@ abstract class Field_Base extends Register_Controls_Base {
 			if ( ! isset( $this->field_attributes[ $key ][ $attr_key ] ) ) {
 				$this->field_attributes[ $key ][ $attr_key ] = array();
 			}
-			$this->field_attributes[ $key ][ $attr_key ][] = $attr_value;
+
+			if ( is_array( $attr_value ) ) {
+				$this->field_attributes[ $key ][ $attr_key ] = array_merge( $this->field_attributes[ $key ][ $attr_key ], $attr_value );
+			} else {
+				$this->field_attributes[ $key ][ $attr_key ][] = $attr_value;
+			}
 		}
 	}
 
