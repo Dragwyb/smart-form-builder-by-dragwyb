@@ -227,7 +227,7 @@ class Field_Checkbox extends Field_Base {
 			'wrapper',
 			array(
 				'id'    => $this->field_wrapper_id( $id ),
-				'class' => $this->field_wrapper_class( $classes ) . ' dragwyb-no-float',
+				'class' => $this->field_wrapper_class( $classes, $settings ) . ' dragwyb-no-float',
 			)
 		);
 

@@ -225,7 +225,7 @@ class Field_Phone extends Field_Base {
 			'wrapper',
 			array(
 				'id'    => $this->field_wrapper_id( $id ),
-				'class' => $this->field_wrapper_class( $classes ),
+				'class' => $this->field_wrapper_class( $classes, $settings ),
 			)
 		);
 
