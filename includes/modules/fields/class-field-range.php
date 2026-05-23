@@ -283,8 +283,30 @@ class Field_Range extends Field_Base {
 		$help     = $this->field_key_exist( $settings, 'help_text', '' );
 		$required = $this->field_key_exist( $settings, 'required', '' ) === 'yes';
 		$classes  = $this->field_key_exist( $settings, 'css_classes', '' );
+
+		$this->add_field_attributes(
+			'wrapper',
+			array(
+				'id'    => $this->field_wrapper_id( $id ),
+				'class' => $this->field_wrapper_class( $classes ) . ' dragwyb-no-float',
+			)
+		);
+
+		$this->add_field_attributes(
+			'input',
+			array(
+				'type'  => 'range',
+				'id'    => $field_id,
+				'name'  => $field_id,
+				'value' => $value,
+				'min'   => $min_val,
+				'max'   => $max_val,
+				'step'  => $step_val,
+				'class' => 'dragwyb-field-input dragwyb-hidden-range',
+			)
+		);
 		?>
-		<div id="<?php echo esc_attr( $this->field_wrapper_id( $id ) ); ?>" class="<?php echo esc_attr( $this->field_wrapper_class( $classes ) ); ?> dragwyb-no-float">
+		<div <?php $this->render_field_attributes( 'wrapper' ); ?>>
 			<div class="dragwyb-input-group">
 				<?php if ( ! empty( $label ) ) : ?>
 					<?php $this->render_field_label( $field_id, $label, $required, $settings ); ?>
@@ -294,16 +316,12 @@ class Field_Range extends Field_Base {
 						<div class="dragwyb-range-progress"></div>
 						<div class="dragwyb-range-thumb"></div>
 					</div>
-					<input
-						type="range"
-						id="<?php echo esc_attr( $field_id ); ?>"
-						name="<?php echo esc_attr( $field_id ); ?>"
-						value="<?php echo esc_attr( $value ); ?>"
-						min="<?php echo esc_attr( $min_val ); ?>"
-						max="<?php echo esc_attr( $max_val ); ?>"
-						step="<?php echo esc_attr( $step_val ); ?>"
-						class="dragwyb-field-input dragwyb-hidden-range"
-						<?php echo $required ? 'required' : ''; ?> />
+					<input 
+					<?php
+					$this->render_field_attributes( 'input' );
+					echo $required ? 'required' : '';
+					?>
+					/>
 				</div>
 			</div>
 			<?php if ( ! empty( $help ) ) : ?>
