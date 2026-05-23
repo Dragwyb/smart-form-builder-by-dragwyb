@@ -296,8 +296,8 @@
             border: none;
             border-bottom: 2px solid var(--dragwyb-input-border-color);
             border-radius: 6px 6px 0 0;
-            padding-top: calc(var(--dragwyb-input-pt) + var(--dragwyb-label-typography-size) + (var(--dragwyb-label-icon-size, var(--dragwyb-input-typography-size)) - var(--dragwyb-input-typography-size)));
-            height: calc(var(--dragwyb-input-pt) + var(--dragwyb-label-typography-size) + 20px + var(--dragwyb-input-typography-size) + (var(--dragwyb-label-icon-size, var(--dragwyb-input-typography-size)) - var(--dragwyb-input-typography-size)) + var(--dragwyb-input-pb));
+            padding-top: calc(var(--dragwyb-input-pt) + var(--dragwyb-label-typography-size));
+            height: calc(var(--dragwyb-input-pt) + var(--dragwyb-label-typography-size) + 20px + var(--dragwyb-input-typography-size) + var(--dragwyb-input-pb));
 
             &:focus {
                 background-color: #e5e7eb;
@@ -310,6 +310,11 @@
                 top: var(--dragwyb-input-pt);
                 transform: translateY(0) scale(0.75);
             }
+        }
+
+        &.dragwyb-float-inside .dragwyb-field-wrapper:not(.dragwyb-no-float):where(.dragwyb-field-label-icon-before, .dragwyb-field-label-icon-after) .dragwyb-field-input {
+            padding-top: calc(var(--dragwyb-input-pt) + var(--dragwyb-label-typography-size) + (var(--dragwyb-label-icon-size, var(--dragwyb-input-typography-size)) - var(--dragwyb-input-typography-size)));
+            height: calc(var(--dragwyb-input-pt) + var(--dragwyb-label-typography-size) + 20px + var(--dragwyb-input-typography-size) + (var(--dragwyb-label-icon-size, var(--dragwyb-input-typography-size)) - var(--dragwyb-input-typography-size)) + var(--dragwyb-input-pb));
         }
     }
 

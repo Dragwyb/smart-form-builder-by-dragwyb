@@ -348,8 +348,20 @@ abstract class Field_Base extends Register_Controls_Base {
 		return $wrapper_id;
 	}
 
-	protected function field_wrapper_class( string $classes = '' ) {
+	protected function field_wrapper_class( string $classes = '', array $settings = array() ) {
 		$wrapper_class = 'dragwyb-field-wrapper dragwyb-' . esc_attr( $this->type ) . '-field';
+
+		$toolbar_settings = $this->get_toolbars_values( 'style' );
+
+		$global_icon_position = $this->field_key_exist( $toolbar_settings, 'label_icon_position', 'before' );
+
+		$field_icon = $this->field_key_exist( $settings, 'label_icon', array() );
+
+		$icon_to_render = ! empty( $field_icon['icon'] ) ? $field_icon : '';
+
+		if ( ! empty( $icon_to_render['icon'] ) ) {
+			$wrapper_class .= ' dragwyb-field-label-icon-' . esc_attr( $global_icon_position );
+		}
 
 		if ( $classes && ! empty( $classes ) ) {
 			$wrapper_class .= ' ' . esc_attr( $classes );
