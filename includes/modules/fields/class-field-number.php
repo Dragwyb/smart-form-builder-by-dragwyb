@@ -206,19 +206,36 @@ class Field_Number extends Field_Base {
 		$required    = $this->field_key_exist( $settings, 'required', '' ) === 'yes';
 		$classes     = $this->field_key_exist( $settings, 'css_classes', '' );
 
+		$this->add_field_attributes(
+			'wrapper',
+			array(
+				'id'    => $this->field_wrapper_id( $id ),
+				'class' => $this->field_wrapper_class( $classes ),
+			)
+		);
+
+		$this->add_field_attributes(
+			'input',
+			array(
+				'type'        => 'number',
+				'id'          => $field_id,
+				'name'        => $field_id,
+				'placeholder' => $placeholder,
+				'min'         => $min,
+				'max'         => $max,
+				'step'        => $step,
+				'class'       => 'dragwyb-field-input',
+			)
+		);
 		?>
-		<div id="<?php echo esc_attr( $this->field_wrapper_id( $id ) ); ?>" class="<?php echo esc_attr( $this->field_wrapper_class( $classes ) ); ?>">
+		<div <?php $this->render_field_attributes( 'wrapper' ); ?>>
 			<div class="dragwyb-input-group">
-				<input
-					type="number"
-					id="<?php echo esc_attr( $field_id ); ?>"
-					name="<?php echo esc_attr( $field_id ); ?>"
-					placeholder="<?php echo esc_attr( $placeholder ); ?>"
-					min="<?php echo esc_attr( $min ); ?>"
-					max="<?php echo esc_attr( $max ); ?>"
-					step="<?php echo esc_attr( $step ); ?>"
-					class="dragwyb-field-input"
-					<?php echo $required ? 'required' : ''; ?> />
+				<input 
+				<?php
+				$this->render_field_attributes( 'input' );
+				echo $required ? 'required' : '';
+				?>
+				/>
 
 				<?php if ( ! empty( $label ) ) : ?>
 					<?php $this->render_field_label( $field_id, $label, $required, $settings ); ?>
