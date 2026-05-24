@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin Name: Smart Form Builder by Dragwyb
+ * Plugin Name: Smart Form Builder
  * Description: Drag and drop form builder for WordPress
  * Version: 1.0.3
  * Author: dragwyb
