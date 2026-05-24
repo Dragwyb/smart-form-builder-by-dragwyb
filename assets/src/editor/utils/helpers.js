@@ -301,7 +301,7 @@ export const updateFieldValue = ({ dispatch, id, value }) => {
     }
 }
 
-export const updateToolbarSetting = ({ id, value, dispatch }) => {
+export const updateToolbarSetting = ({ id, value, selectedToolBarId, dispatch }) => {
 
     if (!DragwybEditor.EditorToolbars || !DragwybEditor.EditorToolbars.toolbars || !DragwybEditor.EditorToolbars.toolbars[id]) {
         return;
@@ -322,7 +322,7 @@ export const updateToolbarSetting = ({ id, value, dispatch }) => {
             required: true,
             functionName: "updateFieldValue"
         });
-        dispatch(updateToolbarSettings(id, value))
+        dispatch(updateToolbarSettings(id, value, selectedToolBarId))
     } catch (e) {
         console.error("Validation failed:", e.message);
     }
@@ -558,6 +558,28 @@ export const deleteStyleSelectors = ({ dispatch, state, key, responsiveType = 'd
     } catch (e) {
         console.error("Validation failed:", e.message);
     }
+}
+
+export const getToolbarSetting = ({ state, toolbar, selectedToolbar = null, settingId, defaultValue = null }) => {
+    if (!settingId) {
+        return defaultValue;
+    }
+
+    let toolbarValue = state.form?.[toolbar];
+
+    if (!toolbarValue) {
+        return defaultValue;
+    }
+
+    if (selectedToolbar && toolbarValue[selectedToolbar]) {
+        toolbarValue = toolbarValue[selectedToolbar];
+    }
+
+    if (!toolbarValue) {
+        return defaultValue;
+    }
+
+    return toolbarValue?.[settingId] ?? defaultValue;
 }
 
 export const compareTwoObjects = ({ obj1, obj2 }) => {

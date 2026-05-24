@@ -127,10 +127,10 @@ export const updateFieldValues = (fieldId, value) => ({
     payload: { fieldId, value }
 });
 
-export const updateToolbarSettings = (id, value) => {
+export const updateToolbarSettings = (id, value, selectedToolBarId) => {
     return {
         type: UPDATE_TOOLBAR_SETTINGS,
-        payload: { id, value }
+        payload: { id, value, selectedToolBarId }
     }
 };
 

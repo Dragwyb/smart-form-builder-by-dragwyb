@@ -35,6 +35,48 @@ class DragwybFieldBase {
         this.attributes = this.field.attributes
     }
 
+    RenderLabel({ id, label, required, settings }) {
+        if (!label || '' === label) {
+            return;
+        }
+
+        const field_icon = settings.label_icon;
+
+        const icon_to_render = field_icon && '' !== field_icon['icon'] ? field_icon : false;
+
+        let field_label_class = 'dragwyb-field-label';
+
+        if (icon_to_render && '' !== icon_to_render['icon']) {
+            field_label_class += ' dragwyb-field-label-icon';
+        }
+
+        return (
+
+            <label htmlFor={id} className={field_label_class}>
+                {
+                    icon_to_render && '' !== icon_to_render['icon'] ?
+                        <>
+                            <DragwybEditor.editor.IconsManager.Render icon={{ type: icon_to_render['type'], icon: icon_to_render['icon'] }} className="dragwyb-label-icon" />
+                            <span className="dragwyb-field-label-text">
+                                {label}
+                                {required === 'yes' &&
+                                    <span className="dragwyb-required">*</span>}
+                            </span>
+                        </> :
+                        <>
+                            {label}
+
+                            {
+                                required === 'yes' &&
+                                <span className="dragwyb-required">*</span>
+                            }
+                        </>
+                }
+
+            </label>
+        )
+    }
+
     updateField(key, value) {
         this.#triggerOnChange(key, value)
     }

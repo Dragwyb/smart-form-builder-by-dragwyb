@@ -6,64 +6,59 @@ namespace Dragwyb\Form_Builder\Includes\Controls\Group;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls\Control_Base;
 
-abstract class Group_Control_Base extends Control_Base
-{
-    protected string $icon = '';
-    protected string $id = '';
-    protected array $data = [];
-    private array $settings_array = [];
+abstract class Group_Control_Base extends Control_Base {
 
-    abstract protected function register_group_controls(): void;
+	protected string $icon        = '';
+	protected string $id          = '';
+	protected array $data         = array();
+	private array $settings_array = array();
 
-    final public function get_icon(): string
-    {
-        return $this->icon;
-    }
+	abstract protected function register_group_controls(): void;
 
-    final public function register_controls(string $id, array $data = []): void
-    {
-        $this->settings_array = [];
-        $this->id = $this->string_sanitize($id);
-        $this->data = $data;
-        $this->register_group_controls();
-    }
+	final public function get_icon(): string {
+		return $this->icon;
+	}
 
-    protected function add_control(string $id, array $data): void
-    {
-        if (isset($this->settings_array[$id])) {
-            return;
-        }
+	final public function register_controls( string $id, array $data = array() ): void {
+		$this->settings_array = array();
+		$this->id             = $this->string_sanitize( $id );
+		$this->data           = $data;
+		$this->register_group_controls();
+	}
 
-        $this->settings_array[$id] = $data;
-    }
+	protected function add_control( string $id, array $data ): void {
+		if ( isset( $this->settings_array[ $id ] ) ) {
+			return;
+		}
 
-    protected function add_responsive_control(string $id, array $data): void
-    {
-        $responsive_types = ['desktop', 'tablet', 'mobile'];
+		$this->settings_array[ $id ] = $data;
+	}
 
-        foreach ($responsive_types as $index => $responsive_type) {
+	protected function add_responsive_control( string $id, array $data ): void {
+		$responsive_types = array( 'desktop', 'tablet', 'mobile' );
 
-            if ('desktop' !== $responsive_type && isset($data[$responsive_type . '_default'])) {
-                $data['default'] = $data[$responsive_type . '_default'];
-            } else if ('desktop' !== $responsive_type) {
-                unset($data['default']);
-            }
+		foreach ( $responsive_types as $index => $responsive_type ) {
 
-            $data['responsive_type'] = $responsive_type;
-            $data['responsive_control'] = true;
+			if ( 'desktop' !== $responsive_type && isset( $data[ $responsive_type . '_default' ] ) ) {
+				$data['default'] = $data[ $responsive_type . '_default' ];
+			} elseif ( 'desktop' !== $responsive_type ) {
+				unset( $data['default'] );
+			}
 
-            $control_id = $id;
+			$data['responsive_type']    = $responsive_type;
+			$data['responsive_control'] = true;
 
-            if ('desktop' !== $responsive_type) {
-                $control_id .= '_' . $responsive_type;
-            }
+			$control_id = $id;
 
-            $this->add_control($control_id, $data);
-        }
-    }
+			if ( 'desktop' !== $responsive_type ) {
+				$control_id .= '_' . $responsive_type;
+			}
 
-    public function get_settings(): array
-    {
-        return $this->settings_array;
-    }
+			$this->add_control( $control_id, $data );
+		}
+	}
+
+	public function get_settings(): array {
+		return $this->settings_array;
+	}
 }

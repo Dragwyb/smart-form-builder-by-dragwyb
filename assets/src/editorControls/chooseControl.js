@@ -43,9 +43,9 @@ export default class ChooseControl extends DragwybEditor.editor.extends.ControlB
                                     title={option.title}
                                 >
                                     {/* Render Icon if it exists */}
-                                    {option.icon && (
-                                        <i className={option.icon} aria-hidden="true"></i>
-                                    )}
+                                    {option.icon &&
+                                        <DragwybEditor.editor.IconsManager.Render icon={option.icon} />
+                                    }
 
                                     {/* Fallback to text if no icon, or for tooltips */}
                                     {!option.icon && <span>{option.title}</span>}

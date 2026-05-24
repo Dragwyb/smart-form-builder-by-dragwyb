@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes;
 
-if (!defined('ABSPATH')) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 use Dragwyb\Form_Builder\Includes\Dragwyb_Form_Builder_Ajax;
@@ -20,113 +20,106 @@ use Dragwyb\Form_Builder\Includes\Frontend\Managers\CSS_Manager;
 use Dragwyb\Form_Builder\Includes\Rest_Routes\Dragwyb_Frontend_Route;
 use Dragwyb\Form_Builder\Includes\Rest_Routes\Dragwyb_Settings_Route;
 
-class Dragwyb_Init
-{
-    private static ?self $instance = null;
+class Dragwyb_Init {
 
-    public static function instance(): self
-    {
-        if (null === self::$instance) {
-            self::$instance = new self();
-        }
+	private static ?self $instance = null;
 
-        return self::$instance;
-    }
+	public static function instance(): self {
+		if ( null === self::$instance ) {
+			self::$instance = new self();
+		}
 
-    public function init(): void
-    {
-        // Initialize admin
-        if (is_admin()) {
-            new Dragwyb_Builder_Editor();
-            new Dragwyb_Pages();
-            new Dragwyb_Post();
-            new Dragwyb_Form_Builder_Ajax();
-            Dragwyb_Settings::instance();
-            Frontend_Render::instance();
-        }
+		return self::$instance;
+	}
 
-        new Dragwyb_Frontend_Route();
-        new Dragwyb_Settings_Route();
-        Form_Preview::instance();
-        Shortcode_Handler::instance();
+	public function init(): void {
+		// Initialize admin
+		if ( is_admin() ) {
+			new Dragwyb_Builder_Editor();
+			new Dragwyb_Pages();
+			new Dragwyb_Post();
+			new Dragwyb_Form_Builder_Ajax();
+			Dragwyb_Settings::instance();
+			Frontend_Render::instance();
+		}
 
-        add_action('admin_init', [$this, 'initial_files']);
+		new Dragwyb_Frontend_Route();
+		new Dragwyb_Settings_Route();
+		Form_Preview::instance();
+		Shortcode_Handler::instance();
 
-        // Enqueue admin assets
-        add_action('admin_enqueue_scripts', [$this, 'admin_assets']);
-    }
+		add_action( 'admin_init', array( $this, 'initial_files' ) );
 
-    public function initial_files()
-    {
-        CSS_Manager::instance();
-    }
+		// Enqueue admin assets
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_assets' ) );
+	}
 
-    public static function core_script()
-    {
+	public function initial_files() {
+		CSS_Manager::instance();
+	}
 
-        $thisObj = self::instance();
+	public static function core_script() {
 
-        $js_assets_info = array(
-            'version' => DRAGWYB_FORM_BUILDER_VERSION,
-            'dependencies' => array('jquery')
-        );
+		$thisObj = self::instance();
 
-        if (file_exists(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/core/core.asset.php')) {
-            $dragwyb_js_assets_info = require_once(DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/core/core.asset.php');
+		$js_assets_info = array(
+			'version'      => DRAGWYB_FORM_BUILDER_VERSION,
+			'dependencies' => array( 'jquery' ),
+		);
 
-            if (isset($dragwyb_js_assets_info['dependencies'])) {
-                $js_assets_info['dependencies'] = array_merge($js_assets_info['dependencies'], $dragwyb_js_assets_info['dependencies']);
-            }
+		if ( file_exists( DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/core/core.asset.php' ) ) {
+			$dragwyb_js_assets_info = require_once DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/core/core.asset.php';
 
-            if (isset($dragwyb_js_assets_info['version'])) {
-                $js_assets_info['version'] = $dragwyb_js_assets_info['version'];
-            }
-        }
+			if ( isset( $dragwyb_js_assets_info['dependencies'] ) ) {
+				$js_assets_info['dependencies'] = array_merge( $js_assets_info['dependencies'], $dragwyb_js_assets_info['dependencies'] );
+			}
 
-        // Enqueue React and dependencies
-        wp_register_script(
-            'dragwyb-form-core',
-            esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/dist/core/core.js'),
-            $js_assets_info['dependencies'],
-            esc_attr($js_assets_info['version']),
-            true
-        );
+			if ( isset( $dragwyb_js_assets_info['version'] ) ) {
+				$js_assets_info['version'] = $dragwyb_js_assets_info['version'];
+			}
+		}
 
-        $thisObj->localize_script();
-    }
+		// Enqueue React and dependencies
+		wp_register_script(
+			'dragwyb-form-core',
+			esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/dist/core/core.js' ),
+			$js_assets_info['dependencies'],
+			esc_attr( $js_assets_info['version'] ),
+			true
+		);
 
-    private function localize_script()
-    {
-        global $post;
+		$thisObj->localize_script();
+	}
 
-        $form_id = $post->ID ?? 0;
+	private function localize_script() {
+		global $post;
 
-        $data = array(
-            'ajaxUrl' => admin_url('admin-ajax.php'),
-            'i18n' => $this->get_translations(),
-        );
+		$form_id = $post->ID ?? 0;
 
-        $data = apply_filters('Dragwyb_Localize_Core_Script', $data);
-        // Localize data
-        wp_localize_script('dragwyb-form-core', 'DragwybBuilder', $data);
-    }
+		$data = array(
+			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+			'i18n'    => $this->get_translations(),
+		);
 
-    public function admin_assets()
-    {
-        // Enqueue admin styles
-        wp_enqueue_style(
-            'dragwyb-form-admin',
-            esc_url(DRAGWYB_FORM_BUILDER_URL . 'assets/css/admin.css'),
-            array(),
-            esc_attr(DRAGWYB_FORM_BUILDER_VERSION),
-            'all'
-        );
-    }
+		$data = apply_filters( 'Dragwyb_Localize_Core_Script', $data );
+		// Localize data
+		wp_localize_script( 'dragwyb-form-core', 'DragwybBuilder', $data );
+	}
 
-    private function get_translations()
-    {
-        $localize_strings = [];
+	public function admin_assets() {
+		// Enqueue admin styles
+		wp_enqueue_style(
+			'dragwyb-form-admin',
+			esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/css/admin.css' ),
+			array(),
+			esc_attr( DRAGWYB_FORM_BUILDER_VERSION ),
+			'all'
+		);
+	}
 
-        return apply_filters('Dragwyb_i18n', $localize_strings);
-    }
+	private function get_translations() {
+		$localize_strings = array();
+
+		return apply_filters( 'Dragwyb_i18n', $localize_strings );
+	}
 }

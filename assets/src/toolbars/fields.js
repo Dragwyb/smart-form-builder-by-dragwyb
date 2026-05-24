@@ -23,7 +23,7 @@ const SidebarField = (props) => {
       onClick={() => addFieldHandler(type)}
       className={`field-type${isDragging ? ' dragging' : ''}`}
     >
-      <i className={icon}></i>
+      <DragwybEditor.editor.IconsManager.Render icon={icon} />
       <p>{label}</p>
     </div>
   );
@@ -104,7 +104,7 @@ const Sidebar = ({ Utils, addFieldHandler }) => {
           (Object.entries(categories).map(([key, { name, icon, fields }]) => (
             <React.Fragment key={key}>
               <div className={`dagwyb-widget-category-section`} id={`category-section-${key}`} onClick={() => { toggleCategory(key) }}>
-                <i className={icon} />
+                <DragwybEditor.editor.IconsManager.Render icon={icon} />
                 <p className="dragwyb-section__title">{name}</p>
                 <span className="dragwyb-section__icon">
                   <TiArrowSortedDown size={20} />

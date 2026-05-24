@@ -8,97 +8,92 @@ use Dragwyb\Form_Builder\Includes\Helper\Helper;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Controls\Controls\Control_Base;
 
-class Register_Controls
-{
-    private static $instance = null;
+class Register_Controls {
 
-    private array $controls = [];
+	private static $instance = null;
 
-    private array $group_controls = [];
+	private array $controls = array();
 
-    private array $default_controls = [Controls::CHOOSE, Controls::COLOR, Controls::DIMENSIONS, Controls::FONTS, Controls::GALLERY, Controls::IMAGE, Controls::HEADING, Controls::ICON, Controls::NUMBER, Controls::RADIO, Controls::RAW_HTML, Controls::REPEATER, Controls::SECTION, Controls::SELECT, Controls::MULTISELECT, Controls::SLIDER, Controls::SWITCHER, Controls::TABS, Controls::TAB, Controls::TEXT, Controls::TEXTAREA, Controls::WYSIWYG, Controls::POPOVER_TOGGLE, Controls::URL];
+	private array $group_controls = array();
 
-    private array $default_group_controls = [Controls::GROUP_TYPOGRAPHY, Controls::GROUP_BORDER, Controls::GROUP_BOX_SHADOW, Controls::GROUP_TEXT_SHADOW, Controls::GROUP_CSS_FILTER, Controls::GROUP_BACKGROUND];
+	private array $default_controls = array( Controls::CHOOSE, Controls::COLOR, Controls::DIMENSIONS, Controls::FONTS, Controls::GALLERY, Controls::IMAGE, Controls::HEADING, Controls::ICON, Controls::NUMBER, Controls::RADIO, Controls::RAW_HTML, Controls::REPEATER, Controls::SECTION, Controls::SELECT, Controls::MULTISELECT, Controls::SLIDER, Controls::SWITCHER, Controls::TABS, Controls::TAB, Controls::TEXT, Controls::TEXTAREA, Controls::WYSIWYG, Controls::POPOVER_TOGGLE, Controls::URL );
 
-    public static function instance(): self
-    {
-        if (null === self::$instance) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
+	private array $default_group_controls = array( Controls::GROUP_TYPOGRAPHY, Controls::GROUP_BORDER, Controls::GROUP_BOX_SHADOW, Controls::GROUP_TEXT_SHADOW, Controls::GROUP_CSS_FILTER, Controls::GROUP_BACKGROUND );
 
-    public function __construct()
-    {
-        $this->register_default_controls();
-        $this->register_default_group_controls();
+	public static function instance(): self {
+		if ( null === self::$instance ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
 
-        do_action('Dragwyb/register_controls', $this);
-    }
+	public function __construct() {
+		$this->register_default_controls();
+		$this->register_default_group_controls();
+
+		do_action( 'Dragwyb/register_controls', $this );
+	}
 
 
-    private function register_default_controls(): void
-    {
-        foreach ($this->default_controls as $control) {
+	private function register_default_controls(): void {
+		foreach ( $this->default_controls as $control ) {
 
-            $dragwyb_name_space = Helper::namespace_into_dir_path(__NAMESPACE__);
-            $dir   = dirname($dragwyb_name_space);
-            $dir = Helper::dir_path_into_namespace($dir);
+			$dragwyb_name_space = Helper::namespace_into_dir_path( __NAMESPACE__ );
+			$dir                = dirname( $dragwyb_name_space );
+			$dir                = Helper::dir_path_into_namespace( $dir );
 
-            $control = $this->captialize_class_name($control);
-            $class = $dir . '\Controls\Control_' . ucfirst(esc_html($control));
+			$control = $this->captialize_class_name( $control );
+			$class   = $dir . '\Controls\Control_' . ucfirst( esc_html( $control ) );
 
-            if (class_exists($class)) {
-                $this->register_control(new $class());
-            }
-        }
-    }
+			if ( class_exists( $class ) ) {
+				$this->register_control( new $class() );
+			}
+		}
+	}
 
-    private function register_default_group_controls(): void
-    {
-        foreach ($this->default_group_controls as $control) {
+	private function register_default_group_controls(): void {
+		foreach ( $this->default_group_controls as $control ) {
 
-            $dragwyb_name_space = Helper::namespace_into_dir_path(__NAMESPACE__);
-            $dir   = dirname($dragwyb_name_space);
-            $dir = Helper::dir_path_into_namespace($dir);
+			$dragwyb_name_space = Helper::namespace_into_dir_path( __NAMESPACE__ );
+			$dir                = dirname( $dragwyb_name_space );
+			$dir                = Helper::dir_path_into_namespace( $dir );
 
-            $control = $this->captialize_class_name($control);
-            $class = $dir . '\Group\\' . $control . '\\Control_' . ucfirst(esc_html($control));
+			$control = $this->captialize_class_name( $control );
+			$class   = $dir . '\Group\\' . $control . '\\Control_' . ucfirst( esc_html( $control ) );
 
-            if (class_exists($class)) {
-                $this->register_group_control(new $class());
-            }
-        }
-    }
+			if ( class_exists( $class ) ) {
+				$this->register_group_control( new $class() );
+			}
+		}
+	}
 
-    private function captialize_class_name($string)
-    {
-        // Replace hyphens with underscores
-        $string = str_replace('-', '_', $string);
+	private function captialize_class_name( $string ) {
+		// Replace hyphens with underscores
+		$string = str_replace( '-', '_', $string );
 
-        // Capitalize first letter and letters after underscores
-        return preg_replace_callback('/(^|_)([a-z])/', function ($matches) {
-            return $matches[1] . strtoupper($matches[2]);
-        }, $string);
-    }
+		// Capitalize first letter and letters after underscores
+		return preg_replace_callback(
+			'/(^|_)([a-z])/',
+			function ( $matches ) {
+				return $matches[1] . strtoupper( $matches[2] );
+			},
+			$string
+		);
+	}
 
-    public function register_control(Control_Base $field): void
-    {
-        $this->controls[$field->get_type()] = $field;
-    }
+	public function register_control( Control_Base $field ): void {
+		$this->controls[ $field->get_type() ] = $field;
+	}
 
-    public function register_group_control(Control_Base $field): void
-    {
-        $this->group_controls[$field->get_type()] = $field;
-    }
+	public function register_group_control( Control_Base $field ): void {
+		$this->group_controls[ $field->get_type() ] = $field;
+	}
 
-    public function get_controls(): array
-    {
-        return $this->controls;
-    }
+	public function get_controls(): array {
+		return $this->controls;
+	}
 
-    public function get_group_controls(): array
-    {
-        return $this->group_controls;
-    }
+	public function get_group_controls(): array {
+		return $this->group_controls;
+	}
 }

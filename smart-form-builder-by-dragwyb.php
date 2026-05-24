@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin Name: Smart Form Builder by Dragwyb
+ * Plugin Name: Smart Form Builder
  * Description: Drag and drop form builder for WordPress
  * Version: 1.0.3
  * Author: dragwyb
@@ -13,112 +13,104 @@
 
 declare(strict_types=1);
 
-if (!defined('ABSPATH')) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 use Dragwyb\Form_Builder\Dragwyb_Form_Builder_Autoload;
 use Dragwyb\Form_Builder\Includes\Dragwyb_Init;
 use Dragwyb\Form_Builder\Admin\Db\Submission\Dragwyb_Submission_Db;
 
-final class Dragwyb_Form_Builder
-{
-    /**
-     * Plugin version
-     */
-    const VERSION = '1.0.3';
+final class Dragwyb_Form_Builder {
 
-    /**
-     * Plugin instance
-     */
-    private static $instance = null;
+	/**
+	 * Plugin version
+	 */
+	const VERSION = '1.0.3';
 
-    private $styling;
+	/**
+	 * Plugin instance
+	 */
+	private static $instance = null;
 
-    /**
-     * Get plugin instance
-     */
-    public static function instance(): self
-    {
-        if (null === self::$instance) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
+	private $styling;
 
-    /**
-     * Constructor
-     */
-    private function __construct()
-    {
-        $this->define_constants();
+	/**
+	 * Get plugin instance
+	 */
+	public static function instance(): self {
+		if ( null === self::$instance ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
 
-        // Load autoloader
-        require_once DRAGWYB_FORM_BUILDER_PATH . 'class-dragwyb-autoload.php';
-        Dragwyb_Form_Builder_Autoload::instance();
+	/**
+	 * Constructor
+	 */
+	private function __construct() {
+		$this->define_constants();
 
-        $this->init_hooks();
-    }
+		// Load autoloader
+		require_once DRAGWYB_FORM_BUILDER_PATH . 'class-dragwyb-autoload.php';
+		Dragwyb_Form_Builder_Autoload::instance();
 
-    /**
-     * Define plugin constants
-     */
-    private function define_constants(): void
-    {
-        define('DRAGWYB_PREFIX', 'dragwyb');
-        define('DRAGWYB_FORM_BUILDER_VERSION', self::VERSION);
-        define('DRAGWYB_FORM_BUILDER_PATH', plugin_dir_path(__FILE__));
-        define('DRAGWYB_FORM_BUILDER_URL', plugin_dir_url(__FILE__));
-    }
+		$this->init_hooks();
+	}
 
-    /**
-     * Initialize WordPress hooks
-     */
-    private function init_hooks(): void
-    {
-        $this->init_plugin();
-    }
+	/**
+	 * Define plugin constants
+	 */
+	private function define_constants(): void {
+		define( 'DRAGWYB_PREFIX', 'dragwyb' );
+		define( 'DRAGWYB_FORM_BUILDER_VERSION', self::VERSION );
+		define( 'DRAGWYB_FORM_BUILDER_PATH', plugin_dir_path( __FILE__ ) );
+		define( 'DRAGWYB_FORM_BUILDER_URL', plugin_dir_url( __FILE__ ) );
+	}
 
-    /**
-     * Check if plugin version changed, and update DB if needed.
-     */
-    private static function create_submission_db(): void
-    {
-        $db_version = get_option('dragwyb_submission_db_version', false);
-        if (!$db_version || $db_version !== Dragwyb_Submission_Db::VERSION) {
-            Dragwyb_Submission_Db::create_table();
-            update_option('dragwyb_submission_db_version', Dragwyb_Submission_Db::VERSION);
-        }
-    }
+	/**
+	 * Initialize WordPress hooks
+	 */
+	private function init_hooks(): void {
+		$this->init_plugin();
+	}
 
-    /**
-     * Initialize plugin components
-     */
-    public function init_plugin(): void
-    {
+	/**
+	 * Check if plugin version changed, and update DB if needed.
+	 */
+	private static function create_submission_db(): void {
+		$db_version = get_option( 'dragwyb_submission_db_version', false );
+		if ( ! $db_version || $db_version !== Dragwyb_Submission_Db::VERSION ) {
+			Dragwyb_Submission_Db::create_table();
+			update_option( 'dragwyb_submission_db_version', Dragwyb_Submission_Db::VERSION );
+		}
+	}
 
-        $dragwyb = Dragwyb_Init::instance();
-        $dragwyb->init();
-    }
+	/**
+	 * Initialize plugin components
+	 */
+	public function init_plugin(): void {
 
-    /**
-     * Plugin activation hook
-     */
-    public static function activate(): void
-    {
-        require_once plugin_dir_path(__FILE__) . 'class-dragwyb-autoload.php';
-        Dragwyb_Form_Builder_Autoload::instance();
+		$dragwyb = Dragwyb_Init::instance();
+		$dragwyb->init();
+	}
 
-        self::create_submission_db();
-    }
+	/**
+	 * Plugin activation hook
+	 */
+	public static function activate(): void {
+		require_once plugin_dir_path( __FILE__ ) . 'class-dragwyb-autoload.php';
+		Dragwyb_Form_Builder_Autoload::instance();
+
+		self::create_submission_db();
+	}
 }
 
-register_activation_hook(__FILE__, ['Dragwyb_Form_Builder', 'activate']);
+register_activation_hook( __FILE__, array( 'Dragwyb_Form_Builder', 'activate' ) );
 
 // Initialize plugin
-function dragwyb_form_builder()
-{
-    return Dragwyb_Form_Builder::instance();
+function dragwyb_form_builder() {
+	return Dragwyb_Form_Builder::instance();
 }
 
 // Start the plugin

@@ -8,8 +8,8 @@ use Dragwyb\Form_Builder\Includes\Core\Helpers;
 use Dragwyb\Form_Builder\Includes\Frontend\Frontend_Render;
 use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
 
-if (! defined('ABSPATH')) {
-    exit; // Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -19,142 +19,139 @@ if (! defined('ABSPATH')) {
  *
  * @package Dragwyb\Form_Builder\Includes\Rest_Routes
  */
-class Dragwyb_Frontend_Route
-{
+class Dragwyb_Frontend_Route {
 
-    /**
-     * Dragwyb_Frontend_Route constructor.
-     */
-    public function __construct()
-    {
-        add_action('rest_api_init', [$this, 'register_routes']);
-    }
 
-    /**
-     * Registers the REST API routes.
-     *
-     * @return void
-     */
-    public function register_routes(): void
-    {
-        register_rest_route(
-            'dragwyb-form-builder/v1',
-            '/submit',
-            [
-                'methods'             => \WP_REST_Server::CREATABLE,
-                'callback'            => [$this, 'submit_form'],
-                'permission_callback' => [$this, 'verify_submission_permission'],
-                'args'                => $this->get_endpoint_args(),
-            ]
-        );
-    }
+	/**
+	 * Dragwyb_Frontend_Route constructor.
+	 */
+	public function __construct() {
+		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
+	}
 
-    /**
-     * Verify frontend submission requests.
-     *
-     * @param \WP_REST_Request $request The REST API request object.
-     * @return bool|\WP_Error
-     */
-    public function verify_submission_permission(\WP_REST_Request $request)
-    {
-        $nonce = $request->get_param('nonce');
-        $form_id = absint($request->get_param('form_id'));
-        $action = Frontend_Render::get_submission_key($form_id);
+	/**
+	 * Registers the REST API routes.
+	 *
+	 * @return void
+	 */
+	public function register_routes(): void {
+		register_rest_route(
+			'dragwyb-form-builder/v1',
+			'/submit',
+			array(
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'submit_form' ),
+				'permission_callback' => array( $this, 'verify_submission_permission' ),
+				'args'                => $this->get_endpoint_args(),
+			)
+		);
+	}
 
-        if (empty($nonce) || !wp_verify_nonce(sanitize_text_field(wp_unslash($nonce)), $action)) {
-            return new \WP_Error(
-                'rest_forbidden',
-                __('Invalid submission token.', 'smart-form-builder-by-dragwyb'),
-                ['status' => 403]
-            );
-        }
+	/**
+	 * Verify frontend submission requests.
+	 *
+	 * @param \WP_REST_Request $request The REST API request object.
+	 * @return bool|\WP_Error
+	 */
+	public function verify_submission_permission( \WP_REST_Request $request ) {
+		$nonce   = $request->get_param( 'nonce' );
+		$form_id = absint( $request->get_param( 'form_id' ) );
+		$action  = Frontend_Render::get_submission_key( $form_id );
 
-        if (!$form_id || get_post_status($form_id) === false) {
-            return new \WP_Error(
-                'invalid_form',
-                __('Invalid form ID.', 'smart-form-builder-by-dragwyb'),
-                ['status' => 400]
-            );
-        }
+		if ( empty( $nonce ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $nonce ) ), $action ) ) {
+			return new \WP_Error(
+				'rest_forbidden',
+				__( 'Invalid submission token.', 'smart-form-builder-by-dragwyb' ),
+				array( 'status' => 403 )
+			);
+		}
 
-        return true;
-    }
+		if ( ! $form_id || get_post_status( $form_id ) === false ) {
+			return new \WP_Error(
+				'invalid_form',
+				__( 'Invalid form ID.', 'smart-form-builder-by-dragwyb' ),
+				array( 'status' => 400 )
+			);
+		}
 
-    /**
-     * Retrieves the endpoint arguments for the form submission route.
-     *
-     * @return array The endpoint arguments.
-     */
-    public function get_endpoint_args(): array
-    {
-        return [
-            'form_id' => [
-                'description'       => __('The ID of the form being submitted.', 'smart-form-builder-by-dragwyb'),
-                'type'              => 'integer',
-                'required'          => true,
-                'sanitize_callback' => 'absint',
-                'validate_callback' => function ($param, $request, $key) {
-                    return is_numeric($param) && $param > 0;
-                },
-            ],
-            'fields'  => [
-                'description' => __('The submitted form fields data.', 'smart-form-builder-by-dragwyb'),
-                'type'        => 'object',
-                'required'    => true,
-                'validate_callback' => function ($param, $request, $key) {
-                    return is_array($param);
-                },
-            ],
-        ];
-    }
+		return true;
+	}
 
-    /**
-     * Handles the form submission REST API request.
-     *
-     * @param \WP_REST_Request $request The REST API request object.
-     *
-     * @return \WP_REST_Response|\WP_Error The response or error object.
-     */
-    public function submit_form(\WP_REST_Request $request)
-    {
-        $form_id = $request->get_param('form_id');
-        $fields  = $request->get_param('fields');
+	/**
+	 * Retrieves the endpoint arguments for the form submission route.
+	 *
+	 * @return array The endpoint arguments.
+	 */
+	public function get_endpoint_args(): array {
+		return array(
+			'form_id' => array(
+				'description'       => __( 'The ID of the form being submitted.', 'smart-form-builder-by-dragwyb' ),
+				'type'              => 'integer',
+				'required'          => true,
+				'sanitize_callback' => 'absint',
+				'validate_callback' => function ( $param, $request, $key ) {
+					return is_numeric( $param ) && $param > 0;
+				},
+			),
+			'fields'  => array(
+				'description'       => __( 'The submitted form fields data.', 'smart-form-builder-by-dragwyb' ),
+				'type'              => 'object',
+				'required'          => true,
+				'validate_callback' => function ( $param, $request, $key ) {
+					return is_array( $param );
+				},
+			),
+		);
+	}
 
-        if (!$form_id) {
-            return new \WP_Error('invalid_form', __('Invalid form ID.', 'smart-form-builder-by-dragwyb'), ['status' => 400]);
-        }
+	/**
+	 * Handles the form submission REST API request.
+	 *
+	 * @param \WP_REST_Request $request The REST API request object.
+	 *
+	 * @return \WP_REST_Response|\WP_Error The response or error object.
+	 */
+	public function submit_form( \WP_REST_Request $request ) {
+		$form_id = $request->get_param( 'form_id' );
+		$fields  = $request->get_param( 'fields' );
 
-        if (defined('DRAGWYB_FORM_SUBMISSION_REQUEST')) {
-            return new \WP_Error('form_submission_already_running', __('Form submission is already running.', 'smart-form-builder-by-dragwyb'), ['status' => 400]);
-        }
+		if ( ! $form_id ) {
+			return new \WP_Error( 'invalid_form', __( 'Invalid form ID.', 'smart-form-builder-by-dragwyb' ), array( 'status' => 400 ) );
+		}
 
-        define('DRAGWYB_FORM_SUBMISSION_REQUEST', true);
+		if ( defined( 'DRAGWYB_FORM_SUBMISSION_REQUEST' ) ) {
+			return new \WP_Error( 'form_submission_already_running', __( 'Form submission is already running.', 'smart-form-builder-by-dragwyb' ), array( 'status' => 400 ) );
+		}
 
-        $form_id = intval($form_id);
+		define( 'DRAGWYB_FORM_SUBMISSION_REQUEST', true );
 
-        // Instantiate the submission handler
-        $handler = new Form_Submission_Handler($form_id, (array) $fields);
+		$form_id = intval( $form_id );
 
-        $handler_errors = $handler->get_errors();
-        // If there are validation errors, return them as a JSON response
-        if ($handler->has_errors()) {
-            return rest_ensure_response([
-                'success' => false,
-                'message' => isset($handler_errors['honeypot']) ? $handler_errors['honeypot'] : __('Form submission failed due to validation errors.', 'smart-form-builder-by-dragwyb'),
-                'errors'  => $handler_errors,
-            ]);
-        }
+		// Instantiate the submission handler
+		$handler = new Form_Submission_Handler( $form_id, (array) $fields );
 
-        // Return a successful JSON response
-        return rest_ensure_response(
-            [
-                'success' => true,
-                'message' => __('Form submitted successfully.', 'smart-form-builder-by-dragwyb'),
-                'data'    => [
-                    'form_id'      => $form_id,
-                    'actions_data' => $handler->get_form_return_data(),
-                ],
-            ]
-        );
-    }
+		$handler_errors = $handler->get_errors();
+		// If there are validation errors, return them as a JSON response
+		if ( $handler->has_errors() ) {
+			return rest_ensure_response(
+				array(
+					'success' => false,
+					'message' => isset( $handler_errors['honeypot'] ) ? $handler_errors['honeypot'] : __( 'Form submission failed due to validation errors.', 'smart-form-builder-by-dragwyb' ),
+					'errors'  => $handler_errors,
+				)
+			);
+		}
+
+		// Return a successful JSON response
+		return rest_ensure_response(
+			array(
+				'success' => true,
+				'message' => __( 'Form submitted successfully.', 'smart-form-builder-by-dragwyb' ),
+				'data'    => array(
+					'form_id'      => $form_id,
+					'actions_data' => $handler->get_form_return_data(),
+				),
+			)
+		);
+	}
 }

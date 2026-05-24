@@ -25,7 +25,7 @@ const ToolBar = ({ setActiveTab, setSettingId }) => {
                 data-tab={tab}
             >
                 <span className="dragwyb-editor__toolbar-item-icon">
-                    <i className={toolbars[tab].icon} />
+                    <DragwybEditor.editor.IconsManager.Render icon={toolbars[tab].icon} />
                 </span>
                 <span className="dragwyb-editor__toolbar-item-text">
                     {toolbars[tab].name}

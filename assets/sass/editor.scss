@@ -620,11 +620,15 @@ body {
             line-height: 1;
             font-weight: 500;
             border-radius: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
 
-            i {
+            .dragwyb-button__text {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            svg {
+                width: 15px;
                 margin-right: .5rem;
             }
         }
@@ -680,7 +684,6 @@ body {
         justify-content: center;
         color: #fff;
         border-radius: 50%;
-        font-size: 1.1rem;
         text-decoration: none;
 
         &>div {
@@ -688,7 +691,12 @@ body {
         }
     }
 
-    &__preview-toggle i {
+    &__preview-toggle {
+        padding: unset !important;
+    }
+
+    &__preview-toggle svg {
+        width: 1.2rem;
         margin-right: 0px !important;
     }
 
@@ -722,7 +730,7 @@ body {
 
     &__settings {
         width: var(--panel-width);
-        height: calc(100% - 84px);
+        height: 100%;
         box-shadow: var(--dragwyb-ring-offset-shadow, 0 0 #0000), var(--dragwyb-ring-shadow, 0 0 #0000), var(--dragwyb-sm-shadow);
 
         &__footer {
@@ -812,7 +820,7 @@ body {
                     background-color: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
                 }
 
-                i {
+                svg {
                     color: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
                 }
             }
@@ -830,14 +838,9 @@ body {
                 margin-inline: auto;
             }
 
-            i {
-                font-size: 0.9rem;
-                border-radius: 50%;
+            svg {
                 width: 18px;
                 height: 18px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
                 transition: all 0.3s ease-in-out;
             }
         }
@@ -915,14 +918,8 @@ body {
             position: relative;
             cursor: pointer;
 
-            i {
-                font-size: 1rem;
-                border-radius: 50%;
+            svg {
                 width: 18px;
-                height: 18px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
             }
 
             p {
@@ -959,7 +956,7 @@ body {
                 display: flex;
                 align-items: center;
                 padding: 10px;
-                gap: 13px;
+                gap: 8px;
                 color: hsl(var(--dragwyb-card-foreground)/var(--dragwyb-text-opacity, 1));
                 border-radius: 4px;
 
@@ -970,10 +967,8 @@ body {
                     color: hsl(var(--dragwyb-primary)/var(--dragwyb-text-opacity, 1));
                 }
 
-                i {
-                    border-radius: 10px;
-                    aspect-ratio: 1/1;
-                    font-size: 1rem;
+                svg {
+                    width: 15px;
                 }
 
                 p {

@@ -269,7 +269,7 @@
     align-items: center;
     justify-content: center;
     flex-grow: 1;
-    padding: 7px 10px;
+    padding: 5px 10px;
     cursor: pointer;
     text-align: center;
     transition: all 0.2s ease;
@@ -298,8 +298,8 @@
     }
 
     // Icon styling adjustments
-    i {
-      font-size: 14px;
+    svg {
+      width: 14px;
       pointer-events: none;
     }
 
@@ -716,6 +716,10 @@
       justify-content: center;
       transition: all 0.2s;
 
+      svg {
+        width: 13px
+      }
+
       &:hover,
       &.active {
         background: hsl(var(--dragwyb-input));
@@ -782,7 +786,10 @@
       align-items: center;
       justify-content: center;
       border-radius: 3px;
-      font-size: 14px;
+
+      svg {
+        width: 14px;
+      }
 
       &.selected {
         background: hsl(var(--dragwyb-primary) / 0.1);
@@ -792,7 +799,10 @@
       &.empty {
         background: hsl(var(--dragwyb-input) / 0.3);
         color: hsl(var(--dragwyb-sidebar-foreground) / 0.5);
-        font-size: 10px;
+
+        svg {
+          width: 10px;
+        }
       }
     }
 
@@ -802,10 +812,15 @@
       text-transform: capitalize;
     }
 
+    .dragwyb-preview-actions {
+      display: flex;
+      align-items: center;
+      line-height: 1;
+    }
+
     .remove-icon {
       color: #d63638;
-      font-size: 12px;
-      padding: 5px;
+      height: 18px;
       opacity: 0.6;
 
       &:hover {
@@ -870,6 +885,10 @@
         color: #d63638;
         font-size: 10px;
 
+        svg {
+          width: 12px;
+        }
+
         &:hover {
           background: #fff;
           color: #b32d2e;
@@ -892,11 +911,14 @@
     border-radius: 3px;
     cursor: pointer;
     transition: all 0.2s;
-    font-size: 13px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
+
+    svg {
+      width: 13px;
+    }
 
     &:hover {
       background: hsl(var(--dragwyb-input) / 0.2);
@@ -986,11 +1008,18 @@
       color: #fff;
     }
 
-    i {
-      padding: .4rem;
+    .dragwyb-popover-toggle__icon {
+      padding: 0.4rem;
       background: hsl(var(--dragwyb-popover)/var(--dragwyb-bg-opacity, 1));
       border: 1px solid hsl(var(--dragwyb-border)/var(--dragwyb-border-opacity, 1));
       border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      svg {
+        width: 13px;
+      }
     }
   }
 
@@ -1242,8 +1271,8 @@
         border-color: hsl(var(--dragwyb-primary));
       }
 
-      i {
-        font-size: 20px;
+      svg {
+        width: 26px;
       }
 
       &.empty {

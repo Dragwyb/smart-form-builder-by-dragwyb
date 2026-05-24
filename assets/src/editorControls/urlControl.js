@@ -49,7 +49,7 @@ export default class UrlControl extends DragwybEditor.editor.extends.ControlBase
                             onClick={() => this.setState({ showOptions: !this.state.showOptions })}
                             title="Link Options"
                         >
-                            <i className="fa fa-cog"></i>
+                            <DragwybEditor.editor.IconsManager.Render icon={{ type: 'solid', icon: 'cog' }} />
                         </button>
                     </div>
 

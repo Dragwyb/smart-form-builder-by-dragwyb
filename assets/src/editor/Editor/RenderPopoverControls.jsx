@@ -140,7 +140,7 @@ const RenderPopoverControls = ({
         } else if (action.type === 'register') {
             dispatch(updatePopoverControls(action.controlKey, action.popOverStatus));
         }
-    });
+    }, []);
 
     return renderOutput;
 };

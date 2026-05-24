@@ -6,117 +6,111 @@ namespace Dragwyb\Form_Builder\Includes\Controls\Controls;
 
 use Dragwyb\Form_Builder\Includes\Controls\Fonts\Fonts_Helper;
 
-class Control_Fonts extends Control_Base
-{
-    private $exclude_fonts = array();
-    private $group_fonts = array();
+class Control_Fonts extends Control_Base {
 
-    protected function init(): void
-    {
-        $this->type = 'fonts';
-        $this->name = __('Font Family', 'smart-form-builder-by-dragwyb');
-    }
+	private $exclude_fonts = array();
+	private $group_fonts   = array();
 
-    protected function register_settings()
-    {
-        return [
-            'name'    => 'string',
-            'label'   => 'string',
-            'default' => 'string',
-            'exclude_fonts' => 'custom',
-            'groups' => 'custom',
-            'options' => 'custom', // Allow passing specific font groups if needed
-            'label_inline' => 'boolean',
-        ];
-    }
+	protected function init(): void {
+		$this->type = 'fonts';
+		$this->name = __( 'Font Family', 'smart-form-builder-by-dragwyb' );
+	}
 
-    protected function default_setting(): array
-    {
-        return [
-            'default' => 'Roboto', // Default Font
-            'options' => $this->get_fonts_list(),
-            'label_inline' => true,
-        ];
-    }
+	protected function register_settings() {
+		return array(
+			'name'          => 'string',
+			'label'         => 'string',
+			'default'       => 'string',
+			'exclude_fonts' => 'custom',
+			'groups'        => 'custom',
+			'options'       => 'custom', // Allow passing specific font groups if needed
+			'label_inline'  => 'boolean',
+		);
+	}
 
-    private function get_fonts_list(): array
-    {
-        $groups = $this->get_fonts_group();
+	protected function default_setting(): array {
+		return array(
+			'default'      => 'Roboto', // Default Font
+			'options'      => $this->get_fonts_list(),
+			'label_inline' => true,
+		);
+	}
 
-        $font_list = Fonts_Helper::get_fonts_by_groups($groups);
+	private function get_fonts_list(): array {
+		$groups = $this->get_fonts_group();
 
-        if (isset($this->exclude_fonts) && is_array($this->exclude_fonts) && count($this->exclude_fonts) > 0) {
-            foreach ($this->exclude_fonts as $font) {
-                unset($font_list[$font]);
-            }
-        }
+		$font_list = Fonts_Helper::get_fonts_by_groups( $groups );
 
-        return isset($font_list) && is_array($font_list) && count($font_list) > 0 ? $font_list : [];
-    }
+		if ( isset( $this->exclude_fonts ) && is_array( $this->exclude_fonts ) && count( $this->exclude_fonts ) > 0 ) {
+			foreach ( $this->exclude_fonts as $font ) {
+				unset( $font_list[ $font ] );
+			}
+		}
 
-    private function get_fonts_group(): array
-    {
-        if (isset($this->group_fonts) && is_array($this->group_fonts) && count($this->group_fonts) > 0) {
-            $this->group_fonts = array_map(function ($group) {
-                return $this->string_sanitize($group);
-            }, $this->group_fonts);
+		return isset( $font_list ) && is_array( $font_list ) && count( $font_list ) > 0 ? $font_list : array();
+	}
 
-            return $this->group_fonts;
-        }
+	private function get_fonts_group(): array {
+		if ( isset( $this->group_fonts ) && is_array( $this->group_fonts ) && count( $this->group_fonts ) > 0 ) {
+			$this->group_fonts = array_map(
+				function ( $group ) {
+					return $this->string_sanitize( $group );
+				},
+				$this->group_fonts
+			);
 
-        $font_list = Fonts_Helper::get_font_groups();
-        $group = [];
-        foreach ($font_list as $key => $value) {
-            $group[] = $this->string_sanitize($key);
-        }
+			return $this->group_fonts;
+		}
 
-        return isset($group) && is_array($group) && count($group) > 0 ? $group : [];
-    }
+		$font_list = Fonts_Helper::get_font_groups();
+		$group     = array();
+		foreach ( $font_list as $key => $value ) {
+			$group[] = $this->string_sanitize( $key );
+		}
 
-    protected function sanitize_control($value, $settings)
-    {
-        // Font names can contain spaces (e.g., "Open Sans")
-        return sanitize_text_field($value);
-    }
+		return isset( $group ) && is_array( $group ) && count( $group ) > 0 ? $group : array();
+	}
 
-    protected function exclude_fonts_setting_sanitize(array $fonts): array
-    {
-        $this->exclude_fonts = array();
-        $data = &$this->exclude_fonts;
+	protected function sanitize_control( $value, $settings ) {
+		// Font names can contain spaces (e.g., "Open Sans")
+		return sanitize_text_field( $value );
+	}
 
-        if (isset($fonts) && count($fonts) > 0) {
-            foreach ($fonts as $font) {
-                $data[] = $this->string_sanitize($font);
-            }
-        }
+	protected function exclude_fonts_setting_sanitize( array $fonts ): array {
+		$this->exclude_fonts = array();
+		$data                = &$this->exclude_fonts;
 
-        return isset($data) && is_array($data) && count($data) > 0 ? $data : [];
-    }
+		if ( isset( $fonts ) && count( $fonts ) > 0 ) {
+			foreach ( $fonts as $font ) {
+				$data[] = $this->string_sanitize( $font );
+			}
+		}
 
-    protected function groups_setting_sanitize(array $groups): array
-    {
-        $this->group_fonts = array();
-        $data = &$this->group_fonts;
+		return isset( $data ) && is_array( $data ) && count( $data ) > 0 ? $data : array();
+	}
 
-        if (isset($groups) && count($groups) > 0) {
-            foreach ($groups as $group) {
-                $data[] = $this->string_sanitize($group);
-            }
-        }
+	protected function groups_setting_sanitize( array $groups ): array {
+		$this->group_fonts = array();
+		$data              = &$this->group_fonts;
 
-        return isset($data) && is_array($data) && count($data) > 0 ? $data : [];
-    }
+		if ( isset( $groups ) && count( $groups ) > 0 ) {
+			foreach ( $groups as $group ) {
+				$data[] = $this->string_sanitize( $group );
+			}
+		}
 
-    protected function options_setting_sanitize(array $options): array
-    {
-        $data = array();
+		return isset( $data ) && is_array( $data ) && count( $data ) > 0 ? $data : array();
+	}
 
-        if (isset($options) && count($options) > 0) {
-            foreach ($options as $font => $type) {
-                $data[$this->string_sanitize($font)] = $this->string_sanitize($type);
-            }
-        }
+	protected function options_setting_sanitize( array $options ): array {
+		$data = array();
 
-        return isset($data) && is_array($data) && count($data) > 0 ? $data : [];
-    }
+		if ( isset( $options ) && count( $options ) > 0 ) {
+			foreach ( $options as $font => $type ) {
+				$data[ $this->string_sanitize( $font ) ] = $this->string_sanitize( $type );
+			}
+		}
+
+		return isset( $data ) && is_array( $data ) && count( $data ) > 0 ? $data : array();
+	}
 }

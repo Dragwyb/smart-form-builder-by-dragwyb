@@ -194,11 +194,12 @@
 .dragwyb-form-wrapper {
 
     /* --- Default / Top --- */
-    &:not(.dragwyb-layout-left):not(.dragwyb-layout-floating),
-    &.dragwyb-layout-top {
-        .dragwyb-input-group {
-            display: flex;
-            flex-direction: column-reverse;
+    &:not(.dragwyb-layout-left, .dragwyb-layout-floating) {
+        .dragwyb-field-wrapper:not(.dragwyb-no-float) {
+            .dragwyb-input-group {
+                display: flex;
+                flex-direction: column-reverse;
+            }
         }
     }
 
@@ -217,11 +218,13 @@
             .dragwyb-field-label {
                 grid-column: 1;
                 margin-bottom: 0;
+                order: 0;
             }
 
             .dragwyb-field-input,
             .dragwyb-options-container {
                 grid-column: 2;
+                order: 1;
             }
 
             .dragwyb-field-help {
@@ -296,7 +299,8 @@
             border: none;
             border-bottom: 2px solid var(--dragwyb-input-border-color);
             border-radius: 6px 6px 0 0;
-            padding-top: calc(var(--dragwyb-input-pt) + 0.8em);
+            padding-top: calc(var(--dragwyb-input-pt) + var(--dragwyb-label-typography-size));
+            height: calc(var(--dragwyb-input-pt) + var(--dragwyb-label-typography-size) + 20px + var(--dragwyb-input-typography-size) + var(--dragwyb-input-pb));
 
             &:focus {
                 background-color: #e5e7eb;
@@ -306,9 +310,14 @@
 
             &:focus~.dragwyb-field-label,
             &:not(:placeholder-shown)~.dragwyb-field-label {
-                top: 0.8em;
+                top: var(--dragwyb-input-pt);
                 transform: translateY(0) scale(0.75);
             }
+        }
+
+        &.dragwyb-float-inside .dragwyb-field-wrapper:not(.dragwyb-no-float):where(.dragwyb-field-label-icon-before, .dragwyb-field-label-icon-after) .dragwyb-field-input {
+            padding-top: calc(var(--dragwyb-input-pt) + var(--dragwyb-label-typography-size) + (var(--dragwyb-label-icon-size, var(--dragwyb-input-typography-size)) - var(--dragwyb-input-typography-size)));
+            height: calc(var(--dragwyb-input-pt) + var(--dragwyb-label-typography-size) + 20px + var(--dragwyb-input-typography-size) + (var(--dragwyb-label-icon-size, var(--dragwyb-input-typography-size)) - var(--dragwyb-input-typography-size)) + var(--dragwyb-input-pb));
         }
     }
 
@@ -393,6 +402,24 @@
         flex: 0 0 calc((var(--dragwyb-field-width) * 1%) - (var(--dragwyb-field-gap) * (1 - var(--dragwyb-field-width) / 100)));
         grid-column: span var(--dragwyb-column-span, 1);
 
+        &.dragwyb-field-label-icon-before {
+            .dragwyb-field-label {
+                svg {
+                    margin-right: var(--dragwyb-label-icon-spacing, 5px);
+                }
+            }
+        }
+
+        &.dragwyb-field-label-icon-after {
+            .dragwyb-field-label {
+                flex-direction: row-reverse;
+
+                svg {
+                    margin-left: var(--dragwyb-label-icon-spacing, 5px);
+                }
+            }
+        }
+
         .dragwyb-field-label {
             font-family: var(--dragwyb-label-typography-family);
             font-size: var(--dragwyb-label-typography-size);
@@ -410,6 +437,19 @@
             margin-bottom: var(--dragwyb-label-spacing);
             cursor: pointer;
             transition: var(--dragwyb-transition);
+            display: flex;
+            align-items: center;
+
+            span.dragwyb-field-label-text {
+                display: flex;
+                align-items: center;
+            }
+
+            svg {
+                fill: var(--dragwyb-label-color);
+                stroke: var(--dragwyb-label-color);
+                width: var(--dragwyb-label-icon-size, var(--dragwyb-label-typography-size));
+            }
 
             .dragwyb-required {
                 color: var(--dragwyb-asterisk-color);
