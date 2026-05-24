@@ -269,7 +269,7 @@
     align-items: center;
     justify-content: center;
     flex-grow: 1;
-    padding: 7px 10px;
+    padding: 5px 10px;
     cursor: pointer;
     text-align: center;
     transition: all 0.2s ease;
@@ -298,8 +298,8 @@
     }
 
     // Icon styling adjustments
-    i {
-      font-size: 14px;
+    svg {
+      width: 14px;
       pointer-events: none;
     }
 
@@ -1008,11 +1008,18 @@
       color: #fff;
     }
 
-    i {
-      padding: .4rem;
+    .dragwyb-popover-toggle__icon {
+      padding: 0.4rem;
       background: hsl(var(--dragwyb-popover)/var(--dragwyb-bg-opacity, 1));
       border: 1px solid hsl(var(--dragwyb-border)/var(--dragwyb-border-opacity, 1));
       border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      svg {
+        width: 13px;
+      }
     }
   }
 

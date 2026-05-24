@@ -65,7 +65,7 @@ export default class PopoverToggleControl extends DragwybEditor.editor.extends.C
                 >
                     <this.RenderLabel />
                     {settings.icon && (
-                        <i className={`dragwyb-popover-toggle__icon ${settings.icon}`} aria-hidden="true" />
+                        <span className="dragwyb-popover-toggle__icon"><DragwybEditor.editor.IconsManager.Render icon={settings.icon} /></span>
                     )}
                 </div>
             </div>
