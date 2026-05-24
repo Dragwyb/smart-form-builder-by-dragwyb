@@ -243,11 +243,11 @@ class Field_Captcha extends Field_Base {
 		}
 
 		if ( $captcha_type === 'recaptcha_v2' && ! empty( $site_key ) ) {
-			wp_enqueue_script( 'google-recaptcha-v2', 'https://www.google.com/recaptcha/api.js', array(), null, true );
+			wp_enqueue_script( 'google-recaptcha-v2', 'https://www.google.com/recaptcha/api.js', array(), DRAGWYB_FORM_BUILDER_VERSION, true );
 		} elseif ( $captcha_type === 'recaptcha_v3' && ! empty( $site_key ) ) {
-			wp_enqueue_script( 'google-recaptcha-v3', 'https://www.google.com/recaptcha/api.js?render=' . esc_attr( $site_key ), array(), null, true );
+			wp_enqueue_script( 'google-recaptcha-v3', 'https://www.google.com/recaptcha/api.js?render=' . esc_attr( $site_key ), array(), DRAGWYB_FORM_BUILDER_VERSION, true );
 		} elseif ( $captcha_type === 'hcaptcha' && ! empty( $site_key ) ) {
-			wp_enqueue_script( 'hcaptcha', 'https://js.hcaptcha.com/1/api.js?recaptchacompat=off', array(), null, true );
+			wp_enqueue_script( 'hcaptcha', 'https://js.hcaptcha.com/1/api.js?recaptchacompat=off', array(), DRAGWYB_FORM_BUILDER_VERSION, true );
 		}
 
 		$this->add_field_attributes(
