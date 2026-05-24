@@ -1,11 +1,11 @@
-# Dragwyb Contact Form Builder – Drag & Drop Smart Forms
+# Smart Form Builder – Drag & Drop Smart Forms
 
 **Contributors:** dragwyb  
 **Tags:** contact form, form builder, drag and drop form, custom form, ajax form  
 **Plugin URI:** https://dragwyb.com/form-builder/
 **Author URI:** https://dragwyb.com/
 **Requires at least:** 5.8  
-**Tested up to:** 6.9  
+**Tested up to:** 7.0  
 **Requires PHP:** 7.4  
 **Stable tag:** 1.0.0  
 **License:** GPL2  
@@ -15,7 +15,7 @@ The fastest, zero-bloat drag and drop form builder for WordPress. Create secure 
 
 ## Description
 
-Looking for the fastest **drag and drop form builder** for WordPress? **Dragwyb Contact Form Builder** is a modern, React-powered **custom form plugin** designed for maximum speed, database performance, and extreme customization.
+Looking for the fastest **drag and drop form builder** for WordPress? **Smart Form Builder** is a modern, React-powered **custom form plugin** designed for maximum speed, database performance, and extreme customization.
 
 Whether you need to build a simple **contact form**, a multi-column lead generation form, or a detailed user survey, Dragwyb makes it incredibly easy. Unlike legacy **WordPress form plugins** that slow down your website by flooding the `wp_postmeta` table with individual entry data, Dragwyb uses a highly optimized **custom database table** (`dragwyb_submissions`) with JSON payloads. This guarantees your WordPress database remains lightning-fast, even with thousands of form submissions.
 
@@ -23,7 +23,7 @@ With an intuitive **drag-and-drop React interface**, 21 distinct form fields, de
 
 ## Live Demo
 
-Explore live examples of the **Dragwyb Contact Form Builder** in action:
+Explore live examples of the **Smart Form Builder** in action:
 
 🔗 [Dragwyb Form Builder Demo](https://dragwyb.com/form-builder/?utm_source=wpplugin&utm_medium=readme&utm_campaign=dragwyb_form)
 
