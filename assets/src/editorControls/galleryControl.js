@@ -25,7 +25,7 @@ export default class GalleryControl extends DragwybEditor.editor.extends.Control
                                     onClick={() => this.removeImage(image.id)}
                                     title="Remove Image"
                                 >
-                                    <i className="fa fa-times"></i>
+                                    <DragwybEditor.editor.IconsManager.Render icon={{ type: 'solid', icon: 'times' }} />
                                 </div>
                             </div>
                         ))}
@@ -37,7 +37,7 @@ export default class GalleryControl extends DragwybEditor.editor.extends.Control
                         className="dragwyb-btn-add-gallery"
                         onClick={() => this.openMediaFrame()}
                     >
-                        <i className="fa fa-plus-circle"></i>
+                        <DragwybEditor.editor.IconsManager.Render icon={{ type: 'solid', icon: 'plus-circle' }} />
                         {images.length > 0 ? ' Edit Gallery' : ' Add Images'}
                     </button>
                 </div>

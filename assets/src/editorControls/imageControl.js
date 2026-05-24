@@ -27,7 +27,7 @@ export default class ImageControl extends DragwybEditor.editor.extends.ControlBa
                                     onClick={() => this.removeImage()}
                                     title="Remove Image"
                                 >
-                                    <i className="fa fa-times"></i>
+                                    <DragwybEditor.editor.IconsManager.Render icon={{ type: 'solid', icon: 'times' }} />
                                 </div>
                             </div>
                         </div>
@@ -40,7 +40,7 @@ export default class ImageControl extends DragwybEditor.editor.extends.ControlBa
                         onClick={() => this.openMediaFrame()}
                         style={{ marginTop: image.url ? '10px' : '0' }}
                     >
-                        <i className={image.url ? "fa fa-pencil" : "fa fa-plus-circle"}></i>
+                        <DragwybEditor.editor.IconsManager.Render icon={{ type: 'solid', icon: image.url ? 'pencil' : 'plus-circle' }} />
                         {image.url ? ' Change Image' : ' Select Image'}
                     </button>
                 </div>

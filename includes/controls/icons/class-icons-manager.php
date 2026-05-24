@@ -144,7 +144,7 @@ class Icons_Manager {
 			return;
 		}
 
-		$valid_icon_types = array( 'solid', 'regular', 'brands' );
+		$valid_icon_types = Icons_Helper::get_icon_groups();
 
 		if ( ! in_array( $icon_type, $valid_icon_types ) ) {
 			return;

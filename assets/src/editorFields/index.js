@@ -316,7 +316,7 @@ class hiddenField extends DragwybEditor.editor.extends.FieldBase {
         return (
             <>
                 <div style={placeholderStyle}>
-                    <i className="fas fa-eye-slash"></i>
+                    <DragwybEditor.editor.IconsManager.Render icon={{ type: 'solid', icon: 'eye-slash' }} width={15} />
                     <strong>Hidden Field:</strong> {fieldId}
                     <span style={{ fontSize: '11px', marginLeft: 'auto' }}>(Value: {s.default_value || '(empty)'})</span>
                 </div>

@@ -716,6 +716,10 @@
       justify-content: center;
       transition: all 0.2s;
 
+      svg {
+        width: 13px
+      }
+
       &:hover,
       &.active {
         background: hsl(var(--dragwyb-input));
@@ -782,7 +786,10 @@
       align-items: center;
       justify-content: center;
       border-radius: 3px;
-      font-size: 14px;
+
+      svg {
+        width: 14px;
+      }
 
       &.selected {
         background: hsl(var(--dragwyb-primary) / 0.1);
@@ -792,7 +799,10 @@
       &.empty {
         background: hsl(var(--dragwyb-input) / 0.3);
         color: hsl(var(--dragwyb-sidebar-foreground) / 0.5);
-        font-size: 10px;
+
+        svg {
+          width: 10px;
+        }
       }
     }
 
@@ -802,10 +812,15 @@
       text-transform: capitalize;
     }
 
+    .dragwyb-preview-actions {
+      display: flex;
+      align-items: center;
+      line-height: 1;
+    }
+
     .remove-icon {
       color: #d63638;
-      font-size: 12px;
-      padding: 5px;
+      height: 18px;
       opacity: 0.6;
 
       &:hover {
@@ -870,6 +885,10 @@
         color: #d63638;
         font-size: 10px;
 
+        svg {
+          width: 12px;
+        }
+
         &:hover {
           background: #fff;
           color: #b32d2e;
@@ -892,11 +911,14 @@
     border-radius: 3px;
     cursor: pointer;
     transition: all 0.2s;
-    font-size: 13px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
+
+    svg {
+      width: 13px;
+    }
 
     &:hover {
       background: hsl(var(--dragwyb-input) / 0.2);
@@ -1242,8 +1264,8 @@
         border-color: hsl(var(--dragwyb-primary));
       }
 
-      i {
-        font-size: 20px;
+      svg {
+        width: 26px;
       }
 
       &.empty {

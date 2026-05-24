@@ -88,15 +88,7 @@ class Form_Preview {
 		}
 	}
 
-	public function init_iframe() {
-		// font-awesome@5.15.4
-		wp_enqueue_style(
-			'dragwyb-font-awesome',
-			esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/font-awesome/v5/all.min.css' ),
-			array(),
-			'5.15.4'
-		);
-	}
+	public function init_iframe() {}
 
 	public function enqueue_editor_preview_styles() {
 		wp_enqueue_style(
