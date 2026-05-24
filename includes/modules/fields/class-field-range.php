@@ -356,11 +356,13 @@ class Field_Range extends Field_Base {
 		$max_val = isset( $field_attr['max_val'] ) ? (float) $field_attr['max_val'] : null;
 
 		if ( $min_val !== null && (float) $value < $min_val ) {
-			$error_handler->add_error( $field_id, sprintf( __( 'Value must be greater than or equal to %s.', 'smart-form-builder-by-dragwyb' ), $min_val ) );
+			// translators: %s is the minimum value.
+			$error_handler->add_error( $field_id, sprintf( esc_html__( 'Value must be greater than or equal to %s.', 'smart-form-builder-by-dragwyb' ), esc_html( $min_val ) ) );
 		}
 
 		if ( $max_val !== null && (float) $value > $max_val ) {
-			$error_handler->add_error( $field_id, sprintf( __( 'Value must be less than or equal to %s.', 'smart-form-builder-by-dragwyb' ), $max_val ) );
+			// translators: %s is the maximum value.
+			$error_handler->add_error( $field_id, sprintf( esc_html__( 'Value must be less than or equal to %s.', 'smart-form-builder-by-dragwyb' ), esc_html( $max_val ) ) );
 		}
 	}
 

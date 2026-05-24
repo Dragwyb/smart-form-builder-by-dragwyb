@@ -303,12 +303,14 @@ class Field_Text extends Field_Base {
 		$max_length = isset( $field_attr['max_length'] ) ? (int) $field_attr['max_length'] : null;
 
 		if ( isset( $min_length ) && strlen( $value ) < $min_length ) {
-			$error_handler->add_error( $field_id, sprintf( __( 'This field requires at least %d characters.', 'smart-form-builder-by-dragwyb' ), $min_length ) );
+			// translators: %d is the minimum length.
+			$error_handler->add_error( $field_id, sprintf( esc_html__( 'This field requires at least %d characters.', 'smart-form-builder-by-dragwyb' ), esc_html( $min_length ) ) );
 			return;
 		}
 
 		if ( isset( $max_length ) && strlen( $value ) > $max_length ) {
-			$error_handler->add_error( $field_id, sprintf( __( 'This field requires at most %d characters.', 'smart-form-builder-by-dragwyb' ), $max_length ) );
+			// translators: %d is the maximum length.
+			$error_handler->add_error( $field_id, sprintf( esc_html__( 'This field requires at most %d characters.', 'smart-form-builder-by-dragwyb' ), esc_html( $max_length ) ) );
 			return;
 		}
 	}
