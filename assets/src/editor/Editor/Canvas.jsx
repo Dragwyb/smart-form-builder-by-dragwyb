@@ -83,21 +83,27 @@ const RenderItem = React.memo(({
         if (dragRef) dragRef(Node);
     }, [dropRef, dragRef]);
 
-    let wrapperClass = `dragwyb-field-wrapper dragwyb-${field.type}-field${field.css_classes || ''}`;
+    let wrapperClass = ['dragwyb-field-wrapper', `dragwyb-${field.type}-field`];
     let id = `dragwyb-field-wrapper-${field._id}`;
 
+    if (field.css_classes) {
+        wrapperClass.push(field.css_classes);
+    }
+
     if (allowedChildren === true) {
-        wrapperClass = `dragwyb-${field.type} dragwyb-has-actions`;
+        wrapperClass.push(`dragwyb-${field.type}`, 'dragwyb-has-actions');
         id = `dragwyb-${field.type}-${field._id}`;
     }
 
     if (['button', 'file', 'radio', 'checkbox'].includes(field.type)) {
-        wrapperClass += " dragwyb-no-float";
+        wrapperClass.push("dragwyb-no-float");
     }
 
     if (selectedField && selectedField === field._id) {
-        wrapperClass += " selected";
+        wrapperClass.push("selected");
     }
+
+    wrapperClass = DragwybBuilder.Hooks.applyFilter('Dragwyb/Field/WrapperClass', wrapperClass, fieldId, field.type, field.attributes, Utils);
 
     const onRootContainerSelect = useCallback(() => {
         const id = field._id;
@@ -127,7 +133,7 @@ const RenderItem = React.memo(({
             {!isDragging &&
                 <div
                     ref={setNodeRef}
-                    className={wrapperClass}
+                    className={wrapperClass.join(' ')}
                     onClick={onFieldSelectHandler}
                     {...listeners}
                     {...attributes}

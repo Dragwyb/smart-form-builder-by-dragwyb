@@ -560,6 +560,28 @@ export const deleteStyleSelectors = ({ dispatch, state, key, responsiveType = 'd
     }
 }
 
+export const getToolbarSetting = ({ state, toolbar, selectedToolbar = null, settingId, defaultValue = null }) => {
+    if (!settingId) {
+        return defaultValue;
+    }
+
+    let toolbarValue = state.form?.[toolbar];
+
+    if (!toolbarValue) {
+        return defaultValue;
+    }
+
+    if (selectedToolbar && toolbarValue[selectedToolbar]) {
+        toolbarValue = toolbarValue[selectedToolbar];
+    }
+
+    if (!toolbarValue) {
+        return defaultValue;
+    }
+
+    return toolbarValue?.[settingId] ?? defaultValue;
+}
+
 export const compareTwoObjects = ({ obj1, obj2 }) => {
     const keys = Object.keys(obj1);
     let isvalueChanged = true;
