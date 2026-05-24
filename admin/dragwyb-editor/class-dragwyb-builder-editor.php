@@ -107,9 +107,9 @@ if ( ! class_exists( 'Dragwyb_Builder_Editor' ) ) {
 			$builder_page   = DRAGWYB_PREFIX . '-form-builder';
 			$screen_id      = DRAGWYB_PREFIX . '-form_page_' . DRAGWYB_PREFIX . '-form-builder';
 			$current_screen = get_current_screen();
-			$current_page   = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for admin dashboard pages check
+			$current_page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
 
-            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for admin dashboard pages check
 			if ( ( ! isset( $current_screen ) || $current_screen->id !== $screen_id ) && $current_page !== $builder_page ) {
 				return;
 			}
@@ -341,6 +341,7 @@ if ( ! class_exists( 'Dragwyb_Builder_Editor' ) ) {
 
 			$frontend = Frontend_Render::instance();
 			$frontend->init( $form_id );
+			$frontend->enqueue_static_assets();
 			$style_cache     = $frontend->get_generated_css();
 			$root_containers = $frontend->get_root_containers();
 

@@ -296,7 +296,9 @@ class Dragwyb_Form_Builder_Ajax {
 		// Check if full edit data exists (JSON payload)
 		if ( isset( $_POST['submission_data'] ) ) {
 			// Data is JSON string from JS, decode it, sanitize it, and encode it back to ensure validity
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Data is properly sanitized later in the foreach loop
 			$submission_data = json_decode( wp_unslash( $_POST['submission_data'] ), true );
+
 			if ( json_last_error() === JSON_ERROR_NONE && is_array( $submission_data ) ) {
 				$sanitized = array();
 				foreach ( $submission_data as $key => $val ) {
