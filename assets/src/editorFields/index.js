@@ -20,12 +20,12 @@ class textField extends DragwybEditor.editor.extends.FieldBase {
                         defaultValue={s.default_value}
                         onChange={(e) => this.updateField(this.id, e.target.value)}
                     />
-                    {label && (
-                        <label htmlFor={fieldId} className="dragwyb-field-label">
-                            {label}
-                            {s.required === 'yes' && <span className="dragwyb-required">*</span>}
-                        </label>
-                    )}
+                    {label && <this.RenderLabel
+                        id={fieldId}
+                        label={label}
+                        required={s.required}
+                        settings={s}
+                    />}
                 </div>
                 {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
             </>
@@ -53,12 +53,12 @@ class emailField extends DragwybEditor.editor.extends.FieldBase {
                         defaultValue={s.default_value}
                         onChange={(e) => this.updateField(this.id, e.target.value)}
                     />
-                    {label && (
-                        <label htmlFor={fieldId} className="dragwyb-field-label">
-                            {label}
-                            {s.required === 'yes' && <span className="dragwyb-required">*</span>}
-                        </label>
-                    )}
+                    {label && <this.RenderLabel
+                        id={fieldId}
+                        label={label}
+                        required={s.required}
+                        settings={s}
+                    />}
                 </div>
                 {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
             </>
@@ -86,12 +86,12 @@ class dateField extends DragwybEditor.editor.extends.FieldBase {
                         defaultValue={s.default_value}
                         onChange={(e) => this.updateField(this.id, e.target.value)}
                     />
-                    {label && (
-                        <label htmlFor={fieldId} className="dragwyb-field-label">
-                            {label}
-                            {s.required === 'yes' && <span className="dragwyb-required">*</span>}
-                        </label>
-                    )}
+                    {label && <this.RenderLabel
+                        id={fieldId}
+                        label={label}
+                        required={s.required}
+                        settings={s}
+                    />}
                 </div>
                 {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
             </>
@@ -119,12 +119,12 @@ class textAreaField extends DragwybEditor.editor.extends.FieldBase {
                         className="dragwyb-field-input"
                         onChange={(e) => this.updateField(this.id, e.target.value)}
                     ></textarea>
-                    {label && (
-                        <label htmlFor={fieldId} className="dragwyb-field-label">
-                            {label}
-                            {s.required === 'yes' && <span className="dragwyb-required">*</span>}
-                        </label>
-                    )}
+                    {label && <this.RenderLabel
+                        id={fieldId}
+                        label={label}
+                        required={s.required}
+                        settings={s}
+                    />}
                 </div>
                 {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
             </>
@@ -154,12 +154,12 @@ class selectField extends DragwybEditor.editor.extends.FieldBase {
                                 <option key={i} value={opt.attributes.option_value}>{opt.attributes.option_label}</option>
                         ))}
                     </select>
-                    {label && (
-                        <label htmlFor={fieldId} className="dragwyb-field-label">
-                            {label}
-                            {s.required === 'yes' && <span className="dragwyb-required">*</span>}
-                        </label>
-                    )}
+                    {label && <this.RenderLabel
+                        id={fieldId}
+                        label={label}
+                        required={s.required}
+                        settings={s}
+                    />}
                 </div>
                 {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
             </>
@@ -192,12 +192,12 @@ class radioField extends DragwybEditor.editor.extends.FieldBase {
                                 </label>
                         ))}
                     </div>
-                    {label && (
-                        <label htmlFor={fieldId} className="dragwyb-field-label">
-                            {label}
-                            {s.required === 'yes' && <span className="dragwyb-required">*</span>}
-                        </label>
-                    )}
+                    {label && <this.RenderLabel
+                        id={fieldId}
+                        label={label}
+                        required={s.required}
+                        settings={s}
+                    />}
                 </div>
                 {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
             </>
@@ -216,12 +216,12 @@ class fileField extends DragwybEditor.editor.extends.FieldBase {
 
         return (
             <>
-                {label && (
-                    <label htmlFor={fieldId} className="dragwyb-field-label">
-                        {label}
-                        {s.required === 'yes' && <span className="dragwyb-required">*</span>}
-                    </label>
-                )}
+                {label && <this.RenderLabel
+                    id={fieldId}
+                    label={label}
+                    required={s.required}
+                    settings={s}
+                />}
                 <div className="dragwyb-file-upload-container">
                     <input type="file" id={fieldId} className="dragwyb-field-input" disabled />
                 </div>
@@ -243,7 +243,12 @@ class checkboxField extends DragwybEditor.editor.extends.FieldBase {
         return (
             <>
                 <div className="dragwyb-input-group">
-                    {s.label && <div className="dragwyb-field-label">{s.label}</div>}
+                    {s.label && <this.RenderLabel
+                        id={''}
+                        label={s.label}
+                        required={s.required}
+                        settings={s}
+                    />}
                     <div className={`dragwyb-options-container ${layoutClass}`}>
                         {options.map((opt, i) => (
                             !opt.attributes ? null :
@@ -280,12 +285,12 @@ class numberField extends DragwybEditor.editor.extends.FieldBase {
                         max={s.max_val}
                         step={s.step}
                     />
-                    {label && (
-                        <label htmlFor={fieldId} className="dragwyb-field-label">
-                            {label}
-                            {s.required === 'yes' && <span className="dragwyb-required">*</span>}
-                        </label>
-                    )}
+                    {label && <this.RenderLabel
+                        id={fieldId}
+                        label={label}
+                        required={s.required}
+                        settings={s}
+                    />}
                 </div>
                 {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
             </>
@@ -353,7 +358,12 @@ class urlField extends DragwybEditor.editor.extends.FieldBase {
             <>
                 <div className="dragwyb-input-group">
                     <input type="url" id={fieldId} className="dragwyb-field-input" placeholder={s.placeholder || ' '} defaultValue={s.default_value} onChange={(e) => this.updateField(this.id, e.target.value)} />
-                    {label && (<label htmlFor={fieldId} className="dragwyb-field-label">{label}{s.required === 'yes' && <span className="dragwyb-required">*</span>}</label>)}
+                    {label && <this.RenderLabel
+                        id={fieldId}
+                        label={label}
+                        required={s.required}
+                        settings={s}
+                    />}
                 </div>
                 {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
             </>
@@ -373,7 +383,12 @@ class phoneField extends DragwybEditor.editor.extends.FieldBase {
             <>
                 <div className="dragwyb-input-group">
                     <input type="tel" id={fieldId} className="dragwyb-field-input" placeholder={s.placeholder || ' '} defaultValue={s.default_value} onChange={(e) => this.updateField(this.id, e.target.value)} />
-                    {label && (<label htmlFor={fieldId} className="dragwyb-field-label">{label}{s.required === 'yes' && <span className="dragwyb-required">*</span>}</label>)}
+                    {label && <this.RenderLabel
+                        id={fieldId}
+                        label={label}
+                        required={s.required}
+                        settings={s}
+                    />}
                 </div>
                 {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
             </>
@@ -393,7 +408,12 @@ class nameField extends DragwybEditor.editor.extends.FieldBase {
             <>
                 <div className="dragwyb-input-group">
                     <input type="text" id={fieldId} className="dragwyb-field-input" placeholder={s.placeholder || ' '} defaultValue={s.default_value} onChange={(e) => this.updateField(this.id, e.target.value)} />
-                    {label && (<label htmlFor={fieldId} className="dragwyb-field-label">{label}{s.required === 'yes' && <span className="dragwyb-required">*</span>}</label>)}
+                    {label && <this.RenderLabel
+                        id={fieldId}
+                        label={label}
+                        required={s.required}
+                        settings={s}
+                    />}
                 </div>
                 {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
             </>
@@ -413,7 +433,12 @@ class addressField extends DragwybEditor.editor.extends.FieldBase {
             <>
                 <div className="dragwyb-input-group">
                     <textarea id={fieldId} className="dragwyb-field-input" rows="3" placeholder={s.placeholder || ' '} defaultValue={s.default_value} onChange={(e) => this.updateField(this.id, e.target.value)}></textarea>
-                    {label && (<label htmlFor={fieldId} className="dragwyb-field-label">{label}{s.required === 'yes' && <span className="dragwyb-required">*</span>}</label>)}
+                    {label && <this.RenderLabel
+                        id={fieldId}
+                        label={label}
+                        required={s.required}
+                        settings={s}
+                    />}
                 </div>
                 {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
             </>
@@ -433,7 +458,12 @@ class timeField extends DragwybEditor.editor.extends.FieldBase {
             <>
                 <div className="dragwyb-input-group">
                     <input type="time" id={fieldId} className="dragwyb-field-input" defaultValue={s.default_value} onChange={(e) => this.updateField(this.id, e.target.value)} />
-                    {label && (<label htmlFor={fieldId} className="dragwyb-field-label">{label}{s.required === 'yes' && <span className="dragwyb-required">*</span>}</label>)}
+                    {label && <this.RenderLabel
+                        id={fieldId}
+                        label={label}
+                        required={s.required}
+                        settings={s}
+                    />}
                 </div>
                 {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
             </>
@@ -470,7 +500,12 @@ class rangeField extends DragwybEditor.editor.extends.FieldBase {
                             this.updateField(this.id, e.target.value);
                         }} />
                     </div>
-                    {label && (<label htmlFor={fieldId} className="dragwyb-field-label">{label}{s.required === 'yes' && <span className="dragwyb-required">*</span>}</label>)}
+                    {label && <this.RenderLabel
+                        id={fieldId}
+                        label={label}
+                        required={s.required}
+                        settings={s}
+                    />}
                 </div>
                 {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
             </>
