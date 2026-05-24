@@ -194,11 +194,12 @@
 .dragwyb-form-wrapper {
 
     /* --- Default / Top --- */
-    &:not(.dragwyb-layout-left):not(.dragwyb-layout-floating),
-    &.dragwyb-layout-top {
-        .dragwyb-input-group {
-            display: flex;
-            flex-direction: column-reverse;
+    &:not(.dragwyb-layout-left, .dragwyb-layout-floating) {
+        .dragwyb-field-wrapper:not(.dragwyb-no-float) {
+            .dragwyb-input-group {
+                display: flex;
+                flex-direction: column-reverse;
+            }
         }
     }
 
@@ -217,11 +218,13 @@
             .dragwyb-field-label {
                 grid-column: 1;
                 margin-bottom: 0;
+                order: 0;
             }
 
             .dragwyb-field-input,
             .dragwyb-options-container {
                 grid-column: 2;
+                order: 1;
             }
 
             .dragwyb-field-help {
