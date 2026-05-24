@@ -69,6 +69,7 @@ class After_Submission extends Toolbar_Base {
 		$form_id      = absint( $this->get_form_id() );
 		$data         = array();
 
+		// translators: %s: Form name.
 		$data['label'] = sprintf( esc_html__( '%s Settings', 'smart-form-builder-by-dragwyb' ), sanitize_text_field( $this->get_name() ) );
 
 		// Base toolbar settings
