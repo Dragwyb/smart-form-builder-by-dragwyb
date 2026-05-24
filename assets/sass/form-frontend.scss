@@ -402,6 +402,24 @@
         flex: 0 0 calc((var(--dragwyb-field-width) * 1%) - (var(--dragwyb-field-gap) * (1 - var(--dragwyb-field-width) / 100)));
         grid-column: span var(--dragwyb-column-span, 1);
 
+        &.dragwyb-field-label-icon-before {
+            .dragwyb-field-label {
+                svg {
+                    margin-right: var(--dragwyb-label-icon-spacing, 5px);
+                }
+            }
+        }
+
+        &.dragwyb-field-label-icon-after {
+            .dragwyb-field-label {
+                flex-direction: row-reverse;
+
+                svg {
+                    margin-left: var(--dragwyb-label-icon-spacing, 5px);
+                }
+            }
+        }
+
         .dragwyb-field-label {
             font-family: var(--dragwyb-label-typography-family);
             font-size: var(--dragwyb-label-typography-size);
@@ -422,25 +440,9 @@
             display: flex;
             align-items: center;
 
-            &.label-icon-after {
-                flex-direction: row-reverse;
-            }
-
             span.dragwyb-field-label-text {
                 display: flex;
                 align-items: center;
-            }
-
-            &.label-icon-before {
-                svg {
-                    margin-right: var(--dragwyb-label-icon-spacing, 5px);
-                }
-            }
-
-            &.label-icon-after {
-                svg {
-                    margin-left: var(--dragwyb-label-icon-spacing, 5px);
-                }
             }
 
             svg {

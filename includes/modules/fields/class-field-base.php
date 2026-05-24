@@ -319,7 +319,7 @@ abstract class Field_Base extends Register_Controls_Base {
 		$field_label_class = 'dragwyb-field-label';
 
 		if ( ! empty( $icon_to_render['icon'] ) ) {
-			$field_label_class .= ' dragwyb-field-label-icon label-icon-' . esc_attr( $global_icon_position );
+			$field_label_class .= ' dragwyb-field-label-icon';
 		}
 		?>
 		<label for="<?php echo esc_attr( $for_id ); ?>" class="<?php echo esc_attr( $field_label_class ); ?> ">
