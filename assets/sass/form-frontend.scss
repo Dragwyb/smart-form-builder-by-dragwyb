@@ -419,8 +419,14 @@
             margin-bottom: var(--dragwyb-label-spacing);
             cursor: pointer;
             transition: var(--dragwyb-transition);
+            display: flex;
+            align-items: center;
 
-            &:where(.dragwyb-field-label-icon) {
+            &.label-icon-after {
+                flex-direction: row-reverse;
+            }
+
+            span.dragwyb-field-label-text {
                 display: flex;
                 align-items: center;
             }

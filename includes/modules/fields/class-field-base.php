@@ -324,24 +324,25 @@ abstract class Field_Base extends Register_Controls_Base {
 		?>
 		<label for="<?php echo esc_attr( $for_id ); ?>" class="<?php echo esc_attr( $field_label_class ); ?> ">
 			<?php
-			if ( $global_icon_position === 'before' ) {
-				if ( ! empty( $icon_to_render['icon'] ) ) {
-					\Dragwyb\Form_Builder\Includes\Controls\Icons\Icons_Manager::render_icon( $icon_to_render, array( 'class' => 'dragwyb-label-icon' ) );
-				}
+			if ( ! empty( $icon_to_render['icon'] ) ) {
+				\Dragwyb\Form_Builder\Includes\Controls\Icons\Icons_Manager::render_icon( $icon_to_render, array( 'class' => 'dragwyb-label-icon' ) );
 			}
-			?>
-			<?php echo esc_html( $label ); ?>
-			<?php
-			if ( $global_icon_position === 'after' ) {
-				if ( ! empty( $icon_to_render['icon'] ) ) {
-					\Dragwyb\Form_Builder\Includes\Controls\Icons\Icons_Manager::render_icon( $icon_to_render, array( 'class' => 'dragwyb-label-icon' ) );
-				}
+
+			if ( ! empty( $icon_to_render['icon'] ) ) {
+				echo '<span class="dragwyb-field-label-text">';
 			}
-			?>
-			<?php
+
+			echo esc_html( $label );
+
 			if ( $required ) :
 				?>
-				<span class="dragwyb-required">*</span><?php endif; ?>
+				<span class="dragwyb-required">*</span>
+				<?php
+				endif;
+			if ( ! empty( $icon_to_render['icon'] ) ) {
+				echo '</span>';
+			}
+			?>
 		</label>
 		<?php
 	}
