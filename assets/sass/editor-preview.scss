@@ -99,6 +99,23 @@ html {
     &__add-field {
         width: 100%;
 
+        &-icon {
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease-in-out;
+            background: hsl(var(--dragwyb-card-foreground)/0.3);
+            margin-bottom: 6px;
+
+            svg {
+                fill: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
+                width: 13px;
+            }
+        }
+
         &-wrapper {
             border: 2px dashed hsl(var(--dragwyb-border)/var(--dragwyb-bg-opacity, 1));
             padding: 20px;
@@ -114,20 +131,6 @@ html {
             margin-top: 10px;
             cursor: pointer;
 
-            i {
-                font-size: 13px;
-                border-radius: 50%;
-                width: 18px;
-                height: 18px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                transition: all 0.3s ease-in-out;
-                background: hsl(var(--dragwyb-card-foreground)/0.3);
-                color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
-                margin-bottom: 6px;
-            }
-
             P {
                 margin: 0;
                 font-size: 17px;
@@ -140,9 +143,11 @@ html {
             &:hover {
                 border-color: hsl(var(--dragwyb-primary) / var(--dragwyb-border-opacity, 1));
                 background-color: hsl(var(--dragwyb-primary)/12%);
+
                 color: hsl(var(--dragwyb-primary)/1);
 
-                i {
+                span.dragwyb-canvas__add-field-icon {
+                    fill: hsl(var(--dragwyb-primary)/1);
                     background: hsl(var(--dragwyb-primary)/1);
                 }
             }

@@ -4,6 +4,7 @@ import App from './App';
 import DragwybControlBase from './controlBase';
 import DragwybFieldBase from './fieldBase';
 import DragwybToolbarBase from './toolbarBase';
+import IconsManager from './components/IconsManager';
 import '../../sass/editor.scss';
 
 if (!DragwybEditor.editor) {
@@ -17,6 +18,7 @@ if (!DragwybEditor.editor.extends) {
 DragwybEditor.editor.extends.FieldBase = DragwybFieldBase;
 DragwybEditor.editor.extends.ControlBase = DragwybControlBase;
 DragwybEditor.editor.extends.ToolbarBase = DragwybToolbarBase;
+DragwybEditor.editor.IconsManager = IconsManager;
 
 Object.freeze(DragwybEditor);
 

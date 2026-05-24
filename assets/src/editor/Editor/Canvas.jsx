@@ -5,6 +5,7 @@ import * as Fields from "./Fields";
 import { addField } from "../store/actions";
 import { __, sprintf } from "@wordpress/i18n";
 import { Utils as Helper } from '../components/Utils';
+import IconsManager from "../components/IconsManager";
 
 const RenderItem = React.memo(({
     fieldId,
@@ -227,7 +228,7 @@ const AddFieldMsg = React.memo(({ setActiveTab, updateFieldSelect }) => {
             }}
         >
             <div className={`dragwyb-canvas__add-field-wrapper ${isOver ? " drag-active" : ""}`}>
-                {(!isOver && activeTab !== 'fields') && <i className="fas fa-plus" />}
+                {(!isOver && activeTab !== 'fields') && <span className="dragwyb-canvas__add-field-icon"><IconsManager.renderIcons icon={{ type: 'solid', icon: 'plus' }} /></span>}
                 <p>{emptyMessage}</p>
             </div>
         </div>

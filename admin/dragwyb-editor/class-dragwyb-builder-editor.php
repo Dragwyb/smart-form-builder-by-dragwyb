@@ -242,20 +242,26 @@ if ( ! class_exists( 'Dragwyb_Builder_Editor' ) ) {
 		}
 
 		private function get_fa_icons_list(): array {
-			$icons = Icons_Helper::get_icons_list_group();
+			$dragwyb_icons = Icons_Helper::get_icon_groups();
 
-			return $icons;
+			$icons_array = array();
+
+			foreach ( $dragwyb_icons as $dragwyb_icon ) {
+				$svg_file_path = DRAGWYB_FORM_BUILDER_PATH . 'includes/controls/icons/json/' . sanitize_file_name( $dragwyb_icon ) . '.php';
+
+				if ( ! file_exists( $svg_file_path ) ) {
+					continue;
+				}
+
+				$dragwyb_svg_icons = require $svg_file_path;
+
+				$icons_array[ $dragwyb_icon ] = $dragwyb_svg_icons;
+			}
+
+			return $icons_array;
 		}
 
 		private function external_libs(): void {
-			// font-awesome@5.15.4
-			wp_enqueue_style(
-				'dragwyb-font-awesome',
-				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/font-awesome/v5/all.min.css' ),
-				array(),
-				'5.15.4'
-			);
-
 			// @simonwep/pickr@1.9.1 style
 			wp_enqueue_style(
 				'dragwyb-pickr',

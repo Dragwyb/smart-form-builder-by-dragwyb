@@ -6,6 +6,7 @@ import { __ } from '@wordpress/i18n';
 import { escUrl } from '../../utils/escaping';
 import { updateThemeMode } from '../../store/actions';
 import ResponsiveDevices from '../../components/Common/ResponsiveDevices';
+import IconsManager from '../../components/IconsManager';
 
 // Import the icons you requested
 import { FaSun, FaMoon } from 'react-icons/fa';
@@ -79,7 +80,7 @@ const Header = () => {
                     </div>
                 </div>
                 <a href={escUrl(DragwybEditor.previewUrl)} className='dragwyb-editor__preview-toggle' target="_blank">
-                    <i className='far fa-eye' title={__('Preview', 'smart-form-builder-by-dragwyb')} />
+                    <IconsManager icon='far fa-eye' title={__('Preview', 'smart-form-builder-by-dragwyb')} />
                 </a>
                 <hr />
                 <a href={escUrl(DragwybEditor.adminUrl)} className='dragwyb-button dragwyb-button--default dragwyb-button--medium'>

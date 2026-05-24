@@ -620,11 +620,15 @@ body {
             line-height: 1;
             font-weight: 500;
             border-radius: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
 
-            i {
+            .dragwyb-button__text {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            svg {
+                width: 15px;
                 margin-right: .5rem;
             }
         }
@@ -680,7 +684,6 @@ body {
         justify-content: center;
         color: #fff;
         border-radius: 50%;
-        font-size: 1.1rem;
         text-decoration: none;
 
         &>div {
@@ -688,7 +691,12 @@ body {
         }
     }
 
-    &__preview-toggle i {
+    &__preview-toggle {
+        padding: unset !important;
+    }
+
+    &__preview-toggle svg {
+        width: 1.2rem;
         margin-right: 0px !important;
     }
 
