@@ -271,7 +271,7 @@ class Field_Captcha extends Field_Base {
 		?>
 		<div <?php $this->render_field_attributes( 'wrapper' ); ?>>
 			<?php if ( $hide_label !== 'yes' && ! empty( $label ) && $captcha_type !== 'recaptcha_v3' ) : ?>
-				<?php $this->render_field_label( $field_id, $label, false, $settings, $field_id . '_input' ); ?>
+				<?php $this->render_field_label( $field_id . '_input', $label, false, $settings ); ?>
 			<?php endif; ?>
 			<div class="dragwyb-captcha-container" data-type="<?php echo esc_attr( $captcha_type ); ?>" data-sitekey="<?php echo esc_attr( $site_key ); ?>" id="<?php echo esc_attr( $field_id ); ?>_container">
 				<?php if ( empty( $site_key ) ) : ?>

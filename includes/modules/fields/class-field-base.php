@@ -296,16 +296,11 @@ abstract class Field_Base extends Register_Controls_Base {
 	 * @param string $label The label text.
 	 * @param bool   $required Whether the field is required.
 	 * @param array  $settings The field settings.
-	 * @param string $for_id The ID of the form element this label is for.
 	 * @return void
 	 */
-	protected function render_field_label( string $field_id, string $label, bool $required, array $settings, string $for_id = '' ) {
+	protected function render_field_label( string $field_id = '', string $label, bool $required, array $settings ) {
 		if ( empty( $label ) ) {
 			return;
-		}
-
-		if ( empty( $for_id ) ) {
-			$for_id = $field_id;
 		}
 
 		$field_icon = $this->field_key_exist( $settings, 'label_icon', array() );
@@ -318,7 +313,7 @@ abstract class Field_Base extends Register_Controls_Base {
 			$field_label_class .= ' dragwyb-field-label-icon';
 		}
 		?>
-		<label for="<?php echo esc_attr( $for_id ); ?>" class="<?php echo esc_attr( $field_label_class ); ?> ">
+		<label for="<?php echo esc_attr( $field_id ); ?>" class="<?php echo esc_attr( $field_label_class ); ?> ">
 			<?php
 			if ( ! empty( $icon_to_render['icon'] ) ) {
 				\Dragwyb\Form_Builder\Includes\Controls\Icons\Icons_Manager::render_icon( $icon_to_render, array( 'class' => 'dragwyb-label-icon' ) );
