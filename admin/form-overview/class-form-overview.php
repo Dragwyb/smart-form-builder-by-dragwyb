@@ -64,7 +64,7 @@ if ( ! class_exists( 'Form_Overview' ) ) {
 
 			<div class="wrap">
 				<h1 class="wp-heading-inline"><?php esc_html_e( 'Smart Form Builder', 'smart-form-builder-by-dragwyb' ); ?></h1>
-				<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . DRAGWYB_PREFIX . '-form-builder' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add Form' ); ?></a>
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . DRAGWYB_PREFIX . '-form-builder' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add Form', 'smart-form-builder-by-dragwyb' ); ?></a>
 				<hr class="wp-header-end">
 				<ul class="subsubsub">
 					<?php
