@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\After_Submission\Actions;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 use Dragwyb\Form_Builder\Includes\After_Submission\Action_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
