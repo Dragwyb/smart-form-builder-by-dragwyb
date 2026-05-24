@@ -308,10 +308,6 @@ abstract class Field_Base extends Register_Controls_Base {
 			$for_id = $field_id;
 		}
 
-		$toolbar_settings = $this->get_toolbars_values( 'style' );
-
-		$global_icon_position = $this->field_key_exist( $toolbar_settings, 'label_icon_position', 'before' );
-
 		$field_icon = $this->field_key_exist( $settings, 'label_icon', array() );
 
 		$icon_to_render = ! empty( $field_icon['icon'] ) ? $field_icon : '';
