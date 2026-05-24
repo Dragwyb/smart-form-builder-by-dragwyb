@@ -211,6 +211,7 @@ abstract class Field_Base extends Register_Controls_Base {
 	abstract public function sanitize( string $default = '', $value = null );
 
 	public function render() {
+		$this->field_attributes = array();
 		$this->enqueue_assets();
 		$this->render_field();
 	}
