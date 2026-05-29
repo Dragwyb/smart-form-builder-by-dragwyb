@@ -83,7 +83,10 @@ const RenderItem = React.memo(({
         if (dragRef) dragRef(Node);
     }, [dropRef, dragRef]);
 
-    let wrapperClass = ['dragwyb-field-wrapper', `dragwyb-${field.type}-field`];
+    let wrapperClass = [];
+    if (field.type !== 'row') {
+        wrapperClass = ['dragwyb-field-wrapper', `dragwyb-${field.type}-field`];
+    }
     let id = `dragwyb-field-wrapper-${field._id}`;
 
     if (field.css_classes) {
