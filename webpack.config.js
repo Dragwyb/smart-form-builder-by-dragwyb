@@ -174,6 +174,7 @@ module.exports = (env, argv) => {
             'editor',
             'core',
             'editorFields',
+            'editorPreview',
             'editorControls',
             'toolbars',
         ],
