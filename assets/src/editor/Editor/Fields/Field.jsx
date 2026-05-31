@@ -2,12 +2,11 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { useDraggable, useDroppable } from "../../components/Common";
 
-const Field = ({ field, value = '', onChange, errors = [], disabled = false, children, childrens, Utils }) => {
+const Field = ({ field, value = '', errors = [], disabled = false, children, childrens, Utils, perviewIFrame }) => {
 
     const getHtml = () => {
         return <div>Unsupported field type: {field.type}</div>;
     };
-
 
     if (['row'].includes(field.type)) {
         const extensibleUtils = {};
@@ -17,7 +16,9 @@ const Field = ({ field, value = '', onChange, errors = [], disabled = false, chi
         Utils = { ...Utils, ...extensibleUtils };
     }
 
-    let Html = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/FieldRender/' + field.type, getHtml(), children, field.type, field._id, value, field, onChange, Utils, childrens);
+    const previewFrameWindow = perviewIFrame.defaultView;
+
+    let Html = previewFrameWindow.DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/FieldRender/' + field.type, getHtml(), children, field.type, field._id, value, field, Utils, childrens);
 
     return (
         <>

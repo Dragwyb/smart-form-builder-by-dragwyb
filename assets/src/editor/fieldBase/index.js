@@ -1,6 +1,4 @@
 class DragwybFieldBase {
-    #updateValue = () => { }
-
     constructor(args) {
         this.fieldName = this.fieldName();
 
@@ -28,9 +26,8 @@ class DragwybFieldBase {
         this.id = args[3];
         this.value = args[4];
         this.field = args[5];
-        this.#updateValue = args[6];
-        this.Utils = args[7];
-        this.childrenIds = args[8];
+        this.Utils = args[6];
+        this.childrenIds = args[7];
 
         this.attributes = this.field.attributes
     }
@@ -72,18 +69,8 @@ class DragwybFieldBase {
                             }
                         </>
                 }
-
             </label>
         )
-    }
-
-    updateField(key, value) {
-        this.#triggerOnChange(key, value)
-    }
-
-    #triggerOnChange(key, value) {
-        this.value = value;
-        this.#updateValue({ fieldObject: this });
     }
 
     /**

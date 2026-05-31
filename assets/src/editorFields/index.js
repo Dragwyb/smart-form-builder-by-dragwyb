@@ -18,7 +18,6 @@ class textField extends DragwybEditor.editor.extends.FieldBase {
                         className="dragwyb-field-input"
                         placeholder={s.placeholder || ' '}
                         defaultValue={s.default_value}
-                        onChange={(e) => this.updateField(this.id, e.target.value)}
                     />
                     {label && <this.RenderLabel
                         id={fieldId}
@@ -51,7 +50,6 @@ class emailField extends DragwybEditor.editor.extends.FieldBase {
                         className="dragwyb-field-input"
                         placeholder={s.placeholder || ' '}
                         defaultValue={s.default_value}
-                        onChange={(e) => this.updateField(this.id, e.target.value)}
                     />
                     {label && <this.RenderLabel
                         id={fieldId}
@@ -84,7 +82,6 @@ class dateField extends DragwybEditor.editor.extends.FieldBase {
                         className="dragwyb-field-input"
                         placeholder={s.placeholder || ' '}
                         defaultValue={s.default_value}
-                        onChange={(e) => this.updateField(this.id, e.target.value)}
                     />
                     {label && <this.RenderLabel
                         id={fieldId}
@@ -117,7 +114,6 @@ class textAreaField extends DragwybEditor.editor.extends.FieldBase {
                         rows={s.rows || 4}
                         placeholder={s.placeholder || ' '}
                         className="dragwyb-field-input"
-                        onChange={(e) => this.updateField(this.id, e.target.value)}
                     ></textarea>
                     {label && <this.RenderLabel
                         id={fieldId}
@@ -146,9 +142,7 @@ class selectField extends DragwybEditor.editor.extends.FieldBase {
         return (
             <>
                 <div className="dragwyb-input-group">
-                    <select id={fieldId} className="dragwyb-field-input" multiple={s.multiple === 'yes'}
-                        onChange={(e) => this.updateField(this.id, e.target.value)}
-                    >
+                    <select id={fieldId} className="dragwyb-field-input" multiple={s.multiple === 'yes'}>
                         {options.map((opt, i) => (
                             !opt.attributes ? null :
                                 <option key={i} value={opt.attributes.option_value}>{opt.attributes.option_label}</option>
@@ -186,8 +180,7 @@ class radioField extends DragwybEditor.editor.extends.FieldBase {
                         {options.map((opt, i) => (
                             !opt.attributes ? null :
                                 <label key={i} className="dragwyb-option-item">
-                                    <input type="radio" name={fieldId} value={opt.attributes.option_value}
-                                        onChange={(e) => this.updateField(this.id, e.target.value)} />
+                                    <input type="radio" name={fieldId} value={opt.attributes.option_value} />
                                     <span className="dragwyb-radio-label">{opt.attributes.option_label}</span>
                                 </label>
                         ))}
@@ -357,7 +350,7 @@ class urlField extends DragwybEditor.editor.extends.FieldBase {
         return (
             <>
                 <div className="dragwyb-input-group">
-                    <input type="url" id={fieldId} className="dragwyb-field-input" placeholder={s.placeholder || ' '} defaultValue={s.default_value} onChange={(e) => this.updateField(this.id, e.target.value)} />
+                    <input type="url" id={fieldId} className="dragwyb-field-input" placeholder={s.placeholder || ' '} defaultValue={s.default_value} />
                     {label && <this.RenderLabel
                         id={fieldId}
                         label={label}
@@ -382,7 +375,7 @@ class phoneField extends DragwybEditor.editor.extends.FieldBase {
         return (
             <>
                 <div className="dragwyb-input-group">
-                    <input type="tel" id={fieldId} className="dragwyb-field-input" placeholder={s.placeholder || ' '} defaultValue={s.default_value} onChange={(e) => this.updateField(this.id, e.target.value)} />
+                    <input type="tel" id={fieldId} className="dragwyb-field-input" placeholder={s.placeholder || ' '} defaultValue={s.default_value} />
                     {label && <this.RenderLabel
                         id={fieldId}
                         label={label}
@@ -407,7 +400,7 @@ class nameField extends DragwybEditor.editor.extends.FieldBase {
         return (
             <>
                 <div className="dragwyb-input-group">
-                    <input type="text" id={fieldId} className="dragwyb-field-input" placeholder={s.placeholder || ' '} defaultValue={s.default_value} onChange={(e) => this.updateField(this.id, e.target.value)} />
+                    <input type="text" id={fieldId} className="dragwyb-field-input" placeholder={s.placeholder || ' '} defaultValue={s.default_value} />
                     {label && <this.RenderLabel
                         id={fieldId}
                         label={label}
@@ -432,7 +425,7 @@ class addressField extends DragwybEditor.editor.extends.FieldBase {
         return (
             <>
                 <div className="dragwyb-input-group">
-                    <textarea id={fieldId} className="dragwyb-field-input" rows="3" placeholder={s.placeholder || ' '} defaultValue={s.default_value} onChange={(e) => this.updateField(this.id, e.target.value)}></textarea>
+                    <textarea id={fieldId} className="dragwyb-field-input" rows="3" placeholder={s.placeholder || ' '} defaultValue={s.default_value} />
                     {label && <this.RenderLabel
                         id={fieldId}
                         label={label}
@@ -457,7 +450,7 @@ class timeField extends DragwybEditor.editor.extends.FieldBase {
         return (
             <>
                 <div className="dragwyb-input-group">
-                    <input type="time" id={fieldId} className="dragwyb-field-input" defaultValue={s.default_value} onChange={(e) => this.updateField(this.id, e.target.value)} />
+                    <input type="time" id={fieldId} className="dragwyb-field-input" defaultValue={s.default_value} />
                     {label && <this.RenderLabel
                         id={fieldId}
                         label={label}
@@ -490,6 +483,12 @@ class rangeField extends DragwybEditor.editor.extends.FieldBase {
         return (
             <>
                 <div className="dragwyb-input-group">
+                    {label && <this.RenderLabel
+                        id={fieldId}
+                        label={label}
+                        required={s.required}
+                        settings={s}
+                    />}
                     <div className="dragwyb-custom-range-container">
                         <div className="dragwyb-range-track">
                             <div className="dragwyb-range-progress" style={{ width: `${percentage}%` }}></div>
@@ -497,15 +496,8 @@ class rangeField extends DragwybEditor.editor.extends.FieldBase {
                         </div>
                         <input type="range" id={fieldId} className="dragwyb-field-input dragwyb-hidden-range" min={s.min_val} max={s.max_val} step={s.step_val} defaultValue={s.default_value} onChange={(e) => {
                             e.target.setAttribute('value', e.target.value);
-                            this.updateField(this.id, e.target.value);
                         }} />
                     </div>
-                    {label && <this.RenderLabel
-                        id={fieldId}
-                        label={label}
-                        required={s.required}
-                        settings={s}
-                    />}
                 </div>
                 {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
             </>
@@ -585,6 +577,6 @@ const initializeFields = () => {
     );
 };
 
-jQuery(document).on('Dragwyb:editorInit', () => {
+jQuery(document).on('Dragwyb:editorAppLoaded', () => {
     initializeFields();
 });

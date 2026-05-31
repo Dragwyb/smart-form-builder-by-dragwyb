@@ -13,7 +13,6 @@ const initialState = {
     form: DragwybEditor.formData || [],
     notices: [],
     errors: [],
-    values: {},
     sectionSettings: {},
     activePopoverKey: false,
     fieldIds,

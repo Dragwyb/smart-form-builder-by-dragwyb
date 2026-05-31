@@ -16,11 +16,26 @@ const PreviewIframe = ({ children, url, style = {} }) => {
         const iframe = event.target;
         const doc = iframe.contentWindow.document;
 
-        setTimeout(() => {
-            setMountNode(doc);
-            dispatch(updateIframeNode(doc));
-            jQuery(document).trigger('Dragwyb:editorAppLoaded');
-        }, 1500);
+        setMountNode(doc);
+        dispatch(updateIframeNode(doc));
+        const editorToolBars = DragwybEditor?.EditorToolbars?.toolbars;
+
+        if (editorToolBars) {
+            const toolbarKeys = Object.keys(editorToolBars);
+            toolbarKeys.forEach((key) => {
+                const toolbarLocalizeData = DragwybEditor?.[key];
+
+                const iframeWindow = doc.defaultView;
+
+                if (!iframeWindow.hasOwnProperty('DragwybEditor')) {
+                    iframeWindow.DragwybEditor = {};
+                }
+
+                if (!iframeWindow.DragwybEditor.hasOwnProperty(key)) {
+                    iframeWindow.DragwybEditor[key] = toolbarLocalizeData;
+                }
+            });
+        }
     };
 
     return (

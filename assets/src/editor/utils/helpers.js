@@ -1,6 +1,6 @@
 
 import { useRef, useEffect } from "react";
-import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updateFieldValues, updateToolbarSettings, updateSectionSettings, updateStyleSelectors as updateStyleSelectorsAction, deleteStyleSelectors as deleteStyleSelectorsAction, updateResponsiveType as updateResponsiveTypeAction, updateactivePopoverKey as updateactivePopoverKeyAction, updateActiveRootContainer as updateActiveRootContainerAction, resetActiveRootContainer as resetActiveRootContainerAction } from "../store/actions";
+import { updateFieldId, addField, updateSelectedSettingId, updateActiveToolbar, updateToolbarSettings, updateSectionSettings, updateStyleSelectors as updateStyleSelectorsAction, deleteStyleSelectors as deleteStyleSelectorsAction, updateResponsiveType as updateResponsiveTypeAction, updateactivePopoverKey as updateactivePopoverKeyAction, updateActiveRootContainer as updateActiveRootContainerAction, resetActiveRootContainer as resetActiveRootContainerAction } from "../store/actions";
 import PropTypes, { number } from "prop-types";
 import DragwybControlBase from "../controlBase";
 
@@ -279,28 +279,6 @@ export const AddField = ({ state, type, dispatch, Utils, index = null, parentCon
     return field;
 };
 
-export const updateFieldValue = ({ dispatch, id, value }) => {
-    try {
-        const validatorId = validateProp({
-            key: "id",
-            value: id, // invalid
-            types: ["string"],
-            required: true,
-            functionName: "updateFieldValue"
-        });
-        const validatorValue = validateProp({
-            key: "value",
-            value: value, // invalid
-            types: ["any"],
-            required: true,
-            functionName: "updateFieldValue"
-        });
-        dispatch(updateFieldValues(id, value));
-    } catch (e) {
-        console.error("Validation failed:", e.message);
-    }
-}
-
 export const updateToolbarSetting = ({ id, value, selectedToolBarId, dispatch }) => {
 
     if (!DragwybEditor.EditorToolbars || !DragwybEditor.EditorToolbars.toolbars || !DragwybEditor.EditorToolbars.toolbars[id]) {
@@ -313,14 +291,14 @@ export const updateToolbarSetting = ({ id, value, selectedToolBarId, dispatch })
             value: id, // invalid
             types: ["string"],
             required: true,
-            functionName: "updateFieldValue"
+            functionName: "updateToolbarSetting"
         });
         const validatorValue = validateProp({
             key: "value",
             value: value, // invalid
             types: ["any"],
             required: true,
-            functionName: "updateFieldValue"
+            functionName: "updateToolbarSetting"
         });
         dispatch(updateToolbarSettings(id, value, selectedToolBarId))
     } catch (e) {
