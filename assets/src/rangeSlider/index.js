@@ -5,3 +5,9 @@ jQuery(document).on('Dragwyb:frontendInit', () => {
         new DragwybRangeSlider(container);
     });
 });
+
+jQuery(document).on('Dragwyb:editorAppLoaded', () => {
+    DragwybBuilder.Hooks.addAction('dragwyb/editorPreview/form_ready', (container, formId) => {
+        new DragwybRangeSlider(container);
+    });
+});

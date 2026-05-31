@@ -560,6 +560,33 @@ export const getToolbarSetting = ({ state, toolbar, selectedToolbar = null, sett
     return toolbarValue?.[settingId] ?? defaultValue;
 }
 
+export const getPreviewIframe = ({ state }) => {
+    if (state.iframeEle && state.iframeEle) {
+        return state.iframeEle;
+    }
+
+    return null;
+}
+
+export const editorFormReady = ({ state }) => {
+    const formId = state.form.id;
+    const formPreviewIframe = state.iframeEle;
+
+    if (!formId || !formPreviewIframe) {
+        return;
+    }
+
+    const previewWindow = formPreviewIframe.defaultView;
+
+    if (previewWindow) {
+        const formWrp = jQuery(formPreviewIframe).find(`#dragwyb-form-wrapper-${formId}`);
+
+        if (formWrp.length > 0) {
+            previewWindow.DragwybBuilder.Hooks.doAction('dragwyb/eidotPreview/form_ready', formWrp, formId);
+        }
+    }
+}
+
 export const compareTwoObjects = ({ obj1, obj2 }) => {
     const keys = Object.keys(obj1);
     let isvalueChanged = true;

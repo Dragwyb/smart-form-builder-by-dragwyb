@@ -7,6 +7,7 @@ class DragwybFrontend {
     }
 
     init() {
+        if (!window.DragwybFrontendData || !window.DragwybFrontendData.frontendRoute || !window.DragwybFrontendData.nonce) return;
         this.bindEvents();
     }
 

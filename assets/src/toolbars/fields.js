@@ -225,6 +225,7 @@ class Fields extends DragwybEditor.editor.extends.ToolbarBase {
       }
 
       if (valueUpdate) {
+        this.Utils.editorFormReady();
         this.updateToolbar();
       }
     }

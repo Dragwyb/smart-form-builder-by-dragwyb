@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import { updateIframeNode } from '../store/actions';
 import UpdateFormLabelPosition from './updateFormLabelPosition';
 import Scrollbar from '../components/Scrollbar';
+import { editorFormReady } from '../utils/helpers'
 
 const PreviewIframe = ({ children, url, style = {} }) => {
     const [mountNode, setMountNode] = useState(null);
     const responsiveType = useSelector((state) => state.responsiveType);
     const dispatch = useDispatch();
+    const store = useStore();
+    const state = store.getState();
 
     const iframeSrc = `${url}&dragwyb_iframe_mode=true`;
 
@@ -36,6 +39,10 @@ const PreviewIframe = ({ children, url, style = {} }) => {
                 }
             });
         }
+
+        setTimeout(() => {
+            editorFormReady({ state: { form: { id: state.form.id }, iframeEle: doc } })
+        }, 100);
     };
 
     return (
