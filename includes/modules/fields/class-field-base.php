@@ -41,6 +41,14 @@ abstract class Field_Base extends Register_Controls_Base {
 		return array();
 	}
 
+	protected function editor_scripts() {
+		return array();
+	}
+
+	protected function editor_styles() {
+		return array();
+	}
+
 	abstract protected function register_field_controls();
 
 	final protected function register_controls(): void {
@@ -63,6 +71,27 @@ abstract class Field_Base extends Register_Controls_Base {
 	public function enqueue_assets() {
 		$scripts = $this->register_scripts();
 		$styles  = $this->register_styles();
+
+		if ( is_array( $scripts ) ) {
+			foreach ( $scripts as $script ) {
+				if ( ! wp_script_is( $script, 'enqueued' ) ) {
+					wp_enqueue_script( $script );
+				}
+			}
+		}
+
+		if ( is_array( $styles ) ) {
+			foreach ( $styles as $style ) {
+				if ( ! wp_style_is( $style, 'enqueued' ) ) {
+					wp_enqueue_style( $style );
+				}
+			}
+		}
+	}
+
+	public function enqueue_editor_assets() {
+		$scripts = $this->editor_scripts();
+		$styles  = $this->editor_styles();
 
 		if ( is_array( $scripts ) ) {
 			foreach ( $scripts as $script ) {
