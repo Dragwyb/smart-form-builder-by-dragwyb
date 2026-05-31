@@ -34,6 +34,10 @@ const PreviewIframe = ({ children, url, style = {} }) => {
                     iframeWindow.DragwybEditor = {};
                 }
 
+                if (!iframeWindow.hasOwnProperty('faIconsList')) {
+                    iframeWindow.DragwybEditor.faIconsList = DragwybEditor.faIconsList;
+                }
+
                 if (!iframeWindow.DragwybEditor.hasOwnProperty(key)) {
                     iframeWindow.DragwybEditor[key] = toolbarLocalizeData;
                 }
