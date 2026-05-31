@@ -13,7 +13,6 @@ import {
     UPDATE_ACTIVE_POPOVER,
     UPDATE_FIELD,
     UPDATE_FIELD_ORDER,
-    UPDATE_FIELD_VALUES,
     UPDATE_TOOLBAR_SETTINGS,
     UPDATE_SECTION_SETTINGS,
     UPDATE_POPOVER_INITIALIZE,
@@ -360,15 +359,6 @@ export default function reducer(state, action) {
 
             return state;
         }
-
-        case UPDATE_FIELD_VALUES:
-            return {
-                ...state,
-                values: {
-                    ...state.values || {},
-                    [action.payload.fieldId]: action.payload.value
-                }
-            };
 
         case UPDATE_TOOLBAR_SETTINGS: {
             const toolbarId = action.payload.id;

@@ -16,7 +16,6 @@ export const RESET_POPOVER_CONTROLS = 'RESET_POPOVER_CONTROLS';
 export const UPDATE_SAVE_STATE = 'UPDATE_SAVE_STATE';
 export const SHOW_NOTICE = 'SHOW_NOTICE';
 export const HIDE_NOTICE = 'HIDE_NOTICE';
-export const UPDATE_FIELD_VALUES = 'UPDATE_FIELD_VALUES';
 export const ERROR_NOTICE = 'ERROR_NOTICE';
 export const DUPLICATE_FIELD = 'DUPLICATE_FIELD';
 export const UPDATE_SELECTED_SETTING_ID = 'UPDATE_SELECTED_SETTING_ID';
@@ -120,11 +119,6 @@ export const deleteField = (fieldId) => ({
 export const updateFieldOrder = (currentId, targetId, index) => ({
     type: UPDATE_FIELD_ORDER,
     payload: { currentId, targetId, index }
-});
-
-export const updateFieldValues = (fieldId, value) => ({
-    type: UPDATE_FIELD_VALUES,
-    payload: { fieldId, value }
 });
 
 export const updateToolbarSettings = (id, value, selectedToolBarId) => {

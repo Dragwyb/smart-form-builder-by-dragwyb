@@ -11,42 +11,8 @@ use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
 
 class Field_Row extends Field_Base {
 
-	private $fields;
-	private $field_module_cache;
-
-	protected function register_scripts() {
-		$scripts = array();
-
-		if ( defined( 'DRAGWYB_EDITOR' ) ) {
-			$scripts = array( 'dragwyb_editor_fields' );
-		}
-
-		return $scripts;
-	}
-
 	public function __construct() {
 		parent::__construct();
-		// The script is typically already registered by base fields, but we ensure it's there
-		if ( ! wp_script_is( 'dragwyb_editor_fields', 'registered' ) ) {
-			$js_assets_info = array(
-				'version'      => DRAGWYB_FORM_BUILDER_VERSION,
-				'dependencies' => array(),
-			);
-
-			if ( file_exists( DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/editorFields/editorFields.asset.php' ) ) {
-				$dragwyb_js_assets_info = require_once DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/editorFields/editorFields.asset.php';
-
-				if ( isset( $dragwyb_js_assets_info['dependencies'] ) ) {
-					$js_assets_info['dependencies'] = array_merge( $js_assets_info['dependencies'], $dragwyb_js_assets_info['dependencies'] );
-				}
-
-				if ( isset( $dragwyb_js_assets_info['version'] ) ) {
-					$js_assets_info['version'] = $dragwyb_js_assets_info['version'];
-				}
-			}
-
-			wp_register_script( 'dragwyb_editor_fields', esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/dist/editorFields/editorFields.js' ), $js_assets_info['dependencies'], esc_attr( $js_assets_info['version'] ), true );
-		}
 	}
 
 	protected function init(): void {

@@ -347,7 +347,6 @@ if ( ! class_exists( 'Dragwyb_Builder_Editor' ) ) {
 
 			$frontend = Frontend_Render::instance();
 			$frontend->init( $form_id );
-			$frontend->enqueue_static_assets();
 			$style_cache     = $frontend->get_generated_css();
 			$root_containers = $frontend->get_root_containers();
 

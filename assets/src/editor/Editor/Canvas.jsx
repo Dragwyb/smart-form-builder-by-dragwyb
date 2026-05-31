@@ -18,7 +18,8 @@ const RenderItem = React.memo(({
     errors,
     Utils,
     lastContainer = true,
-    store
+    store,
+    perviewIFrame
 }) => {
 
     const isButtonContainerFunc = field => {
@@ -83,7 +84,10 @@ const RenderItem = React.memo(({
         if (dragRef) dragRef(Node);
     }, [dropRef, dragRef]);
 
-    let wrapperClass = ['dragwyb-field-wrapper', `dragwyb-${field.type}-field`];
+    let wrapperClass = [];
+    if (field.type !== 'row') {
+        wrapperClass = ['dragwyb-field-wrapper', `dragwyb-${field.type}-field`];
+    }
     let id = `dragwyb-field-wrapper-${field._id}`;
 
     if (field.css_classes) {
@@ -95,7 +99,7 @@ const RenderItem = React.memo(({
         id = `dragwyb-${field.type}-${field._id}`;
     }
 
-    if (['button', 'file', 'radio', 'checkbox'].includes(field.type)) {
+    if (['button', 'file', 'radio', 'checkbox', 'range'].includes(field.type)) {
         wrapperClass.push("dragwyb-no-float");
     }
 
@@ -104,6 +108,7 @@ const RenderItem = React.memo(({
     }
 
     wrapperClass = DragwybBuilder.Hooks.applyFilter('Dragwyb/Field/WrapperClass', wrapperClass, fieldId, field.type, field.attributes, Utils);
+    wrapperClass = DragwybBuilder.Hooks.applyFilter(`Dragwyb/Field/WrapperClass/${field.type}`, wrapperClass, fieldId, field.type, field.attributes, Utils);
 
     const onRootContainerSelect = useCallback(() => {
         const id = field._id;
@@ -139,7 +144,7 @@ const RenderItem = React.memo(({
                     {...attributes}
                     id={id}
                 >
-                    <Fields.Preview fields={[field]} values={values} errors={errors} childrens={childrens} Utils={Utils}>
+                    <Fields.Preview fields={[field]} values={values} errors={errors} childrens={childrens} Utils={Utils} perviewIFrame={perviewIFrame}>
                         {childrens && childrens.length > 0 && (
                             childrens.map((childId, childIndex) => (
                                 <React.Fragment key={childId || `empty-${childIndex}`}>
@@ -154,6 +159,7 @@ const RenderItem = React.memo(({
                                             values={values}
                                             errors={errors}
                                             Utils={Utils}
+                                            perviewIFrame={perviewIFrame}
                                         />
                                     }
                                 </React.Fragment>
@@ -248,12 +254,14 @@ const Canvas = ({
     dropInfo,
     setActiveTab
 }) => {
-    const values = useSelector((state) => state.values);
+    // const values = useSelector((state) => state.values);
+    const values = {};
     const errors = useSelector((state) => state.errors);
     const rootContainers = useSelector((state) => state.form.rootContainers);
     const dispatch = useDispatch();
     const store = useStore();
     const state = store.getState();
+    const perviewIFrame = useSelector(state => state.iframeEle);
 
     const Utils = useMemo(() => {
         return Helper(state, dispatch);
@@ -349,6 +357,7 @@ const Canvas = ({
                                             Utils={Utils}
                                             lastContainer={rootContainers.length === index + 1}
                                             store={store}
+                                            perviewIFrame={perviewIFrame}
                                         />
                                     ))}
                                 </>

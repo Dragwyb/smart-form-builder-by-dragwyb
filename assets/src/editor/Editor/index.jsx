@@ -10,11 +10,12 @@ import {
     useSensor,
     useSensors,
     PointerSensor,
-    MouseSensor,
-    TouchSensor,
+    KeyboardSensor,
     pointerWithin,
     rectIntersection,
+    closestCenter,
 } from "@dnd-kit/core";
+import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 
 import SidebarFieldOverlay from "../components/SidebarFieldOverlay";
 import { Utils as Helper } from "../components/Utils";
@@ -58,9 +59,10 @@ const Editor = () => {
     }, [Utils, resetSection]);
 
     const sensors = useSensors(
-        useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-        useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
-        useSensor(TouchSensor, { activationConstraint: { delay: 5, tolerance: 6 } })
+        useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
     );
 
     const customCollisionDetection = useCallback((args) => {
@@ -70,7 +72,7 @@ const Editor = () => {
             return pointerCollisions;
         }
 
-        return rectIntersection(args);
+        return closestCenter(args);
     }, []);
 
     const measureDroppableContainers = (node) => {
