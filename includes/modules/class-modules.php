@@ -10,6 +10,7 @@ use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
 use Dragwyb\Form_Builder\Includes\Modules\Sanitize_Module_Settings\Sanitize_Module_Settings;
 use Dragwyb\Form_Builder\Includes\Categories\Categories;
 use Dragwyb\Form_Builder\Includes\Categories\Categories\Category_Base;
+use Dragwyb\Form_Builder\Includes\Helper\Helper;
 
 class Modules extends Toolbar_Base {
 
@@ -98,6 +99,8 @@ class Modules extends Toolbar_Base {
 
 		$field_categories = array();
 
+		$is_editor_preview_mode = Helper::is_editor_preview_mode();
+
 		foreach ( $register_categories as $key => $category ) {
 			if ( ! isset( $category ) || ! $category instanceof Category_Base ) {
 				continue;
@@ -118,7 +121,11 @@ class Modules extends Toolbar_Base {
 			}
 
 			$field->set_form_id( $form_id );
-			$field->enqueue_assets();
+
+			if ( $is_editor_preview_mode ) {
+				$field->enqueue_assets();
+				$field->enqueue_editor_assets();
+			}
 
 			$name              = $field->get_name();
 			$conrols           = $field->render_controls();
