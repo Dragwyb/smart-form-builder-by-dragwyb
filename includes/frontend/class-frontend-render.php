@@ -78,16 +78,16 @@ class Frontend_Render {
 	}
 
 	private function set_toolbar_data(): void {
-		$toolbar_obj = Toolbars::instance();
-		$toolbars    = $toolbar_obj->get_toolbars();
+		$toolbar_obj    = Toolbars::instance();
+		self::$toolbars = $toolbar_obj->get_toolbars();
 
 		foreach ( self::$form_data as $key => $value ) {
 			if ( $key === 'id' ) {
 				continue;
 			}
 
-			if ( count( $toolbars ) > 0 && isset( $toolbars[ $key ] ) && $toolbars[ $key ] instanceof Toolbar_Base ) {
-				$toolbar = $toolbars[ $key ];
+			if ( isset( self::$toolbars ) && count( self::$toolbars ) > 0 && isset( self::$toolbars[ $key ] ) && self::$toolbars[ $key ] instanceof Toolbar_Base ) {
+				$toolbar = self::$toolbars[ $key ];
 				$toolbar->set_form_id( self::$form_id );
 				$toolbar->set_toolbar_data( $value );
 				$toolbar_data = $toolbar->get_toolbar_data();
@@ -283,8 +283,9 @@ class Frontend_Render {
 	}
 
 	public function get_generated_css(): array {
-		$toolbar_obj    = Toolbars::instance();
-		self::$toolbars = $toolbar_obj->get_toolbars();
+		if ( ! isset( self::$toolbars ) ) {
+			return array();
+		}
 
 		foreach ( self::$toolbar_data as $toolbar_key => $settings ) {
 			if ( isset( self::$toolbars[ $toolbar_key ] ) && method_exists( self::$toolbars[ $toolbar_key ], 'get_toolbar_settings' ) ) {
