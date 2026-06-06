@@ -122,7 +122,6 @@ class Form_Submission_Handler {
 		$this->validate_honeypot( $this->raw_data );
 		$this->validate_fields( $this->raw_data );
 
-		var_dump( $this->sanitized_data );
 		if ( ! $this->has_errors() ) {
 			$this->process_submission();
 		}
