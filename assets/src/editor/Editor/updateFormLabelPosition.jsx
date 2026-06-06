@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 const updateFieldWrapperClass = (wrapperClass, Id, type, attributes, utils) => {
     if (attributes && attributes.label_icon && attributes.label_icon.icon && attributes.label_icon.icon !== '') {
         const labelIconsPosition = utils.getToolbarSetting({ toolbar: 'style', settingId: 'label_icon_position', defaultValue: 'before' })
+
         const labelPositionClass = `dragwyb-field-label-icon-${labelIconsPosition}`;
         wrapperClass.push(labelPositionClass)
     }

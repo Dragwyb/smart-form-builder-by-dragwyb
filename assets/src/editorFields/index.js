@@ -176,6 +176,12 @@ class radioField extends DragwybEditor.editor.extends.FieldBase {
         return (
             <>
                 <div className="dragwyb-input-group">
+                    {label && <this.RenderLabel
+                        id={fieldId}
+                        label={label}
+                        required={s.required}
+                        settings={s}
+                    />}
                     <div className={`dragwyb-options-container ${layoutClass}`}>
                         {options.map((opt, i) => (
                             !opt.attributes ? null :
@@ -185,12 +191,6 @@ class radioField extends DragwybEditor.editor.extends.FieldBase {
                                 </label>
                         ))}
                     </div>
-                    {label && <this.RenderLabel
-                        id={fieldId}
-                        label={label}
-                        required={s.required}
-                        settings={s}
-                    />}
                 </div>
                 {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
             </>

@@ -7,6 +7,7 @@ namespace Dragwyb\Form_Builder\Includes\Rest_Routes;
 use Dragwyb\Form_Builder\Includes\Core\Helpers;
 use Dragwyb\Form_Builder\Includes\Frontend\Frontend_Render;
 use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
+use Dragwyb\Form_Builder\Includes\Toolbars\Toolbars;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -128,16 +129,28 @@ class Dragwyb_Frontend_Route {
 		$form_id = intval( $form_id );
 
 		// Instantiate the submission handler
-		$handler = new Form_Submission_Handler( $form_id, (array) $fields );
+		$handler = new Form_Submission_Handler(
+			$form_id,
+			(array) $fields,
+			Frontend_Render::instance(),
+			Toolbars::instance()
+		);
+		$handler->handle();
 
 		$handler_errors = $handler->get_errors();
 		// If there are validation errors, return them as a JSON response
 		if ( $handler->has_errors() ) {
+			// Convert WP_Error to a flat array to preserve the API response format.
+			$errors_array = array();
+			foreach ( $handler_errors->get_error_codes() as $code ) {
+				$errors_array[ $code ] = $handler_errors->get_error_message( $code );
+			}
+
 			return rest_ensure_response(
 				array(
 					'success' => false,
-					'message' => isset( $handler_errors['honeypot'] ) ? $handler_errors['honeypot'] : __( 'Form submission failed due to validation errors.', 'smart-form-builder-by-dragwyb' ),
-					'errors'  => $handler_errors,
+					'message' => $handler_errors->get_error_message( 'honeypot' ) ? $handler_errors->get_error_message( 'honeypot' ) : __( 'Form submission failed due to validation errors.', 'smart-form-builder-by-dragwyb' ),
+					'errors'  => $errors_array,
 				)
 			);
 		}

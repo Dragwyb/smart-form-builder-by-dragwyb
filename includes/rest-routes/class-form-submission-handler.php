@@ -54,9 +54,9 @@ class Form_Submission_Handler {
 	/**
 	 * Stores the list of errors.
 	 *
-	 * @var array<string, string>
+	 * @var \WP_Error
 	 */
-	private array $errors = array();
+	private \WP_Error $errors;
 
 	/**
 	 * Stores the form return data.
@@ -66,28 +66,65 @@ class Form_Submission_Handler {
 	private array $form_return_data = array();
 
 	/**
+	 * Stores field configuration and metadata keyed by the field's original key.
+	 *
+	 * Each entry holds:
+	 *   - 'field_type': the field type string for quick access.
+	 *
+	 * Used by update_submission_entry() to retrieve field type and re-run
+	 * sanitization without having to re-parse the full form config.
+	 *
+	 * @var array<string, array{field_type: string}>
+	 */
+	private array $fields_data = array();
+
+	/**
+	 * Frontend Render instance.
+	 *
+	 * @var Frontend_Render
+	 */
+	private Frontend_Render $frontend;
+
+	/**
+	 * Toolbars instance.
+	 *
+	 * @var Toolbars
+	 */
+	private Toolbars $toolbars;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param int   $form_id   The form ID.
-	 * @param array $form_data The raw form data to process.
+	 * @param int             $form_id   The form ID.
+	 * @param array           $form_data The raw form data to process.
+	 * @param Frontend_Render $frontend  The frontend render instance.
+	 * @param Toolbars        $toolbars  The toolbars instance.
 	 */
-	public function __construct( int $form_id, array $form_data ) {
+	public function __construct( int $form_id, array $form_data, Frontend_Render $frontend, Toolbars $toolbars ) {
+		$this->form_id  = absint( $form_id );
+		$this->raw_data = wp_unslash( $form_data );
+		$this->frontend = $frontend;
+		$this->toolbars = $toolbars;
+		$this->errors   = new \WP_Error();
+	}
+
+	/**
+	 * Execute the form validation and submission workflow.
+	 *
+	 * @return void
+	 */
+	public function handle(): void {
 		if ( ! defined( 'DRAGWYB_FORM_SUBMISSION_REQUEST' ) ) {
 			return;
 		}
 
-		$form_data = wp_unslash( $form_data );
-
-		$this->form_id = absint( $form_id );
-		$this->generate_form_config( $form_data );
-
-		$this->validate_honeypot( $form_data );
+		$this->generate_form_config( $this->raw_data );
+		$this->validate_honeypot( $this->raw_data );
+		$this->validate_fields( $this->raw_data );
 
 		if ( ! $this->has_errors() ) {
-			$this->validate_fields( $form_data );
+			$this->process_submission();
 		}
-
-		$this->process_submission();
 	}
 
 	/**
@@ -96,14 +133,8 @@ class Form_Submission_Handler {
 	 * @return void
 	 */
 	private function process_submission(): void {
-		if ( $this->has_errors() ) {
-			return;
-		}
-
-		$frontend = Frontend_Render::instance();
-		$frontend->init( $this->form_id );
-		$toolbar_obj                     = Toolbars::instance();
-		$after_submission_toolbar_config = $toolbar_obj->get_toolbar( 'after-submission' );
+		$this->frontend->init( $this->form_id );
+		$after_submission_toolbar_config = $this->toolbars->get_toolbar( 'after-submission' );
 
 		if ( ! isset( $after_submission_toolbar_config ) || ! $after_submission_toolbar_config instanceof Toolbar_Base ) {
 			return;
@@ -117,60 +148,52 @@ class Form_Submission_Handler {
 	}
 
 	private function generate_form_config( array $form_data ): void {
-		$frontend = Frontend_Render::instance();
-		$frontend->init( $this->form_id );
-		$toolbar_obj   = Toolbars::instance();
-		$toolbar_types = $toolbar_obj->get_toolbar_types();
+		$this->frontend->init( $this->form_id );
+		$toolbar_types = $this->toolbars->get_toolbar_types();
 
 		$this->form_config = array();
 
 		foreach ( $toolbar_types as $toolbar_type ) {
 			if ( $toolbar_type === 'fields' ) {
-				$this->set_fields_config( $frontend->get_fields_values(), $form_data, $frontend );
+				$this->set_fields_config( $this->frontend->get_fields_values(), $form_data );
 			} else {
-				$this->form_config[ $toolbar_type ] = $frontend->get_toolbars_values( $toolbar_type );
+				$this->form_config[ $toolbar_type ] = $this->frontend->get_toolbars_values( $toolbar_type );
 			}
 		}
 	}
 
-	private function set_fields_config( array $fields, array $form_data, Frontend_Render $frontend ): void {
-
-		$field_map = array();
+	private function set_fields_config( array $fields, array $form_data ): void {
+		// Pre-index the fields array for O(1) lookups.
+		$indexed_fields = array();
+		foreach ( $fields as $key => $field ) {
+			$indexed_fields[ $key ] = $key;
+			if ( isset( $field['attributes']['field_id'] ) ) {
+				$indexed_fields[ $field['attributes']['field_id'] ] = $key;
+			}
+		}
 
 		foreach ( $form_data as $field_value ) {
 			$field_orignal_key = sanitize_text_field( $field_value['name'] );
+			$field_key         = substr( $field_orignal_key, 6 );
 
-			$field_key = substr( $field_orignal_key, 6 );
+			$matched_key = null;
+			if ( isset( $indexed_fields[ $field_key ] ) ) {
+				$matched_key = $indexed_fields[ $field_key ];
+			} elseif ( isset( $indexed_fields[ $field_orignal_key ] ) ) {
+				$matched_key = $indexed_fields[ $field_orignal_key ];
+			}
 
-			if ( isset( $fields[ $field_key ] ) ) {
-				if ( ! isset( $fields[ $field_key ]['type'] ) ) {
+			if ( null !== $matched_key && isset( $fields[ $matched_key ] ) ) {
+				$field_data = $fields[ $matched_key ];
+				if ( ! isset( $field_data['type'] ) ) {
 					continue;
 				}
 
-				$field_type = $fields[ $field_key ]['type'];
+				$field_type = $field_data['type'];
 
-				$this->set_fields_sanitized_values( $field_type, $field_orignal_key, $fields[ $field_key ], $field_value['value'], $frontend );
+				$this->set_fields_sanitized_values( $field_type, $field_orignal_key, $field_data, $field_value['value'] );
 
-				unset( $fields[ $field_key ] );
-				$field_map[ $field_key ] = array();
-			} else {
-				$unique_keys = array_diff_key( $fields, $field_map );
-
-				foreach ( $unique_keys as $key => $field_data ) {
-					if ( isset( $field_data['attributes']['field_id'] ) && $field_data['attributes']['field_id'] === $field_orignal_key ) {
-						if ( ! isset( $field_data['type'] ) ) {
-							break;
-						}
-
-						$field_type = $field_data['type'];
-
-						$this->set_fields_sanitized_values( $field_type, $field_orignal_key, $field_data, $field_value['value'], $frontend );
-
-						$field_map[ $key ] = array();
-						unset( $fields[ $key ] );
-						break;
-					}
-				}
+				unset( $fields[ $matched_key ] );
 			}
 		}
 
@@ -188,53 +211,74 @@ class Form_Submission_Handler {
 	}
 
 	/**
-	 * Sanitize field values.
+	 * Sanitize field values and set the initial sanitized data state.
 	 *
-	 * @param string          $field_type The field type.
-	 * @param string          $field_orignal_key The field original key.
-	 * @param array           $field_data The field data.
-	 * @param mixed           $field_value The field value.
-	 * @param Frontend_Render $frontend The frontend instance.
+	 * @param string $field_type        The field type.
+	 * @param string $field_orignal_key The field original key.
+	 * @param array  $field_data        The field data.
+	 * @param mixed  $field_value       The field raw value.
 	 * @return void
 	 */
-	private function set_fields_sanitized_values( string $field_type, string $field_orignal_key, array $field_data, $field_value, Frontend_Render $frontend ): void {
+	private function set_fields_sanitized_values( string $field_type, string $field_orignal_key, array $field_data, $field_value ): void {
 		$field_orignal_key = sanitize_text_field( $field_orignal_key );
 
 		$this->form_config['fields'][ $field_orignal_key ] = $field_data;
-		$field_module                                      = $frontend->get_module( $field_type );
+		$field_module                                      = $this->frontend->get_module( $field_type );
 
 		if ( ! $field_module instanceof Field_Base ) {
 			return;
 		}
 
 		$this->form_config['fields'][ $field_orignal_key ]['raw_value'] = $field_value;
-		$field_sanitized_value                                      = apply_filters( 'Dragwyb/Field/Value/Sanitize/' . $field_type, '', $field_value );
+
+		$default_value = $field_value;
+		if ( method_exists( $field_module, 'sanitize' ) ) {
+			$default_value = $field_module->sanitize( '', $field_value );
+		}
+
+		$field_sanitized_value = apply_filters( 'Dragwyb/Field/Value/Sanitize/' . $field_type, $default_value, $field_value );
+
+		// 1. Store it in the configuration array for reference
 		$this->form_config['fields'][ $field_orignal_key ]['value'] = $field_sanitized_value;
+
+		// 2. Set the baseline submission state (This is the critical addition)
+		$this->sanitized_data[ $field_orignal_key ] = $field_sanitized_value;
+
+		// Cache field metadata so update_submission_entry() can re-sanitize later.
+		$this->fields_data[ $field_orignal_key ] = array(
+			'field_type' => $field_type,
+		);
 	}
 
 	/**
 	 * Validate fields
 	 */
 	private function validate_fields( array $form_data ): void {
-		$form_config_data = $this->form_config;
-		do_action( 'Dragwyb/Form/Before_Validation', $form_data, $form_config_data, $this );
+		do_action( 'Dragwyb/Form/Before_Validation', $form_data, $this->form_config, $this );
 
 		foreach ( $form_data as $field_value ) {
 			$field_orignal_key = sanitize_text_field( $field_value['name'] );
+
+			// 1. If a previous hook completely removed this field, skip validation.
+			if ( ! array_key_exists( $field_orignal_key, $this->sanitized_data ) ) {
+				continue;
+			}
 
 			if ( ! isset( $this->form_config['fields'][ $field_orignal_key ] ) ) {
 				continue;
 			}
 
 			$field_data = $this->form_config['fields'][ $field_orignal_key ];
+			$field_type = $field_data['type'];
 
-			$field_type  = $field_data['type'];
-			$field_value = $field_value['value'];
+			// 2. Fetch the CURRENT state of the sanitized data.
+			// This ensures if an earlier hook called update_submission_entry(),
+			// this hook validates the updated value, not the original raw one.
+			$current_sanitized_value = $this->sanitized_data[ $field_orignal_key ];
 
-			do_action( 'Dragwyb/Field/Value/Validate/' . $field_type, $field_value, $field_orignal_key, $form_config_data, $this );
-
-			$sanitized_value                            = apply_filters( 'Dragwyb/Field/Value/Sanitize/' . $field_type, '', $field_value );
-			$this->sanitized_data[ $field_orignal_key ] = $sanitized_value;
+			// 3. Fire the validation hook. If this hook calls add_error(),
+			// remove_submission_entry(), etc., the $this instance handles it perfectly.
+			do_action( 'Dragwyb/Field/Value/Validate/' . $field_type, $current_sanitized_value, $field_orignal_key, $this->form_config, $this );
 		}
 
 		do_action( 'Dragwyb/Form/After_Validation', $form_data, $this->form_config, $this );
@@ -294,7 +338,7 @@ class Form_Submission_Handler {
 	 * @return void
 	 */
 	public function add_error( string $id, string $message ): void {
-		$this->errors[ $id ] = $this->sanitize_error( $message );
+		$this->errors->add( $id, $this->sanitize_error( $message ) );
 	}
 
 	/**
@@ -305,9 +349,7 @@ class Form_Submission_Handler {
 	 * @return void
 	 */
 	public function remove_error( string $id ): void {
-		if ( isset( $this->errors[ $id ] ) ) {
-			unset( $this->errors[ $id ] );
-		}
+		$this->errors->remove( $id );
 	}
 
 	/**
@@ -327,15 +369,15 @@ class Form_Submission_Handler {
 	 * @return bool True if there are errors, false otherwise.
 	 */
 	public function has_errors(): bool {
-		return ! empty( $this->errors );
+		return $this->errors->has_errors();
 	}
 
 	/**
 	 * Get all registered errors.
 	 *
-	 * @return array<string, string> The array of errors.
+	 * @return \WP_Error The WP_Error instance.
 	 */
-	public function get_errors(): array {
+	public function get_errors(): \WP_Error {
 		return $this->errors;
 	}
 
@@ -347,7 +389,8 @@ class Form_Submission_Handler {
 	 * @return string|null The error message, or null if not found.
 	 */
 	public function get_error( string $id ): ?string {
-		return $this->errors[ $id ] ?? null;
+		$message = $this->errors->get_error_message( $id );
+		return $message !== '' ? $message : null;
 	}
 
 	/**
@@ -356,6 +399,70 @@ class Form_Submission_Handler {
 	 * @return void
 	 */
 	public function clear_errors(): void {
-		$this->errors = array();
+		$this->errors = new \WP_Error();
+	}
+
+	// -------------------------------------------------------------------------
+	// Submission Entry Management
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Remove a sanitized submission entry by its field key.
+	 *
+	 * Checks whether the given field ID exists in the current sanitized data.
+	 * If found, the entry is removed; otherwise the call is silently ignored.
+	 *
+	 * @param string $id The field original key (e.g. "field_abc123") to remove.
+	 * @return void
+	 */
+	public function remove_submission_entry( string $id ): void {
+		$id = sanitize_text_field( $id );
+
+		if ( ! isset( $this->sanitized_data[ $id ] ) ) {
+			return;
+		}
+
+		unset( $this->sanitized_data[ $id ] );
+	}
+
+	/**
+	 * Update a sanitized submission entry with a new value.
+	 *
+	 * Retrieves the field type from the cached $fields_data for the given field ID,
+	 * runs the value through the field-type-specific sanitize filter
+	 * ( 'Dragwyb/Field/Value/Sanitize/{field_type}' ), and stores the result
+	 * in $sanitized_data.
+	 *
+	 * Returns false when:
+	 *   - the submission ID does not exist in $sanitized_data, or
+	 *   - no field metadata is found in $fields_data for that ID.
+	 *
+	 * @param string $id    The field original key (e.g. "field_abc123") to update.
+	 * @param mixed  $value The new raw value to sanitize and store.
+	 * @return bool True on success, false when the entry or its metadata is missing.
+	 */
+	public function update_submission_entry( string $id, $value ): bool {
+		$id = sanitize_text_field( $id );
+
+		if ( ! isset( $this->sanitized_data[ $id ] ) ) {
+			return false;
+		}
+
+		if ( ! isset( $this->fields_data[ $id ]['field_type'] ) ) {
+			return false;
+		}
+
+		$field_type   = $this->fields_data[ $id ]['field_type'];
+		$field_module = $this->frontend->get_module( $field_type );
+
+		$default_value = $value;
+		if ( $field_module instanceof Field_Base && method_exists( $field_module, 'sanitize' ) ) {
+			$default_value = $field_module->sanitize( '', $value );
+		}
+
+		$sanitized_value             = apply_filters( 'Dragwyb/Field/Value/Sanitize/' . $field_type, $default_value, $value );
+		$this->sanitized_data[ $id ] = $sanitized_value;
+
+		return true;
 	}
 }
