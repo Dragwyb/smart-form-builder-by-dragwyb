@@ -348,11 +348,13 @@ class Field_Captcha extends Field_Base {
 		<?php
 	}
 
-	public function validate( $value, $field_id, $form_config, Form_Submission_Handler $error_handler ): void {
+	public function validate( $value, $field_id, $form_config, Form_Submission_Handler $submission_handler ): void {
 		if ( ! isset( $form_config['fields'][ $field_id ] ) ) {
-			$error_handler->add_error( $field_id, __( 'Invalid field.', 'smart-form-builder-by-dragwyb' ) );
+			$submission_handler->add_error( $field_id, __( 'Invalid field.', 'smart-form-builder-by-dragwyb' ) );
 			return;
 		}
+
+		$submission_handler->remove_submission_entry( $field_id );
 
 		$field_attr      = isset( $form_config['fields'][ $field_id ]['attributes'] ) ? $form_config['fields'][ $field_id ]['attributes'] : array();
 		$captcha_type    = isset( $field_attr['captcha_type'] ) ? $field_attr['captcha_type'] : 'recaptcha_v2';
@@ -372,12 +374,12 @@ class Field_Captcha extends Field_Base {
 		}
 
 		if ( empty( $secret_key ) ) {
-			// Can't validate without secret key.
+			$submission_handler->add_error( $field_id, __( 'Captcha is not configured. Please configure it in the Global Settings.', 'smart-form-builder-by-dragwyb' ) );
 			return;
 		}
 
 		if ( empty( $value ) ) {
-			$error_handler->add_error( $field_id, $error_msg );
+			$submission_handler->add_error( $field_id, $error_msg );
 			return;
 		}
 
@@ -397,7 +399,7 @@ class Field_Captcha extends Field_Base {
 				);
 
 				if ( is_wp_error( $response ) ) {
-					$error_handler->add_error( $field_id, __( 'Unable to connect to Captcha server. Please try again later.', 'smart-form-builder-by-dragwyb' ) );
+					$submission_handler->add_error( $field_id, __( 'Unable to connect to Captcha server. Please try again later.', 'smart-form-builder-by-dragwyb' ) );
 					return;
 				}
 
@@ -405,10 +407,10 @@ class Field_Captcha extends Field_Base {
 				$result = json_decode( $body );
 
 				if ( ! $result || empty( $result->success ) ) {
-					$error_handler->add_error( $field_id, $error_msg );
+					$submission_handler->add_error( $field_id, $error_msg );
 				} elseif ( $captcha_type === 'recaptcha_v3' ) {
 					if ( isset( $result->score ) && (float) $result->score < $score_threshold ) {
-						$error_handler->add_error( $field_id, $error_msg );
+						$submission_handler->add_error( $field_id, $error_msg );
 					}
 				}
 				break;
@@ -427,7 +429,7 @@ class Field_Captcha extends Field_Base {
 				);
 
 				if ( is_wp_error( $response ) ) {
-					$error_handler->add_error( $field_id, __( 'Unable to connect to Captcha server. Please try again later.', 'smart-form-builder-by-dragwyb' ) );
+					$submission_handler->add_error( $field_id, __( 'Unable to connect to Captcha server. Please try again later.', 'smart-form-builder-by-dragwyb' ) );
 					return;
 				}
 
@@ -435,12 +437,10 @@ class Field_Captcha extends Field_Base {
 				$result = json_decode( $body );
 
 				if ( ! $result || empty( $result->success ) ) {
-					$error_handler->add_error( $field_id, $error_msg );
+					$submission_handler->add_error( $field_id, $error_msg );
 				}
 				break;
-
 			default:
-				// Other captchas are not implemented yet.
 				break;
 		}
 	}
