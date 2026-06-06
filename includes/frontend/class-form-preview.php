@@ -75,8 +75,8 @@ class Form_Preview {
 			// Also remove all scripts hooked into after_wp_tiny_mce.
 			remove_all_actions( 'after_wp_tiny_mce' );
 
-			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ), 999999 );
-			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ), 999999 );
+			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_editor_preview_scripts' ), 999999 );
+			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_editor_preview_styles' ), 999999 );
 
 			// Setup default heartbeat options
 			// add_filter(
@@ -94,8 +94,6 @@ class Form_Preview {
 			$frontend_render->enqueue_static_assets();
 			$frontend_render->get_toolbar_data( 'fields' );
 			wp_head();
-			$this->enqueue_editor_preview_styles();
-			$this->enqueue_editor_preview_scripts();
 			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- it's a core WordPress hook for rendering the head section
 			// do_action( 'wp_head' );
 			// do_action( 'wp_footer' );
