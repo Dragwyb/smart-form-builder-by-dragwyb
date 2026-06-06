@@ -43,6 +43,8 @@ class Frontend_Render {
 
 	private static $frontend_localize_data = array();
 
+	private static $set_initial_config = false;
+
 
 	public static function instance(): self {
 		if ( null === self::$instance ) {
@@ -64,9 +66,18 @@ class Frontend_Render {
 			return;
 		}
 
+		$this->initial_config();
+	}
+
+	private function initial_config(): void {
+		if ( true === self::$set_initial_config ) {
+			return;
+		}
+
 		$this->set_control();
 		$this->set_module();
 		$this->set_toolbar_data();
+		self::$set_initial_config = true;
 	}
 
 	private function set_module(): void {
@@ -118,6 +129,8 @@ class Frontend_Render {
 	}
 
 	public function get_toolbars_values( string $type ): array {
+		$this->initial_config();
+
 		if ( ! isset( self::$toolbar_data[ $type ] ) ) {
 			return array();
 		}
@@ -126,6 +139,8 @@ class Frontend_Render {
 	}
 
 	public function get_toolbar_data( string $type ): array {
+		$this->initial_config();
+
 		if ( ! isset( self::$toolbars[ $type ] ) ) {
 			return array();
 		}
