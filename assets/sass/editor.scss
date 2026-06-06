@@ -863,6 +863,10 @@ body {
 
 // FIeld settings tab
 .dragwyb-fields-settings {
+    &~.dragwyb-editor__settings {
+        height: calc(100% - 83.1px);
+    }
+
     &__tabs {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -906,7 +910,7 @@ body {
     }
 
     &__fields {
-        height: calc(100% - 60px);
+        height: calc(100% - 65px);
 
         .dagwyb-widget-category-section {
             grid-column: 1/-1;
@@ -1046,6 +1050,10 @@ body {
             background-color: hsl(var(--dragwyb-secondary)/var(--dragwyb-bg-opacity, 1));
             border-radius: 20px;
         }
+    }
+
+    &__header~&__content {
+        height: calc(100% - 54.8px);
     }
 
     &__settings {
