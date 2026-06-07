@@ -224,7 +224,7 @@ class Field_Date extends Field_Base {
 				'id'          => $field_id,
 				'name'        => $field_id,
 				'placeholder' => $placeholder,
-				'class'       => 'dragwyb-input',
+				'class'       => 'dragwyb-field-input',
 			)
 		);
 		?>
