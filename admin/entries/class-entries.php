@@ -133,7 +133,6 @@ class Entries {
 				</div>
 			</div>
 		</div>
-		</div>
 
 		<!-- Modals Container -->
 		<div id="dragwyb-modal-overlay" class="dragwyb-modal-overlay">
