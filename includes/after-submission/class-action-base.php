@@ -54,4 +54,22 @@ abstract class Action_Base extends Register_Controls_Base {
 	protected function register_controls(): void {
 		$this->register_settings();
 	}
+
+	/**
+	 * Store field label and value in field_id key.
+	 *
+	 * @param array $form_data array of field_id => value
+	 * @param array $form_config array of field_id => label,type,subtype,etc
+	 * @return array form data with field label and value in field_id key
+	 */
+	protected function get_form_data( $form_data, $form_config ) {
+		$data = array();
+		foreach ( $form_data as $field_id => $field_value ) {
+			$data[ $field_id ] = array(
+				'label' => isset( $form_config['fields'][ $field_id ]['attributes']['label'] ) ? $form_config['fields'][ $field_id ]['attributes']['label'] : $field_id,
+				'value' => $field_value,
+			);
+		}
+		return $data;
+	}
 }
