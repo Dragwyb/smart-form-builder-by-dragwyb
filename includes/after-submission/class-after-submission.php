@@ -110,9 +110,27 @@ class After_Submission extends Toolbar_Base {
 		$after_submission_config           = isset( $form_config['after-submission'] ) && is_array( $form_config['after-submission'] ) ? $form_config['after-submission'] : array();
 		$selected_after_submission_actions = isset( $after_submission_config['after_submissions'] ) && is_array( $after_submission_config['after_submissions'] ) ? $after_submission_config['after_submissions'] : array();
 
+		$has_errors = $form_submission->has_errors();
+
 		if ( ! empty( $selected_after_submission_actions ) ) {
-			foreach ( $selected_after_submission_actions as $selected_action ) {
-				$action_base = $this->get_action( $selected_action );
+			if ( ! $has_errors ) {
+				foreach ( $selected_after_submission_actions as $selected_action ) {
+					if ( 'error_logs' === $selected_action ) {
+						continue;
+					}
+					$action_base = $this->get_action( $selected_action );
+
+					if ( $action_base && $action_base instanceof Action_Base ) {
+						$action_base->process_submission( $form_id, $form_data, $form_config, $form_submission );
+					}
+				}
+			}
+
+			// Fetch latest errors.
+			$has_errors = $form_submission->has_errors();
+
+			if ( $has_errors && in_array( 'error_logs', $selected_after_submission_actions ) ) {
+				$action_base = $this->get_action( 'error_logs' );
 
 				if ( $action_base && $action_base instanceof Action_Base ) {
 					$action_base->process_submission( $form_id, $form_data, $form_config, $form_submission );
