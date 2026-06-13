@@ -99,7 +99,7 @@ class Save_Submissions_Action extends Action_Base {
 
 			$insert_data = array(
 				'form_id'         => $form_id,
-				'submission_data' => $form_data,
+				'submission_data' => $this->get_form_data( $form_data, $form_config ),
 			);
 
 			$collect_ip = isset( $settings['collect_user_ip'] ) && 'yes' === $settings['collect_user_ip'] ? 'yes' : 'no';
