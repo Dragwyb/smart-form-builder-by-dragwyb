@@ -308,7 +308,7 @@ class Field_Date extends Field_Base {
 	public function sanitize( $default = '', $value = null ) {
 		if ( $value ) {
 			$date = \DateTime::createFromFormat( 'Y-m-d|', $value );
-			return $date ? $date->format( $this->settings['date_format']['value'] ) : $default;
+			return $date ? $date->format( 'Y-m-d' ) : $default;
 		}
 
 		return sanitize_text_field( $default );
