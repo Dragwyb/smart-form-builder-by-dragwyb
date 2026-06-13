@@ -263,7 +263,7 @@ class Field_Date extends Field_Base {
 		}
 
 		if ( ! empty( $value ) ) {
-			$date = DateTime::createFromFormat( 'Y-m-d', $value );
+			$date = \DateTime::createFromFormat( 'Y-m-d|', $value );
 			if ( ! $date || $date->format( 'Y-m-d' ) !== $value ) {
 				$error_handler->add_error( $field_id, __( 'Invalid date format', 'smart-form-builder-by-dragwyb' ) );
 				return;
@@ -271,18 +271,28 @@ class Field_Date extends Field_Base {
 
 			// Check min date
 			if ( isset( $field_attr['min_date'] ) && ! empty( $field_attr['min_date'] ) ) {
-				$min_date = new DateTime( $field_attr['min_date'] );
-				if ( $date < $min_date ) {
-					$error_handler->add_error( $field_id, __( 'Value is below minimum', 'smart-form-builder-by-dragwyb' ) );
-					return;
+				try {
+					$min_date = new \DateTime( $field_attr['min_date'] );
+					$min_date->setTime( 0, 0, 0 );
+					if ( $date < $min_date ) {
+						$error_handler->add_error( $field_id, __( 'Value is below minimum', 'smart-form-builder-by-dragwyb' ) );
+						return;
+					}
+				} catch ( \Exception $e ) {
+					// Gracefully ignore invalid configuration
 				}
 			}
 
 			// Check max date
 			if ( isset( $field_attr['max_date'] ) && ! empty( $field_attr['max_date'] ) ) {
-				$max_date = new DateTime( $field_attr['max_date'] );
-				if ( $date > $max_date ) {
-					$error_handler->add_error( $field_id, __( 'Value exceeds maximum', 'smart-form-builder-by-dragwyb' ) );
+				try {
+					$max_date = new \DateTime( $field_attr['max_date'] );
+					$max_date->setTime( 0, 0, 0 );
+					if ( $date > $max_date ) {
+						$error_handler->add_error( $field_id, __( 'Value exceeds maximum', 'smart-form-builder-by-dragwyb' ) );
+					}
+				} catch ( \Exception $e ) {
+					// Gracefully ignore invalid configuration
 				}
 			}
 		}
@@ -297,7 +307,7 @@ class Field_Date extends Field_Base {
 	 */
 	public function sanitize( $default = '', $value = null ) {
 		if ( $value ) {
-			$date = DateTime::createFromFormat( 'Y-m-d', $value );
+			$date = \DateTime::createFromFormat( 'Y-m-d|', $value );
 			return $date ? $date->format( $this->settings['date_format']['value'] ) : $default;
 		}
 
