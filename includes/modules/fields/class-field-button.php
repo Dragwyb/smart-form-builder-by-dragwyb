@@ -272,9 +272,8 @@ class Field_Button extends Field_Base {
 	/**
 	 * Sanitize the field value.
 	 *
-	 * @param string $default The default value.
-	 * @param mixed  $value The value to sanitize.
+	 * @param mixed $value The value to sanitize.
 	 * @return mixed Sanitized value.
 	 */
-	public function sanitize( $default = '', $value = null ) {}
+	public function sanitize( $value = null ) {}
 }

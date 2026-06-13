@@ -162,7 +162,13 @@ class Field_Section extends Field_Base {
 		// Section field does not submit data.
 	}
 
-	public function sanitize( $default = '', $value = null ) {
-		return '';
+	/**
+	 * Sanitize the field value.
+	 *
+	 * @param mixed $value The value to sanitize.
+	 * @return mixed Sanitized value.
+	 */
+	public function sanitize( $value = null ) {
+		return null;
 	}
 }

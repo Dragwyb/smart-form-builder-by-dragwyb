@@ -301,16 +301,15 @@ class Field_Date extends Field_Base {
 	/**
 	 * Sanitize the field value.
 	 *
-	 * @param string $default The default value.
-	 * @param mixed  $value The value to sanitize.
+	 * @param mixed $value The value to sanitize.
 	 * @return mixed Sanitized value.
 	 */
-	public function sanitize( $default = '', $value = null ) {
+	public function sanitize( $value = null ) {
 		if ( $value ) {
 			$date = \DateTime::createFromFormat( 'Y-m-d|', $value );
-			return $date ? $date->format( 'Y-m-d' ) : $default;
+			return $date ? $date->format( 'Y-m-d' ) : null;
 		}
 
-		return sanitize_text_field( $default );
+		return null;
 	}
 }

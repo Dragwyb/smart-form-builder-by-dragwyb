@@ -273,10 +273,16 @@ class Field_Name extends Field_Base {
 		}
 	}
 
-	public function sanitize( $default = '', $value = null ) {
+	/**
+	 * Sanitize the field value.
+	 *
+	 * @param mixed $value The value to sanitize.
+	 * @return mixed Sanitized value.
+	 */
+	public function sanitize( $value = null ) {
 		if ( $value && is_string( $value ) ) {
 			return sanitize_text_field( $value );
 		}
-		return sanitize_text_field( $default );
+		return null;
 	}
 }
