@@ -11,9 +11,9 @@ class Register_Actions {
 
 	private static $instance = null;
 
-	private array $actions = array();
+	private $actions = array();
 
-	private array $default_actions = array( 'email', 'error-message', 'redirect', 'save-submissions', 'success-message', 'user-email' );
+	private $default_actions = array( 'email', 'error-message', 'redirect', 'save-submissions', 'success-message', 'user-email', 'error-logs' );
 
 	public static function instance(): self {
 		if ( null === self::$instance ) {
