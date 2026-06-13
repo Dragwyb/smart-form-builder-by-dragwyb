@@ -24,7 +24,7 @@ use Dragwyb\Form_Builder\Admin\Review\Dragwyb_Review_Notice;
 
 class Dragwyb_Init {
 
-	private static ?self $instance = null;
+	private static $instance = null;
 
 	public static function instance(): self {
 		if ( null === self::$instance ) {

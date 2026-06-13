@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Entries {
 
-	private static ?self $instance = null;
+	private static $instance = null;
 
 	public static function instance(): self {
 		if ( null === self::$instance ) {
