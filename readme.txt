@@ -1,15 +1,15 @@
 # Smart Form Builder
 
-**Contributors:** dragwyb  
-**Tags:** contact form, form builder, drag and drop form, custom form, ajax form  
-**Plugin URI:** https://dragwyb.com/form-builder/
-**Author URI:** https://dragwyb.com/
-**Requires at least:** 5.8  
-**Tested up to:** 7.0  
-**Requires PHP:** 7.4  
-**Stable tag:** 1.0.3 
-**License:** GPL2  
-**License URI:** http://www.gnu.org/licenses/gpl-2.0.html
+Contributors: dragwyb  
+Tags: contact form, form builder, drag and drop form, custom form, ajax form  
+Plugin URI: https://dragwyb.com/form-builder/
+Author URI: https://dragwyb.com/
+Requires at least: 5.8  
+Tested up to: 7.0  
+Requires PHP: 7.4  
+Stable tag: 1.0.3 
+License: GPL2  
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 The fastest, zero-bloat drag & drop WordPress form builder. Create secure AJAX forms with a React visual editor and custom database tables.
 
