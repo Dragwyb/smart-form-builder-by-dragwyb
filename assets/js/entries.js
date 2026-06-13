@@ -387,18 +387,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     for (const [key, value] of Object.entries(decoded)) {
                         const tr = document.createElement('tr');
                         const th = document.createElement('th');
-                        
+
                         let label = key;
                         let displayVal = value;
                         if (value && typeof value === 'object' && 'value' in value) {
                             label = value.label !== key ? `${value.label} (${key})` : value.label;
                             displayVal = value.value;
                         }
-                        
+
                         th.textContent = label;
                         const td = document.createElement('td');
                         td.textContent = Array.isArray(displayVal) ? displayVal.join(', ') : (displayVal == null ? '' : String(displayVal));
-                        
+
                         tr.appendChild(th);
                         tr.appendChild(td);
                         tbody.appendChild(tr);
@@ -482,8 +482,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (entry.submission_data_decoded) {
                 for (const [key, value] of Object.entries(entry.submission_data_decoded)) {
                     // We only support editing strings/numbers easily in this basic dynamic form
-                    const isArray = Array.isArray(value);
-                    const displayVal = isArray ? value.join(', ') : value;
+                    const isArray = Array.isArray(value.value);
+                    const displayVal = isArray ? value.value.join(', ') : value.value;
 
                     const field = document.createElement('div');
                     field.className = 'dragwyb-modal-field';

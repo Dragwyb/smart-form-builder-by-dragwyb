@@ -176,13 +176,13 @@ class Dragwyb_Form_Builder_Ajax {
 					if ( $count >= 3 ) {
 						break;
 					}
-					$display_val    = is_array( $value ) ? implode( ', ', $value ) : (string) $value;
-					$summary[]      = sprintf( '<strong>%s:</strong> %s', esc_html( (string) $key ), esc_html( $display_val ) );
-					$summary_text[] = sprintf( '%s: %s', sanitize_text_field( (string) $key ), sanitize_text_field( $display_val ) );
+					$display_val    = is_array( $value['value'] ) ? implode( ', ', $value['value'] ) : (string) $value['value'];
+					$summary[]      = sprintf( '<strong>%s:</strong> %s', esc_html( (string) $value['label'] ), esc_html( $display_val ) );
+					$summary_text[] = sprintf( '%s: %s', sanitize_text_field( (string) $value['label'] ), sanitize_text_field( $display_val ) );
 					++$count;
 				}
 				$entry->submission_data_summary      = implode( '<br>', $summary ) . ( count( $data ) > 3 ? '<br><em>...and more</em>' : '' );
-				$entry->submission_data_summary_text = implode( ' ', $summary_text ) . ( count( $data ) > 3 ? ' ...and more' : '' );
+				$entry->submission_data_summary_text = implode( '; ', $summary_text ) . ( count( $data ) > 3 ? ' ...and more' : '' );
 			} else {
 				$entry->submission_data_summary      = esc_html( wp_trim_words( $entry->submission_data, 10, '...' ) );
 				$entry->submission_data_summary_text = sanitize_text_field( wp_trim_words( $entry->submission_data, 10, '...' ) );
