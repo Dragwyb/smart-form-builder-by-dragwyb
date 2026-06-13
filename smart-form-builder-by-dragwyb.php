@@ -20,6 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Dragwyb\Form_Builder\Dragwyb_Form_Builder_Autoload;
 use Dragwyb\Form_Builder\Includes\Dragwyb_Init;
 use Dragwyb\Form_Builder\Admin\Db\Submission\Dragwyb_Submission_Db;
+use Dragwyb\Form_Builder\Admin\Db\Error_Log\Dragwyb_Error_Log_Db;
 
 final class Dragwyb_Form_Builder {
 
@@ -83,6 +84,12 @@ final class Dragwyb_Form_Builder {
 		if ( ! $db_version || $db_version !== Dragwyb_Submission_Db::VERSION ) {
 			Dragwyb_Submission_Db::create_table();
 			update_option( 'dragwyb_submission_db_version', Dragwyb_Submission_Db::VERSION );
+		}
+
+		$error_log_db_version = get_option( 'dragwyb_error_log_db_version', false );
+		if ( ! $error_log_db_version || $error_log_db_version !== Dragwyb_Error_Log_Db::VERSION ) {
+			Dragwyb_Error_Log_Db::create_table();
+			update_option( 'dragwyb_error_log_db_version', Dragwyb_Error_Log_Db::VERSION );
 		}
 	}
 
