@@ -137,7 +137,7 @@ class Entries {
 		<!-- Modals Container -->
 		<div id="dragwyb-modal-overlay" class="dragwyb-modal-overlay">
 			<!-- View Modal -->
-			<div id="dragwyb-view-modal" class="dragwyb-modal" style="display: none;">
+			<div id="dragwyb-view-modal" class="dragwyb-modal dragwyb-entries-modal" style="display: none;">
 				<div class="dragwyb-modal-header">
 					<h2><?php esc_html_e( 'View Entry', 'smart-form-builder-by-dragwyb' ); ?></h2>
 					<button type="button" class="dragwyb-modal-close"><span class="dashicons dashicons-no-alt"></span></button>
