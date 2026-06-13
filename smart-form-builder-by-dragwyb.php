@@ -102,6 +102,12 @@ final class Dragwyb_Form_Builder {
 		require_once plugin_dir_path( __FILE__ ) . 'class-dragwyb-autoload.php';
 		Dragwyb_Form_Builder_Autoload::instance();
 
+		if ( ! get_option( 'dragwyb_form_builder_install_data', false ) ) {
+			update_option( 'dragwyb_form_builder_install_data', gmdate( 'Y-m-d H:i:s' ) );
+		}
+
+		update_option( 'dragwyb_form_builder_activation_data', gmdate( 'Y-m-d H:i:s' ) );
+
 		self::create_submission_db();
 	}
 }
