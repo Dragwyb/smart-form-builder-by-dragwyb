@@ -303,12 +303,18 @@ class Field_File extends Field_Base {
 		}
 	}
 
-	public function sanitize( $default = '', $value = null ) {
+	/**
+	 * Sanitize the field value.
+	 *
+	 * @param mixed $value The value to sanitize.
+	 * @return mixed Sanitized value.
+	 */
+	public function sanitize( $value = null ) {
 		// For files, the sanitization and actual saving/moving usually happen during a dedicated submission step
 		// Returning the file path or name or an empty string for now
 		if ( isset( $value['name'] ) ) {
 			return sanitize_file_name( $value['name'] );
 		}
-		return '';
+		return null;
 	}
 }

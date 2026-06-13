@@ -37,11 +37,13 @@ export default class SwitcherControl extends DragwybEditor.editor.extends.Contro
                         onChange={changeHandler}
                         disabled={disabled}
                     />
-                    <span className="dragwyb-switcher__slider">
-                        {settings.show_label === true && (value === returnValue ? settings.on_label : settings.off_label)}
-                    </span>
-                </label>
-            </div>
+                    <div className="dragwyb-switcher__label" {...{ 'data-show-label': settings.on_label, 'data-hide-label': settings.off_label }}>
+                        {/* {settings.show_label === true && (value === returnValue ?  : )} */}
+                        <span className="dragwyb-switcher__slider">
+                        </span>
+                    </div>
+                </label >
+            </div >
         );
     }
 }

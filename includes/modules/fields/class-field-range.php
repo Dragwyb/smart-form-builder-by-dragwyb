@@ -366,10 +366,16 @@ class Field_Range extends Field_Base {
 		}
 	}
 
-	public function sanitize( $default = '', $value = null ) {
+	/**
+	 * Sanitize the field value.
+	 *
+	 * @param mixed $value The value to sanitize.
+	 * @return mixed Sanitized value.
+	 */
+	public function sanitize( $value = null ) {
 		if ( $value && is_numeric( $value ) ) {
 			return floatval( $value );
 		}
-		return is_numeric( $default ) ? floatval( $default ) : 0;
+		return null;
 	}
 }

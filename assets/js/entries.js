@@ -180,6 +180,13 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.addEventListener('click', closeModal);
         });
 
+        // Close on clicking outside
+        elements.modalOverlay.addEventListener('click', (e) => {
+            if (e.target === elements.modalOverlay) {
+                closeModal();
+            }
+        });
+
         // Save Full Edit
         elements.saveEntryBtn.addEventListener('click', saveFullEdit);
     }
@@ -356,36 +363,100 @@ document.addEventListener('DOMContentLoaded', () => {
             await modalWait(startTime);
 
             clearElement(elements.viewModalBody);
+
+            // Build premium grid layout
+            const grid = document.createElement('div');
+            grid.className = 'dragwyb-entry-details-grid';
+
+            // Left Panel: Submitted Data
+            const leftPanel = document.createElement('div');
+            leftPanel.className = 'dragwyb-detail-section';
+            const leftTitle = document.createElement('h3');
+            leftTitle.textContent = 'Submitted Data Fields';
+            leftPanel.appendChild(leftTitle);
+
             const table = document.createElement('table');
-            table.className = 'widefat striped';
+            table.className = 'dragwyb-detail-table';
             const tbody = document.createElement('tbody');
 
-            const addDetailRow = (label, value) => {
-                const row = document.createElement('tr');
-                const labelCell = document.createElement('td');
-                const labelStrong = document.createElement('strong');
-                labelStrong.textContent = label;
-                labelCell.appendChild(labelStrong);
-                row.appendChild(labelCell);
-                appendTextCell(row, value);
-                tbody.appendChild(row);
-            };
-
-            addDetailRow('ID', entry.id);
-            addDetailRow('Form ID', entry.form_id);
-            addDetailRow('IP Address', entry.ip_address);
-            addDetailRow('User Agent', entry.user_agent);
-            addDetailRow('Date', entry.created_at);
-
+            let hasData = false;
             if (entry.submission_data_decoded) {
-                for (const [key, value] of Object.entries(entry.submission_data_decoded)) {
-                    const displayVal = Array.isArray(value) ? value.join(', ') : value;
-                    addDetailRow(key, displayVal);
+                const decoded = entry.submission_data_decoded;
+                if (typeof decoded === 'object' && Object.keys(decoded).length > 0) {
+                    hasData = true;
+                    for (const [key, value] of Object.entries(decoded)) {
+                        const tr = document.createElement('tr');
+                        const th = document.createElement('th');
+
+                        let label = key;
+                        let displayVal = value;
+                        if (value && typeof value === 'object' && 'value' in value) {
+                            label = value.label !== key ? `${value.label} (${key})` : value.label;
+                            displayVal = value.value;
+                        }
+
+                        th.textContent = label;
+                        const td = document.createElement('td');
+                        td.textContent = Array.isArray(displayVal) ? displayVal.join(', ') : (displayVal == null ? '' : String(displayVal));
+
+                        tr.appendChild(th);
+                        tr.appendChild(td);
+                        tbody.appendChild(tr);
+                    }
                 }
             }
 
+            if (!hasData) {
+                const tr = document.createElement('tr');
+                const td = document.createElement('td');
+                td.colSpan = 2;
+                td.style.color = '#888';
+                td.style.fontStyle = 'italic';
+                td.textContent = 'No submission data recorded.';
+                tr.appendChild(td);
+                tbody.appendChild(tr);
+            }
+
             table.appendChild(tbody);
-            elements.viewModalBody.appendChild(table);
+            leftPanel.appendChild(table);
+
+            // Right Panel: Metadata
+            const rightPanel = document.createElement('div');
+            rightPanel.className = 'dragwyb-detail-section';
+            const rightTitle = document.createElement('h3');
+            rightTitle.textContent = 'Metadata';
+            rightPanel.appendChild(rightTitle);
+
+            const metaList = document.createElement('ul');
+            metaList.className = 'dragwyb-meta-list';
+
+            const addMetaItem = (label, val, className = '') => {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>${label}:</strong> `;
+                if (className) {
+                    const span = document.createElement('span');
+                    span.className = className;
+                    span.textContent = val;
+                    li.appendChild(span);
+                } else {
+                    li.appendChild(document.createTextNode(val));
+                }
+                metaList.appendChild(li);
+            };
+
+            addMetaItem('Entry ID', entry.id);
+            addMetaItem('Form ID', entry.form_id);
+            addMetaItem('IP Address', entry.ip_address);
+            addMetaItem('Status', entry.status);
+            addMetaItem('Date Submitted', entry.created_at);
+            addMetaItem('User Agent', entry.user_agent, 'user-agent-text');
+
+            rightPanel.appendChild(metaList);
+
+            grid.appendChild(leftPanel);
+            grid.appendChild(rightPanel);
+
+            elements.viewModalBody.appendChild(grid);
         });
     }
 
@@ -411,8 +482,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (entry.submission_data_decoded) {
                 for (const [key, value] of Object.entries(entry.submission_data_decoded)) {
                     // We only support editing strings/numbers easily in this basic dynamic form
-                    const isArray = Array.isArray(value);
-                    const displayVal = isArray ? value.join(', ') : value;
+                    const isArray = Array.isArray(value.value);
+                    const displayVal = isArray ? value.value.join(', ') : value.value;
 
                     const field = document.createElement('div');
                     field.className = 'dragwyb-modal-field';

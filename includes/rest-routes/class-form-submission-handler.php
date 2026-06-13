@@ -122,9 +122,7 @@ class Form_Submission_Handler {
 		$this->validate_honeypot( $this->raw_data );
 		$this->validate_fields( $this->raw_data );
 
-		if ( ! $this->has_errors() ) {
-			$this->process_submission();
-		}
+		$this->process_submission();
 	}
 
 	/**
@@ -140,11 +138,15 @@ class Form_Submission_Handler {
 			return;
 		}
 
-		do_action( 'Dragwyb/Form/Submission/Before_Processing', $this->sanitized_data, $this->form_config, $this );
+		if ( ! $this->has_errors() ) {
+			do_action( 'Dragwyb/Form/Submission/Before_Processing', $this->sanitized_data, $this->form_config, $this );
+		}
 
 		$after_submission_toolbar_config->process_submission( $this->form_id, $this->sanitized_data, $this->form_config, $this );
 
-		do_action( 'Dragwyb/Form/Submission/After_Processing', $this->sanitized_data, $this->form_config, $this );
+		if ( ! $this->has_errors() ) {
+			do_action( 'Dragwyb/Form/Submission/After_Processing', $this->sanitized_data, $this->form_config, $this );
+		}
 	}
 
 	private function generate_form_config( array $form_data ): void {
@@ -231,12 +233,11 @@ class Form_Submission_Handler {
 
 		$this->form_config['fields'][ $field_orignal_key ]['raw_value'] = $field_value;
 
-		$default_value = $field_value;
-		if ( method_exists( $field_module, 'sanitize' ) ) {
-			$default_value = $field_module->sanitize( '', $field_value );
-		}
+		$field_sanitized_value = apply_filters( 'Dragwyb/Field/Value/Sanitize/' . $field_type, $field_value );
 
-		$field_sanitized_value = apply_filters( 'Dragwyb/Field/Value/Sanitize/' . $field_type, $default_value, $field_value );
+		if ( method_exists( $field_module, 'sanitize' ) ) {
+			$field_sanitized_value = $field_module->sanitize( $field_value );
+		}
 
 		// 1. Store it in the configuration array for reference
 		$this->form_config['fields'][ $field_orignal_key ]['value'] = $field_sanitized_value;

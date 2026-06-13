@@ -19,10 +19,12 @@ use Dragwyb\Form_Builder\Includes\Frontend\Form_Preview;
 use Dragwyb\Form_Builder\Includes\Frontend\Managers\CSS_Manager;
 use Dragwyb\Form_Builder\Includes\Rest_Routes\Dragwyb_Frontend_Route;
 use Dragwyb\Form_Builder\Includes\Rest_Routes\Dragwyb_Settings_Route;
+use Dragwyb\Form_Builder\Admin\Feedback\SMFBD_Feedback_Form;
+use Dragwyb\Form_Builder\Admin\Review\Dragwyb_Review_Notice;
 
 class Dragwyb_Init {
 
-	private static ?self $instance = null;
+	private static $instance = null;
 
 	public static function instance(): self {
 		if ( null === self::$instance ) {
@@ -41,6 +43,9 @@ class Dragwyb_Init {
 			new Dragwyb_Form_Builder_Ajax();
 			Dragwyb_Settings::instance();
 			Frontend_Render::instance();
+			SMFBD_Feedback_Form::get_instance();
+
+			$this->review_notice();
 		}
 
 		new Dragwyb_Frontend_Route();
@@ -115,6 +120,13 @@ class Dragwyb_Init {
 			esc_attr( DRAGWYB_FORM_BUILDER_VERSION ),
 			'all'
 		);
+	}
+
+	private function review_notice() {
+		$already_rated = get_option( 'dragwyb_form_builder_already_reviewd', false );
+		if ( ! $already_rated && class_exists( Dragwyb_Review_Notice::class ) ) {
+			Dragwyb_Review_Notice::instance();
+		}
 	}
 
 	private function get_translations() {

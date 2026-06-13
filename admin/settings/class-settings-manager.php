@@ -104,21 +104,14 @@ class Settings_Manager {
 				),
 			),
 			'performance'    => array(
-				'load_font_awesome' => array(
-					'label'        => __( 'Load Font Awesome', 'smart-form-builder-by-dragwyb' ),
-					'description'  => __( 'Disable this if your theme already loads Font Awesome.', 'smart-form-builder-by-dragwyb' ),
-					'type'         => 'string',
-					'default'      => 'yes',
-					'valid_values' => array( 'yes', 'no' ),
-				),
-				'load_svg_icons'    => array(
+				'load_svg_icons'   => array(
 					'label'        => __( 'Load SVG Icons', 'smart-form-builder-by-dragwyb' ),
 					'description'  => __( 'Enable this if want to load SVG icons instead of Font Awesome icons (recommended).', 'smart-form-builder-by-dragwyb' ),
 					'type'         => 'string',
 					'default'      => 'no',
 					'valid_values' => array( 'yes', 'no' ),
 				),
-				'load_default_css'  => array(
+				'load_default_css' => array(
 					'label'        => __( 'Load Default CSS', 'smart-form-builder-by-dragwyb' ),
 					'description'  => __( 'Disable this if you dont want to load default CSS for fields and forms (not recommended).', 'smart-form-builder-by-dragwyb' ),
 					'type'         => 'string',

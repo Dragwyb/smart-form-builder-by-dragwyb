@@ -12,6 +12,7 @@ use Dragwyb\Form_Builder\Includes\Toolbars\Toolbars;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
 use Dragwyb\Form_Builder\Includes\Frontend\Managers\CSS_Manager;
 use Dragwyb\Form_Builder\Admin\Db\Submission\Dragwyb_Submission_Db;
+use Dragwyb\Form_Builder\Admin\Db\Error_Log\Dragwyb_Error_Log_Db;
 
 class Dragwyb_Form_Builder_Ajax {
 
@@ -25,6 +26,9 @@ class Dragwyb_Form_Builder_Ajax {
 		add_action( 'wp_ajax_dragwyb_get_entry', array( $this, 'get_entry' ) );
 		add_action( 'wp_ajax_dragwyb_update_entry', array( $this, 'update_entry' ) );
 		add_action( 'wp_ajax_dragwyb_delete_entry', array( $this, 'delete_entry' ) );
+		add_action( 'wp_ajax_dragwyb_get_errors', array( $this, 'get_errors' ) );
+		add_action( 'wp_ajax_dragwyb_delete_error', array( $this, 'delete_error' ) );
+		add_action( 'wp_ajax_dragwyb_clear_errors', array( $this, 'clear_errors' ) );
 	}
 
 	/**
@@ -172,13 +176,13 @@ class Dragwyb_Form_Builder_Ajax {
 					if ( $count >= 3 ) {
 						break;
 					}
-					$display_val    = is_array( $value ) ? implode( ', ', $value ) : (string) $value;
-					$summary[]      = sprintf( '<strong>%s:</strong> %s', esc_html( (string) $key ), esc_html( $display_val ) );
-					$summary_text[] = sprintf( '%s: %s', sanitize_text_field( (string) $key ), sanitize_text_field( $display_val ) );
+					$display_val    = is_array( $value['value'] ) ? implode( ', ', $value['value'] ) : (string) $value['value'];
+					$summary[]      = sprintf( '<strong>%s:</strong> %s', esc_html( (string) $value['label'] ), esc_html( $display_val ) );
+					$summary_text[] = sprintf( '%s: %s', sanitize_text_field( (string) $value['label'] ), sanitize_text_field( $display_val ) );
 					++$count;
 				}
 				$entry->submission_data_summary      = implode( '<br>', $summary ) . ( count( $data ) > 3 ? '<br><em>...and more</em>' : '' );
-				$entry->submission_data_summary_text = implode( ' ', $summary_text ) . ( count( $data ) > 3 ? ' ...and more' : '' );
+				$entry->submission_data_summary_text = implode( '; ', $summary_text ) . ( count( $data ) > 3 ? ' ...and more' : '' );
 			} else {
 				$entry->submission_data_summary      = esc_html( wp_trim_words( $entry->submission_data, 10, '...' ) );
 				$entry->submission_data_summary_text = sanitize_text_field( wp_trim_words( $entry->submission_data, 10, '...' ) );
@@ -372,5 +376,122 @@ class Dragwyb_Form_Builder_Ajax {
 		}
 
 		return $this->current_user_can_manage_form( absint( $entry->form_id ), $capability );
+	}
+
+	/**
+	 * Get error logs via AJAX
+	 */
+	public function get_errors(): void {
+		check_ajax_referer( 'dragwyb_admin_nonce' );
+
+		if ( ! $this->current_user_can_manage_entries() ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied', 'smart-form-builder-by-dragwyb' ) ) );
+		}
+
+		$db              = new Dragwyb_Error_Log_Db();
+		$allowed_orderby = array( 'id', 'form_id', 'ip_address', 'created_at' );
+		$orderby         = isset( $_POST['orderby'] ) ? sanitize_key( wp_unslash( $_POST['orderby'] ) ) : 'created_at';
+		$orderby         = in_array( $orderby, $allowed_orderby, true ) ? $orderby : 'created_at';
+
+		$args = array(
+			'limit'   => isset( $_POST['limit'] ) ? absint( wp_unslash( $_POST['limit'] ) ) : 20,
+			'offset'  => isset( $_POST['offset'] ) ? absint( wp_unslash( $_POST['offset'] ) ) : 0,
+			'orderby' => $orderby,
+			'order'   => isset( $_POST['order'] ) ? sanitize_key( wp_unslash( $_POST['order'] ) ) : 'DESC',
+			'search'  => isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '',
+			'form_id' => isset( $_POST['form_id'] ) ? absint( wp_unslash( $_POST['form_id'] ) ) : 0,
+		);
+
+		$entries = $db->get_all( $args );
+		$total   = $db->get_total_count( $args );
+
+		// Process data for UI
+		foreach ( $entries as &$entry ) {
+			$entry->form_title = get_the_title( $entry->form_id ) ?: '#' . $entry->form_id;
+
+			$data = json_decode( $entry->submission_data, true );
+			if ( json_last_error() === JSON_ERROR_NONE && is_array( $data ) ) {
+				$summary = array();
+				$count   = 0;
+				foreach ( $data as $key => $value ) {
+					if ( $count >= 3 ) {
+						break;
+					}
+					$display_val = is_array( $value ) ? implode( ', ', $value ) : (string) $value;
+					$summary[]   = sprintf( '<strong>%s:</strong> %s', esc_html( (string) $key ), esc_html( $display_val ) );
+					++$count;
+				}
+				$entry->submission_data_summary = implode( '<br>', $summary ) . ( count( $data ) > 3 ? '<br><em>...and more</em>' : '' );
+			} else {
+				$entry->submission_data_summary = esc_html( wp_trim_words( $entry->submission_data, 10, '...' ) );
+			}
+
+			// Format validation errors summary
+			$errors = json_decode( $entry->errors, true );
+			if ( json_last_error() === JSON_ERROR_NONE && is_array( $errors ) ) {
+				$err_summary = array();
+				foreach ( $errors as $field_key => $err_msg ) {
+					$err_summary[] = sprintf( '<span class="dragwyb-error-badge"><strong>%s:</strong> %s</span>', esc_html( (string) $field_key ), esc_html( (string) $err_msg ) );
+				}
+				$entry->errors_summary = implode( ' ', $err_summary );
+			} else {
+				$entry->errors_summary = esc_html( $entry->errors );
+			}
+
+			$entry->created_at_formatted = wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $entry->created_at ) );
+		}
+
+		wp_send_json_success(
+			array(
+				'entries'     => $entries,
+				'total_items' => $total,
+				'total_pages' => ceil( $total / max( 1, $args['limit'] ) ),
+			)
+		);
+	}
+
+	/**
+	 * Delete a single error log via AJAX
+	 */
+	public function delete_error(): void {
+		check_ajax_referer( 'dragwyb_admin_nonce' );
+
+		if ( ! $this->current_user_can_manage_entries() ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied', 'smart-form-builder-by-dragwyb' ) ) );
+		}
+
+		$id = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		if ( ! $id ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid ID', 'smart-form-builder-by-dragwyb' ) ) );
+		}
+
+		$db      = new Dragwyb_Error_Log_Db();
+		$deleted = $db->delete( $id );
+
+		if ( $deleted === false ) {
+			wp_send_json_error( array( 'message' => __( 'Failed to delete error log.', 'smart-form-builder-by-dragwyb' ) ) );
+		}
+
+		wp_send_json_success( array( 'message' => __( 'Error log deleted successfully.', 'smart-form-builder-by-dragwyb' ) ) );
+	}
+
+	/**
+	 * Clear all error logs via AJAX
+	 */
+	public function clear_errors(): void {
+		check_ajax_referer( 'dragwyb_admin_nonce' );
+
+		if ( ! $this->current_user_can_manage_entries() ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied', 'smart-form-builder-by-dragwyb' ) ) );
+		}
+
+		$db      = new Dragwyb_Error_Log_Db();
+		$cleared = $db->clear_all();
+
+		if ( $cleared === false ) {
+			wp_send_json_error( array( 'message' => __( 'Failed to clear error logs.', 'smart-form-builder-by-dragwyb' ) ) );
+		}
+
+		wp_send_json_success( array( 'message' => __( 'All error logs cleared successfully.', 'smart-form-builder-by-dragwyb' ) ) );
 	}
 }

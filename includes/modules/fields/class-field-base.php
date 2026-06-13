@@ -233,11 +233,10 @@ abstract class Field_Base extends Register_Controls_Base {
 	/**
 	 * Sanitize the field value.
 	 *
-	 * @param string $default The default value.
-	 * @param mixed  $value The value to sanitize.
+	 * @param mixed $value The value to sanitize.
 	 * @return mixed Sanitized value.
 	 */
-	abstract public function sanitize( string $default = '', $value = null );
+	abstract public function sanitize( $value = null );
 
 	public function render() {
 		$this->field_attributes = array();

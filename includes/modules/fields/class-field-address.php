@@ -272,10 +272,17 @@ class Field_Address extends Field_Base {
 		}
 	}
 
-	public function sanitize( $default = '', $value = null ) {
-		if ( $value && is_string( $value ) ) {
+	/**
+	 * Sanitize the field value.
+	 *
+	 * @param mixed $value The value to sanitize.
+	 * @return mixed Sanitized value.
+	 */
+	public function sanitize( $value = null ) {
+		if ( isset( $value ) && is_string( $value ) ) {
 			return sanitize_textarea_field( $value );
 		}
-		return sanitize_textarea_field( $default );
+
+		return null;
 	}
 }

@@ -318,15 +318,14 @@ class Field_Text extends Field_Base {
 	/**
 	 * Sanitize the field value.
 	 *
-	 * @param string $default The default value.
-	 * @param mixed  $value The value to sanitize.
+	 * @param mixed $value The value to sanitize.
 	 * @return mixed Sanitized value.
 	 */
-	public function sanitize( $default = '', $value = null ) {
+	public function sanitize( $value = null ) {
 		if ( $value && is_string( $value ) ) {
 			return sanitize_text_field( $value );
 		}
 
-		return sanitize_text_field( $default );
+		return null;
 	}
 }

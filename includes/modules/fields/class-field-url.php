@@ -282,10 +282,16 @@ class Field_Url extends Field_Base {
 		}
 	}
 
-	public function sanitize( $default = '', $value = null ) {
+	/**
+	 * Sanitize the field value.
+	 *
+	 * @param mixed $value The value to sanitize.
+	 * @return mixed Sanitized value.
+	 */
+	public function sanitize( $value = null ) {
 		if ( $value && is_string( $value ) ) {
 			return esc_url_raw( $value );
 		}
-		return esc_url_raw( $default );
+		return null;
 	}
 }

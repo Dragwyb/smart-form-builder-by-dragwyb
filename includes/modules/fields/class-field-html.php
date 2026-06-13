@@ -109,7 +109,13 @@ class Field_Html extends Field_Base {
 		// HTML field does not submit data.
 	}
 
-	public function sanitize( $default = '', $value = null ) {
+	/**
+	 * Sanitize the field value.
+	 *
+	 * @param mixed $value The value to sanitize.
+	 * @return mixed Sanitized value.
+	 */
+	public function sanitize( $value = null ) {
 		return '';
 	}
 }
