@@ -428,7 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const fieldName = document.createElement('div');
             fieldName.className = 'error-field-name';
-            fieldName.textContent = field;
+            fieldName.textContent = submissionData && submissionData[field] && submissionData[field].label ? `${submissionData[field].label} (${field}) :` : field;
 
             const errMsg = document.createElement('div');
             errMsg.className = 'error-message';
