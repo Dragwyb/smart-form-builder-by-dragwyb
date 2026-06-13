@@ -143,6 +143,17 @@ Built with ❤️ by Dragwyb. Thanks to the WordPress developer community for co
 
 This plugin is licensed under the GPL2 license.
 
+## Screenshots
+1. Drag & Drop Visual Form Builder.
+2. Clean, Responsive Frontend Forms
+3. Advanced Visual Styling & Customization.
+4. Powerful Submission Actions & Redirects.
+5. Built-in Entry Management.
+6. Easy Form Management & Shortcodes.
+7. Spam Protection & Advanced Security.
+8. Performance Optimizer: Toggle Unused Fields.
+9. Seamless Global API Integrations.
+
 == Changelog ==
 
 = 1.0.3 16 April 2026 =
