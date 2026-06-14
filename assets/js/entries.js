@@ -489,7 +489,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     field.className = 'dragwyb-modal-field';
 
                     const label = document.createElement('label');
-                    label.textContent = key;
+                    label.textContent = value.label !== key ? `${value.label} (${key})` : value.label;
 
                     const input = document.createElement('input');
                     input.type = 'text';
