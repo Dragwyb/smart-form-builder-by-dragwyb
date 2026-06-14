@@ -13,6 +13,8 @@ use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
 use Dragwyb\Form_Builder\Includes\Frontend\Managers\CSS_Manager;
 use Dragwyb\Form_Builder\Admin\Db\Submission\Dragwyb_Submission_Db;
 use Dragwyb\Form_Builder\Admin\Db\Error_Log\Dragwyb_Error_Log_Db;
+use Dragwyb\Form_Builder\Includes\Modules\Modules;
+use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Base;
 
 class Dragwyb_Form_Builder_Ajax {
 
@@ -287,13 +289,26 @@ class Dragwyb_Form_Builder_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Permission denied', 'smart-form-builder-by-dragwyb' ) ) );
 		}
 
-		$data = array();
+		if ( ! property_exists( $entry, 'submission_data' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid data', 'smart-form-builder-by-dragwyb' ) ) );
+		}
+
+		$entry_submission_data = json_decode( $entry->submission_data, true );
+
+		if ( json_last_error() !== JSON_ERROR_NONE || ! is_array( $entry_submission_data ) ) {
+			$entry_submission_data = array();
+		}
+
+		$is_data_update = false;
+		$dragwyb_module = null;
 
 		// Check if quick edit data exists
 		if ( isset( $_POST['status'] ) ) {
+			$is_data_update = true;
 			$data['status'] = sanitize_text_field( wp_unslash( $_POST['status'] ) );
 		}
 		if ( isset( $_POST['created_at'] ) ) {
+			$is_data_update     = true;
 			$data['created_at'] = sanitize_text_field( wp_unslash( $_POST['created_at'] ) );
 		}
 
@@ -304,17 +319,33 @@ class Dragwyb_Form_Builder_Ajax {
 			$submission_data = json_decode( wp_unslash( $_POST['submission_data'] ), true );
 
 			if ( json_last_error() === JSON_ERROR_NONE && is_array( $submission_data ) ) {
-				$sanitized = array();
-				foreach ( $submission_data as $key => $val ) {
-					$s_key               = sanitize_text_field( $key );
-					$s_val               = is_array( $val ) ? array_map( 'sanitize_textarea_field', $val ) : sanitize_textarea_field( (string) $val );
-					$sanitized[ $s_key ] = $s_val;
+				foreach ( $entry_submission_data as $key => $val ) {
+					if ( ! isset( $submission_data[ $key ] ) || ! isset( $val['value'] ) || $val['value'] === $submission_data[ $key ] || ! isset( $val['type'] ) ) {
+						continue;
+					}
+
+					$is_data_update = true;
+
+					if ( ! isset( $dragwyb_module ) ) {
+						$dragwyb_module = Modules::instance();
+					}
+
+					$field_type = $val['type'];
+
+					$dragwyb_field = $dragwyb_module->get_field( $field_type );
+
+					if ( ! $dragwyb_field instanceof Field_Base ) {
+						continue;
+					}
+
+					$entry_submission_data[ $key ]['value'] = $dragwyb_field->sanitize( $submission_data[ $key ] );
 				}
-				$data['submission_data'] = wp_json_encode( $sanitized );
+
+				$data['submission_data'] = wp_json_encode( $entry_submission_data );
 			}
 		}
 
-		if ( empty( $data ) ) {
+		if ( ! $is_data_update ) {
 			wp_send_json_error( array( 'message' => __( 'No data provided for update.', 'smart-form-builder-by-dragwyb' ) ) );
 		}
 
