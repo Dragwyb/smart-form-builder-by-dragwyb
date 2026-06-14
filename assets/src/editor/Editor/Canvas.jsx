@@ -44,8 +44,6 @@ const RenderItem = React.memo(({
         return isButtonContainerFunc(field);
     }, [field])
 
-    const selectedField = useSelector((state) => state.selectedSettingId);
-
     if (!field) {
         return null;
     }
@@ -103,32 +101,28 @@ const RenderItem = React.memo(({
         wrapperClass.push("dragwyb-no-float");
     }
 
-    if (selectedField && selectedField === field._id) {
-        wrapperClass.push("selected");
-    }
-
     wrapperClass = DragwybBuilder.Hooks.applyFilter('Dragwyb/Field/WrapperClass', wrapperClass, fieldId, field.type, field.attributes, Utils);
     wrapperClass = DragwybBuilder.Hooks.applyFilter(`Dragwyb/Field/WrapperClass/${field.type}`, wrapperClass, fieldId, field.type, field.attributes, Utils);
 
     const onRootContainerSelect = useCallback(() => {
         const id = field._id;
 
-        if (!id || selectedField === id) {
+        if (!id) {
             return;
         }
 
         onFieldSelect({ id });
-    }, [field._id, selectedField, onFieldSelect]);
+    }, [field._id, onFieldSelect]);
 
-    const onFieldSelectHandler = useCallback(() => {
+    const onFieldSelectHandler = useCallback((e) => {
         const id = field._id;
 
-        if (!id || isRootContainer || selectedField === id) {
+        if (!id || isRootContainer) {
             return;
         }
 
         onFieldSelect({ id });
-    }, [field._id, isRootContainer, selectedField, onFieldSelect]);
+    }, [field._id, isRootContainer, onFieldSelect]);
 
     return (
         <>

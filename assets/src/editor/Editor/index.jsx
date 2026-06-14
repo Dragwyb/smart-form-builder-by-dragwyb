@@ -46,6 +46,9 @@ const Editor = () => {
     }, [dispatch]);
 
     const setSelectedSettingId = useCallback(({ id = false, tab = "fields" }) => {
+        if (store?.getState()?.selectedSettingId === id) {
+            return;
+        }
         Utils.setSelectedSettingId({ value: id });
         resetSection();
         const defaultToolbar = DragwybEditor?.EditorToolbars?.Default ?? false;
