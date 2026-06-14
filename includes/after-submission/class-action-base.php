@@ -68,6 +68,7 @@ abstract class Action_Base extends Register_Controls_Base {
 			$data[ $field_id ] = array(
 				'label' => isset( $form_config['fields'][ $field_id ]['attributes']['label'] ) ? $form_config['fields'][ $field_id ]['attributes']['label'] : $field_id,
 				'value' => $field_value,
+				'type'  => isset( $form_config['fields'][ $field_id ]['type'] ) ? $form_config['fields'][ $field_id ]['type'] : 'text',
 			);
 		}
 		return $data;
