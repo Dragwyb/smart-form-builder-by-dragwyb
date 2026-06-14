@@ -68,17 +68,7 @@ const Editor = () => {
         })
     );
 
-    const customCollisionDetection = useCallback((args) => {
-        const pointerCollisions = pointerWithin(args);
-
-        if (pointerCollisions.length > 0) {
-            return pointerCollisions;
-        }
-
-        return closestCenter(args);
-    }, []);
-
-    const measureDroppableContainers = (node) => {
+    const measureDroppableContainers = useCallback((node) => {
         const rect = node.getBoundingClientRect();
 
         const iframe = document.getElementById('dragwyb-preview-iframe');
@@ -87,7 +77,7 @@ const Editor = () => {
             const iframeRect = iframe.getBoundingClientRect();
 
             return {
-                top: rect.top + iframeRect.top,
+                top: rect.top + iframeRect.top - 10,
                 left: rect.left + iframeRect.left,
                 bottom: rect.bottom + iframeRect.top,
                 right: rect.right + iframeRect.left,
@@ -109,29 +99,14 @@ const Editor = () => {
             x: rect.x,
             y: rect.y,
         };
-    };
+    }, []);
 
     const measureDraggableContainers = useCallback((node) => {
         const rect = node.getBoundingClientRect();
 
         const iframe = document.getElementById('dragwyb-preview-iframe');
 
-        if (iframe && node.ownerDocument === iframe.contentDocument) {
-            const iframeRect = iframe.getBoundingClientRect();
-
-            return {
-                top: rect.top + iframeRect.top,
-                left: rect.left + iframeRect.left,
-                bottom: rect.bottom + iframeRect.top,
-                right: rect.right + iframeRect.left,
-                width: rect.width,
-                height: rect.height,
-                x: rect.x + iframeRect.left,
-                y: rect.y + iframeRect.top,
-            };
-        }
-
-        return {
+        const finalPosition = {
             top: rect.top,
             left: rect.left,
             bottom: rect.bottom,
@@ -141,6 +116,26 @@ const Editor = () => {
             x: rect.x,
             y: rect.y,
         };
+
+        const iframeRect = iframe.getBoundingClientRect();
+
+        if (iframe && node.ownerDocument !== document) {
+            finalPosition.top = rect.top + iframeRect.top;
+            finalPosition.left = rect.left + iframeRect.left;
+            finalPosition.bottom = rect.bottom + iframeRect.top;
+            finalPosition.right = rect.right + iframeRect.left;
+            finalPosition.width = rect.width;
+            finalPosition.height = rect.height;
+            finalPosition.x = rect.x + iframeRect.left;
+            finalPosition.y = rect.y + iframeRect.top;
+        } else {
+            finalPosition.top = rect.top + iframeRect.top;
+            finalPosition.bottom = rect.bottom + iframeRect.top;
+            finalPosition.height = rect.height;
+            finalPosition.y = rect.y + iframeRect.top;
+        }
+
+        return finalPosition;
     }, []);
 
     // Memoize measuring config to prevent DndContext re-init
@@ -313,7 +308,6 @@ const Editor = () => {
             <div className="dragwyb-editor__body">
                 <DndContext
                     sensors={sensors}
-                    collisionDetection={customCollisionDetection}
                     onDragStart={handleDragStart}
                     onDragEnd={handleDragEnd}
                     onDragCancel={handleDragCancel}
