@@ -63,7 +63,41 @@ document.addEventListener('DOMContentLoaded', () => {
     function appendHtmlCell(row, value, className = '') {
         const cell = document.createElement('td');
         if (className) cell.className = className;
-        cell.innerHTML = value;
+        
+        // Safely parse HTML and append only safe tags (strong, em, br, span with allowed class)
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(value || '', 'text/html');
+        
+        function sanitizeNode(node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                return document.createTextNode(node.textContent);
+            }
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                const tag = node.tagName.toLowerCase();
+                if (['strong', 'em', 'br', 'span'].includes(tag)) {
+                    const el = document.createElement(tag);
+                    if (tag === 'span' && node.className === 'dragwyb-error-badge') {
+                        el.className = 'dragwyb-error-badge';
+                    }
+                    for (const child of node.childNodes) {
+                        const sanitizedChild = sanitizeNode(child);
+                        if (sanitizedChild) {
+                            el.appendChild(sanitizedChild);
+                        }
+                    }
+                    return el;
+                }
+            }
+            return document.createTextNode(node.textContent);
+        }
+        
+        for (const child of doc.body.childNodes) {
+            const sanitized = sanitizeNode(child);
+            if (sanitized) {
+                cell.appendChild(sanitized);
+            }
+        }
+        
         row.appendChild(cell);
         return cell;
     }
@@ -203,7 +237,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .finally(() => {
                     elements.clearAllBtn.disabled = false;
-                    elements.clearAllBtn.innerHTML = '<span class="dashicons dashicons-trash"></span> Clear All Logs';
+                    elements.clearAllBtn.textContent = '';
+                    const icon = document.createElement('span');
+                    icon.className = 'dashicons dashicons-trash';
+                    elements.clearAllBtn.appendChild(icon);
+                    elements.clearAllBtn.appendChild(document.createTextNode(' Clear All Logs'));
                 });
         });
 
@@ -452,7 +490,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const addMetaItem = (label, val, className = '') => {
             const li = document.createElement('li');
-            li.innerHTML = `<strong>${label}:</strong> `;
+            const strong = document.createElement('strong');
+            strong.textContent = label + ':';
+            li.appendChild(strong);
+            li.appendChild(document.createTextNode(' '));
             if (className) {
                 const span = document.createElement('span');
                 span.className = className;
