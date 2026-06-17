@@ -432,7 +432,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const addMetaItem = (label, val, className = '') => {
                 const li = document.createElement('li');
-                li.innerHTML = `<strong>${label}:</strong> `;
+                const strong = document.createElement('strong');
+                strong.textContent = label + ':';
+                li.appendChild(strong);
+                li.appendChild(document.createTextNode(' '));
                 if (className) {
                     const span = document.createElement('span');
                     span.className = className;
