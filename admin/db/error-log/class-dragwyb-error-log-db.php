@@ -226,6 +226,11 @@ class Dragwyb_Error_Log_Db {
 		global $wpdb;
 		$table_name = self::get_table_name();
 
-		return $wpdb->query( "TRUNCATE TABLE $table_name" ) !== false || $wpdb->query( "DELETE FROM $table_name" ) !== false;
+		$result = $wpdb->query( "TRUNCATE TABLE $table_name" );
+		if ( $result === false ) {
+			$result = $wpdb->query( "DELETE FROM $table_name" );
+		}
+
+		return $result !== false;
 	}
 }
