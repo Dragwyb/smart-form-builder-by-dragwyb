@@ -392,7 +392,7 @@ class Frontend_Render {
 			$css_string .= '}';
 		}
 
-		return sanitize_text_field( $css_string );
+		return wp_strip_all_tags( $css_string );
 	}
 
 	public static function enqueue_static_assets() {
