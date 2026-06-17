@@ -105,6 +105,11 @@ class Form_Bulk_Actions_Handler {
 	}
 
 	protected function trash_post( $post_id ) {
+		if ( ! current_user_can( 'delete_post', $post_id ) ) {
+			++$this->locked;
+			return;
+		}
+
 		if ( wp_check_post_lock( $post_id ) ) {
 			++$this->locked;
 			return;
