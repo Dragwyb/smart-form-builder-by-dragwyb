@@ -178,11 +178,11 @@ if ( ! class_exists( 'SMFBD_Feedback_Form' ) ) {
 		 */
 		public function smfbd_send_feedback() {
 			if ( isset( $_POST['action'] ) && 'smfbd_send_feedback' === $_POST['action'] ) {
-				check_ajax_referer( 'smfbd_send_feedback_nonce', 'nonce' );
-
 				if ( ! current_user_can( 'manage_options' ) ) {
 					wp_send_json_error( 'Unauthorized' );
 				}
+
+				check_ajax_referer( 'smfbd_send_feedback_nonce', 'nonce' );
 
 				$wordpress_version = get_bloginfo( 'version' );
 				$php_version       = phpversion();
