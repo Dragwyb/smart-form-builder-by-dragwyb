@@ -69,12 +69,12 @@ class List_Table extends WP_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb'          => '<input type="checkbox" />', // Required for bulk actions
-			'name'        => 'Name',
-			'author'      => 'Author',
-			'shortcode'   => 'Shortcode',
-			'id'          => 'ID',
-			'clean_cache' => 'Clean Cache',
-			'date'        => 'Date',
+			'name'        => __( 'Name', 'smart-form-builder-by-dragwyb' ),
+			'author'      => __( 'Author', 'smart-form-builder-by-dragwyb' ),
+			'shortcode'   => __( 'Shortcode', 'smart-form-builder-by-dragwyb' ),
+			'id'          => __( 'ID', 'smart-form-builder-by-dragwyb' ),
+			'clean_cache' => __( 'Clean Cache', 'smart-form-builder-by-dragwyb' ),
+			'date'        => __( 'Date', 'smart-form-builder-by-dragwyb' ),
 		);
 
 		// Modify columns via a filter
@@ -258,8 +258,8 @@ class List_Table extends WP_List_Table {
 				esc_html__( 'Delete', 'smart-form-builder-by-dragwyb' )
 			);
 		} else {
-			$actions['edit']  = '<a href="?page=dragwyb-form-builder&form_id=' . (int) esc_attr( $form->ID ) . '">Edit</a>';
-			$actions['view']  = '<a href="' . esc_url( $this->get_preview_url( $form->ID ) ) . '" target="_blank">View</a>';
+			$actions['edit']  = '<a href="?page=dragwyb-form-builder&form_id=' . (int) esc_attr( $form->ID ) . '">' . esc_html__( 'Edit', 'smart-form-builder-by-dragwyb' ) . '</a>';
+			$actions['view']  = '<a href="' . esc_url( $this->get_preview_url( $form->ID ) ) . '" target="_blank">' . esc_html__( 'View', 'smart-form-builder-by-dragwyb' ) . '</a>';
 			$actions['trash'] = sprintf(
 				'<a href="%s" class="submitdelete" onclick="%s">%s</a>',
 				esc_url( wp_nonce_url( "post.php?action=trash&post={$form->ID}", 'trash-post_' . $form->ID ) ),
@@ -284,13 +284,13 @@ class List_Table extends WP_List_Table {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- for post status check
 		if ( isset( $_REQUEST['post_status'] ) && $_REQUEST['post_status'] === 'trash' ) {
 			return array(
-				'delete'  => 'Delete Permanently',
-				'untrash' => 'Restore',
+				'delete'  => __( 'Delete Permanently', 'smart-form-builder-by-dragwyb' ),
+				'untrash' => __( 'Restore', 'smart-form-builder-by-dragwyb' ),
 			);
 		}
 
 		return array(
-			'trash' => 'Move to Trash',
+			'trash' => __( 'Move to Trash', 'smart-form-builder-by-dragwyb' ),
 		);
 	}
 
