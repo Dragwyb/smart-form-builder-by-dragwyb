@@ -144,7 +144,7 @@ class Dragwyb_Settings_Route {
 		$value = $value['value'];
 
 		if ( isset( $data['valid_values'] ) ) {
-			if ( in_array( $value, $data['valid_values'] ) ) {
+			if ( in_array( $value, $data['valid_values'], true ) ) {
 				$settings[ $key ] = $value;
 			}
 		} else {
