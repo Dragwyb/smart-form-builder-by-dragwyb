@@ -96,7 +96,7 @@ class Shortcode_Handler {
 		return '<div class="' . esc_attr( $class ) . '" id="dragwyb-form-wrapper-' . esc_attr( $form_id ) . '">' . self::$frontend_render->render() . '</div>';
 	}
 
-	private function allowed_html_for_form(): array {
+	final public function allowed_html_for_form(): array {
 		$allowed_html = wp_kses_allowed_html( 'post' ); // includes basic tags like <a>, <p>, <br>, <strong>, etc.
 
 		$form_tags = array(
