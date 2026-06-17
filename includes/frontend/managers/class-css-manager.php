@@ -129,24 +129,23 @@ class CSS_Manager {
 	}
 
 	public function clean_cache_request(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'smart-form-builder-by-dragwyb' ) ) );
+		}
+
 		if ( ! isset( $_POST['delete_cache_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['delete_cache_nonce'] ) ), 'delete_cache_nonce' ) ) {
-			wp_send_json_error( 'Invalid nonce' );
+			wp_send_json_error( array( 'message' => __( 'Invalid nonce', 'smart-form-builder-by-dragwyb' ) ) );
 		}
 
 		if ( ! isset( $_POST['form_id'] ) ) {
-			wp_send_json_error( 'Invalid form id 1' );
-		}
-
-		// 1. Check Permission
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( 'Unauthorized' );
+			wp_send_json_error( array( 'message' => __( 'Invalid form ID', 'smart-form-builder-by-dragwyb' ) ) );
 		}
 
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized use it for get form id and below use nonce verification based on form ID.
 		$form_id = absint( sanitize_text_field( wp_unslash( $_POST['form_id'] ) ) );
 
 		if ( $form_id <= 0 ) {
-			wp_send_json_error( 'Invalid form id 2' );
+			wp_send_json_error( array( 'message' => __( 'Invalid form ID', 'smart-form-builder-by-dragwyb' ) ) );
 		}
 
 		$post_type = Dragwyb_Post::POST_TYPE;
@@ -154,18 +153,18 @@ class CSS_Manager {
 		$nonce_key = $post_type . $form_id . '-clean-cache';
 
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), $nonce_key ) ) {
-			wp_send_json_error( 'Invalid nonce' );
+			wp_send_json_error( array( 'message' => __( 'Invalid nonce', 'smart-form-builder-by-dragwyb' ) ) );
 		}
 
 		$form_id = $this->clean_cache( $form_id );
 
 		if ( $form_id <= 0 ) {
-			wp_send_json_error( 'Invalid form id 3' );
+			wp_send_json_error( array( 'message' => __( 'Invalid form ID', 'smart-form-builder-by-dragwyb' ) ) );
 		}
 
 		wp_send_json_success(
 			array(
-				'message' => 'Cache cleaned successfully',
+				'message' => __( 'Cache cleaned successfully', 'smart-form-builder-by-dragwyb' ),
 				'form_id' => $form_id,
 			)
 		);
