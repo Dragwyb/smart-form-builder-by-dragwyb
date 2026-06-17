@@ -141,7 +141,7 @@ class Dragwyb_Error_Log_Db {
 		$args = wp_parse_args( $args, $defaults );
 
 		$allowed_orderby = array( 'id', 'form_id', 'ip_address', 'created_at' );
-		$orderby         = in_array( $args['orderby'], $allowed_orderby ) ? $args['orderby'] : 'created_at';
+		$orderby         = in_array( $args['orderby'], $allowed_orderby, true ) ? $args['orderby'] : 'created_at';
 		$order           = strtoupper( $args['order'] ) === 'ASC' ? 'ASC' : 'DESC';
 
 		$query_params = array();
