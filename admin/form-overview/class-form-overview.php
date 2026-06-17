@@ -26,7 +26,6 @@ if ( ! class_exists( 'Form_Overview' ) ) {
 		}
 
 		public function render_entries( $screen ) {
-			$screen( 'form-overview' );
 			if ( gettype( $screen ) === 'object' && $screen( 'form-overview' ) ) {
 				$this->display_post_entries();
 				$this->admin_assets();
