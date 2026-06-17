@@ -676,6 +676,13 @@ class Frontend_Render {
 					$css_value = isset( $value[ $ph_value ] ) ? $value[ $ph_value ] : '';
 				}
 
+				if ( is_string( $css_value ) ) {
+					$css_value = wp_strip_all_tags( $css_value );
+					if ( ! preg_match( '/^[a-zA-Z0-9\s#.,()%\-\'"]*$/', $css_value ) ) {
+						$css_value = '';
+					}
+				}
+
 				if ( $css_value === '' && isset( $placeholders['UNIT'] ) ) {
 					$is_unit_value = '{{' . $ph_key . '}}' . '{{UNIT}}';
 					if ( strpos( $final_property, $is_unit_value ) !== false ) {
