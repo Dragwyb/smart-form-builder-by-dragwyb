@@ -41,11 +41,15 @@ class Form_Preview {
 			return;
 		}
 
+		$form_id = isset( $_GET['p'] ) ? absint( $_GET['p'] ) : 0;
+
+		if ( ! current_user_can( 'edit_post', $form_id ) && ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
 		if ( function_exists( 'status_header' ) ) {
 			status_header( 200 );
 		}
-
-		$form_id = isset( $_GET['p'] ) ? absint( $_GET['p'] ) : 0;
 
 		if ( Helper::is_editor_preview_mode() ) {
 
