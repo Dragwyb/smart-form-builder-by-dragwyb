@@ -40,7 +40,7 @@ jQuery(document).ready(function ($) {
                     if (response.success && response.success === true) {
                         const formId = response.data.form_id;
                         if (formId && formId > 0) {
-                            const button = document.querySelector('table.table-view-list.dragwyb-forms tbody tr td.clean_cache.column-clean_cache button[id="clean-cache-' + formId + '"]');
+                            const button = document.getElementById('clean-cache-' + formId);
                             button.disabled = true;
                             button.classList.add('button');
                             alert(response.data.message);
