@@ -67,7 +67,8 @@ class Dragwyb_Frontend_Route {
 			);
 		}
 
-		if ( ! $form_id || get_post_status( $form_id ) === false ) {
+		$post = get_post( $form_id );
+		if ( ! $post || $post->post_type !== \Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post::POST_TYPE || $post->post_status !== 'publish' ) {
 			return new \WP_Error(
 				'invalid_form',
 				__( 'Invalid form ID.', 'smart-form-builder-by-dragwyb' ),
