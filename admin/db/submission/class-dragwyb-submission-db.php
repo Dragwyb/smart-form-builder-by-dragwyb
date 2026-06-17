@@ -143,7 +143,7 @@ class Dragwyb_Submission_Db {
 		$args = wp_parse_args( $args, $defaults );
 
 		$allowed_orderby = array( 'id', 'form_id', 'ip_address', 'created_at' );
-		$orderby         = in_array( $args['orderby'], $allowed_orderby ) ? $args['orderby'] : 'created_at';
+		$orderby         = in_array( $args['orderby'], $allowed_orderby, true ) ? $args['orderby'] : 'created_at';
 		$order           = strtoupper( $args['order'] ) === 'ASC' ? 'ASC' : 'DESC';
 
 		$query_params = array();
@@ -221,7 +221,12 @@ class Dragwyb_Submission_Db {
 		$set_parts = array();
 		$values    = array();
 
+		$allowed_columns = array( 'form_id', 'user_id', 'ip_address', 'user_agent', 'submission_data', 'status', 'created_at', 'updated_at' );
+
 		foreach ( $data as $key => $value ) {
+			if ( ! in_array( $key, $allowed_columns, true ) ) {
+				continue;
+			}
 			$format      = in_array( $key, array( 'form_id', 'user_id' ), true ) ? '%d' : '%s';
 			$set_parts[] = '`' . sanitize_key( $key ) . '` = ' . $format;
 			$values[]    = $value;
