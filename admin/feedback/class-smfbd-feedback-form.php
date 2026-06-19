@@ -69,7 +69,7 @@ if ( ! class_exists( 'SMFBD_Feedback_Form' ) ) {
 		public function __construct() {
 			$this->route          = 'https://feedback.dragwyb.com/wp-json/wpfd/v1/feedback';
 			$this->plugin_name    = 'Smart Form Builder';
-			$this->plugin_slug    = 'smart-form-builder-by-dragwyb';
+			$this->plugin_slug    = 'smart-form-builder';
 			$this->plugin_version = defined( 'DRAGWYB_FORM_BUILDER_VERSION' ) ? DRAGWYB_FORM_BUILDER_VERSION : '1.0.0';
 			add_action( 'wp_ajax_smfbd_send_feedback', array( $this, 'smfbd_send_feedback' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles_and_scripts' ) );
