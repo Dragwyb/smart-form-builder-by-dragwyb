@@ -6,7 +6,7 @@ Author URI: https://dragwyb.com/
 Requires at least: 5.8  
 Tested up to: 7.0  
 Requires PHP: 7.4  
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPL2  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -136,6 +136,12 @@ If the "Save Submissions" action is enabled on your form, all data points are sa
 ---
 
 ## == Changelog ==
+
+= 1.0.5 (19 June 2026) =
+* Added PHP older version compabitility.
+* Fixed form editor preview Captcha field HTML rendering.
+* Improved plugin short description.
+* Update form menu label.
 
 = 1.0.4 (19 June 2026) =
 * Public release.
