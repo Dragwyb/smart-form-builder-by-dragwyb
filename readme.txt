@@ -88,6 +88,20 @@ We are continually optimizing Smart Form Builder. Our development roadmap includ
 
 ---
 
+
+== External Services ==
+
+This plugin utilizes the following libraries:
+
+* **Pickr:** A high-performance color picker library. Used for design customization features.
+    * **Source:** [https://github.com/Simonwep/pickr](https://github.com/Simonwep/pickr)
+    * **Local Paths:** `assets/lib/pickr/css/index.css`, `assets/lib/pickr/js/index.js`
+* **Font Awesome (Free):** Used for providing iconography within the editor and frontend forms.
+    * **Source/License:** [https://fontawesome.com/license/free](https://fontawesome.com/license/free)
+    * **Local Path:** `assets/font-awesome/v5/all.min.css`
+
+---
+
 ## == Frequently Asked Questions ==
 
 #### Is this WordPress contact form plugin free?
