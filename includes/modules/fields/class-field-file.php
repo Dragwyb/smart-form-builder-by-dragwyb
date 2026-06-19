@@ -253,7 +253,8 @@ class Field_File extends Field_Base {
 		$field_attr = isset( $form_config['fields'][ $field_id ]['attributes'] ) ? $form_config['fields'][ $field_id ]['attributes'] : array();
 
 		// Check if file was uploaded
-		$file_exists = isset( $_FILES[ $field_id ] ) && $_FILES[ $field_id ]['error'] !== UPLOAD_ERR_NO_FILE;
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is verified in the submission handler class.
+		$file_exists = isset( $_FILES[ $field_id ] ) && isset( $_FILES[ $field_id ]['error'] ) && $_FILES[ $field_id ]['error'] !== UPLOAD_ERR_NO_FILE;
 
 		if ( ! $file_exists && ( isset( $field_attr['required'] ) && $field_attr['required'] == 'yes' ) ) {
 			$error_handler->add_error( $field_id, __( 'This field is required.', 'smart-form-builder-by-dragwyb' ) );
@@ -264,6 +265,7 @@ class Field_File extends Field_Base {
 			return;
 		}
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce is verified in the submission handler class, file parameters are checked and validated individually below.
 		$file = $_FILES[ $field_id ];
 
 		// 1. Check for upload errors
