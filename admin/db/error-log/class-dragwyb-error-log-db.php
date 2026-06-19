@@ -80,7 +80,7 @@ class Dragwyb_Error_Log_Db {
 			$data['errors'] = wp_json_encode( $data['errors'] );
 		}
 
-		$table_name = self::get_table_name();
+		$table_name = esc_sql( self::get_table_name() );
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$inserted = $wpdb->query(
@@ -116,7 +116,7 @@ class Dragwyb_Error_Log_Db {
 	 */
 	public function get( int $id ) {
 		global $wpdb;
-		$table_name = self::get_table_name();
+		$table_name = esc_sql( self::get_table_name() );
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 		return $wpdb->get_row(
@@ -136,7 +136,7 @@ class Dragwyb_Error_Log_Db {
 	 */
 	public function get_all( array $args = array() ): array {
 		global $wpdb;
-		$table_name = self::get_table_name();
+		$table_name = esc_sql( self::get_table_name() );
 
 		$defaults = array(
 			'limit'   => 20,
@@ -162,7 +162,7 @@ class Dragwyb_Error_Log_Db {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 		return $wpdb->get_results(
 			$wpdb->prepare(
-				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
 				"SELECT * FROM $table_name $where_clause ORDER BY $orderby $order LIMIT %d OFFSET %d",
 				...$query_params
 			)
@@ -177,21 +177,26 @@ class Dragwyb_Error_Log_Db {
 	 */
 	public function get_total_count( array $args = array() ): int {
 		global $wpdb;
-		$table_name = self::get_table_name();
+		$table_name = esc_sql( self::get_table_name() );
 
 		$query_params = array();
 		$where_clause = $this->build_where_clause( $args, $query_params );
 
 		$sql = "SELECT COUNT(id) FROM $table_name $where_clause";
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
-		return (int) $wpdb->get_var(
-			empty( $query_params )
-				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-				? $sql
-				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-				: $wpdb->prepare( $sql, ...$query_params )
-		);
+		if ( empty( $query_params ) ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
+			return (int) $wpdb->get_var( $sql );
+		} else {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+			return (int) $wpdb->get_var(
+				$wpdb->prepare(
+					// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+					$sql,
+					...$query_params
+				)
+			);
+		}
 	}
 
 	/**
@@ -225,7 +230,7 @@ class Dragwyb_Error_Log_Db {
 	 */
 	public function delete( int $id ) {
 		global $wpdb;
-		$table_name = self::get_table_name();
+		$table_name = esc_sql( self::get_table_name() );
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 		return $wpdb->query(
@@ -244,7 +249,7 @@ class Dragwyb_Error_Log_Db {
 	 */
 	public function clear_all() {
 		global $wpdb;
-		$table_name = self::get_table_name();
+		$table_name = esc_sql( self::get_table_name() );
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
 		$result = $wpdb->query( "TRUNCATE TABLE $table_name" );
