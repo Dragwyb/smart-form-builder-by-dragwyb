@@ -6,188 +6,180 @@ namespace Dragwyb\Form_Builder\Includes\Controls\Controls;
 
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 
-class Control_Repeater extends Control_Base
-{
-    private $controls = null;
-    private $repeater_data = null;
-    private $value = null;
+class Control_Repeater extends Control_Base {
 
-    protected function register_settings()
-    {
-        return array(
-            'name' => 'string',
-            'label' => 'string',
-            'default' => 'custom',
-            'items' => 'custom',
-            'item_label' => 'string',
-            'add_item' => 'string',
-            '_id' => 'string'
-        );
-    }
+	private $controls      = null;
+	private $repeater_data = null;
+	private $value         = null;
 
-    protected function default_setting(): array
-    {
-        return array(
-            'add_item' => __('Add Item', 'smart-form-builder-by-dragwyb')
-        );
-    }
+	protected function register_settings() {
+		return array(
+			'name'       => 'string',
+			'label'      => 'string',
+			'default'    => 'custom',
+			'items'      => 'custom',
+			'item_label' => 'string',
+			'add_item'   => 'string',
+			'_id'        => 'string',
+		);
+	}
 
-    protected function init(): void
-    {
-        $this->type = 'repeater';
-        $this->name = __('Repeater', 'smart-form-builder-by-dragwyb');
-    }
+	protected function default_setting(): array {
+		return array(
+			'add_item' => __( 'Add Item', 'smart-form-builder-by-dragwyb' ),
+		);
+	}
 
-    public function set_value($data, string $control_id, $repeater_data = null): void
-    {
-        if (isset($repeater_data['type']) && $repeater_data['type'] == 'repeater' && isset($repeater_data['items'])) {
-            $this->repeater_data = $repeater_data;
-        } else {
-            $this->repeater_data = array();
-        }
+	protected function init(): void {
+		$this->type = 'repeater';
+		$this->name = __( 'Repeater', 'smart-form-builder-by-dragwyb' );
+	}
 
-        $this->control_id = sanitize_text_field($control_id);
+	public function set_value( $data, string $control_id, $repeater_data = null ): void {
+		if ( isset( $repeater_data['type'] ) && $repeater_data['type'] == 'repeater' && isset( $repeater_data['items'] ) ) {
+			$this->repeater_data = $repeater_data;
+		} else {
+			$this->repeater_data = array();
+		}
 
-        $this->set_filter_value($data, $repeater_data);
-    }
+		$this->control_id = sanitize_text_field( $control_id );
 
-    private function set_filter_value($data, $repeater_data): void
-    {
-        $this->value = $this->sanitize_control($data, $repeater_data);
-    }
+		$this->set_filter_value( $data, $repeater_data );
+	}
 
-    protected function sanitize_control($items, $settings)
-    {
-        if (!is_array($items) || count($items) <= 0 || !isset($this->control_id)) {
-            return '';
-        }
+	private function set_filter_value( $data, $repeater_data ): void {
+		$this->value = $this->sanitize_control( $data, $repeater_data );
+	}
 
-        $data = array();
+	protected function sanitize_control( $items, $settings ) {
+		if ( ! is_array( $items ) || count( $items ) <= 0 || ! isset( $this->control_id ) ) {
+			return '';
+		}
 
-        foreach ($items as $index => $item) {
-            if (!isset($item['_id'])) {
-                continue;
-            }
+		$data = array();
 
-            $data[$index] = array('_id' => sanitize_text_field($item['_id']));
+		foreach ( $items as $index => $item ) {
+			if ( ! isset( $item['_id'] ) ) {
+				continue;
+			}
 
-            if (!isset($this->repeater_data) || !is_array($this->repeater_data) || count($this->repeater_data) <= 0) {
-                continue;
-            }
+			$data[ $index ] = array( '_id' => sanitize_text_field( $item['_id'] ) );
 
-            $register_fields = $this->repeater_data['items'];
+			if ( ! isset( $this->repeater_data ) || ! is_array( $this->repeater_data ) || count( $this->repeater_data ) <= 0 ) {
+				continue;
+			}
 
-            if (!isset($register_fields) || !is_array($register_fields) || count($register_fields) < 0) {
-                continue;
-            }
+			$register_fields = $this->repeater_data['items'];
 
-            if (!isset($item['attributes']) || !is_array($item['attributes']) || count($item['attributes']) <= 0) {
-                continue;
-            }
+			if ( ! isset( $register_fields ) || ! is_array( $register_fields ) || count( $register_fields ) < 0 ) {
+				continue;
+			}
 
-            $attributes = $item['attributes'];
+			if ( ! isset( $item['attributes'] ) || ! is_array( $item['attributes'] ) || count( $item['attributes'] ) <= 0 ) {
+				continue;
+			}
 
-            $data[$index]['attributes'] = array();
+			$attributes = $item['attributes'];
 
+			$data[ $index ]['attributes'] = array();
 
-            foreach ($attributes as $field => $value) {
-                if (!isset($register_fields[$field]['type'])) {
-                    continue;
-                }
+			foreach ( $attributes as $field => $value ) {
+				if ( ! isset( $register_fields[ $field ]['type'] ) ) {
+					continue;
+				}
 
-                if (!isset($this->controls)) {
-                    $this->controls = new Controls;;
-                }
+				if ( ! isset( $this->controls ) ) {
+					$this->controls = new Controls();
 
-                $type = $register_fields[$field]['type'];
+				}
 
-                $control_obj = $this->controls->get_control($type);
+				$type = $register_fields[ $field ]['type'];
 
-                if (!$control_obj) {
-                    continue;
-                }
+				$control_obj = $this->controls->get_control( $type );
 
-                $control_obj = $control_obj::newInstance();
+				if ( ! $control_obj ) {
+					continue;
+				}
 
-                $control_obj->set_value($value, $field);
-                $filtered_value = $control_obj->get_value();
+				$control_obj = $control_obj::newInstance();
 
-                if (isset($filtered_value) && $filtered_value) {
-                    $data[$index]['attributes'][sanitize_text_field($field)] = $value;
-                }
-            }
-        }
+				$control_obj->set_value( $value, $field );
+				$filtered_value = $control_obj->get_value();
 
-        return $data;
-    }
+				if ( isset( $filtered_value ) && $filtered_value ) {
+					$data[ $index ]['attributes'][ sanitize_text_field( $field ) ] = $value;
+				}
+			}
+		}
 
-    public function get_value()
-    {
-        return $this->value;
-    }
+		return $data;
+	}
 
-    protected function items_setting_sanitize($fields)
-    {
+	public function get_value() {
+		return $this->value;
+	}
 
-        if (!is_array($fields) || count($fields) < 0) {
-            return array();
-        }
+	protected function items_setting_sanitize( $fields ) {
 
-        $data = array();
+		if ( ! is_array( $fields ) || count( $fields ) < 0 ) {
+			return array();
+		}
 
-        foreach ($fields as $field) {
-            $data[$field['name']] = $field;
-        }
+		$data = array();
 
-        return $data;
-    }
+		foreach ( $fields as $field ) {
+			$data[ $field['name'] ] = $field;
+		}
 
-    protected function default_setting_sanitize($fields)
-    {
-        if (!is_array($fields) || count($fields) <= 0) {
-            return '';
-        }
+		return $data;
+	}
 
-        $fields_settings = $this->get_settings();
+	protected function default_setting_sanitize( $fields ) {
+		if ( ! is_array( $fields ) || count( $fields ) <= 0 ) {
+			return '';
+		}
 
-        if (!isset($fields_settings['items']) || !is_array($fields_settings['items']) || count($fields_settings['items']) <= 0) {
-            return '';
-        }
+		$fields_settings = $this->get_settings();
 
-        $repeater_fields = $fields_settings['items'];
+		if ( ! isset( $fields_settings['items'] ) || ! is_array( $fields_settings['items'] ) || count( $fields_settings['items'] ) <= 0 ) {
+			return '';
+		}
 
-        $data = array();
-        foreach ($fields as $index => $field) {
-            $data[$index] = array();
+		$repeater_fields = $fields_settings['items'];
 
-            foreach ($field as $key => $value) {
-                if (!isset($repeater_fields[$key]) || !isset($repeater_fields[$key]['type'])) {
-                    continue;
-                }
+		$data = array();
+		foreach ( $fields as $index => $field ) {
+			$data[ $index ] = array();
 
-                if (!isset($this->controls)) {
-                    $this->controls = new Controls;;
-                }
+			foreach ( $field as $key => $value ) {
+				if ( ! isset( $repeater_fields[ $key ] ) || ! isset( $repeater_fields[ $key ]['type'] ) ) {
+					continue;
+				}
 
-                $type = $repeater_fields[$key]['type'];
+				if ( ! isset( $this->controls ) ) {
+					$this->controls = new Controls();
 
-                $control_obj = $this->controls->get_control($type);
+				}
 
-                if (!$control_obj) {
-                    continue;
-                }
+				$type = $repeater_fields[ $key ]['type'];
 
-                $control_obj = $control_obj::newInstance();
+				$control_obj = $this->controls->get_control( $type );
 
-                $control_obj->set_value($value, $key);
-                $filtered_value = $control_obj->get_value();
+				if ( ! $control_obj ) {
+					continue;
+				}
 
-                if (isset($filtered_value) && $filtered_value) {
-                    $data[$index][$key] = $value;
-                }
-            }
-        }
+				$control_obj = $control_obj::newInstance();
 
-        return $data;
-    }
+				$control_obj->set_value( $value, $key );
+				$filtered_value = $control_obj->get_value();
+
+				if ( isset( $filtered_value ) && $filtered_value ) {
+					$data[ $index ][ $key ] = $value;
+				}
+			}
+		}
+
+		return $data;
+	}
 }

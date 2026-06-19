@@ -8,53 +8,48 @@ use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\After_Submission\Actions\Email_Action_Base;
 use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
 
-class Email_Action extends Email_Action_Base
-{
-    public function get_id(): string
-    {
-        return 'admin_email';
-    }
+class Email_Action extends Email_Action_Base {
 
-    public function get_name(): string
-    {
-        return __('Send Admin Email', 'smart-form-builder-by-dragwyb');
-    }
+	public function get_id(): string {
+		return 'admin_email';
+	}
 
-    protected function section_label(): string
-    {
-        return __('Admin Email Notification', 'smart-form-builder-by-dragwyb');
-    }
+	public function get_name(): string {
+		return __( 'Send Admin Email', 'smart-form-builder-by-dragwyb' );
+	}
 
-    protected function register_settings(): void
-    {
-        $this->email_action_settings();
-    }
+	protected function section_label(): string {
+		return __( 'Admin Email Notification', 'smart-form-builder-by-dragwyb' );
+	}
 
-    public function process_submission($form_id, $form_data, $form_config, Form_Submission_Handler $form_submission)
-    {
-        $settings = $form_config['after-submission'] ?? [];
+	protected function register_settings(): void {
+		$this->email_action_settings();
+	}
 
-        $to = $settings['email_to_admin_email'] ?? get_option('admin_email');
+	public function process_submission( $form_id, $form_data, $form_config, Form_Submission_Handler $form_submission ) {
+		$settings = $form_config['after-submission'] ?? array();
 
-        if (empty($to)) {
-            $form_submission->add_error('admin_email', 'No email address found');
-            return;
-        }
+		$to = $settings['email_to_admin_email'] ?? get_option( 'admin_email' );
 
-        if (!is_email($to)) {
-            $form_submission->add_error('admin_email', 'No valid email address found');
-            return; // Target is not a valid email after parsing
-        }
+		if ( empty( $to ) ) {
+			$form_submission->add_error( 'admin_email', 'No email address found' );
+			return;
+		}
 
-        $subject = $settings['email_subject_admin_email'] ?? __('New Submission: [Form Name]', 'smart-form-builder-by-dragwyb');
-        $message = $settings['email_message_body_admin_email'] ?? '{all_fields}';
+		if ( ! is_email( $to ) ) {
+			$form_submission->add_error( 'admin_email', 'No valid email address found' );
+			return; // Target is not a valid email after parsing
+		}
 
-        $to = $this->replace_shortcodes($to, $form_data, $form_config);
-        $subject = $this->replace_shortcodes($subject, $form_data, $form_config);
-        $message = $this->replace_shortcodes($message, $form_data, $form_config);
+		$subject = $settings['email_subject_admin_email'] ?? __( 'New Submission: [Form Name]', 'smart-form-builder-by-dragwyb' );
+		$message = $settings['email_message_body_admin_email'] ?? '{all_fields}';
 
-        $headers = ['Content-Type: text/html; charset=UTF-8'];
+		$to      = $this->replace_shortcodes( $to, $form_data, $form_config );
+		$subject = $this->replace_shortcodes( $subject, $form_data, $form_config );
+		$message = $this->replace_shortcodes( $message, $form_data, $form_config );
 
-        $this->send_email($to, $subject, $message, $headers, $form_submission);
-    }
+		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
+
+		$this->send_email( $to, $subject, $message, $headers, $form_submission );
+	}
 }

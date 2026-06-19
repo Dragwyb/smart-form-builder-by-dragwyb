@@ -2,93 +2,87 @@
 
 namespace Dragwyb\Form_Builder\Includes\Controls\Icons;
 
-if (! defined('ABSPATH')) {
-    exit; // Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
 }
 
-class Icons_Helper
-{
-    private static $solid_icons;
+class Icons_Helper {
 
-    private static $regular_icons;
+	private static $solid_icons;
 
-    private static $brands_icons;
+	private static $regular_icons;
 
-    private static $icon_groups;
+	private static $brands_icons;
 
-    public static function get_icons_solid()
-    {
-        if (null === self::$solid_icons) {
-            $icons = self::get_icons_list('solid');
+	private static $icon_groups;
 
-            self::$solid_icons = apply_filters('Dragwyb/icons_list/solid/icons', $icons);
-        }
+	public static function get_icons_solid() {
+		if ( null === self::$solid_icons ) {
+			$icons = self::get_icons_list( 'solid' );
 
-        return self::$solid_icons;
-    }
+			self::$solid_icons = apply_filters( 'Dragwyb/icons_list/solid/icons', $icons );
+		}
 
-    public static function get_icons_regular()
-    {
-        if (null === self::$regular_icons) {
-            $icons = self::get_icons_list('regular');
+		return self::$solid_icons;
+	}
 
-            self::$regular_icons = apply_filters('Dragwyb/icons_list/regular/icons', $icons);
-        }
+	public static function get_icons_regular() {
+		if ( null === self::$regular_icons ) {
+			$icons = self::get_icons_list( 'regular' );
 
-        return self::$regular_icons;
-    }
+			self::$regular_icons = apply_filters( 'Dragwyb/icons_list/regular/icons', $icons );
+		}
 
-    public static function get_icons_brands()
-    {
-        if (null === self::$brands_icons) {
-            $icons = self::get_icons_list('brands');
+		return self::$regular_icons;
+	}
 
-            self::$brands_icons = apply_filters('Dragwyb/icons_list/brands/icons', $icons);
-        }
+	public static function get_icons_brands() {
+		if ( null === self::$brands_icons ) {
+			$icons = self::get_icons_list( 'brands' );
 
-        return self::$brands_icons;
-    }
+			self::$brands_icons = apply_filters( 'Dragwyb/icons_list/brands/icons', $icons );
+		}
 
-    private static function get_icons_list($path)
-    {
-        $path = sanitize_text_field($path);
+		return self::$brands_icons;
+	}
 
-        $file_path = DRAGWYB_FORM_BUILDER_PATH . 'includes/controls/icons/list/' . $path . '.php';
+	private static function get_icons_list( $path ) {
+		$path = sanitize_text_field( $path );
 
-        if (file_exists($file_path)) {
-            $icons = require_once $file_path;
+		$file_path = DRAGWYB_FORM_BUILDER_PATH . 'includes/controls/icons/list/' . $path . '.php';
 
-            if (is_array($icons)) {
-                return $icons;
-            }
-        }
+		if ( file_exists( $file_path ) ) {
+			$icons = require_once $file_path;
 
-        return [];
-    }
+			if ( is_array( $icons ) ) {
+				return $icons;
+			}
+		}
 
-    public static function get_icons_list_group()
-    {
-        $icons_type = self::get_icon_groups();
-        $icons = [];
+		return array();
+	}
 
-        foreach ($icons_type as $type) {
-            $icons_method = 'get_icons_' . $type;
+	public static function get_icons_list_group() {
+		$icons_type = self::get_icon_groups();
+		$icons      = array();
 
-            if (method_exists(self::class, $icons_method)) {
-                $icons_list = self::$icons_method();
-                $icons[$type] = $icons_list;
-            }
-        }
+		foreach ( $icons_type as $type ) {
+			$icons_method = 'get_icons_' . $type;
 
-        return $icons;
-    }
+			if ( method_exists( self::class, $icons_method ) ) {
+				$icons_list     = self::$icons_method();
+				$icons[ $type ] = $icons_list;
+			}
+		}
 
-    public static function get_icon_groups()
-    {
-        if (null === self::$icon_groups) {
-            self::$icon_groups = apply_filters('Dragwyb/icons_list/icon_groups', array('solid', 'regular', 'brands'));
-        }
+		return $icons;
+	}
 
-        return self::$icon_groups;
-    }
+	public static function get_icon_groups() {
+		if ( null === self::$icon_groups ) {
+			self::$icon_groups = apply_filters( 'Dragwyb/icons_list/icon_groups', array( 'solid', 'regular', 'brands' ) );
+		}
+
+		return self::$icon_groups;
+	}
 }

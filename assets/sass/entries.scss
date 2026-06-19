@@ -116,13 +116,15 @@ $white: #fff;
 /* Modals */
 .dragwyb-modal-overlay {
     position: fixed;
-    inset: 0; // Shorthand for top/left/right/bottom: 0
+    inset: 0;
     background: rgba(0, 0, 0, 0.7);
     z-index: 100000;
     display: none;
     justify-content: center;
     align-items: center;
     backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity 0.25s ease-out;
 
     .dragwyb-entries-loading {
         padding: 0;
@@ -133,34 +135,51 @@ $white: #fff;
 
     &.dragwyb-active {
         display: flex;
+        opacity: 1;
+
+        .dragwyb-modal {
+            transform: scale(1);
+        }
     }
 
     .dragwyb-modal {
         background: $white;
         width: 600px;
         max-width: 90%;
-        max-height: 90vh;
-        border-radius: 4px;
+        max-height: 85vh;
+        border-radius: 8px;
         display: flex;
         flex-direction: column;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+        transform: scale(0.95);
+        transition: transform 0.25s ease-out;
+        border: 1px solid #dcdcdc;
+        overflow: hidden;
 
         &-header {
-            @include flex-between;
-            padding: 15px 20px;
-            border-bottom: 1px solid $color-border-light;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            border-bottom: 1px solid #e5e7eb;
+            background: #f8fafc;
 
             h2 {
                 margin: 0;
                 font-size: 18px;
+                color: #1e293b;
+                font-weight: 600;
             }
 
             .dragwyb-modal-close {
                 background: none;
                 border: none;
                 cursor: pointer;
-                color: #666;
+                color: #64748b;
                 transition: color 0.2s ease;
+                padding: 4px;
+                display: flex;
+                align-items: center;
 
                 &:hover {
                     color: $color-danger;
@@ -169,7 +188,7 @@ $white: #fff;
         }
 
         &-body {
-            padding: 20px;
+            padding: 24px;
             overflow-y: auto;
             flex: 1;
 
@@ -180,20 +199,112 @@ $white: #fff;
                     display: block;
                     font-weight: 600;
                     margin-bottom: 5px;
+                    color: #475569;
                 }
 
                 input {
                     width: 100%;
+                    padding: 6px 10px;
+                    border: 1px solid #cbd5e1;
+                    border-radius: 4px;
                 }
             }
         }
 
         &-footer {
-            padding: 15px 20px;
-            border-top: 1px solid $color-border-light;
+            padding: 16px 24px;
+            border-top: 1px solid #e5e7eb;
+            background: #f8fafc;
             display: flex;
             justify-content: flex-end;
             gap: 10px;
         }
     }
+}
+
+/* Premium Grid Layout for Details in Entries */
+.dragwyb-entry-details-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+
+    @media (min-width: 768px) {
+        grid-template-columns: 1.2fr 0.8fr;
+    }
+}
+
+.dragwyb-detail-section {
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 16px;
+
+    h3 {
+        margin-top: 0;
+        margin-bottom: 12px;
+        font-size: 14px;
+        color: #475569;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+}
+
+.dragwyb-detail-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+        padding: 8px 12px;
+        text-align: left;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    th {
+        font-weight: 600;
+        color: #64748b;
+        width: 35%;
+    }
+
+    td {
+        color: #334155;
+        word-break: break-word;
+    }
+
+    tr:last-child {
+        td, th {
+            border-bottom: none;
+        }
+    }
+}
+
+.dragwyb-meta-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+        margin-bottom: 8px;
+        color: #475569;
+
+        strong {
+            color: #0f172a;
+        }
+
+        span.user-agent-text {
+            display: block;
+            font-family: monospace;
+            background: #f1f5f9;
+            padding: 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-top: 4px;
+            word-break: break-all;
+        }
+    }
+}
+
+.dragwyb-entries-modal {
+    width: 800px !important;
 }

@@ -71,7 +71,7 @@ const SidebarFieldOverlay = React.memo(({ data }) => {
             modifiers={[snapToCursor]}
         >
             <div className="dragwyb-overlay-preview">
-                {config.icon && <i className={config.icon}></i>}
+                {config.icon && <DragwybEditor.editor.IconsManager.Render icon={config.icon} width={15} />}
                 <p>{config.label}</p>
             </div>
         </DragOverlay>

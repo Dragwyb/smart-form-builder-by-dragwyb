@@ -13,7 +13,6 @@ import {
     UPDATE_ACTIVE_POPOVER,
     UPDATE_FIELD,
     UPDATE_FIELD_ORDER,
-    UPDATE_FIELD_VALUES,
     UPDATE_TOOLBAR_SETTINGS,
     UPDATE_SECTION_SETTINGS,
     UPDATE_POPOVER_INITIALIZE,
@@ -361,20 +360,31 @@ export default function reducer(state, action) {
             return state;
         }
 
-        case UPDATE_FIELD_VALUES:
-            return {
-                ...state,
-                values: {
-                    ...state.values || {},
-                    [action.payload.fieldId]: action.payload.value
-                }
-            };
-
         case UPDATE_TOOLBAR_SETTINGS: {
             const toolbarId = action.payload.id;
 
             if (!DragwybEditor.EditorToolbars || !DragwybEditor.EditorToolbars.toolbars || !DragwybEditor.EditorToolbars.toolbars[toolbarId]) {
                 return state;
+            }
+
+            if (action.payload.selectedToolBarId && action.payload.selectedToolBarId !== '' && toolbarId !== action.payload.selectedToolBarId) {
+                const newFieldData = action.payload.value[action.payload.selectedToolBarId] !== undefined
+                    ? action.payload.value[action.payload.selectedToolBarId]
+                    : action.payload.value;
+
+                return {
+                    ...state,
+                    form: {
+                        ...state.form,
+                        [toolbarId]: {
+                            ...state.form[toolbarId],
+                            [action.payload.selectedToolBarId]: {
+                                ...state.form[toolbarId][action.payload.selectedToolBarId],
+                                ...newFieldData
+                            }
+                        }
+                    }
+                };
             }
 
             return {

@@ -5,6 +5,7 @@ import * as Fields from "./Fields";
 import { addField } from "../store/actions";
 import { __, sprintf } from "@wordpress/i18n";
 import { Utils as Helper } from '../components/Utils';
+import IconsManager from "../components/IconsManager";
 
 const RenderItem = React.memo(({
     fieldId,
@@ -16,42 +17,32 @@ const RenderItem = React.memo(({
     onDelete,
     errors,
     Utils,
-    isButtonContainer = false
+    lastContainer = true,
+    store,
+    perviewIFrame
 }) => {
 
-    const attributesRef = useRef(null);
-    const totalChildrensRef = useRef(0);
+    const isButtonContainerFunc = field => {
+        if (lastContainer === false) return false;
 
-    function isFieldEqual(prevProps, nextProps) {
-
-        if (prevProps.fields[fieldId].attributes !== nextProps.fields[fieldId].attributes) {
+        if (!field || !field.is_root_container || !field.children || field.children.length === 0) {
             return false;
         }
 
+        const state = store.getState();
+        const formFields = state.form.fields;
 
-        if (nextProps.fields[fieldId].is_root_container && nextProps.fields[fieldId].children) {
-            if (prevProps.fields[fieldId].children?.length !== nextProps.fields[fieldId].children?.length) {
-                return false;
-            } else if (nextProps.fields[fieldId]?.children && totalChildrensRef !== nextProps.fields[fieldId].children?.length) {
-                return false;
-            }
-        }
+        return field.children.some(childId => {
+            const childField = formFields[childId];
+            return childField && childField.type === 'button';
+        });
+    };
 
-        if (null === attributesRef.current) {
-            return prevProps.fields[fieldId].attributes === nextProps.fields[fieldId].attributes;
-        }
+    const field = useSelector((state) => state.form.fields[fieldId]);
 
-        return JSON.stringify(attributesRef.current) === JSON.stringify({ ...nextProps.fields[fieldId].attributes });
-
-    }
-
-    const formData = useSelector((state) => state.form, isFieldEqual);
-    const field = formData.fields[fieldId];
-
-    attributesRef.current = field.attributes ? { ...field.attributes } : [];
-    totalChildrensRef.current = field?.children?.length || 0;
-
-    const selectedField = useSelector((state) => state.selectedSettingId);
+    const isButtonContainer = useMemo(() => {
+        return isButtonContainerFunc(field);
+    }, [field])
 
     if (!field) {
         return null;
@@ -91,41 +82,47 @@ const RenderItem = React.memo(({
         if (dragRef) dragRef(Node);
     }, [dropRef, dragRef]);
 
-    let wrapperClass = `dragwyb-field-wrapper dragwyb-${field.type}-field${field.css_classes || ''}`;
+    let wrapperClass = [];
+    if (field.type !== 'row') {
+        wrapperClass = ['dragwyb-field-wrapper', `dragwyb-${field.type}-field`];
+    }
     let id = `dragwyb-field-wrapper-${field._id}`;
 
+    if (field.css_classes) {
+        wrapperClass.push(field.css_classes);
+    }
+
     if (allowedChildren === true) {
-        wrapperClass = `dragwyb-${field.type} dragwyb-has-actions`;
+        wrapperClass.push(`dragwyb-${field.type}`, 'dragwyb-has-actions');
         id = `dragwyb-${field.type}-${field._id}`;
     }
 
-    if (['button', 'file', 'radio', 'checkbox'].includes(field.type)) {
-        wrapperClass += " dragwyb-no-float";
+    if (['button', 'file', 'radio', 'checkbox', 'range'].includes(field.type)) {
+        wrapperClass.push("dragwyb-no-float");
     }
 
-    if (selectedField && selectedField === field._id) {
-        wrapperClass += " selected";
-    }
+    wrapperClass = DragwybBuilder.Hooks.applyFilter('Dragwyb/Field/WrapperClass', wrapperClass, fieldId, field.type, field.attributes, Utils);
+    wrapperClass = DragwybBuilder.Hooks.applyFilter(`Dragwyb/Field/WrapperClass/${field.type}`, wrapperClass, fieldId, field.type, field.attributes, Utils);
 
     const onRootContainerSelect = useCallback(() => {
         const id = field._id;
 
-        if (!id || selectedField === id) {
+        if (!id) {
             return;
         }
 
         onFieldSelect({ id });
-    }, [field._id, selectedField, onFieldSelect]);
+    }, [field._id, onFieldSelect]);
 
-    const onFieldSelectHandler = useCallback(() => {
+    const onFieldSelectHandler = useCallback((e) => {
         const id = field._id;
 
-        if (!id || isRootContainer || selectedField === id) {
+        if (!id || isRootContainer) {
             return;
         }
 
         onFieldSelect({ id });
-    }, [field._id, isRootContainer, selectedField, onFieldSelect]);
+    }, [field._id, isRootContainer, onFieldSelect]);
 
     return (
         <>
@@ -135,13 +132,13 @@ const RenderItem = React.memo(({
             {!isDragging &&
                 <div
                     ref={setNodeRef}
-                    className={wrapperClass}
+                    className={wrapperClass.join(' ')}
                     onClick={onFieldSelectHandler}
                     {...listeners}
                     {...attributes}
                     id={id}
                 >
-                    <Fields.Preview fields={[field]} values={values} errors={errors} childrens={childrens} Utils={Utils}>
+                    <Fields.Preview fields={[field]} values={values} errors={errors} childrens={childrens} Utils={Utils} perviewIFrame={perviewIFrame}>
                         {childrens && childrens.length > 0 && (
                             childrens.map((childId, childIndex) => (
                                 <React.Fragment key={childId || `empty-${childIndex}`}>
@@ -156,6 +153,7 @@ const RenderItem = React.memo(({
                                             values={values}
                                             errors={errors}
                                             Utils={Utils}
+                                            perviewIFrame={perviewIFrame}
                                         />
                                     }
                                 </React.Fragment>
@@ -205,17 +203,28 @@ const RenderItem = React.memo(({
 
 RenderItem.displayName = 'RenderItem';
 
-const AddFieldMsg = React.memo(({ setActiveTab, isOver, updateFieldSelect }) => {
+const AddFieldMsg = React.memo(({ setActiveTab, updateFieldSelect }) => {
     const activeTab = useSelector((state) => state.activeToolbar);
-    let emptyMessage = __("Add field", "smart-form-builder-by-dragwyb");
 
+    const { setNodeRef, isOver } = useDroppable({
+        id: `canvas-drop-`,
+        data: {
+            canvasFieldDrop: true,
+            canvasDrop: true,
+            currentId: null,
+            index: 0
+        },
+    });
+
+    let emptyMessage = __("Click or drag fields here to start building.", "smart-form-builder-by-dragwyb");
     if (isOver) {
-        emptyMessage = __("Drag field here.", "smart-form-builder-by-dragwyb");
+        emptyMessage = __("Drop field here", "smart-form-builder-by-dragwyb");
     }
 
     return (
         <div
-            className="dragwyb-canvas__add-field"
+            ref={setNodeRef}
+            className={`dragwyb-canvas__add-field${isOver ? " active" : ""}`}
             onClick={() => {
                 if (activeTab === 'fields') {
                     updateFieldSelect({ id: false });
@@ -225,7 +234,7 @@ const AddFieldMsg = React.memo(({ setActiveTab, isOver, updateFieldSelect }) => 
             }}
         >
             <div className={`dragwyb-canvas__add-field-wrapper ${isOver ? " drag-active" : ""}`}>
-                <i className="fas fa-plus" />
+                {(!isOver && activeTab !== 'fields') && <span className="dragwyb-canvas__add-field-icon"><IconsManager.renderIcons icon={{ type: 'solid', icon: 'plus' }} /></span>}
                 <p>{emptyMessage}</p>
             </div>
         </div>
@@ -239,14 +248,14 @@ const Canvas = ({
     dropInfo,
     setActiveTab
 }) => {
-    const values = useSelector((state) => state.values);
+    // const values = useSelector((state) => state.values);
+    const values = {};
     const errors = useSelector((state) => state.errors);
     const rootContainers = useSelector((state) => state.form.rootContainers);
-    // Granular selector — only subscribe to fields object reference
-    const formFields = useSelector((state) => state.form.fields);
     const dispatch = useDispatch();
     const store = useStore();
     const state = store.getState();
+    const perviewIFrame = useSelector(state => state.iframeEle);
 
     const Utils = useMemo(() => {
         return Helper(state, dispatch);
@@ -317,18 +326,6 @@ const Canvas = ({
         canvasCls += " canvas-empty";
     }
 
-    const isButtonContainer = useCallback((fieldKey) => {
-        const field = formFields[fieldKey];
-        if (!field || !field.is_root_container || !field.children || field.children.length === 0) {
-            return false;
-        }
-
-        return field.children.some(childId => {
-            const childField = formFields[childId];
-            return childField && childField.type === 'button';
-        });
-    }, [formFields]);
-
     return (
         <div className="dragwyb-editor__main">
             <div className="dragwyb-canvas-wrapper" ref={setNodeRef}>
@@ -352,7 +349,9 @@ const Canvas = ({
                                             index={index}
                                             dropInfo={dropInfo}
                                             Utils={Utils}
-                                            isButtonContainer={rootContainers.length === index + 1 ? isButtonContainer(fieldKey) : false}
+                                            lastContainer={rootContainers.length === index + 1}
+                                            store={store}
+                                            perviewIFrame={perviewIFrame}
                                         />
                                     ))}
                                 </>

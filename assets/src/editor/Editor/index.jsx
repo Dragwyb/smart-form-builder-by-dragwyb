@@ -10,11 +10,12 @@ import {
     useSensor,
     useSensors,
     PointerSensor,
-    MouseSensor,
-    TouchSensor,
+    KeyboardSensor,
     pointerWithin,
     rectIntersection,
+    closestCenter,
 } from "@dnd-kit/core";
+import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 
 import SidebarFieldOverlay from "../components/SidebarFieldOverlay";
 import { Utils as Helper } from "../components/Utils";
@@ -45,6 +46,9 @@ const Editor = () => {
     }, [dispatch]);
 
     const setSelectedSettingId = useCallback(({ id = false, tab = "fields" }) => {
+        if (store?.getState()?.selectedSettingId === id) {
+            return;
+        }
         Utils.setSelectedSettingId({ value: id });
         resetSection();
         const defaultToolbar = DragwybEditor?.EditorToolbars?.Default ?? false;
@@ -58,22 +62,13 @@ const Editor = () => {
     }, [Utils, resetSection]);
 
     const sensors = useSensors(
-        useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-        useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
-        useSensor(TouchSensor, { activationConstraint: { delay: 5, tolerance: 6 } })
+        useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
     );
 
-    const customCollisionDetection = useCallback((args) => {
-        const pointerCollisions = pointerWithin(args);
-
-        if (pointerCollisions.length > 0) {
-            return pointerCollisions;
-        }
-
-        return rectIntersection(args);
-    }, []);
-
-    const measureDroppableContainers = (node) => {
+    const measureDroppableContainers = useCallback((node) => {
         const rect = node.getBoundingClientRect();
 
         const iframe = document.getElementById('dragwyb-preview-iframe');
@@ -82,7 +77,7 @@ const Editor = () => {
             const iframeRect = iframe.getBoundingClientRect();
 
             return {
-                top: rect.top + iframeRect.top,
+                top: rect.top + iframeRect.top - 10,
                 left: rect.left + iframeRect.left,
                 bottom: rect.bottom + iframeRect.top,
                 right: rect.right + iframeRect.left,
@@ -104,29 +99,14 @@ const Editor = () => {
             x: rect.x,
             y: rect.y,
         };
-    };
+    }, []);
 
     const measureDraggableContainers = useCallback((node) => {
         const rect = node.getBoundingClientRect();
 
         const iframe = document.getElementById('dragwyb-preview-iframe');
 
-        if (iframe && node.ownerDocument === iframe.contentDocument) {
-            const iframeRect = iframe.getBoundingClientRect();
-
-            return {
-                top: rect.top + iframeRect.top,
-                left: rect.left + iframeRect.left,
-                bottom: rect.bottom + iframeRect.top,
-                right: rect.right + iframeRect.left,
-                width: rect.width,
-                height: rect.height,
-                x: rect.x + iframeRect.left,
-                y: rect.y + iframeRect.top,
-            };
-        }
-
-        return {
+        const finalPosition = {
             top: rect.top,
             left: rect.left,
             bottom: rect.bottom,
@@ -136,6 +116,26 @@ const Editor = () => {
             x: rect.x,
             y: rect.y,
         };
+
+        const iframeRect = iframe.getBoundingClientRect();
+
+        if (iframe && node.ownerDocument !== document) {
+            finalPosition.top = rect.top + iframeRect.top;
+            finalPosition.left = rect.left + iframeRect.left;
+            finalPosition.bottom = rect.bottom + iframeRect.top;
+            finalPosition.right = rect.right + iframeRect.left;
+            finalPosition.width = rect.width;
+            finalPosition.height = rect.height;
+            finalPosition.x = rect.x + iframeRect.left;
+            finalPosition.y = rect.y + iframeRect.top;
+        } else {
+            finalPosition.top = rect.top + iframeRect.top;
+            finalPosition.bottom = rect.bottom + iframeRect.top;
+            finalPosition.height = rect.height;
+            finalPosition.y = rect.y + iframeRect.top;
+        }
+
+        return finalPosition;
     }, []);
 
     // Memoize measuring config to prevent DndContext re-init
@@ -208,6 +208,7 @@ const Editor = () => {
         const activeRect = active.rect.current.translated;
         const overRect = over.rect;
 
+
         if (!activeRect || !overRect) return;
 
         // 2. Calculate the exact vertical center of the dragged item
@@ -268,7 +269,7 @@ const Editor = () => {
                 index: finalId.index,
             }
 
-            if (currentDropInfo && currentDropInfo.targetId !== 'root') {
+            if (currentDropInfo && currentDropInfo.targetId && currentDropInfo.targetId !== 'root') {
                 addFieldData.parentContainer = {
                     rootContainerId: currentDropInfo.targetId,
                     activeColumnIndex: finalId.index
@@ -307,7 +308,6 @@ const Editor = () => {
             <div className="dragwyb-editor__body">
                 <DndContext
                     sensors={sensors}
-                    collisionDetection={customCollisionDetection}
                     onDragStart={handleDragStart}
                     onDragEnd={handleDragEnd}
                     onDragCancel={handleDragCancel}
@@ -318,7 +318,7 @@ const Editor = () => {
                         setActiveTab={setActiveTabHandler}
                         setSettingId={setSelectedSettingId}
                     />
-                    <ToolbarSettings />
+                    <ToolbarSettings onFieldSelect={setSelectedSettingId} />
 
                     {/* The Iframe Shield: Crucial for dragging over iframe */}
                     {activeDrag && (

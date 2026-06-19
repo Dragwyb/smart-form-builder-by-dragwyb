@@ -4,59 +4,74 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Includes\After_Submission;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 use Dragwyb\Form_Builder\Includes\Controls\Register_Controls_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 
-class Settings extends Register_Controls_Base
-{
-    /**
-     * Singleton instance
-     * @var Settings|null
-     */
-    private static $instance = null;
+class Settings extends Register_Controls_Base {
 
-    public static function instance(): self
-    {
-        if (null === self::$instance) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
+	/**
+	 * Singleton instance
+	 *
+	 * @var Settings|null
+	 */
+	private static $instance = null;
 
-    protected function init(): void {}
+	public static function instance(): self {
+		if ( null === self::$instance ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
 
-    protected function register_controls(): void
-    {
-        $actions = After_Submission::instance()->get_actions();
-        $options = [];
+	protected function init(): void {}
 
-        foreach ($actions as $action) {
-            $options[$action->get_id()] = $action->get_name();
-        }
+	protected function register_controls(): void {
+		add_action(
+			'Dragwyb/Editor/after_section_end/data_handling',
+			function ( $control_obj, $section_id ) {
+				$control_obj->remove_control( 'data_handling' );
+				$after_submissions = $control_obj->get_control( 'after_submissions' );
 
-        // Data Handling
-        $this->start_section('data_handling', [
-            'label' => __('Data Handling', 'smart-form-builder-by-dragwyb'),
-        ]);
+				if ( ! isset( $after_submissions['conditions'] ) ) {
+					return;
+				}
 
-        $this->add_control('after_submissions', [
-            'type'    => Controls::MULTISELECT,
-            'label'   => __('After Submissions Actions', 'smart-form-builder-by-dragwyb'),
-            'default' => [],
-            'options' => $options,
-        ]);
+				unset( $after_submissions['conditions'] );
+				$control_obj->update_control( 'after_submissions', $after_submissions );
+			},
+			10,
+			2
+		);
 
-        $this->end_section();
+		$actions = After_Submission::instance()->get_actions();
+		$options = array();
 
-        add_action('Dragwyb/Editor/after_section_end/data_handling', function ($control_obj, $section_id) {
-            $control_obj->remove_control('data_handling');
-            $after_submissions = $control_obj->get_control('after_submissions');
-            if (!isset($after_submissions['conditions'])) {
-                return;
-            }
+		foreach ( $actions as $action ) {
+			$options[ $action->get_id() ] = $action->get_name();
+		}
 
-            unset($after_submissions['conditions']);
-            $control_obj->update_control('after_submissions', $after_submissions);
-        }, 10, 2);
-    }
+		// Data Handling
+		$this->start_section(
+			'data_handling',
+			array(
+				'label' => __( 'Data Handling', 'smart-form-builder-by-dragwyb' ),
+			)
+		);
+
+		$this->add_control(
+			'after_submissions',
+			array(
+				'type'    => Controls::MULTISELECT,
+				'label'   => __( 'After Submissions Actions', 'smart-form-builder-by-dragwyb' ),
+				'default' => array(),
+				'options' => $options,
+			)
+		);
+
+		$this->end_section();
+	}
 }

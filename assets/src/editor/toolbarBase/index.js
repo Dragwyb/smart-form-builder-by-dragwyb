@@ -77,7 +77,7 @@ class DragwybToolbarBase extends Component {
     }
 
     #triggerOnChange() {
-        this.#updateValue({ key: this.id, value: this.toolbarData, toolbarObj: this });
+        this.#updateValue({ key: this.id, value: this.toolbarData, selectedToolBarId: this.settingId, toolbarObj: this });
     }
 
     /**

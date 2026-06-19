@@ -620,11 +620,15 @@ body {
             line-height: 1;
             font-weight: 500;
             border-radius: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
 
-            i {
+            .dragwyb-button__text {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            svg {
+                width: 15px;
                 margin-right: .5rem;
             }
         }
@@ -680,7 +684,6 @@ body {
         justify-content: center;
         color: #fff;
         border-radius: 50%;
-        font-size: 1.1rem;
         text-decoration: none;
 
         &>div {
@@ -688,7 +691,12 @@ body {
         }
     }
 
-    &__preview-toggle i {
+    &__preview-toggle {
+        padding: unset !important;
+    }
+
+    &__preview-toggle svg {
+        width: 1.2rem;
         margin-right: 0px !important;
     }
 
@@ -724,6 +732,33 @@ body {
         width: var(--panel-width);
         height: 100%;
         box-shadow: var(--dragwyb-ring-offset-shadow, 0 0 #0000), var(--dragwyb-ring-shadow, 0 0 #0000), var(--dragwyb-sm-shadow);
+
+        &__footer {
+            button {
+                padding: 8px 16px;
+                font-size: 13px;
+                font-weight: 500;
+                color: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
+                background-color: hsl(var(--dragwyb-primary)/0.1);
+                border: 1px dashed hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
+                border-radius: 6px;
+                cursor: pointer;
+                transition: background-color 0.2s ease;
+                width: 100%;
+                border-radius: 0px;
+                font-weight: 600;
+                font-size: 1rem;
+                height: 45.6px;
+
+                .dashicons {
+                    margin-right: .5rem;
+                }
+
+                &:hover {
+                    background-color: hsl(var(--dragwyb-primary)/0.2);
+                }
+            }
+        }
     }
 
     &__toolbar_settings {
@@ -785,7 +820,7 @@ body {
                     background-color: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
                 }
 
-                i {
+                svg {
                     color: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
                 }
             }
@@ -803,14 +838,9 @@ body {
                 margin-inline: auto;
             }
 
-            i {
-                font-size: 0.9rem;
-                border-radius: 50%;
+            svg {
                 width: 18px;
                 height: 18px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
                 transition: all 0.3s ease-in-out;
             }
         }
@@ -833,6 +863,10 @@ body {
 
 // FIeld settings tab
 .dragwyb-fields-settings {
+    &~.dragwyb-editor__settings {
+        height: calc(100% - 83.1px);
+    }
+
     &__tabs {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -876,7 +910,7 @@ body {
     }
 
     &__fields {
-        height: calc(100% - 60px);
+        height: calc(100% - 65px);
 
         .dagwyb-widget-category-section {
             grid-column: 1/-1;
@@ -888,14 +922,8 @@ body {
             position: relative;
             cursor: pointer;
 
-            i {
-                font-size: 1rem;
-                border-radius: 50%;
+            svg {
                 width: 18px;
-                height: 18px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
             }
 
             p {
@@ -932,7 +960,7 @@ body {
                 display: flex;
                 align-items: center;
                 padding: 10px;
-                gap: 13px;
+                gap: 8px;
                 color: hsl(var(--dragwyb-card-foreground)/var(--dragwyb-text-opacity, 1));
                 border-radius: 4px;
 
@@ -943,10 +971,8 @@ body {
                     color: hsl(var(--dragwyb-primary)/var(--dragwyb-text-opacity, 1));
                 }
 
-                i {
-                    border-radius: 10px;
-                    aspect-ratio: 1/1;
-                    font-size: 1rem;
+                svg {
+                    width: 15px;
                 }
 
                 p {
@@ -1006,7 +1032,7 @@ body {
 
     &__content {
         font-family: Roboto, Arial, Helvetica, sans-serif;
-        height: calc(100% - 55px);
+        height: 100%;
 
         &::-webkit-scrollbar {
             width: 8px;
@@ -1024,6 +1050,10 @@ body {
             background-color: hsl(var(--dragwyb-secondary)/var(--dragwyb-bg-opacity, 1));
             border-radius: 20px;
         }
+    }
+
+    &__header~&__content {
+        height: calc(100% - 54.8px);
     }
 
     &__settings {
@@ -1060,7 +1090,7 @@ $dropdown-max-height: 250px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     box-sizing: border-box;
     display: inline-block;
-    width: 115px;
+    max-width: 60%;
 
     * {
         box-sizing: border-box;
@@ -1125,7 +1155,7 @@ $dropdown-max-height: 250px;
         display: inline-flex;
         flex-direction: column;
         overflow: hidden;
-        width: 100%;
+        min-width: 100%;
 
         // Position: BOTTOM
         &.position-bottom {
@@ -1174,7 +1204,6 @@ $dropdown-max-height: 250px;
         overflow-y: auto;
         flex-grow: 1; // Take remaining height
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
 
         li {
             margin: 0;

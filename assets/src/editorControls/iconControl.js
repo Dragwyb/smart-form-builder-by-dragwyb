@@ -33,9 +33,9 @@ export default class IconControl extends DragwybEditor.editor.extends.ControlBas
         const globalIcons = DragwybEditor.faIconsList || {};
 
         this.libraries = {
-            solid: globalIcons.solid || [],
-            regular: globalIcons.regular || [],
-            brands: globalIcons.brands || []
+            solid: Object.keys(globalIcons.solid || {}),
+            regular: Object.keys(globalIcons.regular || {}),
+            brands: Object.keys(globalIcons.brands || {}),
         };
     }
 
@@ -67,9 +67,9 @@ export default class IconControl extends DragwybEditor.editor.extends.ControlBas
         const { search } = this.state;
         const lowerSearch = search.toLowerCase();
 
-        const solidIcons = DragwybEditor.faIconsList.solid;
-        const regularIcons = DragwybEditor.faIconsList.regular;
-        const brandsIcons = DragwybEditor.faIconsList.brands;
+        const solidIcons = DragwybEditor.editor.IconsManager.getIconsByGroup('solid');
+        const regularIcons = DragwybEditor.editor.IconsManager.getIconsByGroup('regular');
+        const brandsIcons = DragwybEditor.editor.IconsManager.getIconsByGroup('brands');
 
         const Icons = [];
 
@@ -149,9 +149,7 @@ export default class IconControl extends DragwybEditor.editor.extends.ControlBas
                     }}
                     title={fullIconClass}
                 >
-                    <div className="dragwyb-icon-inner">
-                        <i className={fullIconClass}></i>
-                    </div>
+                    <DragwybEditor.editor.IconsManager.Render icon={{ type, icon }} />
                 </div>
             }) : null;
         }
@@ -165,11 +163,11 @@ export default class IconControl extends DragwybEditor.editor.extends.ControlBas
                         <div className="dragwyb-preview-left">
                             {value ? (
                                 <div className="dragwyb-icon-box selected">
-                                    <i className={this.createIconClass(value.type, value.icon)}></i>
+                                    <DragwybEditor.editor.IconsManager.Render icon={{ type: value.type, icon: value.icon }} />
                                 </div>
                             ) : (
                                 <div className="dragwyb-icon-box empty">
-                                    <i className="fas fa-plus"></i>
+                                    <DragwybEditor.editor.IconsManager.Render icon={{ type: 'solid', icon: 'plus' }} />
                                 </div>
                             )}
                             <span className="dragwyb-icon-name" style={{ textTransform: 'capitalize' }}>
@@ -179,14 +177,14 @@ export default class IconControl extends DragwybEditor.editor.extends.ControlBas
 
                         {value && (
                             <div className="dragwyb-preview-actions">
-                                <i
-                                    className="fas fa-times remove-icon"
+                                <DragwybEditor.editor.IconsManager.Render icon={{ type: 'solid', icon: 'times' }}
+                                    title="Remove"
+                                    className="remove-icon"
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         this.updateControlHandler(id, '');
                                     }}
-                                    title="Remove"
-                                ></i>
+                                />
                             </div>
                         )}
                     </div>
