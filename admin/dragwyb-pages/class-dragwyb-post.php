@@ -178,7 +178,7 @@ class Dragwyb_Post {
 				if ( function_exists( 'wp_get_referer' ) ) {
 					$referal_url = wp_get_referer();
 
-					if ( str_contains( $referal_url, 'page=dragwyb-form-overview' ) ) {
+					if ( strpos( $referal_url, 'page=dragwyb-form-overview' ) !== false ) {
 						Form_Bulk_Actions_Handler::instance( $current_post_type );
 					}
 				}
@@ -188,7 +188,7 @@ class Dragwyb_Post {
 
 	public function bulk_action_notices() {
 
-		if ( ! function_exists( 'get_current_screen' ) || ! property_exists( get_current_screen(), 'id' ) || ! str_contains( get_current_screen()->id, 'dragwyb-form-overview' ) ) {
+		if ( ! function_exists( 'get_current_screen' ) || ! property_exists( get_current_screen(), 'id' ) || strpos( get_current_screen()->id, 'dragwyb-form-overview' ) === false ) {
 			return;
 		}
 

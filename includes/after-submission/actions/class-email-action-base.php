@@ -79,7 +79,7 @@ abstract class Email_Action_Base extends Action_Base {
 		}
 
 		// Replace {all_fields}
-		if ( str_contains( $text, '{all_fields}' ) ) {
+		if ( strpos( $text, '{all_fields}' ) !== false ) {
 			$all_fields_text = '';
 			foreach ( $form_data as $key => $value ) {
 				// Try to get field label

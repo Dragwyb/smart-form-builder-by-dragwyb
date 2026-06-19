@@ -293,7 +293,7 @@ abstract class Field_Base extends Register_Controls_Base {
 			$attribute_key = sanitize_key( $attribute_key );
 
 			// SECURITY: Block all inline event handlers (onclick, onmouseover, etc.).
-			if ( str_starts_with( $attribute_key, 'on' ) ) {
+			if ( 0 === strpos( $attribute_key, 'on' ) ) {
 				continue;
 			}
 
