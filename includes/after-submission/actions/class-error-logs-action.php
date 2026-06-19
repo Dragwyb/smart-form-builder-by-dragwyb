@@ -35,7 +35,7 @@ class Error_Logs_Action extends Action_Base {
 				'type'        => Controls::SWITCHER,
 				'label'       => __( 'Enable Error Logging', 'smart-form-builder-by-dragwyb' ),
 				'default'     => 'yes',
-				'description' => __( 'Log validation failures to WordPress Dashboard > Dragwyb Form > Error Log', 'smart-form-builder-by-dragwyb' ),
+				'description' => __( 'Log validation failures to WordPress Dashboard > Smart Forms > Error Log', 'smart-form-builder-by-dragwyb' ),
 			)
 		);
 

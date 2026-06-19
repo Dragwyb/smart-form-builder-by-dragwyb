@@ -41,7 +41,7 @@ class Dragwyb_Post {
 	 */
 	public function register_post_type(): void {
 		$args = array(
-			'label'               => 'Dragwyb Form',
+			'label'               => 'Smart Forms',
 			'public'              => false,
 			'exclude_from_search' => true,
 			'show_ui'             => false,
