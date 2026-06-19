@@ -73,6 +73,7 @@ if ( ! class_exists( 'Dragwyb_Review_Notice' ) ) {
 			</div>
 		</div>',
 				esc_html__( 'Thank you for using Smart Form Builder.', 'smart-form-builder-by-dragwyb' ),
+				/* translators: %s: line break tag */
 				sprintf( esc_html__( 'Enjoying the Smart Form Builder? Your feedback is invaluable in shaping the plugin\'s future.%sPlease consider leaving a review on the WordPress Plugin Directory to help others and support our growth.', 'smart-form-builder-by-dragwyb' ), '<br>' ),
 				esc_html__( 'Leave a Review', 'smart-form-builder-by-dragwyb' ),
 				esc_html__( 'Already Review.', 'smart-form-builder-by-dragwyb' )
