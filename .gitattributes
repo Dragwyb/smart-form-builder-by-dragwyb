@@ -20,3 +20,5 @@ phpunit.xml* export-ignore
 composer.json export-ignore
 composer.lock export-ignore
 vendor/ export-ignore
+.wordpress-org/ export-ignore
+.babelrc export-ignore

@@ -20,3 +20,5 @@ phpunit.xml*
 composer.json
 composer.lock
 vendor/
+.wordpress-org
+.babelrc
