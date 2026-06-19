@@ -82,20 +82,23 @@ class Dragwyb_Error_Log_Db {
 
 		$table_name = self::get_table_name();
 
-		$sql = $wpdb->prepare(
-			"INSERT INTO $table_name (form_id, ip_address, user_agent, submission_data, errors, created_at) VALUES (%d, %s, %s, %s, %s, %s)",
-			absint( $data['form_id'] ),
-			sanitize_text_field( $data['ip_address'] ),
-			sanitize_text_field( $data['user_agent'] ),
-			$data['submission_data'],
-			$data['errors'],
-			sanitize_text_field( $data['created_at'] )
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$inserted = $wpdb->query(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				"INSERT INTO $table_name (form_id, ip_address, user_agent, submission_data, errors, created_at) VALUES (%d, %s, %s, %s, %s, %s)",
+				absint( $data['form_id'] ),
+				sanitize_text_field( $data['ip_address'] ),
+				sanitize_text_field( $data['user_agent'] ),
+				$data['submission_data'],
+				$data['errors'],
+				sanitize_text_field( $data['created_at'] )
+			)
 		);
-
-		$inserted = $wpdb->query( $sql );
 
 		if ( false === $inserted ) {
 			if ( ! empty( $wpdb->last_error ) ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 				error_log( 'Dragwyb error log insert failed: ' . $wpdb->last_error );
 			}
 
@@ -115,8 +118,14 @@ class Dragwyb_Error_Log_Db {
 		global $wpdb;
 		$table_name = self::get_table_name();
 
-		$sql = $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %d", $id );
-		return $wpdb->get_row( $sql );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		return $wpdb->get_row(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				"SELECT * FROM $table_name WHERE id = %d",
+				$id
+			)
+		);
 	}
 
 	/**
@@ -150,11 +159,14 @@ class Dragwyb_Error_Log_Db {
 		$query_params[] = absint( $args['limit'] );
 		$query_params[] = absint( $args['offset'] );
 
-		$sql = "SELECT * FROM $table_name $where_clause ORDER BY $orderby $order LIMIT %d OFFSET %d";
-
-		$sql = $wpdb->prepare( $sql, ...$query_params );
-
-		return $wpdb->get_results( $sql );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		return $wpdb->get_results(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
+				"SELECT * FROM $table_name $where_clause ORDER BY $orderby $order LIMIT %d OFFSET %d",
+				...$query_params
+			)
+		);
 	}
 
 	/**
@@ -172,11 +184,14 @@ class Dragwyb_Error_Log_Db {
 
 		$sql = "SELECT COUNT(id) FROM $table_name $where_clause";
 
-		if ( ! empty( $query_params ) ) {
-			$sql = $wpdb->prepare( $sql, ...$query_params );
-		}
-
-		return (int) $wpdb->get_var( $sql );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		return (int) $wpdb->get_var(
+			empty( $query_params )
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				? $sql
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				: $wpdb->prepare( $sql, ...$query_params )
+		);
 	}
 
 	/**
@@ -212,9 +227,14 @@ class Dragwyb_Error_Log_Db {
 		global $wpdb;
 		$table_name = self::get_table_name();
 
-		$sql = $wpdb->prepare( "DELETE FROM $table_name WHERE id = %d", $id );
-
-		return $wpdb->query( $sql );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		return $wpdb->query(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				"DELETE FROM $table_name WHERE id = %d",
+				$id
+			)
+		);
 	}
 
 	/**
@@ -226,8 +246,10 @@ class Dragwyb_Error_Log_Db {
 		global $wpdb;
 		$table_name = self::get_table_name();
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
 		$result = $wpdb->query( "TRUNCATE TABLE $table_name" );
 		if ( $result === false ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
 			$result = $wpdb->query( "DELETE FROM $table_name" );
 		}
 
