@@ -60,6 +60,7 @@ class Helper {
 
 	final public static function is_editor_preview_mode(): bool {
 		if ( self::is_preview_mode() ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verification is done in self::is_preview_mode() which is called first.
 			$iframe_mode = isset( $_GET['dragwyb_iframe_mode'] ) ? sanitize_key( wp_unslash( $_GET['dragwyb_iframe_mode'] ) ) : '';
 
 			if ( 'true' === $iframe_mode ) {
