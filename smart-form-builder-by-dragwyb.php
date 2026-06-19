@@ -34,8 +34,6 @@ final class Dragwyb_Form_Builder {
 	 */
 	private static $instance = null;
 
-	private $styling;
-
 	/**
 	 * Get plugin instance
 	 */
