@@ -6,11 +6,11 @@ Author URI: https://dragwyb.com/
 Requires at least: 5.8  
 Tested up to: 7.0  
 Requires PHP: 7.4  
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 License: GPL2  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Fast, zero-bloat drag & drop WordPress form builder. Build secure AJAX forms with a visual React editor and optimized custom database tables.
+Fast, zero-bloat drag & drop contact form builder. Build secure AJAX forms with a visual React editor and optimized custom database tables.
 == Description ==
 
 Looking for the fastest **drag and drop form builder** for WordPress? **Smart Form Builder** by Dragwyb is a cutting-edge, React-powered **custom form plugin** engineered for blistering speed, zero-bloat database performance, and unparalleled styling customization. 
@@ -136,6 +136,10 @@ If the "Save Submissions" action is enabled on your form, all data points are sa
 ---
 
 ## == Changelog ==
+
+= 1.0.6 (20 June 2026) =
+* Fixed Form Editor styling issue dashboard menus showing.
+* Fixed feedback notice not working.
 
 = 1.0.5 (19 June 2026) =
 * Added PHP older version compabitility.

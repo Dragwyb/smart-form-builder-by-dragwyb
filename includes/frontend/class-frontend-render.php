@@ -92,6 +92,10 @@ class Frontend_Render {
 		$toolbar_obj    = Toolbars::instance();
 		self::$toolbars = $toolbar_obj->get_toolbars();
 
+		if ( empty( self::$form_data ) ) {
+			return;
+		}
+
 		foreach ( self::$form_data as $key => $value ) {
 			if ( $key === 'id' ) {
 				continue;
