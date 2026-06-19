@@ -10,8 +10,7 @@ Stable tag: 1.0.4
 License: GPL2  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-The fastest, zero-bloat drag & drop WordPress form builder. Create secure, high-performance AJAX forms with a React visual editor and optimized custom database tables.
-
+The fastest zero-bloat drag & drop WordPress **contact form** builder. Build secure AJAX forms with a React visual editor and optimized custom database tables.
 == Description ==
 
 Looking for the fastest **drag and drop form builder** for WordPress? **Smart Form Builder** by Dragwyb is a cutting-edge, React-powered **custom form plugin** engineered for blistering speed, zero-bloat database performance, and unparalleled styling customization. 
