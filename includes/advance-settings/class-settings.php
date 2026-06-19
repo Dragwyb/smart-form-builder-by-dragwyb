@@ -72,50 +72,6 @@ class Settings extends Register_Controls_Base {
 
 		$this->end_section();
 
-		// Form Restrictions (Great for Contests)
-		$this->start_section(
-			'restrictions',
-			array(
-				'label' => __( 'Restrictions', 'smart-form-builder-by-dragwyb' ),
-			)
-		);
-
-		$this->add_control(
-			'limit_entries',
-			array(
-				'type'    => Controls::SWITCHER,
-				'label'   => __( 'Limit Number of Entries', 'smart-form-builder-by-dragwyb' ),
-				'default' => 'no',
-			)
-		);
-
-		$this->add_control(
-			'max_entries',
-			array(
-				'type'       => Controls::NUMBER,
-				'label'      => __( 'Max Entries Allowed', 'smart-form-builder-by-dragwyb' ),
-				'default'    => 100,
-				'min'        => 1,
-				'conditions' => array(
-					'limit_entries' => true,
-				),
-			)
-		);
-
-		$this->add_control(
-			'limit_message',
-			array(
-				'type'       => Controls::TEXTAREA,
-				'label'      => __( 'Message when limit reached', 'smart-form-builder-by-dragwyb' ),
-				'default'    => __( 'This form is no longer accepting submissions.', 'smart-form-builder-by-dragwyb' ),
-				'conditions' => array(
-					'limit_entries' => true,
-				),
-			)
-		);
-
-		$this->end_section();
-
 		// Security & Privacy
 		$this->start_section(
 			'security',
