@@ -42,8 +42,8 @@ class Dragwyb_Pages {
 	 */
 	public function add_main_menu_page(): void {
 		add_menu_page(
-			__( 'Dragwyb Form', 'smart-form-builder-by-dragwyb' ),
-			__( 'Dragwyb Form', 'smart-form-builder-by-dragwyb' ),
+			__( 'Smart Forms', 'smart-form-builder-by-dragwyb' ),
+			__( 'Smart Forms', 'smart-form-builder-by-dragwyb' ),
 			'manage_options',
 			DRAGWYB_PREFIX . '-form-overview',
 			array( $this, 'dragwyb_render_page' ),

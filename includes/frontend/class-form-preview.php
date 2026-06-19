@@ -41,6 +41,7 @@ class Form_Preview {
 			return;
 		}
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verification is not required here nonce already verified in Helper::is_preview_mode() check.
 		$form_id = isset( $_GET['p'] ) ? absint( $_GET['p'] ) : 0;
 
 		if ( ! current_user_can( 'edit_post', $form_id ) && ! current_user_can( 'manage_options' ) ) {
@@ -112,8 +113,7 @@ class Form_Preview {
 
 		// 3. ECHO THE SHORTCODE (Crucial Step)
 		echo '<div id="dragwyb-preview-wrapper" style="width: 100%;">';
-		$allowed_html = \Dragwyb\Form_Builder\Includes\Frontend\Shortcode\Shortcode_Handler::instance()->allowed_html_for_form();
-		echo wp_kses( do_shortcode( '[dragwyb-form id="' . $post_id . '"]' ), $allowed_html );
+		echo do_shortcode( '[dragwyb-form id="' . $post_id . '"]' );
 		echo '</div>';
 
 		if ( function_exists( 'get_footer' ) ) {

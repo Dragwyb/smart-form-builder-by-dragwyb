@@ -711,7 +711,7 @@ class Frontend_Render {
 	}
 
 	private function set_css_cache( &$css_array, $selector, $property, $type, $control_id, $field_id = null, $current_item = null ) {
-		$property = str_ends_with( $property, ';' ) ? $property : $property . ';';
+		$property = ( ';' === substr( $property, -1 ) ) ? $property : $property . ';';
 
 		if ( defined( 'DRAGWYB_EDITOR' ) && true === DRAGWYB_EDITOR ) {
 			$unique_key = sanitize_text_field( $type );

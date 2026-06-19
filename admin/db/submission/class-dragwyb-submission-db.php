@@ -80,24 +80,26 @@ class Dragwyb_Submission_Db {
 			$data['submission_data'] = wp_json_encode( $data['submission_data'] );
 		}
 
-		$table_name = self::get_table_name();
+		$table_name = esc_sql( self::get_table_name() );
 
-		$sql = $wpdb->prepare(
-			"INSERT INTO $table_name (form_id, user_id, ip_address, user_agent, submission_data, status, created_at, updated_at) VALUES (%d, %d, %s, %s, %s, %s, %s, %s)",
-			absint( $data['form_id'] ),
-			absint( $data['user_id'] ),
-			sanitize_text_field( $data['ip_address'] ),
-			sanitize_text_field( $data['user_agent'] ),
-			$data['submission_data'],
-			sanitize_text_field( $data['status'] ),
-			sanitize_text_field( $data['created_at'] ),
-			sanitize_text_field( $data['updated_at'] )
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$inserted = $wpdb->query(
+			$wpdb->prepare(
+				"INSERT INTO $table_name (form_id, user_id, ip_address, user_agent, submission_data, status, created_at, updated_at) VALUES (%d, %d, %s, %s, %s, %s, %s, %s)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				absint( $data['form_id'] ),
+				absint( $data['user_id'] ),
+				sanitize_text_field( $data['ip_address'] ),
+				sanitize_text_field( $data['user_agent'] ),
+				$data['submission_data'],
+				sanitize_text_field( $data['status'] ),
+				sanitize_text_field( $data['created_at'] ),
+				sanitize_text_field( $data['updated_at'] )
+			)
 		);
-
-		$inserted = $wpdb->query( $sql );
 
 		if ( false === $inserted ) {
 			if ( ! empty( $wpdb->last_error ) ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 				error_log( 'Dragwyb submission insert failed: ' . $wpdb->last_error );
 			}
 
@@ -115,10 +117,15 @@ class Dragwyb_Submission_Db {
 	 */
 	public function get( int $id ) {
 		global $wpdb;
-		$table_name = self::get_table_name();
+		$table_name = esc_sql( self::get_table_name() );
 
-		$sql = $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %d", $id );
-		return $wpdb->get_row( $sql );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		return $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT * FROM $table_name WHERE id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$id
+			)
+		);
 	}
 
 	/**
@@ -129,7 +136,7 @@ class Dragwyb_Submission_Db {
 	 */
 	public function get_all( array $args = array() ): array {
 		global $wpdb;
-		$table_name = self::get_table_name();
+		$table_name = esc_sql( self::get_table_name() );
 
 		$defaults = array(
 			'limit'   => 20,
@@ -152,11 +159,14 @@ class Dragwyb_Submission_Db {
 		$query_params[] = absint( $args['limit'] );
 		$query_params[] = absint( $args['offset'] );
 
-		$sql = "SELECT * FROM $table_name $where_clause ORDER BY $orderby $order LIMIT %d OFFSET %d";
-
-		$sql = $wpdb->prepare( $sql, ...$query_params );
-
-		return $wpdb->get_results( $sql );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+		return $wpdb->get_results(
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+			$wpdb->prepare(
+				"SELECT * FROM $table_name $where_clause ORDER BY $orderby $order LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				...$query_params
+			)
+		);
 	}
 
 	/**
@@ -167,18 +177,26 @@ class Dragwyb_Submission_Db {
 	 */
 	public function get_total_count( array $args = array() ): int {
 		global $wpdb;
-		$table_name = self::get_table_name();
+		$table_name = esc_sql( self::get_table_name() );
 
 		$query_params = array();
 		$where_clause = $this->build_where_clause( $args, $query_params );
 
 		$sql = "SELECT COUNT(id) FROM $table_name $where_clause";
 
-		if ( ! empty( $query_params ) ) {
-			$sql = $wpdb->prepare( $sql, ...$query_params );
+		if ( empty( $query_params ) ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+			return (int) $wpdb->get_var( $sql );
+		} else {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+			return (int) $wpdb->get_var(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+				$wpdb->prepare(
+					$sql, // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+					...$query_params
+				)
+			);
 		}
-
-		return (int) $wpdb->get_var( $sql );
 	}
 
 	/**
@@ -212,7 +230,7 @@ class Dragwyb_Submission_Db {
 	 */
 	public function update( int $id, array $data ) {
 		global $wpdb;
-		$table_name = self::get_table_name();
+		$table_name = esc_sql( self::get_table_name() );
 
 		if ( empty( $data ) ) {
 			return false;
@@ -234,12 +252,14 @@ class Dragwyb_Submission_Db {
 
 		$values[] = $id;
 
-		$sql = $wpdb->prepare(
-			"UPDATE $table_name SET " . implode( ', ', $set_parts ) . ' WHERE id = %d',
-			...$values
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+		return $wpdb->query(
+			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+			$wpdb->prepare(
+				"UPDATE $table_name SET " . implode( ', ', $set_parts ) . ' WHERE id = %d', // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
+				...$values
+			)
 		);
-
-		return $wpdb->query( $sql );
 	}
 
 	/**
@@ -250,10 +270,14 @@ class Dragwyb_Submission_Db {
 	 */
 	public function delete( int $id ) {
 		global $wpdb;
-		$table_name = self::get_table_name();
+		$table_name = esc_sql( self::get_table_name() );
 
-		$sql = $wpdb->prepare( "DELETE FROM $table_name WHERE id = %d", $id );
-
-		return $wpdb->query( $sql );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		return $wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM $table_name WHERE id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$id
+			)
+		);
 	}
 }

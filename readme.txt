@@ -6,11 +6,11 @@ Author URI: https://dragwyb.com/
 Requires at least: 5.8  
 Tested up to: 7.0  
 Requires PHP: 7.4  
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPL2  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-The fastest zero-bloat drag & drop WordPress **contact form** builder. Build secure AJAX forms with a React visual editor and optimized custom database tables.
+Fast, zero-bloat drag & drop WordPress form builder. Build secure AJAX forms with a visual React editor and optimized custom database tables.
 == Description ==
 
 Looking for the fastest **drag and drop form builder** for WordPress? **Smart Form Builder** by Dragwyb is a cutting-edge, React-powered **custom form plugin** engineered for blistering speed, zero-bloat database performance, and unparalleled styling customization. 
@@ -124,16 +124,24 @@ If the "Save Submissions" action is enabled on your form, all data points are sa
 ## == Screenshots ==
 
 1. **React Drag & Drop Builder:** The modern, fast interface for building custom forms.
-2. **Global & Field Styling:** Visual controls for typography, colors, and borders.
-3. **Form Entries Database:** Clean and searchable backend dashboard of all your form submissions.
-4. **Row & Layout Settings:** Creating multi-column responsive grid forms.
-5. **Anti-Spam Integration:** Global settings for reCAPTCHA and hCaptcha integration.
+2. **Form Preview:** Instant feedback on your form design.
+3. **Global & Field Styling:** Visual controls for typography, colors, and borders.
+4. **Submission Settings:** Form actions after submission.
+5. **Form Entries Database:** Clean and searchable backend dashboard of all your form submissions.
 6. **Easy Form Management:** Shortcodes and rapid status configurations.
-7. **Performance Optimizer:** Globally toggle unused fields to save asset execution times.
+7. **Anti-Spam Integration:** Global settings for reCAPTCHA and hCaptcha integration.
+8. **Performance Optimizer:** Globally toggle unused fields to save asset execution times.
+9. **API Integrations:** API integrations with other platforms.
 
 ---
 
 ## == Changelog ==
+
+= 1.0.5 (19 June 2026) =
+* Added PHP older version compabitility.
+* Fixed form editor preview Captcha field HTML rendering.
+* Improved plugin short description.
+* Update form menu label.
 
 = 1.0.4 (19 June 2026) =
 * Public release.
