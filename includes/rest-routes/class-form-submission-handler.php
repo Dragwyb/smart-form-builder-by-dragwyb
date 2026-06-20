@@ -237,6 +237,8 @@ class Form_Submission_Handler {
 
 		if ( method_exists( $field_module, 'sanitize' ) ) {
 			$field_sanitized_value = $field_module->sanitize( $field_value );
+		} else {
+			$field_sanitized_value = is_array( $field_value ) ? array_map( 'sanitize_text_field', $field_value ) : sanitize_text_field( $field_value );
 		}
 
 		// 1. Store it in the configuration array for reference
@@ -456,12 +458,14 @@ class Form_Submission_Handler {
 		$field_type   = $this->fields_data[ $id ]['field_type'];
 		$field_module = $this->frontend->get_module( $field_type );
 
-		$default_value = $value;
-		if ( $field_module instanceof Field_Base && method_exists( $field_module, 'sanitize' ) ) {
-			$default_value = $field_module->sanitize( '', $value );
+		$sanitized_value = apply_filters( 'Dragwyb/Field/Value/Sanitize/' . $field_type, $value );
+
+		if ( method_exists( $field_module, 'sanitize' ) ) {
+			$sanitized_value = $field_module->sanitize( $value );
+		} else {
+			$sanitized_value = is_array( $value ) ? array_map( 'sanitize_text_field', $value ) : sanitize_text_field( $value );
 		}
 
-		$sanitized_value             = apply_filters( 'Dragwyb/Field/Value/Sanitize/' . $field_type, $default_value, $value );
 		$this->sanitized_data[ $id ] = $sanitized_value;
 
 		return true;
