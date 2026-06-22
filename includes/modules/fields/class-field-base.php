@@ -13,6 +13,7 @@ use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Categories\Categories;
 use Dragwyb\Form_Builder\Includes\Frontend\Frontend_Render;
 use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
+use Dragwyb\Form_Builder\Includes\Repeater\Repeater;
 
 abstract class Field_Base extends Register_Controls_Base {
 
@@ -508,19 +509,78 @@ abstract class Field_Base extends Register_Controls_Base {
 			array(
 				'type'         => Controls::SWITCHER,
 				'label'        => __( 'Enable Logic', 'smart-form-builder-by-dragwyb' ),
-				'default'      => '',
-				'return_value' => '',
-				'disabled'     => true,
+				'default'      => 'no',
+				'return_value' => 'yes',
+			)
+		);
+
+		$conditional_repeater = new Repeater();
+
+		$conditional_repeater->add_control(
+			'condition_field_id',
+			array(
+				'type'        => Controls::TEXT,
+				'label'       => __( 'Condition Field ID', 'smart-form-builder-by-dragwyb' ),
+				'description' => __( 'Enter the ID of the field to check.', 'smart-form-builder-by-dragwyb' ),
+			)
+		);
+
+		$conditional_repeater->add_control(
+			'condition_value',
+			array(
+				'type'        => Controls::TEXT,
+				'label'       => __( 'Value', 'smart-form-builder-by-dragwyb' ),
+				'description' => __( 'The value to compare against.', 'smart-form-builder-by-dragwyb' ),
+			)
+		);
+
+		$conditional_repeater->add_control(
+			'condition_operator',
+			array(
+				'type'         => Controls::SELECT,
+				'label'        => __( 'Operator', 'smart-form-builder-by-dragwyb' ),
+				'options'      => array(
+					'equal'        => __( 'Equals', 'smart-form-builder-by-dragwyb' ),
+					'not_equal'    => __( 'Not Equals', 'smart-form-builder-by-dragwyb' ),
+					'contains'     => __( 'Contains', 'smart-form-builder-by-dragwyb' ),
+					'not_contains' => __( 'Not Contains', 'smart-form-builder-by-dragwyb' ),
+					'greater_than' => __( 'Greater Than', 'smart-form-builder-by-dragwyb' ),
+					'less_than'    => __( 'Less Than', 'smart-form-builder-by-dragwyb' ),
+				),
+				'default'      => 'equal',
+				'label_inline' => true,
+			)
+		);
+
+		$conditional_repeater->add_control(
+			'condition_action',
+			array(
+				'type'         => Controls::SWITCHER,
+				'label'        => __( 'Action', 'smart-form-builder-by-dragwyb' ),
+				'default'      => 'yes',
+				'return_value' => 'yes',
+				'on_label'     => __( 'Show', 'smart-form-builder-by-dragwyb' ),
+				'off_label'    => __( 'Hide', 'smart-form-builder-by-dragwyb' ),
 			)
 		);
 
 		$this->add_control(
-			'logic_msg',
+			'logic_conditions',
 			array(
-				'type'      => Controls::RAW_HTML,
-				// translators: %1$s is the opening bold tag, %2$s is the closing bold tag
-				'raw'       => '<div style="color: hsl(var(--dragwyb-sidebar-foreground)/var(--dragwyb-text-opacity, 1)); font-size: 12px; padding: 10px 0;">' . sprintf( __( '%1$sComing Soon%2$s: Advanced Conditional Logic is in development. This feature will allow you to dynamically show or hide fields based on user input.', 'smart-form-builder-by-dragwyb' ), '<strong>', '</strong>' ) . '</div>',
-				'condition' => array(
+				'type'       => Controls::REPEATER,
+				'label'      => __( 'Conditions', 'smart-form-builder-by-dragwyb' ),
+				'items'      => $conditional_repeater->get_settings(),
+				'default'    => array(
+					array(
+						'condition_field_id' => '',
+						'condition_value'    => '',
+						'condition_operator' => 'equal',
+						'condition_action'   => 'yes',
+					),
+				),
+				'add_item'   => __( 'Add Condition', 'smart-form-builder-by-dragwyb' ),
+				'item_label' => 'condition_field_id',
+				'conditions' => array(
 					'enable_logic' => 'yes',
 				),
 			)
