@@ -228,6 +228,9 @@ class Settings extends Register_Controls_Base {
 				),
 				'default'      => 'before',
 				'label_inline' => true,
+				'conditions'   => array(
+					'label_position!' => 'hidden',
+				),
 			)
 		);
 
