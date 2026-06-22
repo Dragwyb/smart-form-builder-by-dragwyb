@@ -1232,6 +1232,7 @@ $dropdown-max-height: 250px;
         font-size: 13px;
         color: hsl(var(--dragwyb-card-foreground)/var(--dragwyb-text-opacity, 1));
         margin: 0;
+        white-space: nowrap;
 
         &:nth-child(2n+2) {
             background-color: hsl(var(--dragwyb-secondary)/0.3);
