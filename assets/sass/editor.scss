@@ -606,6 +606,8 @@ body {
         a.dragwyb-button {
             color: #fff;
             border-color: #fff;
+            display: flex;
+            align-items: center;
 
             &:hover {
                 color: hsl(var(--dragwyb-primary) / var(--dragwyb-text-opacity, 1));
