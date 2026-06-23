@@ -170,6 +170,7 @@ abstract class Field_Base extends Register_Controls_Base {
 
 	public function set_field_settings( array $setting ) {
 		$this->display_settings = $setting;
+		$this->test_settings    = $setting;
 	}
 
 	protected function get_field_settings(): array {
@@ -243,6 +244,7 @@ abstract class Field_Base extends Register_Controls_Base {
 		$this->field_attributes = array();
 		$this->enqueue_assets();
 		$this->render_field();
+		$this->localize_condition_data();
 	}
 
 	/**
@@ -587,6 +589,76 @@ abstract class Field_Base extends Register_Controls_Base {
 		);
 
 		$this->end_section();
+	}
+
+	/**
+	 * Localize the condition data
+	 * this function is final and can not be overridden
+	 *
+	 * @return void
+	 */
+	final public function localize_condition_data(): void {
+		$settings = $this->get_field_settings();
+
+		if ( ! isset( $settings['enable_logic'] ) || 'yes' !== $settings['enable_logic'] ) {
+			return;
+		}
+
+		if ( ! isset( $settings['field_id'] ) || empty( $settings['field_id'] ) ) {
+			return;
+		}
+
+		if ( ! isset( $settings['logic_conditions'] ) || empty( $settings['logic_conditions'] ) ) {
+			return;
+		}
+
+		$condition_data   = array();
+		$current_form_id  = (int) $this->get_form_id();
+		$logic_conditions = $settings['logic_conditions'];
+
+		foreach ( $logic_conditions as $logic_condition ) {
+			$logic_attributes = $this->field_key_exist( $logic_condition, 'attributes', array() );
+
+			if ( empty( $logic_attributes ) ) {
+				continue;
+			}
+
+			if ( empty( $logic_attributes['condition_field_id'] ) ) {
+				continue;
+			}
+
+			$condition_data[] = array(
+				'field_id' => $logic_attributes['condition_field_id'],
+				'value'    => $logic_attributes['condition_value'],
+				'operator' => $logic_attributes['condition_operator'],
+				'action'   => $logic_attributes['condition_action'],
+			);
+		}
+
+		add_filter(
+			'Dragwyb/Frontend/Form/Localize_Settings',
+			function ( $localize_data, $form_id ) use ( $settings, $condition_data, $current_form_id ) {
+				if ( $form_id !== $current_form_id ) {
+					return $localize_data;
+				}
+
+				$field_id = $settings['field_id'];
+
+				if ( ! isset( $localize_data['conditions'] ) ) {
+					$localize_data['conditions'] = array();
+				}
+
+				if ( isset( $localize_data['conditions'][ $field_id ] ) ) {
+					return $localize_data;
+				}
+
+				$localize_data['conditions'][ $field_id ] = $condition_data;
+
+				return $localize_data;
+			},
+			10,
+			2
+		);
 	}
 
 	protected function header_controls(): array {

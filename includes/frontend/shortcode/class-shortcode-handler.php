@@ -67,8 +67,6 @@ class Shortcode_Handler {
 			self::$frontend_render::enqueue_static_assets();
 		}
 
-		self::$frontend_render::localize_form_data();
-
 		$css_manager = CSS_Manager::instance();
 
 		$css_manager->enqueue_form_styles( $form_id, self::$frontend_render );
@@ -93,7 +91,11 @@ class Shortcode_Handler {
 			}
 		}
 
-		return '<div class="' . esc_attr( $class ) . '" id="dragwyb-form-wrapper-' . esc_attr( $form_id ) . '">' . self::$frontend_render->render() . '</div>';
+		$output = '<div class="' . esc_attr( $class ) . '" id="dragwyb-form-wrapper-' . esc_attr( $form_id ) . '">' . self::$frontend_render->render() . '</div>';
+
+		self::$frontend_render::localize_form_data();
+
+		return $output;
 	}
 
 	final public function allowed_html_for_form(): array {
