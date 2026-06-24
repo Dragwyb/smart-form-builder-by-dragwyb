@@ -242,6 +242,16 @@ abstract class Control_Base {
 		return $return;
 	}
 
+	private function dynamic_tag_setting_sanitize( array $dynamic_tag ) {
+		$return = array();
+
+		foreach ( $dynamic_tag as $key => $value ) {
+			$return[ sanitize_textarea_field( $key ) ] = $this->boolean_setting_sanitize( $value );
+		}
+
+		return $return;
+	}
+
 	protected function range_sanitize( array $range ) {
 		return $this->range_setting_sanitize( $range );
 	}

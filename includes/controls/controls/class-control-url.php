@@ -15,7 +15,8 @@ class Control_Url extends Control_Base {
 			'is_external'   => 'boolean', // Option to hide/show the "New Window" checkbox
 			'nofollow'      => 'boolean', // Option to hide/show the "New Window" checkbox
 			'url'           => 'url', // Option to hide/show the "New Window" checkbox
-			'dynamic_tag'   => 'boolean',
+			'dynamic_tag'   => 'custom',
+			'field_id_tags' => 'boolean',
 		);
 	}
 
@@ -48,7 +49,10 @@ class Control_Url extends Control_Base {
 			'url'         => '',
 			'is_external' => false,
 			'nofollow'    => false,
-			'dynamic_tag' => true,
+			'dynamic_tag' => array(
+				'active'    => true,
+				'field_ids' => false,
+			),
 		);
 	}
 

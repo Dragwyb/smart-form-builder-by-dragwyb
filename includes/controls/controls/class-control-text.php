@@ -13,10 +13,12 @@ class Control_Text extends Control_Base {
 
 	protected function register_settings() {
 		return array(
-			'name'         => 'string',
-			'label'        => 'string',
-			'default'      => 'string',
-			'label_inline' => 'boolean',
+			'name'          => 'string',
+			'label'         => 'string',
+			'default'       => 'string',
+			'label_inline'  => 'boolean',
+			'dynamic_tag'   => 'custom',
+			'field_id_tags' => 'boolean',
 		);
 	}
 
@@ -64,6 +66,15 @@ class Control_Text extends Control_Base {
 	protected function init(): void {
 		$this->type = 'text';
 		$this->name = __( 'Text', 'smart-form-builder-by-dragwyb' );
+	}
+
+	protected function default_setting(): array {
+		return array(
+			'dynamic_tag' => array(
+				'active'    => true,
+				'field_ids' => false,
+			),
+		);
 	}
 
 	protected function sanitize_control( $value, $settings ) {
