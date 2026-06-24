@@ -6,14 +6,6 @@ namespace Dragwyb\Form_Builder\Includes\Controls\Controls;
 
 class Control_Url extends Control_Base {
 
-	protected function register_scripts(): array {
-		return array( 'dragwyb-editor-controls' );
-	}
-
-	protected function register_style(): array {
-		return array( 'dragwyb-editor-controls' );
-	}
-
 	protected function register_settings() {
 		return array(
 			'label'         => 'string',
@@ -23,6 +15,7 @@ class Control_Url extends Control_Base {
 			'is_external'   => 'boolean', // Option to hide/show the "New Window" checkbox
 			'nofollow'      => 'boolean', // Option to hide/show the "New Window" checkbox
 			'url'           => 'url', // Option to hide/show the "New Window" checkbox
+			'dynamic_tag'   => 'boolean',
 		);
 	}
 
@@ -55,6 +48,7 @@ class Control_Url extends Control_Base {
 			'url'         => '',
 			'is_external' => false,
 			'nofollow'    => false,
+			'dynamic_tag' => true,
 		);
 	}
 
