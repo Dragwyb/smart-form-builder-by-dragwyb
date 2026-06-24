@@ -428,7 +428,6 @@ abstract class Field_Base extends Register_Controls_Base {
 				'type'        => Controls::TEXT,
 				'label'       => __( 'Field ID', 'smart-form-builder-by-dragwyb' ),
 				'description' => __( 'Use this ID for custom scripts or logic.', 'smart-form-builder-by-dragwyb' ),
-				'dynamic'     => array( 'active' => false ),
 			)
 		);
 

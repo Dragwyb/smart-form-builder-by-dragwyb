@@ -68,7 +68,6 @@ class Field_Range extends Field_Base {
 				'type'    => Controls::TEXT,
 				'label'   => __( 'Field Label', 'smart-form-builder-by-dragwyb' ),
 				'default' => __( 'Range', 'smart-form-builder-by-dragwyb' ),
-				'dynamic' => array( 'active' => true ),
 			)
 		);
 

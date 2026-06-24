@@ -36,7 +36,6 @@ class Field_Url extends Field_Base {
 				'type'    => Controls::TEXT,
 				'label'   => __( 'Field Label', 'smart-form-builder-by-dragwyb' ),
 				'default' => __( 'URL', 'smart-form-builder-by-dragwyb' ),
-				'dynamic' => array( 'active' => true ),
 			)
 		);
 
