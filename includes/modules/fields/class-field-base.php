@@ -520,9 +520,13 @@ abstract class Field_Base extends Register_Controls_Base {
 		$conditional_repeater->add_control(
 			'condition_field_id',
 			array(
-				'type'        => Controls::TEXT,
-				'label'       => __( 'Condition Field ID', 'smart-form-builder-by-dragwyb' ),
-				'description' => __( 'Enter the ID of the field to check.', 'smart-form-builder-by-dragwyb' ),
+				'type'          => Controls::TEXT,
+				'label'         => __( 'Condition Field ID', 'smart-form-builder-by-dragwyb' ),
+				'description'   => __( 'Enter the ID of the field to check.', 'smart-form-builder-by-dragwyb' ),
+				'field_id_tags' => true,
+				'dynamic_tag'   => array(
+					'active' => false,
+				),
 			)
 		);
 
