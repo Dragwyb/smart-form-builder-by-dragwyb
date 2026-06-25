@@ -61,6 +61,11 @@ class Frontend_Render {
 		self::$fields       = array();
 		self::$form_data    = get_post_meta( self::$form_id, '_dragwyb_form_data', true );
 
+		if ( is_array( self::$form_data ) ) {
+			$dynamic_tags    = \Dragwyb\Form_Builder\Includes\Dynamic_Tags\Dynamic_Tags_Manager::instance();
+			self::$form_data = $dynamic_tags->replace_tags( self::$form_data, self::$form_id );
+		}
+
 		if ( empty( self::$form_data ) || ! is_array( self::$form_data ) || ! isset( self::$form_data['fields'] ) || count( self::$form_data ) < 1 ) {
 			self::$fields = array();
 			return;

@@ -107,6 +107,10 @@ class After_Submission extends Toolbar_Base {
 	}
 
 	final public function process_submission( $form_id, $form_data, $form_config, Form_Submission_Handler $form_submission ): void {
+		// Process dynamic tags recursively in the action settings using the Dynamic_Tags_Manager
+		$dynamic_tags = \Dragwyb\Form_Builder\Includes\Dynamic_Tags\Dynamic_Tags_Manager::instance();
+		$form_config  = $dynamic_tags->replace_tags( $form_config, (int) $form_id, $form_data );
+
 		$after_submission_config           = isset( $form_config['after-submission'] ) && is_array( $form_config['after-submission'] ) ? $form_config['after-submission'] : array();
 		$selected_after_submission_actions = isset( $after_submission_config['after_submissions'] ) && is_array( $after_submission_config['after_submissions'] ) ? $after_submission_config['after_submissions'] : array();
 
