@@ -57,6 +57,91 @@
     transform: translateY(-50%);
   }
 
+  .dragwyb-control__dynamic {
+    cursor: pointer;
+    padding: 0.3rem;
+    border-radius: 5px;
+    display: inline-flex;
+    font-size: 10px;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: hsl(var(--dragwyb-muted-foreground));
+    transition: color 0.2s, background-color 0.2s;
+
+    &:hover {
+      color: hsl(var(--dragwyb-primary));
+      background-color: hsl(var(--dragwyb-muted) / 0.3);
+    }
+
+    &.has-reset {
+      right: 26px;
+    }
+  }
+
+  .dragwyb-dynamic-dropdown {
+    position: absolute;
+    top: calc(100% + 2px);
+    right: 0;
+    z-index: 1000;
+    min-width: 160px;
+    background-color: hsl(var(--dragwyb-card));
+    border: 1px solid hsl(var(--dragwyb-border));
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 4px 0;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+
+    &__header {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: hsl(var(--dragwyb-muted-foreground));
+      padding: 6px 12px;
+      border-bottom: 1px solid hsl(var(--dragwyb-border) / 0.5);
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+
+    &__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    &__item {
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      color: hsl(var(--dragwyb-card-foreground));
+      transition: background-color 0.2s, color 0.2s;
+      line-height: 1.2;
+
+      &:hover {
+        background-color: hsl(var(--dragwyb-accent));
+        color: hsl(var(--dragwyb-accent-foreground));
+      }
+
+      svg {
+        flex-shrink: 0;
+        color: hsl(var(--dragwyb-primary));
+      }
+      
+      span {
+        white-space: nowrap;
+      }
+    }
+  }
+
   .dragwyb-control_reset {
     display: inline-flex;
     align-items: center;

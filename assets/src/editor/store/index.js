@@ -29,5 +29,6 @@ const initialState = {
 };
 
 const store = createStore(reducer, initialState, applyMiddleware(thunk));
+window.DragwybStore = store;
 
 export default store; 
