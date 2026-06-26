@@ -28,20 +28,8 @@ class Field_Range extends Field_Base {
 				'dependencies' => array( 'jquery', 'dragwyb-form-frontend' ),
 			);
 
-			if ( file_exists( DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/rangeSlider/rangeSlider.asset.php' ) ) {
-				$dragwyb_js_assets_info = require_once DRAGWYB_FORM_BUILDER_PATH . 'assets/dist/rangeSlider/rangeSlider.asset.php';
-
-				if ( isset( $dragwyb_js_assets_info['dependencies'] ) ) {
-					$js_assets_info['dependencies'] = array_merge( $js_assets_info['dependencies'], $dragwyb_js_assets_info['dependencies'] );
-				}
-
-				if ( isset( $dragwyb_js_assets_info['version'] ) ) {
-					$js_assets_info['version'] = $dragwyb_js_assets_info['version'];
-				}
-			}
-
 			wp_register_style( 'dragwyb-range-slider', esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/css/range-slider.css' ), array(), esc_attr( $js_assets_info['version'] ), 'all' );
-			wp_register_script( 'dragwyb-range-slider', esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/dist/rangeSlider/rangeSlider.js' ), $js_assets_info['dependencies'], esc_attr( $js_assets_info['version'] ), true );
+			wp_register_script( 'dragwyb-range-slider', esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/js/range-slider.min.js' ), $js_assets_info['dependencies'], esc_attr( $js_assets_info['version'] ), true );
 		}
 	}
 
