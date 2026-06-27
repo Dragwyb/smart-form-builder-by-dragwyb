@@ -113,6 +113,8 @@
       padding: 0;
       display: flex;
       flex-direction: column;
+      max-height: 250px;
+      overflow: auto;
     }
 
     &__item {
