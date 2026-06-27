@@ -633,8 +633,8 @@ abstract class Field_Base extends Register_Controls_Base {
 			$condition_data[] = array(
 				'field_id' => $logic_attributes['condition_field_id'],
 				'value'    => $logic_attributes['condition_value'],
-				'operator' => $logic_attributes['condition_operator'],
-				'action'   => $logic_attributes['condition_action'],
+				'operator' => $this->field_key_exist( $logic_attributes, 'condition_operator', 'equal' ),
+				'action'   => $this->field_key_exist( $logic_attributes, 'condition_action', 'show' ),
 			);
 		}
 

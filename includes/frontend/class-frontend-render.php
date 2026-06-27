@@ -12,6 +12,7 @@ use Dragwyb\Form_Builder\Includes\Toolbars\Toolbars;
 use Dragwyb\Form_Builder\Includes\Toolbars\Toolbar_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Fonts\Fonts_Helper;
 use Dragwyb\Form_Builder\Includes\Dragwyb_Init;
+use Dragwyb\Form_Builder\Includes\Helper\Helper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -455,6 +456,17 @@ class Frontend_Render {
 
 		wp_enqueue_script( 'dragwyb-form-frontend' );
 
+		if ( ! Helper::is_preview_mode() ) {
+			wp_register_script(
+				'dragwyb-form-conditional',
+				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/js/conditional-field.min.js' ),
+				array( 'dragwyb-form-frontend' ),
+				esc_attr( DRAGWYB_FORM_BUILDER_VERSION ),
+				true
+			);
+			wp_enqueue_script( 'dragwyb-form-conditional' );
+		}
+
 		$dragwyb_fontend_localize_data = apply_filters( 'Dragwyb/Frontend/Localize_Settings', array() );
 
 		self::$frontend_localize_data = array_merge(
@@ -506,7 +518,9 @@ class Frontend_Render {
 
 		$dragwyb_fontend_localize_data = apply_filters( 'Dragwyb/Frontend/Form/Localize_Settings', $dragwyb_fontend_localize_data, self::$form_id );
 
-		$dragwyb_fontend_localize_data['nonce'] = wp_create_nonce( self::get_submission_key( self::$form_id ) );
+		if ( ! Helper::is_preview_mode() ) {
+			$dragwyb_fontend_localize_data['nonce'] = wp_create_nonce( self::get_submission_key( self::$form_id ) );
+		}
 
 		self::$frontend_localize_data[ 'form_' . self::$form_id ] = $dragwyb_fontend_localize_data;
 
@@ -516,6 +530,10 @@ class Frontend_Render {
 
 		if ( ! in_array( self::$form_id, self::$frontend_localize_data['render_forms'] ) ) {
 			self::$frontend_localize_data['render_forms'][] = self::$form_id;
+		}
+
+		if ( Helper::is_preview_mode() ) {
+			self::$frontend_localize_data['isPreview'] = true;
 		}
 
 		wp_localize_script( 'dragwyb-form-frontend', 'DragwybFrontendData', self::$frontend_localize_data );
