@@ -135,7 +135,7 @@
         flex-shrink: 0;
         color: hsl(var(--dragwyb-primary));
       }
-      
+
       span {
         white-space: nowrap;
       }
@@ -1172,7 +1172,6 @@
   border-radius: 6px;
   margin-bottom: 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  overflow: hidden;
 
   .dragwyb-setting-row:last-child {
     margin-bottom: 16px;
