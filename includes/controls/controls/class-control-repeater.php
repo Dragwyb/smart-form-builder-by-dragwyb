@@ -103,7 +103,8 @@ class Control_Repeater extends Control_Base {
 
 				$control_obj = $control_obj::newInstance();
 
-				$control_obj->set_value( $value, $field );
+				$control_settings_arr = isset( $settings['items'][ $field ] ) && is_array( $settings['items'][ $field ] ) ? $settings['items'][ $field ] : array();
+				$control_obj->set_value( $value, $field, $control_settings_arr );
 				$filtered_value = $control_obj->get_value();
 
 				if ( isset( $filtered_value ) && $filtered_value ) {
@@ -148,6 +149,7 @@ class Control_Repeater extends Control_Base {
 		$repeater_fields = $fields_settings['items'];
 
 		$data = array();
+
 		foreach ( $fields as $index => $field ) {
 			$data[ $index ] = array();
 
@@ -171,7 +173,8 @@ class Control_Repeater extends Control_Base {
 
 				$control_obj = $control_obj::newInstance();
 
-				$control_obj->set_value( $value, $key );
+				$control_settings_arr = isset( $fields_settings['items'][ $key ] ) && is_array( $fields_settings['items'][ $key ] ) ? $fields_settings['items'][ $key ] : array();
+				$control_obj->set_value( $value, $key, $control_settings_arr );
 				$filtered_value = $control_obj->get_value();
 
 				if ( isset( $filtered_value ) && $filtered_value ) {
