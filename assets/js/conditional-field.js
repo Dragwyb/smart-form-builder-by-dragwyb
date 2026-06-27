@@ -54,9 +54,28 @@ class DragwybConditionalFields {
 
                 if (shouldShow) {
                     $wrapper.show();
+                    // Restore required attribute if it was originally required
+                    $targetInput.each((_, el) => {
+                        const $el = jQuery(el);
+                        if ($el.data('dragwyb-required') === true || $el.attr('data-dragwyb-required') === 'true') {
+                            $el.prop('required', true);
+                            $el.attr('required', 'required');
+                        }
+                    });
                 } else {
                     $wrapper.hide();
                     this.clearFieldError($targetInput);
+                    // Store original required attribute and remove it
+                    $targetInput.each((_, el) => {
+                        const $el = jQuery(el);
+                        const isRequired = el.hasAttribute('required') || $el.prop('required') || $el.data('dragwyb-required') === true || $el.attr('data-dragwyb-required') === 'true';
+                        if (isRequired) {
+                            $el.data('dragwyb-required', true);
+                            $el.attr('data-dragwyb-required', 'true');
+                            $el.prop('required', false);
+                            $el.removeAttr('required');
+                        }
+                    });
                 }
             }
         });
