@@ -39,6 +39,10 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
     #onSubmit(event) {
         event.preventDefault();
 
+        if (this.elements.$form.closest('#dragwyb-preview-wrapper').length || window.DragwybFrontendData.isPreview === '1') {
+            return;
+        }
+
         // Trigger action before submit
         DragwybBuilder.Hooks.doAction('dragwyb/frontend/form/before_submit' + this.formId, event, this);
 
@@ -170,6 +174,7 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
     handleFieldValidation(element) {
         const $field = jQuery(element);
         if ($field.is('[type="submit"], [type="button"], [type="hidden"]')) return true;
+        if (!$field.is(':visible')) return true;
 
         const validation = this.validateField(element);
 
