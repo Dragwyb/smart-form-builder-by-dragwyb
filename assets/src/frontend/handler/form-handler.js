@@ -175,6 +175,7 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
         const $field = jQuery(element);
         if ($field.is('[type="submit"], [type="button"], [type="hidden"]')) return true;
         if (!$field.is(':visible')) return true;
+        if ($field.closest('.dragwyb-field-wrapper').length > 0 && !$field.closest('.dragwyb-field-wrapper').is(':visible')) return true;
 
         const validation = this.validateField(element);
 
