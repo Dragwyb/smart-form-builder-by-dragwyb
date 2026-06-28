@@ -1,16 +1,15 @@
 /**
  * Frontend Conditional Fields logic
  */
-class DragwybConditionalFields {
-    constructor($container, formId) {
-        this.$container = $container;
-        this.formId = formId;
-        this.$form = $container.is('form') ? $container : $container.find('form.dragwyb-form');
-        this.conditions = window.DragwybFrontendData && window.DragwybFrontendData[`form_${formId}`] && window.DragwybFrontendData[`form_${formId}`].conditions ? window.DragwybFrontendData[`form_${formId}`].conditions : {};
-        this.init();
+class DragwybConditionalFields extends DragwybBuilder.DragwybFormFrontendBase {
+    bindElements() {
+        this.elements.$form = this.$container.is('form') ? this.$container : this.$container.find('form.dragwyb-form');
     }
 
     init() {
+        const formId = this.getFormId();
+        this.conditions = window.DragwybFrontendData && window.DragwybFrontendData[`form_${formId}`] && window.DragwybFrontendData[`form_${formId}`].conditions ? window.DragwybFrontendData[`form_${formId}`].conditions : {};
+
         if (!this.conditions || Object.keys(this.conditions).length === 0) {
             return;
         }
@@ -21,7 +20,7 @@ class DragwybConditionalFields {
     bindEvents() {
         // Listen to change and input events on all form inputs.
         // The 'input' event captures rangeSlider movements in real-time as it bubbles up.
-        this.$form.on('change input', 'input, select, textarea', () => {
+        this.getElements('$form').on('change input', 'input, select, textarea', () => {
             this.evaluateAllConditions();
         });
     }
@@ -44,7 +43,8 @@ class DragwybConditionalFields {
             });
 
             // Find target element wrapper
-            const $targetInput = this.$form.find(`[name="${targetFieldId}"], [name="${targetFieldId}[]"]`);
+            const $form = this.getElements('$form');
+            const $targetInput = $form.find(`[name="${targetFieldId}"], [name="${targetFieldId}[]"]`);
             const $wrapper = $targetInput.first().closest('.dragwyb-field-wrapper');
 
             if ($wrapper.length) {
@@ -82,15 +82,16 @@ class DragwybConditionalFields {
     }
 
     getFieldValue(fieldId) {
-        let $field = this.$form.find(`[name="${fieldId}"], [name="${fieldId}[]"]`);
+        const $form = this.getElements('$form');
+        let $field = $form.find(`[name="${fieldId}"], [name="${fieldId}[]"]`);
         if (!$field.length) {
             return '';
         }
 
         if ($field.is(':radio')) {
-            return this.$form.find(`[name="${fieldId}"]:checked, [name="${fieldId}[]"]:checked`).val() || '';
+            return $form.find(`[name="${fieldId}"]:checked, [name="${fieldId}[]"]:checked`).val() || '';
         } else if ($field.is(':checkbox')) {
-            const checkedValues = this.$form.find(`[name="${fieldId}"]:checked, [name="${fieldId}[]"]:checked`).map((_, el) => jQuery(el).val()).get();
+            const checkedValues = $form.find(`[name="${fieldId}"]:checked, [name="${fieldId}[]"]:checked`).map((_, el) => jQuery(el).val()).get();
             if ($field.length > 1) {
                 return checkedValues;
             }
