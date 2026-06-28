@@ -591,7 +591,7 @@ abstract class Field_Base extends Register_Controls_Base {
 					),
 				),
 				'add_item'   => __( 'Add Condition', 'smart-form-builder-by-dragwyb' ),
-				'item_label' => 'condition_field_id',
+				'item_label' => '{{condition_field_id}} {{condition_operator}} {{condition_value}}',
 				'conditions' => array(
 					'enable_logic' => 'yes',
 				),
