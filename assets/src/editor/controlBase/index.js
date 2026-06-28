@@ -185,6 +185,7 @@ class DragwybControlBase extends Component {
 
     RenderLabel({ label = null, className = '', attr = {}, children = null }) {
         label = label || this.settings.label;
+        const defaultValue = this.settings.default || '';
 
         if (!label) {
             return null;
@@ -213,7 +214,7 @@ class DragwybControlBase extends Component {
                             <FaDatabase size={10} />
                         </span>
                     )}
-                    {this.state.value && <span className="dragwyb-control__reset" onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.resetControl(); }}>
+                    {this.state.value && this.state.value !== defaultValue && <span className="dragwyb-control__reset" onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.resetControl(); }}>
                         <FaUndo size={12} title={__('Reset to Default', 'smart-form-builder-by-dragwyb')} />
                     </span>}
                     {isDynamicSupported && this.state.showDynamicMenu && (
