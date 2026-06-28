@@ -174,7 +174,7 @@ class Form_Submission_Handler {
 			}
 		}
 
-		foreach ( $form_data as $field_value ) {
+		foreach ( $form_data as $field_key_index => $field_value ) {
 			$field_orignal_key = sanitize_text_field( $field_value['name'] );
 			$field_key         = substr( $field_orignal_key, 6 );
 
@@ -192,6 +192,14 @@ class Form_Submission_Handler {
 				}
 
 				$field_type = $field_data['type'];
+
+				// Evaluate conditional logic.
+				$condition_checker = new Condition_Field_Methods();
+				$condition_checker->set_field_config( $field_data );
+				if ( ! $condition_checker->is_matched( $this->raw_data ) ) {
+					unset( $this->raw_data[ $field_key_index ] );
+					continue;
+				}
 
 				$this->set_fields_sanitized_values( $field_type, $field_orignal_key, $field_data, $field_value['value'] );
 
