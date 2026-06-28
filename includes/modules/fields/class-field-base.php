@@ -518,6 +518,25 @@ abstract class Field_Base extends Register_Controls_Base {
 		$conditional_repeater = new Repeater();
 
 		$conditional_repeater->add_control(
+			'condition_action',
+			array(
+				'type'    => Controls::CHOOSE,
+				'label'   => __( 'Show / Hide', 'smart-form-builder-by-dragwyb' ),
+				'default' => 'show',
+				'options' => array(
+					'hide' => array(
+						'title' => __( 'Hide', 'smart-form-builder-by-dragwyb' ),
+						'icon'  => 'fas fa-eye-slash',
+					),
+					'show' => array(
+						'title' => __( 'Show', 'smart-form-builder-by-dragwyb' ),
+						'icon'  => 'fas fa-eye',
+					),
+				),
+			)
+		);
+
+		$conditional_repeater->add_control(
 			'condition_field_id',
 			array(
 				'type'          => Controls::TEXT,
@@ -527,15 +546,6 @@ abstract class Field_Base extends Register_Controls_Base {
 				'dynamic_tag'   => array(
 					'active' => false,
 				),
-			)
-		);
-
-		$conditional_repeater->add_control(
-			'condition_value',
-			array(
-				'type'        => Controls::TEXT,
-				'label'       => __( 'Value', 'smart-form-builder-by-dragwyb' ),
-				'description' => __( 'The value to compare against.', 'smart-form-builder-by-dragwyb' ),
 			)
 		);
 
@@ -558,14 +568,11 @@ abstract class Field_Base extends Register_Controls_Base {
 		);
 
 		$conditional_repeater->add_control(
-			'condition_action',
+			'condition_value',
 			array(
-				'type'         => Controls::SWITCHER,
-				'label'        => __( 'Action', 'smart-form-builder-by-dragwyb' ),
-				'default'      => 'yes',
-				'return_value' => 'yes',
-				'on_label'     => __( 'Show', 'smart-form-builder-by-dragwyb' ),
-				'off_label'    => __( 'Hide', 'smart-form-builder-by-dragwyb' ),
+				'type'        => Controls::TEXT,
+				'label'       => __( 'Value', 'smart-form-builder-by-dragwyb' ),
+				'description' => __( 'The value to compare against.', 'smart-form-builder-by-dragwyb' ),
 			)
 		);
 
@@ -580,7 +587,7 @@ abstract class Field_Base extends Register_Controls_Base {
 						'condition_field_id' => '',
 						'condition_value'    => '',
 						'condition_operator' => 'equal',
-						'condition_action'   => 'yes',
+						'condition_action'   => 'show',
 					),
 				),
 				'add_item'   => __( 'Add Condition', 'smart-form-builder-by-dragwyb' ),
