@@ -66,7 +66,7 @@ class Condition_Field_Methods {
 				continue;
 			}
 
-			$action = $cond_attrs['condition_action'] ?? 'no';
+			$action = $cond_attrs['condition_action'] ?? 'hide';
 
 			// Get the submitted value for the dependency field.
 			$dep_field_id = $cond_attrs['condition_field_id'];
@@ -84,7 +84,7 @@ class Condition_Field_Methods {
 
 		// If action is 'yes' (Show): show/match if met, hide/not match if not met.
 		// If action is 'no' (Hide): hide/not match if met, show/match if not met.
-		return ( 'yes' === $action ) ? $conditions_met : ! $conditions_met;
+		return ( 'show' === $action ) ? $conditions_met : ! $conditions_met;
 	}
 
 	/**
