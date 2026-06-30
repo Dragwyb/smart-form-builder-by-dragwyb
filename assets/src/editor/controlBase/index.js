@@ -96,6 +96,7 @@ class DragwybControlBase extends Component {
         if (this.state.showDynamicMenu) {
             const button = document.getElementById(`dynamic-btn-${this.id}`);
             const dropdown = document.getElementById(`dynamic-dropdown-${this.id}`);
+
             if (button && !button.contains(e.target) && dropdown && !dropdown.contains(e.target)) {
                 this.setState({ showDynamicMenu: false });
             }
@@ -206,7 +207,6 @@ class DragwybControlBase extends Component {
                             className={`dragwyb-control__dynamic${this.state.value ? ' has-reset' : ''}`}
                             onClick={(e) => {
                                 e.preventDefault();
-                                e.stopPropagation();
                                 this.setState(prev => ({ showDynamicMenu: !prev.showDynamicMenu }));
                             }}
                             title={__('Dynamic Tags', 'smart-form-builder-by-dragwyb')}
