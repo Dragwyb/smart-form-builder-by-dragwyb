@@ -139,7 +139,7 @@ class Field_Step extends Field_Base {
 			// Step Indicator item html.
 			$step_indicator_html = '<div class="dragwyb-step-item' . ( $is_active_step ? ' active' : '' ) . '" data-step="' . esc_attr( $id ) . '"><div class="dragwyb-step-dot"><div class="dragwyb-step-number">' . absint( $step_index ) . '</div></div>';
 			if ( ! empty( $label ) ) {
-				$step_indicator_html .= '<div class="dragwyb-step-title"/>' . esc_html( $label ) . '</div>';
+				$step_indicator_html .= '<div class="dragwyb-step-title">' . esc_html( $label ) . '</div>';
 			}
 			$step_indicator_html .= '</div>';
 
