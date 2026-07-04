@@ -67,7 +67,7 @@ const RenderItem = React.memo(({
         listeners,
         setNodeRef: dragRef,
         isDragging,
-    } = allowedChildren === true && isButtonContainer === false ? useDraggable({
+    } = (allowedChildren === true || isRootContainer === true) && isButtonContainer === false ? useDraggable({
         id: `canvas-drag-field-${field._id}`,
         data: {
             canvasDrag: true,
@@ -92,7 +92,7 @@ const RenderItem = React.memo(({
         wrapperClass.push(field.css_classes);
     }
 
-    if (allowedChildren === true) {
+    if (allowedChildren === true || isRootContainer === true) {
         wrapperClass.push(`dragwyb-${field.type}`, 'dragwyb-has-actions');
         id = `dragwyb-${field.type}-${field._id}`;
     }

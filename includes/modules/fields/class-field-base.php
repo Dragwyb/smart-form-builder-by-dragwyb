@@ -243,8 +243,10 @@ abstract class Field_Base extends Register_Controls_Base {
 	public function render() {
 		$this->field_attributes = array();
 		$this->enqueue_assets();
-		$this->render_field();
+		$field_content = $this->render_field();
 		$this->localize_condition_data();
+
+		return $field_content;
 	}
 
 	/**

@@ -747,5 +747,139 @@ class Settings extends Register_Controls_Base {
 		);
 
 		$this->end_section();
+
+		// SECTION 6: STEPS STYLING
+		$this->start_section(
+			'section_steps_style',
+			array(
+				'label' => __( 'Steps Styling', 'smart-form-builder-by-dragwyb' ),
+			)
+		);
+
+		$this->add_control(
+			'step_indicator_type',
+			array(
+				'type'         => Controls::SELECT,
+				'label'        => __( 'Indicator Type', 'smart-form-builder-by-dragwyb' ),
+				'options'      => array(
+					'numbers'  => __( 'Numbers & Labels', 'smart-form-builder-by-dragwyb' ),
+					'progress' => __( 'Progress Bar', 'smart-form-builder-by-dragwyb' ),
+					'dots'     => __( 'Dots Only', 'smart-form-builder-by-dragwyb' ),
+					'none'     => __( 'None', 'smart-form-builder-by-dragwyb' ),
+				),
+				'default'      => 'numbers',
+				'label_inline' => true,
+			)
+		);
+
+		$this->add_control(
+			'step_active_color',
+			array(
+				'type'      => Controls::COLOR,
+				'label'     => __( 'Active Color', 'smart-form-builder-by-dragwyb' ),
+				'default'   => '#1d4ed8',
+				'selectors' => array(
+					'{{WRAPPER}} .dragwyb-step-item.active .dragwyb-step-dot' => 'border-color: {{VALUE}}; background-color: {{VALUE}};',
+					'{{WRAPPER}} .dragwyb-step-item.active .dragwyb-step-dot .dragwyb-step-number' => 'color: #ffffff;',
+					'{{WRAPPER}} .dragwyb-step-item.active .dragwyb-step-title' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .dragwyb-step-progress-fill' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}} .dragwyb-step-item.completed .dragwyb-step-dot' => 'border-color: {{VALUE}}; background-color: #ffffff;',
+					'{{WRAPPER}} .dragwyb-step-item.completed .dragwyb-step-dot .dragwyb-step-number' => 'color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_control(
+			'step_inactive_color',
+			array(
+				'type'      => Controls::COLOR,
+				'label'     => __( 'Inactive Color', 'smart-form-builder-by-dragwyb' ),
+				'default'   => '#9ca3af',
+				'selectors' => array(
+					'{{WRAPPER}} .dragwyb-step-item .dragwyb-step-dot' => 'border-color: {{VALUE}};',
+					'{{WRAPPER}} .dragwyb-step-item .dragwyb-step-dot .dragwyb-step-number' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .dragwyb-step-item .dragwyb-step-title' => 'color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_control(
+			'step_text_color',
+			array(
+				'type'      => Controls::COLOR,
+				'label'     => __( 'Divider Text Color', 'smart-form-builder-by-dragwyb' ),
+				'default'   => '#374151',
+				'selectors' => array(
+					'{{WRAPPER}} .dragwyb-step-divider-text' => 'color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_control(
+			'step_line_color',
+			array(
+				'type'      => Controls::COLOR,
+				'label'     => __( 'Line/Connector Color', 'smart-form-builder-by-dragwyb' ),
+				'default'   => '#e5e7eb',
+				'selectors' => array(
+					'{{WRAPPER}} .dragwyb-step-divider::before, {{WRAPPER}} .dragwyb-step-divider::after' => 'border-bottom-color: {{VALUE}};',
+					'{{WRAPPER}} .dragwyb-step-indicator::before' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}} .dragwyb-step-progress-bar' => 'background-color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_control(
+			'step_divider_style',
+			array(
+				'type'         => Controls::SELECT,
+				'label'        => __( 'Line Style', 'smart-form-builder-by-dragwyb' ),
+				'options'      => array(
+					'solid'  => __( 'Solid', 'smart-form-builder-by-dragwyb' ),
+					'dashed' => __( 'Dashed', 'smart-form-builder-by-dragwyb' ),
+					'dotted' => __( 'Dotted', 'smart-form-builder-by-dragwyb' ),
+				),
+				'default'      => 'solid',
+				'label_inline' => true,
+				'selectors' => array(
+					'{{WRAPPER}} .dragwyb-step-divider::before, {{WRAPPER}} .dragwyb-step-divider::after' => 'border-bottom-style: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_control(
+			'step_divider_thickness',
+			array(
+				'type'      => Controls::SLIDER,
+				'label'     => __( 'Line Thickness', 'smart-form-builder-by-dragwyb' ),
+				'default'   => array(
+					'size' => 2,
+					'unit' => 'px',
+				),
+				'range'     => array(
+					'px' => array(
+						'min' => 1,
+						'max' => 10,
+					),
+				),
+				'selectors' => array(
+					'{{WRAPPER}} .dragwyb-step-divider::before, {{WRAPPER}} .dragwyb-step-divider::after' => 'border-bottom-width: {{VALUE}}{{UNIT}};',
+					'{{WRAPPER}} .dragwyb-step-indicator::before' => 'height: {{VALUE}}{{UNIT}};',
+					'{{WRAPPER}} .dragwyb-step-progress-bar' => 'height: {{VALUE}}{{UNIT}};',
+				),
+			)
+		);
+
+		$this->add_group_control(
+			'step_typography',
+			array(
+				'type'     => Controls::GROUP_TYPOGRAPHY,
+				'label'    => __( 'Step Typography', 'smart-form-builder-by-dragwyb' ),
+				'selector' => '{{WRAPPER}} .dragwyb-step-title, {{WRAPPER}} .dragwyb-step-divider-text',
+				'prefix'   => 'step',
+			)
+		);
+
+		$this->end_section();
 	}
 }

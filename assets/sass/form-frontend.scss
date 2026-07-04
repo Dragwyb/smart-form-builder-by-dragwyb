@@ -178,11 +178,14 @@
 }
 
 .dragwyb-form {
-    display: flex;
-    gap: var(--dragwyb-field-gap);
-    flex-wrap: wrap;
+    &:not(.dragwyb-step-form) {
+        display: flex;
+        gap: var(--dragwyb-field-gap);
+        flex-wrap: wrap;
+        justify-content: var(--dragwyb-form-justify-content, left);
+    }
+
     box-sizing: border-box;
-    justify-content: var(--dragwyb-form-justify-content, left);
     margin: 0;
 }
 
@@ -678,6 +681,219 @@
     .dragwyb-captcha-container {
         margin: var(--dragwyb-captcha-mt, 0) var(--dragwyb-captcha-mr, 0) var(--dragwyb-captcha-mb, 0) var(--dragwyb-captcha-ml, 0);
         padding: var(--dragwyb-captcha-pt, 0) var(--dragwyb-captcha-pr, 0) var(--dragwyb-captcha-pb, 0) var(--dragwyb-captcha-pl, 0);
+    }
+
+    /* Step Divider (Centered line and text) */
+    .dragwyb-step-divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: var(--dragwyb-step-margin-top, 25px) 0 var(--dragwyb-step-margin-bottom, 25px) 0;
+        width: 100%;
+
+        &::before,
+        &::after {
+            content: '';
+            flex: 1;
+            border-bottom-style: var(--dragwyb-step-divider-style, solid);
+            border-bottom-width: var(--dragwyb-step-divider-thickness, 2px);
+            border-bottom-color: var(--dragwyb-step-line-color, #e5e7eb);
+        }
+
+        &:not(:empty)::before {
+            margin-right: 15px;
+        }
+
+        &:not(:empty)::after {
+            margin-left: 15px;
+        }
+
+        .dragwyb-step-divider-text {
+            padding: 0 15px;
+            font-weight: var(--dragwyb-step-typography-wt, 600);
+            font-size: var(--dragwyb-step-typography-size, 16px);
+            font-family: var(--dragwyb-step-typography-family, inherit);
+            color: var(--dragwyb-step-text-color, #374151);
+        }
+    }
+
+    /* Frontend Step field */
+    .dragwyb-step-field {
+        display: flex;
+        gap: var(--dragwyb-field-gap);
+        flex-wrap: wrap;
+        box-sizing: border-box;
+        justify-content: var(--dragwyb-form-justify-content, left);
+        margin: 0;
+        width: 100%;
+
+        &_hidden {
+            display: none;
+        }
+    }
+
+    /* Step Indicator Container at top of form */
+    .dragwyb-step-indicator-container {
+        width: 100%;
+        margin-bottom: 30px;
+    }
+
+    /* Step Indicator - Numbers/Dots Style */
+    .dragwyb-step-indicator {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        margin: 0 auto 10px auto;
+        padding: 0;
+        width: 100%;
+
+        /* Connecting line between steps */
+        &::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            /* aligns with center of dots */
+            left: 0;
+            right: 0;
+            height: var(--dragwyb-step-divider-thickness, 2px);
+            background-color: var(--dragwyb-step-line-color, #e5e7eb);
+            z-index: 1;
+        }
+
+        .dragwyb-step-item {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            z-index: 2;
+
+            .dragwyb-step-dot {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background-color: #ffffff;
+                border: var(--dragwyb-step-divider-thickness, 2px) solid var(--dragwyb-step-line-color, #e5e7eb);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+                margin-bottom: 8px;
+
+                .dragwyb-step-number {
+                    font-weight: 600;
+                    font-size: 14px;
+                    color: var(--dragwyb-step-inactive-color, #9ca3af);
+                }
+            }
+
+            .dragwyb-step-title {
+                font-size: var(--dragwyb-step-typography-size, 14px);
+                font-weight: var(--dragwyb-step-typography-wt, 500);
+                font-family: var(--dragwyb-step-typography-family, inherit);
+                color: var(--dragwyb-step-inactive-color, #6b7280);
+                text-align: center;
+            }
+
+            /* Active State */
+            &.active {
+                .dragwyb-step-dot {
+                    border-color: var(--dragwyb-step-active-color, #1d4ed8);
+                    background-color: var(--dragwyb-step-active-color, #1d4ed8);
+
+                    .dragwyb-step-number {
+                        color: #ffffff;
+                    }
+                }
+
+                .dragwyb-step-title {
+                    color: var(--dragwyb-step-active-color, #1d4ed8);
+                    font-weight: 600;
+                }
+            }
+
+            /* Completed State */
+            &.completed {
+                .dragwyb-step-dot {
+                    border-color: var(--dragwyb-step-active-color, #1d4ed8);
+                    background-color: #ffffff;
+
+                    .dragwyb-step-number {
+                        color: var(--dragwyb-step-active-color, #1d4ed8);
+                    }
+                }
+
+                .dragwyb-step-title {
+                    color: var(--dragwyb-step-active-color, #1d4ed8);
+                }
+            }
+        }
+    }
+
+    /* Dots Only Mode overrides */
+    &[data-step-indicator="dots"] {
+        .dragwyb-step-indicator {
+            &::before {
+                top: 8px;
+            }
+
+            .dragwyb-step-item {
+                .dragwyb-step-dot {
+                    width: 16px;
+                    height: 16px;
+
+                    .dragwyb-step-number {
+                        display: none;
+                    }
+                }
+
+                .dragwyb-step-title {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    /* Progress Bar Style */
+    .dragwyb-step-progress-wrapper {
+        width: 100%;
+
+        .dragwyb-step-progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--dragwyb-step-line-color, #e5e7eb);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .dragwyb-step-progress-fill {
+            height: 100%;
+            background-color: var(--dragwyb-step-active-color, #1d4ed8);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .dragwyb-step-progress-text {
+            font-size: 14px;
+            color: var(--dragwyb-step-text-color, #6b7280);
+            font-weight: 500;
+        }
+    }
+
+    /* Step Navigation Buttons */
+    .dragwyb-step-navigation {
+        display: flex;
+        gap: 15px;
+        width: 100%;
+        justify-content: flex-start;
+
+        .dragwyb-step-next {
+            margin-left: auto;
+            /* Push Next button to the right */
+        }
     }
 }
 

@@ -544,6 +544,21 @@ class captchaField extends DragwybEditor.editor.extends.FieldBase {
     }
 }
 
+class stepField extends DragwybEditor.editor.extends.FieldBase {
+    fieldName() { return 'step'; }
+    bind() {
+        if (!this.shouldRender()) return <></>;
+        const s = this.attributes;
+        return (
+            <div className="dragwyb-step-divider">
+                <span className="dragwyb-step-divider-line"></span>
+                <span className="dragwyb-step-divider-text">{s.label || 'Next Step'}</span>
+                <span className="dragwyb-step-divider-line"></span>
+            </div>
+        );
+    }
+}
+
 const initializeFields = () => {
     const defaultFields = {
         'text': (args) => new textField(args),
@@ -567,6 +582,7 @@ const initializeFields = () => {
         'html': (args) => new htmlField(args),
         'section': (args) => new sectionField(args),
         'captcha': (args) => new captchaField(args),
+        'step': (args) => new stepField(args),
     };
 
     Object.keys(defaultFields).forEach(key =>

@@ -200,7 +200,8 @@ class Frontend_Render {
 			return ob_get_clean();
 		}
 
-		echo '<form class="dragwyb-form" id="dragwyb-form-' . esc_attr( self::$form_id ) . '">';
+		$style_settings      = $this->get_toolbars_values( 'style' );
+		$step_indicator_type = isset( $style_settings['step_indicator_type'] ) ? $style_settings['step_indicator_type'] : 'numbers';
 
 		$advance_settings = $this->get_toolbars_values( 'advance' );
 		if ( isset( $advance_settings['honeypot'] ) && $advance_settings['honeypot'] === 'yes' ) {
@@ -208,6 +209,11 @@ class Frontend_Render {
 			echo '<input type="text" name="dragwyb_h_email" value="" tabindex="-1" autocomplete="off" />';
 			echo '</div>';
 		}
+
+		$is_steps_form              = false;
+		$step_form_current_position = 0;
+		$step_form_index            = 1;
+		$step_navigation_html       = '';
 
 		foreach ( self::$root_containers as $root_container ) {
 			$row_field = self::$fields[ $root_container ];
@@ -226,6 +232,10 @@ class Frontend_Render {
 
 			if ( ! self::$field_module_cache[ $type ] instanceof Field_Base ) {
 				return;
+			}
+
+			if ( $is_steps_form && 'step' !== $type ) {
+				continue;
 			}
 
 			$is_root_container = self::$field_module_cache[ $type ]->is_root_container();
@@ -254,27 +264,64 @@ class Frontend_Render {
 				self::$field_module_cache[ $type ]->set_the_id( sanitize_text_field( $field_data['_id'] ) );
 				self::$field_module_cache[ $type ]->set_frontend_handler( $this );
 
-				if ( isset( $row_field['attributes'] ) && ! empty( $row_field['attributes'] ) ) {
-					$attributes               = $row_field['attributes'];
-					$field_data['attributes'] = array();
-					$this->attributes_loop( $attributes, $type, $field_data );
+				$field_data['attributes'] = array();
+				if ( isset( $row_field['children'] ) ) {
 					$field_data['attributes'] = array_merge( $field_data['attributes'], array( 'children' => $row_field['children'] ) );
+				}
+
+				if ( 'step' === $type && ! $is_steps_form ) {
+					$is_steps_form                           = true;
+					$field_data['attributes']['step_active'] = true;
+				}
+
+				if ( 'step' === $type ) {
+					$step_form_current_position = array_search( $row_field['_id'], self::$root_containers, true );
+					$next_form_fields           = array_slice( self::$root_containers, $step_form_current_position + 1 );
+
+					$field_data['attributes']['root_containers'] = $next_form_fields;
+					$field_data['attributes']['form_fields']     = self::$fields;
+					$field_data['attributes']['step_index']      = $step_form_index;
+					$field_data['attributes']['indicator_type']  = $step_indicator_type;
+					++$step_form_index;
+				}
+
+				if ( isset( $row_field['attributes'] ) && ! empty( $row_field['attributes'] ) ) {
+					$attributes = $row_field['attributes'];
+					$this->attributes_loop( $attributes, $type, $field_data );
 					self::$field_module_cache[ $type ]->set_field_settings( $field_data['attributes'] );
 				} else {
-					$field_data['attributes'] = array();
-					$field_data['attributes'] = array_merge( $field_data['attributes'], array( 'children' => $row_field['children'] ) );
 					self::$field_module_cache[ $type ]->set_field_settings( $field_data['attributes'] );
 				}
 
-				self::$field_module_cache[ $type ]->render();
+				if ( 'step' === $type ) {
+					$step_navigation_html .= self::$field_module_cache[ $type ]->render();
+				} else {
+					self::$field_module_cache[ $type ]->render();
+				}
 			}
 
 			$field_data = null;
 		}
 
-		echo '</form>';
+		$fields_html = ob_get_clean();
+		$form_html   = '<form class="dragwyb-form' . ( $is_steps_form ? ' dragwyb-step-form' : '' ) . '" id="dragwyb-form-' . esc_attr( self::$form_id ) . '" data-step-indicator="' . esc_attr( $step_indicator_type ) . '">';
+		if ( $is_steps_form ) {
+			if ( ! empty( $step_navigation_html ) ) {
+				$form_html .= '<div class="dragwyb-step-indicator-container"><div class="dragwyb-step-indicator"/>' . $step_navigation_html . '</div></div>';
+			} elseif ( 'progress' === $step_indicator_type ) {
+				$form_html .= '<div class="dragwyb-step-indicator-container" id="indicator-bar" style="display: block;">
+            <div class="dragwyb-step-progress-wrapper">
+                <span class="dragwyb-step-progress-text" id="progress-text">' . esc_html__( 'Step 1 of ' . $step_form_index, 'smart-form-builder-by-dragwyb' ) . '</span>
+                <div class="dragwyb-step-progress-bar">
+                    <div class="dragwyb-step-progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+        </div>';
+			}
+		}
+		$form_html .= $fields_html . '</form>';
 
-		return ob_get_clean();
+		return $form_html;
 	}
 
 	private function attributes_loop( $attributes, $type, &$field_data ): void {
