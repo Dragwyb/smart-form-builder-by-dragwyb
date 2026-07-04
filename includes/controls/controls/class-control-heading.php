@@ -31,6 +31,7 @@ class Control_Heading extends Control_Base {
 	 */
 	protected function register_settings(): array {
 		return array(
+			'name'      => 'string',
 			'label'     => 'string',
 			'separator' => 'string', // 'before', 'after', or 'none'
 		);

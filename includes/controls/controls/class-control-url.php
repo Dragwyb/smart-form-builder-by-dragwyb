@@ -8,6 +8,7 @@ class Control_Url extends Control_Base {
 
 	protected function register_settings() {
 		return array(
+			'name'          => 'string',
 			'label'         => 'string',
 			'default'       => 'url', // Custom sanitizer below
 			'placeholder'   => 'string',

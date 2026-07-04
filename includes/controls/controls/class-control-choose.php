@@ -18,6 +18,7 @@ class Control_Choose extends Control_Base {
 
 	protected function register_settings() {
 		return array(
+			'name'         => 'string',
 			'label'        => 'string',
 			'default'      => 'string',
 			'options'      => 'options', // Custom type handled below
