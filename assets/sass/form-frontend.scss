@@ -888,11 +888,10 @@
         display: flex;
         gap: 15px;
         width: 100%;
-        justify-content: flex-start;
+        justify-content: space-between;
 
-        .dragwyb-step-next {
-            margin-left: auto;
-            /* Push Next button to the right */
+        .dragwyb-button-field {
+            width: unset;
         }
     }
 }

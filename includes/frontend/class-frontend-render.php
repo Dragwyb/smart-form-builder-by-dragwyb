@@ -512,15 +512,6 @@ class Frontend_Render {
 				true
 			);
 			wp_enqueue_script( 'dragwyb-form-conditional' );
-
-			wp_register_script(
-				'dragwyb-form-step-field',
-				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/js/step-field.js' ),
-				array( 'dragwyb-form-frontend' ),
-				esc_attr( DRAGWYB_FORM_BUILDER_VERSION ),
-				true
-			);
-			wp_enqueue_script( 'dragwyb-form-step-field' );
 		}
 
 		$dragwyb_fontend_localize_data = apply_filters( 'Dragwyb/Frontend/Localize_Settings', array() );
