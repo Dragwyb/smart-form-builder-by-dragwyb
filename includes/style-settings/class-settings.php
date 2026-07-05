@@ -595,7 +595,7 @@ class Settings extends Register_Controls_Base {
 			array(
 				'type'       => Controls::GROUP_TYPOGRAPHY,
 				'label'      => __( 'Step Typography', 'smart-form-builder-by-dragwyb' ),
-				'selector'   => '{{WRAPPER}} .dragwyb-step-title, {{WRAPPER}} .dragwyb-step-divider-text',
+				'selector'   => '{{WRAPPER}}',
 				'prefix'     => 'step',
 				'conditions' => array(
 					'step_indicator_type!' => 'none',
