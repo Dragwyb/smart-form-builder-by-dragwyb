@@ -687,7 +687,7 @@ abstract class Field_Base extends Register_Controls_Base {
 			),
 		);
 
-		$tabs = apply_filters( 'Dragwyb/Editor/render_controls/header_tabs', $tabs );
+		$tabs = apply_filters( 'Dragwyb/Editor/render_controls/header_tabs', $tabs, $this->type );
 
 		$header_tab['header_controls'] = array(
 			'type' => 'tabs',

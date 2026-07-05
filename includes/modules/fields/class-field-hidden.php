@@ -21,7 +21,7 @@ class Field_Hidden extends Field_Base {
 		$header_tab = array();
 		$tabs       = array();
 
-		$tabs = apply_filters( 'Dragwyb/Editor/render_controls/header_tabs', $tabs );
+		$tabs = apply_filters( 'Dragwyb/Editor/render_controls/header_tabs', $tabs, $this->type );
 
 		if ( $tabs && is_array( $tabs ) && count( $tabs ) > 0 ) {
 			$header_tab['header_controls'] = array(
