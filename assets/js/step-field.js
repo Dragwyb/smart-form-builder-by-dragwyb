@@ -15,6 +15,10 @@ class DragwybStepFields extends DragwybBuilder.DragwybFormFrontendBase {
         this.steps = this.elements.$stepFields;
         this.stepsCount = this.steps.length;
 
+        if (this.elements.$form.find('.dragwyb-step-indicator-container .dragwyb-step-title').length > 0) {
+            this.elements.$form.find('.dragwyb-step-indicator-container').addClass('step-has-title');
+        }
+
         // Find initial active step index (usually 0)
         this.currentStepIdx = 0;
         this.steps.each((idx, el) => {
