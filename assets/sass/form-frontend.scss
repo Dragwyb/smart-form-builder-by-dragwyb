@@ -683,41 +683,24 @@
         padding: var(--dragwyb-captcha-pt, 0) var(--dragwyb-captcha-pr, 0) var(--dragwyb-captcha-pb, 0) var(--dragwyb-captcha-pl, 0);
     }
 
-    /* Step Divider (Centered line and text) */
+    /* Step Divider Line styling (directly styled with border-top, no pseudo-selectors) */
     .dragwyb-step-divider {
-        display: flex;
-        align-items: center;
-        text-align: center;
-        margin: var(--dragwyb-step-margin-top, 25px) 0 var(--dragwyb-step-margin-bottom, 25px) 0;
-        width: 100%;
-
-        &::before,
-        &::after {
-            content: '';
-            flex: 1;
-            border-bottom-style: var(--dragwyb-step-divider-style, solid);
-            border-bottom-width: var(--dragwyb-step-divider-thickness, 2px);
-            border-bottom-color: var(--dragwyb-step-line-color, #e5e7eb);
-        }
-
-        &:not(:empty)::before {
-            margin-right: 15px;
-        }
-
-        &:not(:empty)::after {
-            margin-left: 15px;
-        }
-
-        .dragwyb-step-divider-text {
-            padding: 0 15px;
-            font-weight: var(--dragwyb-step-typography-wt, 600);
-            font-size: var(--dragwyb-step-typography-size, 16px);
-            font-family: var(--dragwyb-step-typography-family, inherit);
-            color: var(--dragwyb-step-text-color, #374151);
-        }
+        flex: 1;
+        height: 0;
+        border-top: var(--dragwyb-step-divider-thickness, 2px) var(--dragwyb-step-divider-style, solid) var(--dragwyb-step-line-color, #e5e7eb);
+        transition: border-color 0.3s ease;
     }
 
-    /* Frontend Step field */
+    .dragwyb-step-divider-text {
+        padding: 0 15px;
+        font-weight: var(--dragwyb-step-typography-wt, 600);
+        font-size: var(--dragwyb-step-typography-size, 16px);
+        font-family: var(--dragwyb-step-typography-family, inherit);
+        color: var(--dragwyb-step-text-color, #374151);
+        white-space: nowrap;
+    }
+
+    /* Frontend Step field (container wrapping inputs / editor placeholder layout) */
     .dragwyb-step-field {
         display: flex;
         gap: var(--dragwyb-field-gap);
@@ -735,7 +718,6 @@
     /* Step Indicator Container at top of form */
     .dragwyb-step-indicator-container {
         width: 100%;
-        margin-bottom: 30px;
     }
 
     /* Step Indicator - Numbers/Dots Style */
@@ -744,29 +726,23 @@
         justify-content: space-between;
         align-items: center;
         position: relative;
-        margin: 0 auto 10px auto;
-        padding: 0;
         width: 100%;
 
-        /* Connecting line between steps */
         &::before {
-            content: '';
-            position: absolute;
-            top: 20px;
-            /* aligns with center of dots */
-            left: 0;
-            right: 0;
-            height: var(--dragwyb-step-divider-thickness, 2px);
-            background-color: var(--dragwyb-step-line-color, #e5e7eb);
-            z-index: 1;
+            display: none;
+        }
+
+        .dragwyb-step-divider {
+            width: auto;
+            display: block;
         }
 
         .dragwyb-step-item {
             position: relative;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            flex: 1;
+            align-items: flex-start;
+            flex: 0 0 40px;
             z-index: 2;
 
             .dragwyb-step-dot {
@@ -774,12 +750,11 @@
                 height: 40px;
                 border-radius: 50%;
                 background-color: #ffffff;
-                border: var(--dragwyb-step-divider-thickness, 2px) solid var(--dragwyb-step-line-color, #e5e7eb);
+                border: var(--dragwyb-step-divider-thickness, 2px) solid var(--dragwyb-step-inactive-color, #9ca3af);
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 transition: all 0.3s ease;
-                margin-bottom: 8px;
 
                 .dragwyb-step-number {
                     font-weight: 600;
@@ -789,11 +764,33 @@
             }
 
             .dragwyb-step-title {
+                position: absolute;
+                top: 48px;
+                left: 50%;
+                transform: translateX(-50%);
                 font-size: var(--dragwyb-step-typography-size, 14px);
                 font-weight: var(--dragwyb-step-typography-wt, 500);
                 font-family: var(--dragwyb-step-typography-family, inherit);
                 color: var(--dragwyb-step-inactive-color, #6b7280);
                 text-align: center;
+                white-space: nowrap;
+            }
+
+            &:first-child {
+                .dragwyb-step-title {
+                    left: 0;
+                    transform: none;
+                    text-align: left;
+                }
+            }
+
+            &:last-child {
+                .dragwyb-step-title {
+                    left: auto;
+                    right: 0;
+                    transform: none;
+                    text-align: right;
+                }
             }
 
             /* Active State */
@@ -829,16 +826,24 @@
                 }
             }
         }
+
+        .dragwyb-step-item.completed+.dragwyb-step-divider {
+            border-top-color: var(--dragwyb-step-active-color, #1d4ed8);
+        }
     }
 
     /* Dots Only Mode overrides */
     &[data-step-indicator="dots"] {
         .dragwyb-step-indicator {
-            &::before {
-                top: 8px;
+            padding-bottom: 0;
+
+            .dragwyb-step-divider {
+                margin-top: 8px;
             }
 
             .dragwyb-step-item {
+                flex: 0 0 16px;
+
                 .dragwyb-step-dot {
                     width: 16px;
                     height: 16px;

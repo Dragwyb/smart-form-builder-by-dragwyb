@@ -550,10 +550,12 @@ class stepField extends DragwybEditor.editor.extends.FieldBase {
         if (!this.shouldRender()) return <></>;
         const s = this.attributes;
         return (
-            <div className="dragwyb-step-divider">
-                <span className="dragwyb-step-divider-line"></span>
-                <span className="dragwyb-step-divider-text">{s.label || 'Next Step'}</span>
-                <span className="dragwyb-step-divider-line"></span>
+            <div className="dragwyb-step-indicator-container">
+                <div className="dragwyb-step-indicator">
+                    <span className="dragwyb-step-divider"></span>
+                    <span className="dragwyb-step-divider-text">{s.label || 'Next Step'}</span>
+                    <span className="dragwyb-step-divider"></span>
+                </div>
             </div>
         );
     }

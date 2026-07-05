@@ -779,12 +779,7 @@ class Settings extends Register_Controls_Base {
 				'label'     => __( 'Active Color', 'smart-form-builder-by-dragwyb' ),
 				'default'   => '#1d4ed8',
 				'selectors' => array(
-					'{{WRAPPER}} .dragwyb-step-item.active .dragwyb-step-dot' => 'border-color: {{VALUE}}; background-color: {{VALUE}};',
-					'{{WRAPPER}} .dragwyb-step-item.active .dragwyb-step-dot .dragwyb-step-number' => 'color: #ffffff;',
-					'{{WRAPPER}} .dragwyb-step-item.active .dragwyb-step-title' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .dragwyb-step-progress-fill' => 'background-color: {{VALUE}};',
-					'{{WRAPPER}} .dragwyb-step-item.completed .dragwyb-step-dot' => 'border-color: {{VALUE}}; background-color: #ffffff;',
-					'{{WRAPPER}} .dragwyb-step-item.completed .dragwyb-step-dot .dragwyb-step-number' => 'color: {{VALUE}};',
+					'{{WRAPPER}}' => '--dragwyb-step-active-color: {{VALUE}};',
 				),
 			)
 		);
@@ -796,9 +791,7 @@ class Settings extends Register_Controls_Base {
 				'label'     => __( 'Inactive Color', 'smart-form-builder-by-dragwyb' ),
 				'default'   => '#9ca3af',
 				'selectors' => array(
-					'{{WRAPPER}} .dragwyb-step-item .dragwyb-step-dot' => 'border-color: {{VALUE}};',
-					'{{WRAPPER}} .dragwyb-step-item .dragwyb-step-dot .dragwyb-step-number' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .dragwyb-step-item .dragwyb-step-title' => 'color: {{VALUE}};',
+					'{{WRAPPER}}' => '--dragwyb-step-inactive-color: {{VALUE}};',
 				),
 			)
 		);
@@ -810,7 +803,7 @@ class Settings extends Register_Controls_Base {
 				'label'     => __( 'Divider Text Color', 'smart-form-builder-by-dragwyb' ),
 				'default'   => '#374151',
 				'selectors' => array(
-					'{{WRAPPER}} .dragwyb-step-divider-text' => 'color: {{VALUE}};',
+					'{{WRAPPER}}' => '--dragwyb-step-text-color: {{VALUE}};',
 				),
 			)
 		);
@@ -822,9 +815,7 @@ class Settings extends Register_Controls_Base {
 				'label'     => __( 'Line/Connector Color', 'smart-form-builder-by-dragwyb' ),
 				'default'   => '#e5e7eb',
 				'selectors' => array(
-					'{{WRAPPER}} .dragwyb-step-divider::before, {{WRAPPER}} .dragwyb-step-divider::after' => 'border-bottom-color: {{VALUE}};',
-					'{{WRAPPER}} .dragwyb-step-indicator::before' => 'background-color: {{VALUE}};',
-					'{{WRAPPER}} .dragwyb-step-progress-bar' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}}' => '--dragwyb-step-line-color: {{VALUE}};',
 				),
 			)
 		);
@@ -841,8 +832,8 @@ class Settings extends Register_Controls_Base {
 				),
 				'default'      => 'solid',
 				'label_inline' => true,
-				'selectors' => array(
-					'{{WRAPPER}} .dragwyb-step-divider::before, {{WRAPPER}} .dragwyb-step-divider::after' => 'border-bottom-style: {{VALUE}};',
+				'selectors'    => array(
+					'{{WRAPPER}}' => '--dragwyb-step-divider-style: {{VALUE}};',
 				),
 			)
 		);
@@ -863,9 +854,7 @@ class Settings extends Register_Controls_Base {
 					),
 				),
 				'selectors' => array(
-					'{{WRAPPER}} .dragwyb-step-divider::before, {{WRAPPER}} .dragwyb-step-divider::after' => 'border-bottom-width: {{VALUE}}{{UNIT}};',
-					'{{WRAPPER}} .dragwyb-step-indicator::before' => 'height: {{VALUE}}{{UNIT}};',
-					'{{WRAPPER}} .dragwyb-step-progress-bar' => 'height: {{VALUE}}{{UNIT}};',
+					'{{WRAPPER}}' => '--dragwyb-step-divider-thickness: {{VALUE}}{{UNIT}};',
 				),
 			)
 		);
