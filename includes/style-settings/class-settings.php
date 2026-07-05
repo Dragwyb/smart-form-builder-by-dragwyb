@@ -545,6 +545,26 @@ class Settings extends Register_Controls_Base {
 		);
 
 		$this->add_control(
+			'step_dot_size',
+			array(
+				'type'       => Controls::SLIDER,
+				'label'      => __( 'Dot Size', 'smart-form-builder-by-dragwyb' ),
+				'range'      => array(
+					'px' => array(
+						'min' => 1,
+						'max' => 100,
+					),
+				),
+				'conditions' => array(
+					'step_indicator_type!' => 'none',
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--dragwyb-step-dot-size: {{VALUE}}{{UNIT}};',
+				),
+			)
+		);
+
+		$this->add_control(
 			'step_divider_thickness',
 			array(
 				'type'       => Controls::SLIDER,
@@ -625,7 +645,7 @@ class Settings extends Register_Controls_Base {
 				'label'      => __( 'Inactive Color', 'smart-form-builder-by-dragwyb' ),
 				'default'    => '#9ca3af',
 				'conditions' => array(
-					'step_indicator_type!' => 'none',
+					'step_indicator_type' => array( 'number', 'dots' ),
 				),
 				'selectors'  => array(
 					'{{WRAPPER}}' => '--dragwyb-step-inactive-color: {{VALUE}};',

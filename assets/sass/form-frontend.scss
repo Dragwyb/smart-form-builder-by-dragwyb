@@ -756,8 +756,8 @@
             z-index: 2;
 
             .dragwyb-step-dot {
-                width: 40px;
-                height: 40px;
+                width: var(--dragwyb-step-dot-size, 40px);
+                height: var(--dragwyb-step-dot-size, 40px);
                 border-radius: 50%;
                 background-color: #ffffff;
                 border: var(--dragwyb-step-divider-thickness, 2px) solid var(--dragwyb-step-inactive-color, #9ca3af);
@@ -847,16 +847,12 @@
         .dragwyb-step-indicator {
             padding-bottom: 0;
 
-            .dragwyb-step-divider {
-                margin-top: 8px;
-            }
-
             .dragwyb-step-item {
                 flex: 0 0 16px;
 
                 .dragwyb-step-dot {
-                    width: 16px;
-                    height: 16px;
+                    width: var(--dragwyb-step-dot-size, 16px);
+                    height: var(--dragwyb-step-dot-size, 16px);
 
                     .dragwyb-step-number {
                         display: none;
@@ -907,6 +903,10 @@
 
         .dragwyb-button-field {
             width: unset;
+        }
+
+        .dragwyb-step-next {
+            margin-left: auto;
         }
     }
 }
