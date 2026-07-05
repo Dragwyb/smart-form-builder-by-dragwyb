@@ -773,54 +773,6 @@ class Settings extends Register_Controls_Base {
 		);
 
 		$this->add_control(
-			'step_active_color',
-			array(
-				'type'      => Controls::COLOR,
-				'label'     => __( 'Active Color', 'smart-form-builder-by-dragwyb' ),
-				'default'   => '#1d4ed8',
-				'selectors' => array(
-					'{{WRAPPER}}' => '--dragwyb-step-active-color: {{VALUE}};',
-				),
-			)
-		);
-
-		$this->add_control(
-			'step_inactive_color',
-			array(
-				'type'      => Controls::COLOR,
-				'label'     => __( 'Inactive Color', 'smart-form-builder-by-dragwyb' ),
-				'default'   => '#9ca3af',
-				'selectors' => array(
-					'{{WRAPPER}}' => '--dragwyb-step-inactive-color: {{VALUE}};',
-				),
-			)
-		);
-
-		$this->add_control(
-			'step_text_color',
-			array(
-				'type'      => Controls::COLOR,
-				'label'     => __( 'Divider Text Color', 'smart-form-builder-by-dragwyb' ),
-				'default'   => '#374151',
-				'selectors' => array(
-					'{{WRAPPER}}' => '--dragwyb-step-text-color: {{VALUE}};',
-				),
-			)
-		);
-
-		$this->add_control(
-			'step_line_color',
-			array(
-				'type'      => Controls::COLOR,
-				'label'     => __( 'Line/Connector Color', 'smart-form-builder-by-dragwyb' ),
-				'default'   => '#e5e7eb',
-				'selectors' => array(
-					'{{WRAPPER}}' => '--dragwyb-step-line-color: {{VALUE}};',
-				),
-			)
-		);
-
-		$this->add_control(
 			'step_divider_style',
 			array(
 				'type'         => Controls::SELECT,
@@ -832,6 +784,9 @@ class Settings extends Register_Controls_Base {
 				),
 				'default'      => 'solid',
 				'label_inline' => true,
+				'conditions'   => array(
+					'step_indicator_type' => array( 'numbers', 'dots' ),
+				),
 				'selectors'    => array(
 					'{{WRAPPER}}' => '--dragwyb-step-divider-style: {{VALUE}};',
 				),
@@ -841,20 +796,45 @@ class Settings extends Register_Controls_Base {
 		$this->add_control(
 			'step_divider_thickness',
 			array(
-				'type'      => Controls::SLIDER,
-				'label'     => __( 'Line Thickness', 'smart-form-builder-by-dragwyb' ),
-				'default'   => array(
+				'type'       => Controls::SLIDER,
+				'label'      => __( 'Line Thickness', 'smart-form-builder-by-dragwyb' ),
+				'default'    => array(
 					'size' => 2,
 					'unit' => 'px',
 				),
-				'range'     => array(
+				'range'      => array(
 					'px' => array(
 						'min' => 1,
 						'max' => 10,
 					),
 				),
-				'selectors' => array(
+				'conditions' => array(
+					'step_indicator_type!' => 'none',
+				),
+				'selectors'  => array(
 					'{{WRAPPER}}' => '--dragwyb-step-divider-thickness: {{VALUE}}{{UNIT}};',
+				),
+			)
+		);
+
+		$this->add_control(
+			'step_bottom_spacing',
+			array(
+				'type'      => Controls::SLIDER,
+				'label'     => __( 'Step Bottom Spacing', 'smart-form-builder-by-dragwyb' ),
+				'default'   => array(
+					'size' => 15,
+					'unit' => 'px',
+				),
+				'range'     => array(
+					'px' => array(
+						'min' => 0,
+						'max' => 100,
+					),
+				),
+				'units'     => array( 'px', '%' ),
+				'selectors' => array(
+					'{{WRAPPER}}' => '--dragwyb-step-bottom-spacing: {{VALUE}}{{UNIT}};',
 				),
 			)
 		);
@@ -862,10 +842,73 @@ class Settings extends Register_Controls_Base {
 		$this->add_group_control(
 			'step_typography',
 			array(
-				'type'     => Controls::GROUP_TYPOGRAPHY,
-				'label'    => __( 'Step Typography', 'smart-form-builder-by-dragwyb' ),
-				'selector' => '{{WRAPPER}} .dragwyb-step-title, {{WRAPPER}} .dragwyb-step-divider-text',
-				'prefix'   => 'step',
+				'type'       => Controls::GROUP_TYPOGRAPHY,
+				'label'      => __( 'Step Typography', 'smart-form-builder-by-dragwyb' ),
+				'selector'   => '{{WRAPPER}} .dragwyb-step-title, {{WRAPPER}} .dragwyb-step-divider-text',
+				'prefix'     => 'step',
+				'conditions' => array(
+					'step_indicator_type!' => 'none',
+				),
+			)
+		);
+
+		$this->add_control(
+			'step_active_color',
+			array(
+				'type'       => Controls::COLOR,
+				'label'      => __( 'Active Color', 'smart-form-builder-by-dragwyb' ),
+				'default'    => '#1d4ed8',
+				'conditions' => array(
+					'step_indicator_type!' => 'none',
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--dragwyb-step-active-color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_control(
+			'step_inactive_color',
+			array(
+				'type'       => Controls::COLOR,
+				'label'      => __( 'Inactive Color', 'smart-form-builder-by-dragwyb' ),
+				'default'    => '#9ca3af',
+				'conditions' => array(
+					'step_indicator_type!' => 'none',
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--dragwyb-step-inactive-color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_control(
+			'step_text_color',
+			array(
+				'type'       => Controls::COLOR,
+				'label'      => __( 'Divider Text Color', 'smart-form-builder-by-dragwyb' ),
+				'default'    => '#374151',
+				'conditions' => array(
+					'step_indicator_type!' => 'none',
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--dragwyb-step-text-color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_control(
+			'step_line_color',
+			array(
+				'type'       => Controls::COLOR,
+				'label'      => __( 'Line/Connector Color', 'smart-form-builder-by-dragwyb' ),
+				'default'    => '#e5e7eb',
+				'conditions' => array(
+					'step_indicator_type!' => 'none',
+				),
+				'selectors'  => array(
+					'{{WRAPPER}}' => '--dragwyb-step-line-color: {{VALUE}};',
+				),
 			)
 		);
 
