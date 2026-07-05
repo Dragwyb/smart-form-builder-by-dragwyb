@@ -703,6 +703,7 @@
     /* Frontend Step field (container wrapping inputs / editor placeholder layout) */
     .dragwyb-field-wrapper.dragwyb-step-field {
         margin-bottom: calc(var(--dragwyb-field-gap) * -1);
+        border: 1px solid transparent;
     }
 
     .dragwyb-step-field {
@@ -723,6 +724,10 @@
     .dragwyb-step-indicator-container {
         width: 100%;
         margin-bottom: var(--dragwyb-step-bottom-spacing, var(--dragwyb-field-gap));
+
+        &.step-has-title {
+            margin-bottom: calc(var(--dragwyb-step-bottom-spacing, var(--dragwyb-field-gap)) + var(--dragwyb-step-typography-size, 14px) * 1.5);
+        }
     }
 
     /* Step Indicator - Numbers/Dots Style */
