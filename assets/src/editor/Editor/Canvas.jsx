@@ -117,7 +117,7 @@ const RenderItem = React.memo(({
     const onFieldSelectHandler = useCallback((e) => {
         const id = field._id;
 
-        if (!id || isRootContainer) {
+        if (!id || (isRootContainer && allowedChildren)) {
             return;
         }
 
