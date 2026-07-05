@@ -46,6 +46,58 @@ class Field_Step extends Field_Base {
 		$this->is_root_container = true;
 	}
 
+	protected function header_controls(): array {
+		$header_tab = array();
+		$tabs       = array(
+			self::ContentTab => array(
+				'label' => 'Content',
+			),
+			self::AdvanceTab => array(
+				'label' => 'Advance',
+			),
+		);
+
+		$tabs = apply_filters( 'Dragwyb/Editor/render_controls/header_tabs', $tabs, $this->type );
+
+		$header_tab['header_controls'] = array(
+			'type' => 'tabs',
+			'tabs' => $tabs,
+		);
+
+		return $header_tab;
+	}
+
+	protected function layout_id_controls(): void {
+		$this->start_section(
+			'section_advance_layout',
+			array(
+				'label' => __( 'Layout', 'smart-form-builder-by-dragwyb' ),
+				'tab'   => self::AdvanceTab,
+			)
+		);
+
+			// The Field ID is a unique identifier used for saving data and logic
+		$this->add_control(
+			'field_id',
+			array(
+				'type'        => Controls::TEXT,
+				'label'       => __( 'Step ID', 'smart-form-builder-by-dragwyb' ),
+				'description' => __( 'Use this ID for custom scripts or logic.', 'smart-form-builder-by-dragwyb' ),
+			)
+		);
+
+		$this->add_control(
+			'css_classes',
+			array(
+				'type'        => Controls::TEXT,
+				'label'       => __( 'Custom CSS Classes', 'smart-form-builder-by-dragwyb' ),
+				'description' => __( 'Add custom classes to the wrapper.', 'smart-form-builder-by-dragwyb' ),
+			)
+		);
+
+		$this->end_section();
+	}
+
 	protected function register_field_controls(): void {
 		$this->start_section(
 			'section_content_general',
