@@ -30,7 +30,7 @@ class DragwybConditionalFields extends DragwybBuilder.DragwybFormFrontendBase {
             if (!conditionsList || !conditionsList.length) return;
 
             let conditionsMet = true;
-            let action = 'yes'; // 'yes' = Show, 'no' = Hide
+            let action = 'show'; // 'yes' = Show, 'no' = Hide
 
             conditionsList.forEach(condition => {
                 action = condition.action;
@@ -50,7 +50,7 @@ class DragwybConditionalFields extends DragwybBuilder.DragwybFormFrontendBase {
             if ($wrapper.length) {
                 // If action is 'yes' (Show): show if met, hide if not met
                 // If action is 'no' (Hide): hide if met, show if not met
-                const shouldShow = (action === 'yes') ? conditionsMet : !conditionsMet;
+                const shouldShow = (action === 'show') ? conditionsMet : !conditionsMet;
 
                 if (shouldShow) {
                     $wrapper.show();
