@@ -502,8 +502,7 @@ class Frontend_Render {
 		);
 
 		wp_enqueue_script( 'dragwyb-form-frontend' );
-
-		if ( ! Helper::is_preview_mode() ) {
+		if ( ! Helper::is_editor_preview_mode() ) {
 			wp_register_script(
 				'dragwyb-form-conditional',
 				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/js/conditional-field.min.js' ),
