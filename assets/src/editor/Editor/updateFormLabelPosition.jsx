@@ -18,8 +18,22 @@ const UpdateFormLabelPosition = () => {
     const labelFloat = useSelector((state) => state?.form?.style?.floating_style || 'outlined');
     const formBgType = useSelector((state) => state?.form?.style?.form_container_bg_background || 'color');
     const labelIconsPosition = useSelector((state) => state?.form?.style?.label_icon_position || 'before');
+    const stepIndicatorType = useSelector((state) => state?.form?.style?.step_indicator_type || 'numbers');
 
     const iframeNode = useSelector(state => state?.iframeEle);
+
+    useEffect(() => {
+        if (!iframeNode) {
+            return;
+        }
+
+        const stepIndicators = iframeNode.querySelectorAll('.dragwyb-step-indicator-container.dragwyb-editor-preview');
+        if (stepIndicators && stepIndicators.length > 0) {
+            stepIndicators.forEach(stepIndicator => {
+                stepIndicator.setAttribute('data-step-indicator', stepIndicatorType);
+            })
+        }
+    }, [iframeNode, stepIndicatorType]);
 
     useEffect(() => {
         if (!iframeNode || !labelPosition) {

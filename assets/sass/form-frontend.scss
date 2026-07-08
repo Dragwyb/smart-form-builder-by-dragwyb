@@ -718,6 +718,15 @@
         &_hidden {
             display: none;
         }
+
+        &[data-step-indicator="dots"] {
+            .dragwyb-editor-step-item {
+                .dragwyb-step-dot {
+                    width: 16px;
+                    height: 16px;
+                }
+            }
+        }
     }
 
     /* Step Indicator Container at top of form */
@@ -752,7 +761,6 @@
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            flex: 0 0 40px;
             z-index: 2;
 
             .dragwyb-step-dot {
@@ -765,6 +773,7 @@
                 align-items: center;
                 justify-content: center;
                 transition: all 0.3s ease;
+                box-sizing: border-box;
 
                 .dragwyb-step-number {
                     font-weight: 600;
@@ -775,7 +784,7 @@
 
             .dragwyb-step-title {
                 position: absolute;
-                top: 48px;
+                top: calc(var(--dragwyb-step-dot-size, 40px) + 8px);
                 left: 50%;
                 transform: translateX(-50%);
                 font-size: var(--dragwyb-step-typography-size, 14px);
@@ -784,23 +793,6 @@
                 color: var(--dragwyb-step-inactive-color, #6b7280);
                 text-align: center;
                 white-space: nowrap;
-            }
-
-            &:first-child {
-                .dragwyb-step-title {
-                    left: 0;
-                    transform: none;
-                    text-align: left;
-                }
-            }
-
-            &:last-child {
-                .dragwyb-step-title {
-                    left: auto;
-                    right: 0;
-                    transform: none;
-                    text-align: right;
-                }
             }
 
             /* Active State */
@@ -842,8 +834,46 @@
         }
     }
 
+    // editor step preview
+    .dragwyb-editor-preview {
+        &:not(&[data-step-indicator="none"]) {
+            display: block !important;
+        }
+
+        &[data-step-indicator="none"] {
+            display: none !important;
+        }
+
+        &[data-step-indicator="dots"],
+        &[data-step-indicator="numbers"] {
+            .dragwyb-step-progress-wrapper {
+                display: none !important;
+            }
+
+            .dragwyb-step-item {
+                display: flex !important;
+            }
+
+            .dragwyb-step-divider {
+                display: block !important;
+            }
+        }
+
+        &[data-step-indicator="progress"] {
+            .dragwyb-step-progress-wrapper {
+                display: block !important;
+            }
+
+            .dragwyb-step-item,
+            .dragwyb-step-divider {
+                display: none !important;
+            }
+        }
+    }
+
     /* Dots Only Mode overrides */
-    &[data-step-indicator="dots"] {
+    &[data-step-indicator="dots"],
+    .dragwyb-editor-preview[data-step-indicator="dots"] {
         .dragwyb-step-indicator {
             padding-bottom: 0;
 
