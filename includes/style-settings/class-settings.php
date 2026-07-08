@@ -645,7 +645,7 @@ class Settings extends Register_Controls_Base {
 				'label'      => __( 'Inactive Color', 'smart-form-builder-by-dragwyb' ),
 				'default'    => '#9ca3af',
 				'conditions' => array(
-					'step_indicator_type' => array( 'number', 'dots' ),
+					'step_indicator_type' => array( 'numbers', 'dots' ),
 				),
 				'selectors'  => array(
 					'{{WRAPPER}}' => '--dragwyb-step-inactive-color: {{VALUE}};',
