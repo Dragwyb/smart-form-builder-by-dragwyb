@@ -57,8 +57,8 @@ class Condition_Field_Methods {
 		}
 
 		$conditions_met = true;
-		// Default action is 'yes' (Show). In logic, condition_action can be switcher: 'yes' (Show) or 'no' (Hide).
-		$action = 'yes';
+		// Default action is show. In logic, condition_action can be switcher: show or hide.
+		$action = 'show';
 
 		foreach ( $logic_conditions as $condition ) {
 			$cond_attrs = $condition['attributes'] ?? $condition;
@@ -66,7 +66,7 @@ class Condition_Field_Methods {
 				continue;
 			}
 
-			$action = $cond_attrs['condition_action'] ?? 'hide';
+			$action = $cond_attrs['condition_action'] ?? 'show';
 
 			// Get the submitted value for the dependency field.
 			$dep_field_id = $cond_attrs['condition_field_id'];
@@ -82,8 +82,8 @@ class Condition_Field_Methods {
 			}
 		}
 
-		// If action is 'yes' (Show): show/match if met, hide/not match if not met.
-		// If action is 'no' (Hide): hide/not match if met, show/match if not met.
+		// If action is Show: show/match if met, hide/not match if not met.
+		// If action is Hide: hide/not match if met, show/match if not met.
 		return ( 'show' === $action ) ? $conditions_met : ! $conditions_met;
 	}
 
