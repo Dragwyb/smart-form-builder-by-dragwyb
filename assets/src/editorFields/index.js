@@ -569,7 +569,7 @@ const StepPreview = ({ attributes, id }) => {
     }
 
     const stepIndex = stepContainers.indexOf(id) + 1;
-    const totalSteps = stepContainers.length + 1;
+    const totalSteps = stepContainers.length;
     const label = attributes.label || '';
 
     // Default to 'numbers' or 'dots' style
