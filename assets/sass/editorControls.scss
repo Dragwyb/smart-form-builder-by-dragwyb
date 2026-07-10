@@ -21,6 +21,11 @@
     padding: 0px;
   }
 
+  &[data-type="heading"] {
+    padding-bottom: 0;
+    border-bottom: 1px solid hsl(var(--dragwyb-border) / var(--dragwyb-border-opacity, 1));
+  }
+
   .dragwyb-label-inline {
     display: flex;
     align-items: center;
@@ -234,7 +239,7 @@
      Heading
      ========================= */
 .dragwyb-control--heading {
-  padding: 15px 0 10px 0;
+  padding: 15px 0 0 0;
   width: 100%;
   box-sizing: border-box;
 
