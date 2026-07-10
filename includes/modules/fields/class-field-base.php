@@ -13,6 +13,7 @@ use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Categories\Categories;
 use Dragwyb\Form_Builder\Includes\Frontend\Frontend_Render;
 use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
+use Dragwyb\Form_Builder\Includes\Repeater\Repeater;
 
 abstract class Field_Base extends Register_Controls_Base {
 
@@ -169,6 +170,7 @@ abstract class Field_Base extends Register_Controls_Base {
 
 	public function set_field_settings( array $setting ) {
 		$this->display_settings = $setting;
+		$this->test_settings    = $setting;
 	}
 
 	protected function get_field_settings(): array {
@@ -241,7 +243,10 @@ abstract class Field_Base extends Register_Controls_Base {
 	public function render() {
 		$this->field_attributes = array();
 		$this->enqueue_assets();
-		$this->render_field();
+		$field_content = $this->render_field();
+		$this->localize_condition_data();
+
+		return $field_content;
 	}
 
 	/**
@@ -425,7 +430,6 @@ abstract class Field_Base extends Register_Controls_Base {
 				'type'        => Controls::TEXT,
 				'label'       => __( 'Field ID', 'smart-form-builder-by-dragwyb' ),
 				'description' => __( 'Use this ID for custom scripts or logic.', 'smart-form-builder-by-dragwyb' ),
-				'dynamic'     => array( 'active' => false ),
 			)
 		);
 
@@ -508,25 +512,165 @@ abstract class Field_Base extends Register_Controls_Base {
 			array(
 				'type'         => Controls::SWITCHER,
 				'label'        => __( 'Enable Logic', 'smart-form-builder-by-dragwyb' ),
-				'default'      => '',
-				'return_value' => '',
-				'disabled'     => true,
+				'default'      => 'no',
+				'return_value' => 'yes',
+			)
+		);
+
+		$conditional_repeater = new Repeater();
+
+		$conditional_repeater->add_control(
+			'condition_action',
+			array(
+				'type'    => Controls::CHOOSE,
+				'label'   => __( 'Show / Hide', 'smart-form-builder-by-dragwyb' ),
+				'default' => 'show',
+				'options' => array(
+					'hide' => array(
+						'title' => __( 'Hide', 'smart-form-builder-by-dragwyb' ),
+						'icon'  => 'fas fa-eye-slash',
+					),
+					'show' => array(
+						'title' => __( 'Show', 'smart-form-builder-by-dragwyb' ),
+						'icon'  => 'fas fa-eye',
+					),
+				),
+			)
+		);
+
+		$conditional_repeater->add_control(
+			'condition_field_id',
+			array(
+				'type'          => Controls::TEXT,
+				'label'         => __( 'Condition Field ID', 'smart-form-builder-by-dragwyb' ),
+				'description'   => __( 'Enter the ID of the field to check.', 'smart-form-builder-by-dragwyb' ),
+				'field_id_tags' => true,
+				'dynamic_tag'   => array(
+					'active' => false,
+				),
+			)
+		);
+
+		$conditional_repeater->add_control(
+			'condition_operator',
+			array(
+				'type'         => Controls::SELECT,
+				'label'        => __( 'Operator', 'smart-form-builder-by-dragwyb' ),
+				'options'      => array(
+					'equal'        => __( 'Equals', 'smart-form-builder-by-dragwyb' ),
+					'not_equal'    => __( 'Not Equals', 'smart-form-builder-by-dragwyb' ),
+					'contains'     => __( 'Contains', 'smart-form-builder-by-dragwyb' ),
+					'not_contains' => __( 'Not Contains', 'smart-form-builder-by-dragwyb' ),
+					'greater_than' => __( 'Greater Than', 'smart-form-builder-by-dragwyb' ),
+					'less_than'    => __( 'Less Than', 'smart-form-builder-by-dragwyb' ),
+				),
+				'default'      => 'equal',
+				'label_inline' => true,
+			)
+		);
+
+		$conditional_repeater->add_control(
+			'condition_value',
+			array(
+				'type'        => Controls::TEXT,
+				'label'       => __( 'Value', 'smart-form-builder-by-dragwyb' ),
+				'description' => __( 'The value to compare against.', 'smart-form-builder-by-dragwyb' ),
 			)
 		);
 
 		$this->add_control(
-			'logic_msg',
+			'logic_conditions',
 			array(
-				'type'      => Controls::RAW_HTML,
-				// translators: %1$s is the opening bold tag, %2$s is the closing bold tag
-				'raw'       => '<div style="color: hsl(var(--dragwyb-sidebar-foreground)/var(--dragwyb-text-opacity, 1)); font-size: 12px; padding: 10px 0;">' . sprintf( __( '%1$sComing Soon%2$s: Advanced Conditional Logic is in development. This feature will allow you to dynamically show or hide fields based on user input.', 'smart-form-builder-by-dragwyb' ), '<strong>', '</strong>' ) . '</div>',
-				'condition' => array(
+				'type'       => Controls::REPEATER,
+				'label'      => __( 'Conditions', 'smart-form-builder-by-dragwyb' ),
+				'items'      => $conditional_repeater->get_settings(),
+				'default'    => array(
+					array(
+						'condition_field_id' => '',
+						'condition_value'    => '',
+						'condition_operator' => 'equal',
+						'condition_action'   => 'show',
+					),
+				),
+				'add_item'   => __( 'Add Condition', 'smart-form-builder-by-dragwyb' ),
+				'item_label' => '{{condition_field_id}} {{condition_operator}} {{condition_value}}',
+				'conditions' => array(
 					'enable_logic' => 'yes',
 				),
 			)
 		);
 
 		$this->end_section();
+	}
+
+	/**
+	 * Localize the condition data
+	 * this function is final and can not be overridden
+	 *
+	 * @return void
+	 */
+	final public function localize_condition_data(): void {
+		$settings = $this->get_field_settings();
+
+		if ( ! isset( $settings['enable_logic'] ) || 'yes' !== $settings['enable_logic'] ) {
+			return;
+		}
+
+		if ( ! isset( $settings['field_id'] ) || empty( $settings['field_id'] ) ) {
+			return;
+		}
+
+		if ( ! isset( $settings['logic_conditions'] ) || empty( $settings['logic_conditions'] ) ) {
+			return;
+		}
+
+		$condition_data   = array();
+		$current_form_id  = (int) $this->get_form_id();
+		$logic_conditions = $settings['logic_conditions'];
+
+		foreach ( $logic_conditions as $logic_condition ) {
+			$logic_attributes = $this->field_key_exist( $logic_condition, 'attributes', array() );
+
+			if ( empty( $logic_attributes ) ) {
+				continue;
+			}
+
+			if ( empty( $logic_attributes['condition_field_id'] ) ) {
+				continue;
+			}
+
+			$condition_data[] = array(
+				'field_id' => $logic_attributes['condition_field_id'],
+				'value'    => $logic_attributes['condition_value'],
+				'operator' => $this->field_key_exist( $logic_attributes, 'condition_operator', 'equal' ),
+				'action'   => $this->field_key_exist( $logic_attributes, 'condition_action', 'show' ),
+			);
+		}
+
+		add_filter(
+			'Dragwyb/Frontend/Form/Localize_Settings',
+			function ( $localize_data, $form_id ) use ( $settings, $condition_data, $current_form_id ) {
+				if ( $form_id !== $current_form_id ) {
+					return $localize_data;
+				}
+
+				$field_id = $settings['field_id'];
+
+				if ( ! isset( $localize_data['conditions'] ) ) {
+					$localize_data['conditions'] = array();
+				}
+
+				if ( isset( $localize_data['conditions'][ $field_id ] ) ) {
+					return $localize_data;
+				}
+
+				$localize_data['conditions'][ $field_id ] = $condition_data;
+
+				return $localize_data;
+			},
+			10,
+			2
+		);
 	}
 
 	protected function header_controls(): array {
@@ -543,7 +687,7 @@ abstract class Field_Base extends Register_Controls_Base {
 			),
 		);
 
-		$tabs = apply_filters( 'Dragwyb/Editor/render_controls/header_tabs', $tabs );
+		$tabs = apply_filters( 'Dragwyb/Editor/render_controls/header_tabs', $tabs, $this->type );
 
 		$header_tab['header_controls'] = array(
 			'type' => 'tabs',

@@ -298,9 +298,10 @@ abstract class Register_Controls_Base {
 		$this->add_control(
 			$id . '_popover_toggle',
 			array(
-				'type'  => Controls::POPOVER_TOGGLE,
-				'label' => isset( $control_data['name'] ) ? sanitize_text_field( $control_data['name'] ) : __( 'Popover Toggle', 'smart-form-builder-by-dragwyb' ),
-				'icon'  => isset( $control_data['icon'] ) ? $control_data['icon'] : 'fas fa-pen',
+				'type'       => Controls::POPOVER_TOGGLE,
+				'label'      => isset( $control_data['name'] ) ? sanitize_text_field( $control_data['name'] ) : __( 'Popover Toggle', 'smart-form-builder-by-dragwyb' ),
+				'icon'       => isset( $control_data['icon'] ) ? $control_data['icon'] : 'fas fa-pen',
+				'conditions' => $conditions,
 			)
 		);
 

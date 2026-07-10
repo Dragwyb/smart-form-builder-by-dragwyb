@@ -76,7 +76,7 @@ class Field_Radio extends Field_Base {
 						'option_value' => 'no',
 					),
 				),
-				'item_label' => 'option_label',
+				'item_label' => '{{option_label}}',
 			)
 		);
 

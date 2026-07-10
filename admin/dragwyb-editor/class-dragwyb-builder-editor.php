@@ -220,6 +220,16 @@ if ( ! class_exists( 'Dragwyb_Builder_Editor' ) ) {
 				esc_attr( $js_assets_info['version'] )
 			);
 
+			// Retrieve registered PHP dynamic tags
+			$dynamic_tags_manager = \Dragwyb\Form_Builder\Includes\Dynamic_Tags\Dynamic_Tags_Manager::instance();
+			$tags_data            = array();
+			foreach ( $dynamic_tags_manager->get_tags() as $tag => $data ) {
+				$tags_data[] = array(
+					'tag'   => $tag,
+					'label' => $data['label'],
+				);
+			}
+
 			$localize_data = array(
 				'ajaxUrl'         => admin_url( 'admin-ajax.php' ),
 				'pluginUrl'       => esc_url( DRAGWYB_FORM_BUILDER_URL ),
@@ -232,6 +242,7 @@ if ( ! class_exists( 'Dragwyb_Builder_Editor' ) ) {
 				'adminUrl'        => admin_url( 'admin.php?page=dragwyb-form-overview' ),
 				'faIconsList'     => $this->get_fa_icons_list(),
 				'previewUrl'      => home_url( '/?post_type=' . Dragwyb_Post::POST_TYPE . '&p=' . self::$form_id . '&preview_id=' . Form_Preview::generate_key( self::$form_id ) ),
+				'dynamicTags'     => $tags_data,
 			);
 
 			$localize_data = apply_filters( 'Dragwyb/Editor/Localize_Settings', $localize_data );

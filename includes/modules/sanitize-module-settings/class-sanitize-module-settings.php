@@ -66,7 +66,7 @@ if ( ! class_exists( 'Sanitize_Module_Settings' ) ) {
 					self::$filtered_data[ $field['_id'] ]['parentId'] = sanitize_text_field( $field['parentId'] );
 				}
 
-				if ( isset( $field['children'] ) ) {
+				if ( isset( $field['children'] ) || isset( $field['is_root_container'] ) ) {
 					$type = sanitize_text_field( $field['type'] );
 					$this->set_field_module( $type );
 

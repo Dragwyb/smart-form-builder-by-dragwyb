@@ -38,16 +38,24 @@ abstract class Email_Action_Base extends Action_Base {
 				'default'     => get_option( 'admin_email' ),
 				'description' => __( 'Separate multiple emails with commas.', 'smart-form-builder-by-dragwyb' ),
 				'required'    => true,
+				'dynamic_tag' => array(
+					'active'    => true,
+					'field_ids' => true,
+				),
 			)
 		);
 
 		$this->add_control(
 			'email_subject_' . $prefix,
 			array(
-				'type'     => Controls::TEXT,
-				'label'    => __( 'Subject Line', 'smart-form-builder-by-dragwyb' ),
-				'default'  => __( 'New Submission: [Form Name]', 'smart-form-builder-by-dragwyb' ),
-				'required' => true,
+				'type'        => Controls::TEXT,
+				'label'       => __( 'Subject Line', 'smart-form-builder-by-dragwyb' ),
+				'default'     => __( 'New Submission: [Form Name]', 'smart-form-builder-by-dragwyb' ),
+				'required'    => true,
+				'dynamic_tag' => array(
+					'active'    => true,
+					'field_ids' => true,
+				),
 			)
 		);
 
@@ -59,6 +67,10 @@ abstract class Email_Action_Base extends Action_Base {
 				'default'     => '{all_fields}', // Shortcode for all data
 				'description' => __( 'Use {all_fields} to show all data, or use field IDs like {name}.', 'smart-form-builder-by-dragwyb' ),
 				'required'    => true,
+				'dynamic_tag' => array(
+					'active'    => true,
+					'field_ids' => true,
+				),
 			)
 		);
 

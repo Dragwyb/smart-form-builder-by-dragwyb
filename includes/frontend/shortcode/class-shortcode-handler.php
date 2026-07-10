@@ -67,24 +67,19 @@ class Shortcode_Handler {
 			self::$frontend_render::enqueue_static_assets();
 		}
 
-		self::$frontend_render::localize_form_data();
-
 		$css_manager = CSS_Manager::instance();
 
 		$css_manager->enqueue_form_styles( $form_id, self::$frontend_render );
 
-		$toolbar_values = self::$frontend_render->get_toolbars_values( 'style' );
-		$label_position = isset( $toolbar_values['label_position'] ) ? $toolbar_values['label_position'] : 'top';
-		$form_bg_type   = isset( $toolbar_values['form_container_bg_background'] ) ? $toolbar_values['form_container_bg_background'] : 'color';
+		$toolbar_values      = self::$frontend_render->get_toolbars_values( 'style' );
+		$label_position      = isset( $toolbar_values['label_position'] ) ? $toolbar_values['label_position'] : 'top';
+		$form_bg_type        = isset( $toolbar_values['form_container_bg_background'] ) ? $toolbar_values['form_container_bg_background'] : 'color';
+		$step_indicator_type = isset( $toolbar_values['step_indicator_type'] ) ? $toolbar_values['step_indicator_type'] : 'number';
 
 		$class = 'dragwyb-form-wrapper';
 
 		if ( isset( $label_position ) && ! empty( $label_position ) ) {
 			$class .= ' dragwyb-layout-' . esc_attr( $label_position );
-
-			if ( isset( $form_bg_type ) && ! empty( $form_bg_type ) ) {
-				$class .= ' dragwyb-bg-' . esc_attr( $form_bg_type );
-			}
 
 			if ( $label_position === 'floating' ) {
 				$floating_style = isset( $toolbar_values['floating_style'] ) ? $toolbar_values['floating_style'] : 'outlined';
@@ -93,7 +88,15 @@ class Shortcode_Handler {
 			}
 		}
 
-		return '<div class="' . esc_attr( $class ) . '" id="dragwyb-form-wrapper-' . esc_attr( $form_id ) . '">' . self::$frontend_render->render() . '</div>';
+		if ( isset( $form_bg_type ) && ! empty( $form_bg_type ) ) {
+			$class .= ' dragwyb-bg-' . esc_attr( $form_bg_type );
+		}
+
+		$output = '<div class="' . esc_attr( $class ) . '" id="dragwyb-form-wrapper-' . esc_attr( $form_id ) . '" data-step-indicator="' . esc_attr( $step_indicator_type ) . '">' . self::$frontend_render->render() . '</div>';
+
+		self::$frontend_render::localize_form_data();
+
+		return $output;
 	}
 
 	final public function allowed_html_for_form(): array {

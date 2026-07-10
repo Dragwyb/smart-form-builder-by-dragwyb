@@ -168,6 +168,12 @@
     --dragwyb-btn-box-shadow-color: transparent;
     --dragwyb-btn-box-shadow-position: ;
 
+    // Previous Button
+    --dragwyb-prev-btn-bg: #e5e7eb;
+    --dragwyb-prev-btn-color: #374151;
+    --dragwyb-prev-btn-hover-bg: #d1d5db;
+    --dragwyb-prev-btn-hover-color: #374151;
+
     --dragwyb-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
     // Toggle (Checkbox & Radio)
@@ -178,11 +184,14 @@
 }
 
 .dragwyb-form {
-    display: flex;
-    gap: var(--dragwyb-field-gap);
-    flex-wrap: wrap;
+    &:not(.dragwyb-step-form) {
+        display: flex;
+        gap: var(--dragwyb-field-gap);
+        flex-wrap: wrap;
+        justify-content: var(--dragwyb-form-justify-content, left);
+    }
+
     box-sizing: border-box;
-    justify-content: var(--dragwyb-form-justify-content, left);
     margin: 0;
 }
 
@@ -570,53 +579,63 @@
                 }
             }
         }
+    }
 
-        /* Buttons */
-        button {
-            font-family: var(--dragwyb-btn-typography-family);
-            font-size: var(--dragwyb-btn-typography-size);
-            font-weight: var(--dragwyb-btn-typography-wt);
-            font-style: var(--dragwyb-btn-typography-st);
-            text-transform: var(--dragwyb-btn-typography-ts);
-            text-decoration: var(--dragwyb-btn-typography-dt);
-            line-height: var(--dragwyb-btn-typography-lh);
-            letter-spacing: var(--dragwyb-btn-typography-ls);
-            word-spacing: var(--dragwyb-btn-typography-ws);
-            text-align: var(--dragwyb-btn-typography-align, center);
-            width: var(--dragwyb-btn-width);
-            background-color: var(--dragwyb-btn-bg);
-            color: var(--dragwyb-btn-color);
-            border: 0px var(--dragwyb-btn-border-style) var(--dragwyb-btn-border-color);
-            border-top-width: var(--dragwyb-btn-border-top-width);
-            border-bottom-width: var(--dragwyb-btn-border-bottom-width);
-            border-left-width: var(--dragwyb-btn-border-left-width);
-            border-right-width: var(--dragwyb-btn-border-right-width);
-            border-radius: var(--dragwyb-btn-radius);
-            padding: var(--dragwyb-btn-pt) var(--dragwyb-btn-pr) var(--dragwyb-btn-pb) var(--dragwyb-btn-pl);
-            box-shadow: var(--dragwyb-btn-box-shadow-position) var(--dragwyb-btn-box-shadow-h) var(--dragwyb-btn-box-shadow-v) var(--dragwyb-btn-box-shadow-blur) var(--dragwyb-btn-box-shadow-spread) var(--dragwyb-btn-box-shadow-color);
-            cursor: pointer;
-            transition: var(--dragwyb-transition);
+    /* Buttons */
+    button {
+        font-family: var(--dragwyb-btn-typography-family);
+        font-size: var(--dragwyb-btn-typography-size);
+        font-weight: var(--dragwyb-btn-typography-wt);
+        font-style: var(--dragwyb-btn-typography-st);
+        text-transform: var(--dragwyb-btn-typography-ts);
+        text-decoration: var(--dragwyb-btn-typography-dt);
+        line-height: var(--dragwyb-btn-typography-lh);
+        letter-spacing: var(--dragwyb-btn-typography-ls);
+        word-spacing: var(--dragwyb-btn-typography-ws);
+        text-align: var(--dragwyb-btn-typography-align, center);
+        width: var(--dragwyb-btn-width);
+        background-color: var(--dragwyb-btn-bg);
+        color: var(--dragwyb-btn-color);
+        border: 0px var(--dragwyb-btn-border-style) var(--dragwyb-btn-border-color);
+        border-top-width: var(--dragwyb-btn-border-top-width);
+        border-bottom-width: var(--dragwyb-btn-border-bottom-width);
+        border-left-width: var(--dragwyb-btn-border-left-width);
+        border-right-width: var(--dragwyb-btn-border-right-width);
+        border-radius: var(--dragwyb-btn-radius);
+        padding: var(--dragwyb-btn-pt) var(--dragwyb-btn-pr) var(--dragwyb-btn-pb) var(--dragwyb-btn-pl);
+        box-shadow: var(--dragwyb-btn-box-shadow-position) var(--dragwyb-btn-box-shadow-h) var(--dragwyb-btn-box-shadow-v) var(--dragwyb-btn-box-shadow-blur) var(--dragwyb-btn-box-shadow-spread) var(--dragwyb-btn-box-shadow-color);
+        cursor: pointer;
+        transition: var(--dragwyb-transition);
+
+        &:hover {
+            color: var(--dragwyb-btn-hover-color, var(--dragwyb-btn-color));
+            background-color: var(--dragwyb-btn-hover-bg, var(--dragwyb-btn-bg));
+            border-color: var(--dragwyb-btn-hover-border-color, var(--dragwyb-btn-border-color));
+        }
+
+        &.dragwyb-button-prev {
+            background-color: var(--dragwyb-prev-btn-bg, var(--dragwyb-btn-bg));
+            color: var(--dragwyb-prev-btn-color, var(--dragwyb-btn-color));
 
             &:hover {
-                color: var(--dragwyb-btn-hover-color, var(--dragwyb-btn-color));
-                background-color: var(--dragwyb-btn-hover-bg, var(--dragwyb-btn-bg));
-                border-color: var(--dragwyb-btn-hover-border-color, var(--dragwyb-btn-border-color));
+                background-color: var(--dragwyb-prev-btn-hover-bg, var(--dragwyb-prev-btn-hover-bg, var(--dragwyb-btn-bg)));
+                color: var(--dragwyb-prev-btn-hover-color, var(--dragwyb-prev-btn-hover-color, var(--dragwyb-btn-color)));
             }
+        }
 
-            &-block {
-                width: 100%;
-                display: flex;
-            }
+        &-block {
+            width: 100%;
+            display: flex;
+        }
 
-            &-reset {
-                background-color: transparent;
-                border: 1px solid var(--dragwyb-input-border-color);
-                color: var(--dragwyb-label-color);
+        &-reset {
+            background-color: transparent;
+            border: 1px solid var(--dragwyb-input-border-color);
+            color: var(--dragwyb-label-color);
 
-                &:hover {
-                    background-color: var(--dragwyb-form-bg-filled);
-                    color: var(--dragwyb-input-color);
-                }
+            &:hover {
+                background-color: var(--dragwyb-form-bg-filled);
+                color: var(--dragwyb-input-color);
             }
         }
     }
@@ -678,6 +697,263 @@
     .dragwyb-captcha-container {
         margin: var(--dragwyb-captcha-mt, 0) var(--dragwyb-captcha-mr, 0) var(--dragwyb-captcha-mb, 0) var(--dragwyb-captcha-ml, 0);
         padding: var(--dragwyb-captcha-pt, 0) var(--dragwyb-captcha-pr, 0) var(--dragwyb-captcha-pb, 0) var(--dragwyb-captcha-pl, 0);
+    }
+
+    /* Step Divider Line styling (directly styled with border-top, no pseudo-selectors) */
+    .dragwyb-step-divider {
+        flex: 1;
+        height: 0;
+        border-top: var(--dragwyb-step-divider-thickness, 2px) var(--dragwyb-step-divider-style, solid) var(--dragwyb-step-line-color, #e5e7eb);
+        transition: border-color 0.3s ease;
+    }
+
+    .dragwyb-step-divider-text {
+        padding: 0 15px;
+        font-weight: var(--dragwyb-step-typography-wt, 600);
+        font-size: var(--dragwyb-step-typography-size, 16px);
+        font-family: var(--dragwyb-step-typography-family, inherit);
+        color: var(--dragwyb-step-text-color, #374151);
+        white-space: nowrap;
+    }
+
+    /* Frontend Step field (container wrapping inputs / editor placeholder layout) */
+    .dragwyb-field-wrapper.dragwyb-step-field {
+        margin-bottom: calc(var(--dragwyb-field-gap) * -1);
+        border: 1px solid transparent;
+    }
+
+    .dragwyb-step-field {
+        display: flex;
+        gap: var(--dragwyb-field-gap);
+        flex-wrap: wrap;
+        box-sizing: border-box;
+        justify-content: var(--dragwyb-form-justify-content, left);
+        margin: 0;
+        width: 100%;
+
+        &_hidden {
+            display: none;
+        }
+
+        &[data-step-indicator="dots"] {
+            .dragwyb-editor-step-item {
+                .dragwyb-step-dot {
+                    width: 16px;
+                    height: 16px;
+                }
+            }
+        }
+    }
+
+    /* Step Indicator Container at top of form */
+    .dragwyb-step-indicator-container {
+        width: 100%;
+        margin-bottom: var(--dragwyb-step-bottom-spacing, var(--dragwyb-field-gap));
+
+        &.step-has-title {
+            margin-bottom: calc(var(--dragwyb-step-bottom-spacing, var(--dragwyb-field-gap)) + var(--dragwyb-step-typography-size, 14px) * 1.5);
+        }
+    }
+
+    /* Step Indicator - Numbers/Dots Style */
+    .dragwyb-step-indicator {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        width: 100%;
+
+        &::before {
+            display: none;
+        }
+
+        .dragwyb-step-divider {
+            width: auto;
+            display: block;
+        }
+
+        .dragwyb-step-item {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            z-index: 2;
+
+            .dragwyb-step-dot {
+                width: var(--dragwyb-step-dot-size, 40px);
+                height: var(--dragwyb-step-dot-size, 40px);
+                border-radius: 50%;
+                background-color: #ffffff;
+                border: var(--dragwyb-step-divider-thickness, 2px) solid var(--dragwyb-step-inactive-color, #9ca3af);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+                box-sizing: border-box;
+
+                .dragwyb-step-number {
+                    font-weight: 600;
+                    font-size: 14px;
+                    color: var(--dragwyb-step-inactive-color, #9ca3af);
+                }
+            }
+
+            .dragwyb-step-title {
+                position: absolute;
+                top: calc(var(--dragwyb-step-dot-size, 40px) + 8px);
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: var(--dragwyb-step-typography-size, 14px);
+                font-weight: var(--dragwyb-step-typography-wt, 500);
+                font-family: var(--dragwyb-step-typography-family, inherit);
+                color: var(--dragwyb-step-inactive-color, #6b7280);
+                text-align: center;
+                white-space: nowrap;
+            }
+
+            /* Active State */
+            &.active {
+                .dragwyb-step-dot {
+                    border-color: var(--dragwyb-step-active-color, #1d4ed8);
+                    background-color: var(--dragwyb-step-active-color, #1d4ed8);
+
+                    .dragwyb-step-number {
+                        color: #ffffff;
+                    }
+                }
+
+                .dragwyb-step-title {
+                    color: var(--dragwyb-step-active-color, #1d4ed8);
+                    font-weight: 600;
+                }
+            }
+
+            /* Completed State */
+            &.completed {
+                .dragwyb-step-dot {
+                    border-color: var(--dragwyb-step-active-color, #1d4ed8);
+                    background-color: #ffffff;
+
+                    .dragwyb-step-number {
+                        color: var(--dragwyb-step-active-color, #1d4ed8);
+                    }
+                }
+
+                .dragwyb-step-title {
+                    color: var(--dragwyb-step-active-color, #1d4ed8);
+                }
+            }
+        }
+
+        .dragwyb-step-item.completed+.dragwyb-step-divider {
+            border-top-color: var(--dragwyb-step-active-color, #1d4ed8);
+        }
+    }
+
+    // editor step preview
+    .dragwyb-editor-preview {
+        &:not(&[data-step-indicator="none"]) {
+            display: block !important;
+        }
+
+        &[data-step-indicator="none"] {
+            display: none !important;
+        }
+
+        &[data-step-indicator="dots"],
+        &[data-step-indicator="numbers"] {
+            .dragwyb-step-progress-wrapper {
+                display: none !important;
+            }
+
+            .dragwyb-step-item {
+                display: flex !important;
+            }
+
+            .dragwyb-step-divider {
+                display: block !important;
+            }
+        }
+
+        &[data-step-indicator="progress"] {
+            .dragwyb-step-progress-wrapper {
+                display: block !important;
+            }
+
+            .dragwyb-step-item,
+            .dragwyb-step-divider {
+                display: none !important;
+            }
+        }
+    }
+
+    /* Dots Only Mode overrides */
+    &[data-step-indicator="dots"],
+    .dragwyb-editor-preview[data-step-indicator="dots"] {
+        .dragwyb-step-indicator {
+            padding-bottom: 0;
+
+            .dragwyb-step-item {
+                flex: 0 0 16px;
+
+                .dragwyb-step-dot {
+                    width: var(--dragwyb-step-dot-size, 16px);
+                    height: var(--dragwyb-step-dot-size, 16px);
+
+                    .dragwyb-step-number {
+                        display: none;
+                    }
+                }
+
+                .dragwyb-step-title {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    /* Progress Bar Style */
+    .dragwyb-step-progress-wrapper {
+        width: 100%;
+
+        .dragwyb-step-progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--dragwyb-step-line-color, #e5e7eb);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .dragwyb-step-progress-fill {
+            height: 100%;
+            background-color: var(--dragwyb-step-active-color, #1d4ed8);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .dragwyb-step-progress-text {
+            font-size: 14px;
+            color: var(--dragwyb-step-text-color, #6b7280);
+            font-weight: 500;
+        }
+    }
+
+    /* Step Navigation Buttons */
+    .dragwyb-step-navigation {
+        display: flex;
+        gap: 15px;
+        width: 100%;
+        justify-content: space-between;
+
+        .dragwyb-button-field {
+            width: unset;
+        }
+
+        .dragwyb-step-next {
+            margin-left: auto;
+        }
     }
 }
 

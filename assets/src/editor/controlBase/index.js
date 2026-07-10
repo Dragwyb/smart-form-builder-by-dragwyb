@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import ResponsiveDevices from "../../editor/components/Common/ResponsiveDevices";
-import { FaUndo } from "react-icons/fa";
+import { FaUndo, FaDatabase } from "react-icons/fa";
 import { __ } from '@wordpress/i18n';
 
 class DragwybControlBase extends Component {
@@ -9,7 +9,8 @@ class DragwybControlBase extends Component {
     constructor(props) {
         super();
         this.state = {
-            value: props.value
+            value: props.value,
+            showDynamicMenu: false
         }
         this.styleRender = props.styleRender || false;
 
@@ -28,6 +29,7 @@ class DragwybControlBase extends Component {
     componentDidMount = () => {
         this.renderStyleSelector();
         this.onRender();
+        document.addEventListener('click', this.handleOutsideClick);
     }
 
     renderStyleSelector() {
@@ -71,6 +73,7 @@ class DragwybControlBase extends Component {
 
     componentWillUnmount = () => {
         this.onDestroy();
+        document.removeEventListener('click', this.handleOutsideClick);
     }
 
     #renderContent(props) {
@@ -89,12 +92,108 @@ class DragwybControlBase extends Component {
         return this.bind();
     }
 
+    handleOutsideClick = (e) => {
+        if (this.state.showDynamicMenu) {
+            const button = document.getElementById(`dynamic-btn-${this.id}`);
+            const dropdown = document.getElementById(`dynamic-dropdown-${this.id}`);
+
+            if (button && !button.contains(e.target) && dropdown && !dropdown.contains(e.target)) {
+                this.setState({ showDynamicMenu: false });
+            }
+        }
+    }
+
+    handleInsertDynamicTag = (tag) => {
+        const currentValue = this.state.value || '';
+        let newValue;
+        if (typeof currentValue === 'object' && currentValue !== null) {
+            if (this.controlName === 'url') {
+                newValue = {
+                    ...currentValue,
+                    url: tag
+                };
+            } else {
+                newValue = currentValue;
+            }
+        } else {
+            newValue = tag;
+        }
+
+        this.setState({ showDynamicMenu: false });
+        this.updateControlHandler(this.id, newValue);
+    }
+
+    getDynamicTagsOptions() {
+        const options = [];
+
+        const isFieldIdEnabled = this.settings.field_id_tags === true;
+
+        if (isFieldIdEnabled) {
+            // 2. Fetch all field IDs currently in the form Redux store
+            const storeState = window.DragwybStore?.getState();
+            const fields = storeState?.form?.fields || {};
+
+            Object.keys(fields).forEach(key => {
+                const field = fields[key];
+                if (field && field.type !== 'row' && field.type !== 'button') {
+                    const idVal = field.attributes?.field_id || field._id;
+                    const labelVal = field.attributes?.label || '';
+                    if (idVal) {
+                        options.push({
+                            tag: idVal,
+                            label: labelVal
+                        });
+                    }
+                }
+            });
+
+            return options;
+        }
+
+        // 1. Fetch registered PHP dynamic tags
+        const phpTags = DragwybEditor?.dynamicTags || [];
+        const isFieldIdTagsEnabled = this.settings.dynamic_tag?.field_ids === true;
+        phpTags.forEach(item => {
+            options.push({
+                tag: item.tag,
+                label: item.label
+            });
+        });
+
+
+        if (isFieldIdTagsEnabled) {
+            // 2. Fetch all field IDs currently in the form Redux store
+            const storeState = window.DragwybStore?.getState();
+            const fields = storeState?.form?.fields || {};
+
+            Object.keys(fields).forEach(key => {
+                const field = fields[key];
+                if (field && field.type !== 'row' && field.type !== 'button') {
+                    const idVal = field.attributes?.field_id || field._id;
+                    const labelVal = field.attributes?.label || '';
+                    if (idVal) {
+                        options.push({
+                            tag: `field:${idVal}`,
+                            label: `${__('Field:', 'smart-form-builder-by-dragwyb')} ${labelVal}`
+                        });
+                    }
+                }
+            });
+        }
+
+        return options;
+    }
+
     RenderLabel({ label = null, className = '', attr = {}, children = null }) {
         label = label || this.settings.label;
+        const defaultValue = this.settings.default || '';
 
         if (!label) {
             return null;
         }
+
+        const isFieldTagEnable = this.settings.field_id_tags === true;
+        const isDynamicSupported = this.settings.dynamic_tag?.active === true || isFieldTagEnable;
 
         return (
             <>
@@ -102,9 +201,41 @@ class DragwybControlBase extends Component {
                     {label}
                     {this.settings.responsive_control && this.settings.responsive_type && <ResponsiveDevices Utils={this.Utils} style='dropdown' />}
                     {children}
-                    {this.state.value && <span className="dragwyb-control__reset" onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.resetControl(); }}>
+                    {isDynamicSupported && (
+                        <span
+                            id={`dynamic-btn-${this.id}`}
+                            className={`dragwyb-control__dynamic${this.state.value ? ' has-reset' : ''}`}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                this.setState(prev => ({ showDynamicMenu: !prev.showDynamicMenu }));
+                            }}
+                            title={__('Dynamic Tags', 'smart-form-builder-by-dragwyb')}
+                        >
+                            <FaDatabase size={10} />
+                        </span>
+                    )}
+                    {this.state.value && this.state.value !== defaultValue && <span className="dragwyb-control__reset" onClick={(e) => { e.preventDefault(); e.stopPropagation(); this.resetControl(); }}>
                         <FaUndo size={12} title={__('Reset to Default', 'smart-form-builder-by-dragwyb')} />
                     </span>}
+                    {isDynamicSupported && this.state.showDynamicMenu && (
+                        <div id={`dynamic-dropdown-${this.id}`} className="dragwyb-dynamic-dropdown">
+                            <div className="dragwyb-dynamic-dropdown__header">
+                                {__('Dynamic Tags', 'smart-form-builder-by-dragwyb')}
+                            </div>
+                            <ul className="dragwyb-dynamic-dropdown__list">
+                                {this.getDynamicTagsOptions().map((opt, i) => (
+                                    <li key={i} className="dragwyb-dynamic-dropdown__item" onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        this.handleInsertDynamicTag(`${isFieldTagEnable ? opt.tag : `{${opt.tag}}`}`);
+                                    }}>
+                                        <FaDatabase size={10} style={{ marginRight: '6px' }} />
+                                        <span>{opt.label}({opt.tag})</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
                 </label>
             </>
         );

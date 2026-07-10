@@ -9,7 +9,7 @@ export default class ChooseControl extends DragwybEditor.editor.extends.ControlB
 
         const { settings, id } = this;
         // Default to empty string if no value is set
-        const currentValue = this.state.value !== undefined ? this.state.value : (settings.default || '');
+        const currentValue = this.state.value !== undefined && this.state.value !== '' ? this.state.value : (settings.default || '');
         const labelInline = settings.label_inline || false;
 
         // Ensure options exist

@@ -8,6 +8,7 @@ const StyleLoader = () => {
     // because setting state with a DOM node triggers unnecessary re-renders
     const styleWrapperRef = useRef(null);
     const iframeEle = useSelector(state => state?.iframeEle);
+    const iframeRef = useRef(iframeEle);
 
     const generateCssStrings = useCallback((cssSelectors) => {
         const cssCache = {};
@@ -60,7 +61,7 @@ const StyleLoader = () => {
                     }`;
                 }
 
-                if (!styleWrapperRef.current && cssString !== '' && iframeEle) {
+                if (iframeRef.current !== iframeEle && cssString !== '' && iframeEle) {
                     const styleId = `dragwyb-form-${formId}`;
 
                     // Attempt to find the existing style tag

@@ -544,6 +544,67 @@ class captchaField extends DragwybEditor.editor.extends.FieldBase {
     }
 }
 
+const StepPreview = ({ attributes, id }) => {
+    const state = window.parent?.DragwybStore?.getState() || window.DragwybStore?.getState() || {};
+    const formId = state?.form?.id;
+    const indicatorType = state?.form?.style?.step_indicator_type || 'numbers';
+    const fields = state?.form?.fields || {};
+
+    let stepContainers = [];
+    const allStepFIelds = document.querySelectorAll(`#dragwyb-form-wrapper-${formId} .dragwyb-field-wrapper.dragwyb-step-field`);
+    if (allStepFIelds && allStepFIelds.length > 0) {
+        allStepFIelds.forEach(stepField => {
+            const stepId = stepField.id.replace('dragwyb-step-', '');
+
+            console.log(stepId);
+            stepContainers.push(stepId);
+        });
+    } else {
+        const rootContainers = state?.form?.rootContainers || [];
+        stepContainers = rootContainers.filter(cid => fields[cid]?.type === 'step');
+    }
+
+    if (!stepContainers.includes(id)) {
+        stepContainers.push(id);
+    }
+
+    const stepIndex = stepContainers.indexOf(id) + 1;
+    const totalSteps = stepContainers.length;
+    const label = attributes.label || '';
+
+    // Default to 'numbers' or 'dots' style
+    const isDots = indicatorType === 'dots';
+    return (
+        <div className="dragwyb-step-indicator-container dragwyb-editor-preview" data-step-indicator={indicatorType} style={{ display: indicatorType === 'none' ? 'none' : 'flex' }}>
+            <div className="dragwyb-step-indicator">
+                <div className={`dragwyb-step-item${stepIndex === 1 ? ' active' : ''}`} style={{ display: ['numbers', 'dots'].includes(indicatorType) ? 'flex' : 'none' }}>
+                    <div className="dragwyb-step-dot">
+                        {!isDots && <div className="dragwyb-step-number">{stepIndex}</div>}
+                    </div>
+                    {(!isDots && label) && <div className="dragwyb-step-title">{label}</div>}
+                </div>
+                <span className="dragwyb-step-divider" style={{ display: ['numbers', 'dots'].includes(indicatorType) ? 'block' : 'none' }}></span>
+                <div className="dragwyb-step-progress-wrapper" style={{ display: indicatorType === 'progress' ? 'block' : 'none' }}>
+                    <div className="dragwyb-step-progress-text">
+                        Step {stepIndex} of {totalSteps}
+                    </div>
+                    <div className="dragwyb-step-progress-bar">
+                        <div className="dragwyb-step-progress-fill" style={{ width: stepIndex === 1 ? '100%' : 0 }}></div>
+                    </div>
+                </div>
+            </div>
+        </div >
+    );
+};
+
+class stepField extends DragwybEditor.editor.extends.FieldBase {
+    fieldName() { return 'step'; }
+    bind() {
+        if (!this.shouldRender()) return <></>;
+        return <StepPreview attributes={this.attributes} id={this.id} />;
+    }
+}
+
 const initializeFields = () => {
     const defaultFields = {
         'text': (args) => new textField(args),
@@ -567,6 +628,7 @@ const initializeFields = () => {
         'html': (args) => new htmlField(args),
         'section': (args) => new sectionField(args),
         'captcha': (args) => new captchaField(args),
+        'step': (args) => new stepField(args),
     };
 
     Object.keys(defaultFields).forEach(key =>

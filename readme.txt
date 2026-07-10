@@ -6,7 +6,7 @@ Author URI: https://dragwyb.com/
 Requires at least: 5.8  
 Tested up to: 7.0  
 Requires PHP: 7.4  
-Stable tag: 1.0.6
+Stable tag: 1.1.0
 License: GPL2  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -136,6 +136,16 @@ If the "Save Submissions" action is enabled on your form, all data points are sa
 ---
 
 ## == Changelog ==
+
+= 1.1.0 (2026-07-11) =
+* Added Conditional field settings.
+* Added dynamic tags option in controls.
+* Added step field for multi-step forms.
+* Added style settings for step indicator.
+* Added progress bar styling.
+* Added button style settings for previous and next buttons.
+* Optimize assets loading.
+* Improved drodown control stylings.
 
 = 1.0.6 (20 June 2026) =
 * Fixed Form Editor styling issue dashboard menus showing.

@@ -78,11 +78,18 @@ const SortableRepeaterItem = ({
   const repeaterHeading = (key, index) => {
     let heading = "";
 
-    if (repeaterItem[key]) {
-      heading = repeaterItem[key];
+    if (key) {
+      if (key.includes('{{')) {
+        heading = key.replace(/\{\{([^}]+)\}\}/g, (match, p1) => {
+          const trimmedKey = p1.trim();
+          return repeaterItem[trimmedKey] !== undefined ? repeaterItem[trimmedKey] : "";
+        });
+      } else if (repeaterItem[key]) {
+        heading = repeaterItem[key];
+      }
     }
 
-    if (!heading || "" === heading) {
+    if (!heading || "" === heading.trim()) {
       heading = `Item #${index + 1}`;
     }
 

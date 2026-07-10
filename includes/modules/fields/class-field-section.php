@@ -36,7 +36,6 @@ class Field_Section extends Field_Base {
 				'type'    => Controls::TEXT,
 				'label'   => __( 'Section Title', 'smart-form-builder-by-dragwyb' ),
 				'default' => __( 'Section Title', 'smart-form-builder-by-dragwyb' ),
-				'dynamic' => array( 'active' => true ),
 			)
 		);
 

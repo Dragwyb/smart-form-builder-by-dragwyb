@@ -8,6 +8,7 @@ class Control_Image extends Control_Base {
 
 	protected function register_settings() {
 		return array(
+			'name'    => 'string',
 			'label'   => 'string',
 			'default' => 'image', // Custom sanitizer
 		);
