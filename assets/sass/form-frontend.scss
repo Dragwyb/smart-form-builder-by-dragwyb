@@ -168,6 +168,12 @@
     --dragwyb-btn-box-shadow-color: transparent;
     --dragwyb-btn-box-shadow-position: ;
 
+    // Previous Button
+    --dragwyb-prev-btn-bg: #e5e7eb;
+    --dragwyb-prev-btn-color: #374151;
+    --dragwyb-prev-btn-hover-bg: #d1d5db;
+    --dragwyb-prev-btn-hover-color: #374151;
+
     --dragwyb-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
     // Toggle (Checkbox & Radio)
@@ -573,53 +579,63 @@
                 }
             }
         }
+    }
 
-        /* Buttons */
-        button {
-            font-family: var(--dragwyb-btn-typography-family);
-            font-size: var(--dragwyb-btn-typography-size);
-            font-weight: var(--dragwyb-btn-typography-wt);
-            font-style: var(--dragwyb-btn-typography-st);
-            text-transform: var(--dragwyb-btn-typography-ts);
-            text-decoration: var(--dragwyb-btn-typography-dt);
-            line-height: var(--dragwyb-btn-typography-lh);
-            letter-spacing: var(--dragwyb-btn-typography-ls);
-            word-spacing: var(--dragwyb-btn-typography-ws);
-            text-align: var(--dragwyb-btn-typography-align, center);
-            width: var(--dragwyb-btn-width);
-            background-color: var(--dragwyb-btn-bg);
-            color: var(--dragwyb-btn-color);
-            border: 0px var(--dragwyb-btn-border-style) var(--dragwyb-btn-border-color);
-            border-top-width: var(--dragwyb-btn-border-top-width);
-            border-bottom-width: var(--dragwyb-btn-border-bottom-width);
-            border-left-width: var(--dragwyb-btn-border-left-width);
-            border-right-width: var(--dragwyb-btn-border-right-width);
-            border-radius: var(--dragwyb-btn-radius);
-            padding: var(--dragwyb-btn-pt) var(--dragwyb-btn-pr) var(--dragwyb-btn-pb) var(--dragwyb-btn-pl);
-            box-shadow: var(--dragwyb-btn-box-shadow-position) var(--dragwyb-btn-box-shadow-h) var(--dragwyb-btn-box-shadow-v) var(--dragwyb-btn-box-shadow-blur) var(--dragwyb-btn-box-shadow-spread) var(--dragwyb-btn-box-shadow-color);
-            cursor: pointer;
-            transition: var(--dragwyb-transition);
+    /* Buttons */
+    button {
+        font-family: var(--dragwyb-btn-typography-family);
+        font-size: var(--dragwyb-btn-typography-size);
+        font-weight: var(--dragwyb-btn-typography-wt);
+        font-style: var(--dragwyb-btn-typography-st);
+        text-transform: var(--dragwyb-btn-typography-ts);
+        text-decoration: var(--dragwyb-btn-typography-dt);
+        line-height: var(--dragwyb-btn-typography-lh);
+        letter-spacing: var(--dragwyb-btn-typography-ls);
+        word-spacing: var(--dragwyb-btn-typography-ws);
+        text-align: var(--dragwyb-btn-typography-align, center);
+        width: var(--dragwyb-btn-width);
+        background-color: var(--dragwyb-btn-bg);
+        color: var(--dragwyb-btn-color);
+        border: 0px var(--dragwyb-btn-border-style) var(--dragwyb-btn-border-color);
+        border-top-width: var(--dragwyb-btn-border-top-width);
+        border-bottom-width: var(--dragwyb-btn-border-bottom-width);
+        border-left-width: var(--dragwyb-btn-border-left-width);
+        border-right-width: var(--dragwyb-btn-border-right-width);
+        border-radius: var(--dragwyb-btn-radius);
+        padding: var(--dragwyb-btn-pt) var(--dragwyb-btn-pr) var(--dragwyb-btn-pb) var(--dragwyb-btn-pl);
+        box-shadow: var(--dragwyb-btn-box-shadow-position) var(--dragwyb-btn-box-shadow-h) var(--dragwyb-btn-box-shadow-v) var(--dragwyb-btn-box-shadow-blur) var(--dragwyb-btn-box-shadow-spread) var(--dragwyb-btn-box-shadow-color);
+        cursor: pointer;
+        transition: var(--dragwyb-transition);
+
+        &:hover {
+            color: var(--dragwyb-btn-hover-color, var(--dragwyb-btn-color));
+            background-color: var(--dragwyb-btn-hover-bg, var(--dragwyb-btn-bg));
+            border-color: var(--dragwyb-btn-hover-border-color, var(--dragwyb-btn-border-color));
+        }
+
+        &.dragwyb-button-prev {
+            background-color: var(--dragwyb-prev-btn-bg, var(--dragwyb-btn-bg));
+            color: var(--dragwyb-prev-btn-color, var(--dragwyb-btn-color));
 
             &:hover {
-                color: var(--dragwyb-btn-hover-color, var(--dragwyb-btn-color));
-                background-color: var(--dragwyb-btn-hover-bg, var(--dragwyb-btn-bg));
-                border-color: var(--dragwyb-btn-hover-border-color, var(--dragwyb-btn-border-color));
+                background-color: var(--dragwyb-prev-btn-hover-bg, var(--dragwyb-prev-btn-hover-bg, var(--dragwyb-btn-bg)));
+                color: var(--dragwyb-prev-btn-hover-color, var(--dragwyb-prev-btn-hover-color, var(--dragwyb-btn-color)));
             }
+        }
 
-            &-block {
-                width: 100%;
-                display: flex;
-            }
+        &-block {
+            width: 100%;
+            display: flex;
+        }
 
-            &-reset {
-                background-color: transparent;
-                border: 1px solid var(--dragwyb-input-border-color);
-                color: var(--dragwyb-label-color);
+        &-reset {
+            background-color: transparent;
+            border: 1px solid var(--dragwyb-input-border-color);
+            color: var(--dragwyb-label-color);
 
-                &:hover {
-                    background-color: var(--dragwyb-form-bg-filled);
-                    color: var(--dragwyb-input-color);
-                }
+            &:hover {
+                background-color: var(--dragwyb-form-bg-filled);
+                color: var(--dragwyb-input-color);
             }
         }
     }

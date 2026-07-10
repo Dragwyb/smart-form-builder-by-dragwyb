@@ -783,6 +783,13 @@ class Settings extends Register_Controls_Base {
 				'prefix'   => 'btn',
 			)
 		);
+		$this->add_control(
+			'submit_button_heading',
+			array(
+				'type'  => Controls::HEADING,
+				'label' => __( 'Submit / Next Button', 'smart-form-builder-by-dragwyb' ),
+			)
+		);
 
 		$this->start_tabs( 'tabs_button_style' );
 
@@ -853,6 +860,72 @@ class Settings extends Register_Controls_Base {
 				),
 			)
 		);
+
+		$this->add_control(
+			'heading_prev_button',
+			array(
+				'type'  => Controls::HEADING,
+				'label' => __( 'Previous Button', 'smart-form-builder-by-dragwyb' ),
+			)
+		);
+
+		$this->start_tabs( 'tabs_prev_button_style' );
+
+		$this->start_tab( 'tab_prev_button_normal', array( 'label' => __( 'Normal', 'smart-form-builder-by-dragwyb' ) ) );
+
+		$this->add_control(
+			'prev_button_text_color',
+			array(
+				'type'      => Controls::COLOR,
+				'label'     => __( 'Text Color', 'smart-form-builder-by-dragwyb' ),
+				'default'   => '#374151',
+				'selectors' => array(
+					'{{WRAPPER}}' => '--dragwyb-prev-btn-color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_control(
+			'prev_button_bg_color',
+			array(
+				'type'      => Controls::COLOR,
+				'label'     => __( 'Background Color', 'smart-form-builder-by-dragwyb' ),
+				'default'   => '#e5e7eb',
+				'selectors' => array(
+					'{{WRAPPER}}' => '--dragwyb-prev-btn-bg: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->end_tab();
+
+		$this->start_tab( 'tab_prev_button_hover', array( 'label' => __( 'Hover', 'smart-form-builder-by-dragwyb' ) ) );
+
+		$this->add_control(
+			'prev_button_hover_text_color',
+			array(
+				'type'      => Controls::COLOR,
+				'label'     => __( 'Text Color', 'smart-form-builder-by-dragwyb' ),
+				'selectors' => array(
+					'{{WRAPPER}}' => '--dragwyb-prev-btn-hover-color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_control(
+			'prev_button_hover_bg_color',
+			array(
+				'type'      => Controls::COLOR,
+				'label'     => __( 'Background Color', 'smart-form-builder-by-dragwyb' ),
+				'default'   => '#d1d5db',
+				'selectors' => array(
+					'{{WRAPPER}}' => '--dragwyb-prev-btn-hover-bg: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->end_tab();
+		$this->end_tabs();
 
 		$this->add_group_control(
 			'button_border',
