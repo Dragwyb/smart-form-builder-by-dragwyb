@@ -108,6 +108,14 @@ class Field_Step extends Field_Base {
 		);
 
 		$this->add_control(
+			'step_description',
+			array(
+				'type' => Controls::RAW_HTML,
+				'raw'  => sprintf( __( 'Step field preview different from frontend. In editor show step field placeholder for style and visual previwe verify field on frontend.', 'smart-form-builder-by-dragwyb' ) ),
+			)
+		);
+
+		$this->add_control(
 			'label',
 			array(
 				'type'    => Controls::TEXT,
@@ -144,7 +152,6 @@ class Field_Step extends Field_Base {
 		}
 
 		$settings            = $this->get_field_settings();
-		$toolbar_value       = $this->get_toolbars_values( 'style' );
 		$id                  = $this->get_the_id();
 		$label               = $this->field_key_exist( $settings, 'label', '' );
 		$next                = $this->field_key_exist( $settings, 'next_button_text', 'Next' );
