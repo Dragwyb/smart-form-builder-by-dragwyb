@@ -155,8 +155,8 @@ class Dragwyb_Form_Builder_Ajax {
 		$orderby         = isset( $_POST['orderby'] ) ? sanitize_key( wp_unslash( $_POST['orderby'] ) ) : 'created_at';
 		$orderby         = in_array( $orderby, $allowed_orderby, true ) ? $orderby : 'created_at';
 
-		$order           = isset( $_POST['order'] ) ? sanitize_key( wp_unslash( $_POST['order'] ) ) : 'DESC';
-		$order           = in_array( strtoupper( $order ), array( 'ASC', 'DESC' ), true ) ? strtoupper( $order ) : 'DESC';
+		$order = isset( $_POST['order'] ) ? sanitize_key( wp_unslash( $_POST['order'] ) ) : 'DESC';
+		$order = in_array( strtoupper( $order ), array( 'ASC', 'DESC' ), true ) ? strtoupper( $order ) : 'DESC';
 
 		$args = array(
 			'limit'   => isset( $_POST['limit'] ) ? absint( wp_unslash( $_POST['limit'] ) ) : 20,
@@ -181,9 +181,12 @@ class Dragwyb_Form_Builder_Ajax {
 					if ( $count >= 3 ) {
 						break;
 					}
-					$display_val    = is_array( $value['value'] ) ? implode( ', ', $value['value'] ) : (string) $value['value'];
-					$summary[]      = sprintf( '<strong>%s:</strong> %s', esc_html( (string) $value['label'] ), esc_html( $display_val ) );
-					$summary_text[] = sprintf( '%s: %s', sanitize_text_field( (string) $value['label'] ), sanitize_text_field( $display_val ) );
+
+					$raw_val     = ( is_array( $value ) && isset( $value['value'] ) ) ? $value['value'] : $value;
+					$display_val = is_array( $raw_val ) ? implode( ', ', $raw_val ) : (string) $raw_val;
+
+					$summary[]      = isset( $value['label'] ) ? sprintf( '<strong>%s:</strong> %s', esc_html( (string) $value['label'] ), esc_html( $display_val ) ) : esc_html( $display_val );
+					$summary_text[] = isset( $value['label'] ) ? sprintf( '%s: %s', sanitize_text_field( (string) $value['label'] ), sanitize_text_field( $display_val ) ) : sanitize_text_field( $display_val );
 					++$count;
 				}
 				$entry->submission_data_summary      = implode( '<br>', $summary ) . ( count( $data ) > 3 ? '<br><em>...and more</em>' : '' );
@@ -427,8 +430,8 @@ class Dragwyb_Form_Builder_Ajax {
 		$orderby         = isset( $_POST['orderby'] ) ? sanitize_key( wp_unslash( $_POST['orderby'] ) ) : 'created_at';
 		$orderby         = in_array( $orderby, $allowed_orderby, true ) ? $orderby : 'created_at';
 
-		$order           = isset( $_POST['order'] ) ? sanitize_key( wp_unslash( $_POST['order'] ) ) : 'DESC';
-		$order           = in_array( strtoupper( $order ), array( 'ASC', 'DESC' ), true ) ? strtoupper( $order ) : 'DESC';
+		$order = isset( $_POST['order'] ) ? sanitize_key( wp_unslash( $_POST['order'] ) ) : 'DESC';
+		$order = in_array( strtoupper( $order ), array( 'ASC', 'DESC' ), true ) ? strtoupper( $order ) : 'DESC';
 
 		$args = array(
 			'limit'   => isset( $_POST['limit'] ) ? absint( wp_unslash( $_POST['limit'] ) ) : 20,
