@@ -108,7 +108,6 @@ export default class WysiwygControl extends DragwybEditor.editor.extends.Control
         // If value is dynamic tag then update wysiwyg editor
         if (value.match(/^\{.*\}$/)) {
             const { id } = this;
-            console.log('hello world')
             if (typeof wp !== 'undefined' && wp.editor) {
                 const editorId = `dragwyb-wysiwyg-${id}`;
 
