@@ -82,6 +82,9 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
 
                     this.clearFormData();
 
+                    // Reset step fields on successful form submission
+                    DragwybBuilder.Hooks.applyFilter('dragwyb/frontend/reset_step_fields_' + this.formId, true);
+
                     // Trigger specific frontend actions returned by the backend
                     if (response.data.actions_data && typeof response.data.actions_data === 'object') {
                         Object.entries(response.data.actions_data).forEach(([actionId, actionData]) => {
