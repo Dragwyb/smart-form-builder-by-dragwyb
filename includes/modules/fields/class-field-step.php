@@ -118,9 +118,8 @@ class Field_Step extends Field_Base {
 		$this->add_control(
 			'label',
 			array(
-				'type'    => Controls::TEXT,
-				'label'   => __( 'Step Title', 'smart-form-builder-by-dragwyb' ),
-				'default' => __( 'Next Step', 'smart-form-builder-by-dragwyb' ),
+				'type'  => Controls::TEXT,
+				'label' => __( 'Step Title', 'smart-form-builder-by-dragwyb' ),
 			)
 		);
 
