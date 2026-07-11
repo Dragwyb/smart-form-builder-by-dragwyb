@@ -100,4 +100,26 @@ export default class WysiwygControl extends DragwybEditor.editor.extends.Control
             }
         }
     }
+
+    updateControlHandler(key, value) {
+        this.setState({ value })
+        this.updateControls(key, value);
+
+        // If value is dynamic tag then update wysiwyg editor
+        if (value.match(/^\{.*\}$/)) {
+            const { id } = this;
+            console.log('hello world')
+            if (typeof wp !== 'undefined' && wp.editor) {
+                const editorId = `dragwyb-wysiwyg-${id}`;
+
+                if (typeof window.tinyMCE !== 'undefined') {
+                    const editor = window.tinyMCE.get(editorId);
+
+                    if (editor) {
+                        editor.setContent(value);
+                    }
+                }
+            }
+        }
+    }
 }
