@@ -28,8 +28,10 @@ class Dragwyb_Form_Builder_Ajax {
 		add_action( 'wp_ajax_dragwyb_get_entry', array( $this, 'get_entry' ) );
 		add_action( 'wp_ajax_dragwyb_update_entry', array( $this, 'update_entry' ) );
 		add_action( 'wp_ajax_dragwyb_delete_entry', array( $this, 'delete_entry' ) );
+		add_action( 'wp_ajax_dragwyb_delete_entries', array( $this, 'delete_entries' ) );
 		add_action( 'wp_ajax_dragwyb_get_errors', array( $this, 'get_errors' ) );
 		add_action( 'wp_ajax_dragwyb_delete_error', array( $this, 'delete_error' ) );
+		add_action( 'wp_ajax_dragwyb_delete_errors', array( $this, 'delete_errors' ) );
 		add_action( 'wp_ajax_dragwyb_clear_errors', array( $this, 'clear_errors' ) );
 	}
 
@@ -395,6 +397,45 @@ class Dragwyb_Form_Builder_Ajax {
 		wp_send_json_success( array( 'message' => __( 'Entry deleted successfully.', 'smart-form-builder-by-dragwyb' ) ) );
 	}
 
+	/**
+	 * Delete multiple entries (submissions) via AJAX
+	 */
+	public function delete_entries(): void {
+		check_ajax_referer( 'dragwyb_admin_nonce' );
+
+		if ( ! $this->current_user_can_manage_entries() ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied', 'smart-form-builder-by-dragwyb' ) ) );
+		}
+
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- IDs are sanitized via array_map and absint
+		$ids = isset( $_POST['ids'] ) ? array_map( 'absint', (array) $_POST['ids'] ) : array();
+		if ( empty( $ids ) ) {
+			wp_send_json_error( array( 'message' => __( 'No IDs provided', 'smart-form-builder-by-dragwyb' ) ) );
+		}
+
+		$db          = new Dragwyb_Submission_Db();
+		$allowed_ids = array();
+
+		foreach ( $ids as $id ) {
+			$entry = $db->get( $id );
+			if ( $entry && $this->current_user_can_manage_entry( $entry, 'delete_post' ) ) {
+				$allowed_ids[] = $id;
+			}
+		}
+
+		if ( empty( $allowed_ids ) ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied or invalid IDs', 'smart-form-builder-by-dragwyb' ) ) );
+		}
+
+		$deleted = $db->delete_multiple( $allowed_ids );
+
+		if ( $deleted === false ) {
+			wp_send_json_error( array( 'message' => __( 'Failed to delete entries.', 'smart-form-builder-by-dragwyb' ) ) );
+		}
+
+		wp_send_json_success( array( 'message' => __( 'Selected entries deleted successfully.', 'smart-form-builder-by-dragwyb' ) ) );
+	}
+
 	private function current_user_can_manage_form( int $form_id, string $capability = 'edit_post' ): bool {
 		if ( current_user_can( 'manage_options' ) ) {
 			return true;
@@ -513,6 +554,32 @@ class Dragwyb_Form_Builder_Ajax {
 		}
 
 		wp_send_json_success( array( 'message' => __( 'Error log deleted successfully.', 'smart-form-builder-by-dragwyb' ) ) );
+	}
+
+	/**
+	 * Delete multiple error logs via AJAX
+	 */
+	public function delete_errors(): void {
+		check_ajax_referer( 'dragwyb_admin_nonce' );
+
+		if ( ! $this->current_user_can_manage_entries() ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied', 'smart-form-builder-by-dragwyb' ) ) );
+		}
+
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- IDs are sanitized via array_map and absint
+		$ids = isset( $_POST['ids'] ) ? array_map( 'absint', (array) $_POST['ids'] ) : array();
+		if ( empty( $ids ) ) {
+			wp_send_json_error( array( 'message' => __( 'No IDs provided', 'smart-form-builder-by-dragwyb' ) ) );
+		}
+
+		$db      = new Dragwyb_Error_Log_Db();
+		$deleted = $db->delete_multiple( $ids );
+
+		if ( $deleted === false ) {
+			wp_send_json_error( array( 'message' => __( 'Failed to delete error logs.', 'smart-form-builder-by-dragwyb' ) ) );
+		}
+
+		wp_send_json_success( array( 'message' => __( 'Selected error logs deleted successfully.', 'smart-form-builder-by-dragwyb' ) ) );
 	}
 
 	/**

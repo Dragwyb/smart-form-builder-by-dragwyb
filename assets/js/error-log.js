@@ -30,6 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
         totalItemsText: document.getElementById('dragwyb-total-items'),
         clearAllBtn: document.getElementById('dragwyb-clear-all-btn'),
         sortableHeaders: document.querySelectorAll('.dragwyb-custom-table th.sortable'),
+        selectAll: document.getElementById('dragwyb-select-all'),
+        bulkAction: document.getElementById('dragwyb-bulk-action'),
+        bulkActionBtn: document.getElementById('dragwyb-bulk-action-btn'),
 
         // Modals
         modalOverlay: document.getElementById('dragwyb-modal-overlay'),
@@ -106,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearElement(elements.tbody);
         const row = document.createElement('tr');
         const cell = document.createElement('td');
-        cell.colSpan = 6;
+        cell.colSpan = 7;
         cell.style.textAlign = 'center';
         cell.style.padding = '20px';
         if (options.color) cell.style.color = options.color;
@@ -256,6 +259,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 closeModal();
             }
         });
+
+        // Select All checkboxes
+        if (elements.selectAll) {
+            elements.selectAll.addEventListener('change', (e) => {
+                const checkboxes = elements.tbody.querySelectorAll('.dragwyb-error-checkbox');
+                checkboxes.forEach(cb => {
+                    cb.checked = e.target.checked;
+                });
+            });
+        }
+
+        // Bulk action Apply button
+        if (elements.bulkActionBtn) {
+            elements.bulkActionBtn.addEventListener('click', () => {
+                const action = elements.bulkAction.value;
+                if (action !== 'delete') {
+                    alert('Please select a valid bulk action.');
+                    return;
+                }
+
+                const checkedCbs = elements.tbody.querySelectorAll('.dragwyb-error-checkbox:checked');
+                if (checkedCbs.length === 0) {
+                    alert('Please select at least one log entry.');
+                    return;
+                }
+
+                if (!confirm(`Are you sure you want to delete ${checkedCbs.length} selected log entries?`)) {
+                    return;
+                }
+
+                const ids = Array.from(checkedCbs).map(cb => cb.value);
+                bulkDeleteErrors(ids);
+            });
+        }
     }
 
     // Load Forms for Dropdown
@@ -322,6 +359,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Render Table Rows
     function renderTable(entries) {
+        if (elements.selectAll) {
+            elements.selectAll.checked = false;
+        }
+
         if (!entries || entries.length === 0) {
             appendStatusRow(i18n.no_errors || 'No validation errors logged.');
             return;
@@ -332,6 +373,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const id = String(parseInt(entry.id, 10) || 0);
             const row = document.createElement('tr');
             row.id = `error-row-${id}`;
+
+            // Checkbox column
+            const cbCell = document.createElement('td');
+            cbCell.className = 'column-cb check-column';
+            const cbInput = document.createElement('input');
+            cbInput.type = 'checkbox';
+            cbInput.className = 'dragwyb-error-checkbox';
+            cbInput.value = id;
+            cbCell.appendChild(cbInput);
+            row.appendChild(cbCell);
 
             const titleCell = appendTextCell(row, '', 'dragwyb-title-column');
             const strong = document.createElement('strong');
@@ -394,6 +445,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     alert(res.data.message || 'Error deleting log entry');
                 }
+            });
+    }
+
+    function bulkDeleteErrors(ids) {
+        setLoadingState(true);
+
+        const formData = new FormData();
+        formData.append('action', 'dragwyb_delete_errors');
+        formData.append('_ajax_nonce', nonce);
+        ids.forEach(id => formData.append('ids[]', id));
+
+        fetch(ajax_url, { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(res => {
+                if (res.success) {
+                    loadErrors();
+                } else {
+                    alert(res.data.message || 'Error deleting log entries');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('An error occurred while deleting log entries.');
+            })
+            .finally(() => {
+                setLoadingState(false);
             });
     }
 

@@ -86,6 +86,13 @@ class Error_Log {
 					<select id="dragwyb-form-filter" class="dragwyb-select">
 						<option value="0"><?php esc_html_e( 'Loading forms...', 'smart-form-builder-by-dragwyb' ); ?></option>
 					</select>
+					<div class="dragwyb-bulk-actions actions bulkactions" style="display: flex; gap: 5px; align-items: center; margin-left: 10px;">
+						<select id="dragwyb-bulk-action" class="dragwyb-select" style="min-width: 130px; padding: 3px 24px 3px 8px;">
+							<option value="-1"><?php esc_html_e( 'Bulk actions', 'smart-form-builder-by-dragwyb' ); ?></option>
+							<option value="delete"><?php esc_html_e( 'Delete', 'smart-form-builder-by-dragwyb' ); ?></option>
+						</select>
+						<button type="button" id="dragwyb-bulk-action-btn" class="button"><?php esc_html_e( 'Apply', 'smart-form-builder-by-dragwyb' ); ?></button>
+					</div>
 				</div>
 
 				<div class="dragwyb-search-box">
@@ -98,6 +105,9 @@ class Error_Log {
 				<table class="wp-list-table widefat fixed striped dragwyb-custom-table">
 					<thead>
 						<tr>
+							<th scope="col" id="cb" class="manage-column column-cb check-column" style="width: 2.2em; vertical-align: middle;">
+								<input id="dragwyb-select-all" type="checkbox">
+							</th>
 							<th scope="col" id="col-id" class="manage-column column-id sortable desc" data-orderby="id" style="width: 80px;">
 								<a href="#"><span><?php esc_html_e( 'ID', 'smart-form-builder-by-dragwyb' ); ?></span><span class="sorting-indicator"></span></a>
 							</th>

@@ -338,3 +338,14 @@
     margin-top: 4px;
     word-break: break-all;
 }
+
+.dragwyb-custom-table th.column-cb, .dragwyb-custom-table td.column-cb {
+    width: 2.2em !important;
+    padding: 10px 10px !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+.dragwyb-custom-table th.column-cb input[type=checkbox], .dragwyb-custom-table td.column-cb input[type=checkbox] {
+    margin: 0 !important;
+    vertical-align: middle !important;
+}
