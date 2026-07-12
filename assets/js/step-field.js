@@ -31,6 +31,11 @@ class DragwybStepFields extends DragwybBuilder.DragwybFormFrontendBase {
         const $finalStep = this.steps.eq(this.stepsCount - 1);
         $finalStep.find('.dragwyb-step-next').hide();
 
+        DragwybBuilder.Hooks.addFilter('dragwyb/frontend/reset_step_fields_' + this.formId, (value) => {
+            this.resetStepField();
+            return value;
+        });
+
         this.bindEvents();
         this.updateIndicators();
     }
@@ -87,6 +92,11 @@ class DragwybStepFields extends DragwybBuilder.DragwybFormFrontendBase {
                 }
             }, 10);
         });
+
+        // Reset form event handler
+        this.elements.$form.on('reset', () => {
+            this.resetStepField();
+        });
     }
 
     validateStepFields($step) {
@@ -127,6 +137,18 @@ class DragwybStepFields extends DragwybBuilder.DragwybFormFrontendBase {
             scrollTop: this.elements.$form.offset().top - 100
         }, 300);
 
+        this.updateIndicators();
+    }
+
+    resetStepField() {
+        this.steps.each((idx, el) => {
+            if (idx === 0) {
+                jQuery(el).removeClass('dragwyb-step-field_hidden');
+            } else {
+                jQuery(el).addClass('dragwyb-step-field_hidden');
+            }
+        });
+        this.currentStepIdx = 0;
         this.updateIndicators();
     }
 
