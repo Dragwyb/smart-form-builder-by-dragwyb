@@ -14,13 +14,19 @@ $white: #fff;
     align-items: center;
 }
 
-/* Custom Entries Page Styles */
-.dragwyb-entries-wrap {
+/* Custom Entries & Error Log Page Styles */
+.dragwyb-entries-wrap,
+.dragwyb-error-log-wrap {
     margin-top: 20px;
+    position: relative;
 
-    .dragwyb-entries-controls {
-        @include flex-between;
+    .dragwyb-entries-controls,
+    .dragwyb-error-log-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         margin-bottom: 15px;
+        clear: both;
 
         .dragwyb-filters {
             display: flex;
@@ -44,7 +50,8 @@ $white: #fff;
         }
     }
 
-    .dragwyb-entries-table-container {
+    .dragwyb-entries-table-container,
+    .dragwyb-error-log-table-container {
         background: $white;
         border: 1px solid $color-border;
         box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
@@ -91,6 +98,20 @@ $white: #fff;
                 padding: 30px !important;
                 color: $color-text-muted;
             }
+
+            // Checkbox selection column
+            th.column-cb,
+            td.column-cb {
+                width: 2.2em !important;
+                padding: 10px 10px !important;
+                text-align: center !important;
+                vertical-align: middle !important;
+
+                input[type=checkbox] {
+                    margin: 0 !important;
+                    vertical-align: middle !important;
+                }
+            }
         }
     }
 
@@ -110,6 +131,51 @@ $white: #fff;
                 gap: 5px;
             }
         }
+    }
+}
+
+/* Clear All Button (Error Logs Page) */
+.dragwyb-clear-all-btn {
+    float: right;
+    margin-top: 3px !important;
+    background: #fcf0f0 !important;
+    border-color: #f5c2c2 !important;
+    color: #b32d2e !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease-in-out !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    span {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+        line-height: 1;
+    }
+
+    &:hover:not(:disabled) {
+        background: #b32d2e !important;
+        border-color: #b32d2e !important;
+        color: #fff !important;
+        box-shadow: 0 2px 4px rgba(179, 45, 46, 0.2);
+    }
+}
+
+/* Error Badge Styles */
+.dragwyb-error-badge {
+    display: inline-block;
+    background: #fcf0f0;
+    border: 1px solid #f8d7da;
+    color: #842029;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    margin: 2px 4px 2px 0;
+    line-height: 1.4;
+
+    strong {
+        color: #b32d2e;
     }
 }
 
@@ -222,8 +288,9 @@ $white: #fff;
     }
 }
 
-/* Premium Grid Layout for Details in Entries */
-.dragwyb-entry-details-grid {
+/* Premium Grid Layout for Details in Entries & Error Logs */
+.dragwyb-entry-details-grid,
+.dragwyb-error-details-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 20px;
@@ -249,13 +316,24 @@ $white: #fff;
         text-transform: uppercase;
         letter-spacing: 0.05em;
     }
+
+    &.errors-section {
+        background: #fff5f5;
+        border-color: #fbcfe8;
+
+        h3 {
+            color: #b91c1c;
+            border-color: #fecdd3;
+        }
+    }
 }
 
 .dragwyb-detail-table {
     width: 100%;
     border-collapse: collapse;
 
-    th, td {
+    th,
+    td {
         padding: 8px 12px;
         text-align: left;
         border-bottom: 1px solid #f1f5f9;
@@ -273,9 +351,35 @@ $white: #fff;
     }
 
     tr:last-child {
-        td, th {
+        td,
+        th {
             border-bottom: none;
         }
+    }
+}
+
+.dragwyb-error-detail-card {
+    background: $white;
+    border: 1px solid #fee2e2;
+    border-left: 4px solid #ef4444;
+    border-radius: 4px;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    .error-field-name {
+        font-weight: 600;
+        color: #991b1b;
+        margin-bottom: 4px;
+    }
+
+    .error-message {
+        color: #7f1d1d;
+        font-size: 13px;
     }
 }
 
@@ -305,6 +409,26 @@ $white: #fff;
     }
 }
 
-.dragwyb-entries-modal {
+.dragwyb-entries-modal,
+.dragwyb-error-modal {
     width: 800px !important;
+}
+
+/* Export Modal */
+.dragwyb-export-modal-content {
+    width: 500px !important;
+}
+
+.dragwyb-export-formats label {
+    transition: border-color 0.2s, background-color 0.2s;
+
+    &:hover {
+        border-color: #3b82f6 !important;
+        background: #eff6ff !important;
+    }
+
+    input:checked + span {
+        color: #2563eb;
+        font-weight: 600;
+    }
 }
