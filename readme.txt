@@ -137,15 +137,19 @@ If the "Save Submissions" action is enabled on your form, all data points are sa
 
 ## == Changelog ==
 
-= 1.1.0 (2026-07-11) =
+= 1.1.0 (2026-07-15) =
 * Added Conditional field settings.
 * Added dynamic tags option in controls.
 * Added step field for multi-step forms.
 * Added style settings for step indicator.
 * Added progress bar styling.
 * Added button style settings for previous and next buttons.
+* Added bulk delete action button in entries and error logs.
+* Added entrie and error logs export feature.
+* Added form editor button in form preview adminbar.
 * Optimize assets loading.
 * Improved drodown control stylings.
+* Improved step field preview on editor.
 
 = 1.0.6 (20 June 2026) =
 * Fixed Form Editor styling issue dashboard menus showing.
