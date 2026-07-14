@@ -32,7 +32,7 @@ class Dragwyb_Form_Builder_Ajax {
 		add_action( 'wp_ajax_dragwyb_get_errors', array( $this, 'get_errors' ) );
 		add_action( 'wp_ajax_dragwyb_delete_error', array( $this, 'delete_error' ) );
 		add_action( 'wp_ajax_dragwyb_delete_errors', array( $this, 'delete_errors' ) );
-		add_action( 'wp_ajax_dragwyb_clear_errors', array( $this, 'clear_errors' ) );
+		add_action( 'wp_ajax_dragwyb_get_export_data', array( $this, 'get_export_data' ) );
 	}
 
 	/**
@@ -583,22 +583,88 @@ class Dragwyb_Form_Builder_Ajax {
 	}
 
 	/**
-	 * Clear all error logs via AJAX
+	 * Get raw export data in batches or specific IDs via AJAX
 	 */
-	public function clear_errors(): void {
+	public function get_export_data(): void {
 		check_ajax_referer( 'dragwyb_admin_nonce' );
 
 		if ( ! $this->current_user_can_manage_entries() ) {
 			wp_send_json_error( array( 'message' => __( 'Permission denied', 'smart-form-builder-by-dragwyb' ) ) );
 		}
 
-		$db      = new Dragwyb_Error_Log_Db();
-		$cleared = $db->clear_all();
-
-		if ( $cleared === false ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to clear error logs.', 'smart-form-builder-by-dragwyb' ) ) );
+		if ( is_user_logged_in() && ! is_admin() ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied', 'smart-form-builder-by-dragwyb' ) ) );
 		}
 
-		wp_send_json_success( array( 'message' => __( 'All error logs cleared successfully.', 'smart-form-builder-by-dragwyb' ) ) );
+		$type = isset( $_POST['type'] ) ? sanitize_key( wp_unslash( $_POST['type'] ) ) : 'entries';
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized below via array_map and absint
+		$ids = isset( $_POST['ids'] ) ? array_map( 'absint', (array) $_POST['ids'] ) : array();
+
+		if ( ! empty( $ids ) ) {
+			// Fetch specific IDs
+			if ( $type === 'errors' ) {
+				$db      = new Dragwyb_Error_Log_Db();
+				$results = array();
+				foreach ( $ids as $id ) {
+					$entry = $db->get( $id );
+					if ( $entry ) {
+						$results[] = $entry;
+					}
+				}
+			} else {
+				$db      = new Dragwyb_Submission_Db();
+				$results = array();
+				foreach ( $ids as $id ) {
+					$entry = $db->get( $id );
+					if ( $entry && $this->current_user_can_manage_entry( $entry ) ) {
+						$results[] = $entry;
+					}
+				}
+			}
+			wp_send_json_success(
+				array(
+					'items' => $results,
+					'total' => count( $results ),
+				)
+			);
+		} else {
+			// Fetch by filter with limit and offset (for batching)
+			$limit   = isset( $_POST['limit'] ) ? absint( wp_unslash( $_POST['limit'] ) ) : 100;
+			$offset  = isset( $_POST['offset'] ) ? absint( wp_unslash( $_POST['offset'] ) ) : 0;
+			$form_id = isset( $_POST['form_id'] ) ? absint( wp_unslash( $_POST['form_id'] ) ) : 0;
+			$search  = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
+
+			$args = array(
+				'limit'   => $limit,
+				'offset'  => $offset,
+				'form_id' => $form_id,
+				'search'  => $search,
+			);
+
+			if ( $type === 'errors' ) {
+				$db    = new Dragwyb_Error_Log_Db();
+				$items = $db->get_all( $args );
+				$total = $db->get_total_count( $args );
+			} else {
+				$db    = new Dragwyb_Submission_Db();
+				$items = $db->get_all( $args );
+				// Filter out entries user doesn't have permission for
+				$filtered_items = array();
+				foreach ( $items as $item ) {
+					if ( $this->current_user_can_manage_entry( $item ) ) {
+						$filtered_items[] = $item;
+					}
+				}
+				$items = $filtered_items;
+				$total = $db->get_total_count( $args );
+			}
+
+			wp_send_json_success(
+				array(
+					'items' => $items,
+					'total' => $total,
+				)
+			);
+		}
 	}
 }
