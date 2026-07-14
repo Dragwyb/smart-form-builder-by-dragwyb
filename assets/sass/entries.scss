@@ -26,6 +26,7 @@ $white: #fff;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 15px;
+        margin-top: 20px;
         clear: both;
 
         .dragwyb-filters {
@@ -351,6 +352,7 @@ $white: #fff;
     }
 
     tr:last-child {
+
         td,
         th {
             border-bottom: none;
@@ -365,7 +367,7 @@ $white: #fff;
     border-radius: 4px;
     padding: 10px 14px;
     margin-bottom: 10px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 
     &:last-child {
         margin-bottom: 0;
@@ -427,7 +429,7 @@ $white: #fff;
         background: #eff6ff !important;
     }
 
-    input:checked + span {
+    input:checked+span {
         color: #2563eb;
         font-weight: 600;
     }
