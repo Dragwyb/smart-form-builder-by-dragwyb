@@ -17,6 +17,8 @@ Looking for the fastest **drag and drop form builder** for WordPress? **Smart Fo
 
 Whether you need to create a simple **WordPress contact form**, a high-converting lead generation form, a multi-step user survey, or an inquiry form for Elementor or Gutenberg layouts, Dragwyb makes it effortless.
 
+*   **[Live Demo](https://dragwyb.com/smart-form-builder/?utm_source=wpplugin&utm_medium=readme&utm_campaign=dragwyb_form)** — Test the builder live!
+
 ### ⚡ Say Goodbye to Database Bloat
 Legacy **WordPress form plugins** slow down your website by flooding the `wp_postmeta` table with separate database rows for every single field submission. Dragwyb solves this with an optimized **custom database table** (`dragwyb_submissions`) using structured JSON payloads. This ensures your WordPress database remains lightning-fast, even with tens of thousands of entry submissions.
 
@@ -25,9 +27,8 @@ With an intuitive, lag-free **drag-and-drop React interface**, 21 distinct dynam
 
 ## 🔗 Useful Links
 
-*   **[Live Demo](https://dragwyb.com/form-builder/?utm_source=wpplugin&utm_medium=readme&utm_campaign=dragwyb_form)** — Test the builder live!
 *   **[Click To Chat](https://wordpress.org/plugins/dragwyb-click-to-chat/)** — Connect with your customers via WhatsApp.
-*   **[Flipbox Addon for Elementor](https://wordpress.org/plugins/flipbox-addon-for-elementor/)** — Stunning 3D flip boxes for your site.
+*   **[Flipbox Addon for Elementor](https://wordpress.org/plugins/ultimate-flipbox-addon-for-elementor/)** — Stunning 3D flip boxes for your site.
 
 ---
 
@@ -61,18 +62,7 @@ Dragwyb gives you granular control over every pixel, layout constraint, and serv
 ### 3. Versatile Form Fields (21 Available)
 Build any custom form layout using: *Text, Email, Textarea, Number, Select Dropdown, Checkbox Group, Radio Button, Date, Time, URL, Phone, Name, Address, File Upload, Range Slider, Captcha, Hidden Fields, Custom HTML, Section Breaks, Layout Rows, and Buttons.*
 
----
-
-## == Upcoming Features ==
-
-We are continually optimizing Smart Form Builder. Our development roadmap includes:
-
-*   🔀 Advanced Conditional Logic (Show/Hide fields dynamically)
-*   🌍 Country Field & Smart Country Code Selector
-*   🖼️ Radio Image Selectors (Visual selections)
-*   🪜 Multi-step Form Wizard Fields
-
----
+*   **[Live Demo](https://dragwyb.com/smart-form-builder/?utm_source=wpplugin&utm_medium=readme&utm_campaign=dragwyb_form)** — Test the builder live!
 
 ## == Installation ==
 
