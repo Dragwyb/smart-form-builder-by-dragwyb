@@ -140,8 +140,8 @@ If the "Save Submissions" action is enabled on your form, all data points are sa
 = 1.1.1 (2026-07-16) =
 * Added entrie and error logs export feature.
 * Added bulk delete action button in entries and error logs.
-* Improved step field preview on editor.
 * Added form editor button in form preview adminbar.
+* Improved step field preview on editor.
 
 = 1.1.0 (2026-07-15) =
 * Added Conditional field settings.
