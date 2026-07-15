@@ -6,7 +6,7 @@ Author URI: https://dragwyb.com/
 Requires at least: 5.8  
 Tested up to: 7.0  
 Requires PHP: 7.4  
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPL2  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -137,6 +137,12 @@ If the "Save Submissions" action is enabled on your form, all data points are sa
 
 ## == Changelog ==
 
+= 1.1.1 (2026-07-16) =
+* Added entrie and error logs export feature.
+* Added bulk delete action button in entries and error logs.
+* Improved step field preview on editor.
+* Added form editor button in form preview adminbar.
+
 = 1.1.0 (2026-07-15) =
 * Added Conditional field settings.
 * Added dynamic tags option in controls.
@@ -144,12 +150,8 @@ If the "Save Submissions" action is enabled on your form, all data points are sa
 * Added style settings for step indicator.
 * Added progress bar styling.
 * Added button style settings for previous and next buttons.
-* Added bulk delete action button in entries and error logs.
-* Added entrie and error logs export feature.
-* Added form editor button in form preview adminbar.
 * Optimize assets loading.
 * Improved drodown control stylings.
-* Improved step field preview on editor.
 
 = 1.0.6 (20 June 2026) =
 * Fixed Form Editor styling issue dashboard menus showing.
