@@ -32,8 +32,8 @@ class Error_Log {
 		}
 
 		wp_enqueue_style(
-			DRAGWYB_PREFIX . '-error-log-style',
-			esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/css/error-log.css' ),
+			DRAGWYB_PREFIX . '-entries-style',
+			esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/css/entries.css' ),
 			array(),
 			esc_attr( DRAGWYB_FORM_BUILDER_VERSION )
 		);
@@ -76,8 +76,8 @@ class Error_Log {
 		?>
 		<div class="wrap dragwyb-error-log-wrap">
 			<h1 class="wp-heading-inline"><?php esc_html_e( 'Submission Error Log', 'smart-form-builder-by-dragwyb' ); ?></h1>
-			<button type="button" id="dragwyb-clear-all-btn" class="button button-link-delete dragwyb-clear-all-btn">
-				<span class="dashicons dashicons-trash"></span> <?php esc_html_e( 'Clear All Logs', 'smart-form-builder-by-dragwyb' ); ?>
+			<button type="button" id="dragwyb-export-btn" class="page-title-action dragwyb-export-btn" style="margin-left: 10px; display: inline-flex; align-items: center; gap: 4px; vertical-align: middle;">
+				<span class="dashicons dashicons-download" style="font-size: 16px; width: 16px; height: 16px; line-height: 1;"></span> <?php esc_html_e( 'Export', 'smart-form-builder-by-dragwyb' ); ?>
 			</button>
 			<hr class="wp-header-end">
 
@@ -86,6 +86,13 @@ class Error_Log {
 					<select id="dragwyb-form-filter" class="dragwyb-select">
 						<option value="0"><?php esc_html_e( 'Loading forms...', 'smart-form-builder-by-dragwyb' ); ?></option>
 					</select>
+					<div class="dragwyb-bulk-actions actions bulkactions" style="display: flex; gap: 5px; align-items: center; margin-left: 10px;">
+						<select id="dragwyb-bulk-action" class="dragwyb-select" style="min-width: 130px; padding: 3px 24px 3px 8px;">
+							<option value="-1"><?php esc_html_e( 'Bulk actions', 'smart-form-builder-by-dragwyb' ); ?></option>
+							<option value="delete"><?php esc_html_e( 'Delete', 'smart-form-builder-by-dragwyb' ); ?></option>
+						</select>
+						<button type="button" id="dragwyb-bulk-action-btn" class="button button-primary"><?php esc_html_e( 'Apply', 'smart-form-builder-by-dragwyb' ); ?></button>
+					</div>
 				</div>
 
 				<div class="dragwyb-search-box">
@@ -98,6 +105,9 @@ class Error_Log {
 				<table class="wp-list-table widefat fixed striped dragwyb-custom-table">
 					<thead>
 						<tr>
+							<th scope="col" id="cb" class="manage-column column-cb check-column" style="width: 2.2em; vertical-align: middle;">
+								<input id="dragwyb-select-all" type="checkbox">
+							</th>
 							<th scope="col" id="col-id" class="manage-column column-id sortable desc" data-orderby="id" style="width: 80px;">
 								<a href="#"><span><?php esc_html_e( 'ID', 'smart-form-builder-by-dragwyb' ); ?></span><span class="sorting-indicator"></span></a>
 							</th>
@@ -145,13 +155,63 @@ class Error_Log {
 		<!-- Modals Container -->
 		<div id="dragwyb-modal-overlay" class="dragwyb-modal-overlay">
 			<!-- View Modal -->
-			<div id="dragwyb-view-modal" class="dragwyb-modal dragwyb-error-modal">
+			<div id="dragwyb-view-modal" class="dragwyb-modal dragwyb-error-modal" style="display: none;">
 				<div class="dragwyb-modal-header">
 					<h2><?php esc_html_e( 'Submission Error Details', 'smart-form-builder-by-dragwyb' ); ?></h2>
 					<button type="button" class="dragwyb-modal-close"><span class="dashicons dashicons-no-alt"></span></button>
 				</div>
 				<div class="dragwyb-modal-body" id="dragwyb-view-modal-body">
 					<!-- Dynamic Content -->
+				</div>
+			</div>
+
+			<!-- Export Modal -->
+			<div id="dragwyb-export-modal" class="dragwyb-modal dragwyb-export-modal-content" style="display: none; max-width: 500px;">
+				<div class="dragwyb-modal-header">
+					<h2><?php esc_html_e( 'Export Error Logs', 'smart-form-builder-by-dragwyb' ); ?></h2>
+					<button type="button" class="dragwyb-modal-close"><span class="dashicons dashicons-no-alt"></span></button>
+				</div>
+				<div class="dragwyb-modal-body">
+					<div id="dragwyb-export-warning" class="dragwyb-export-warning" style="margin-bottom: 20px; padding: 12px; background: #fff8e5; border-left: 4px solid #ffb900; border-radius: 4px;">
+						<p style="margin: 0; font-weight: 600; color: #8a6d3b;"><?php esc_html_e( 'Warning: You haven\'t selected any entries. Do you want to export all error logs matching current filters?', 'smart-form-builder-by-dragwyb' ); ?></p>
+					</div>
+					<div id="dragwyb-export-selection-info" class="dragwyb-export-selection-info" style="margin-bottom: 20px; padding: 12px; background: #e5f5fa; border-left: 4px solid #00a0d2; border-radius: 4px; display: none;">
+						<p style="margin: 0; font-weight: 600; color: #0073aa;" id="dragwyb-export-selection-text"></p>
+					</div>
+					<div style="margin-bottom: 20px;">
+						<label style="display: block; font-weight: 600; margin-bottom: 8px; color: #475569;"><?php esc_html_e( 'Select Export Format:', 'smart-form-builder-by-dragwyb' ); ?></label>
+						<div class="dragwyb-export-formats" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+							<label style="display: flex; align-items: center; gap: 8px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; background: #f8fafc;">
+								<input type="radio" name="export_format" value="excel" checked>
+								<span><?php esc_html_e( 'Excel (.xls)', 'smart-form-builder-by-dragwyb' ); ?></span>
+							</label>
+							<label style="display: flex; align-items: center; gap: 8px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; background: #f8fafc;">
+								<input type="radio" name="export_format" value="csv">
+								<span><?php esc_html_e( 'CSV (.csv)', 'smart-form-builder-by-dragwyb' ); ?></span>
+							</label>
+							<label style="display: flex; align-items: center; gap: 8px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; background: #f8fafc;">
+								<input type="radio" name="export_format" value="json">
+								<span><?php esc_html_e( 'JSON (.json)', 'smart-form-builder-by-dragwyb' ); ?></span>
+							</label>
+							<label style="display: flex; align-items: center; gap: 8px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; background: #f8fafc;">
+								<input type="radio" name="export_format" value="xml">
+								<span><?php esc_html_e( 'XML (.xml)', 'smart-form-builder-by-dragwyb' ); ?></span>
+							</label>
+						</div>
+					</div>
+					<div id="dragwyb-export-progress-container" style="display: none; margin-top: 20px;">
+						<div style="display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 5px; color: #475569;">
+							<span id="dragwyb-export-progress-text"><?php esc_html_e( 'Exporting...', 'smart-form-builder-by-dragwyb' ); ?></span>
+							<span id="dragwyb-export-progress-percent">0%</span>
+						</div>
+						<div style="width: 100%; height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden;">
+							<div id="dragwyb-export-progress-bar" style="width: 0%; height: 100%; background: #3b82f6; transition: width 0.2s ease;"></div>
+						</div>
+					</div>
+				</div>
+				<div class="dragwyb-modal-footer">
+					<button type="button" class="button dragwyb-modal-close-btn"><?php esc_html_e( 'Cancel', 'smart-form-builder-by-dragwyb' ); ?></button>
+					<button type="button" class="button button-primary" id="dragwyb-start-export-btn"><?php esc_html_e( 'Export', 'smart-form-builder-by-dragwyb' ); ?></button>
 				</div>
 			</div>
 		</div>

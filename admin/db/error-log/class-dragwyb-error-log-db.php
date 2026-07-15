@@ -238,6 +238,32 @@ class Dragwyb_Error_Log_Db {
 	}
 
 	/**
+	 * Delete multiple error logs.
+	 *
+	 * @param array $ids The error log IDs to delete.
+	 * @return int|false The number of rows deleted, or false on error.
+	 */
+	public function delete_multiple( array $ids ) {
+		global $wpdb;
+		$table_name = esc_sql( self::get_table_name() );
+
+		if ( empty( $ids ) ) {
+			return 0;
+		}
+
+		$ids    = array_map( 'absint', $ids );
+		$format = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		return $wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM $table_name WHERE id IN ($format)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				...$ids
+			)
+		);
+	}
+
+	/**
 	 * Clear all error logs.
 	 *
 	 * @return int|false The number of rows deleted, or false on error.

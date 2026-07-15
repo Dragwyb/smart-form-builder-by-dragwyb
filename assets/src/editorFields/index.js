@@ -572,10 +572,16 @@ const StepPreview = ({ attributes, id }) => {
     const totalSteps = stepContainers.length;
     const label = attributes.label || '';
 
+    let containerCls = "dragwyb-step-indicator-container dragwyb-editor-preview";
+
+    if (label && label !== '') {
+        containerCls += ' step-has-title';
+    }
+
     // Default to 'numbers' or 'dots' style
     const isDots = indicatorType === 'dots';
     return (
-        <div className="dragwyb-step-indicator-container dragwyb-editor-preview" data-step-indicator={indicatorType} style={{ display: indicatorType === 'none' ? 'none' : 'flex' }}>
+        <div className={containerCls} data-step-indicator={indicatorType} style={{ display: indicatorType === 'none' ? 'none' : 'flex' }}>
             <div className="dragwyb-step-indicator">
                 <div className={`dragwyb-step-item${stepIndex === 1 ? ' active' : ''}`} style={{ display: ['numbers', 'dots'].includes(indicatorType) ? 'flex' : 'none' }}>
                     <div className="dragwyb-step-dot">

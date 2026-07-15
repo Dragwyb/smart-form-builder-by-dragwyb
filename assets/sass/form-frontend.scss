@@ -750,7 +750,7 @@
         width: 100%;
         margin-bottom: var(--dragwyb-step-bottom-spacing, var(--dragwyb-field-gap));
 
-        &.step-has-title {
+        &.step-has-title:not([data-step-indicator="progress"], [data-step-indicator="dots"]) {
             margin-bottom: calc(var(--dragwyb-step-bottom-spacing, var(--dragwyb-field-gap)) + var(--dragwyb-step-typography-size, 14px) * 1.5);
         }
     }

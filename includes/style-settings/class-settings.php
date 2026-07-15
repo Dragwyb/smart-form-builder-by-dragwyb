@@ -556,7 +556,7 @@ class Settings extends Register_Controls_Base {
 					),
 				),
 				'conditions' => array(
-					'step_indicator_type!' => 'none',
+					'step_indicator_type' => array( 'numbers', 'dots' ),
 				),
 				'selectors'  => array(
 					'{{WRAPPER}}' => '--dragwyb-step-dot-size: {{VALUE}}{{UNIT}};',

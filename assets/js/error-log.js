@@ -28,8 +28,20 @@ document.addEventListener('DOMContentLoaded', () => {
         currentPageText: document.getElementById('dragwyb-current-page'),
         totalPagesText: document.getElementById('dragwyb-total-pages'),
         totalItemsText: document.getElementById('dragwyb-total-items'),
-        clearAllBtn: document.getElementById('dragwyb-clear-all-btn'),
         sortableHeaders: document.querySelectorAll('.dragwyb-custom-table th.sortable'),
+        selectAll: document.getElementById('dragwyb-select-all'),
+        bulkAction: document.getElementById('dragwyb-bulk-action'),
+        bulkActionBtn: document.getElementById('dragwyb-bulk-action-btn'),
+        exportBtn: document.getElementById('dragwyb-export-btn'),
+        exportModal: document.getElementById('dragwyb-export-modal'),
+        exportWarning: document.getElementById('dragwyb-export-warning'),
+        exportSelectionInfo: document.getElementById('dragwyb-export-selection-info'),
+        exportSelectionText: document.getElementById('dragwyb-export-selection-text'),
+        startExportBtn: document.getElementById('dragwyb-start-export-btn'),
+        exportProgressContainer: document.getElementById('dragwyb-export-progress-container'),
+        exportProgressText: document.getElementById('dragwyb-export-progress-text'),
+        exportProgressPercent: document.getElementById('dragwyb-export-progress-percent'),
+        exportProgressBar: document.getElementById('dragwyb-export-progress-bar'),
 
         // Modals
         modalOverlay: document.getElementById('dragwyb-modal-overlay'),
@@ -63,11 +75,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function appendHtmlCell(row, value, className = '') {
         const cell = document.createElement('td');
         if (className) cell.className = className;
-        
+
         // Safely parse HTML and append only safe tags (strong, em, br, span with allowed class)
         const parser = new DOMParser();
         const doc = parser.parseFromString(value || '', 'text/html');
-        
+
         function sanitizeNode(node) {
             if (node.nodeType === Node.TEXT_NODE) {
                 return document.createTextNode(node.textContent);
@@ -90,14 +102,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             return document.createTextNode(node.textContent);
         }
-        
+
         for (const child of doc.body.childNodes) {
             const sanitized = sanitizeNode(child);
             if (sanitized) {
                 cell.appendChild(sanitized);
             }
         }
-        
+
         row.appendChild(cell);
         return cell;
     }
@@ -106,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearElement(elements.tbody);
         const row = document.createElement('tr');
         const cell = document.createElement('td');
-        cell.colSpan = 6;
+        cell.colSpan = 7;
         cell.style.textAlign = 'center';
         cell.style.padding = '20px';
         if (options.color) cell.style.color = options.color;
@@ -213,38 +225,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Clear All Logs
-        elements.clearAllBtn.addEventListener('click', () => {
-            if (!confirm(i18n.clear_confirm || 'Are you sure you want to clear ALL error logs?')) return;
-
-            const formData = new FormData();
-            formData.append('action', 'dragwyb_clear_errors');
-            formData.append('_ajax_nonce', nonce);
-
-            elements.clearAllBtn.disabled = true;
-            elements.clearAllBtn.textContent = 'Clearing...';
-
-            fetch(ajax_url, { method: 'POST', body: formData })
-                .then(res => res.json())
-                .then(res => {
-                    if (res.success) {
-                        state.offset = 0;
-                        state.currentPage = 1;
-                        loadErrors();
-                    } else {
-                        alert(res.data.message || 'Error clearing logs');
-                    }
-                })
-                .finally(() => {
-                    elements.clearAllBtn.disabled = false;
-                    elements.clearAllBtn.textContent = '';
-                    const icon = document.createElement('span');
-                    icon.className = 'dashicons dashicons-trash';
-                    elements.clearAllBtn.appendChild(icon);
-                    elements.clearAllBtn.appendChild(document.createTextNode(' Clear All Logs'));
-                });
-        });
-
         // Modal Close
         elements.modalCloseBtns.forEach(btn => {
             btn.addEventListener('click', closeModal);
@@ -256,6 +236,71 @@ document.addEventListener('DOMContentLoaded', () => {
                 closeModal();
             }
         });
+
+        // Select All checkboxes
+        if (elements.selectAll) {
+            elements.selectAll.addEventListener('change', (e) => {
+                const checkboxes = elements.tbody.querySelectorAll('.dragwyb-error-checkbox');
+                checkboxes.forEach(cb => {
+                    cb.checked = e.target.checked;
+                });
+            });
+        }
+
+        // Bulk action Apply button
+        if (elements.bulkActionBtn) {
+            elements.bulkActionBtn.addEventListener('click', () => {
+                const action = elements.bulkAction.value;
+                if (action !== 'delete') {
+                    alert('Please select a valid bulk action.');
+                    return;
+                }
+
+                const checkedCbs = elements.tbody.querySelectorAll('.dragwyb-error-checkbox:checked');
+                if (checkedCbs.length === 0) {
+                    alert('Please select at least one log entry.');
+                    return;
+                }
+
+                if (!confirm(`Are you sure you want to delete ${checkedCbs.length} selected log entries?`)) {
+                    return;
+                }
+
+                const ids = Array.from(checkedCbs).map(cb => cb.value);
+                bulkDeleteErrors(ids);
+            });
+        }
+
+        // Open Export Modal
+        if (elements.exportBtn) {
+            elements.exportBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const checkedCbs = elements.tbody.querySelectorAll('.dragwyb-error-checkbox:checked');
+
+                if (checkedCbs.length === 0) {
+                    elements.exportWarning.style.display = 'block';
+                    elements.exportSelectionInfo.style.display = 'none';
+                } else {
+                    elements.exportWarning.style.display = 'none';
+                    elements.exportSelectionText.textContent = `You have selected ${checkedCbs.length} log entries to export.`;
+                    elements.exportSelectionInfo.style.display = 'block';
+                }
+
+                elements.viewModal.style.display = 'none';
+                elements.exportModal.style.display = 'flex';
+                elements.modalOverlay.classList.add('dragwyb-active');
+            });
+        }
+
+        // Start Export Process
+        if (elements.startExportBtn) {
+            elements.startExportBtn.addEventListener('click', () => {
+                const checkedCbs = elements.tbody.querySelectorAll('.dragwyb-error-checkbox:checked');
+                const selectedIds = Array.from(checkedCbs).map(cb => cb.value);
+                const format = document.querySelector('input[name="export_format"]:checked').value;
+                runErrorsExport(selectedIds, format);
+            });
+        }
     }
 
     // Load Forms for Dropdown
@@ -322,6 +367,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Render Table Rows
     function renderTable(entries) {
+        if (elements.selectAll) {
+            elements.selectAll.checked = false;
+        }
+
         if (!entries || entries.length === 0) {
             appendStatusRow(i18n.no_errors || 'No validation errors logged.');
             return;
@@ -332,6 +381,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const id = String(parseInt(entry.id, 10) || 0);
             const row = document.createElement('tr');
             row.id = `error-row-${id}`;
+
+            // Checkbox column
+            const cbCell = document.createElement('td');
+            cbCell.className = 'check-column';
+            const cbInput = document.createElement('input');
+            cbInput.type = 'checkbox';
+            cbInput.className = 'dragwyb-error-checkbox';
+            cbInput.value = id;
+            cbCell.appendChild(cbInput);
+            row.appendChild(cbCell);
 
             const titleCell = appendTextCell(row, '', 'dragwyb-title-column');
             const strong = document.createElement('strong');
@@ -397,12 +456,39 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
+    function bulkDeleteErrors(ids) {
+        setLoadingState(true);
+
+        const formData = new FormData();
+        formData.append('action', 'dragwyb_delete_errors');
+        formData.append('_ajax_nonce', nonce);
+        ids.forEach(id => formData.append('ids[]', id));
+
+        fetch(ajax_url, { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(res => {
+                if (res.success) {
+                    loadErrors();
+                } else {
+                    alert(res.data.message || 'Error deleting log entries');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('An error occurred while deleting log entries.');
+            })
+            .finally(() => {
+                setLoadingState(false);
+            });
+    }
+
     // Modal view
     function openViewModal(id) {
         const entry = state.entries.find(e => parseInt(e.id, 10) === id);
         if (!entry) return;
 
         clearElement(elements.viewModalBody);
+        elements.viewModal.style.display = 'flex';
 
         // Build premium grid layout
         const grid = document.createElement('div');
@@ -524,6 +610,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function closeModal() {
         elements.modalOverlay.classList.remove('dragwyb-active');
+
+        setTimeout(() => {
+            elements.viewModal.style.display = 'none';
+            if (elements.exportModal) elements.exportModal.style.display = 'none';
+            // Reset progress
+            if (elements.exportProgressContainer) elements.exportProgressContainer.style.display = 'none';
+            if (elements.exportProgressBar) elements.exportProgressBar.style.width = '0%';
+            if (elements.exportProgressPercent) elements.exportProgressPercent.textContent = '0%';
+            if (elements.startExportBtn) elements.startExportBtn.disabled = false;
+        }, 300);
     }
 
     function updatePagination(totalItems, totalPages) {
@@ -551,6 +647,298 @@ document.addEventListener('DOMContentLoaded', () => {
     // eslint-disable-next-line no-unused-vars
     function showError(message) {
         appendStatusRow(message, { color: 'red' });
+    }
+
+    function runErrorsExport(selectedIds, format) {
+        elements.exportProgressContainer.style.display = 'block';
+        elements.startExportBtn.disabled = true;
+
+        const closeBtns = elements.exportModal.querySelectorAll('.dragwyb-modal-close, .dragwyb-modal-close-btn');
+        closeBtns.forEach(btn => btn.style.pointerEvents = 'none');
+
+        let allItems = [];
+        const limit = 100;
+        let offset = 0;
+
+        function updateProgress(current, total) {
+            const pct = total > 0 ? Math.round((current / total) * 100) : 0;
+            elements.exportProgressPercent.textContent = `${pct}%`;
+            elements.exportProgressBar.style.width = `${pct}%`;
+            elements.exportProgressText.textContent = `Exporting page ${Math.ceil(current / limit)}...`;
+        }
+
+        function fetchBatch() {
+            const formData = new FormData();
+            formData.append('action', 'dragwyb_get_export_data');
+            formData.append('_ajax_nonce', nonce);
+            formData.append('type', 'errors');
+
+            if (selectedIds.length > 0) {
+                selectedIds.forEach(id => formData.append('ids[]', id));
+            } else {
+                formData.append('form_id', state.form_id);
+                formData.append('search', state.search);
+                formData.append('limit', limit);
+                formData.append('offset', offset);
+            }
+
+            fetch(ajax_url, { method: 'POST', body: formData })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success && res.data) {
+                        const items = res.data.items || [];
+                        const total = res.data.total || 0;
+                        allItems = allItems.concat(items);
+
+                        updateProgress(allItems.length, total);
+
+                        if (selectedIds.length === 0 && allItems.length < total && items.length > 0) {
+                            offset += limit;
+                            fetchBatch();
+                        } else {
+                            downloadExportFile(allItems, format, 'errors');
+                            cleanupExport();
+                        }
+                    } else {
+                        alert(res.data && res.data.message ? res.data.message : 'Error fetching export data.');
+                        cleanupExport();
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('An error occurred during export.');
+                    cleanupExport();
+                });
+        }
+
+        function cleanupExport() {
+            closeBtns.forEach(btn => btn.style.pointerEvents = 'auto');
+            setTimeout(() => {
+                closeModal();
+            }, 500);
+        }
+
+        fetchBatch();
+    }
+
+    function downloadExportFile(items, format, type) {
+        if (items.length === 0) {
+            alert('No items to export.');
+            return;
+        }
+
+        let content = '';
+        let mimeType = 'text/plain';
+        let filename = `${type}_export_${new Date().toISOString().slice(0, 10)}`;
+
+        let headers = ['ID', 'Form ID', 'IP Address', 'User Agent', 'Date'];
+        if (type === 'entries') {
+            headers.push('Status');
+        }
+
+        let submissionKeys = new Set();
+        let errorKeys = new Set();
+        let itemsData = items.map(item => {
+            let fields = {};
+            try {
+                const parsed = JSON.parse(item.submission_data || '{}');
+                for (const [k, v] of Object.entries(parsed)) {
+                    const val = (v && typeof v === 'object' && 'value' in v) ? v.value : v;
+                    const label = (v && typeof v === 'object' && 'label' in v) ? v.label : k;
+                    fields[label] = Array.isArray(val) ? val.join(', ') : val;
+                    submissionKeys.add(label);
+                }
+            } catch (e) {
+                console.error('Failed to parse submission data for item ' + item.id, e);
+            }
+
+            if (type === 'errors') {
+                try {
+                    const parsedErrors = JSON.parse(item.errors || '{}');
+                    for (const [k, v] of Object.entries(parsedErrors)) {
+                        fields['Error: ' + k] = v;
+                        errorKeys.add('Error: ' + k);
+                    }
+                } catch (e) {
+                    console.error('Failed to parse errors for item ' + item.id, e);
+                }
+            }
+            return fields;
+        });
+
+        const submissionHeaders = Array.from(submissionKeys);
+        const errorHeaders = Array.from(errorKeys);
+
+        let allHeaders = [];
+        if (type === 'entries') {
+            allHeaders = ['ID', 'Form ID', ...submissionHeaders, 'IP Address', 'User Agent', 'Status', 'Date'];
+        } else {
+            allHeaders = ['ID', 'Form ID', ...submissionHeaders.map(h => 'Field: ' + h), ...errorHeaders, 'IP Address', 'User Agent', 'Date'];
+            itemsData = itemsData.map(fields => {
+                let mapped = {};
+                for (const [k, v] of Object.entries(fields)) {
+                    if (k.startsWith('Error: ')) {
+                        mapped[k] = v;
+                    } else {
+                        mapped['Field: ' + k] = v;
+                    }
+                }
+                return mapped;
+            });
+        }
+
+        function escapeXML(unsafe) {
+            if (unsafe == null) return '';
+            return String(unsafe).replace(/[<>&'"]/g, function (c) {
+                switch (c) {
+                    case '<': return '&lt;';
+                    case '>': return '&gt;';
+                    case '&': return '&amp;';
+                    case '\'': return '&apos;';
+                    case '"': return '&quot;';
+                }
+                return c;
+            });
+        }
+
+        function escapeCSV(val) {
+            if (val == null) return '';
+            let str = String(val);
+            if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes('\r')) {
+                return '"' + str.replace(/"/g, '""') + '"';
+            }
+            return str;
+        }
+
+        if (format === 'json') {
+            const jsonItems = items.map((item, index) => {
+                let record = {
+                    id: parseInt(item.id, 10),
+                    form_id: parseInt(item.form_id, 10),
+                    ip_address: item.ip_address,
+                    user_agent: item.user_agent,
+                    created_at: item.created_at
+                };
+                if (type === 'entries') {
+                    record.status = item.status;
+                    record.submission_data = itemsData[index];
+                } else {
+                    let errors = {};
+                    try { errors = JSON.parse(item.errors || '{}'); } catch (e) { }
+                    record.submission_data = {};
+                    for (const [k, v] of Object.entries(itemsData[index])) {
+                        if (k.startsWith('Field: ')) {
+                            record.submission_data[k.replace('Field: ', '')] = v;
+                        }
+                    }
+                    record.errors = errors;
+                }
+                return record;
+            });
+            content = JSON.stringify(jsonItems, null, 2);
+            mimeType = 'application/json';
+            filename += '.json';
+        } else if (format === 'xml') {
+            let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<export>\n';
+            items.forEach((item, index) => {
+                xml += '  <item>\n';
+                xml += `    <id>${item.id}</id>\n`;
+                xml += `    <form_id>${item.form_id}</form_id>\n`;
+                xml += `    <ip_address>${escapeXML(item.ip_address)}</ip_address>\n`;
+                xml += `    <user_agent>${escapeXML(item.user_agent)}</user_agent>\n`;
+                if (type === 'entries') {
+                    xml += `    <status>${escapeXML(item.status)}</status>\n`;
+                }
+                xml += `    <date>${escapeXML(item.created_at)}</date>\n`;
+
+                xml += '    <data>\n';
+                const data = itemsData[index];
+                for (const [k, v] of Object.entries(data)) {
+                    const cleanTag = k.replace(/[^a-zA-Z0-9_]/g, '_');
+                    xml += `      <${cleanTag}>${escapeXML(v)}</${cleanTag}>\n`;
+                }
+                xml += '    </data>\n';
+                xml += '  </item>\n';
+            });
+            xml += '</export>';
+            content = xml;
+            mimeType = 'application/xml';
+            filename += '.xml';
+        } else if (format === 'csv') {
+            const csvRows = [];
+            csvRows.push(allHeaders.map(escapeCSV).join(','));
+
+            items.forEach((item, index) => {
+                const rowData = [];
+                allHeaders.forEach(header => {
+                    if (header === 'ID') rowData.push(item.id);
+                    else if (header === 'Form ID') rowData.push(item.form_id);
+                    else if (header === 'IP Address') rowData.push(item.ip_address);
+                    else if (header === 'User Agent') rowData.push(item.user_agent);
+                    else if (header === 'Status') rowData.push(item.status);
+                    else if (header === 'Date') rowData.push(item.created_at);
+                    else {
+                        const val = itemsData[index][header];
+                        rowData.push(val != null ? val : '');
+                    }
+                });
+                csvRows.push(rowData.map(escapeCSV).join(','));
+            });
+            content = '\uFEFF' + csvRows.join('\n');
+            mimeType = 'text/csv;charset=utf-8';
+            filename += '.csv';
+        } else if (format === 'excel') {
+            let excelXml = '<?xml version="1.0" encoding="utf-8"?>\n' +
+                '<?mso-application progid="Excel.Sheet"?>\n' +
+                '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"\n' +
+                ' xmlns:o="urn:schemas-microsoft-com:office:office"\n' +
+                ' xmlns:x="urn:schemas-microsoft-com:office:excel"\n' +
+                ' xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"\n' +
+                ' xmlns:html="http://www.w3.org/TR/REC-html40">\n' +
+                ' <Worksheet ss:Name="Sheet1">\n' +
+                ' <Table>\n';
+
+            excelXml += '  <Row>\n';
+            allHeaders.forEach(header => {
+                excelXml += `   <Cell><Data ss:Type="String">${escapeXML(header)}</Data></Cell>\n`;
+            });
+            excelXml += '  </Row>\n';
+
+            items.forEach((item, index) => {
+                excelXml += '  <Row>\n';
+                allHeaders.forEach(header => {
+                    let val = '';
+                    if (header === 'ID') val = item.id;
+                    else if (header === 'Form ID') val = item.form_id;
+                    else if (header === 'IP Address') val = item.ip_address;
+                    else if (header === 'User Agent') val = item.user_agent;
+                    else if (header === 'Status') val = item.status;
+                    else if (header === 'Date') val = item.created_at;
+                    else {
+                        val = itemsData[index][header];
+                    }
+                    const escapedVal = escapeXML(val);
+                    const typeAttr = (header === 'ID' || header === 'Form ID') ? 'Number' : 'String';
+                    excelXml += `   <Cell><Data ss:Type="${typeAttr}">${escapedVal}</Data></Cell>\n`;
+                });
+                excelXml += '  </Row>\n';
+            });
+
+            excelXml += ' </Table>\n </Worksheet>\n</Workbook>';
+            content = excelXml;
+            mimeType = 'application/vnd.ms-excel';
+            filename += '.xls';
+        }
+
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     }
 
     init();

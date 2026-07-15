@@ -30,6 +30,7 @@ class Form_Preview {
 	public function __construct() {
 		add_action( 'template_redirect', array( $this, 'init' ) );
 		add_action( 'Dragwyb/Editor/Preview/Init', array( $this, 'init_iframe' ) );
+		add_action( 'admin_bar_menu', array( $this, 'add_editor_button_to_admin_bar' ), 999 );
 	}
 
 	public function init() {
@@ -127,6 +128,52 @@ class Form_Preview {
 	}
 
 	public function init_iframe() {}
+
+	/**
+	 * Add Smart Form button to admin bar on form preview page.
+	 *
+	 * @param \WP_Admin_Bar $wp_admin_bar WordPress Admin Bar object.
+	 */
+	public function add_editor_button_to_admin_bar( $wp_admin_bar ) {
+		if ( ! Helper::is_preview_mode() ) {
+			return;
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verification is done in Helper::is_preview_mode().
+		$form_id = isset( $_GET['p'] ) ? absint( $_GET['p'] ) : 0;
+
+		if ( ! $form_id ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'edit_post', $form_id ) && ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$editor_url = admin_url( 'admin.php?page=' . DRAGWYB_PREFIX . '-form-builder&form_id=' . $form_id );
+		$logo_url   = DRAGWYB_FORM_BUILDER_URL . 'assets/img/menu-logo.svg';
+		$logo_html  = '<img src="' . esc_url( $logo_url ) . '" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 6px; margin-top: -2px;" />';
+		$title      = $logo_html . __( 'Smart Form', 'smart-form-builder-by-dragwyb' );
+
+		$wp_admin_bar->add_node(
+			array(
+				'id'    => 'dragwyb-edit-form',
+				'title' => wp_kses(
+					$title,
+					array(
+						'img' => array(
+							'src'   => array(),
+							'style' => array(),
+						),
+					)
+				),
+				'href'  => esc_url( $editor_url ),
+				'meta'  => array(
+					'class' => 'dragwyb-admin-bar-btn',
+				),
+			)
+		);
+	}
 
 	public function enqueue_editor_preview_styles() {
 		$css_assets_info = array(
