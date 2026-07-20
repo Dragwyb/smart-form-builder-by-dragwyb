@@ -13,7 +13,6 @@ const ToolbarSettings = ({ onFieldSelect }) => {
   const setting = useSelector(state => state.activeToolbar);
   const selectedToolbar = useSelector(state => state.selectedSettingId);
   const formData = useSelector(state => state.form);
-
   const toolbarRef = useRef(null);
   const historyTimeoutRef = useRef(null);
   const sidebarRef = useRef(null);

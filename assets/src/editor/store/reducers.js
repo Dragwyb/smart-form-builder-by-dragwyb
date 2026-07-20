@@ -573,20 +573,21 @@ export default function reducer(state, action) {
         case HISTORY_REVERT: {
             const targetIndex = action.payload.index;
             const past = state.history.past;
+            const toolbars = Object.keys(DragwybEditor.EditorToolbars.toolbars);
+            const revertedStates = {};
 
             if (targetIndex === -1) {
-                // Revert only toolbar fields, style, submission and advance to initial state
+                toolbars.map(toolbarKey => {
+                    revertedStates[toolbarKey] = JSON.parse(JSON.stringify(DragwybEditor.formData[toolbarKey] || {}));
+                });
+
                 return {
                     ...state,
                     form: {
                         ...state.form,
-                        fields: JSON.parse(JSON.stringify(DragwybEditor.formData?.fields || {})),
-                        style: JSON.parse(JSON.stringify(DragwybEditor.formData?.style || {})),
-                        'after-submission': JSON.parse(JSON.stringify(DragwybEditor.formData?.['after-submission'] || {})),
-                        advance: JSON.parse(JSON.stringify(DragwybEditor.formData?.advance || {}))
+                        ...revertedStates
                     },
                     styleSelectors: DragwybEditor?.frontendInitialData?.css && typeof DragwybEditor?.frontendInitialData?.css === 'object' ? JSON.parse(JSON.stringify(DragwybEditor.frontendInitialData.css)) : {},
-                    sectionSettings: {},
                     history: {
                         ...state.history,
                         currentIndex: -1
@@ -597,17 +598,17 @@ export default function reducer(state, action) {
             const targetSnapshot = past[targetIndex];
             if (!targetSnapshot) return state;
 
+            toolbars.map(toolbarKey => {
+                revertedStates[toolbarKey] = JSON.parse(JSON.stringify(targetSnapshot.form[toolbarKey] || {}));
+            });
+
             return {
                 ...state,
                 form: {
                     ...state.form,
-                    fields: JSON.parse(JSON.stringify(targetSnapshot.form.fields || {})),
-                    style: JSON.parse(JSON.stringify(targetSnapshot.form.style || {})),
-                    'after-submission': JSON.parse(JSON.stringify(targetSnapshot.form['after-submission'] || {})),
-                    advance: JSON.parse(JSON.stringify(targetSnapshot.form.advance || {}))
+                    ...revertedStates
                 },
                 styleSelectors: JSON.parse(JSON.stringify(targetSnapshot.styleSelectors || {})),
-                sectionSettings: JSON.parse(JSON.stringify(targetSnapshot.sectionSettings || {})),
                 history: {
                     ...state.history,
                     currentIndex: targetIndex
@@ -620,19 +621,18 @@ export default function reducer(state, action) {
 
             // Truncate future states if we were currently reverted to a past step
             const cleanPast = past.slice(0, currentIndex + 1);
+            const toolbars = Object.keys(DragwybEditor.EditorToolbars.toolbars);
 
             const newSnapshot = {
-                form: JSON.parse(JSON.stringify({
-                    fields: state.form.fields || {},
-                    style: state.form.style || {},
-                    'after-submission': state.form['after-submission'] || {},
-                    advance: state.form.advance || {}
-                })),
+                form: {},
                 styleSelectors: JSON.parse(JSON.stringify(state.styleSelectors || {})),
-                sectionSettings: JSON.parse(JSON.stringify(state.sectionSettings || {})),
                 label: action.payload.label,
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
             };
+
+            toolbars.map(toolbarKey => {
+                newSnapshot.form[toolbarKey] = JSON.parse(JSON.stringify(state.form[toolbarKey] || {}));
+            })
 
             // Enforce the size limit of 50 entries
             let finalPast = [...cleanPast, newSnapshot];

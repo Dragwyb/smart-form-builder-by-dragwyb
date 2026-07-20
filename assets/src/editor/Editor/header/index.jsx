@@ -1,10 +1,10 @@
-import { useEffect, useCallback, useMemo, useState } from 'react';
+import { useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useStore, useDispatch } from 'react-redux';
 import { Utils as Helper } from '../../components/Utils';
 import { SaveBtn } from '../../components/Common';
 import { __ } from '@wordpress/i18n';
 import { escUrl } from '../../utils/escaping';
-import { updateThemeMode, updateActiveToolbar } from '../../store/actions';
+import { updateThemeMode, updateActiveToolbar, revertToHistory } from '../../store/actions';
 import ResponsiveDevices from '../../components/Common/ResponsiveDevices';
 import IconsManager from '../../components/IconsManager';
 
@@ -43,6 +43,42 @@ const Header = () => {
 
     }, [themeMode, iframeEle]);
 
+    // Keyboard Shortcuts for Undo & Redo
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            const isCtrl = e.ctrlKey || e.metaKey;
+            if (isCtrl && !e.altKey) {
+                if (e.key.toLowerCase() === 'z') {
+                    e.preventDefault();
+                    const stateHistory = store.getState().history || { past: [], currentIndex: -1 };
+                    if (e.shiftKey) {
+                        // Ctrl+Shift+Z or Cmd+Shift+Z -> Redo
+                        if (stateHistory.currentIndex < stateHistory.past.length - 1) {
+                            dispatch(revertToHistory(stateHistory.currentIndex + 1));
+                        }
+                    } else {
+                        // Ctrl+Z or Cmd+Z -> Undo
+                        if (stateHistory.currentIndex > -1) {
+                            dispatch(revertToHistory(stateHistory.currentIndex - 1));
+                        }
+                    }
+                } else if (e.key.toLowerCase() === 'y') {
+                    // Ctrl+Y or Cmd+Y -> Redo
+                    e.preventDefault();
+                    const stateHistory = store.getState().history || { past: [], currentIndex: -1 };
+                    if (stateHistory.currentIndex < stateHistory.past.length - 1) {
+                        dispatch(revertToHistory(stateHistory.currentIndex + 1));
+                    }
+                }
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [dispatch, store]);
+
     // Apply the theme to the body tag whenever the state changes
     const toggleTheme = useCallback(() => {
         dispatch(updateThemeMode(themeMode === 'light' ? 'dark' : 'light'));
@@ -72,7 +108,7 @@ const Header = () => {
             </div>
 
             <div className="dragwyb-editor__actions">
-                <div
+                <div 
                     className={`dragwyb-editor__history-toggle${activeToolbar === 'history' ? ' active' : ''}`}
                     onClick={() => {
                         const nextToolbar = activeToolbar === 'history' ? (DragwybEditor?.EditorToolbars?.Default ?? 'fields') : 'history';
