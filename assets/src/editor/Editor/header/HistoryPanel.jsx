@@ -65,6 +65,7 @@ const HistoryPanel = ({ onClose }) => {
                         >
                             <div className="details">
                                 {renderLabel(snapshot.label)}
+                                <span>{snapshot.timestamp}</span>
                             </div>
                             {history.currentIndex === index && (
                                 <span className="check-icon"><FaCheck /></span>

@@ -13,7 +13,7 @@ const ToolbarSettings = ({ onFieldSelect }) => {
   const setting = useSelector(state => state.activeToolbar);
   const selectedToolbar = useSelector(state => state.selectedSettingId);
   const formData = useSelector(state => state.form);
-  
+
   const toolbarRef = useRef(null);
   const historyTimeoutRef = useRef(null);
   const sidebarRef = useRef(null);
@@ -115,9 +115,8 @@ const ToolbarSettings = ({ onFieldSelect }) => {
     const currentToolbarObj = toolbarRef.current;
     if (currentToolbarObj) {
       const currentSettings = currentToolbarObj.getToolbarSettings();
-      const settingName = setting === 'after-submission' ? 'Submission' : (setting.charAt(0).toUpperCase() + setting.slice(1));
       const fieldName = currentSettings?.label || '';
-      
+
       let controlLabel = key;
       if (currentSettings?.controls?.[key]?.label) {
         controlLabel = currentSettings.controls[key].label;
@@ -129,7 +128,7 @@ const ToolbarSettings = ({ onFieldSelect }) => {
         });
       }
 
-      const historyLabel = `${settingName}: ${fieldName ? fieldName + ', ' : ''}${controlLabel}`;
+      const historyLabel = `${fieldName ? fieldName + ', ' : ''}${controlLabel}`;
 
       pendingHistoryDispatchRef.current = () => {
         dispatch({
