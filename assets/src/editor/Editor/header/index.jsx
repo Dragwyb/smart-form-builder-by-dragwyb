@@ -1,18 +1,19 @@
-import { useEffect, useCallback, useMemo } from 'react';
+import { useEffect, useCallback, useMemo, useState } from 'react';
 import { useSelector, useStore, useDispatch } from 'react-redux';
 import { Utils as Helper } from '../../components/Utils';
 import { SaveBtn } from '../../components/Common';
 import { __ } from '@wordpress/i18n';
 import { escUrl } from '../../utils/escaping';
-import { updateThemeMode } from '../../store/actions';
+import { updateThemeMode, updateActiveToolbar } from '../../store/actions';
 import ResponsiveDevices from '../../components/Common/ResponsiveDevices';
 import IconsManager from '../../components/IconsManager';
 
 // Import the icons you requested
-import { FaSun, FaMoon } from 'react-icons/fa';
+import { FaSun, FaMoon, FaHistory } from 'react-icons/fa';
 
 const Header = () => {
     // Existing Selectors
+    const activeToolbar = useSelector(state => state?.activeToolbar);
     const formStatus = useSelector(state => state?.form?.advance?.form_status || DragwybEditor.formData.status);
     const formTitle = useSelector(state => state?.form?.advance?.form_name || DragwybEditor.formData.title);
     const themeMode = useSelector(state => state?.themeMode || 'light');
@@ -71,6 +72,16 @@ const Header = () => {
             </div>
 
             <div className="dragwyb-editor__actions">
+                <div
+                    className={`dragwyb-editor__history-toggle${activeToolbar === 'history' ? ' active' : ''}`}
+                    onClick={() => {
+                        const nextToolbar = activeToolbar === 'history' ? (DragwybEditor?.EditorToolbars?.Default ?? 'fields') : 'history';
+                        dispatch(updateActiveToolbar(nextToolbar));
+                    }}
+                    title={__('View History', 'smart-form-builder-by-dragwyb')}
+                >
+                    <FaHistory color='#fff' />
+                </div>
                 <div
                     className="dragwyb-editor__theme-toggle"
                     onClick={toggleTheme}

@@ -2,21 +2,23 @@ import { __ } from "@wordpress/i18n";
 import { useEffect, useRef, useMemo, useCallback } from "react";
 import { useStore, useDispatch, useSelector } from 'react-redux';
 import FieldSettings from "../Editor/FieldSettings";
-import DragwybToolbarBase from "../toolbarBase"
+import DragwybToolbarBase from "../toolbarBase";
 import { Utils as Helper } from '../components/Utils';
 import { useDraggable, useDroppable } from "../components/Common";
+import { updateActiveToolbar } from "../store/actions";
+import HistoryPanel from "../Editor/header/HistoryPanel";
 
 const ToolbarSettings = ({ onFieldSelect }) => {
+  // --- 1. Hook Declarations (Must be at the top level) ---
   const setting = useSelector(state => state.activeToolbar);
   const selectedToolbar = useSelector(state => state.selectedSettingId);
   const formData = useSelector(state => state.form);
+  
   const toolbarRef = useRef(null);
-
-  if (!setting) {
-    return null;
-  }
-
+  const historyTimeoutRef = useRef(null);
   const sidebarRef = useRef(null);
+  const pendingHistoryDispatchRef = useRef(null);
+  const lastSettingRef = useRef(setting);
 
   const dispatch = useDispatch();
   const store = useStore();
@@ -35,8 +37,32 @@ const ToolbarSettings = ({ onFieldSelect }) => {
     return utils;
   }, []);
 
-  const toolbarData = selectedToolbar && formData[setting];
-  const toolbarSettings = DragwybEditor[setting];
+  // Flush pending changes on unmount
+  useEffect(() => {
+    return () => {
+      if (historyTimeoutRef.current) {
+        clearTimeout(historyTimeoutRef.current);
+      }
+      if (pendingHistoryDispatchRef.current) {
+        pendingHistoryDispatchRef.current();
+      }
+    };
+  }, []);
+
+  // Flush pending changes immediately when active toolbar tab changes
+  useEffect(() => {
+    if (lastSettingRef.current !== setting) {
+      if (historyTimeoutRef.current) {
+        clearTimeout(historyTimeoutRef.current);
+        historyTimeoutRef.current = null;
+        if (pendingHistoryDispatchRef.current) {
+          pendingHistoryDispatchRef.current();
+          pendingHistoryDispatchRef.current = null;
+        }
+      }
+      lastSettingRef.current = setting;
+    }
+  }, [setting]);
 
   useEffect(() => {
     const $sidebar = window.jQuery(sidebarRef.current);
@@ -79,8 +105,65 @@ const ToolbarSettings = ({ onFieldSelect }) => {
     dispatch({ type: "DELETE_FIELD", payload: id });
   }, [dispatch]);
 
-  let toolBarHtml = false;
+  const onSettingChangeHandler = useCallback((key, value) => {
+    toolbarRef.current.updateToolbarHandler(key, value);
 
+    if (historyTimeoutRef.current) {
+      clearTimeout(historyTimeoutRef.current);
+    }
+
+    const currentToolbarObj = toolbarRef.current;
+    if (currentToolbarObj) {
+      const currentSettings = currentToolbarObj.getToolbarSettings();
+      const settingName = setting === 'after-submission' ? 'Submission' : (setting.charAt(0).toUpperCase() + setting.slice(1));
+      const fieldName = currentSettings?.label || '';
+      
+      let controlLabel = key;
+      if (currentSettings?.controls?.[key]?.label) {
+        controlLabel = currentSettings.controls[key].label;
+      } else {
+        Object.values(currentSettings?.controls || {}).forEach(ctrl => {
+          if (ctrl?.controls?.[key]?.label) {
+            controlLabel = ctrl.controls[key].label;
+          }
+        });
+      }
+
+      const historyLabel = `${settingName}: ${fieldName ? fieldName + ', ' : ''}${controlLabel}`;
+
+      pendingHistoryDispatchRef.current = () => {
+        dispatch({
+          type: 'ADD_HISTORY_SNAPSHOT',
+          payload: { label: historyLabel }
+        });
+      };
+    }
+
+    historyTimeoutRef.current = setTimeout(() => {
+      if (pendingHistoryDispatchRef.current) {
+        pendingHistoryDispatchRef.current();
+        pendingHistoryDispatchRef.current = null;
+      }
+      historyTimeoutRef.current = null;
+    }, 800);
+  }, [dispatch, setting]);
+
+  // --- 2. Conditional Early Returns (Must be placed after all hooks) ---
+  if (!setting) {
+    return null;
+  }
+
+  if (setting === 'history') {
+    return <div className="dragwyb-editor__sidebar" ref={sidebarRef}>
+      <HistoryPanel onClose={() => dispatch(updateActiveToolbar(DragwybEditor?.EditorToolbars?.Default ?? 'fields'))} />
+    </div>;
+  }
+
+  // --- 3. Normal Render Logic ---
+  const toolbarData = selectedToolbar && formData[setting];
+  const toolbarSettings = DragwybEditor[setting];
+
+  let toolBarHtml = false;
   let toolBarObject = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/toolbarRender/' + setting, toolBarHtml, setting, selectedToolbar, toolbarData, toolbarSettings, updateToolBar, { ...Utils, ...extensibleUtils });
 
   if (!(toolBarObject instanceof DragwybToolbarBase || toolBarObject instanceof DragwybEditor.editor.extends.ToolbarBase)) {
@@ -90,10 +173,6 @@ const ToolbarSettings = ({ onFieldSelect }) => {
 
   const settings = toolBarObject.getToolbarSettings();
   const toolbarHTML = toolBarObject.render();
-
-  const onSettingChangeHandler = useCallback((key, value) => {
-    toolbarRef.current.updateToolbarHandler(key, value);
-  }, []);
 
   toolbarRef.current = toolBarObject;
 
@@ -115,7 +194,7 @@ const ToolbarSettings = ({ onFieldSelect }) => {
         </button>}
       </div>
     </>}
-  </div>
+  </div>;
 };
 
 export default ToolbarSettings;

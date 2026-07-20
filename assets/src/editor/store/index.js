@@ -10,7 +10,7 @@ if (DragwybEditor?.formData?.fields) {
 }
 
 const initialState = {
-    form: DragwybEditor.formData || [],
+    form: DragwybEditor && DragwybEditor.formData ? JSON.parse(JSON.stringify(DragwybEditor.formData)) : {},
     notices: [],
     errors: [],
     sectionSettings: {},
@@ -25,7 +25,11 @@ const initialState = {
     themeMode: localStorage.getItem("DragwybEditorTheme") || 'dark',
     responsiveType: 1024,
     rootContainers: DragwybEditor?.formData?.fields?.rootContainers || [],
-    activeRootContainer: null
+    activeRootContainer: null,
+    history: {
+        past: [],
+        currentIndex: -1
+    }
 };
 
 const store = createStore(reducer, initialState, applyMiddleware(thunk));

@@ -28,7 +28,9 @@ import {
     ADD_ROOT_CONTAINERS,
     DELETE_ROOT_CONTAINER,
     UPDATE_ACTIVE_ROOT_CONTAINER,
-    RESET_ACTIVE_ROOT_CONTAINER
+    RESET_ACTIVE_ROOT_CONTAINER,
+    HISTORY_REVERT,
+    ADD_HISTORY_SNAPSHOT
 } from './actions';
 
 /**
@@ -565,6 +567,87 @@ export default function reducer(state, action) {
             return {
                 ...state,
                 styleSelectors: restSelectors
+            };
+        }
+
+        case HISTORY_REVERT: {
+            const targetIndex = action.payload.index;
+            const past = state.history.past;
+
+            if (targetIndex === -1) {
+                // Revert only toolbar fields, style, submission and advance to initial state
+                return {
+                    ...state,
+                    form: {
+                        ...state.form,
+                        fields: JSON.parse(JSON.stringify(DragwybEditor.formData?.fields || {})),
+                        style: JSON.parse(JSON.stringify(DragwybEditor.formData?.style || {})),
+                        'after-submission': JSON.parse(JSON.stringify(DragwybEditor.formData?.['after-submission'] || {})),
+                        advance: JSON.parse(JSON.stringify(DragwybEditor.formData?.advance || {}))
+                    },
+                    styleSelectors: DragwybEditor?.frontendInitialData?.css && typeof DragwybEditor?.frontendInitialData?.css === 'object' ? JSON.parse(JSON.stringify(DragwybEditor.frontendInitialData.css)) : {},
+                    sectionSettings: {},
+                    history: {
+                        ...state.history,
+                        currentIndex: -1
+                    }
+                };
+            }
+
+            const targetSnapshot = past[targetIndex];
+            if (!targetSnapshot) return state;
+
+            return {
+                ...state,
+                form: {
+                    ...state.form,
+                    fields: JSON.parse(JSON.stringify(targetSnapshot.form.fields || {})),
+                    style: JSON.parse(JSON.stringify(targetSnapshot.form.style || {})),
+                    'after-submission': JSON.parse(JSON.stringify(targetSnapshot.form['after-submission'] || {})),
+                    advance: JSON.parse(JSON.stringify(targetSnapshot.form.advance || {}))
+                },
+                styleSelectors: JSON.parse(JSON.stringify(targetSnapshot.styleSelectors || {})),
+                sectionSettings: JSON.parse(JSON.stringify(targetSnapshot.sectionSettings || {})),
+                history: {
+                    ...state.history,
+                    currentIndex: targetIndex
+                }
+            };
+        }
+
+        case ADD_HISTORY_SNAPSHOT: {
+            const { past, currentIndex } = state.history;
+
+            // Truncate future states if we were currently reverted to a past step
+            const cleanPast = past.slice(0, currentIndex + 1);
+
+            const newSnapshot = {
+                form: JSON.parse(JSON.stringify({
+                    fields: state.form.fields || {},
+                    style: state.form.style || {},
+                    'after-submission': state.form['after-submission'] || {},
+                    advance: state.form.advance || {}
+                })),
+                styleSelectors: JSON.parse(JSON.stringify(state.styleSelectors || {})),
+                sectionSettings: JSON.parse(JSON.stringify(state.sectionSettings || {})),
+                label: action.payload.label,
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+            };
+
+            // Enforce the size limit of 50 entries
+            let finalPast = [...cleanPast, newSnapshot];
+            let newIndex = cleanPast.length;
+            if (finalPast.length > 50) {
+                finalPast = finalPast.slice(finalPast.length - 50);
+                newIndex = 49;
+            }
+
+            return {
+                ...state,
+                history: {
+                    past: finalPast,
+                    currentIndex: newIndex
+                }
             };
         }
 

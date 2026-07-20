@@ -33,6 +33,18 @@ export const ADD_ROOT_CONTAINERS = 'ADD_ROOT_CONTAINERS';
 export const DELETE_ROOT_CONTAINER = 'DELETE_ROOT_CONTAINER';
 export const UPDATE_ACTIVE_ROOT_CONTAINER = 'UPDATE_ACTIVE_ROOT_CONTAINER';
 export const RESET_ACTIVE_ROOT_CONTAINER = 'RESET_ACTIVE_ROOT_CONTAINER';
+export const HISTORY_REVERT = 'HISTORY_REVERT';
+export const ADD_HISTORY_SNAPSHOT = 'ADD_HISTORY_SNAPSHOT';
+
+export const revertToHistory = (index) => ({
+    type: HISTORY_REVERT,
+    payload: { index }
+});
+
+export const addHistorySnapshot = (label) => ({
+    type: ADD_HISTORY_SNAPSHOT,
+    payload: { label }
+});
 
 export const updateThemeMode = (themeMode) => ({
     type: UPDATE_THEME_MODE,
