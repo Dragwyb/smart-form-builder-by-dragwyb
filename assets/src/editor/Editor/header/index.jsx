@@ -133,7 +133,7 @@ const Header = () => {
                         {themeMode === 'light' ? <FaMoon color='#fff' /> : <FaSun color="#f39c12" />}
                     </div>
                 </div>
-                <a href={escUrl(DragwybEditor.previewUrl)} className='dragwyb-editor__preview-toggle' target="_blank">
+                <a href={escUrl(DragwybEditor.previewUrl)} className='dragwyb-editor__preview-toggle' target="_blank" title={__('Frontend Preview', 'smart-form-builder-by-dragwyb')}>
                     <IconsManager icon='far fa-eye' title={__('Preview', 'smart-form-builder-by-dragwyb')} />
                 </a>
                 <hr />
