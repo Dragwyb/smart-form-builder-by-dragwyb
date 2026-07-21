@@ -24,7 +24,6 @@ const initialState = {
     iframeEle: null,
     themeMode: localStorage.getItem("DragwybEditorTheme") || 'dark',
     responsiveType: 1024,
-    rootContainers: DragwybEditor?.formData?.fields?.rootContainers || [],
     activeRootContainer: null,
     history: {
         past: [],

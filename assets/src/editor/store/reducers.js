@@ -580,6 +580,7 @@ export default function reducer(state, action) {
                 toolbars.map(toolbarKey => {
                     revertedStates[toolbarKey] = JSON.parse(JSON.stringify(DragwybEditor.formData[toolbarKey] || {}));
                 });
+                revertedStates.rootContainers = DragwybEditor?.formData?.rootContainers || [];
 
                 return {
                     ...state,
@@ -601,6 +602,8 @@ export default function reducer(state, action) {
             toolbars.map(toolbarKey => {
                 revertedStates[toolbarKey] = JSON.parse(JSON.stringify(targetSnapshot.form[toolbarKey] || {}));
             });
+
+            revertedStates.rootContainers = targetSnapshot?.form?.rootContainers || [];
 
             return {
                 ...state,
@@ -624,7 +627,9 @@ export default function reducer(state, action) {
             const toolbars = Object.keys(DragwybEditor.EditorToolbars.toolbars);
 
             const newSnapshot = {
-                form: {},
+                form: {
+                    rootContainers: JSON.parse(JSON.stringify(state.form.rootContainers))
+                },
                 styleSelectors: JSON.parse(JSON.stringify(state.styleSelectors || {})),
                 label: action.payload.label,
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
