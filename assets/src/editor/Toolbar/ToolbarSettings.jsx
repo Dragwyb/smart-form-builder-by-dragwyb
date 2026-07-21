@@ -99,9 +99,22 @@ const ToolbarSettings = ({ onFieldSelect }) => {
     Utils.updateToolbarSetting({ id: key, value, selectedToolBarId });
   }, [Utils]);
 
-  const handleDeleteField = useCallback((id) => {
+  const handleDeleteField = useCallback((id, fieldVlaues, fieldType) => {
     onFieldSelect({ id: false });
     dispatch({ type: "DELETE_FIELD", payload: id });
+
+    let fieldLabel = fieldVlaues?.label;
+
+    if (typeof fieldLabel !== 'string' || '' === fieldLabel) {
+      fieldLabel = fieldVlaues.field_id;
+    }
+
+    const historyLabel = `Delete ${fieldType}, (${fieldLabel})`;
+
+    dispatch({
+      type: 'ADD_HISTORY_SNAPSHOT',
+      payload: { label: historyLabel }
+    });
   }, [dispatch]);
 
   const onSettingChangeHandler = useCallback((key, value) => {
@@ -174,19 +187,21 @@ const ToolbarSettings = ({ onFieldSelect }) => {
 
   toolbarRef.current = toolBarObject;
 
+  const toolbarValues = toolbarRef.current.getToolbarValue();
+
   return <div className="dragwyb-editor__sidebar" ref={sidebarRef} >
     {toolbarHTML && toolbarHTML}
     {settings && settings.controls && <>
       <div className="dragwyb-editor__settings">
         <FieldSettings
           selectedTab={setting}
-          toolbarValue={toolbarRef.current.getToolbarValue()}
+          toolbarValue={toolbarValues}
           toolbarSettings={settings}
           onSettingChange={onSettingChangeHandler}
         />
       </div>
       <div className='dragwyb-editor__settings__footer'>
-        {setting === 'fields' && selectedToolbar !== 'fields' && <button onClick={() => handleDeleteField(selectedToolbar)}>
+        {setting === 'fields' && selectedToolbar !== 'fields' && <button onClick={() => handleDeleteField(selectedToolbar, toolbarValues, settings.label)}>
           <span className="dashicons dashicons-trash"></span>
           {__('Delete', 'dragwyb-form-builder')} {settings.label || ''}
         </button>}

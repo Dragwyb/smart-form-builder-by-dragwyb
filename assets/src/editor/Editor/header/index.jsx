@@ -45,6 +45,10 @@ const Header = () => {
 
     // Keyboard Shortcuts for Undo & Redo
     useEffect(() => {
+        if (!iframeEle) {
+            return;
+        }
+
         const handleKeyDown = (e) => {
             const isCtrl = e.ctrlKey || e.metaKey;
             if (isCtrl && !e.altKey) {
@@ -77,7 +81,7 @@ const Header = () => {
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [dispatch, store]);
+    }, [dispatch, store, iframeEle]);
 
     // Apply the theme to the body tag whenever the state changes
     const toggleTheme = useCallback(() => {
@@ -108,7 +112,7 @@ const Header = () => {
             </div>
 
             <div className="dragwyb-editor__actions">
-                <div 
+                <div
                     className={`dragwyb-editor__history-toggle${activeToolbar === 'history' ? ' active' : ''}`}
                     onClick={() => {
                         const nextToolbar = activeToolbar === 'history' ? (DragwybEditor?.EditorToolbars?.Default ?? 'fields') : 'history';

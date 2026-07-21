@@ -582,12 +582,20 @@ export default function reducer(state, action) {
                 });
                 revertedStates.rootContainers = DragwybEditor?.formData?.rootContainers || [];
 
+                let fieldIds = [];
+
+                if (DragwybEditor?.formData?.fields) {
+                    const existingIds = JSON.stringify(DragwybEditor?.formData?.fields);
+                    fieldIds = [...existingIds.matchAll(/"_id"\s*:\s*"([^"]+)"/g)].map(match => match[1]);
+                }
+
                 return {
                     ...state,
                     form: {
                         ...state.form,
                         ...revertedStates
                     },
+                    fieldIds,
                     styleSelectors: DragwybEditor?.frontendInitialData?.css && typeof DragwybEditor?.frontendInitialData?.css === 'object' ? JSON.parse(JSON.stringify(DragwybEditor.frontendInitialData.css)) : {},
                     history: {
                         ...state.history,
@@ -609,8 +617,9 @@ export default function reducer(state, action) {
                 ...state,
                 form: {
                     ...state.form,
-                    ...revertedStates
+                    ...revertedStates,
                 },
+                fieldIds: JSON.parse(JSON.stringify(targetSnapshot.fieldIds)),
                 styleSelectors: JSON.parse(JSON.stringify(targetSnapshot.styleSelectors || {})),
                 history: {
                     ...state.history,
@@ -630,6 +639,7 @@ export default function reducer(state, action) {
                 form: {
                     rootContainers: JSON.parse(JSON.stringify(state.form.rootContainers))
                 },
+                fieldIds: JSON.parse(JSON.stringify(state.fieldIds || [])),
                 styleSelectors: JSON.parse(JSON.stringify(state.styleSelectors || {})),
                 label: action.payload.label,
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
