@@ -1539,7 +1539,7 @@ $dropdown-max-height: 250px;
         position: relative;
         border-bottom: 1px solid #e2e8f0;
         padding: 18px 20px;
-        
+
         .dark & {
             border-bottom-color: #334155;
         }
@@ -1550,6 +1550,7 @@ $dropdown-max-height: 250px;
             text-align: center;
             color: #0f172a;
             margin: 0;
+
             .dark & {
                 color: #f8fafc;
             }
@@ -1570,8 +1571,10 @@ $dropdown-max-height: 250px;
             justify-content: center;
             line-height: 1;
             padding: 0;
+
             &:hover {
                 color: #0f172a;
+
                 .dark & {
                     color: #f8fafc;
                 }
@@ -1586,6 +1589,7 @@ $dropdown-max-height: 250px;
         flex-direction: column;
         flex: 1;
         overflow: hidden;
+
         .dark & {
             background-color: #0f172a;
         }
@@ -1606,6 +1610,7 @@ $dropdown-max-height: 250px;
         margin-top: 20px;
         margin-bottom: 5px;
         font-weight: 500;
+
         .dark & {
             color: #94a3b8;
         }
@@ -1633,6 +1638,7 @@ $dropdown-max-height: 250px;
 
     &:hover {
         border-color: #cbd5e1;
+
         .dark & {
             border-color: #475569;
         }
@@ -1651,15 +1657,11 @@ $dropdown-max-height: 250px;
 
         .check-icon {
             color: #475569;
+
             .dark & {
                 color: #cbd5e1;
             }
         }
-    }
-
-    &.disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
     }
 
     .details {
@@ -1677,7 +1679,7 @@ $dropdown-max-height: 250px;
         .label-italic {
             font-style: italic;
         }
-        
+
         .label-normal {
             font-weight: 500;
         }

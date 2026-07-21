@@ -20,7 +20,7 @@ export default class TextareaControl extends DragwybEditor.editor.extends.Contro
                     id={id}
                     name={id}
                     className="dragwyb-control__textarea"
-                    value={value}
+                    value={value ?? ''}
                     onChange={(e) => this.updateControlHandler(id, e.target.value)}
                 />
             </div>

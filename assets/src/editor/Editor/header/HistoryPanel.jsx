@@ -60,7 +60,7 @@ const HistoryPanel = ({ onClose }) => {
                     {history.past.map((snapshot, index) => (
                         <div
                             key={index}
-                            className={`dragwyb-history-item ${history.currentIndex === index ? 'active' : ''} ${index > history.currentIndex ? 'disabled' : ''}`}
+                            className={`dragwyb-history-item ${history.currentIndex === index ? 'active' : ''}`}
                             onClick={() => dispatch(revertToHistory(index))}
                         >
                             <div className="details">

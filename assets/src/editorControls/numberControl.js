@@ -25,7 +25,7 @@ export default class NumberControl extends DragwybEditor.editor.extends.ControlB
                     min={min}
                     max={max}
                     step={step}
-                    value={value}
+                    value={value ?? ''}
                     onChange={(e) => this.updateControlHandler(id, e.target.value)}
                 />
             </div>

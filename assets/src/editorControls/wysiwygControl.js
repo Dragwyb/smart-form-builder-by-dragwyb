@@ -64,7 +64,7 @@ export default class WysiwygControl extends DragwybEditor.editor.extends.Control
                     id={editorId}
                     name={editorId}
                     className="dragwyb-control__wysiwyg"
-                    value={value}
+                    value={value ?? ''}
                     onChange={(e) => {
                         this.updateControlHandler(id, e.target.value);
                     }}
