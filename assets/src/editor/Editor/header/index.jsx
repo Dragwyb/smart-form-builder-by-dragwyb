@@ -52,6 +52,14 @@ const Header = () => {
         const handleKeyDown = (e) => {
             const isCtrl = e.ctrlKey || e.metaKey;
             if (isCtrl && !e.altKey) {
+                if (e.target.localName === 'textarea') {
+                    return;
+                }
+
+                if (e.target.localName === 'input' && ['text', 'email', 'number', 'password'].includes(e.target.type)) {
+                    return;
+                }
+
                 if (e.key.toLowerCase() === 'z') {
                     e.preventDefault();
                     const stateHistory = store.getState().history || { past: [], currentIndex: -1 };
@@ -78,8 +86,10 @@ const Header = () => {
         };
 
         window.addEventListener('keydown', handleKeyDown);
+        iframeEle.addEventListener('keydown', handleKeyDown);
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
+            iframeEle.removeEventListener('keydown', handleKeyDown);
         };
     }, [dispatch, store, iframeEle]);
 
