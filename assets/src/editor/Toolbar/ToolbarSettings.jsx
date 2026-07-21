@@ -156,7 +156,7 @@ const ToolbarSettings = ({ onFieldSelect }) => {
         pendingHistoryDispatchRef.current = null;
       }
       historyTimeoutRef.current = null;
-    }, 800);
+    }, 400);
   }, [dispatch, setting]);
 
   // --- 2. Conditional Early Returns (Must be placed after all hooks) ---
