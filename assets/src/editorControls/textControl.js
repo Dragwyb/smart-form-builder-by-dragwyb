@@ -21,7 +21,7 @@ export default class TextControl extends DragwybEditor.editor.extends.ControlBas
                     className="dragwyb-control__input"
                     id={id}
                     name={id}
-                    value={value ?? ''}
+                    value={value}
                     onChange={(e) => this.updateControlHandler(id, e.target.value)}
                 />
             </div>
