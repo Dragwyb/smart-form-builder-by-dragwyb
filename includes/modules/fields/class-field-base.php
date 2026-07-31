@@ -170,7 +170,6 @@ abstract class Field_Base extends Register_Controls_Base {
 
 	public function set_field_settings( array $setting ) {
 		$this->display_settings = $setting;
-		$this->test_settings    = $setting;
 	}
 
 	protected function get_field_settings(): array {
