@@ -55,7 +55,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_name": {
@@ -63,7 +64,7 @@
         "type": "text",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Full Name",
+          "label": "Name",
           "placeholder": "Enter your full name",
           "required": true,
           "error_message": "Please enter your name."
@@ -74,7 +75,7 @@
         "type": "email",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Business Email Address",
+          "label": "Email",
           "placeholder": "name@company.com",
           "required": true,
           "error_message": "A valid business email address is required to receive the guide."
@@ -93,7 +94,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_job_title": {
@@ -112,7 +114,7 @@
         "type": "select",
         "parentId": "row_mkt_profile",
         "attributes": {
-          "label": "Company Employee Count",
+          "label": "Company Size",
           "required": true,
           "default_value": "11-50",
           "options_list": [
@@ -167,7 +169,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_industry": {
@@ -175,7 +178,7 @@
         "type": "select",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Industry Sector",
+          "label": "Industry",
           "required": true,
           "default_value": "tech",
           "options_list": [
@@ -222,7 +225,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Primary Interests / Topics of Study",
+          "label": "Interests",
           "required": false,
           "options_list": [
             {
@@ -262,7 +265,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_newsletter_consent": {
@@ -270,7 +274,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_consent",
         "attributes": {
-          "label": "Newsletter Subscription",
+          "label": "Newsletter",
           "required": false,
           "options_list": [
             {
@@ -288,7 +292,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_consent",
         "attributes": {
-          "label": "Direct Outreach Consent",
+          "label": "Contact Consent",
           "required": false,
           "options_list": [
             {
@@ -314,7 +318,7 @@
         "type": "select",
         "parentId": "row_mkt_source",
         "attributes": {
-          "label": "How did you find this whitepaper?",
+          "label": "Source",
           "required": false,
           "options_list": [
             {
@@ -407,7 +411,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_name": {
@@ -415,7 +420,7 @@
         "type": "text",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Full Name",
+          "label": "Name",
           "placeholder": "Enter your full name",
           "required": true,
           "error_message": "Please enter your name."
@@ -426,7 +431,7 @@
         "type": "email",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Business Email Address",
+          "label": "Email",
           "placeholder": "name@company.com",
           "required": true,
           "error_message": "A valid business email address is required to receive the guide."
@@ -445,7 +450,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_job_title": {
@@ -464,7 +470,7 @@
         "type": "select",
         "parentId": "row_mkt_profile",
         "attributes": {
-          "label": "Company Employee Count",
+          "label": "Company Size",
           "required": true,
           "default_value": "11-50",
           "options_list": [
@@ -519,7 +525,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_industry": {
@@ -527,7 +534,7 @@
         "type": "select",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Industry Sector",
+          "label": "Industry",
           "required": true,
           "default_value": "tech",
           "options_list": [
@@ -574,7 +581,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Primary Interests / Topics of Study",
+          "label": "Interests",
           "required": false,
           "options_list": [
             {
@@ -614,7 +621,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_newsletter_consent": {
@@ -622,7 +630,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_consent",
         "attributes": {
-          "label": "Newsletter Subscription",
+          "label": "Newsletter",
           "required": false,
           "options_list": [
             {
@@ -640,7 +648,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_consent",
         "attributes": {
-          "label": "Direct Outreach Consent",
+          "label": "Contact Consent",
           "required": false,
           "options_list": [
             {
@@ -666,7 +674,7 @@
         "type": "select",
         "parentId": "row_mkt_source",
         "attributes": {
-          "label": "How did you find this whitepaper?",
+          "label": "Source",
           "required": false,
           "options_list": [
             {
@@ -713,7 +721,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_captcha": {
@@ -721,7 +730,7 @@
         "type": "captcha",
         "parentId": "row_mkt_action",
         "attributes": {
-          "label": "Robot Check",
+          "label": "Captcha",
           "theme": "light",
           "size": "normal"
         }
@@ -731,7 +740,7 @@
         "type": "button",
         "parentId": "row_mkt_action",
         "attributes": {
-          "label": "Get Instant Free Download",
+          "label": "Download",
           "button_action": "submit",
           "button_style": "primary",
           "css_classes": "marketing-submit"
@@ -793,7 +802,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_name": {
@@ -801,7 +811,7 @@
         "type": "text",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Full Name",
+          "label": "Name",
           "placeholder": "Enter your full name",
           "required": true,
           "error_message": "Please enter your name."
@@ -812,7 +822,7 @@
         "type": "email",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Business Email Address",
+          "label": "Email",
           "placeholder": "name@company.com",
           "required": true,
           "error_message": "A valid business email address is required to receive the guide."
@@ -831,7 +841,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_job_title": {
@@ -850,7 +861,7 @@
         "type": "select",
         "parentId": "row_mkt_profile",
         "attributes": {
-          "label": "Company Employee Count",
+          "label": "Company Size",
           "required": true,
           "default_value": "11-50",
           "options_list": [
@@ -905,7 +916,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_industry": {
@@ -913,7 +925,7 @@
         "type": "select",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Industry Sector",
+          "label": "Industry",
           "required": true,
           "default_value": "tech",
           "options_list": [
@@ -960,7 +972,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Primary Interests / Topics of Study",
+          "label": "Interests",
           "required": false,
           "options_list": [
             {
@@ -1045,7 +1057,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_name": {
@@ -1053,7 +1066,7 @@
         "type": "text",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Full Name",
+          "label": "Name",
           "placeholder": "Enter your full name",
           "required": true,
           "error_message": "Please enter your name."
@@ -1064,7 +1077,7 @@
         "type": "email",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Business Email Address",
+          "label": "Email",
           "placeholder": "name@company.com",
           "required": true,
           "error_message": "A valid business email address is required to receive the guide."
@@ -1083,7 +1096,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_job_title": {
@@ -1102,7 +1116,7 @@
         "type": "select",
         "parentId": "row_mkt_profile",
         "attributes": {
-          "label": "Company Employee Count",
+          "label": "Company Size",
           "required": true,
           "default_value": "11-50",
           "options_list": [
@@ -1157,7 +1171,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_industry": {
@@ -1165,7 +1180,7 @@
         "type": "select",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Industry Sector",
+          "label": "Industry",
           "required": true,
           "default_value": "tech",
           "options_list": [
@@ -1212,7 +1227,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Primary Interests / Topics of Study",
+          "label": "Interests",
           "required": false,
           "options_list": [
             {
@@ -1252,7 +1267,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_newsletter_consent": {
@@ -1260,7 +1276,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_consent",
         "attributes": {
-          "label": "Newsletter Subscription",
+          "label": "Newsletter",
           "required": false,
           "options_list": [
             {
@@ -1278,7 +1294,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_consent",
         "attributes": {
-          "label": "Direct Outreach Consent",
+          "label": "Contact Consent",
           "required": false,
           "options_list": [
             {
@@ -1304,7 +1320,7 @@
         "type": "select",
         "parentId": "row_mkt_source",
         "attributes": {
-          "label": "How did you find this whitepaper?",
+          "label": "Source",
           "required": false,
           "options_list": [
             {
@@ -1397,7 +1413,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_name": {
@@ -1405,7 +1422,7 @@
         "type": "text",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Full Name",
+          "label": "Name",
           "placeholder": "Enter your full name",
           "required": true,
           "error_message": "Please enter your name."
@@ -1416,7 +1433,7 @@
         "type": "email",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Business Email Address",
+          "label": "Email",
           "placeholder": "name@company.com",
           "required": true,
           "error_message": "A valid business email address is required to receive the guide."
@@ -1435,7 +1452,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_job_title": {
@@ -1454,7 +1472,7 @@
         "type": "select",
         "parentId": "row_mkt_profile",
         "attributes": {
-          "label": "Company Employee Count",
+          "label": "Company Size",
           "required": true,
           "default_value": "11-50",
           "options_list": [
@@ -1509,7 +1527,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_industry": {
@@ -1517,7 +1536,7 @@
         "type": "select",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Industry Sector",
+          "label": "Industry",
           "required": true,
           "default_value": "tech",
           "options_list": [
@@ -1564,7 +1583,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Primary Interests / Topics of Study",
+          "label": "Interests",
           "required": false,
           "options_list": [
             {
@@ -1604,7 +1623,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_newsletter_consent": {
@@ -1612,7 +1632,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_consent",
         "attributes": {
-          "label": "Newsletter Subscription",
+          "label": "Newsletter",
           "required": false,
           "options_list": [
             {
@@ -1630,7 +1650,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_consent",
         "attributes": {
-          "label": "Direct Outreach Consent",
+          "label": "Contact Consent",
           "required": false,
           "options_list": [
             {
@@ -1656,7 +1676,7 @@
         "type": "select",
         "parentId": "row_mkt_source",
         "attributes": {
-          "label": "How did you find this whitepaper?",
+          "label": "Source",
           "required": false,
           "options_list": [
             {
@@ -1703,7 +1723,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_captcha": {
@@ -1711,7 +1732,7 @@
         "type": "captcha",
         "parentId": "row_mkt_action",
         "attributes": {
-          "label": "Robot Check",
+          "label": "Captcha",
           "theme": "light",
           "size": "normal"
         }
@@ -1721,7 +1742,7 @@
         "type": "button",
         "parentId": "row_mkt_action",
         "attributes": {
-          "label": "Get Instant Free Download",
+          "label": "Download",
           "button_action": "submit",
           "button_style": "primary",
           "css_classes": "marketing-submit"
@@ -1783,7 +1804,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_name": {
@@ -1791,7 +1813,7 @@
         "type": "text",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Full Name",
+          "label": "Name",
           "placeholder": "Enter your full name",
           "required": true,
           "error_message": "Please enter your name."
@@ -1802,7 +1824,7 @@
         "type": "email",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Business Email Address",
+          "label": "Email",
           "placeholder": "name@company.com",
           "required": true,
           "error_message": "A valid business email address is required to receive the guide."
@@ -1821,7 +1843,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_job_title": {
@@ -1840,7 +1863,7 @@
         "type": "select",
         "parentId": "row_mkt_profile",
         "attributes": {
-          "label": "Company Employee Count",
+          "label": "Company Size",
           "required": true,
           "default_value": "11-50",
           "options_list": [
@@ -1895,7 +1918,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_industry": {
@@ -1903,7 +1927,7 @@
         "type": "select",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Industry Sector",
+          "label": "Industry",
           "required": true,
           "default_value": "tech",
           "options_list": [
@@ -1950,7 +1974,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Primary Interests / Topics of Study",
+          "label": "Interests",
           "required": false,
           "options_list": [
             {
@@ -2035,7 +2059,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_name": {
@@ -2043,7 +2068,7 @@
         "type": "text",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Full Name",
+          "label": "Name",
           "placeholder": "Enter your full name",
           "required": true,
           "error_message": "Please enter your name."
@@ -2054,7 +2079,7 @@
         "type": "email",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Business Email Address",
+          "label": "Email",
           "placeholder": "name@company.com",
           "required": true,
           "error_message": "A valid business email address is required to receive the guide."
@@ -2073,7 +2098,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_job_title": {
@@ -2092,7 +2118,7 @@
         "type": "select",
         "parentId": "row_mkt_profile",
         "attributes": {
-          "label": "Company Employee Count",
+          "label": "Company Size",
           "required": true,
           "default_value": "11-50",
           "options_list": [
@@ -2147,7 +2173,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_industry": {
@@ -2155,7 +2182,7 @@
         "type": "select",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Industry Sector",
+          "label": "Industry",
           "required": true,
           "default_value": "tech",
           "options_list": [
@@ -2202,7 +2229,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Primary Interests / Topics of Study",
+          "label": "Interests",
           "required": false,
           "options_list": [
             {
@@ -2242,7 +2269,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_newsletter_consent": {
@@ -2250,7 +2278,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_consent",
         "attributes": {
-          "label": "Newsletter Subscription",
+          "label": "Newsletter",
           "required": false,
           "options_list": [
             {
@@ -2268,7 +2296,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_consent",
         "attributes": {
-          "label": "Direct Outreach Consent",
+          "label": "Contact Consent",
           "required": false,
           "options_list": [
             {
@@ -2294,7 +2322,7 @@
         "type": "select",
         "parentId": "row_mkt_source",
         "attributes": {
-          "label": "How did you find this whitepaper?",
+          "label": "Source",
           "required": false,
           "options_list": [
             {
@@ -2387,7 +2415,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_name": {
@@ -2395,7 +2424,7 @@
         "type": "text",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Full Name",
+          "label": "Name",
           "placeholder": "Enter your full name",
           "required": true,
           "error_message": "Please enter your name."
@@ -2406,7 +2435,7 @@
         "type": "email",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Business Email Address",
+          "label": "Email",
           "placeholder": "name@company.com",
           "required": true,
           "error_message": "A valid business email address is required to receive the guide."
@@ -2425,7 +2454,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_job_title": {
@@ -2444,7 +2474,7 @@
         "type": "select",
         "parentId": "row_mkt_profile",
         "attributes": {
-          "label": "Company Employee Count",
+          "label": "Company Size",
           "required": true,
           "default_value": "11-50",
           "options_list": [
@@ -2499,7 +2529,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_industry": {
@@ -2507,7 +2538,7 @@
         "type": "select",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Industry Sector",
+          "label": "Industry",
           "required": true,
           "default_value": "tech",
           "options_list": [
@@ -2554,7 +2585,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Primary Interests / Topics of Study",
+          "label": "Interests",
           "required": false,
           "options_list": [
             {
@@ -2594,7 +2625,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_newsletter_consent": {
@@ -2602,7 +2634,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_consent",
         "attributes": {
-          "label": "Newsletter Subscription",
+          "label": "Newsletter",
           "required": false,
           "options_list": [
             {
@@ -2620,7 +2652,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_consent",
         "attributes": {
-          "label": "Direct Outreach Consent",
+          "label": "Contact Consent",
           "required": false,
           "options_list": [
             {
@@ -2646,7 +2678,7 @@
         "type": "select",
         "parentId": "row_mkt_source",
         "attributes": {
-          "label": "How did you find this whitepaper?",
+          "label": "Source",
           "required": false,
           "options_list": [
             {
@@ -2693,7 +2725,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_captcha": {
@@ -2701,7 +2734,7 @@
         "type": "captcha",
         "parentId": "row_mkt_action",
         "attributes": {
-          "label": "Robot Check",
+          "label": "Captcha",
           "theme": "light",
           "size": "normal"
         }
@@ -2711,7 +2744,7 @@
         "type": "button",
         "parentId": "row_mkt_action",
         "attributes": {
-          "label": "Get Instant Free Download",
+          "label": "Download",
           "button_action": "submit",
           "button_style": "primary",
           "css_classes": "marketing-submit"
@@ -2773,7 +2806,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_name": {
@@ -2781,7 +2815,7 @@
         "type": "text",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Full Name",
+          "label": "Name",
           "placeholder": "Enter your full name",
           "required": true,
           "error_message": "Please enter your name."
@@ -2792,7 +2826,7 @@
         "type": "email",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Business Email Address",
+          "label": "Email",
           "placeholder": "name@company.com",
           "required": true,
           "error_message": "A valid business email address is required to receive the guide."
@@ -2811,7 +2845,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_job_title": {
@@ -2830,7 +2865,7 @@
         "type": "select",
         "parentId": "row_mkt_profile",
         "attributes": {
-          "label": "Company Employee Count",
+          "label": "Company Size",
           "required": true,
           "default_value": "11-50",
           "options_list": [
@@ -2885,7 +2920,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_industry": {
@@ -2893,7 +2929,7 @@
         "type": "select",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Industry Sector",
+          "label": "Industry",
           "required": true,
           "default_value": "tech",
           "options_list": [
@@ -2940,7 +2976,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Primary Interests / Topics of Study",
+          "label": "Interests",
           "required": false,
           "options_list": [
             {
@@ -3025,7 +3061,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_name": {
@@ -3033,7 +3070,7 @@
         "type": "text",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Full Name",
+          "label": "Name",
           "placeholder": "Enter your full name",
           "required": true,
           "error_message": "Please enter your name."
@@ -3044,7 +3081,7 @@
         "type": "email",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Business Email Address",
+          "label": "Email",
           "placeholder": "name@company.com",
           "required": true,
           "error_message": "A valid business email address is required to receive the guide."
@@ -3063,7 +3100,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_job_title": {
@@ -3082,7 +3120,7 @@
         "type": "select",
         "parentId": "row_mkt_profile",
         "attributes": {
-          "label": "Company Employee Count",
+          "label": "Company Size",
           "required": true,
           "default_value": "11-50",
           "options_list": [
@@ -3137,7 +3175,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_industry": {
@@ -3145,7 +3184,7 @@
         "type": "select",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Industry Sector",
+          "label": "Industry",
           "required": true,
           "default_value": "tech",
           "options_list": [
@@ -3192,7 +3231,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Primary Interests / Topics of Study",
+          "label": "Interests",
           "required": false,
           "options_list": [
             {
@@ -3232,7 +3271,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_newsletter_consent": {
@@ -3240,7 +3280,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_consent",
         "attributes": {
-          "label": "Newsletter Subscription",
+          "label": "Newsletter",
           "required": false,
           "options_list": [
             {
@@ -3258,7 +3298,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_consent",
         "attributes": {
-          "label": "Direct Outreach Consent",
+          "label": "Contact Consent",
           "required": false,
           "options_list": [
             {
@@ -3284,7 +3324,7 @@
         "type": "select",
         "parentId": "row_mkt_source",
         "attributes": {
-          "label": "How did you find this whitepaper?",
+          "label": "Source",
           "required": false,
           "options_list": [
             {
@@ -3377,7 +3417,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_name": {
@@ -3385,7 +3426,7 @@
         "type": "text",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Full Name",
+          "label": "Name",
           "placeholder": "Enter your full name",
           "required": true,
           "error_message": "Please enter your name."
@@ -3396,7 +3437,7 @@
         "type": "email",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Business Email Address",
+          "label": "Email",
           "placeholder": "name@company.com",
           "required": true,
           "error_message": "A valid business email address is required to receive the guide."
@@ -3415,7 +3456,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_job_title": {
@@ -3434,7 +3476,7 @@
         "type": "select",
         "parentId": "row_mkt_profile",
         "attributes": {
-          "label": "Company Employee Count",
+          "label": "Company Size",
           "required": true,
           "default_value": "11-50",
           "options_list": [
@@ -3489,7 +3531,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_industry": {
@@ -3497,7 +3540,7 @@
         "type": "select",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Industry Sector",
+          "label": "Industry",
           "required": true,
           "default_value": "tech",
           "options_list": [
@@ -3544,7 +3587,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Primary Interests / Topics of Study",
+          "label": "Interests",
           "required": false,
           "options_list": [
             {
@@ -3584,7 +3627,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_newsletter_consent": {
@@ -3592,7 +3636,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_consent",
         "attributes": {
-          "label": "Newsletter Subscription",
+          "label": "Newsletter",
           "required": false,
           "options_list": [
             {
@@ -3610,7 +3654,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_consent",
         "attributes": {
-          "label": "Direct Outreach Consent",
+          "label": "Contact Consent",
           "required": false,
           "options_list": [
             {
@@ -3636,7 +3680,7 @@
         "type": "select",
         "parentId": "row_mkt_source",
         "attributes": {
-          "label": "How did you find this whitepaper?",
+          "label": "Source",
           "required": false,
           "options_list": [
             {
@@ -3683,7 +3727,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_captcha": {
@@ -3691,7 +3736,7 @@
         "type": "captcha",
         "parentId": "row_mkt_action",
         "attributes": {
-          "label": "Robot Check",
+          "label": "Captcha",
           "theme": "light",
           "size": "normal"
         }
@@ -3701,7 +3746,7 @@
         "type": "button",
         "parentId": "row_mkt_action",
         "attributes": {
-          "label": "Get Instant Free Download",
+          "label": "Download",
           "button_action": "submit",
           "button_style": "primary",
           "css_classes": "marketing-submit"
@@ -3763,7 +3808,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_name": {
@@ -3771,7 +3817,7 @@
         "type": "text",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Full Name",
+          "label": "Name",
           "placeholder": "Enter your full name",
           "required": true,
           "error_message": "Please enter your name."
@@ -3782,7 +3828,7 @@
         "type": "email",
         "parentId": "row_mkt_basics",
         "attributes": {
-          "label": "Business Email Address",
+          "label": "Email",
           "placeholder": "name@company.com",
           "required": true,
           "error_message": "A valid business email address is required to receive the guide."
@@ -3801,7 +3847,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_job_title": {
@@ -3820,7 +3867,7 @@
         "type": "select",
         "parentId": "row_mkt_profile",
         "attributes": {
-          "label": "Company Employee Count",
+          "label": "Company Size",
           "required": true,
           "default_value": "11-50",
           "options_list": [
@@ -3875,7 +3922,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "mkt_industry": {
@@ -3883,7 +3931,7 @@
         "type": "select",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Industry Sector",
+          "label": "Industry",
           "required": true,
           "default_value": "tech",
           "options_list": [
@@ -3930,7 +3978,7 @@
         "type": "checkbox",
         "parentId": "row_mkt_interests",
         "attributes": {
-          "label": "Primary Interests / Topics of Study",
+          "label": "Interests",
           "required": false,
           "options_list": [
             {

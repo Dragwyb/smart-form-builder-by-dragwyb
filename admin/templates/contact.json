@@ -62,7 +62,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "first_name": {
@@ -106,7 +107,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "email": {
@@ -114,7 +116,7 @@
         "type": "email",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Email Address",
+          "label": "Email",
           "placeholder": "example@domain.com",
           "required": true,
           "error_message": "Please enter a valid email address."
@@ -125,7 +127,7 @@
         "type": "phone",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Phone Number",
+          "label": "Phone",
           "placeholder": "(555) 000-0000",
           "required": false,
           "error_message": "Please enter a valid phone number."
@@ -144,7 +146,7 @@
         "type": "text",
         "parentId": "row_subject",
         "attributes": {
-          "label": "Inquiry Subject",
+          "label": "Subject",
           "placeholder": "How can we help you today?",
           "required": true,
           "error_message": "Subject is required."
@@ -163,7 +165,7 @@
         "type": "textarea",
         "parentId": "row_message",
         "attributes": {
-          "label": "Detailed Message",
+          "label": "Message",
           "placeholder": "Write your detailed query here...",
           "required": true,
           "rows": 6,
@@ -183,7 +185,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "department": {
@@ -191,21 +194,21 @@
         "type": "select",
         "parentId": "row_preferences",
         "attributes": {
-          "label": "Select Department",
+          "label": "Department",
           "required": true,
           "options_list": [
             {
               "id": "BMcJEaBLl",
               "attributes": {
                 "option_label": "Customer Support",
-                "option_value": "support",
+                "option_value": "support"
               }
             },
             {
               "id": "9e5k96u0p",
               "attributes": {
                 "option_label": "Sales / Billing",
-                "option_value": "sales",
+                "option_value": "sales"
               }
             },
             {
@@ -232,7 +235,7 @@
         "type": "radio",
         "parentId": "row_preferences",
         "attributes": {
-          "label": "Preferred Response Method",
+          "label": "Response Method",
           "required": true,
           "default_value": "email",
           "layout": "inline",
@@ -250,13 +253,6 @@
               "attributes": {
                 "option_label": "Phone Callback",
                 "option_value": "phone"
-              }
-            },
-            {
-              "id": "j3nvj3nv4",
-              "attributes": {
-                "option_label": "No Preference",
-                "option_value": "none"
               }
             }
           ]
@@ -329,7 +325,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "first_name": {
@@ -371,7 +368,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "email": {
@@ -379,7 +377,7 @@
         "type": "email",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Email Address",
+          "label": "Email",
           "placeholder": "example@domain.com",
           "required": true,
           "error_message": "Please enter a valid email address."
@@ -390,7 +388,7 @@
         "type": "phone",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Phone Number",
+          "label": "Phone",
           "placeholder": "(555) 000-0000",
           "required": false,
           "error_message": "Please enter a valid phone number."
@@ -409,7 +407,7 @@
         "type": "text",
         "parentId": "row_subject",
         "attributes": {
-          "label": "Inquiry Subject",
+          "label": "Subject",
           "placeholder": "How can we help you today?",
           "required": true,
           "error_message": "Subject is required."
@@ -428,7 +426,7 @@
         "type": "textarea",
         "parentId": "row_message",
         "attributes": {
-          "label": "Detailed Message",
+          "label": "Message",
           "placeholder": "Write your detailed query here...",
           "required": true,
           "rows": 6,
@@ -448,7 +446,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "department": {
@@ -456,7 +455,7 @@
         "type": "select",
         "parentId": "row_preferences",
         "attributes": {
-          "label": "Select Department",
+          "label": "Department",
           "required": true,
           "default_value": "support",
           "error_message": "Please choose a department.",
@@ -497,7 +496,7 @@
         "type": "radio",
         "parentId": "row_preferences",
         "attributes": {
-          "label": "Preferred Response Method",
+          "label": "Response Method",
           "required": true,
           "default_value": "email",
           "layout": "inline",
@@ -515,13 +514,6 @@
               "attributes": {
                 "option_label": "Phone Callback",
                 "option_value": "phone"
-              }
-            },
-            {
-              "id": "80126id",
-              "attributes": {
-                "option_label": "No Preference",
-                "option_value": "none"
               }
             }
           ]
@@ -541,7 +533,9 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1,
+          "columns_tablet": 2
         }
       },
       "attachment": {
@@ -549,7 +543,7 @@
         "type": "file",
         "parentId": "row_inquiry_meta",
         "attributes": {
-          "label": "Attach Screenshots (Optional)",
+          "label": "Attachment",
           "required": false,
           "max_file_size": 5,
           "allowed_extensions": [
@@ -566,7 +560,7 @@
         "type": "date",
         "parentId": "row_inquiry_meta",
         "attributes": {
-          "label": "Preferred Appointment Date",
+          "label": "Preferred Date",
           "required": false
         }
       },
@@ -575,7 +569,7 @@
         "type": "checkbox",
         "parentId": "row_inquiry_meta",
         "attributes": {
-          "label": "Compliance Options",
+          "label": "Agreement",
           "required": true,
           "error_message": "You must agree to the Privacy Policy.",
           "options_list": [
@@ -609,7 +603,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "captcha": {
@@ -696,7 +691,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "first_name": {
@@ -738,7 +734,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "email": {
@@ -746,7 +743,7 @@
         "type": "email",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Email Address",
+          "label": "Email",
           "placeholder": "example@domain.com",
           "required": true,
           "error_message": "Please enter a valid email address."
@@ -757,7 +754,7 @@
         "type": "phone",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Phone Number",
+          "label": "Phone",
           "placeholder": "(555) 000-0000",
           "required": false,
           "error_message": "Please enter a valid phone number."
@@ -776,7 +773,7 @@
         "type": "text",
         "parentId": "row_subject",
         "attributes": {
-          "label": "Inquiry Subject",
+          "label": "Subject",
           "placeholder": "How can we help you today?",
           "required": true,
           "error_message": "Subject is required."
@@ -847,7 +844,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "first_name": {
@@ -889,7 +887,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "email": {
@@ -897,7 +896,7 @@
         "type": "email",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Email Address",
+          "label": "Email",
           "placeholder": "example@domain.com",
           "required": true,
           "error_message": "Please enter a valid email address."
@@ -908,7 +907,7 @@
         "type": "phone",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Phone Number",
+          "label": "Phone",
           "placeholder": "(555) 000-0000",
           "required": false,
           "error_message": "Please enter a valid phone number."
@@ -927,7 +926,7 @@
         "type": "text",
         "parentId": "row_subject",
         "attributes": {
-          "label": "Inquiry Subject",
+          "label": "Subject",
           "placeholder": "How can we help you today?",
           "required": true,
           "error_message": "Subject is required."
@@ -946,7 +945,7 @@
         "type": "textarea",
         "parentId": "row_message",
         "attributes": {
-          "label": "Detailed Message",
+          "label": "Message",
           "placeholder": "Write your detailed query here...",
           "required": true,
           "rows": 6,
@@ -966,7 +965,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "department": {
@@ -974,7 +974,7 @@
         "type": "select",
         "parentId": "row_preferences",
         "attributes": {
-          "label": "Select Department",
+          "label": "Department",
           "required": true,
           "default_value": "support",
           "error_message": "Please choose a department.",
@@ -1015,7 +1015,7 @@
         "type": "radio",
         "parentId": "row_preferences",
         "attributes": {
-          "label": "Preferred Response Method",
+          "label": "Response Method",
           "required": true,
           "default_value": "email",
           "layout": "inline",
@@ -1033,13 +1033,6 @@
               "attributes": {
                 "option_label": "Phone Callback",
                 "option_value": "phone"
-              }
-            },
-            {
-              "id": "0sqr7j3",
-              "attributes": {
-                "option_label": "No Preference",
-                "option_value": "none"
               }
             }
           ]
@@ -1112,7 +1105,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "first_name": {
@@ -1154,7 +1148,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "email": {
@@ -1162,7 +1157,7 @@
         "type": "email",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Email Address",
+          "label": "Email",
           "placeholder": "example@domain.com",
           "required": true,
           "error_message": "Please enter a valid email address."
@@ -1173,7 +1168,7 @@
         "type": "phone",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Phone Number",
+          "label": "Phone",
           "placeholder": "(555) 000-0000",
           "required": false,
           "error_message": "Please enter a valid phone number."
@@ -1192,7 +1187,7 @@
         "type": "text",
         "parentId": "row_subject",
         "attributes": {
-          "label": "Inquiry Subject",
+          "label": "Subject",
           "placeholder": "How can we help you today?",
           "required": true,
           "error_message": "Subject is required."
@@ -1211,7 +1206,7 @@
         "type": "textarea",
         "parentId": "row_message",
         "attributes": {
-          "label": "Detailed Message",
+          "label": "Message",
           "placeholder": "Write your detailed query here...",
           "required": true,
           "rows": 6,
@@ -1231,7 +1226,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "department": {
@@ -1239,7 +1235,7 @@
         "type": "select",
         "parentId": "row_preferences",
         "attributes": {
-          "label": "Select Department",
+          "label": "Department",
           "required": true,
           "default_value": "support",
           "error_message": "Please choose a department.",
@@ -1280,7 +1276,7 @@
         "type": "radio",
         "parentId": "row_preferences",
         "attributes": {
-          "label": "Preferred Response Method",
+          "label": "Response Method",
           "required": true,
           "default_value": "email",
           "layout": "inline",
@@ -1298,13 +1294,6 @@
               "attributes": {
                 "option_label": "Phone Callback",
                 "option_value": "phone"
-              }
-            },
-            {
-              "id": "m33t2bj",
-              "attributes": {
-                "option_label": "No Preference",
-                "option_value": "none"
               }
             }
           ]
@@ -1324,7 +1313,9 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1,
+          "columns_tablet": 2
         }
       },
       "attachment": {
@@ -1332,7 +1323,7 @@
         "type": "file",
         "parentId": "row_inquiry_meta",
         "attributes": {
-          "label": "Attach Screenshots (Optional)",
+          "label": "Attachment",
           "required": false,
           "max_file_size": 5,
           "allowed_extensions": [
@@ -1349,7 +1340,7 @@
         "type": "date",
         "parentId": "row_inquiry_meta",
         "attributes": {
-          "label": "Preferred Appointment Date",
+          "label": "Preferred Date",
           "required": false
         }
       },
@@ -1358,7 +1349,7 @@
         "type": "checkbox",
         "parentId": "row_inquiry_meta",
         "attributes": {
-          "label": "Compliance Options",
+          "label": "Agreement",
           "required": true,
           "error_message": "You must agree to the Privacy Policy.",
           "options_list": [
@@ -1392,7 +1383,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "captcha": {
@@ -1479,7 +1471,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "first_name": {
@@ -1521,7 +1514,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "email": {
@@ -1529,7 +1523,7 @@
         "type": "email",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Email Address",
+          "label": "Email",
           "placeholder": "example@domain.com",
           "required": true,
           "error_message": "Please enter a valid email address."
@@ -1540,7 +1534,7 @@
         "type": "phone",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Phone Number",
+          "label": "Phone",
           "placeholder": "(555) 000-0000",
           "required": false,
           "error_message": "Please enter a valid phone number."
@@ -1559,7 +1553,7 @@
         "type": "text",
         "parentId": "row_subject",
         "attributes": {
-          "label": "Inquiry Subject",
+          "label": "Subject",
           "placeholder": "How can we help you today?",
           "required": true,
           "error_message": "Subject is required."
@@ -1630,7 +1624,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "first_name": {
@@ -1672,7 +1667,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "email": {
@@ -1680,7 +1676,7 @@
         "type": "email",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Email Address",
+          "label": "Email",
           "placeholder": "example@domain.com",
           "required": true,
           "error_message": "Please enter a valid email address."
@@ -1691,7 +1687,7 @@
         "type": "phone",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Phone Number",
+          "label": "Phone",
           "placeholder": "(555) 000-0000",
           "required": false,
           "error_message": "Please enter a valid phone number."
@@ -1710,7 +1706,7 @@
         "type": "text",
         "parentId": "row_subject",
         "attributes": {
-          "label": "Inquiry Subject",
+          "label": "Subject",
           "placeholder": "How can we help you today?",
           "required": true,
           "error_message": "Subject is required."
@@ -1729,7 +1725,7 @@
         "type": "textarea",
         "parentId": "row_message",
         "attributes": {
-          "label": "Detailed Message",
+          "label": "Message",
           "placeholder": "Write your detailed query here...",
           "required": true,
           "rows": 6,
@@ -1749,7 +1745,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "department": {
@@ -1757,7 +1754,7 @@
         "type": "select",
         "parentId": "row_preferences",
         "attributes": {
-          "label": "Select Department",
+          "label": "Department",
           "required": true,
           "default_value": "support",
           "error_message": "Please choose a department.",
@@ -1798,7 +1795,7 @@
         "type": "radio",
         "parentId": "row_preferences",
         "attributes": {
-          "label": "Preferred Response Method",
+          "label": "Response Method",
           "required": true,
           "default_value": "email",
           "layout": "inline",
@@ -1816,13 +1813,6 @@
               "attributes": {
                 "option_label": "Phone Callback",
                 "option_value": "phone"
-              }
-            },
-            {
-              "id": "c4xehsy",
-              "attributes": {
-                "option_label": "No Preference",
-                "option_value": "none"
               }
             }
           ]
@@ -1895,7 +1885,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "first_name": {
@@ -1937,7 +1928,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "email": {
@@ -1945,7 +1937,7 @@
         "type": "email",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Email Address",
+          "label": "Email",
           "placeholder": "example@domain.com",
           "required": true,
           "error_message": "Please enter a valid email address."
@@ -1956,7 +1948,7 @@
         "type": "phone",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Phone Number",
+          "label": "Phone",
           "placeholder": "(555) 000-0000",
           "required": false,
           "error_message": "Please enter a valid phone number."
@@ -1975,7 +1967,7 @@
         "type": "text",
         "parentId": "row_subject",
         "attributes": {
-          "label": "Inquiry Subject",
+          "label": "Subject",
           "placeholder": "How can we help you today?",
           "required": true,
           "error_message": "Subject is required."
@@ -1994,7 +1986,7 @@
         "type": "textarea",
         "parentId": "row_message",
         "attributes": {
-          "label": "Detailed Message",
+          "label": "Message",
           "placeholder": "Write your detailed query here...",
           "required": true,
           "rows": 6,
@@ -2014,7 +2006,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "department": {
@@ -2022,7 +2015,7 @@
         "type": "select",
         "parentId": "row_preferences",
         "attributes": {
-          "label": "Select Department",
+          "label": "Department",
           "required": true,
           "default_value": "support",
           "error_message": "Please choose a department.",
@@ -2063,7 +2056,7 @@
         "type": "radio",
         "parentId": "row_preferences",
         "attributes": {
-          "label": "Preferred Response Method",
+          "label": "Response Method",
           "required": true,
           "default_value": "email",
           "layout": "inline",
@@ -2081,13 +2074,6 @@
               "attributes": {
                 "option_label": "Phone Callback",
                 "option_value": "phone"
-              }
-            },
-            {
-              "id": "qqd1jxh",
-              "attributes": {
-                "option_label": "No Preference",
-                "option_value": "none"
               }
             }
           ]
@@ -2107,7 +2093,9 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1,
+          "columns_tablet": 2
         }
       },
       "attachment": {
@@ -2115,7 +2103,7 @@
         "type": "file",
         "parentId": "row_inquiry_meta",
         "attributes": {
-          "label": "Attach Screenshots (Optional)",
+          "label": "Attachment",
           "required": false,
           "max_file_size": 5,
           "allowed_extensions": [
@@ -2132,7 +2120,7 @@
         "type": "date",
         "parentId": "row_inquiry_meta",
         "attributes": {
-          "label": "Preferred Appointment Date",
+          "label": "Preferred Date",
           "required": false
         }
       },
@@ -2141,7 +2129,7 @@
         "type": "checkbox",
         "parentId": "row_inquiry_meta",
         "attributes": {
-          "label": "Compliance Options",
+          "label": "Agreement",
           "required": true,
           "error_message": "You must agree to the Privacy Policy.",
           "options_list": [
@@ -2175,7 +2163,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "captcha": {
@@ -2262,7 +2251,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "first_name": {
@@ -2304,7 +2294,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "email": {
@@ -2312,7 +2303,7 @@
         "type": "email",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Email Address",
+          "label": "Email",
           "placeholder": "example@domain.com",
           "required": true,
           "error_message": "Please enter a valid email address."
@@ -2323,7 +2314,7 @@
         "type": "phone",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Phone Number",
+          "label": "Phone",
           "placeholder": "(555) 000-0000",
           "required": false,
           "error_message": "Please enter a valid phone number."
@@ -2342,7 +2333,7 @@
         "type": "text",
         "parentId": "row_subject",
         "attributes": {
-          "label": "Inquiry Subject",
+          "label": "Subject",
           "placeholder": "How can we help you today?",
           "required": true,
           "error_message": "Subject is required."
@@ -2413,7 +2404,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "first_name": {
@@ -2455,7 +2447,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "email": {
@@ -2463,7 +2456,7 @@
         "type": "email",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Email Address",
+          "label": "Email",
           "placeholder": "example@domain.com",
           "required": true,
           "error_message": "Please enter a valid email address."
@@ -2474,7 +2467,7 @@
         "type": "phone",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Phone Number",
+          "label": "Phone",
           "placeholder": "(555) 000-0000",
           "required": false,
           "error_message": "Please enter a valid phone number."
@@ -2493,7 +2486,7 @@
         "type": "text",
         "parentId": "row_subject",
         "attributes": {
-          "label": "Inquiry Subject",
+          "label": "Subject",
           "placeholder": "How can we help you today?",
           "required": true,
           "error_message": "Subject is required."
@@ -2512,7 +2505,7 @@
         "type": "textarea",
         "parentId": "row_message",
         "attributes": {
-          "label": "Detailed Message",
+          "label": "Message",
           "placeholder": "Write your detailed query here...",
           "required": true,
           "rows": 6,
@@ -2532,7 +2525,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "department": {
@@ -2540,7 +2534,7 @@
         "type": "select",
         "parentId": "row_preferences",
         "attributes": {
-          "label": "Select Department",
+          "label": "Department",
           "required": true,
           "default_value": "support",
           "error_message": "Please choose a department.",
@@ -2581,7 +2575,7 @@
         "type": "radio",
         "parentId": "row_preferences",
         "attributes": {
-          "label": "Preferred Response Method",
+          "label": "Response Method",
           "required": true,
           "default_value": "email",
           "layout": "inline",
@@ -2599,13 +2593,6 @@
               "attributes": {
                 "option_label": "Phone Callback",
                 "option_value": "phone"
-              }
-            },
-            {
-              "id": "cfkm25j",
-              "attributes": {
-                "option_label": "No Preference",
-                "option_value": "none"
               }
             }
           ]
@@ -2678,7 +2665,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "first_name": {
@@ -2720,7 +2708,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "email": {
@@ -2728,7 +2717,7 @@
         "type": "email",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Email Address",
+          "label": "Email",
           "placeholder": "example@domain.com",
           "required": true,
           "error_message": "Please enter a valid email address."
@@ -2739,7 +2728,7 @@
         "type": "phone",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Phone Number",
+          "label": "Phone",
           "placeholder": "(555) 000-0000",
           "required": false,
           "error_message": "Please enter a valid phone number."
@@ -2758,7 +2747,7 @@
         "type": "text",
         "parentId": "row_subject",
         "attributes": {
-          "label": "Inquiry Subject",
+          "label": "Subject",
           "placeholder": "How can we help you today?",
           "required": true,
           "error_message": "Subject is required."
@@ -2777,7 +2766,7 @@
         "type": "textarea",
         "parentId": "row_message",
         "attributes": {
-          "label": "Detailed Message",
+          "label": "Message",
           "placeholder": "Write your detailed query here...",
           "required": true,
           "rows": 6,
@@ -2797,7 +2786,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "department": {
@@ -2805,7 +2795,7 @@
         "type": "select",
         "parentId": "row_preferences",
         "attributes": {
-          "label": "Select Department",
+          "label": "Department",
           "required": true,
           "default_value": "support",
           "error_message": "Please choose a department.",
@@ -2846,7 +2836,7 @@
         "type": "radio",
         "parentId": "row_preferences",
         "attributes": {
-          "label": "Preferred Response Method",
+          "label": "Response Method",
           "required": true,
           "default_value": "email",
           "layout": "inline",
@@ -2864,13 +2854,6 @@
               "attributes": {
                 "option_label": "Phone Callback",
                 "option_value": "phone"
-              }
-            },
-            {
-              "id": "cdtoio1",
-              "attributes": {
-                "option_label": "No Preference",
-                "option_value": "none"
               }
             }
           ]
@@ -2890,7 +2873,9 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1,
+          "columns_tablet": 2
         }
       },
       "attachment": {
@@ -2898,7 +2883,7 @@
         "type": "file",
         "parentId": "row_inquiry_meta",
         "attributes": {
-          "label": "Attach Screenshots (Optional)",
+          "label": "Attachment",
           "required": false,
           "max_file_size": 5,
           "allowed_extensions": [
@@ -2915,7 +2900,7 @@
         "type": "date",
         "parentId": "row_inquiry_meta",
         "attributes": {
-          "label": "Preferred Appointment Date",
+          "label": "Preferred Date",
           "required": false
         }
       },
@@ -2924,7 +2909,7 @@
         "type": "checkbox",
         "parentId": "row_inquiry_meta",
         "attributes": {
-          "label": "Compliance Options",
+          "label": "Agreement",
           "required": true,
           "error_message": "You must agree to the Privacy Policy.",
           "options_list": [
@@ -2958,7 +2943,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "captcha": {
@@ -3045,7 +3031,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "first_name": {
@@ -3087,7 +3074,8 @@
           "gap": {
             "size": 15,
             "unit": "px"
-          }
+          },
+          "columns_mobile": 1
         }
       },
       "email": {
@@ -3095,7 +3083,7 @@
         "type": "email",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Email Address",
+          "label": "Email",
           "placeholder": "example@domain.com",
           "required": true,
           "error_message": "Please enter a valid email address."
@@ -3106,7 +3094,7 @@
         "type": "phone",
         "parentId": "row_contact_details",
         "attributes": {
-          "label": "Phone Number",
+          "label": "Phone",
           "placeholder": "(555) 000-0000",
           "required": false,
           "error_message": "Please enter a valid phone number."
@@ -3125,7 +3113,7 @@
         "type": "text",
         "parentId": "row_subject",
         "attributes": {
-          "label": "Inquiry Subject",
+          "label": "Subject",
           "placeholder": "How can we help you today?",
           "required": true,
           "error_message": "Subject is required."
