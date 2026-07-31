@@ -372,10 +372,75 @@ class phoneField extends DragwybEditor.editor.extends.FieldBase {
         const fieldId = s.field_id || this.id;
         const defaultLabel = DragwybEditor?.fields?.fields?.[this.fieldName]?.controls?.label?.default;
         const label = s.label || defaultLabel;
+        const countryEnabled = s.country_code_enabled === 'yes';
+
+        const normalizeList = (value) => {
+            if (!value || typeof value !== 'string') return '';
+            return value
+                .split(',')
+                .map((code) => code.trim().toLowerCase())
+                .filter((code) => /^[a-z]{2}$/.test(code))
+                .join(',');
+        };
+
+        const includeCountries = normalizeList(s.country_code_include);
+        const excludeCountries = normalizeList(s.country_code_exclude);
+        const includeSorted = includeCountries ? includeCountries.split(',').sort().join(',') : '';
+        const excludeSorted = excludeCountries ? excludeCountries.split(',').sort().join(',') : '';
+        const commonCountries = includeSorted && includeSorted === excludeSorted ? 'same' : '';
+
+        let defaultCountry = String(s.country_code_default || 'us').toLowerCase();
+        if (/[^a-z]/.test(defaultCountry)) {
+            defaultCountry = '';
+        }
+
+        const dialCodeVisibility = s.dial_code_visibility || 'show';
+        const strictMode = s.country_strict_mode || 'no';
+        const i18n = s.country_internationalisation || 'en';
+        const showFlags = s.country_show_flags || 'yes';
+
+        // Force remount when country-code options change so intl-tel-input re-inits in editor.
+        const itiPreviewKey = countryEnabled
+            ? [
+                'cc',
+                defaultCountry,
+                includeCountries,
+                excludeCountries,
+                dialCodeVisibility,
+                strictMode,
+                i18n,
+                showFlags,
+            ].join('|')
+            : 'off';
+
+        const inputProps = {
+            type: 'tel',
+            id: fieldId,
+            className: 'dragwyb-field-input',
+            placeholder: s.placeholder || ' ',
+            defaultValue: s.default_value,
+        };
+
+        if (countryEnabled) {
+            Object.assign(inputProps, {
+                'data-country-code': 'yes',
+                'data-default-country': defaultCountry,
+                'data-include-countries': includeCountries,
+                'data-exclude-countries': excludeCountries,
+                'data-common-countries': commonCountries,
+                'data-dial-code-visibility': dialCodeVisibility,
+                'data-strict-mode': strictMode,
+                'data-internationalisation': i18n,
+                'data-show-flags': showFlags,
+                'data-iti-config': itiPreviewKey,
+                autoComplete: 'tel',
+            });
+        }
+
         return (
             <>
-                <div className="dragwyb-input-group">
-                    <input type="tel" id={fieldId} className="dragwyb-field-input" placeholder={s.placeholder || ' '} defaultValue={s.default_value} />
+                <div className="dragwyb-input-group" key={`phone-group-${fieldId}-${itiPreviewKey}`}>
+                    <input {...inputProps} />
                     {label && <this.RenderLabel
                         id={fieldId}
                         label={label}
@@ -647,4 +712,21 @@ const initializeFields = () => {
 
 jQuery(document).on('Dragwyb:editorAppLoaded', () => {
     initializeFields();
+
+    DragwybBuilder.Hooks.addFilter('Dragwyb/Field/WrapperClass/phone', (wrapperClass, fieldId, fieldType, attributes) => {
+        if (!Array.isArray(wrapperClass)) {
+            return wrapperClass;
+        }
+
+        if (attributes?.country_code_enabled === 'yes') {
+            if (!wrapperClass.includes('country-code-enabled')) {
+                wrapperClass.push('country-code-enabled');
+            }
+            if (!wrapperClass.includes('dragwyb-no-float')) {
+                wrapperClass.push('dragwyb-no-float');
+            }
+        }
+
+        return wrapperClass;
+    });
 });
