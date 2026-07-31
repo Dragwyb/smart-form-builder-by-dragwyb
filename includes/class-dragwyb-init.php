@@ -35,11 +35,12 @@ class Dragwyb_Init {
 	}
 
 	public function init(): void {
+		new Dragwyb_Post();
+
 		// Initialize admin
 		if ( is_admin() ) {
 			new Dragwyb_Builder_Editor();
 			new Dragwyb_Pages();
-			new Dragwyb_Post();
 			new Dragwyb_Form_Builder_Ajax();
 			Dragwyb_Settings::instance();
 			Frontend_Render::instance();
