@@ -49,6 +49,18 @@ class Dragwyb_Settings_Route {
 				),
 			)
 		);
+
+		register_rest_route(
+			'dragwyb/v1',
+			'/templates',
+			array(
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_templates' ),
+					'permission_callback' => '__return_true',
+				),
+			)
+		);
 	}
 
 	/**
@@ -168,5 +180,39 @@ class Dragwyb_Settings_Route {
 		} else {
 			return sanitize_text_field( $value );
 		}
+	}
+
+	/**
+	 * Load and return prebuilt form templates from JSON files.
+	 *
+	 * @return \WP_REST_Response
+	 */
+	public function get_templates(): \WP_REST_Response {
+		$base_path = DRAGWYB_FORM_BUILDER_PATH . 'admin/templates/';
+
+		$templates = array(
+			'contact'   => array(),
+			'bussiness' => array(),
+			'marketing' => array(),
+			'feedback'  => array(),
+		);
+
+		foreach ( array_keys( $templates ) as $type ) {
+			$file_path = $base_path . $type . '.json';
+			if ( file_exists( $file_path ) ) {
+				$content   = file_get_contents( $file_path );
+				$json_data = json_decode( $content, true );
+				if ( is_array( $json_data ) ) {
+					$templates[ $type ] = $json_data;
+				}
+			}
+		}
+
+		return rest_ensure_response(
+			array(
+				'status' => 'success',
+				'data'   => $templates,
+			)
+		);
 	}
 }

@@ -1,0 +1,3738 @@
+[
+  {
+    "advance": {
+      "form_name": "Client Onboarding Details",
+      "form_status": "publish",
+      "form_description": "Gather initial setup information from new business clients."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Quote Proposal Request from {field_company_name}",
+          "email_message": "<h3>Service Request Details:</h3><p><strong>Company:</strong> {field_company_name} ({field_website_url})</p><p><strong>Contact:</strong> {field_p_contact_name} ({field_p_contact_email})</p><p><strong>Project Category:</strong> {field_project_type}</p><p><strong>Est. Budget:</strong> {field_budget_range}</p><p><strong>Project Overview:</strong><br/>{field_project_details}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_biz_header",
+      "row_company_info",
+      "row_project_specs",
+      "row_timeline_urgency",
+      "row_project_desc",
+      "row_poc_details"
+    ],
+    "fields": {
+      "row_biz_header": {
+        "_id": "row_biz_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_header_html"
+        ]
+      },
+      "biz_header_html": {
+        "_id": "biz_header_html",
+        "type": "html",
+        "parentId": "row_biz_header",
+        "attributes": {
+          "raw_html": "<div class='business-header'><h2>Request a Project Proposal</h2><p>Provide details about your project needs, and our solution architects will draft a customized scope of work and budget estimation.</p><hr/></div>"
+        }
+      },
+      "row_company_info": {
+        "_id": "row_company_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "company_name",
+          "website_url"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "company_name": {
+        "_id": "company_name",
+        "type": "text",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company / Organization Name",
+          "placeholder": "e.g., Acme Corp",
+          "required": true,
+          "error_message": "Company name is required."
+        }
+      },
+      "website_url": {
+        "_id": "website_url",
+        "type": "url",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company Website URL",
+          "placeholder": "https://www.example.com",
+          "required": false
+        }
+      },
+      "row_project_specs": {
+        "_id": "row_project_specs",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_type",
+          "budget_range"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "project_type": {
+        "_id": "project_type",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Project Service Category",
+          "required": true,
+          "default_value": "software",
+          "options_list": [
+            {
+              "id": "2u8ot81",
+              "attributes": {
+                "option_label": "Custom Software Development",
+                "option_value": "software"
+              }
+            },
+            {
+              "id": "ddok002",
+              "attributes": {
+                "option_label": "Enterprise Website & CMS Builder",
+                "option_value": "website"
+              }
+            },
+            {
+              "id": "otkrm0i",
+              "attributes": {
+                "option_label": "Digital Marketing Campaign",
+                "option_value": "marketing"
+              }
+            },
+            {
+              "id": "5y3aupc",
+              "attributes": {
+                "option_label": "IT Infrastructure & Cloud Setup",
+                "option_value": "cloud"
+              }
+            }
+          ]
+        }
+      },
+      "budget_range": {
+        "_id": "budget_range",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Estimated Budget Range (USD)",
+          "required": true,
+          "default_value": "10k-25k",
+          "options_list": [
+            {
+              "id": "v780tku",
+              "attributes": {
+                "option_label": "$5,000 - $10,000",
+                "option_value": "5k-10k"
+              }
+            },
+            {
+              "id": "l8k97gd",
+              "attributes": {
+                "option_label": "$10,000 - $25,000",
+                "option_value": "10k-25k"
+              }
+            },
+            {
+              "id": "wmnivwf",
+              "attributes": {
+                "option_label": "$25,000 - $50,000",
+                "option_value": "25k-50k"
+              }
+            },
+            {
+              "id": "bg7mh7c",
+              "attributes": {
+                "option_label": "$50,000+",
+                "option_value": "50k_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_timeline_urgency": {
+        "_id": "row_timeline_urgency",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "start_date",
+          "urgency"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "start_date": {
+        "_id": "start_date",
+        "type": "date",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Desired Launch / Start Date",
+          "required": true,
+          "error_message": "Please specify your target launch date."
+        }
+      },
+      "urgency": {
+        "_id": "urgency",
+        "type": "radio",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Project Priority Level",
+          "required": true,
+          "default_value": "normal",
+          "layout": "inline",
+          "options_list": [
+            {
+              "id": "6jlqpvq",
+              "attributes": {
+                "option_label": "Immediate (Critical)",
+                "option_value": "high"
+              }
+            },
+            {
+              "id": "nj301r5",
+              "attributes": {
+                "option_label": "Within 1-3 Months",
+                "option_value": "normal"
+              }
+            },
+            {
+              "id": "g653uak",
+              "attributes": {
+                "option_label": "Planning Phase (3+ Months)",
+                "option_value": "low"
+              }
+            }
+          ]
+        }
+      },
+      "row_project_desc": {
+        "_id": "row_project_desc",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_details"
+        ]
+      },
+      "project_details": {
+        "_id": "project_details",
+        "type": "textarea",
+        "parentId": "row_project_desc",
+        "attributes": {
+          "label": "Project Scope & Description",
+          "placeholder": "Briefly describe your objectives, key features, and deliverables...",
+          "required": true,
+          "rows": 8,
+          "error_message": "Please explain your project details."
+        }
+      },
+      "row_poc_details": {
+        "_id": "row_poc_details",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "p_contact_name",
+          "p_contact_email",
+          "p_contact_phone"
+        ],
+        "attributes": {
+          "columns": 3,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "p_contact_name": {
+        "_id": "p_contact_name",
+        "type": "text",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Person Name",
+          "placeholder": "Full Name",
+          "required": true,
+          "error_message": "Contact name is required."
+        }
+      },
+      "p_contact_email": {
+        "_id": "p_contact_email",
+        "type": "email",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Business Email",
+          "placeholder": "name@company.com",
+          "required": true,
+          "error_message": "Valid business email is required."
+        }
+      },
+      "p_contact_phone": {
+        "_id": "p_contact_phone",
+        "type": "phone",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Phone Number",
+          "placeholder": "Direct Line",
+          "required": false
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Vendor Registration Form",
+      "form_status": "publish",
+      "form_description": "For registers and details collection from external suppliers."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Quote Proposal Request from {field_company_name}",
+          "email_message": "<h3>Service Request Details:</h3><p><strong>Company:</strong> {field_company_name} ({field_website_url})</p><p><strong>Contact:</strong> {field_p_contact_name} ({field_p_contact_email})</p><p><strong>Project Category:</strong> {field_project_type}</p><p><strong>Est. Budget:</strong> {field_budget_range}</p><p><strong>Project Overview:</strong><br/>{field_project_details}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_biz_header",
+      "row_company_info",
+      "row_project_specs",
+      "row_timeline_urgency",
+      "row_project_desc",
+      "row_poc_details",
+      "row_files_uploads",
+      "row_biz_submit"
+    ],
+    "fields": {
+      "row_biz_header": {
+        "_id": "row_biz_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_header_html"
+        ]
+      },
+      "biz_header_html": {
+        "_id": "biz_header_html",
+        "type": "html",
+        "parentId": "row_biz_header",
+        "attributes": {
+          "raw_html": "<div class='business-header'><h2>Request a Project Proposal</h2><p>Provide details about your project needs, and our solution architects will draft a customized scope of work and budget estimation.</p><hr/></div>"
+        }
+      },
+      "row_company_info": {
+        "_id": "row_company_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "company_name",
+          "website_url"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "company_name": {
+        "_id": "company_name",
+        "type": "text",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company / Organization Name",
+          "placeholder": "e.g., Acme Corp",
+          "required": true,
+          "error_message": "Company name is required."
+        }
+      },
+      "website_url": {
+        "_id": "website_url",
+        "type": "url",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company Website URL",
+          "placeholder": "https://www.example.com",
+          "required": false
+        }
+      },
+      "row_project_specs": {
+        "_id": "row_project_specs",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_type",
+          "budget_range"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "project_type": {
+        "_id": "project_type",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Project Service Category",
+          "required": true,
+          "default_value": "software",
+          "options_list": [
+            {
+              "id": "35jwf2n",
+              "attributes": {
+                "option_label": "Custom Software Development",
+                "option_value": "software"
+              }
+            },
+            {
+              "id": "stm6x0j",
+              "attributes": {
+                "option_label": "Enterprise Website & CMS Builder",
+                "option_value": "website"
+              }
+            },
+            {
+              "id": "af9tr1y",
+              "attributes": {
+                "option_label": "Digital Marketing Campaign",
+                "option_value": "marketing"
+              }
+            },
+            {
+              "id": "e2n7rot",
+              "attributes": {
+                "option_label": "IT Infrastructure & Cloud Setup",
+                "option_value": "cloud"
+              }
+            }
+          ]
+        }
+      },
+      "budget_range": {
+        "_id": "budget_range",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Estimated Budget Range (USD)",
+          "required": true,
+          "default_value": "10k-25k",
+          "options_list": [
+            {
+              "id": "gie08pf",
+              "attributes": {
+                "option_label": "$5,000 - $10,000",
+                "option_value": "5k-10k"
+              }
+            },
+            {
+              "id": "8fq15r5",
+              "attributes": {
+                "option_label": "$10,000 - $25,000",
+                "option_value": "10k-25k"
+              }
+            },
+            {
+              "id": "bf3fo4f",
+              "attributes": {
+                "option_label": "$25,000 - $50,000",
+                "option_value": "25k-50k"
+              }
+            },
+            {
+              "id": "qjz0ix2",
+              "attributes": {
+                "option_label": "$50,000+",
+                "option_value": "50k_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_timeline_urgency": {
+        "_id": "row_timeline_urgency",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "start_date",
+          "urgency"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "start_date": {
+        "_id": "start_date",
+        "type": "date",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Desired Launch / Start Date",
+          "required": true,
+          "error_message": "Please specify your target launch date."
+        }
+      },
+      "urgency": {
+        "_id": "urgency",
+        "type": "radio",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Project Priority Level",
+          "required": true,
+          "default_value": "normal",
+          "layout": "inline",
+          "options_list": [
+            {
+              "id": "zipsict",
+              "attributes": {
+                "option_label": "Immediate (Critical)",
+                "option_value": "high"
+              }
+            },
+            {
+              "id": "dkp6f82",
+              "attributes": {
+                "option_label": "Within 1-3 Months",
+                "option_value": "normal"
+              }
+            },
+            {
+              "id": "2o9vsbp",
+              "attributes": {
+                "option_label": "Planning Phase (3+ Months)",
+                "option_value": "low"
+              }
+            }
+          ]
+        }
+      },
+      "row_project_desc": {
+        "_id": "row_project_desc",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_details"
+        ]
+      },
+      "project_details": {
+        "_id": "project_details",
+        "type": "textarea",
+        "parentId": "row_project_desc",
+        "attributes": {
+          "label": "Project Scope & Description",
+          "placeholder": "Briefly describe your objectives, key features, and deliverables...",
+          "required": true,
+          "rows": 8,
+          "error_message": "Please explain your project details."
+        }
+      },
+      "row_poc_details": {
+        "_id": "row_poc_details",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "p_contact_name",
+          "p_contact_email",
+          "p_contact_phone"
+        ],
+        "attributes": {
+          "columns": 3,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "p_contact_name": {
+        "_id": "p_contact_name",
+        "type": "text",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Person Name",
+          "placeholder": "Full Name",
+          "required": true,
+          "error_message": "Contact name is required."
+        }
+      },
+      "p_contact_email": {
+        "_id": "p_contact_email",
+        "type": "email",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Business Email",
+          "placeholder": "name@company.com",
+          "required": true,
+          "error_message": "Valid business email is required."
+        }
+      },
+      "p_contact_phone": {
+        "_id": "p_contact_phone",
+        "type": "phone",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Phone Number",
+          "placeholder": "Direct Line",
+          "required": false
+        }
+      },
+      "row_files_uploads": {
+        "_id": "row_files_uploads",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_brief",
+          "signed_nda"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "project_brief": {
+        "_id": "project_brief",
+        "type": "file",
+        "parentId": "row_files_uploads",
+        "attributes": {
+          "label": "Upload Project RFQ / Brief",
+          "required": false,
+          "max_file_size": 10,
+          "allowed_extensions": [
+            "pdf",
+            "docx",
+            "zip"
+          ]
+        }
+      },
+      "signed_nda": {
+        "_id": "signed_nda",
+        "type": "file",
+        "parentId": "row_files_uploads",
+        "attributes": {
+          "label": "Upload NDA Form (If applicable)",
+          "required": false,
+          "max_file_size": 5,
+          "allowed_extensions": [
+            "pdf",
+            "jpg"
+          ]
+        }
+      },
+      "row_biz_submit": {
+        "_id": "row_biz_submit",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_captcha",
+          "biz_submit_btn"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "biz_captcha": {
+        "_id": "biz_captcha",
+        "type": "captcha",
+        "parentId": "row_biz_submit",
+        "attributes": {
+          "label": "Verification Check",
+          "theme": "light",
+          "size": "normal"
+        }
+      },
+      "biz_submit_btn": {
+        "_id": "biz_submit_btn",
+        "type": "button",
+        "parentId": "row_biz_submit",
+        "attributes": {
+          "label": "Submit RFP Request",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "business-submit"
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "NDA Negotiation Brief",
+      "form_status": "publish",
+      "form_description": "Request an NDA agreement for confidential project discussions."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Quote Proposal Request from {field_company_name}",
+          "email_message": "<h3>Service Request Details:</h3><p><strong>Company:</strong> {field_company_name} ({field_website_url})</p><p><strong>Contact:</strong> {field_p_contact_name} ({field_p_contact_email})</p><p><strong>Project Category:</strong> {field_project_type}</p><p><strong>Est. Budget:</strong> {field_budget_range}</p><p><strong>Project Overview:</strong><br/>{field_project_details}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_biz_header",
+      "row_company_info",
+      "row_project_specs",
+      "row_timeline_urgency"
+    ],
+    "fields": {
+      "row_biz_header": {
+        "_id": "row_biz_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_header_html"
+        ]
+      },
+      "biz_header_html": {
+        "_id": "biz_header_html",
+        "type": "html",
+        "parentId": "row_biz_header",
+        "attributes": {
+          "raw_html": "<div class='business-header'><h2>Request a Project Proposal</h2><p>Provide details about your project needs, and our solution architects will draft a customized scope of work and budget estimation.</p><hr/></div>"
+        }
+      },
+      "row_company_info": {
+        "_id": "row_company_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "company_name",
+          "website_url"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "company_name": {
+        "_id": "company_name",
+        "type": "text",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company / Organization Name",
+          "placeholder": "e.g., Acme Corp",
+          "required": true,
+          "error_message": "Company name is required."
+        }
+      },
+      "website_url": {
+        "_id": "website_url",
+        "type": "url",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company Website URL",
+          "placeholder": "https://www.example.com",
+          "required": false
+        }
+      },
+      "row_project_specs": {
+        "_id": "row_project_specs",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_type",
+          "budget_range"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "project_type": {
+        "_id": "project_type",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Project Service Category",
+          "required": true,
+          "default_value": "software",
+          "options_list": [
+            {
+              "id": "diimr6t",
+              "attributes": {
+                "option_label": "Custom Software Development",
+                "option_value": "software"
+              }
+            },
+            {
+              "id": "klq919n",
+              "attributes": {
+                "option_label": "Enterprise Website & CMS Builder",
+                "option_value": "website"
+              }
+            },
+            {
+              "id": "yvay1nh",
+              "attributes": {
+                "option_label": "Digital Marketing Campaign",
+                "option_value": "marketing"
+              }
+            },
+            {
+              "id": "iao9uw6",
+              "attributes": {
+                "option_label": "IT Infrastructure & Cloud Setup",
+                "option_value": "cloud"
+              }
+            }
+          ]
+        }
+      },
+      "budget_range": {
+        "_id": "budget_range",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Estimated Budget Range (USD)",
+          "required": true,
+          "default_value": "10k-25k",
+          "options_list": [
+            {
+              "id": "ei6a421",
+              "attributes": {
+                "option_label": "$5,000 - $10,000",
+                "option_value": "5k-10k"
+              }
+            },
+            {
+              "id": "rkxv381",
+              "attributes": {
+                "option_label": "$10,000 - $25,000",
+                "option_value": "10k-25k"
+              }
+            },
+            {
+              "id": "9anji89",
+              "attributes": {
+                "option_label": "$25,000 - $50,000",
+                "option_value": "25k-50k"
+              }
+            },
+            {
+              "id": "dm0kh8x",
+              "attributes": {
+                "option_label": "$50,000+",
+                "option_value": "50k_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_timeline_urgency": {
+        "_id": "row_timeline_urgency",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "start_date",
+          "urgency"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "start_date": {
+        "_id": "start_date",
+        "type": "date",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Desired Launch / Start Date",
+          "required": true,
+          "error_message": "Please specify your target launch date."
+        }
+      },
+      "urgency": {
+        "_id": "urgency",
+        "type": "radio",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Project Priority Level",
+          "required": true,
+          "default_value": "normal",
+          "layout": "inline",
+          "options_list": [
+            {
+              "id": "galtwok",
+              "attributes": {
+                "option_label": "Immediate (Critical)",
+                "option_value": "high"
+              }
+            },
+            {
+              "id": "3zk975z",
+              "attributes": {
+                "option_label": "Within 1-3 Months",
+                "option_value": "normal"
+              }
+            },
+            {
+              "id": "t0yovap",
+              "attributes": {
+                "option_label": "Planning Phase (3+ Months)",
+                "option_value": "low"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Commercial Loan Intake Form",
+      "form_status": "publish",
+      "form_description": "Intake form for business loan requests and financing reviews."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Quote Proposal Request from {field_company_name}",
+          "email_message": "<h3>Service Request Details:</h3><p><strong>Company:</strong> {field_company_name} ({field_website_url})</p><p><strong>Contact:</strong> {field_p_contact_name} ({field_p_contact_email})</p><p><strong>Project Category:</strong> {field_project_type}</p><p><strong>Est. Budget:</strong> {field_budget_range}</p><p><strong>Project Overview:</strong><br/>{field_project_details}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_biz_header",
+      "row_company_info",
+      "row_project_specs",
+      "row_timeline_urgency",
+      "row_project_desc",
+      "row_poc_details"
+    ],
+    "fields": {
+      "row_biz_header": {
+        "_id": "row_biz_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_header_html"
+        ]
+      },
+      "biz_header_html": {
+        "_id": "biz_header_html",
+        "type": "html",
+        "parentId": "row_biz_header",
+        "attributes": {
+          "raw_html": "<div class='business-header'><h2>Request a Project Proposal</h2><p>Provide details about your project needs, and our solution architects will draft a customized scope of work and budget estimation.</p><hr/></div>"
+        }
+      },
+      "row_company_info": {
+        "_id": "row_company_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "company_name",
+          "website_url"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "company_name": {
+        "_id": "company_name",
+        "type": "text",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company / Organization Name",
+          "placeholder": "e.g., Acme Corp",
+          "required": true,
+          "error_message": "Company name is required."
+        }
+      },
+      "website_url": {
+        "_id": "website_url",
+        "type": "url",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company Website URL",
+          "placeholder": "https://www.example.com",
+          "required": false
+        }
+      },
+      "row_project_specs": {
+        "_id": "row_project_specs",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_type",
+          "budget_range"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "project_type": {
+        "_id": "project_type",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Project Service Category",
+          "required": true,
+          "default_value": "software",
+          "options_list": [
+            {
+              "id": "3t4vcz9",
+              "attributes": {
+                "option_label": "Custom Software Development",
+                "option_value": "software"
+              }
+            },
+            {
+              "id": "d3v6dra",
+              "attributes": {
+                "option_label": "Enterprise Website & CMS Builder",
+                "option_value": "website"
+              }
+            },
+            {
+              "id": "6623rvn",
+              "attributes": {
+                "option_label": "Digital Marketing Campaign",
+                "option_value": "marketing"
+              }
+            },
+            {
+              "id": "028z69z",
+              "attributes": {
+                "option_label": "IT Infrastructure & Cloud Setup",
+                "option_value": "cloud"
+              }
+            }
+          ]
+        }
+      },
+      "budget_range": {
+        "_id": "budget_range",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Estimated Budget Range (USD)",
+          "required": true,
+          "default_value": "10k-25k",
+          "options_list": [
+            {
+              "id": "45jij2y",
+              "attributes": {
+                "option_label": "$5,000 - $10,000",
+                "option_value": "5k-10k"
+              }
+            },
+            {
+              "id": "s1w0oi7",
+              "attributes": {
+                "option_label": "$10,000 - $25,000",
+                "option_value": "10k-25k"
+              }
+            },
+            {
+              "id": "g7jux51",
+              "attributes": {
+                "option_label": "$25,000 - $50,000",
+                "option_value": "25k-50k"
+              }
+            },
+            {
+              "id": "ewhu5r5",
+              "attributes": {
+                "option_label": "$50,000+",
+                "option_value": "50k_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_timeline_urgency": {
+        "_id": "row_timeline_urgency",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "start_date",
+          "urgency"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "start_date": {
+        "_id": "start_date",
+        "type": "date",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Desired Launch / Start Date",
+          "required": true,
+          "error_message": "Please specify your target launch date."
+        }
+      },
+      "urgency": {
+        "_id": "urgency",
+        "type": "radio",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Project Priority Level",
+          "required": true,
+          "default_value": "normal",
+          "layout": "inline",
+          "options_list": [
+            {
+              "id": "ntf1213",
+              "attributes": {
+                "option_label": "Immediate (Critical)",
+                "option_value": "high"
+              }
+            },
+            {
+              "id": "oc7wtj4",
+              "attributes": {
+                "option_label": "Within 1-3 Months",
+                "option_value": "normal"
+              }
+            },
+            {
+              "id": "og10sg8",
+              "attributes": {
+                "option_label": "Planning Phase (3+ Months)",
+                "option_value": "low"
+              }
+            }
+          ]
+        }
+      },
+      "row_project_desc": {
+        "_id": "row_project_desc",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_details"
+        ]
+      },
+      "project_details": {
+        "_id": "project_details",
+        "type": "textarea",
+        "parentId": "row_project_desc",
+        "attributes": {
+          "label": "Project Scope & Description",
+          "placeholder": "Briefly describe your objectives, key features, and deliverables...",
+          "required": true,
+          "rows": 8,
+          "error_message": "Please explain your project details."
+        }
+      },
+      "row_poc_details": {
+        "_id": "row_poc_details",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "p_contact_name",
+          "p_contact_email",
+          "p_contact_phone"
+        ],
+        "attributes": {
+          "columns": 3,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "p_contact_name": {
+        "_id": "p_contact_name",
+        "type": "text",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Person Name",
+          "placeholder": "Full Name",
+          "required": true,
+          "error_message": "Contact name is required."
+        }
+      },
+      "p_contact_email": {
+        "_id": "p_contact_email",
+        "type": "email",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Business Email",
+          "placeholder": "name@company.com",
+          "required": true,
+          "error_message": "Valid business email is required."
+        }
+      },
+      "p_contact_phone": {
+        "_id": "p_contact_phone",
+        "type": "phone",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Phone Number",
+          "placeholder": "Direct Line",
+          "required": false
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Conference Room Reservation",
+      "form_status": "publish",
+      "form_description": "Internal form to book meeting rooms and visual equipment."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Quote Proposal Request from {field_company_name}",
+          "email_message": "<h3>Service Request Details:</h3><p><strong>Company:</strong> {field_company_name} ({field_website_url})</p><p><strong>Contact:</strong> {field_p_contact_name} ({field_p_contact_email})</p><p><strong>Project Category:</strong> {field_project_type}</p><p><strong>Est. Budget:</strong> {field_budget_range}</p><p><strong>Project Overview:</strong><br/>{field_project_details}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_biz_header",
+      "row_company_info",
+      "row_project_specs",
+      "row_timeline_urgency",
+      "row_project_desc",
+      "row_poc_details",
+      "row_files_uploads",
+      "row_biz_submit"
+    ],
+    "fields": {
+      "row_biz_header": {
+        "_id": "row_biz_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_header_html"
+        ]
+      },
+      "biz_header_html": {
+        "_id": "biz_header_html",
+        "type": "html",
+        "parentId": "row_biz_header",
+        "attributes": {
+          "raw_html": "<div class='business-header'><h2>Request a Project Proposal</h2><p>Provide details about your project needs, and our solution architects will draft a customized scope of work and budget estimation.</p><hr/></div>"
+        }
+      },
+      "row_company_info": {
+        "_id": "row_company_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "company_name",
+          "website_url"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "company_name": {
+        "_id": "company_name",
+        "type": "text",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company / Organization Name",
+          "placeholder": "e.g., Acme Corp",
+          "required": true,
+          "error_message": "Company name is required."
+        }
+      },
+      "website_url": {
+        "_id": "website_url",
+        "type": "url",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company Website URL",
+          "placeholder": "https://www.example.com",
+          "required": false
+        }
+      },
+      "row_project_specs": {
+        "_id": "row_project_specs",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_type",
+          "budget_range"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "project_type": {
+        "_id": "project_type",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Project Service Category",
+          "required": true,
+          "default_value": "software",
+          "options_list": [
+            {
+              "id": "uhdimgj",
+              "attributes": {
+                "option_label": "Custom Software Development",
+                "option_value": "software"
+              }
+            },
+            {
+              "id": "0ge40qp",
+              "attributes": {
+                "option_label": "Enterprise Website & CMS Builder",
+                "option_value": "website"
+              }
+            },
+            {
+              "id": "a1quvan",
+              "attributes": {
+                "option_label": "Digital Marketing Campaign",
+                "option_value": "marketing"
+              }
+            },
+            {
+              "id": "kr5gwrt",
+              "attributes": {
+                "option_label": "IT Infrastructure & Cloud Setup",
+                "option_value": "cloud"
+              }
+            }
+          ]
+        }
+      },
+      "budget_range": {
+        "_id": "budget_range",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Estimated Budget Range (USD)",
+          "required": true,
+          "default_value": "10k-25k",
+          "options_list": [
+            {
+              "id": "77w1fwm",
+              "attributes": {
+                "option_label": "$5,000 - $10,000",
+                "option_value": "5k-10k"
+              }
+            },
+            {
+              "id": "4yrsijr",
+              "attributes": {
+                "option_label": "$10,000 - $25,000",
+                "option_value": "10k-25k"
+              }
+            },
+            {
+              "id": "o53beh3",
+              "attributes": {
+                "option_label": "$25,000 - $50,000",
+                "option_value": "25k-50k"
+              }
+            },
+            {
+              "id": "71xb198",
+              "attributes": {
+                "option_label": "$50,000+",
+                "option_value": "50k_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_timeline_urgency": {
+        "_id": "row_timeline_urgency",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "start_date",
+          "urgency"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "start_date": {
+        "_id": "start_date",
+        "type": "date",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Desired Launch / Start Date",
+          "required": true,
+          "error_message": "Please specify your target launch date."
+        }
+      },
+      "urgency": {
+        "_id": "urgency",
+        "type": "radio",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Project Priority Level",
+          "required": true,
+          "default_value": "normal",
+          "layout": "inline",
+          "options_list": [
+            {
+              "id": "r58rb61",
+              "attributes": {
+                "option_label": "Immediate (Critical)",
+                "option_value": "high"
+              }
+            },
+            {
+              "id": "xudi6xa",
+              "attributes": {
+                "option_label": "Within 1-3 Months",
+                "option_value": "normal"
+              }
+            },
+            {
+              "id": "pdrffwl",
+              "attributes": {
+                "option_label": "Planning Phase (3+ Months)",
+                "option_value": "low"
+              }
+            }
+          ]
+        }
+      },
+      "row_project_desc": {
+        "_id": "row_project_desc",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_details"
+        ]
+      },
+      "project_details": {
+        "_id": "project_details",
+        "type": "textarea",
+        "parentId": "row_project_desc",
+        "attributes": {
+          "label": "Project Scope & Description",
+          "placeholder": "Briefly describe your objectives, key features, and deliverables...",
+          "required": true,
+          "rows": 8,
+          "error_message": "Please explain your project details."
+        }
+      },
+      "row_poc_details": {
+        "_id": "row_poc_details",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "p_contact_name",
+          "p_contact_email",
+          "p_contact_phone"
+        ],
+        "attributes": {
+          "columns": 3,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "p_contact_name": {
+        "_id": "p_contact_name",
+        "type": "text",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Person Name",
+          "placeholder": "Full Name",
+          "required": true,
+          "error_message": "Contact name is required."
+        }
+      },
+      "p_contact_email": {
+        "_id": "p_contact_email",
+        "type": "email",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Business Email",
+          "placeholder": "name@company.com",
+          "required": true,
+          "error_message": "Valid business email is required."
+        }
+      },
+      "p_contact_phone": {
+        "_id": "p_contact_phone",
+        "type": "phone",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Phone Number",
+          "placeholder": "Direct Line",
+          "required": false
+        }
+      },
+      "row_files_uploads": {
+        "_id": "row_files_uploads",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_brief",
+          "signed_nda"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "project_brief": {
+        "_id": "project_brief",
+        "type": "file",
+        "parentId": "row_files_uploads",
+        "attributes": {
+          "label": "Upload Project RFQ / Brief",
+          "required": false,
+          "max_file_size": 10,
+          "allowed_extensions": [
+            "pdf",
+            "docx",
+            "zip"
+          ]
+        }
+      },
+      "signed_nda": {
+        "_id": "signed_nda",
+        "type": "file",
+        "parentId": "row_files_uploads",
+        "attributes": {
+          "label": "Upload NDA Form (If applicable)",
+          "required": false,
+          "max_file_size": 5,
+          "allowed_extensions": [
+            "pdf",
+            "jpg"
+          ]
+        }
+      },
+      "row_biz_submit": {
+        "_id": "row_biz_submit",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_captcha",
+          "biz_submit_btn"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "biz_captcha": {
+        "_id": "biz_captcha",
+        "type": "captcha",
+        "parentId": "row_biz_submit",
+        "attributes": {
+          "label": "Verification Check",
+          "theme": "light",
+          "size": "normal"
+        }
+      },
+      "biz_submit_btn": {
+        "_id": "biz_submit_btn",
+        "type": "button",
+        "parentId": "row_biz_submit",
+        "attributes": {
+          "label": "Submit RFP Request",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "business-submit"
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Travel & Expense Claim",
+      "form_status": "publish",
+      "form_description": "Submit expense reimbursement forms with dates and attachment receipts."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Quote Proposal Request from {field_company_name}",
+          "email_message": "<h3>Service Request Details:</h3><p><strong>Company:</strong> {field_company_name} ({field_website_url})</p><p><strong>Contact:</strong> {field_p_contact_name} ({field_p_contact_email})</p><p><strong>Project Category:</strong> {field_project_type}</p><p><strong>Est. Budget:</strong> {field_budget_range}</p><p><strong>Project Overview:</strong><br/>{field_project_details}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_biz_header",
+      "row_company_info",
+      "row_project_specs",
+      "row_timeline_urgency"
+    ],
+    "fields": {
+      "row_biz_header": {
+        "_id": "row_biz_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_header_html"
+        ]
+      },
+      "biz_header_html": {
+        "_id": "biz_header_html",
+        "type": "html",
+        "parentId": "row_biz_header",
+        "attributes": {
+          "raw_html": "<div class='business-header'><h2>Request a Project Proposal</h2><p>Provide details about your project needs, and our solution architects will draft a customized scope of work and budget estimation.</p><hr/></div>"
+        }
+      },
+      "row_company_info": {
+        "_id": "row_company_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "company_name",
+          "website_url"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "company_name": {
+        "_id": "company_name",
+        "type": "text",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company / Organization Name",
+          "placeholder": "e.g., Acme Corp",
+          "required": true,
+          "error_message": "Company name is required."
+        }
+      },
+      "website_url": {
+        "_id": "website_url",
+        "type": "url",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company Website URL",
+          "placeholder": "https://www.example.com",
+          "required": false
+        }
+      },
+      "row_project_specs": {
+        "_id": "row_project_specs",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_type",
+          "budget_range"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "project_type": {
+        "_id": "project_type",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Project Service Category",
+          "required": true,
+          "default_value": "software",
+          "options_list": [
+            {
+              "id": "sejft2j",
+              "attributes": {
+                "option_label": "Custom Software Development",
+                "option_value": "software"
+              }
+            },
+            {
+              "id": "q5bzn91",
+              "attributes": {
+                "option_label": "Enterprise Website & CMS Builder",
+                "option_value": "website"
+              }
+            },
+            {
+              "id": "q9ldcvl",
+              "attributes": {
+                "option_label": "Digital Marketing Campaign",
+                "option_value": "marketing"
+              }
+            },
+            {
+              "id": "d3k0mj4",
+              "attributes": {
+                "option_label": "IT Infrastructure & Cloud Setup",
+                "option_value": "cloud"
+              }
+            }
+          ]
+        }
+      },
+      "budget_range": {
+        "_id": "budget_range",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Estimated Budget Range (USD)",
+          "required": true,
+          "default_value": "10k-25k",
+          "options_list": [
+            {
+              "id": "4j83gdq",
+              "attributes": {
+                "option_label": "$5,000 - $10,000",
+                "option_value": "5k-10k"
+              }
+            },
+            {
+              "id": "lrwfovu",
+              "attributes": {
+                "option_label": "$10,000 - $25,000",
+                "option_value": "10k-25k"
+              }
+            },
+            {
+              "id": "nwaonjv",
+              "attributes": {
+                "option_label": "$25,000 - $50,000",
+                "option_value": "25k-50k"
+              }
+            },
+            {
+              "id": "loular5",
+              "attributes": {
+                "option_label": "$50,000+",
+                "option_value": "50k_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_timeline_urgency": {
+        "_id": "row_timeline_urgency",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "start_date",
+          "urgency"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "start_date": {
+        "_id": "start_date",
+        "type": "date",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Desired Launch / Start Date",
+          "required": true,
+          "error_message": "Please specify your target launch date."
+        }
+      },
+      "urgency": {
+        "_id": "urgency",
+        "type": "radio",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Project Priority Level",
+          "required": true,
+          "default_value": "normal",
+          "layout": "inline",
+          "options_list": [
+            {
+              "id": "f4d14yi",
+              "attributes": {
+                "option_label": "Immediate (Critical)",
+                "option_value": "high"
+              }
+            },
+            {
+              "id": "84jtg5w",
+              "attributes": {
+                "option_label": "Within 1-3 Months",
+                "option_value": "normal"
+              }
+            },
+            {
+              "id": "zjojg21",
+              "attributes": {
+                "option_label": "Planning Phase (3+ Months)",
+                "option_value": "low"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Purchase Order Request",
+      "form_status": "publish",
+      "form_description": "Log purchase order requests for corporate manager approvals."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Quote Proposal Request from {field_company_name}",
+          "email_message": "<h3>Service Request Details:</h3><p><strong>Company:</strong> {field_company_name} ({field_website_url})</p><p><strong>Contact:</strong> {field_p_contact_name} ({field_p_contact_email})</p><p><strong>Project Category:</strong> {field_project_type}</p><p><strong>Est. Budget:</strong> {field_budget_range}</p><p><strong>Project Overview:</strong><br/>{field_project_details}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_biz_header",
+      "row_company_info",
+      "row_project_specs",
+      "row_timeline_urgency",
+      "row_project_desc",
+      "row_poc_details"
+    ],
+    "fields": {
+      "row_biz_header": {
+        "_id": "row_biz_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_header_html"
+        ]
+      },
+      "biz_header_html": {
+        "_id": "biz_header_html",
+        "type": "html",
+        "parentId": "row_biz_header",
+        "attributes": {
+          "raw_html": "<div class='business-header'><h2>Request a Project Proposal</h2><p>Provide details about your project needs, and our solution architects will draft a customized scope of work and budget estimation.</p><hr/></div>"
+        }
+      },
+      "row_company_info": {
+        "_id": "row_company_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "company_name",
+          "website_url"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "company_name": {
+        "_id": "company_name",
+        "type": "text",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company / Organization Name",
+          "placeholder": "e.g., Acme Corp",
+          "required": true,
+          "error_message": "Company name is required."
+        }
+      },
+      "website_url": {
+        "_id": "website_url",
+        "type": "url",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company Website URL",
+          "placeholder": "https://www.example.com",
+          "required": false
+        }
+      },
+      "row_project_specs": {
+        "_id": "row_project_specs",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_type",
+          "budget_range"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "project_type": {
+        "_id": "project_type",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Project Service Category",
+          "required": true,
+          "default_value": "software",
+          "options_list": [
+            {
+              "id": "52cyxcq",
+              "attributes": {
+                "option_label": "Custom Software Development",
+                "option_value": "software"
+              }
+            },
+            {
+              "id": "z4n3mha",
+              "attributes": {
+                "option_label": "Enterprise Website & CMS Builder",
+                "option_value": "website"
+              }
+            },
+            {
+              "id": "7bc0fxt",
+              "attributes": {
+                "option_label": "Digital Marketing Campaign",
+                "option_value": "marketing"
+              }
+            },
+            {
+              "id": "sp696wt",
+              "attributes": {
+                "option_label": "IT Infrastructure & Cloud Setup",
+                "option_value": "cloud"
+              }
+            }
+          ]
+        }
+      },
+      "budget_range": {
+        "_id": "budget_range",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Estimated Budget Range (USD)",
+          "required": true,
+          "default_value": "10k-25k",
+          "options_list": [
+            {
+              "id": "33poy4m",
+              "attributes": {
+                "option_label": "$5,000 - $10,000",
+                "option_value": "5k-10k"
+              }
+            },
+            {
+              "id": "e0t06iw",
+              "attributes": {
+                "option_label": "$10,000 - $25,000",
+                "option_value": "10k-25k"
+              }
+            },
+            {
+              "id": "k4rkab4",
+              "attributes": {
+                "option_label": "$25,000 - $50,000",
+                "option_value": "25k-50k"
+              }
+            },
+            {
+              "id": "ba750jp",
+              "attributes": {
+                "option_label": "$50,000+",
+                "option_value": "50k_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_timeline_urgency": {
+        "_id": "row_timeline_urgency",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "start_date",
+          "urgency"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "start_date": {
+        "_id": "start_date",
+        "type": "date",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Desired Launch / Start Date",
+          "required": true,
+          "error_message": "Please specify your target launch date."
+        }
+      },
+      "urgency": {
+        "_id": "urgency",
+        "type": "radio",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Project Priority Level",
+          "required": true,
+          "default_value": "normal",
+          "layout": "inline",
+          "options_list": [
+            {
+              "id": "70h37oh",
+              "attributes": {
+                "option_label": "Immediate (Critical)",
+                "option_value": "high"
+              }
+            },
+            {
+              "id": "dbhui5c",
+              "attributes": {
+                "option_label": "Within 1-3 Months",
+                "option_value": "normal"
+              }
+            },
+            {
+              "id": "b3vu3rd",
+              "attributes": {
+                "option_label": "Planning Phase (3+ Months)",
+                "option_value": "low"
+              }
+            }
+          ]
+        }
+      },
+      "row_project_desc": {
+        "_id": "row_project_desc",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_details"
+        ]
+      },
+      "project_details": {
+        "_id": "project_details",
+        "type": "textarea",
+        "parentId": "row_project_desc",
+        "attributes": {
+          "label": "Project Scope & Description",
+          "placeholder": "Briefly describe your objectives, key features, and deliverables...",
+          "required": true,
+          "rows": 8,
+          "error_message": "Please explain your project details."
+        }
+      },
+      "row_poc_details": {
+        "_id": "row_poc_details",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "p_contact_name",
+          "p_contact_email",
+          "p_contact_phone"
+        ],
+        "attributes": {
+          "columns": 3,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "p_contact_name": {
+        "_id": "p_contact_name",
+        "type": "text",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Person Name",
+          "placeholder": "Full Name",
+          "required": true,
+          "error_message": "Contact name is required."
+        }
+      },
+      "p_contact_email": {
+        "_id": "p_contact_email",
+        "type": "email",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Business Email",
+          "placeholder": "name@company.com",
+          "required": true,
+          "error_message": "Valid business email is required."
+        }
+      },
+      "p_contact_phone": {
+        "_id": "p_contact_phone",
+        "type": "phone",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Phone Number",
+          "placeholder": "Direct Line",
+          "required": false
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "IT Hardware Service Call",
+      "form_status": "publish",
+      "form_description": "Request new IT equipment or log repair tickets for office machines."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Quote Proposal Request from {field_company_name}",
+          "email_message": "<h3>Service Request Details:</h3><p><strong>Company:</strong> {field_company_name} ({field_website_url})</p><p><strong>Contact:</strong> {field_p_contact_name} ({field_p_contact_email})</p><p><strong>Project Category:</strong> {field_project_type}</p><p><strong>Est. Budget:</strong> {field_budget_range}</p><p><strong>Project Overview:</strong><br/>{field_project_details}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_biz_header",
+      "row_company_info",
+      "row_project_specs",
+      "row_timeline_urgency",
+      "row_project_desc",
+      "row_poc_details",
+      "row_files_uploads",
+      "row_biz_submit"
+    ],
+    "fields": {
+      "row_biz_header": {
+        "_id": "row_biz_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_header_html"
+        ]
+      },
+      "biz_header_html": {
+        "_id": "biz_header_html",
+        "type": "html",
+        "parentId": "row_biz_header",
+        "attributes": {
+          "raw_html": "<div class='business-header'><h2>Request a Project Proposal</h2><p>Provide details about your project needs, and our solution architects will draft a customized scope of work and budget estimation.</p><hr/></div>"
+        }
+      },
+      "row_company_info": {
+        "_id": "row_company_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "company_name",
+          "website_url"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "company_name": {
+        "_id": "company_name",
+        "type": "text",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company / Organization Name",
+          "placeholder": "e.g., Acme Corp",
+          "required": true,
+          "error_message": "Company name is required."
+        }
+      },
+      "website_url": {
+        "_id": "website_url",
+        "type": "url",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company Website URL",
+          "placeholder": "https://www.example.com",
+          "required": false
+        }
+      },
+      "row_project_specs": {
+        "_id": "row_project_specs",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_type",
+          "budget_range"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "project_type": {
+        "_id": "project_type",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Project Service Category",
+          "required": true,
+          "default_value": "software",
+          "options_list": [
+            {
+              "id": "jhoeozy",
+              "attributes": {
+                "option_label": "Custom Software Development",
+                "option_value": "software"
+              }
+            },
+            {
+              "id": "t70o6hv",
+              "attributes": {
+                "option_label": "Enterprise Website & CMS Builder",
+                "option_value": "website"
+              }
+            },
+            {
+              "id": "yehgt73",
+              "attributes": {
+                "option_label": "Digital Marketing Campaign",
+                "option_value": "marketing"
+              }
+            },
+            {
+              "id": "cp29kjo",
+              "attributes": {
+                "option_label": "IT Infrastructure & Cloud Setup",
+                "option_value": "cloud"
+              }
+            }
+          ]
+        }
+      },
+      "budget_range": {
+        "_id": "budget_range",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Estimated Budget Range (USD)",
+          "required": true,
+          "default_value": "10k-25k",
+          "options_list": [
+            {
+              "id": "k4mev13",
+              "attributes": {
+                "option_label": "$5,000 - $10,000",
+                "option_value": "5k-10k"
+              }
+            },
+            {
+              "id": "ekfxyoz",
+              "attributes": {
+                "option_label": "$10,000 - $25,000",
+                "option_value": "10k-25k"
+              }
+            },
+            {
+              "id": "ulpjg01",
+              "attributes": {
+                "option_label": "$25,000 - $50,000",
+                "option_value": "25k-50k"
+              }
+            },
+            {
+              "id": "ggyel0l",
+              "attributes": {
+                "option_label": "$50,000+",
+                "option_value": "50k_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_timeline_urgency": {
+        "_id": "row_timeline_urgency",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "start_date",
+          "urgency"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "start_date": {
+        "_id": "start_date",
+        "type": "date",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Desired Launch / Start Date",
+          "required": true,
+          "error_message": "Please specify your target launch date."
+        }
+      },
+      "urgency": {
+        "_id": "urgency",
+        "type": "radio",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Project Priority Level",
+          "required": true,
+          "default_value": "normal",
+          "layout": "inline",
+          "options_list": [
+            {
+              "id": "758ngf4",
+              "attributes": {
+                "option_label": "Immediate (Critical)",
+                "option_value": "high"
+              }
+            },
+            {
+              "id": "ly1emzp",
+              "attributes": {
+                "option_label": "Within 1-3 Months",
+                "option_value": "normal"
+              }
+            },
+            {
+              "id": "c69uphn",
+              "attributes": {
+                "option_label": "Planning Phase (3+ Months)",
+                "option_value": "low"
+              }
+            }
+          ]
+        }
+      },
+      "row_project_desc": {
+        "_id": "row_project_desc",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_details"
+        ]
+      },
+      "project_details": {
+        "_id": "project_details",
+        "type": "textarea",
+        "parentId": "row_project_desc",
+        "attributes": {
+          "label": "Project Scope & Description",
+          "placeholder": "Briefly describe your objectives, key features, and deliverables...",
+          "required": true,
+          "rows": 8,
+          "error_message": "Please explain your project details."
+        }
+      },
+      "row_poc_details": {
+        "_id": "row_poc_details",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "p_contact_name",
+          "p_contact_email",
+          "p_contact_phone"
+        ],
+        "attributes": {
+          "columns": 3,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "p_contact_name": {
+        "_id": "p_contact_name",
+        "type": "text",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Person Name",
+          "placeholder": "Full Name",
+          "required": true,
+          "error_message": "Contact name is required."
+        }
+      },
+      "p_contact_email": {
+        "_id": "p_contact_email",
+        "type": "email",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Business Email",
+          "placeholder": "name@company.com",
+          "required": true,
+          "error_message": "Valid business email is required."
+        }
+      },
+      "p_contact_phone": {
+        "_id": "p_contact_phone",
+        "type": "phone",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Phone Number",
+          "placeholder": "Direct Line",
+          "required": false
+        }
+      },
+      "row_files_uploads": {
+        "_id": "row_files_uploads",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_brief",
+          "signed_nda"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "project_brief": {
+        "_id": "project_brief",
+        "type": "file",
+        "parentId": "row_files_uploads",
+        "attributes": {
+          "label": "Upload Project RFQ / Brief",
+          "required": false,
+          "max_file_size": 10,
+          "allowed_extensions": [
+            "pdf",
+            "docx",
+            "zip"
+          ]
+        }
+      },
+      "signed_nda": {
+        "_id": "signed_nda",
+        "type": "file",
+        "parentId": "row_files_uploads",
+        "attributes": {
+          "label": "Upload NDA Form (If applicable)",
+          "required": false,
+          "max_file_size": 5,
+          "allowed_extensions": [
+            "pdf",
+            "jpg"
+          ]
+        }
+      },
+      "row_biz_submit": {
+        "_id": "row_biz_submit",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_captcha",
+          "biz_submit_btn"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "biz_captcha": {
+        "_id": "biz_captcha",
+        "type": "captcha",
+        "parentId": "row_biz_submit",
+        "attributes": {
+          "label": "Verification Check",
+          "theme": "light",
+          "size": "normal"
+        }
+      },
+      "biz_submit_btn": {
+        "_id": "biz_submit_btn",
+        "type": "button",
+        "parentId": "row_biz_submit",
+        "attributes": {
+          "label": "Submit RFP Request",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "business-submit"
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Time-Off & Leave Intake",
+      "form_status": "publish",
+      "form_description": "Request annual leave, sick leave, or personal time-off."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Quote Proposal Request from {field_company_name}",
+          "email_message": "<h3>Service Request Details:</h3><p><strong>Company:</strong> {field_company_name} ({field_website_url})</p><p><strong>Contact:</strong> {field_p_contact_name} ({field_p_contact_email})</p><p><strong>Project Category:</strong> {field_project_type}</p><p><strong>Est. Budget:</strong> {field_budget_range}</p><p><strong>Project Overview:</strong><br/>{field_project_details}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_biz_header",
+      "row_company_info",
+      "row_project_specs",
+      "row_timeline_urgency"
+    ],
+    "fields": {
+      "row_biz_header": {
+        "_id": "row_biz_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_header_html"
+        ]
+      },
+      "biz_header_html": {
+        "_id": "biz_header_html",
+        "type": "html",
+        "parentId": "row_biz_header",
+        "attributes": {
+          "raw_html": "<div class='business-header'><h2>Request a Project Proposal</h2><p>Provide details about your project needs, and our solution architects will draft a customized scope of work and budget estimation.</p><hr/></div>"
+        }
+      },
+      "row_company_info": {
+        "_id": "row_company_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "company_name",
+          "website_url"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "company_name": {
+        "_id": "company_name",
+        "type": "text",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company / Organization Name",
+          "placeholder": "e.g., Acme Corp",
+          "required": true,
+          "error_message": "Company name is required."
+        }
+      },
+      "website_url": {
+        "_id": "website_url",
+        "type": "url",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company Website URL",
+          "placeholder": "https://www.example.com",
+          "required": false
+        }
+      },
+      "row_project_specs": {
+        "_id": "row_project_specs",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_type",
+          "budget_range"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "project_type": {
+        "_id": "project_type",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Project Service Category",
+          "required": true,
+          "default_value": "software",
+          "options_list": [
+            {
+              "id": "hcmia7f",
+              "attributes": {
+                "option_label": "Custom Software Development",
+                "option_value": "software"
+              }
+            },
+            {
+              "id": "plcr5ww",
+              "attributes": {
+                "option_label": "Enterprise Website & CMS Builder",
+                "option_value": "website"
+              }
+            },
+            {
+              "id": "3lnuy52",
+              "attributes": {
+                "option_label": "Digital Marketing Campaign",
+                "option_value": "marketing"
+              }
+            },
+            {
+              "id": "do0h9g9",
+              "attributes": {
+                "option_label": "IT Infrastructure & Cloud Setup",
+                "option_value": "cloud"
+              }
+            }
+          ]
+        }
+      },
+      "budget_range": {
+        "_id": "budget_range",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Estimated Budget Range (USD)",
+          "required": true,
+          "default_value": "10k-25k",
+          "options_list": [
+            {
+              "id": "o811k5a",
+              "attributes": {
+                "option_label": "$5,000 - $10,000",
+                "option_value": "5k-10k"
+              }
+            },
+            {
+              "id": "f5qp9pw",
+              "attributes": {
+                "option_label": "$10,000 - $25,000",
+                "option_value": "10k-25k"
+              }
+            },
+            {
+              "id": "308zpjv",
+              "attributes": {
+                "option_label": "$25,000 - $50,000",
+                "option_value": "25k-50k"
+              }
+            },
+            {
+              "id": "vlizj7s",
+              "attributes": {
+                "option_label": "$50,000+",
+                "option_value": "50k_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_timeline_urgency": {
+        "_id": "row_timeline_urgency",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "start_date",
+          "urgency"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "start_date": {
+        "_id": "start_date",
+        "type": "date",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Desired Launch / Start Date",
+          "required": true,
+          "error_message": "Please specify your target launch date."
+        }
+      },
+      "urgency": {
+        "_id": "urgency",
+        "type": "radio",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Project Priority Level",
+          "required": true,
+          "default_value": "normal",
+          "layout": "inline",
+          "options_list": [
+            {
+              "id": "cyh9u7l",
+              "attributes": {
+                "option_label": "Immediate (Critical)",
+                "option_value": "high"
+              }
+            },
+            {
+              "id": "vo0bsmo",
+              "attributes": {
+                "option_label": "Within 1-3 Months",
+                "option_value": "normal"
+              }
+            },
+            {
+              "id": "9uowxeg",
+              "attributes": {
+                "option_label": "Planning Phase (3+ Months)",
+                "option_value": "low"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Employee Suggestions Box",
+      "form_status": "publish",
+      "form_description": "Share ideas anonymously with HR and leadership teams."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Quote Proposal Request from {field_company_name}",
+          "email_message": "<h3>Service Request Details:</h3><p><strong>Company:</strong> {field_company_name} ({field_website_url})</p><p><strong>Contact:</strong> {field_p_contact_name} ({field_p_contact_email})</p><p><strong>Project Category:</strong> {field_project_type}</p><p><strong>Est. Budget:</strong> {field_budget_range}</p><p><strong>Project Overview:</strong><br/>{field_project_details}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_biz_header",
+      "row_company_info",
+      "row_project_specs",
+      "row_timeline_urgency",
+      "row_project_desc",
+      "row_poc_details"
+    ],
+    "fields": {
+      "row_biz_header": {
+        "_id": "row_biz_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_header_html"
+        ]
+      },
+      "biz_header_html": {
+        "_id": "biz_header_html",
+        "type": "html",
+        "parentId": "row_biz_header",
+        "attributes": {
+          "raw_html": "<div class='business-header'><h2>Request a Project Proposal</h2><p>Provide details about your project needs, and our solution architects will draft a customized scope of work and budget estimation.</p><hr/></div>"
+        }
+      },
+      "row_company_info": {
+        "_id": "row_company_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "company_name",
+          "website_url"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "company_name": {
+        "_id": "company_name",
+        "type": "text",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company / Organization Name",
+          "placeholder": "e.g., Acme Corp",
+          "required": true,
+          "error_message": "Company name is required."
+        }
+      },
+      "website_url": {
+        "_id": "website_url",
+        "type": "url",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company Website URL",
+          "placeholder": "https://www.example.com",
+          "required": false
+        }
+      },
+      "row_project_specs": {
+        "_id": "row_project_specs",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_type",
+          "budget_range"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "project_type": {
+        "_id": "project_type",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Project Service Category",
+          "required": true,
+          "default_value": "software",
+          "options_list": [
+            {
+              "id": "m5vr9yr",
+              "attributes": {
+                "option_label": "Custom Software Development",
+                "option_value": "software"
+              }
+            },
+            {
+              "id": "dft81vz",
+              "attributes": {
+                "option_label": "Enterprise Website & CMS Builder",
+                "option_value": "website"
+              }
+            },
+            {
+              "id": "jkhaoa7",
+              "attributes": {
+                "option_label": "Digital Marketing Campaign",
+                "option_value": "marketing"
+              }
+            },
+            {
+              "id": "489u7ur",
+              "attributes": {
+                "option_label": "IT Infrastructure & Cloud Setup",
+                "option_value": "cloud"
+              }
+            }
+          ]
+        }
+      },
+      "budget_range": {
+        "_id": "budget_range",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Estimated Budget Range (USD)",
+          "required": true,
+          "default_value": "10k-25k",
+          "options_list": [
+            {
+              "id": "flcypx8",
+              "attributes": {
+                "option_label": "$5,000 - $10,000",
+                "option_value": "5k-10k"
+              }
+            },
+            {
+              "id": "bcex8oe",
+              "attributes": {
+                "option_label": "$10,000 - $25,000",
+                "option_value": "10k-25k"
+              }
+            },
+            {
+              "id": "yg9zeml",
+              "attributes": {
+                "option_label": "$25,000 - $50,000",
+                "option_value": "25k-50k"
+              }
+            },
+            {
+              "id": "imbpgw0",
+              "attributes": {
+                "option_label": "$50,000+",
+                "option_value": "50k_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_timeline_urgency": {
+        "_id": "row_timeline_urgency",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "start_date",
+          "urgency"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "start_date": {
+        "_id": "start_date",
+        "type": "date",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Desired Launch / Start Date",
+          "required": true,
+          "error_message": "Please specify your target launch date."
+        }
+      },
+      "urgency": {
+        "_id": "urgency",
+        "type": "radio",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Project Priority Level",
+          "required": true,
+          "default_value": "normal",
+          "layout": "inline",
+          "options_list": [
+            {
+              "id": "7yv1m3n",
+              "attributes": {
+                "option_label": "Immediate (Critical)",
+                "option_value": "high"
+              }
+            },
+            {
+              "id": "wcme9ft",
+              "attributes": {
+                "option_label": "Within 1-3 Months",
+                "option_value": "normal"
+              }
+            },
+            {
+              "id": "l59lejy",
+              "attributes": {
+                "option_label": "Planning Phase (3+ Months)",
+                "option_value": "low"
+              }
+            }
+          ]
+        }
+      },
+      "row_project_desc": {
+        "_id": "row_project_desc",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_details"
+        ]
+      },
+      "project_details": {
+        "_id": "project_details",
+        "type": "textarea",
+        "parentId": "row_project_desc",
+        "attributes": {
+          "label": "Project Scope & Description",
+          "placeholder": "Briefly describe your objectives, key features, and deliverables...",
+          "required": true,
+          "rows": 8,
+          "error_message": "Please explain your project details."
+        }
+      },
+      "row_poc_details": {
+        "_id": "row_poc_details",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "p_contact_name",
+          "p_contact_email",
+          "p_contact_phone"
+        ],
+        "attributes": {
+          "columns": 3,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "p_contact_name": {
+        "_id": "p_contact_name",
+        "type": "text",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Person Name",
+          "placeholder": "Full Name",
+          "required": true,
+          "error_message": "Contact name is required."
+        }
+      },
+      "p_contact_email": {
+        "_id": "p_contact_email",
+        "type": "email",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Business Email",
+          "placeholder": "name@company.com",
+          "required": true,
+          "error_message": "Valid business email is required."
+        }
+      },
+      "p_contact_phone": {
+        "_id": "p_contact_phone",
+        "type": "phone",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Phone Number",
+          "placeholder": "Direct Line",
+          "required": false
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Project Scope Consultation",
+      "form_status": "publish",
+      "form_description": "Define initial requirements, timelines, and budgets for new projects."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Quote Proposal Request from {field_company_name}",
+          "email_message": "<h3>Service Request Details:</h3><p><strong>Company:</strong> {field_company_name} ({field_website_url})</p><p><strong>Contact:</strong> {field_p_contact_name} ({field_p_contact_email})</p><p><strong>Project Category:</strong> {field_project_type}</p><p><strong>Est. Budget:</strong> {field_budget_range}</p><p><strong>Project Overview:</strong><br/>{field_project_details}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_biz_header",
+      "row_company_info",
+      "row_project_specs",
+      "row_timeline_urgency",
+      "row_project_desc",
+      "row_poc_details",
+      "row_files_uploads",
+      "row_biz_submit"
+    ],
+    "fields": {
+      "row_biz_header": {
+        "_id": "row_biz_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_header_html"
+        ]
+      },
+      "biz_header_html": {
+        "_id": "biz_header_html",
+        "type": "html",
+        "parentId": "row_biz_header",
+        "attributes": {
+          "raw_html": "<div class='business-header'><h2>Request a Project Proposal</h2><p>Provide details about your project needs, and our solution architects will draft a customized scope of work and budget estimation.</p><hr/></div>"
+        }
+      },
+      "row_company_info": {
+        "_id": "row_company_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "company_name",
+          "website_url"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "company_name": {
+        "_id": "company_name",
+        "type": "text",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company / Organization Name",
+          "placeholder": "e.g., Acme Corp",
+          "required": true,
+          "error_message": "Company name is required."
+        }
+      },
+      "website_url": {
+        "_id": "website_url",
+        "type": "url",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company Website URL",
+          "placeholder": "https://www.example.com",
+          "required": false
+        }
+      },
+      "row_project_specs": {
+        "_id": "row_project_specs",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_type",
+          "budget_range"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "project_type": {
+        "_id": "project_type",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Project Service Category",
+          "required": true,
+          "default_value": "software",
+          "options_list": [
+            {
+              "id": "gvftwx6",
+              "attributes": {
+                "option_label": "Custom Software Development",
+                "option_value": "software"
+              }
+            },
+            {
+              "id": "jcbvg7m",
+              "attributes": {
+                "option_label": "Enterprise Website & CMS Builder",
+                "option_value": "website"
+              }
+            },
+            {
+              "id": "srcyqmm",
+              "attributes": {
+                "option_label": "Digital Marketing Campaign",
+                "option_value": "marketing"
+              }
+            },
+            {
+              "id": "j9k00p6",
+              "attributes": {
+                "option_label": "IT Infrastructure & Cloud Setup",
+                "option_value": "cloud"
+              }
+            }
+          ]
+        }
+      },
+      "budget_range": {
+        "_id": "budget_range",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Estimated Budget Range (USD)",
+          "required": true,
+          "default_value": "10k-25k",
+          "options_list": [
+            {
+              "id": "y4gszot",
+              "attributes": {
+                "option_label": "$5,000 - $10,000",
+                "option_value": "5k-10k"
+              }
+            },
+            {
+              "id": "6obemeh",
+              "attributes": {
+                "option_label": "$10,000 - $25,000",
+                "option_value": "10k-25k"
+              }
+            },
+            {
+              "id": "nalp169",
+              "attributes": {
+                "option_label": "$25,000 - $50,000",
+                "option_value": "25k-50k"
+              }
+            },
+            {
+              "id": "u2tg5sg",
+              "attributes": {
+                "option_label": "$50,000+",
+                "option_value": "50k_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_timeline_urgency": {
+        "_id": "row_timeline_urgency",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "start_date",
+          "urgency"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "start_date": {
+        "_id": "start_date",
+        "type": "date",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Desired Launch / Start Date",
+          "required": true,
+          "error_message": "Please specify your target launch date."
+        }
+      },
+      "urgency": {
+        "_id": "urgency",
+        "type": "radio",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Project Priority Level",
+          "required": true,
+          "default_value": "normal",
+          "layout": "inline",
+          "options_list": [
+            {
+              "id": "sba8xez",
+              "attributes": {
+                "option_label": "Immediate (Critical)",
+                "option_value": "high"
+              }
+            },
+            {
+              "id": "jj9aaws",
+              "attributes": {
+                "option_label": "Within 1-3 Months",
+                "option_value": "normal"
+              }
+            },
+            {
+              "id": "nulc0x7",
+              "attributes": {
+                "option_label": "Planning Phase (3+ Months)",
+                "option_value": "low"
+              }
+            }
+          ]
+        }
+      },
+      "row_project_desc": {
+        "_id": "row_project_desc",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_details"
+        ]
+      },
+      "project_details": {
+        "_id": "project_details",
+        "type": "textarea",
+        "parentId": "row_project_desc",
+        "attributes": {
+          "label": "Project Scope & Description",
+          "placeholder": "Briefly describe your objectives, key features, and deliverables...",
+          "required": true,
+          "rows": 8,
+          "error_message": "Please explain your project details."
+        }
+      },
+      "row_poc_details": {
+        "_id": "row_poc_details",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "p_contact_name",
+          "p_contact_email",
+          "p_contact_phone"
+        ],
+        "attributes": {
+          "columns": 3,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "p_contact_name": {
+        "_id": "p_contact_name",
+        "type": "text",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Person Name",
+          "placeholder": "Full Name",
+          "required": true,
+          "error_message": "Contact name is required."
+        }
+      },
+      "p_contact_email": {
+        "_id": "p_contact_email",
+        "type": "email",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Business Email",
+          "placeholder": "name@company.com",
+          "required": true,
+          "error_message": "Valid business email is required."
+        }
+      },
+      "p_contact_phone": {
+        "_id": "p_contact_phone",
+        "type": "phone",
+        "parentId": "row_poc_details",
+        "attributes": {
+          "label": "Contact Phone Number",
+          "placeholder": "Direct Line",
+          "required": false
+        }
+      },
+      "row_files_uploads": {
+        "_id": "row_files_uploads",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_brief",
+          "signed_nda"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "project_brief": {
+        "_id": "project_brief",
+        "type": "file",
+        "parentId": "row_files_uploads",
+        "attributes": {
+          "label": "Upload Project RFQ / Brief",
+          "required": false,
+          "max_file_size": 10,
+          "allowed_extensions": [
+            "pdf",
+            "docx",
+            "zip"
+          ]
+        }
+      },
+      "signed_nda": {
+        "_id": "signed_nda",
+        "type": "file",
+        "parentId": "row_files_uploads",
+        "attributes": {
+          "label": "Upload NDA Form (If applicable)",
+          "required": false,
+          "max_file_size": 5,
+          "allowed_extensions": [
+            "pdf",
+            "jpg"
+          ]
+        }
+      },
+      "row_biz_submit": {
+        "_id": "row_biz_submit",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_captcha",
+          "biz_submit_btn"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "biz_captcha": {
+        "_id": "biz_captcha",
+        "type": "captcha",
+        "parentId": "row_biz_submit",
+        "attributes": {
+          "label": "Verification Check",
+          "theme": "light",
+          "size": "normal"
+        }
+      },
+      "biz_submit_btn": {
+        "_id": "biz_submit_btn",
+        "type": "button",
+        "parentId": "row_biz_submit",
+        "attributes": {
+          "label": "Submit RFP Request",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "business-submit"
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Incident Report Intake",
+      "form_status": "publish",
+      "form_description": "Log operational incidents, safety issues, or workplace concerns."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Quote Proposal Request from {field_company_name}",
+          "email_message": "<h3>Service Request Details:</h3><p><strong>Company:</strong> {field_company_name} ({field_website_url})</p><p><strong>Contact:</strong> {field_p_contact_name} ({field_p_contact_email})</p><p><strong>Project Category:</strong> {field_project_type}</p><p><strong>Est. Budget:</strong> {field_budget_range}</p><p><strong>Project Overview:</strong><br/>{field_project_details}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_biz_header",
+      "row_company_info",
+      "row_project_specs",
+      "row_timeline_urgency"
+    ],
+    "fields": {
+      "row_biz_header": {
+        "_id": "row_biz_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_header_html"
+        ]
+      },
+      "biz_header_html": {
+        "_id": "biz_header_html",
+        "type": "html",
+        "parentId": "row_biz_header",
+        "attributes": {
+          "raw_html": "<div class='business-header'><h2>Request a Project Proposal</h2><p>Provide details about your project needs, and our solution architects will draft a customized scope of work and budget estimation.</p><hr/></div>"
+        }
+      },
+      "row_company_info": {
+        "_id": "row_company_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "company_name",
+          "website_url"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "company_name": {
+        "_id": "company_name",
+        "type": "text",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company / Organization Name",
+          "placeholder": "e.g., Acme Corp",
+          "required": true,
+          "error_message": "Company name is required."
+        }
+      },
+      "website_url": {
+        "_id": "website_url",
+        "type": "url",
+        "parentId": "row_company_info",
+        "attributes": {
+          "label": "Company Website URL",
+          "placeholder": "https://www.example.com",
+          "required": false
+        }
+      },
+      "row_project_specs": {
+        "_id": "row_project_specs",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "project_type",
+          "budget_range"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "project_type": {
+        "_id": "project_type",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Project Service Category",
+          "required": true,
+          "default_value": "software",
+          "options_list": [
+            {
+              "id": "mxjzqk0",
+              "attributes": {
+                "option_label": "Custom Software Development",
+                "option_value": "software"
+              }
+            },
+            {
+              "id": "n2w7w85",
+              "attributes": {
+                "option_label": "Enterprise Website & CMS Builder",
+                "option_value": "website"
+              }
+            },
+            {
+              "id": "8otkned",
+              "attributes": {
+                "option_label": "Digital Marketing Campaign",
+                "option_value": "marketing"
+              }
+            },
+            {
+              "id": "yalilsv",
+              "attributes": {
+                "option_label": "IT Infrastructure & Cloud Setup",
+                "option_value": "cloud"
+              }
+            }
+          ]
+        }
+      },
+      "budget_range": {
+        "_id": "budget_range",
+        "type": "select",
+        "parentId": "row_project_specs",
+        "attributes": {
+          "label": "Estimated Budget Range (USD)",
+          "required": true,
+          "default_value": "10k-25k",
+          "options_list": [
+            {
+              "id": "6lfb9im",
+              "attributes": {
+                "option_label": "$5,000 - $10,000",
+                "option_value": "5k-10k"
+              }
+            },
+            {
+              "id": "2ju2bps",
+              "attributes": {
+                "option_label": "$10,000 - $25,000",
+                "option_value": "10k-25k"
+              }
+            },
+            {
+              "id": "ans3jqy",
+              "attributes": {
+                "option_label": "$25,000 - $50,000",
+                "option_value": "25k-50k"
+              }
+            },
+            {
+              "id": "vz6z9sn",
+              "attributes": {
+                "option_label": "$50,000+",
+                "option_value": "50k_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_timeline_urgency": {
+        "_id": "row_timeline_urgency",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "start_date",
+          "urgency"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "start_date": {
+        "_id": "start_date",
+        "type": "date",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Desired Launch / Start Date",
+          "required": true,
+          "error_message": "Please specify your target launch date."
+        }
+      },
+      "urgency": {
+        "_id": "urgency",
+        "type": "radio",
+        "parentId": "row_timeline_urgency",
+        "attributes": {
+          "label": "Project Priority Level",
+          "required": true,
+          "default_value": "normal",
+          "layout": "inline",
+          "options_list": [
+            {
+              "id": "k5l15al",
+              "attributes": {
+                "option_label": "Immediate (Critical)",
+                "option_value": "high"
+              }
+            },
+            {
+              "id": "iyh084o",
+              "attributes": {
+                "option_label": "Within 1-3 Months",
+                "option_value": "normal"
+              }
+            },
+            {
+              "id": "la6a7ib",
+              "attributes": {
+                "option_label": "Planning Phase (3+ Months)",
+                "option_value": "low"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+]

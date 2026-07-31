@@ -1,0 +1,3136 @@
+[
+  {
+    "advance": {
+      "form_name": "Simple Contact Form",
+      "form_status": "publish",
+      "form_description": "A quick contact form capturing only name, email, and message."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Contact Submission: {field_subject}",
+          "email_message": "<h3>New Submission details:</h3><p><strong>Name:</strong> {field_first_name} {field_last_name}</p><p><strong>Email:</strong> {field_email}</p><p><strong>Message:</strong><br/>{field_message}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      },
+      {
+        "type": "redirect",
+        "active": false,
+        "settings": {
+          "redirect_url": "/thank-you"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_header",
+      "row_personal_info",
+      "row_contact_details",
+      "row_subject",
+      "row_message",
+      "row_preferences"
+    ],
+    "fields": {
+      "row_header": {
+        "_id": "row_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "header_html"
+        ]
+      },
+      "header_html": {
+        "_id": "header_html",
+        "type": "html",
+        "parentId": "row_header",
+        "attributes": {
+          "raw_html": "<div class='contact-header'><h2>Contact Our Support Team</h2><p>Please fill out this detailed form and our agents will get back to you within 24 hours.</p><hr/></div>"
+        }
+      },
+      "row_personal_info": {
+        "_id": "row_personal_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "first_name",
+          "last_name"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "first_name": {
+        "_id": "first_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "First Name",
+          "label_color": "#ff9494ff",
+          "input_text_color": "#ffcc00ff",
+          "placeholder": "e.g., John",
+          "required": true,
+          "default_value": "",
+          "css_classes": "first-name-field",
+          "error_message": "First name is required."
+        }
+      },
+      "last_name": {
+        "_id": "last_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "Last Name",
+          "placeholder": "e.g., Doe",
+          "required": true,
+          "default_value": "",
+          "css_classes": "last-name-field",
+          "error_message": "Last name is required."
+        }
+      },
+      "row_contact_details": {
+        "_id": "row_contact_details",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "email",
+          "phone"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "email": {
+        "_id": "email",
+        "type": "email",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Email Address",
+          "placeholder": "example@domain.com",
+          "required": true,
+          "error_message": "Please enter a valid email address."
+        }
+      },
+      "phone": {
+        "_id": "phone",
+        "type": "phone",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Phone Number",
+          "placeholder": "(555) 000-0000",
+          "required": false,
+          "error_message": "Please enter a valid phone number."
+        }
+      },
+      "row_subject": {
+        "_id": "row_subject",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "subject"
+        ]
+      },
+      "subject": {
+        "_id": "subject",
+        "type": "text",
+        "parentId": "row_subject",
+        "attributes": {
+          "label": "Inquiry Subject",
+          "placeholder": "How can we help you today?",
+          "required": true,
+          "error_message": "Subject is required."
+        }
+      },
+      "row_message": {
+        "_id": "row_message",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "message"
+        ]
+      },
+      "message": {
+        "_id": "message",
+        "type": "textarea",
+        "parentId": "row_message",
+        "attributes": {
+          "label": "Detailed Message",
+          "placeholder": "Write your detailed query here...",
+          "required": true,
+          "rows": 6,
+          "error_message": "Message body cannot be empty."
+        }
+      },
+      "row_preferences": {
+        "_id": "row_preferences",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "department",
+          "contact_method"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "department": {
+        "_id": "department",
+        "type": "select",
+        "parentId": "row_preferences",
+        "attributes": {
+          "label": "Select Department",
+          "required": true,
+          "options_list": [
+            {
+              "id": "BMcJEaBLl",
+              "attributes": {
+                "option_label": "Customer Support",
+                "option_value": "support",
+              }
+            },
+            {
+              "id": "9e5k96u0p",
+              "attributes": {
+                "option_label": "Sales / Billing",
+                "option_value": "sales",
+              }
+            },
+            {
+              "id": "88a759p7n",
+              "attributes": {
+                "option_label": "Technical Department",
+                "option_value": "tech"
+              }
+            },
+            {
+              "id": "n72ns7js9",
+              "attributes": {
+                "option_label": "Partnership Inquiries",
+                "option_value": "partners"
+              }
+            }
+          ],
+          "default_value": "support",
+          "error_message": "Please choose a department."
+        }
+      },
+      "contact_method": {
+        "_id": "contact_method",
+        "type": "radio",
+        "parentId": "row_preferences",
+        "attributes": {
+          "label": "Preferred Response Method",
+          "required": true,
+          "default_value": "email",
+          "layout": "inline",
+          "error_message": "Preferred contact method is required.",
+          "options_list": [
+            {
+              "id": "xx0i5x0x0",
+              "attributes": {
+                "option_label": "Email Response",
+                "option_value": "email"
+              }
+            },
+            {
+              "id": "5j745g59s",
+              "attributes": {
+                "option_label": "Phone Callback",
+                "option_value": "phone"
+              }
+            },
+            {
+              "id": "j3nvj3nv4",
+              "attributes": {
+                "option_label": "No Preference",
+                "option_value": "none"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Detailed Customer Inquiry",
+      "form_status": "publish",
+      "form_description": "A contact form with department selection and multiple attachment fields."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Contact Submission: {field_subject}",
+          "email_message": "<h3>New Submission details:</h3><p><strong>Name:</strong> {field_first_name} {field_last_name}</p><p><strong>Email:</strong> {field_email}</p><p><strong>Message:</strong><br/>{field_message}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      },
+      {
+        "type": "redirect",
+        "active": false,
+        "settings": {
+          "redirect_url": "/thank-you"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_header",
+      "row_personal_info",
+      "row_contact_details",
+      "row_subject",
+      "row_message",
+      "row_preferences",
+      "row_inquiry_meta",
+      "row_security_submit"
+    ],
+    "fields": {
+      "row_header": {
+        "_id": "row_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "header_html"
+        ]
+      },
+      "header_html": {
+        "_id": "header_html",
+        "type": "html",
+        "parentId": "row_header",
+        "attributes": {
+          "raw_html": "<div class='contact-header'><h2>Contact Our Support Team</h2><p>Please fill out this detailed form and our agents will get back to you within 24 hours.</p><hr/></div>"
+        }
+      },
+      "row_personal_info": {
+        "_id": "row_personal_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "first_name",
+          "last_name"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "first_name": {
+        "_id": "first_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "First Name",
+          "placeholder": "e.g., John",
+          "required": true,
+          "default_value": "",
+          "css_classes": "first-name-field",
+          "error_message": "First name is required."
+        }
+      },
+      "last_name": {
+        "_id": "last_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "Last Name",
+          "placeholder": "e.g., Doe",
+          "required": true,
+          "default_value": "",
+          "css_classes": "last-name-field",
+          "error_message": "Last name is required."
+        }
+      },
+      "row_contact_details": {
+        "_id": "row_contact_details",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "email",
+          "phone"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "email": {
+        "_id": "email",
+        "type": "email",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Email Address",
+          "placeholder": "example@domain.com",
+          "required": true,
+          "error_message": "Please enter a valid email address."
+        }
+      },
+      "phone": {
+        "_id": "phone",
+        "type": "phone",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Phone Number",
+          "placeholder": "(555) 000-0000",
+          "required": false,
+          "error_message": "Please enter a valid phone number."
+        }
+      },
+      "row_subject": {
+        "_id": "row_subject",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "subject"
+        ]
+      },
+      "subject": {
+        "_id": "subject",
+        "type": "text",
+        "parentId": "row_subject",
+        "attributes": {
+          "label": "Inquiry Subject",
+          "placeholder": "How can we help you today?",
+          "required": true,
+          "error_message": "Subject is required."
+        }
+      },
+      "row_message": {
+        "_id": "row_message",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "message"
+        ]
+      },
+      "message": {
+        "_id": "message",
+        "type": "textarea",
+        "parentId": "row_message",
+        "attributes": {
+          "label": "Detailed Message",
+          "placeholder": "Write your detailed query here...",
+          "required": true,
+          "rows": 6,
+          "error_message": "Message body cannot be empty."
+        }
+      },
+      "row_preferences": {
+        "_id": "row_preferences",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "department",
+          "contact_method"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "department": {
+        "_id": "department",
+        "type": "select",
+        "parentId": "row_preferences",
+        "attributes": {
+          "label": "Select Department",
+          "required": true,
+          "default_value": "support",
+          "error_message": "Please choose a department.",
+          "options_list": [
+            {
+              "id": "5sxt6ik",
+              "attributes": {
+                "option_label": "Customer Support",
+                "option_value": "support"
+              }
+            },
+            {
+              "id": "dzr02wm",
+              "attributes": {
+                "option_label": "Sales / Billing",
+                "option_value": "sales"
+              }
+            },
+            {
+              "id": "3j2lr25",
+              "attributes": {
+                "option_label": "Technical Department",
+                "option_value": "tech"
+              }
+            },
+            {
+              "id": "qyjegqv",
+              "attributes": {
+                "option_label": "Partnership Inquiries",
+                "option_value": "partners"
+              }
+            }
+          ]
+        }
+      },
+      "contact_method": {
+        "_id": "contact_method",
+        "type": "radio",
+        "parentId": "row_preferences",
+        "attributes": {
+          "label": "Preferred Response Method",
+          "required": true,
+          "default_value": "email",
+          "layout": "inline",
+          "error_message": "Preferred contact method is required.",
+          "options_list": [
+            {
+              "id": "fp9mj9n",
+              "attributes": {
+                "option_label": "Email Response",
+                "option_value": "email"
+              }
+            },
+            {
+              "id": "pdvm4xz",
+              "attributes": {
+                "option_label": "Phone Callback",
+                "option_value": "phone"
+              }
+            },
+            {
+              "id": "80126id",
+              "attributes": {
+                "option_label": "No Preference",
+                "option_value": "none"
+              }
+            }
+          ]
+        }
+      },
+      "row_inquiry_meta": {
+        "_id": "row_inquiry_meta",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "attachment",
+          "best_date",
+          "agree_terms"
+        ],
+        "attributes": {
+          "columns": 3,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "attachment": {
+        "_id": "attachment",
+        "type": "file",
+        "parentId": "row_inquiry_meta",
+        "attributes": {
+          "label": "Attach Screenshots (Optional)",
+          "required": false,
+          "max_file_size": 5,
+          "allowed_extensions": [
+            "png",
+            "jpg",
+            "jpeg",
+            "pdf"
+          ],
+          "error_message": "File upload error."
+        }
+      },
+      "best_date": {
+        "_id": "best_date",
+        "type": "date",
+        "parentId": "row_inquiry_meta",
+        "attributes": {
+          "label": "Preferred Appointment Date",
+          "required": false
+        }
+      },
+      "agree_terms": {
+        "_id": "agree_terms",
+        "type": "checkbox",
+        "parentId": "row_inquiry_meta",
+        "attributes": {
+          "label": "Compliance Options",
+          "required": true,
+          "error_message": "You must agree to the Privacy Policy.",
+          "options_list": [
+            {
+              "id": "zftyn4m",
+              "attributes": {
+                "option_label": "I agree to the Privacy Policy",
+                "option_value": "privacy"
+              }
+            },
+            {
+              "id": "q6boza3",
+              "attributes": {
+                "option_label": "Keep me updated on product announcements",
+                "option_value": "newsletter"
+              }
+            }
+          ]
+        }
+      },
+      "row_security_submit": {
+        "_id": "row_security_submit",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "captcha",
+          "submit_button"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "captcha": {
+        "_id": "captcha",
+        "type": "captcha",
+        "parentId": "row_security_submit",
+        "attributes": {
+          "label": "Spam Protection",
+          "theme": "light",
+          "size": "normal"
+        }
+      },
+      "submit_button": {
+        "_id": "submit_button",
+        "type": "button",
+        "parentId": "row_security_submit",
+        "attributes": {
+          "label": "Send Message",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "submit-button"
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Job Application Intake",
+      "form_status": "publish",
+      "form_description": "Contact form optimized for gathering applicant credentials and resumes."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Contact Submission: {field_subject}",
+          "email_message": "<h3>New Submission details:</h3><p><strong>Name:</strong> {field_first_name} {field_last_name}</p><p><strong>Email:</strong> {field_email}</p><p><strong>Message:</strong><br/>{field_message}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      },
+      {
+        "type": "redirect",
+        "active": false,
+        "settings": {
+          "redirect_url": "/thank-you"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_header",
+      "row_personal_info",
+      "row_contact_details",
+      "row_subject"
+    ],
+    "fields": {
+      "row_header": {
+        "_id": "row_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "header_html"
+        ]
+      },
+      "header_html": {
+        "_id": "header_html",
+        "type": "html",
+        "parentId": "row_header",
+        "attributes": {
+          "raw_html": "<div class='contact-header'><h2>Contact Our Support Team</h2><p>Please fill out this detailed form and our agents will get back to you within 24 hours.</p><hr/></div>"
+        }
+      },
+      "row_personal_info": {
+        "_id": "row_personal_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "first_name",
+          "last_name"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "first_name": {
+        "_id": "first_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "First Name",
+          "placeholder": "e.g., John",
+          "required": true,
+          "default_value": "",
+          "css_classes": "first-name-field",
+          "error_message": "First name is required."
+        }
+      },
+      "last_name": {
+        "_id": "last_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "Last Name",
+          "placeholder": "e.g., Doe",
+          "required": true,
+          "default_value": "",
+          "css_classes": "last-name-field",
+          "error_message": "Last name is required."
+        }
+      },
+      "row_contact_details": {
+        "_id": "row_contact_details",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "email",
+          "phone"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "email": {
+        "_id": "email",
+        "type": "email",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Email Address",
+          "placeholder": "example@domain.com",
+          "required": true,
+          "error_message": "Please enter a valid email address."
+        }
+      },
+      "phone": {
+        "_id": "phone",
+        "type": "phone",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Phone Number",
+          "placeholder": "(555) 000-0000",
+          "required": false,
+          "error_message": "Please enter a valid phone number."
+        }
+      },
+      "row_subject": {
+        "_id": "row_subject",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "subject"
+        ]
+      },
+      "subject": {
+        "_id": "subject",
+        "type": "text",
+        "parentId": "row_subject",
+        "attributes": {
+          "label": "Inquiry Subject",
+          "placeholder": "How can we help you today?",
+          "required": true,
+          "error_message": "Subject is required."
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Event Space Booking Inquiry",
+      "form_status": "publish",
+      "form_description": "Enquire about booking an event space with date and capacity fields."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Contact Submission: {field_subject}",
+          "email_message": "<h3>New Submission details:</h3><p><strong>Name:</strong> {field_first_name} {field_last_name}</p><p><strong>Email:</strong> {field_email}</p><p><strong>Message:</strong><br/>{field_message}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      },
+      {
+        "type": "redirect",
+        "active": false,
+        "settings": {
+          "redirect_url": "/thank-you"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_header",
+      "row_personal_info",
+      "row_contact_details",
+      "row_subject",
+      "row_message",
+      "row_preferences"
+    ],
+    "fields": {
+      "row_header": {
+        "_id": "row_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "header_html"
+        ]
+      },
+      "header_html": {
+        "_id": "header_html",
+        "type": "html",
+        "parentId": "row_header",
+        "attributes": {
+          "raw_html": "<div class='contact-header'><h2>Contact Our Support Team</h2><p>Please fill out this detailed form and our agents will get back to you within 24 hours.</p><hr/></div>"
+        }
+      },
+      "row_personal_info": {
+        "_id": "row_personal_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "first_name",
+          "last_name"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "first_name": {
+        "_id": "first_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "First Name",
+          "placeholder": "e.g., John",
+          "required": true,
+          "default_value": "",
+          "css_classes": "first-name-field",
+          "error_message": "First name is required."
+        }
+      },
+      "last_name": {
+        "_id": "last_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "Last Name",
+          "placeholder": "e.g., Doe",
+          "required": true,
+          "default_value": "",
+          "css_classes": "last-name-field",
+          "error_message": "Last name is required."
+        }
+      },
+      "row_contact_details": {
+        "_id": "row_contact_details",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "email",
+          "phone"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "email": {
+        "_id": "email",
+        "type": "email",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Email Address",
+          "placeholder": "example@domain.com",
+          "required": true,
+          "error_message": "Please enter a valid email address."
+        }
+      },
+      "phone": {
+        "_id": "phone",
+        "type": "phone",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Phone Number",
+          "placeholder": "(555) 000-0000",
+          "required": false,
+          "error_message": "Please enter a valid phone number."
+        }
+      },
+      "row_subject": {
+        "_id": "row_subject",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "subject"
+        ]
+      },
+      "subject": {
+        "_id": "subject",
+        "type": "text",
+        "parentId": "row_subject",
+        "attributes": {
+          "label": "Inquiry Subject",
+          "placeholder": "How can we help you today?",
+          "required": true,
+          "error_message": "Subject is required."
+        }
+      },
+      "row_message": {
+        "_id": "row_message",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "message"
+        ]
+      },
+      "message": {
+        "_id": "message",
+        "type": "textarea",
+        "parentId": "row_message",
+        "attributes": {
+          "label": "Detailed Message",
+          "placeholder": "Write your detailed query here...",
+          "required": true,
+          "rows": 6,
+          "error_message": "Message body cannot be empty."
+        }
+      },
+      "row_preferences": {
+        "_id": "row_preferences",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "department",
+          "contact_method"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "department": {
+        "_id": "department",
+        "type": "select",
+        "parentId": "row_preferences",
+        "attributes": {
+          "label": "Select Department",
+          "required": true,
+          "default_value": "support",
+          "error_message": "Please choose a department.",
+          "options_list": [
+            {
+              "id": "koqzqxr",
+              "attributes": {
+                "option_label": "Customer Support",
+                "option_value": "support"
+              }
+            },
+            {
+              "id": "71pdhhk",
+              "attributes": {
+                "option_label": "Sales / Billing",
+                "option_value": "sales"
+              }
+            },
+            {
+              "id": "ng6lmq6",
+              "attributes": {
+                "option_label": "Technical Department",
+                "option_value": "tech"
+              }
+            },
+            {
+              "id": "jmwu9mu",
+              "attributes": {
+                "option_label": "Partnership Inquiries",
+                "option_value": "partners"
+              }
+            }
+          ]
+        }
+      },
+      "contact_method": {
+        "_id": "contact_method",
+        "type": "radio",
+        "parentId": "row_preferences",
+        "attributes": {
+          "label": "Preferred Response Method",
+          "required": true,
+          "default_value": "email",
+          "layout": "inline",
+          "error_message": "Preferred contact method is required.",
+          "options_list": [
+            {
+              "id": "manzm58",
+              "attributes": {
+                "option_label": "Email Response",
+                "option_value": "email"
+              }
+            },
+            {
+              "id": "sabp0id",
+              "attributes": {
+                "option_label": "Phone Callback",
+                "option_value": "phone"
+              }
+            },
+            {
+              "id": "0sqr7j3",
+              "attributes": {
+                "option_label": "No Preference",
+                "option_value": "none"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Technical Support Ticket",
+      "form_status": "publish",
+      "form_description": "Submit a tech support ticket with system info and issue descriptions."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Contact Submission: {field_subject}",
+          "email_message": "<h3>New Submission details:</h3><p><strong>Name:</strong> {field_first_name} {field_last_name}</p><p><strong>Email:</strong> {field_email}</p><p><strong>Message:</strong><br/>{field_message}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      },
+      {
+        "type": "redirect",
+        "active": false,
+        "settings": {
+          "redirect_url": "/thank-you"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_header",
+      "row_personal_info",
+      "row_contact_details",
+      "row_subject",
+      "row_message",
+      "row_preferences",
+      "row_inquiry_meta",
+      "row_security_submit"
+    ],
+    "fields": {
+      "row_header": {
+        "_id": "row_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "header_html"
+        ]
+      },
+      "header_html": {
+        "_id": "header_html",
+        "type": "html",
+        "parentId": "row_header",
+        "attributes": {
+          "raw_html": "<div class='contact-header'><h2>Contact Our Support Team</h2><p>Please fill out this detailed form and our agents will get back to you within 24 hours.</p><hr/></div>"
+        }
+      },
+      "row_personal_info": {
+        "_id": "row_personal_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "first_name",
+          "last_name"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "first_name": {
+        "_id": "first_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "First Name",
+          "placeholder": "e.g., John",
+          "required": true,
+          "default_value": "",
+          "css_classes": "first-name-field",
+          "error_message": "First name is required."
+        }
+      },
+      "last_name": {
+        "_id": "last_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "Last Name",
+          "placeholder": "e.g., Doe",
+          "required": true,
+          "default_value": "",
+          "css_classes": "last-name-field",
+          "error_message": "Last name is required."
+        }
+      },
+      "row_contact_details": {
+        "_id": "row_contact_details",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "email",
+          "phone"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "email": {
+        "_id": "email",
+        "type": "email",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Email Address",
+          "placeholder": "example@domain.com",
+          "required": true,
+          "error_message": "Please enter a valid email address."
+        }
+      },
+      "phone": {
+        "_id": "phone",
+        "type": "phone",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Phone Number",
+          "placeholder": "(555) 000-0000",
+          "required": false,
+          "error_message": "Please enter a valid phone number."
+        }
+      },
+      "row_subject": {
+        "_id": "row_subject",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "subject"
+        ]
+      },
+      "subject": {
+        "_id": "subject",
+        "type": "text",
+        "parentId": "row_subject",
+        "attributes": {
+          "label": "Inquiry Subject",
+          "placeholder": "How can we help you today?",
+          "required": true,
+          "error_message": "Subject is required."
+        }
+      },
+      "row_message": {
+        "_id": "row_message",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "message"
+        ]
+      },
+      "message": {
+        "_id": "message",
+        "type": "textarea",
+        "parentId": "row_message",
+        "attributes": {
+          "label": "Detailed Message",
+          "placeholder": "Write your detailed query here...",
+          "required": true,
+          "rows": 6,
+          "error_message": "Message body cannot be empty."
+        }
+      },
+      "row_preferences": {
+        "_id": "row_preferences",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "department",
+          "contact_method"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "department": {
+        "_id": "department",
+        "type": "select",
+        "parentId": "row_preferences",
+        "attributes": {
+          "label": "Select Department",
+          "required": true,
+          "default_value": "support",
+          "error_message": "Please choose a department.",
+          "options_list": [
+            {
+              "id": "c8lq9gi",
+              "attributes": {
+                "option_label": "Customer Support",
+                "option_value": "support"
+              }
+            },
+            {
+              "id": "whalz5e",
+              "attributes": {
+                "option_label": "Sales / Billing",
+                "option_value": "sales"
+              }
+            },
+            {
+              "id": "x2gbvrf",
+              "attributes": {
+                "option_label": "Technical Department",
+                "option_value": "tech"
+              }
+            },
+            {
+              "id": "newuizr",
+              "attributes": {
+                "option_label": "Partnership Inquiries",
+                "option_value": "partners"
+              }
+            }
+          ]
+        }
+      },
+      "contact_method": {
+        "_id": "contact_method",
+        "type": "radio",
+        "parentId": "row_preferences",
+        "attributes": {
+          "label": "Preferred Response Method",
+          "required": true,
+          "default_value": "email",
+          "layout": "inline",
+          "error_message": "Preferred contact method is required.",
+          "options_list": [
+            {
+              "id": "2boi0ih",
+              "attributes": {
+                "option_label": "Email Response",
+                "option_value": "email"
+              }
+            },
+            {
+              "id": "yo9xuml",
+              "attributes": {
+                "option_label": "Phone Callback",
+                "option_value": "phone"
+              }
+            },
+            {
+              "id": "m33t2bj",
+              "attributes": {
+                "option_label": "No Preference",
+                "option_value": "none"
+              }
+            }
+          ]
+        }
+      },
+      "row_inquiry_meta": {
+        "_id": "row_inquiry_meta",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "attachment",
+          "best_date",
+          "agree_terms"
+        ],
+        "attributes": {
+          "columns": 3,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "attachment": {
+        "_id": "attachment",
+        "type": "file",
+        "parentId": "row_inquiry_meta",
+        "attributes": {
+          "label": "Attach Screenshots (Optional)",
+          "required": false,
+          "max_file_size": 5,
+          "allowed_extensions": [
+            "png",
+            "jpg",
+            "jpeg",
+            "pdf"
+          ],
+          "error_message": "File upload error."
+        }
+      },
+      "best_date": {
+        "_id": "best_date",
+        "type": "date",
+        "parentId": "row_inquiry_meta",
+        "attributes": {
+          "label": "Preferred Appointment Date",
+          "required": false
+        }
+      },
+      "agree_terms": {
+        "_id": "agree_terms",
+        "type": "checkbox",
+        "parentId": "row_inquiry_meta",
+        "attributes": {
+          "label": "Compliance Options",
+          "required": true,
+          "error_message": "You must agree to the Privacy Policy.",
+          "options_list": [
+            {
+              "id": "7dn0evi",
+              "attributes": {
+                "option_label": "I agree to the Privacy Policy",
+                "option_value": "privacy"
+              }
+            },
+            {
+              "id": "ipipaq3",
+              "attributes": {
+                "option_label": "Keep me updated on product announcements",
+                "option_value": "newsletter"
+              }
+            }
+          ]
+        }
+      },
+      "row_security_submit": {
+        "_id": "row_security_submit",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "captcha",
+          "submit_button"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "captcha": {
+        "_id": "captcha",
+        "type": "captcha",
+        "parentId": "row_security_submit",
+        "attributes": {
+          "label": "Spam Protection",
+          "theme": "light",
+          "size": "normal"
+        }
+      },
+      "submit_button": {
+        "_id": "submit_button",
+        "type": "button",
+        "parentId": "row_security_submit",
+        "attributes": {
+          "label": "Send Message",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "submit-button"
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Business Partnership Proposal",
+      "form_status": "publish",
+      "form_description": "Reach out for strategic business collaborations and joint ventures."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Contact Submission: {field_subject}",
+          "email_message": "<h3>New Submission details:</h3><p><strong>Name:</strong> {field_first_name} {field_last_name}</p><p><strong>Email:</strong> {field_email}</p><p><strong>Message:</strong><br/>{field_message}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      },
+      {
+        "type": "redirect",
+        "active": false,
+        "settings": {
+          "redirect_url": "/thank-you"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_header",
+      "row_personal_info",
+      "row_contact_details",
+      "row_subject"
+    ],
+    "fields": {
+      "row_header": {
+        "_id": "row_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "header_html"
+        ]
+      },
+      "header_html": {
+        "_id": "header_html",
+        "type": "html",
+        "parentId": "row_header",
+        "attributes": {
+          "raw_html": "<div class='contact-header'><h2>Contact Our Support Team</h2><p>Please fill out this detailed form and our agents will get back to you within 24 hours.</p><hr/></div>"
+        }
+      },
+      "row_personal_info": {
+        "_id": "row_personal_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "first_name",
+          "last_name"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "first_name": {
+        "_id": "first_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "First Name",
+          "placeholder": "e.g., John",
+          "required": true,
+          "default_value": "",
+          "css_classes": "first-name-field",
+          "error_message": "First name is required."
+        }
+      },
+      "last_name": {
+        "_id": "last_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "Last Name",
+          "placeholder": "e.g., Doe",
+          "required": true,
+          "default_value": "",
+          "css_classes": "last-name-field",
+          "error_message": "Last name is required."
+        }
+      },
+      "row_contact_details": {
+        "_id": "row_contact_details",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "email",
+          "phone"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "email": {
+        "_id": "email",
+        "type": "email",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Email Address",
+          "placeholder": "example@domain.com",
+          "required": true,
+          "error_message": "Please enter a valid email address."
+        }
+      },
+      "phone": {
+        "_id": "phone",
+        "type": "phone",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Phone Number",
+          "placeholder": "(555) 000-0000",
+          "required": false,
+          "error_message": "Please enter a valid phone number."
+        }
+      },
+      "row_subject": {
+        "_id": "row_subject",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "subject"
+        ]
+      },
+      "subject": {
+        "_id": "subject",
+        "type": "text",
+        "parentId": "row_subject",
+        "attributes": {
+          "label": "Inquiry Subject",
+          "placeholder": "How can we help you today?",
+          "required": true,
+          "error_message": "Subject is required."
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Press & Media Inquiries",
+      "form_status": "publish",
+      "form_description": "Contact form for journalists, editors, and media representatives."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Contact Submission: {field_subject}",
+          "email_message": "<h3>New Submission details:</h3><p><strong>Name:</strong> {field_first_name} {field_last_name}</p><p><strong>Email:</strong> {field_email}</p><p><strong>Message:</strong><br/>{field_message}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      },
+      {
+        "type": "redirect",
+        "active": false,
+        "settings": {
+          "redirect_url": "/thank-you"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_header",
+      "row_personal_info",
+      "row_contact_details",
+      "row_subject",
+      "row_message",
+      "row_preferences"
+    ],
+    "fields": {
+      "row_header": {
+        "_id": "row_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "header_html"
+        ]
+      },
+      "header_html": {
+        "_id": "header_html",
+        "type": "html",
+        "parentId": "row_header",
+        "attributes": {
+          "raw_html": "<div class='contact-header'><h2>Contact Our Support Team</h2><p>Please fill out this detailed form and our agents will get back to you within 24 hours.</p><hr/></div>"
+        }
+      },
+      "row_personal_info": {
+        "_id": "row_personal_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "first_name",
+          "last_name"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "first_name": {
+        "_id": "first_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "First Name",
+          "placeholder": "e.g., John",
+          "required": true,
+          "default_value": "",
+          "css_classes": "first-name-field",
+          "error_message": "First name is required."
+        }
+      },
+      "last_name": {
+        "_id": "last_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "Last Name",
+          "placeholder": "e.g., Doe",
+          "required": true,
+          "default_value": "",
+          "css_classes": "last-name-field",
+          "error_message": "Last name is required."
+        }
+      },
+      "row_contact_details": {
+        "_id": "row_contact_details",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "email",
+          "phone"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "email": {
+        "_id": "email",
+        "type": "email",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Email Address",
+          "placeholder": "example@domain.com",
+          "required": true,
+          "error_message": "Please enter a valid email address."
+        }
+      },
+      "phone": {
+        "_id": "phone",
+        "type": "phone",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Phone Number",
+          "placeholder": "(555) 000-0000",
+          "required": false,
+          "error_message": "Please enter a valid phone number."
+        }
+      },
+      "row_subject": {
+        "_id": "row_subject",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "subject"
+        ]
+      },
+      "subject": {
+        "_id": "subject",
+        "type": "text",
+        "parentId": "row_subject",
+        "attributes": {
+          "label": "Inquiry Subject",
+          "placeholder": "How can we help you today?",
+          "required": true,
+          "error_message": "Subject is required."
+        }
+      },
+      "row_message": {
+        "_id": "row_message",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "message"
+        ]
+      },
+      "message": {
+        "_id": "message",
+        "type": "textarea",
+        "parentId": "row_message",
+        "attributes": {
+          "label": "Detailed Message",
+          "placeholder": "Write your detailed query here...",
+          "required": true,
+          "rows": 6,
+          "error_message": "Message body cannot be empty."
+        }
+      },
+      "row_preferences": {
+        "_id": "row_preferences",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "department",
+          "contact_method"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "department": {
+        "_id": "department",
+        "type": "select",
+        "parentId": "row_preferences",
+        "attributes": {
+          "label": "Select Department",
+          "required": true,
+          "default_value": "support",
+          "error_message": "Please choose a department.",
+          "options_list": [
+            {
+              "id": "9avamba",
+              "attributes": {
+                "option_label": "Customer Support",
+                "option_value": "support"
+              }
+            },
+            {
+              "id": "z1c511m",
+              "attributes": {
+                "option_label": "Sales / Billing",
+                "option_value": "sales"
+              }
+            },
+            {
+              "id": "prmpief",
+              "attributes": {
+                "option_label": "Technical Department",
+                "option_value": "tech"
+              }
+            },
+            {
+              "id": "yb5li80",
+              "attributes": {
+                "option_label": "Partnership Inquiries",
+                "option_value": "partners"
+              }
+            }
+          ]
+        }
+      },
+      "contact_method": {
+        "_id": "contact_method",
+        "type": "radio",
+        "parentId": "row_preferences",
+        "attributes": {
+          "label": "Preferred Response Method",
+          "required": true,
+          "default_value": "email",
+          "layout": "inline",
+          "error_message": "Preferred contact method is required.",
+          "options_list": [
+            {
+              "id": "wtidmx2",
+              "attributes": {
+                "option_label": "Email Response",
+                "option_value": "email"
+              }
+            },
+            {
+              "id": "u6ibyve",
+              "attributes": {
+                "option_label": "Phone Callback",
+                "option_value": "phone"
+              }
+            },
+            {
+              "id": "c4xehsy",
+              "attributes": {
+                "option_label": "No Preference",
+                "option_value": "none"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Sales Department Contact",
+      "form_status": "publish",
+      "form_description": "Connect with our sales team to discuss product pricing and plans."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Contact Submission: {field_subject}",
+          "email_message": "<h3>New Submission details:</h3><p><strong>Name:</strong> {field_first_name} {field_last_name}</p><p><strong>Email:</strong> {field_email}</p><p><strong>Message:</strong><br/>{field_message}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      },
+      {
+        "type": "redirect",
+        "active": false,
+        "settings": {
+          "redirect_url": "/thank-you"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_header",
+      "row_personal_info",
+      "row_contact_details",
+      "row_subject",
+      "row_message",
+      "row_preferences",
+      "row_inquiry_meta",
+      "row_security_submit"
+    ],
+    "fields": {
+      "row_header": {
+        "_id": "row_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "header_html"
+        ]
+      },
+      "header_html": {
+        "_id": "header_html",
+        "type": "html",
+        "parentId": "row_header",
+        "attributes": {
+          "raw_html": "<div class='contact-header'><h2>Contact Our Support Team</h2><p>Please fill out this detailed form and our agents will get back to you within 24 hours.</p><hr/></div>"
+        }
+      },
+      "row_personal_info": {
+        "_id": "row_personal_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "first_name",
+          "last_name"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "first_name": {
+        "_id": "first_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "First Name",
+          "placeholder": "e.g., John",
+          "required": true,
+          "default_value": "",
+          "css_classes": "first-name-field",
+          "error_message": "First name is required."
+        }
+      },
+      "last_name": {
+        "_id": "last_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "Last Name",
+          "placeholder": "e.g., Doe",
+          "required": true,
+          "default_value": "",
+          "css_classes": "last-name-field",
+          "error_message": "Last name is required."
+        }
+      },
+      "row_contact_details": {
+        "_id": "row_contact_details",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "email",
+          "phone"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "email": {
+        "_id": "email",
+        "type": "email",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Email Address",
+          "placeholder": "example@domain.com",
+          "required": true,
+          "error_message": "Please enter a valid email address."
+        }
+      },
+      "phone": {
+        "_id": "phone",
+        "type": "phone",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Phone Number",
+          "placeholder": "(555) 000-0000",
+          "required": false,
+          "error_message": "Please enter a valid phone number."
+        }
+      },
+      "row_subject": {
+        "_id": "row_subject",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "subject"
+        ]
+      },
+      "subject": {
+        "_id": "subject",
+        "type": "text",
+        "parentId": "row_subject",
+        "attributes": {
+          "label": "Inquiry Subject",
+          "placeholder": "How can we help you today?",
+          "required": true,
+          "error_message": "Subject is required."
+        }
+      },
+      "row_message": {
+        "_id": "row_message",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "message"
+        ]
+      },
+      "message": {
+        "_id": "message",
+        "type": "textarea",
+        "parentId": "row_message",
+        "attributes": {
+          "label": "Detailed Message",
+          "placeholder": "Write your detailed query here...",
+          "required": true,
+          "rows": 6,
+          "error_message": "Message body cannot be empty."
+        }
+      },
+      "row_preferences": {
+        "_id": "row_preferences",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "department",
+          "contact_method"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "department": {
+        "_id": "department",
+        "type": "select",
+        "parentId": "row_preferences",
+        "attributes": {
+          "label": "Select Department",
+          "required": true,
+          "default_value": "support",
+          "error_message": "Please choose a department.",
+          "options_list": [
+            {
+              "id": "vovowy7",
+              "attributes": {
+                "option_label": "Customer Support",
+                "option_value": "support"
+              }
+            },
+            {
+              "id": "1ssb2o0",
+              "attributes": {
+                "option_label": "Sales / Billing",
+                "option_value": "sales"
+              }
+            },
+            {
+              "id": "6spmn6s",
+              "attributes": {
+                "option_label": "Technical Department",
+                "option_value": "tech"
+              }
+            },
+            {
+              "id": "sdb2utl",
+              "attributes": {
+                "option_label": "Partnership Inquiries",
+                "option_value": "partners"
+              }
+            }
+          ]
+        }
+      },
+      "contact_method": {
+        "_id": "contact_method",
+        "type": "radio",
+        "parentId": "row_preferences",
+        "attributes": {
+          "label": "Preferred Response Method",
+          "required": true,
+          "default_value": "email",
+          "layout": "inline",
+          "error_message": "Preferred contact method is required.",
+          "options_list": [
+            {
+              "id": "mxtvq4f",
+              "attributes": {
+                "option_label": "Email Response",
+                "option_value": "email"
+              }
+            },
+            {
+              "id": "n012goy",
+              "attributes": {
+                "option_label": "Phone Callback",
+                "option_value": "phone"
+              }
+            },
+            {
+              "id": "qqd1jxh",
+              "attributes": {
+                "option_label": "No Preference",
+                "option_value": "none"
+              }
+            }
+          ]
+        }
+      },
+      "row_inquiry_meta": {
+        "_id": "row_inquiry_meta",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "attachment",
+          "best_date",
+          "agree_terms"
+        ],
+        "attributes": {
+          "columns": 3,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "attachment": {
+        "_id": "attachment",
+        "type": "file",
+        "parentId": "row_inquiry_meta",
+        "attributes": {
+          "label": "Attach Screenshots (Optional)",
+          "required": false,
+          "max_file_size": 5,
+          "allowed_extensions": [
+            "png",
+            "jpg",
+            "jpeg",
+            "pdf"
+          ],
+          "error_message": "File upload error."
+        }
+      },
+      "best_date": {
+        "_id": "best_date",
+        "type": "date",
+        "parentId": "row_inquiry_meta",
+        "attributes": {
+          "label": "Preferred Appointment Date",
+          "required": false
+        }
+      },
+      "agree_terms": {
+        "_id": "agree_terms",
+        "type": "checkbox",
+        "parentId": "row_inquiry_meta",
+        "attributes": {
+          "label": "Compliance Options",
+          "required": true,
+          "error_message": "You must agree to the Privacy Policy.",
+          "options_list": [
+            {
+              "id": "5ve85z9",
+              "attributes": {
+                "option_label": "I agree to the Privacy Policy",
+                "option_value": "privacy"
+              }
+            },
+            {
+              "id": "nf4ga63",
+              "attributes": {
+                "option_label": "Keep me updated on product announcements",
+                "option_value": "newsletter"
+              }
+            }
+          ]
+        }
+      },
+      "row_security_submit": {
+        "_id": "row_security_submit",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "captcha",
+          "submit_button"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "captcha": {
+        "_id": "captcha",
+        "type": "captcha",
+        "parentId": "row_security_submit",
+        "attributes": {
+          "label": "Spam Protection",
+          "theme": "light",
+          "size": "normal"
+        }
+      },
+      "submit_button": {
+        "_id": "submit_button",
+        "type": "button",
+        "parentId": "row_security_submit",
+        "attributes": {
+          "label": "Send Message",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "submit-button"
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Billing & Invoicing Query",
+      "form_status": "publish",
+      "form_description": "Get in touch with our finance team regarding invoice questions."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Contact Submission: {field_subject}",
+          "email_message": "<h3>New Submission details:</h3><p><strong>Name:</strong> {field_first_name} {field_last_name}</p><p><strong>Email:</strong> {field_email}</p><p><strong>Message:</strong><br/>{field_message}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      },
+      {
+        "type": "redirect",
+        "active": false,
+        "settings": {
+          "redirect_url": "/thank-you"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_header",
+      "row_personal_info",
+      "row_contact_details",
+      "row_subject"
+    ],
+    "fields": {
+      "row_header": {
+        "_id": "row_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "header_html"
+        ]
+      },
+      "header_html": {
+        "_id": "header_html",
+        "type": "html",
+        "parentId": "row_header",
+        "attributes": {
+          "raw_html": "<div class='contact-header'><h2>Contact Our Support Team</h2><p>Please fill out this detailed form and our agents will get back to you within 24 hours.</p><hr/></div>"
+        }
+      },
+      "row_personal_info": {
+        "_id": "row_personal_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "first_name",
+          "last_name"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "first_name": {
+        "_id": "first_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "First Name",
+          "placeholder": "e.g., John",
+          "required": true,
+          "default_value": "",
+          "css_classes": "first-name-field",
+          "error_message": "First name is required."
+        }
+      },
+      "last_name": {
+        "_id": "last_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "Last Name",
+          "placeholder": "e.g., Doe",
+          "required": true,
+          "default_value": "",
+          "css_classes": "last-name-field",
+          "error_message": "Last name is required."
+        }
+      },
+      "row_contact_details": {
+        "_id": "row_contact_details",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "email",
+          "phone"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "email": {
+        "_id": "email",
+        "type": "email",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Email Address",
+          "placeholder": "example@domain.com",
+          "required": true,
+          "error_message": "Please enter a valid email address."
+        }
+      },
+      "phone": {
+        "_id": "phone",
+        "type": "phone",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Phone Number",
+          "placeholder": "(555) 000-0000",
+          "required": false,
+          "error_message": "Please enter a valid phone number."
+        }
+      },
+      "row_subject": {
+        "_id": "row_subject",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "subject"
+        ]
+      },
+      "subject": {
+        "_id": "subject",
+        "type": "text",
+        "parentId": "row_subject",
+        "attributes": {
+          "label": "Inquiry Subject",
+          "placeholder": "How can we help you today?",
+          "required": true,
+          "error_message": "Subject is required."
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Website Usability Feedback",
+      "form_status": "publish",
+      "form_description": "Report website bugs or share visual feedback about the site layout."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Contact Submission: {field_subject}",
+          "email_message": "<h3>New Submission details:</h3><p><strong>Name:</strong> {field_first_name} {field_last_name}</p><p><strong>Email:</strong> {field_email}</p><p><strong>Message:</strong><br/>{field_message}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      },
+      {
+        "type": "redirect",
+        "active": false,
+        "settings": {
+          "redirect_url": "/thank-you"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_header",
+      "row_personal_info",
+      "row_contact_details",
+      "row_subject",
+      "row_message",
+      "row_preferences"
+    ],
+    "fields": {
+      "row_header": {
+        "_id": "row_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "header_html"
+        ]
+      },
+      "header_html": {
+        "_id": "header_html",
+        "type": "html",
+        "parentId": "row_header",
+        "attributes": {
+          "raw_html": "<div class='contact-header'><h2>Contact Our Support Team</h2><p>Please fill out this detailed form and our agents will get back to you within 24 hours.</p><hr/></div>"
+        }
+      },
+      "row_personal_info": {
+        "_id": "row_personal_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "first_name",
+          "last_name"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "first_name": {
+        "_id": "first_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "First Name",
+          "placeholder": "e.g., John",
+          "required": true,
+          "default_value": "",
+          "css_classes": "first-name-field",
+          "error_message": "First name is required."
+        }
+      },
+      "last_name": {
+        "_id": "last_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "Last Name",
+          "placeholder": "e.g., Doe",
+          "required": true,
+          "default_value": "",
+          "css_classes": "last-name-field",
+          "error_message": "Last name is required."
+        }
+      },
+      "row_contact_details": {
+        "_id": "row_contact_details",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "email",
+          "phone"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "email": {
+        "_id": "email",
+        "type": "email",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Email Address",
+          "placeholder": "example@domain.com",
+          "required": true,
+          "error_message": "Please enter a valid email address."
+        }
+      },
+      "phone": {
+        "_id": "phone",
+        "type": "phone",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Phone Number",
+          "placeholder": "(555) 000-0000",
+          "required": false,
+          "error_message": "Please enter a valid phone number."
+        }
+      },
+      "row_subject": {
+        "_id": "row_subject",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "subject"
+        ]
+      },
+      "subject": {
+        "_id": "subject",
+        "type": "text",
+        "parentId": "row_subject",
+        "attributes": {
+          "label": "Inquiry Subject",
+          "placeholder": "How can we help you today?",
+          "required": true,
+          "error_message": "Subject is required."
+        }
+      },
+      "row_message": {
+        "_id": "row_message",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "message"
+        ]
+      },
+      "message": {
+        "_id": "message",
+        "type": "textarea",
+        "parentId": "row_message",
+        "attributes": {
+          "label": "Detailed Message",
+          "placeholder": "Write your detailed query here...",
+          "required": true,
+          "rows": 6,
+          "error_message": "Message body cannot be empty."
+        }
+      },
+      "row_preferences": {
+        "_id": "row_preferences",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "department",
+          "contact_method"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "department": {
+        "_id": "department",
+        "type": "select",
+        "parentId": "row_preferences",
+        "attributes": {
+          "label": "Select Department",
+          "required": true,
+          "default_value": "support",
+          "error_message": "Please choose a department.",
+          "options_list": [
+            {
+              "id": "5h5t3h0",
+              "attributes": {
+                "option_label": "Customer Support",
+                "option_value": "support"
+              }
+            },
+            {
+              "id": "u3zruxx",
+              "attributes": {
+                "option_label": "Sales / Billing",
+                "option_value": "sales"
+              }
+            },
+            {
+              "id": "jgzo2wo",
+              "attributes": {
+                "option_label": "Technical Department",
+                "option_value": "tech"
+              }
+            },
+            {
+              "id": "nn936f8",
+              "attributes": {
+                "option_label": "Partnership Inquiries",
+                "option_value": "partners"
+              }
+            }
+          ]
+        }
+      },
+      "contact_method": {
+        "_id": "contact_method",
+        "type": "radio",
+        "parentId": "row_preferences",
+        "attributes": {
+          "label": "Preferred Response Method",
+          "required": true,
+          "default_value": "email",
+          "layout": "inline",
+          "error_message": "Preferred contact method is required.",
+          "options_list": [
+            {
+              "id": "s9qdidx",
+              "attributes": {
+                "option_label": "Email Response",
+                "option_value": "email"
+              }
+            },
+            {
+              "id": "4rvivwp",
+              "attributes": {
+                "option_label": "Phone Callback",
+                "option_value": "phone"
+              }
+            },
+            {
+              "id": "cfkm25j",
+              "attributes": {
+                "option_label": "No Preference",
+                "option_value": "none"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "General Help Desk Intake",
+      "form_status": "publish",
+      "form_description": "For general questions about our services and operating hours."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Contact Submission: {field_subject}",
+          "email_message": "<h3>New Submission details:</h3><p><strong>Name:</strong> {field_first_name} {field_last_name}</p><p><strong>Email:</strong> {field_email}</p><p><strong>Message:</strong><br/>{field_message}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      },
+      {
+        "type": "redirect",
+        "active": false,
+        "settings": {
+          "redirect_url": "/thank-you"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_header",
+      "row_personal_info",
+      "row_contact_details",
+      "row_subject",
+      "row_message",
+      "row_preferences",
+      "row_inquiry_meta",
+      "row_security_submit"
+    ],
+    "fields": {
+      "row_header": {
+        "_id": "row_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "header_html"
+        ]
+      },
+      "header_html": {
+        "_id": "header_html",
+        "type": "html",
+        "parentId": "row_header",
+        "attributes": {
+          "raw_html": "<div class='contact-header'><h2>Contact Our Support Team</h2><p>Please fill out this detailed form and our agents will get back to you within 24 hours.</p><hr/></div>"
+        }
+      },
+      "row_personal_info": {
+        "_id": "row_personal_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "first_name",
+          "last_name"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "first_name": {
+        "_id": "first_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "First Name",
+          "placeholder": "e.g., John",
+          "required": true,
+          "default_value": "",
+          "css_classes": "first-name-field",
+          "error_message": "First name is required."
+        }
+      },
+      "last_name": {
+        "_id": "last_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "Last Name",
+          "placeholder": "e.g., Doe",
+          "required": true,
+          "default_value": "",
+          "css_classes": "last-name-field",
+          "error_message": "Last name is required."
+        }
+      },
+      "row_contact_details": {
+        "_id": "row_contact_details",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "email",
+          "phone"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "email": {
+        "_id": "email",
+        "type": "email",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Email Address",
+          "placeholder": "example@domain.com",
+          "required": true,
+          "error_message": "Please enter a valid email address."
+        }
+      },
+      "phone": {
+        "_id": "phone",
+        "type": "phone",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Phone Number",
+          "placeholder": "(555) 000-0000",
+          "required": false,
+          "error_message": "Please enter a valid phone number."
+        }
+      },
+      "row_subject": {
+        "_id": "row_subject",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "subject"
+        ]
+      },
+      "subject": {
+        "_id": "subject",
+        "type": "text",
+        "parentId": "row_subject",
+        "attributes": {
+          "label": "Inquiry Subject",
+          "placeholder": "How can we help you today?",
+          "required": true,
+          "error_message": "Subject is required."
+        }
+      },
+      "row_message": {
+        "_id": "row_message",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "message"
+        ]
+      },
+      "message": {
+        "_id": "message",
+        "type": "textarea",
+        "parentId": "row_message",
+        "attributes": {
+          "label": "Detailed Message",
+          "placeholder": "Write your detailed query here...",
+          "required": true,
+          "rows": 6,
+          "error_message": "Message body cannot be empty."
+        }
+      },
+      "row_preferences": {
+        "_id": "row_preferences",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "department",
+          "contact_method"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "department": {
+        "_id": "department",
+        "type": "select",
+        "parentId": "row_preferences",
+        "attributes": {
+          "label": "Select Department",
+          "required": true,
+          "default_value": "support",
+          "error_message": "Please choose a department.",
+          "options_list": [
+            {
+              "id": "x6cm2im",
+              "attributes": {
+                "option_label": "Customer Support",
+                "option_value": "support"
+              }
+            },
+            {
+              "id": "r0e910y",
+              "attributes": {
+                "option_label": "Sales / Billing",
+                "option_value": "sales"
+              }
+            },
+            {
+              "id": "6ww97nx",
+              "attributes": {
+                "option_label": "Technical Department",
+                "option_value": "tech"
+              }
+            },
+            {
+              "id": "wpv4w3w",
+              "attributes": {
+                "option_label": "Partnership Inquiries",
+                "option_value": "partners"
+              }
+            }
+          ]
+        }
+      },
+      "contact_method": {
+        "_id": "contact_method",
+        "type": "radio",
+        "parentId": "row_preferences",
+        "attributes": {
+          "label": "Preferred Response Method",
+          "required": true,
+          "default_value": "email",
+          "layout": "inline",
+          "error_message": "Preferred contact method is required.",
+          "options_list": [
+            {
+              "id": "vrss8ex",
+              "attributes": {
+                "option_label": "Email Response",
+                "option_value": "email"
+              }
+            },
+            {
+              "id": "eupc53y",
+              "attributes": {
+                "option_label": "Phone Callback",
+                "option_value": "phone"
+              }
+            },
+            {
+              "id": "cdtoio1",
+              "attributes": {
+                "option_label": "No Preference",
+                "option_value": "none"
+              }
+            }
+          ]
+        }
+      },
+      "row_inquiry_meta": {
+        "_id": "row_inquiry_meta",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "attachment",
+          "best_date",
+          "agree_terms"
+        ],
+        "attributes": {
+          "columns": 3,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "attachment": {
+        "_id": "attachment",
+        "type": "file",
+        "parentId": "row_inquiry_meta",
+        "attributes": {
+          "label": "Attach Screenshots (Optional)",
+          "required": false,
+          "max_file_size": 5,
+          "allowed_extensions": [
+            "png",
+            "jpg",
+            "jpeg",
+            "pdf"
+          ],
+          "error_message": "File upload error."
+        }
+      },
+      "best_date": {
+        "_id": "best_date",
+        "type": "date",
+        "parentId": "row_inquiry_meta",
+        "attributes": {
+          "label": "Preferred Appointment Date",
+          "required": false
+        }
+      },
+      "agree_terms": {
+        "_id": "agree_terms",
+        "type": "checkbox",
+        "parentId": "row_inquiry_meta",
+        "attributes": {
+          "label": "Compliance Options",
+          "required": true,
+          "error_message": "You must agree to the Privacy Policy.",
+          "options_list": [
+            {
+              "id": "5j60sj3",
+              "attributes": {
+                "option_label": "I agree to the Privacy Policy",
+                "option_value": "privacy"
+              }
+            },
+            {
+              "id": "fe41xv2",
+              "attributes": {
+                "option_label": "Keep me updated on product announcements",
+                "option_value": "newsletter"
+              }
+            }
+          ]
+        }
+      },
+      "row_security_submit": {
+        "_id": "row_security_submit",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "captcha",
+          "submit_button"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "captcha": {
+        "_id": "captcha",
+        "type": "captcha",
+        "parentId": "row_security_submit",
+        "attributes": {
+          "label": "Spam Protection",
+          "theme": "light",
+          "size": "normal"
+        }
+      },
+      "submit_button": {
+        "_id": "submit_button",
+        "type": "button",
+        "parentId": "row_security_submit",
+        "attributes": {
+          "label": "Send Message",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "submit-button"
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Urgent Callback Request",
+      "form_status": "publish",
+      "form_description": "Request an immediate call back from a customer success agent."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Contact Submission: {field_subject}",
+          "email_message": "<h3>New Submission details:</h3><p><strong>Name:</strong> {field_first_name} {field_last_name}</p><p><strong>Email:</strong> {field_email}</p><p><strong>Message:</strong><br/>{field_message}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      },
+      {
+        "type": "redirect",
+        "active": false,
+        "settings": {
+          "redirect_url": "/thank-you"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_header",
+      "row_personal_info",
+      "row_contact_details",
+      "row_subject"
+    ],
+    "fields": {
+      "row_header": {
+        "_id": "row_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "header_html"
+        ]
+      },
+      "header_html": {
+        "_id": "header_html",
+        "type": "html",
+        "parentId": "row_header",
+        "attributes": {
+          "raw_html": "<div class='contact-header'><h2>Contact Our Support Team</h2><p>Please fill out this detailed form and our agents will get back to you within 24 hours.</p><hr/></div>"
+        }
+      },
+      "row_personal_info": {
+        "_id": "row_personal_info",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "first_name",
+          "last_name"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "first_name": {
+        "_id": "first_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "First Name",
+          "placeholder": "e.g., John",
+          "required": true,
+          "default_value": "",
+          "css_classes": "first-name-field",
+          "error_message": "First name is required."
+        }
+      },
+      "last_name": {
+        "_id": "last_name",
+        "type": "text",
+        "parentId": "row_personal_info",
+        "attributes": {
+          "label": "Last Name",
+          "placeholder": "e.g., Doe",
+          "required": true,
+          "default_value": "",
+          "css_classes": "last-name-field",
+          "error_message": "Last name is required."
+        }
+      },
+      "row_contact_details": {
+        "_id": "row_contact_details",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "email",
+          "phone"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "email": {
+        "_id": "email",
+        "type": "email",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Email Address",
+          "placeholder": "example@domain.com",
+          "required": true,
+          "error_message": "Please enter a valid email address."
+        }
+      },
+      "phone": {
+        "_id": "phone",
+        "type": "phone",
+        "parentId": "row_contact_details",
+        "attributes": {
+          "label": "Phone Number",
+          "placeholder": "(555) 000-0000",
+          "required": false,
+          "error_message": "Please enter a valid phone number."
+        }
+      },
+      "row_subject": {
+        "_id": "row_subject",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "subject"
+        ]
+      },
+      "subject": {
+        "_id": "subject",
+        "type": "text",
+        "parentId": "row_subject",
+        "attributes": {
+          "label": "Inquiry Subject",
+          "placeholder": "How can we help you today?",
+          "required": true,
+          "error_message": "Subject is required."
+        }
+      }
+    }
+  }
+]

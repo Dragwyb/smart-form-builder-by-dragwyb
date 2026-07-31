@@ -1,0 +1,3962 @@
+[
+  {
+    "advance": {
+      "form_name": "Newsletter Subscription Form",
+      "form_status": "publish",
+      "form_description": "Subscribe to our newsletters and weekly product announcements."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{field_mkt_email}",
+          "email_subject": "Your Free eBook: Enterprise Scaling Guide",
+          "email_message": "<h3>Thank you for downloading our eBook!</h3><p>Hi {field_mkt_name},</p><p>Click the link below to download your copy:</p><p><a href='#'>Download Enterprise Scaling Guide (PDF)</a></p><p>We look forward to seeing you at our next webinar!</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_mkt_banner",
+      "row_mkt_basics",
+      "row_mkt_profile",
+      "row_mkt_interests",
+      "row_mkt_consent",
+      "row_mkt_source"
+    ],
+    "fields": {
+      "row_mkt_banner": {
+        "_id": "row_mkt_banner",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_banner_html"
+        ]
+      },
+      "mkt_banner_html": {
+        "_id": "mkt_banner_html",
+        "type": "html",
+        "parentId": "row_mkt_banner",
+        "attributes": {
+          "raw_html": "<div class='marketing-banner' style='text-align: center;'><h2>Download Free Scaling Guide</h2><p>Get instant access to our premium whitepaper and receive exclusive invitations to our monthly webinars.</p></div>"
+        }
+      },
+      "row_mkt_basics": {
+        "_id": "row_mkt_basics",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_name",
+          "mkt_email"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_name": {
+        "_id": "mkt_name",
+        "type": "text",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Full Name",
+          "placeholder": "Enter your full name",
+          "required": true,
+          "error_message": "Please enter your name."
+        }
+      },
+      "mkt_email": {
+        "_id": "mkt_email",
+        "type": "email",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Business Email Address",
+          "placeholder": "name@company.com",
+          "required": true,
+          "error_message": "A valid business email address is required to receive the guide."
+        }
+      },
+      "row_mkt_profile": {
+        "_id": "row_mkt_profile",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_job_title",
+          "mkt_company_size"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_job_title": {
+        "_id": "mkt_job_title",
+        "type": "text",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Job Title",
+          "placeholder": "e.g., Marketing Director",
+          "required": true,
+          "error_message": "Please enter your professional title."
+        }
+      },
+      "mkt_company_size": {
+        "_id": "mkt_company_size",
+        "type": "select",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Company Employee Count",
+          "required": true,
+          "default_value": "11-50",
+          "options_list": [
+            {
+              "id": "xdg5kj9",
+              "attributes": {
+                "option_label": "Self-Employed / 1 Employee",
+                "option_value": "1"
+              }
+            },
+            {
+              "id": "fysyegs",
+              "attributes": {
+                "option_label": "2 - 10 Employees",
+                "option_value": "2-10"
+              }
+            },
+            {
+              "id": "pe68aci",
+              "attributes": {
+                "option_label": "11 - 50 Employees",
+                "option_value": "11-50"
+              }
+            },
+            {
+              "id": "labwzbz",
+              "attributes": {
+                "option_label": "51 - 200 Employees",
+                "option_value": "51-200"
+              }
+            },
+            {
+              "id": "8n8p1dc",
+              "attributes": {
+                "option_label": "201+ Employees",
+                "option_value": "201_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_interests": {
+        "_id": "row_mkt_interests",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_industry",
+          "mkt_topics"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_industry": {
+        "_id": "mkt_industry",
+        "type": "select",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Industry Sector",
+          "required": true,
+          "default_value": "tech",
+          "options_list": [
+            {
+              "id": "x8bqnzr",
+              "attributes": {
+                "option_label": "Technology & SaaS",
+                "option_value": "tech"
+              }
+            },
+            {
+              "id": "rh5b81h",
+              "attributes": {
+                "option_label": "Healthcare & Biotech",
+                "option_value": "health"
+              }
+            },
+            {
+              "id": "fevk8qw",
+              "attributes": {
+                "option_label": "Finance & Accounting",
+                "option_value": "finance"
+              }
+            },
+            {
+              "id": "tdh4b6f",
+              "attributes": {
+                "option_label": "E-Commerce & Retail",
+                "option_value": "retail"
+              }
+            },
+            {
+              "id": "ojgnvwe",
+              "attributes": {
+                "option_label": "Education & Non-Profit",
+                "option_value": "education"
+              }
+            }
+          ]
+        }
+      },
+      "mkt_topics": {
+        "_id": "mkt_topics",
+        "type": "checkbox",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Primary Interests / Topics of Study",
+          "required": false,
+          "options_list": [
+            {
+              "id": "xpyqtui",
+              "attributes": {
+                "option_label": "Lead Generation Strategies",
+                "option_value": "lead_gen"
+              }
+            },
+            {
+              "id": "gbfam0i",
+              "attributes": {
+                "option_label": "Conversion Rate Optimization (CRO)",
+                "option_value": "cro"
+              }
+            },
+            {
+              "id": "ow2v1tb",
+              "attributes": {
+                "option_label": "Automation & Integration workflows",
+                "option_value": "automation"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_consent": {
+        "_id": "row_mkt_consent",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_newsletter_consent",
+          "mkt_phone_consent"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_newsletter_consent": {
+        "_id": "mkt_newsletter_consent",
+        "type": "checkbox",
+        "parentId": "row_mkt_consent",
+        "attributes": {
+          "label": "Newsletter Subscription",
+          "required": false,
+          "options_list": [
+            {
+              "id": "3ztz6vh",
+              "attributes": {
+                "option_label": "Yes, send me industry tips & product updates monthly",
+                "option_value": "agree"
+              }
+            }
+          ]
+        }
+      },
+      "mkt_phone_consent": {
+        "_id": "mkt_phone_consent",
+        "type": "checkbox",
+        "parentId": "row_mkt_consent",
+        "attributes": {
+          "label": "Direct Outreach Consent",
+          "required": false,
+          "options_list": [
+            {
+              "id": "hknt0pw",
+              "attributes": {
+                "option_label": "I consent to receive text messages or phone callbacks from advisors",
+                "option_value": "agree"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_source": {
+        "_id": "row_mkt_source",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_source_select"
+        ]
+      },
+      "mkt_source_select": {
+        "_id": "mkt_source_select",
+        "type": "select",
+        "parentId": "row_mkt_source",
+        "attributes": {
+          "label": "How did you find this whitepaper?",
+          "required": false,
+          "options_list": [
+            {
+              "id": "vrbz6t2",
+              "attributes": {
+                "option_label": "Google Search Results",
+                "option_value": "google"
+              }
+            },
+            {
+              "id": "f3tbb8p",
+              "attributes": {
+                "option_label": "Social Media (LinkedIn, Twitter)",
+                "option_value": "social"
+              }
+            },
+            {
+              "id": "76sa569",
+              "attributes": {
+                "option_label": "Friend / Colleague Referral",
+                "option_value": "referral"
+              }
+            },
+            {
+              "id": "dhqxpxg",
+              "attributes": {
+                "option_label": "Industry blog or Newsletter",
+                "option_value": "newsletter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Free E-Book Access",
+      "form_status": "publish",
+      "form_description": "Fill out basic lead info to download the latest digital resource guide."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{field_mkt_email}",
+          "email_subject": "Your Free eBook: Enterprise Scaling Guide",
+          "email_message": "<h3>Thank you for downloading our eBook!</h3><p>Hi {field_mkt_name},</p><p>Click the link below to download your copy:</p><p><a href='#'>Download Enterprise Scaling Guide (PDF)</a></p><p>We look forward to seeing you at our next webinar!</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_mkt_banner",
+      "row_mkt_basics",
+      "row_mkt_profile",
+      "row_mkt_interests",
+      "row_mkt_consent",
+      "row_mkt_source",
+      "row_mkt_action"
+    ],
+    "fields": {
+      "row_mkt_banner": {
+        "_id": "row_mkt_banner",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_banner_html"
+        ]
+      },
+      "mkt_banner_html": {
+        "_id": "mkt_banner_html",
+        "type": "html",
+        "parentId": "row_mkt_banner",
+        "attributes": {
+          "raw_html": "<div class='marketing-banner' style='text-align: center;'><h2>Download Free Scaling Guide</h2><p>Get instant access to our premium whitepaper and receive exclusive invitations to our monthly webinars.</p></div>"
+        }
+      },
+      "row_mkt_basics": {
+        "_id": "row_mkt_basics",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_name",
+          "mkt_email"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_name": {
+        "_id": "mkt_name",
+        "type": "text",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Full Name",
+          "placeholder": "Enter your full name",
+          "required": true,
+          "error_message": "Please enter your name."
+        }
+      },
+      "mkt_email": {
+        "_id": "mkt_email",
+        "type": "email",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Business Email Address",
+          "placeholder": "name@company.com",
+          "required": true,
+          "error_message": "A valid business email address is required to receive the guide."
+        }
+      },
+      "row_mkt_profile": {
+        "_id": "row_mkt_profile",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_job_title",
+          "mkt_company_size"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_job_title": {
+        "_id": "mkt_job_title",
+        "type": "text",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Job Title",
+          "placeholder": "e.g., Marketing Director",
+          "required": true,
+          "error_message": "Please enter your professional title."
+        }
+      },
+      "mkt_company_size": {
+        "_id": "mkt_company_size",
+        "type": "select",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Company Employee Count",
+          "required": true,
+          "default_value": "11-50",
+          "options_list": [
+            {
+              "id": "fxc55ov",
+              "attributes": {
+                "option_label": "Self-Employed / 1 Employee",
+                "option_value": "1"
+              }
+            },
+            {
+              "id": "n44n6lt",
+              "attributes": {
+                "option_label": "2 - 10 Employees",
+                "option_value": "2-10"
+              }
+            },
+            {
+              "id": "vn4xuqb",
+              "attributes": {
+                "option_label": "11 - 50 Employees",
+                "option_value": "11-50"
+              }
+            },
+            {
+              "id": "tsxj4pf",
+              "attributes": {
+                "option_label": "51 - 200 Employees",
+                "option_value": "51-200"
+              }
+            },
+            {
+              "id": "ylyptp8",
+              "attributes": {
+                "option_label": "201+ Employees",
+                "option_value": "201_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_interests": {
+        "_id": "row_mkt_interests",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_industry",
+          "mkt_topics"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_industry": {
+        "_id": "mkt_industry",
+        "type": "select",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Industry Sector",
+          "required": true,
+          "default_value": "tech",
+          "options_list": [
+            {
+              "id": "5w9qj9h",
+              "attributes": {
+                "option_label": "Technology & SaaS",
+                "option_value": "tech"
+              }
+            },
+            {
+              "id": "q4wh28a",
+              "attributes": {
+                "option_label": "Healthcare & Biotech",
+                "option_value": "health"
+              }
+            },
+            {
+              "id": "liwdclx",
+              "attributes": {
+                "option_label": "Finance & Accounting",
+                "option_value": "finance"
+              }
+            },
+            {
+              "id": "ktj0sue",
+              "attributes": {
+                "option_label": "E-Commerce & Retail",
+                "option_value": "retail"
+              }
+            },
+            {
+              "id": "qhjt615",
+              "attributes": {
+                "option_label": "Education & Non-Profit",
+                "option_value": "education"
+              }
+            }
+          ]
+        }
+      },
+      "mkt_topics": {
+        "_id": "mkt_topics",
+        "type": "checkbox",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Primary Interests / Topics of Study",
+          "required": false,
+          "options_list": [
+            {
+              "id": "64m5o52",
+              "attributes": {
+                "option_label": "Lead Generation Strategies",
+                "option_value": "lead_gen"
+              }
+            },
+            {
+              "id": "hhe9wvj",
+              "attributes": {
+                "option_label": "Conversion Rate Optimization (CRO)",
+                "option_value": "cro"
+              }
+            },
+            {
+              "id": "482ct5u",
+              "attributes": {
+                "option_label": "Automation & Integration workflows",
+                "option_value": "automation"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_consent": {
+        "_id": "row_mkt_consent",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_newsletter_consent",
+          "mkt_phone_consent"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_newsletter_consent": {
+        "_id": "mkt_newsletter_consent",
+        "type": "checkbox",
+        "parentId": "row_mkt_consent",
+        "attributes": {
+          "label": "Newsletter Subscription",
+          "required": false,
+          "options_list": [
+            {
+              "id": "1m9o7aq",
+              "attributes": {
+                "option_label": "Yes, send me industry tips & product updates monthly",
+                "option_value": "agree"
+              }
+            }
+          ]
+        }
+      },
+      "mkt_phone_consent": {
+        "_id": "mkt_phone_consent",
+        "type": "checkbox",
+        "parentId": "row_mkt_consent",
+        "attributes": {
+          "label": "Direct Outreach Consent",
+          "required": false,
+          "options_list": [
+            {
+              "id": "ue1tegj",
+              "attributes": {
+                "option_label": "I consent to receive text messages or phone callbacks from advisors",
+                "option_value": "agree"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_source": {
+        "_id": "row_mkt_source",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_source_select"
+        ]
+      },
+      "mkt_source_select": {
+        "_id": "mkt_source_select",
+        "type": "select",
+        "parentId": "row_mkt_source",
+        "attributes": {
+          "label": "How did you find this whitepaper?",
+          "required": false,
+          "options_list": [
+            {
+              "id": "o0losrz",
+              "attributes": {
+                "option_label": "Google Search Results",
+                "option_value": "google"
+              }
+            },
+            {
+              "id": "7eyjjxk",
+              "attributes": {
+                "option_label": "Social Media (LinkedIn, Twitter)",
+                "option_value": "social"
+              }
+            },
+            {
+              "id": "lxjdkk6",
+              "attributes": {
+                "option_label": "Friend / Colleague Referral",
+                "option_value": "referral"
+              }
+            },
+            {
+              "id": "y5h9t69",
+              "attributes": {
+                "option_label": "Industry blog or Newsletter",
+                "option_value": "newsletter"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_action": {
+        "_id": "row_mkt_action",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_captcha",
+          "mkt_download_btn"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_captcha": {
+        "_id": "mkt_captcha",
+        "type": "captcha",
+        "parentId": "row_mkt_action",
+        "attributes": {
+          "label": "Robot Check",
+          "theme": "light",
+          "size": "normal"
+        }
+      },
+      "mkt_download_btn": {
+        "_id": "mkt_download_btn",
+        "type": "button",
+        "parentId": "row_mkt_action",
+        "attributes": {
+          "label": "Get Instant Free Download",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "marketing-submit"
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Webinar Seat Registration",
+      "form_status": "publish",
+      "form_description": "Sign up to secure your spot in our upcoming online masterclass."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{field_mkt_email}",
+          "email_subject": "Your Free eBook: Enterprise Scaling Guide",
+          "email_message": "<h3>Thank you for downloading our eBook!</h3><p>Hi {field_mkt_name},</p><p>Click the link below to download your copy:</p><p><a href='#'>Download Enterprise Scaling Guide (PDF)</a></p><p>We look forward to seeing you at our next webinar!</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_mkt_banner",
+      "row_mkt_basics",
+      "row_mkt_profile",
+      "row_mkt_interests"
+    ],
+    "fields": {
+      "row_mkt_banner": {
+        "_id": "row_mkt_banner",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_banner_html"
+        ]
+      },
+      "mkt_banner_html": {
+        "_id": "mkt_banner_html",
+        "type": "html",
+        "parentId": "row_mkt_banner",
+        "attributes": {
+          "raw_html": "<div class='marketing-banner' style='text-align: center;'><h2>Download Free Scaling Guide</h2><p>Get instant access to our premium whitepaper and receive exclusive invitations to our monthly webinars.</p></div>"
+        }
+      },
+      "row_mkt_basics": {
+        "_id": "row_mkt_basics",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_name",
+          "mkt_email"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_name": {
+        "_id": "mkt_name",
+        "type": "text",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Full Name",
+          "placeholder": "Enter your full name",
+          "required": true,
+          "error_message": "Please enter your name."
+        }
+      },
+      "mkt_email": {
+        "_id": "mkt_email",
+        "type": "email",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Business Email Address",
+          "placeholder": "name@company.com",
+          "required": true,
+          "error_message": "A valid business email address is required to receive the guide."
+        }
+      },
+      "row_mkt_profile": {
+        "_id": "row_mkt_profile",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_job_title",
+          "mkt_company_size"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_job_title": {
+        "_id": "mkt_job_title",
+        "type": "text",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Job Title",
+          "placeholder": "e.g., Marketing Director",
+          "required": true,
+          "error_message": "Please enter your professional title."
+        }
+      },
+      "mkt_company_size": {
+        "_id": "mkt_company_size",
+        "type": "select",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Company Employee Count",
+          "required": true,
+          "default_value": "11-50",
+          "options_list": [
+            {
+              "id": "3439w67",
+              "attributes": {
+                "option_label": "Self-Employed / 1 Employee",
+                "option_value": "1"
+              }
+            },
+            {
+              "id": "vkh0j4v",
+              "attributes": {
+                "option_label": "2 - 10 Employees",
+                "option_value": "2-10"
+              }
+            },
+            {
+              "id": "zg08ip2",
+              "attributes": {
+                "option_label": "11 - 50 Employees",
+                "option_value": "11-50"
+              }
+            },
+            {
+              "id": "gzgup82",
+              "attributes": {
+                "option_label": "51 - 200 Employees",
+                "option_value": "51-200"
+              }
+            },
+            {
+              "id": "6dgma2k",
+              "attributes": {
+                "option_label": "201+ Employees",
+                "option_value": "201_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_interests": {
+        "_id": "row_mkt_interests",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_industry",
+          "mkt_topics"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_industry": {
+        "_id": "mkt_industry",
+        "type": "select",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Industry Sector",
+          "required": true,
+          "default_value": "tech",
+          "options_list": [
+            {
+              "id": "2zuaqrq",
+              "attributes": {
+                "option_label": "Technology & SaaS",
+                "option_value": "tech"
+              }
+            },
+            {
+              "id": "pko7zhu",
+              "attributes": {
+                "option_label": "Healthcare & Biotech",
+                "option_value": "health"
+              }
+            },
+            {
+              "id": "bxd2gw8",
+              "attributes": {
+                "option_label": "Finance & Accounting",
+                "option_value": "finance"
+              }
+            },
+            {
+              "id": "yjrdy35",
+              "attributes": {
+                "option_label": "E-Commerce & Retail",
+                "option_value": "retail"
+              }
+            },
+            {
+              "id": "i2d0nkh",
+              "attributes": {
+                "option_label": "Education & Non-Profit",
+                "option_value": "education"
+              }
+            }
+          ]
+        }
+      },
+      "mkt_topics": {
+        "_id": "mkt_topics",
+        "type": "checkbox",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Primary Interests / Topics of Study",
+          "required": false,
+          "options_list": [
+            {
+              "id": "1eubarw",
+              "attributes": {
+                "option_label": "Lead Generation Strategies",
+                "option_value": "lead_gen"
+              }
+            },
+            {
+              "id": "qua0bn3",
+              "attributes": {
+                "option_label": "Conversion Rate Optimization (CRO)",
+                "option_value": "cro"
+              }
+            },
+            {
+              "id": "ub7kume",
+              "attributes": {
+                "option_label": "Automation & Integration workflows",
+                "option_value": "automation"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Interactive Product Demo",
+      "form_status": "publish",
+      "form_description": "Schedule a live demo session with one of our solution consultants."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{field_mkt_email}",
+          "email_subject": "Your Free eBook: Enterprise Scaling Guide",
+          "email_message": "<h3>Thank you for downloading our eBook!</h3><p>Hi {field_mkt_name},</p><p>Click the link below to download your copy:</p><p><a href='#'>Download Enterprise Scaling Guide (PDF)</a></p><p>We look forward to seeing you at our next webinar!</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_mkt_banner",
+      "row_mkt_basics",
+      "row_mkt_profile",
+      "row_mkt_interests",
+      "row_mkt_consent",
+      "row_mkt_source"
+    ],
+    "fields": {
+      "row_mkt_banner": {
+        "_id": "row_mkt_banner",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_banner_html"
+        ]
+      },
+      "mkt_banner_html": {
+        "_id": "mkt_banner_html",
+        "type": "html",
+        "parentId": "row_mkt_banner",
+        "attributes": {
+          "raw_html": "<div class='marketing-banner' style='text-align: center;'><h2>Download Free Scaling Guide</h2><p>Get instant access to our premium whitepaper and receive exclusive invitations to our monthly webinars.</p></div>"
+        }
+      },
+      "row_mkt_basics": {
+        "_id": "row_mkt_basics",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_name",
+          "mkt_email"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_name": {
+        "_id": "mkt_name",
+        "type": "text",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Full Name",
+          "placeholder": "Enter your full name",
+          "required": true,
+          "error_message": "Please enter your name."
+        }
+      },
+      "mkt_email": {
+        "_id": "mkt_email",
+        "type": "email",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Business Email Address",
+          "placeholder": "name@company.com",
+          "required": true,
+          "error_message": "A valid business email address is required to receive the guide."
+        }
+      },
+      "row_mkt_profile": {
+        "_id": "row_mkt_profile",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_job_title",
+          "mkt_company_size"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_job_title": {
+        "_id": "mkt_job_title",
+        "type": "text",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Job Title",
+          "placeholder": "e.g., Marketing Director",
+          "required": true,
+          "error_message": "Please enter your professional title."
+        }
+      },
+      "mkt_company_size": {
+        "_id": "mkt_company_size",
+        "type": "select",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Company Employee Count",
+          "required": true,
+          "default_value": "11-50",
+          "options_list": [
+            {
+              "id": "urxsb5h",
+              "attributes": {
+                "option_label": "Self-Employed / 1 Employee",
+                "option_value": "1"
+              }
+            },
+            {
+              "id": "2cvej6i",
+              "attributes": {
+                "option_label": "2 - 10 Employees",
+                "option_value": "2-10"
+              }
+            },
+            {
+              "id": "aprvxfe",
+              "attributes": {
+                "option_label": "11 - 50 Employees",
+                "option_value": "11-50"
+              }
+            },
+            {
+              "id": "ygnbrbw",
+              "attributes": {
+                "option_label": "51 - 200 Employees",
+                "option_value": "51-200"
+              }
+            },
+            {
+              "id": "chreqje",
+              "attributes": {
+                "option_label": "201+ Employees",
+                "option_value": "201_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_interests": {
+        "_id": "row_mkt_interests",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_industry",
+          "mkt_topics"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_industry": {
+        "_id": "mkt_industry",
+        "type": "select",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Industry Sector",
+          "required": true,
+          "default_value": "tech",
+          "options_list": [
+            {
+              "id": "8vrf1f3",
+              "attributes": {
+                "option_label": "Technology & SaaS",
+                "option_value": "tech"
+              }
+            },
+            {
+              "id": "aes6br6",
+              "attributes": {
+                "option_label": "Healthcare & Biotech",
+                "option_value": "health"
+              }
+            },
+            {
+              "id": "c6dfwfi",
+              "attributes": {
+                "option_label": "Finance & Accounting",
+                "option_value": "finance"
+              }
+            },
+            {
+              "id": "zaimxax",
+              "attributes": {
+                "option_label": "E-Commerce & Retail",
+                "option_value": "retail"
+              }
+            },
+            {
+              "id": "6fu6c7f",
+              "attributes": {
+                "option_label": "Education & Non-Profit",
+                "option_value": "education"
+              }
+            }
+          ]
+        }
+      },
+      "mkt_topics": {
+        "_id": "mkt_topics",
+        "type": "checkbox",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Primary Interests / Topics of Study",
+          "required": false,
+          "options_list": [
+            {
+              "id": "7tocaa1",
+              "attributes": {
+                "option_label": "Lead Generation Strategies",
+                "option_value": "lead_gen"
+              }
+            },
+            {
+              "id": "oejehuf",
+              "attributes": {
+                "option_label": "Conversion Rate Optimization (CRO)",
+                "option_value": "cro"
+              }
+            },
+            {
+              "id": "gj44s8o",
+              "attributes": {
+                "option_label": "Automation & Integration workflows",
+                "option_value": "automation"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_consent": {
+        "_id": "row_mkt_consent",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_newsletter_consent",
+          "mkt_phone_consent"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_newsletter_consent": {
+        "_id": "mkt_newsletter_consent",
+        "type": "checkbox",
+        "parentId": "row_mkt_consent",
+        "attributes": {
+          "label": "Newsletter Subscription",
+          "required": false,
+          "options_list": [
+            {
+              "id": "odcbocr",
+              "attributes": {
+                "option_label": "Yes, send me industry tips & product updates monthly",
+                "option_value": "agree"
+              }
+            }
+          ]
+        }
+      },
+      "mkt_phone_consent": {
+        "_id": "mkt_phone_consent",
+        "type": "checkbox",
+        "parentId": "row_mkt_consent",
+        "attributes": {
+          "label": "Direct Outreach Consent",
+          "required": false,
+          "options_list": [
+            {
+              "id": "2qap8xt",
+              "attributes": {
+                "option_label": "I consent to receive text messages or phone callbacks from advisors",
+                "option_value": "agree"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_source": {
+        "_id": "row_mkt_source",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_source_select"
+        ]
+      },
+      "mkt_source_select": {
+        "_id": "mkt_source_select",
+        "type": "select",
+        "parentId": "row_mkt_source",
+        "attributes": {
+          "label": "How did you find this whitepaper?",
+          "required": false,
+          "options_list": [
+            {
+              "id": "wfsho4f",
+              "attributes": {
+                "option_label": "Google Search Results",
+                "option_value": "google"
+              }
+            },
+            {
+              "id": "qc7iwj5",
+              "attributes": {
+                "option_label": "Social Media (LinkedIn, Twitter)",
+                "option_value": "social"
+              }
+            },
+            {
+              "id": "1vvywek",
+              "attributes": {
+                "option_label": "Friend / Colleague Referral",
+                "option_value": "referral"
+              }
+            },
+            {
+              "id": "k33kbvp",
+              "attributes": {
+                "option_label": "Industry blog or Newsletter",
+                "option_value": "newsletter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Free Trial Account Setup",
+      "form_status": "publish",
+      "form_description": "Request a 14-day trial account with no credit card required."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{field_mkt_email}",
+          "email_subject": "Your Free eBook: Enterprise Scaling Guide",
+          "email_message": "<h3>Thank you for downloading our eBook!</h3><p>Hi {field_mkt_name},</p><p>Click the link below to download your copy:</p><p><a href='#'>Download Enterprise Scaling Guide (PDF)</a></p><p>We look forward to seeing you at our next webinar!</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_mkt_banner",
+      "row_mkt_basics",
+      "row_mkt_profile",
+      "row_mkt_interests",
+      "row_mkt_consent",
+      "row_mkt_source",
+      "row_mkt_action"
+    ],
+    "fields": {
+      "row_mkt_banner": {
+        "_id": "row_mkt_banner",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_banner_html"
+        ]
+      },
+      "mkt_banner_html": {
+        "_id": "mkt_banner_html",
+        "type": "html",
+        "parentId": "row_mkt_banner",
+        "attributes": {
+          "raw_html": "<div class='marketing-banner' style='text-align: center;'><h2>Download Free Scaling Guide</h2><p>Get instant access to our premium whitepaper and receive exclusive invitations to our monthly webinars.</p></div>"
+        }
+      },
+      "row_mkt_basics": {
+        "_id": "row_mkt_basics",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_name",
+          "mkt_email"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_name": {
+        "_id": "mkt_name",
+        "type": "text",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Full Name",
+          "placeholder": "Enter your full name",
+          "required": true,
+          "error_message": "Please enter your name."
+        }
+      },
+      "mkt_email": {
+        "_id": "mkt_email",
+        "type": "email",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Business Email Address",
+          "placeholder": "name@company.com",
+          "required": true,
+          "error_message": "A valid business email address is required to receive the guide."
+        }
+      },
+      "row_mkt_profile": {
+        "_id": "row_mkt_profile",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_job_title",
+          "mkt_company_size"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_job_title": {
+        "_id": "mkt_job_title",
+        "type": "text",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Job Title",
+          "placeholder": "e.g., Marketing Director",
+          "required": true,
+          "error_message": "Please enter your professional title."
+        }
+      },
+      "mkt_company_size": {
+        "_id": "mkt_company_size",
+        "type": "select",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Company Employee Count",
+          "required": true,
+          "default_value": "11-50",
+          "options_list": [
+            {
+              "id": "7hwctyn",
+              "attributes": {
+                "option_label": "Self-Employed / 1 Employee",
+                "option_value": "1"
+              }
+            },
+            {
+              "id": "jh7t6dt",
+              "attributes": {
+                "option_label": "2 - 10 Employees",
+                "option_value": "2-10"
+              }
+            },
+            {
+              "id": "35e1d55",
+              "attributes": {
+                "option_label": "11 - 50 Employees",
+                "option_value": "11-50"
+              }
+            },
+            {
+              "id": "pih4pn0",
+              "attributes": {
+                "option_label": "51 - 200 Employees",
+                "option_value": "51-200"
+              }
+            },
+            {
+              "id": "o6n7oro",
+              "attributes": {
+                "option_label": "201+ Employees",
+                "option_value": "201_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_interests": {
+        "_id": "row_mkt_interests",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_industry",
+          "mkt_topics"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_industry": {
+        "_id": "mkt_industry",
+        "type": "select",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Industry Sector",
+          "required": true,
+          "default_value": "tech",
+          "options_list": [
+            {
+              "id": "el59w9v",
+              "attributes": {
+                "option_label": "Technology & SaaS",
+                "option_value": "tech"
+              }
+            },
+            {
+              "id": "aw2zy3p",
+              "attributes": {
+                "option_label": "Healthcare & Biotech",
+                "option_value": "health"
+              }
+            },
+            {
+              "id": "bnot0mu",
+              "attributes": {
+                "option_label": "Finance & Accounting",
+                "option_value": "finance"
+              }
+            },
+            {
+              "id": "4w0t22m",
+              "attributes": {
+                "option_label": "E-Commerce & Retail",
+                "option_value": "retail"
+              }
+            },
+            {
+              "id": "r1oxgw2",
+              "attributes": {
+                "option_label": "Education & Non-Profit",
+                "option_value": "education"
+              }
+            }
+          ]
+        }
+      },
+      "mkt_topics": {
+        "_id": "mkt_topics",
+        "type": "checkbox",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Primary Interests / Topics of Study",
+          "required": false,
+          "options_list": [
+            {
+              "id": "gqbipcc",
+              "attributes": {
+                "option_label": "Lead Generation Strategies",
+                "option_value": "lead_gen"
+              }
+            },
+            {
+              "id": "43ggg6m",
+              "attributes": {
+                "option_label": "Conversion Rate Optimization (CRO)",
+                "option_value": "cro"
+              }
+            },
+            {
+              "id": "kklrydn",
+              "attributes": {
+                "option_label": "Automation & Integration workflows",
+                "option_value": "automation"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_consent": {
+        "_id": "row_mkt_consent",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_newsletter_consent",
+          "mkt_phone_consent"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_newsletter_consent": {
+        "_id": "mkt_newsletter_consent",
+        "type": "checkbox",
+        "parentId": "row_mkt_consent",
+        "attributes": {
+          "label": "Newsletter Subscription",
+          "required": false,
+          "options_list": [
+            {
+              "id": "nobkmq1",
+              "attributes": {
+                "option_label": "Yes, send me industry tips & product updates monthly",
+                "option_value": "agree"
+              }
+            }
+          ]
+        }
+      },
+      "mkt_phone_consent": {
+        "_id": "mkt_phone_consent",
+        "type": "checkbox",
+        "parentId": "row_mkt_consent",
+        "attributes": {
+          "label": "Direct Outreach Consent",
+          "required": false,
+          "options_list": [
+            {
+              "id": "cqmwhwi",
+              "attributes": {
+                "option_label": "I consent to receive text messages or phone callbacks from advisors",
+                "option_value": "agree"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_source": {
+        "_id": "row_mkt_source",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_source_select"
+        ]
+      },
+      "mkt_source_select": {
+        "_id": "mkt_source_select",
+        "type": "select",
+        "parentId": "row_mkt_source",
+        "attributes": {
+          "label": "How did you find this whitepaper?",
+          "required": false,
+          "options_list": [
+            {
+              "id": "8gyyksk",
+              "attributes": {
+                "option_label": "Google Search Results",
+                "option_value": "google"
+              }
+            },
+            {
+              "id": "jxh8zb4",
+              "attributes": {
+                "option_label": "Social Media (LinkedIn, Twitter)",
+                "option_value": "social"
+              }
+            },
+            {
+              "id": "xrye20p",
+              "attributes": {
+                "option_label": "Friend / Colleague Referral",
+                "option_value": "referral"
+              }
+            },
+            {
+              "id": "cdx4ad5",
+              "attributes": {
+                "option_label": "Industry blog or Newsletter",
+                "option_value": "newsletter"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_action": {
+        "_id": "row_mkt_action",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_captcha",
+          "mkt_download_btn"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_captcha": {
+        "_id": "mkt_captcha",
+        "type": "captcha",
+        "parentId": "row_mkt_action",
+        "attributes": {
+          "label": "Robot Check",
+          "theme": "light",
+          "size": "normal"
+        }
+      },
+      "mkt_download_btn": {
+        "_id": "mkt_download_btn",
+        "type": "button",
+        "parentId": "row_mkt_action",
+        "attributes": {
+          "label": "Get Instant Free Download",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "marketing-submit"
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Discount Code Claim Form",
+      "form_status": "publish",
+      "form_description": "Claim your 15% discount promo code for the ecommerce store."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{field_mkt_email}",
+          "email_subject": "Your Free eBook: Enterprise Scaling Guide",
+          "email_message": "<h3>Thank you for downloading our eBook!</h3><p>Hi {field_mkt_name},</p><p>Click the link below to download your copy:</p><p><a href='#'>Download Enterprise Scaling Guide (PDF)</a></p><p>We look forward to seeing you at our next webinar!</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_mkt_banner",
+      "row_mkt_basics",
+      "row_mkt_profile",
+      "row_mkt_interests"
+    ],
+    "fields": {
+      "row_mkt_banner": {
+        "_id": "row_mkt_banner",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_banner_html"
+        ]
+      },
+      "mkt_banner_html": {
+        "_id": "mkt_banner_html",
+        "type": "html",
+        "parentId": "row_mkt_banner",
+        "attributes": {
+          "raw_html": "<div class='marketing-banner' style='text-align: center;'><h2>Download Free Scaling Guide</h2><p>Get instant access to our premium whitepaper and receive exclusive invitations to our monthly webinars.</p></div>"
+        }
+      },
+      "row_mkt_basics": {
+        "_id": "row_mkt_basics",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_name",
+          "mkt_email"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_name": {
+        "_id": "mkt_name",
+        "type": "text",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Full Name",
+          "placeholder": "Enter your full name",
+          "required": true,
+          "error_message": "Please enter your name."
+        }
+      },
+      "mkt_email": {
+        "_id": "mkt_email",
+        "type": "email",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Business Email Address",
+          "placeholder": "name@company.com",
+          "required": true,
+          "error_message": "A valid business email address is required to receive the guide."
+        }
+      },
+      "row_mkt_profile": {
+        "_id": "row_mkt_profile",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_job_title",
+          "mkt_company_size"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_job_title": {
+        "_id": "mkt_job_title",
+        "type": "text",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Job Title",
+          "placeholder": "e.g., Marketing Director",
+          "required": true,
+          "error_message": "Please enter your professional title."
+        }
+      },
+      "mkt_company_size": {
+        "_id": "mkt_company_size",
+        "type": "select",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Company Employee Count",
+          "required": true,
+          "default_value": "11-50",
+          "options_list": [
+            {
+              "id": "nc1tzfw",
+              "attributes": {
+                "option_label": "Self-Employed / 1 Employee",
+                "option_value": "1"
+              }
+            },
+            {
+              "id": "60yq03q",
+              "attributes": {
+                "option_label": "2 - 10 Employees",
+                "option_value": "2-10"
+              }
+            },
+            {
+              "id": "7lmiikh",
+              "attributes": {
+                "option_label": "11 - 50 Employees",
+                "option_value": "11-50"
+              }
+            },
+            {
+              "id": "jb8sphf",
+              "attributes": {
+                "option_label": "51 - 200 Employees",
+                "option_value": "51-200"
+              }
+            },
+            {
+              "id": "qngwci3",
+              "attributes": {
+                "option_label": "201+ Employees",
+                "option_value": "201_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_interests": {
+        "_id": "row_mkt_interests",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_industry",
+          "mkt_topics"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_industry": {
+        "_id": "mkt_industry",
+        "type": "select",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Industry Sector",
+          "required": true,
+          "default_value": "tech",
+          "options_list": [
+            {
+              "id": "kml42aj",
+              "attributes": {
+                "option_label": "Technology & SaaS",
+                "option_value": "tech"
+              }
+            },
+            {
+              "id": "15om2w4",
+              "attributes": {
+                "option_label": "Healthcare & Biotech",
+                "option_value": "health"
+              }
+            },
+            {
+              "id": "ir3nvjf",
+              "attributes": {
+                "option_label": "Finance & Accounting",
+                "option_value": "finance"
+              }
+            },
+            {
+              "id": "0mek1wo",
+              "attributes": {
+                "option_label": "E-Commerce & Retail",
+                "option_value": "retail"
+              }
+            },
+            {
+              "id": "xjdj8d8",
+              "attributes": {
+                "option_label": "Education & Non-Profit",
+                "option_value": "education"
+              }
+            }
+          ]
+        }
+      },
+      "mkt_topics": {
+        "_id": "mkt_topics",
+        "type": "checkbox",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Primary Interests / Topics of Study",
+          "required": false,
+          "options_list": [
+            {
+              "id": "t340ncs",
+              "attributes": {
+                "option_label": "Lead Generation Strategies",
+                "option_value": "lead_gen"
+              }
+            },
+            {
+              "id": "ktjv4w3",
+              "attributes": {
+                "option_label": "Conversion Rate Optimization (CRO)",
+                "option_value": "cro"
+              }
+            },
+            {
+              "id": "8y1sr11",
+              "attributes": {
+                "option_label": "Automation & Integration workflows",
+                "option_value": "automation"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Refer-a-Friend Capture",
+      "form_status": "publish",
+      "form_description": "Submit friend email addresses to join the corporate referral program."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{field_mkt_email}",
+          "email_subject": "Your Free eBook: Enterprise Scaling Guide",
+          "email_message": "<h3>Thank you for downloading our eBook!</h3><p>Hi {field_mkt_name},</p><p>Click the link below to download your copy:</p><p><a href='#'>Download Enterprise Scaling Guide (PDF)</a></p><p>We look forward to seeing you at our next webinar!</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_mkt_banner",
+      "row_mkt_basics",
+      "row_mkt_profile",
+      "row_mkt_interests",
+      "row_mkt_consent",
+      "row_mkt_source"
+    ],
+    "fields": {
+      "row_mkt_banner": {
+        "_id": "row_mkt_banner",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_banner_html"
+        ]
+      },
+      "mkt_banner_html": {
+        "_id": "mkt_banner_html",
+        "type": "html",
+        "parentId": "row_mkt_banner",
+        "attributes": {
+          "raw_html": "<div class='marketing-banner' style='text-align: center;'><h2>Download Free Scaling Guide</h2><p>Get instant access to our premium whitepaper and receive exclusive invitations to our monthly webinars.</p></div>"
+        }
+      },
+      "row_mkt_basics": {
+        "_id": "row_mkt_basics",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_name",
+          "mkt_email"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_name": {
+        "_id": "mkt_name",
+        "type": "text",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Full Name",
+          "placeholder": "Enter your full name",
+          "required": true,
+          "error_message": "Please enter your name."
+        }
+      },
+      "mkt_email": {
+        "_id": "mkt_email",
+        "type": "email",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Business Email Address",
+          "placeholder": "name@company.com",
+          "required": true,
+          "error_message": "A valid business email address is required to receive the guide."
+        }
+      },
+      "row_mkt_profile": {
+        "_id": "row_mkt_profile",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_job_title",
+          "mkt_company_size"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_job_title": {
+        "_id": "mkt_job_title",
+        "type": "text",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Job Title",
+          "placeholder": "e.g., Marketing Director",
+          "required": true,
+          "error_message": "Please enter your professional title."
+        }
+      },
+      "mkt_company_size": {
+        "_id": "mkt_company_size",
+        "type": "select",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Company Employee Count",
+          "required": true,
+          "default_value": "11-50",
+          "options_list": [
+            {
+              "id": "baau16t",
+              "attributes": {
+                "option_label": "Self-Employed / 1 Employee",
+                "option_value": "1"
+              }
+            },
+            {
+              "id": "cdlllvc",
+              "attributes": {
+                "option_label": "2 - 10 Employees",
+                "option_value": "2-10"
+              }
+            },
+            {
+              "id": "wjhwjzu",
+              "attributes": {
+                "option_label": "11 - 50 Employees",
+                "option_value": "11-50"
+              }
+            },
+            {
+              "id": "k03weqx",
+              "attributes": {
+                "option_label": "51 - 200 Employees",
+                "option_value": "51-200"
+              }
+            },
+            {
+              "id": "rwpqiex",
+              "attributes": {
+                "option_label": "201+ Employees",
+                "option_value": "201_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_interests": {
+        "_id": "row_mkt_interests",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_industry",
+          "mkt_topics"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_industry": {
+        "_id": "mkt_industry",
+        "type": "select",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Industry Sector",
+          "required": true,
+          "default_value": "tech",
+          "options_list": [
+            {
+              "id": "jjfcfeh",
+              "attributes": {
+                "option_label": "Technology & SaaS",
+                "option_value": "tech"
+              }
+            },
+            {
+              "id": "vyvykja",
+              "attributes": {
+                "option_label": "Healthcare & Biotech",
+                "option_value": "health"
+              }
+            },
+            {
+              "id": "o7khki8",
+              "attributes": {
+                "option_label": "Finance & Accounting",
+                "option_value": "finance"
+              }
+            },
+            {
+              "id": "61vnvth",
+              "attributes": {
+                "option_label": "E-Commerce & Retail",
+                "option_value": "retail"
+              }
+            },
+            {
+              "id": "knh18wl",
+              "attributes": {
+                "option_label": "Education & Non-Profit",
+                "option_value": "education"
+              }
+            }
+          ]
+        }
+      },
+      "mkt_topics": {
+        "_id": "mkt_topics",
+        "type": "checkbox",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Primary Interests / Topics of Study",
+          "required": false,
+          "options_list": [
+            {
+              "id": "65csicm",
+              "attributes": {
+                "option_label": "Lead Generation Strategies",
+                "option_value": "lead_gen"
+              }
+            },
+            {
+              "id": "cr7zkv3",
+              "attributes": {
+                "option_label": "Conversion Rate Optimization (CRO)",
+                "option_value": "cro"
+              }
+            },
+            {
+              "id": "xb60v00",
+              "attributes": {
+                "option_label": "Automation & Integration workflows",
+                "option_value": "automation"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_consent": {
+        "_id": "row_mkt_consent",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_newsletter_consent",
+          "mkt_phone_consent"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_newsletter_consent": {
+        "_id": "mkt_newsletter_consent",
+        "type": "checkbox",
+        "parentId": "row_mkt_consent",
+        "attributes": {
+          "label": "Newsletter Subscription",
+          "required": false,
+          "options_list": [
+            {
+              "id": "4dgilzp",
+              "attributes": {
+                "option_label": "Yes, send me industry tips & product updates monthly",
+                "option_value": "agree"
+              }
+            }
+          ]
+        }
+      },
+      "mkt_phone_consent": {
+        "_id": "mkt_phone_consent",
+        "type": "checkbox",
+        "parentId": "row_mkt_consent",
+        "attributes": {
+          "label": "Direct Outreach Consent",
+          "required": false,
+          "options_list": [
+            {
+              "id": "pp9cp22",
+              "attributes": {
+                "option_label": "I consent to receive text messages or phone callbacks from advisors",
+                "option_value": "agree"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_source": {
+        "_id": "row_mkt_source",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_source_select"
+        ]
+      },
+      "mkt_source_select": {
+        "_id": "mkt_source_select",
+        "type": "select",
+        "parentId": "row_mkt_source",
+        "attributes": {
+          "label": "How did you find this whitepaper?",
+          "required": false,
+          "options_list": [
+            {
+              "id": "3fqwsjj",
+              "attributes": {
+                "option_label": "Google Search Results",
+                "option_value": "google"
+              }
+            },
+            {
+              "id": "z00b4ds",
+              "attributes": {
+                "option_label": "Social Media (LinkedIn, Twitter)",
+                "option_value": "social"
+              }
+            },
+            {
+              "id": "dabfc57",
+              "attributes": {
+                "option_label": "Friend / Colleague Referral",
+                "option_value": "referral"
+              }
+            },
+            {
+              "id": "y5fg78g",
+              "attributes": {
+                "option_label": "Industry blog or Newsletter",
+                "option_value": "newsletter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Market Research Intake",
+      "form_status": "publish",
+      "form_description": "Participate in brand research surveys to win store credits."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{field_mkt_email}",
+          "email_subject": "Your Free eBook: Enterprise Scaling Guide",
+          "email_message": "<h3>Thank you for downloading our eBook!</h3><p>Hi {field_mkt_name},</p><p>Click the link below to download your copy:</p><p><a href='#'>Download Enterprise Scaling Guide (PDF)</a></p><p>We look forward to seeing you at our next webinar!</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_mkt_banner",
+      "row_mkt_basics",
+      "row_mkt_profile",
+      "row_mkt_interests",
+      "row_mkt_consent",
+      "row_mkt_source",
+      "row_mkt_action"
+    ],
+    "fields": {
+      "row_mkt_banner": {
+        "_id": "row_mkt_banner",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_banner_html"
+        ]
+      },
+      "mkt_banner_html": {
+        "_id": "mkt_banner_html",
+        "type": "html",
+        "parentId": "row_mkt_banner",
+        "attributes": {
+          "raw_html": "<div class='marketing-banner' style='text-align: center;'><h2>Download Free Scaling Guide</h2><p>Get instant access to our premium whitepaper and receive exclusive invitations to our monthly webinars.</p></div>"
+        }
+      },
+      "row_mkt_basics": {
+        "_id": "row_mkt_basics",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_name",
+          "mkt_email"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_name": {
+        "_id": "mkt_name",
+        "type": "text",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Full Name",
+          "placeholder": "Enter your full name",
+          "required": true,
+          "error_message": "Please enter your name."
+        }
+      },
+      "mkt_email": {
+        "_id": "mkt_email",
+        "type": "email",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Business Email Address",
+          "placeholder": "name@company.com",
+          "required": true,
+          "error_message": "A valid business email address is required to receive the guide."
+        }
+      },
+      "row_mkt_profile": {
+        "_id": "row_mkt_profile",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_job_title",
+          "mkt_company_size"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_job_title": {
+        "_id": "mkt_job_title",
+        "type": "text",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Job Title",
+          "placeholder": "e.g., Marketing Director",
+          "required": true,
+          "error_message": "Please enter your professional title."
+        }
+      },
+      "mkt_company_size": {
+        "_id": "mkt_company_size",
+        "type": "select",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Company Employee Count",
+          "required": true,
+          "default_value": "11-50",
+          "options_list": [
+            {
+              "id": "fencqdm",
+              "attributes": {
+                "option_label": "Self-Employed / 1 Employee",
+                "option_value": "1"
+              }
+            },
+            {
+              "id": "1wu4x7z",
+              "attributes": {
+                "option_label": "2 - 10 Employees",
+                "option_value": "2-10"
+              }
+            },
+            {
+              "id": "rodnhuy",
+              "attributes": {
+                "option_label": "11 - 50 Employees",
+                "option_value": "11-50"
+              }
+            },
+            {
+              "id": "79w8pyo",
+              "attributes": {
+                "option_label": "51 - 200 Employees",
+                "option_value": "51-200"
+              }
+            },
+            {
+              "id": "86du1zc",
+              "attributes": {
+                "option_label": "201+ Employees",
+                "option_value": "201_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_interests": {
+        "_id": "row_mkt_interests",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_industry",
+          "mkt_topics"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_industry": {
+        "_id": "mkt_industry",
+        "type": "select",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Industry Sector",
+          "required": true,
+          "default_value": "tech",
+          "options_list": [
+            {
+              "id": "qrisurz",
+              "attributes": {
+                "option_label": "Technology & SaaS",
+                "option_value": "tech"
+              }
+            },
+            {
+              "id": "7l8802x",
+              "attributes": {
+                "option_label": "Healthcare & Biotech",
+                "option_value": "health"
+              }
+            },
+            {
+              "id": "fab2l31",
+              "attributes": {
+                "option_label": "Finance & Accounting",
+                "option_value": "finance"
+              }
+            },
+            {
+              "id": "todnmqg",
+              "attributes": {
+                "option_label": "E-Commerce & Retail",
+                "option_value": "retail"
+              }
+            },
+            {
+              "id": "l8emnz4",
+              "attributes": {
+                "option_label": "Education & Non-Profit",
+                "option_value": "education"
+              }
+            }
+          ]
+        }
+      },
+      "mkt_topics": {
+        "_id": "mkt_topics",
+        "type": "checkbox",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Primary Interests / Topics of Study",
+          "required": false,
+          "options_list": [
+            {
+              "id": "up89k3m",
+              "attributes": {
+                "option_label": "Lead Generation Strategies",
+                "option_value": "lead_gen"
+              }
+            },
+            {
+              "id": "j988id9",
+              "attributes": {
+                "option_label": "Conversion Rate Optimization (CRO)",
+                "option_value": "cro"
+              }
+            },
+            {
+              "id": "q90o671",
+              "attributes": {
+                "option_label": "Automation & Integration workflows",
+                "option_value": "automation"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_consent": {
+        "_id": "row_mkt_consent",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_newsletter_consent",
+          "mkt_phone_consent"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_newsletter_consent": {
+        "_id": "mkt_newsletter_consent",
+        "type": "checkbox",
+        "parentId": "row_mkt_consent",
+        "attributes": {
+          "label": "Newsletter Subscription",
+          "required": false,
+          "options_list": [
+            {
+              "id": "lyjxk1r",
+              "attributes": {
+                "option_label": "Yes, send me industry tips & product updates monthly",
+                "option_value": "agree"
+              }
+            }
+          ]
+        }
+      },
+      "mkt_phone_consent": {
+        "_id": "mkt_phone_consent",
+        "type": "checkbox",
+        "parentId": "row_mkt_consent",
+        "attributes": {
+          "label": "Direct Outreach Consent",
+          "required": false,
+          "options_list": [
+            {
+              "id": "w5o84ik",
+              "attributes": {
+                "option_label": "I consent to receive text messages or phone callbacks from advisors",
+                "option_value": "agree"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_source": {
+        "_id": "row_mkt_source",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_source_select"
+        ]
+      },
+      "mkt_source_select": {
+        "_id": "mkt_source_select",
+        "type": "select",
+        "parentId": "row_mkt_source",
+        "attributes": {
+          "label": "How did you find this whitepaper?",
+          "required": false,
+          "options_list": [
+            {
+              "id": "yxvt5kv",
+              "attributes": {
+                "option_label": "Google Search Results",
+                "option_value": "google"
+              }
+            },
+            {
+              "id": "xjm0uo9",
+              "attributes": {
+                "option_label": "Social Media (LinkedIn, Twitter)",
+                "option_value": "social"
+              }
+            },
+            {
+              "id": "3skn8au",
+              "attributes": {
+                "option_label": "Friend / Colleague Referral",
+                "option_value": "referral"
+              }
+            },
+            {
+              "id": "wjdkk6l",
+              "attributes": {
+                "option_label": "Industry blog or Newsletter",
+                "option_value": "newsletter"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_action": {
+        "_id": "row_mkt_action",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_captcha",
+          "mkt_download_btn"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_captcha": {
+        "_id": "mkt_captcha",
+        "type": "captcha",
+        "parentId": "row_mkt_action",
+        "attributes": {
+          "label": "Robot Check",
+          "theme": "light",
+          "size": "normal"
+        }
+      },
+      "mkt_download_btn": {
+        "_id": "mkt_download_btn",
+        "type": "button",
+        "parentId": "row_mkt_action",
+        "attributes": {
+          "label": "Get Instant Free Download",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "marketing-submit"
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Event Networking Registration",
+      "form_status": "publish",
+      "form_description": "Register as an attendee for our annual marketing meetup."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{field_mkt_email}",
+          "email_subject": "Your Free eBook: Enterprise Scaling Guide",
+          "email_message": "<h3>Thank you for downloading our eBook!</h3><p>Hi {field_mkt_name},</p><p>Click the link below to download your copy:</p><p><a href='#'>Download Enterprise Scaling Guide (PDF)</a></p><p>We look forward to seeing you at our next webinar!</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_mkt_banner",
+      "row_mkt_basics",
+      "row_mkt_profile",
+      "row_mkt_interests"
+    ],
+    "fields": {
+      "row_mkt_banner": {
+        "_id": "row_mkt_banner",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_banner_html"
+        ]
+      },
+      "mkt_banner_html": {
+        "_id": "mkt_banner_html",
+        "type": "html",
+        "parentId": "row_mkt_banner",
+        "attributes": {
+          "raw_html": "<div class='marketing-banner' style='text-align: center;'><h2>Download Free Scaling Guide</h2><p>Get instant access to our premium whitepaper and receive exclusive invitations to our monthly webinars.</p></div>"
+        }
+      },
+      "row_mkt_basics": {
+        "_id": "row_mkt_basics",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_name",
+          "mkt_email"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_name": {
+        "_id": "mkt_name",
+        "type": "text",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Full Name",
+          "placeholder": "Enter your full name",
+          "required": true,
+          "error_message": "Please enter your name."
+        }
+      },
+      "mkt_email": {
+        "_id": "mkt_email",
+        "type": "email",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Business Email Address",
+          "placeholder": "name@company.com",
+          "required": true,
+          "error_message": "A valid business email address is required to receive the guide."
+        }
+      },
+      "row_mkt_profile": {
+        "_id": "row_mkt_profile",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_job_title",
+          "mkt_company_size"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_job_title": {
+        "_id": "mkt_job_title",
+        "type": "text",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Job Title",
+          "placeholder": "e.g., Marketing Director",
+          "required": true,
+          "error_message": "Please enter your professional title."
+        }
+      },
+      "mkt_company_size": {
+        "_id": "mkt_company_size",
+        "type": "select",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Company Employee Count",
+          "required": true,
+          "default_value": "11-50",
+          "options_list": [
+            {
+              "id": "rnhgxay",
+              "attributes": {
+                "option_label": "Self-Employed / 1 Employee",
+                "option_value": "1"
+              }
+            },
+            {
+              "id": "n5g8kc6",
+              "attributes": {
+                "option_label": "2 - 10 Employees",
+                "option_value": "2-10"
+              }
+            },
+            {
+              "id": "62bxdq8",
+              "attributes": {
+                "option_label": "11 - 50 Employees",
+                "option_value": "11-50"
+              }
+            },
+            {
+              "id": "nb5wmlc",
+              "attributes": {
+                "option_label": "51 - 200 Employees",
+                "option_value": "51-200"
+              }
+            },
+            {
+              "id": "x1hl5je",
+              "attributes": {
+                "option_label": "201+ Employees",
+                "option_value": "201_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_interests": {
+        "_id": "row_mkt_interests",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_industry",
+          "mkt_topics"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_industry": {
+        "_id": "mkt_industry",
+        "type": "select",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Industry Sector",
+          "required": true,
+          "default_value": "tech",
+          "options_list": [
+            {
+              "id": "4efm9c4",
+              "attributes": {
+                "option_label": "Technology & SaaS",
+                "option_value": "tech"
+              }
+            },
+            {
+              "id": "y7zrew5",
+              "attributes": {
+                "option_label": "Healthcare & Biotech",
+                "option_value": "health"
+              }
+            },
+            {
+              "id": "j2gdtz5",
+              "attributes": {
+                "option_label": "Finance & Accounting",
+                "option_value": "finance"
+              }
+            },
+            {
+              "id": "rsyrbfj",
+              "attributes": {
+                "option_label": "E-Commerce & Retail",
+                "option_value": "retail"
+              }
+            },
+            {
+              "id": "3kr3xfd",
+              "attributes": {
+                "option_label": "Education & Non-Profit",
+                "option_value": "education"
+              }
+            }
+          ]
+        }
+      },
+      "mkt_topics": {
+        "_id": "mkt_topics",
+        "type": "checkbox",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Primary Interests / Topics of Study",
+          "required": false,
+          "options_list": [
+            {
+              "id": "8l0qowo",
+              "attributes": {
+                "option_label": "Lead Generation Strategies",
+                "option_value": "lead_gen"
+              }
+            },
+            {
+              "id": "ncfyy2d",
+              "attributes": {
+                "option_label": "Conversion Rate Optimization (CRO)",
+                "option_value": "cro"
+              }
+            },
+            {
+              "id": "pwu08we",
+              "attributes": {
+                "option_label": "Automation & Integration workflows",
+                "option_value": "automation"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Affiliate Partner Application",
+      "form_status": "publish",
+      "form_description": "Apply to promote our tools and earn commissions on sales."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{field_mkt_email}",
+          "email_subject": "Your Free eBook: Enterprise Scaling Guide",
+          "email_message": "<h3>Thank you for downloading our eBook!</h3><p>Hi {field_mkt_name},</p><p>Click the link below to download your copy:</p><p><a href='#'>Download Enterprise Scaling Guide (PDF)</a></p><p>We look forward to seeing you at our next webinar!</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_mkt_banner",
+      "row_mkt_basics",
+      "row_mkt_profile",
+      "row_mkt_interests",
+      "row_mkt_consent",
+      "row_mkt_source"
+    ],
+    "fields": {
+      "row_mkt_banner": {
+        "_id": "row_mkt_banner",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_banner_html"
+        ]
+      },
+      "mkt_banner_html": {
+        "_id": "mkt_banner_html",
+        "type": "html",
+        "parentId": "row_mkt_banner",
+        "attributes": {
+          "raw_html": "<div class='marketing-banner' style='text-align: center;'><h2>Download Free Scaling Guide</h2><p>Get instant access to our premium whitepaper and receive exclusive invitations to our monthly webinars.</p></div>"
+        }
+      },
+      "row_mkt_basics": {
+        "_id": "row_mkt_basics",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_name",
+          "mkt_email"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_name": {
+        "_id": "mkt_name",
+        "type": "text",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Full Name",
+          "placeholder": "Enter your full name",
+          "required": true,
+          "error_message": "Please enter your name."
+        }
+      },
+      "mkt_email": {
+        "_id": "mkt_email",
+        "type": "email",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Business Email Address",
+          "placeholder": "name@company.com",
+          "required": true,
+          "error_message": "A valid business email address is required to receive the guide."
+        }
+      },
+      "row_mkt_profile": {
+        "_id": "row_mkt_profile",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_job_title",
+          "mkt_company_size"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_job_title": {
+        "_id": "mkt_job_title",
+        "type": "text",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Job Title",
+          "placeholder": "e.g., Marketing Director",
+          "required": true,
+          "error_message": "Please enter your professional title."
+        }
+      },
+      "mkt_company_size": {
+        "_id": "mkt_company_size",
+        "type": "select",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Company Employee Count",
+          "required": true,
+          "default_value": "11-50",
+          "options_list": [
+            {
+              "id": "skzd4aq",
+              "attributes": {
+                "option_label": "Self-Employed / 1 Employee",
+                "option_value": "1"
+              }
+            },
+            {
+              "id": "vhtalpy",
+              "attributes": {
+                "option_label": "2 - 10 Employees",
+                "option_value": "2-10"
+              }
+            },
+            {
+              "id": "7hgt83v",
+              "attributes": {
+                "option_label": "11 - 50 Employees",
+                "option_value": "11-50"
+              }
+            },
+            {
+              "id": "9oos55j",
+              "attributes": {
+                "option_label": "51 - 200 Employees",
+                "option_value": "51-200"
+              }
+            },
+            {
+              "id": "4vrfm37",
+              "attributes": {
+                "option_label": "201+ Employees",
+                "option_value": "201_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_interests": {
+        "_id": "row_mkt_interests",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_industry",
+          "mkt_topics"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_industry": {
+        "_id": "mkt_industry",
+        "type": "select",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Industry Sector",
+          "required": true,
+          "default_value": "tech",
+          "options_list": [
+            {
+              "id": "2s0j9q2",
+              "attributes": {
+                "option_label": "Technology & SaaS",
+                "option_value": "tech"
+              }
+            },
+            {
+              "id": "gffqfbf",
+              "attributes": {
+                "option_label": "Healthcare & Biotech",
+                "option_value": "health"
+              }
+            },
+            {
+              "id": "ul1gege",
+              "attributes": {
+                "option_label": "Finance & Accounting",
+                "option_value": "finance"
+              }
+            },
+            {
+              "id": "tyxwk6i",
+              "attributes": {
+                "option_label": "E-Commerce & Retail",
+                "option_value": "retail"
+              }
+            },
+            {
+              "id": "7hxspsz",
+              "attributes": {
+                "option_label": "Education & Non-Profit",
+                "option_value": "education"
+              }
+            }
+          ]
+        }
+      },
+      "mkt_topics": {
+        "_id": "mkt_topics",
+        "type": "checkbox",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Primary Interests / Topics of Study",
+          "required": false,
+          "options_list": [
+            {
+              "id": "qq371jr",
+              "attributes": {
+                "option_label": "Lead Generation Strategies",
+                "option_value": "lead_gen"
+              }
+            },
+            {
+              "id": "ee0unsm",
+              "attributes": {
+                "option_label": "Conversion Rate Optimization (CRO)",
+                "option_value": "cro"
+              }
+            },
+            {
+              "id": "xugvcht",
+              "attributes": {
+                "option_label": "Automation & Integration workflows",
+                "option_value": "automation"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_consent": {
+        "_id": "row_mkt_consent",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_newsletter_consent",
+          "mkt_phone_consent"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_newsletter_consent": {
+        "_id": "mkt_newsletter_consent",
+        "type": "checkbox",
+        "parentId": "row_mkt_consent",
+        "attributes": {
+          "label": "Newsletter Subscription",
+          "required": false,
+          "options_list": [
+            {
+              "id": "r54b3vo",
+              "attributes": {
+                "option_label": "Yes, send me industry tips & product updates monthly",
+                "option_value": "agree"
+              }
+            }
+          ]
+        }
+      },
+      "mkt_phone_consent": {
+        "_id": "mkt_phone_consent",
+        "type": "checkbox",
+        "parentId": "row_mkt_consent",
+        "attributes": {
+          "label": "Direct Outreach Consent",
+          "required": false,
+          "options_list": [
+            {
+              "id": "h13mjaf",
+              "attributes": {
+                "option_label": "I consent to receive text messages or phone callbacks from advisors",
+                "option_value": "agree"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_source": {
+        "_id": "row_mkt_source",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_source_select"
+        ]
+      },
+      "mkt_source_select": {
+        "_id": "mkt_source_select",
+        "type": "select",
+        "parentId": "row_mkt_source",
+        "attributes": {
+          "label": "How did you find this whitepaper?",
+          "required": false,
+          "options_list": [
+            {
+              "id": "j5syyxr",
+              "attributes": {
+                "option_label": "Google Search Results",
+                "option_value": "google"
+              }
+            },
+            {
+              "id": "16ild09",
+              "attributes": {
+                "option_label": "Social Media (LinkedIn, Twitter)",
+                "option_value": "social"
+              }
+            },
+            {
+              "id": "wkq5ypb",
+              "attributes": {
+                "option_label": "Friend / Colleague Referral",
+                "option_value": "referral"
+              }
+            },
+            {
+              "id": "u03za2n",
+              "attributes": {
+                "option_label": "Industry blog or Newsletter",
+                "option_value": "newsletter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Sponsorship Request Intake",
+      "form_status": "publish",
+      "form_description": "Request sponsorship funding for conferences or local community events."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{field_mkt_email}",
+          "email_subject": "Your Free eBook: Enterprise Scaling Guide",
+          "email_message": "<h3>Thank you for downloading our eBook!</h3><p>Hi {field_mkt_name},</p><p>Click the link below to download your copy:</p><p><a href='#'>Download Enterprise Scaling Guide (PDF)</a></p><p>We look forward to seeing you at our next webinar!</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_mkt_banner",
+      "row_mkt_basics",
+      "row_mkt_profile",
+      "row_mkt_interests",
+      "row_mkt_consent",
+      "row_mkt_source",
+      "row_mkt_action"
+    ],
+    "fields": {
+      "row_mkt_banner": {
+        "_id": "row_mkt_banner",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_banner_html"
+        ]
+      },
+      "mkt_banner_html": {
+        "_id": "mkt_banner_html",
+        "type": "html",
+        "parentId": "row_mkt_banner",
+        "attributes": {
+          "raw_html": "<div class='marketing-banner' style='text-align: center;'><h2>Download Free Scaling Guide</h2><p>Get instant access to our premium whitepaper and receive exclusive invitations to our monthly webinars.</p></div>"
+        }
+      },
+      "row_mkt_basics": {
+        "_id": "row_mkt_basics",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_name",
+          "mkt_email"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_name": {
+        "_id": "mkt_name",
+        "type": "text",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Full Name",
+          "placeholder": "Enter your full name",
+          "required": true,
+          "error_message": "Please enter your name."
+        }
+      },
+      "mkt_email": {
+        "_id": "mkt_email",
+        "type": "email",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Business Email Address",
+          "placeholder": "name@company.com",
+          "required": true,
+          "error_message": "A valid business email address is required to receive the guide."
+        }
+      },
+      "row_mkt_profile": {
+        "_id": "row_mkt_profile",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_job_title",
+          "mkt_company_size"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_job_title": {
+        "_id": "mkt_job_title",
+        "type": "text",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Job Title",
+          "placeholder": "e.g., Marketing Director",
+          "required": true,
+          "error_message": "Please enter your professional title."
+        }
+      },
+      "mkt_company_size": {
+        "_id": "mkt_company_size",
+        "type": "select",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Company Employee Count",
+          "required": true,
+          "default_value": "11-50",
+          "options_list": [
+            {
+              "id": "2hnu2d6",
+              "attributes": {
+                "option_label": "Self-Employed / 1 Employee",
+                "option_value": "1"
+              }
+            },
+            {
+              "id": "rz2mnx7",
+              "attributes": {
+                "option_label": "2 - 10 Employees",
+                "option_value": "2-10"
+              }
+            },
+            {
+              "id": "nb9nv98",
+              "attributes": {
+                "option_label": "11 - 50 Employees",
+                "option_value": "11-50"
+              }
+            },
+            {
+              "id": "a471gon",
+              "attributes": {
+                "option_label": "51 - 200 Employees",
+                "option_value": "51-200"
+              }
+            },
+            {
+              "id": "sj0qf0y",
+              "attributes": {
+                "option_label": "201+ Employees",
+                "option_value": "201_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_interests": {
+        "_id": "row_mkt_interests",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_industry",
+          "mkt_topics"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_industry": {
+        "_id": "mkt_industry",
+        "type": "select",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Industry Sector",
+          "required": true,
+          "default_value": "tech",
+          "options_list": [
+            {
+              "id": "o687ugf",
+              "attributes": {
+                "option_label": "Technology & SaaS",
+                "option_value": "tech"
+              }
+            },
+            {
+              "id": "owiddpf",
+              "attributes": {
+                "option_label": "Healthcare & Biotech",
+                "option_value": "health"
+              }
+            },
+            {
+              "id": "4mphdfr",
+              "attributes": {
+                "option_label": "Finance & Accounting",
+                "option_value": "finance"
+              }
+            },
+            {
+              "id": "ijcrpfo",
+              "attributes": {
+                "option_label": "E-Commerce & Retail",
+                "option_value": "retail"
+              }
+            },
+            {
+              "id": "p3x9lhv",
+              "attributes": {
+                "option_label": "Education & Non-Profit",
+                "option_value": "education"
+              }
+            }
+          ]
+        }
+      },
+      "mkt_topics": {
+        "_id": "mkt_topics",
+        "type": "checkbox",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Primary Interests / Topics of Study",
+          "required": false,
+          "options_list": [
+            {
+              "id": "bb05ovw",
+              "attributes": {
+                "option_label": "Lead Generation Strategies",
+                "option_value": "lead_gen"
+              }
+            },
+            {
+              "id": "7t7t1ue",
+              "attributes": {
+                "option_label": "Conversion Rate Optimization (CRO)",
+                "option_value": "cro"
+              }
+            },
+            {
+              "id": "mpfw8oe",
+              "attributes": {
+                "option_label": "Automation & Integration workflows",
+                "option_value": "automation"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_consent": {
+        "_id": "row_mkt_consent",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_newsletter_consent",
+          "mkt_phone_consent"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_newsletter_consent": {
+        "_id": "mkt_newsletter_consent",
+        "type": "checkbox",
+        "parentId": "row_mkt_consent",
+        "attributes": {
+          "label": "Newsletter Subscription",
+          "required": false,
+          "options_list": [
+            {
+              "id": "3bbyp6k",
+              "attributes": {
+                "option_label": "Yes, send me industry tips & product updates monthly",
+                "option_value": "agree"
+              }
+            }
+          ]
+        }
+      },
+      "mkt_phone_consent": {
+        "_id": "mkt_phone_consent",
+        "type": "checkbox",
+        "parentId": "row_mkt_consent",
+        "attributes": {
+          "label": "Direct Outreach Consent",
+          "required": false,
+          "options_list": [
+            {
+              "id": "vnhas8w",
+              "attributes": {
+                "option_label": "I consent to receive text messages or phone callbacks from advisors",
+                "option_value": "agree"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_source": {
+        "_id": "row_mkt_source",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_source_select"
+        ]
+      },
+      "mkt_source_select": {
+        "_id": "mkt_source_select",
+        "type": "select",
+        "parentId": "row_mkt_source",
+        "attributes": {
+          "label": "How did you find this whitepaper?",
+          "required": false,
+          "options_list": [
+            {
+              "id": "ah62b3q",
+              "attributes": {
+                "option_label": "Google Search Results",
+                "option_value": "google"
+              }
+            },
+            {
+              "id": "ybgq2uf",
+              "attributes": {
+                "option_label": "Social Media (LinkedIn, Twitter)",
+                "option_value": "social"
+              }
+            },
+            {
+              "id": "mt85vf0",
+              "attributes": {
+                "option_label": "Friend / Colleague Referral",
+                "option_value": "referral"
+              }
+            },
+            {
+              "id": "dwpp08b",
+              "attributes": {
+                "option_label": "Industry blog or Newsletter",
+                "option_value": "newsletter"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_action": {
+        "_id": "row_mkt_action",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_captcha",
+          "mkt_download_btn"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_captcha": {
+        "_id": "mkt_captcha",
+        "type": "captcha",
+        "parentId": "row_mkt_action",
+        "attributes": {
+          "label": "Robot Check",
+          "theme": "light",
+          "size": "normal"
+        }
+      },
+      "mkt_download_btn": {
+        "_id": "mkt_download_btn",
+        "type": "button",
+        "parentId": "row_mkt_action",
+        "attributes": {
+          "label": "Get Instant Free Download",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "marketing-submit"
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Beta Program Application",
+      "form_status": "publish",
+      "form_description": "Apply to become a early tester for our upcoming mobile application."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{field_mkt_email}",
+          "email_subject": "Your Free eBook: Enterprise Scaling Guide",
+          "email_message": "<h3>Thank you for downloading our eBook!</h3><p>Hi {field_mkt_name},</p><p>Click the link below to download your copy:</p><p><a href='#'>Download Enterprise Scaling Guide (PDF)</a></p><p>We look forward to seeing you at our next webinar!</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_mkt_banner",
+      "row_mkt_basics",
+      "row_mkt_profile",
+      "row_mkt_interests"
+    ],
+    "fields": {
+      "row_mkt_banner": {
+        "_id": "row_mkt_banner",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_banner_html"
+        ]
+      },
+      "mkt_banner_html": {
+        "_id": "mkt_banner_html",
+        "type": "html",
+        "parentId": "row_mkt_banner",
+        "attributes": {
+          "raw_html": "<div class='marketing-banner' style='text-align: center;'><h2>Download Free Scaling Guide</h2><p>Get instant access to our premium whitepaper and receive exclusive invitations to our monthly webinars.</p></div>"
+        }
+      },
+      "row_mkt_basics": {
+        "_id": "row_mkt_basics",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_name",
+          "mkt_email"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_name": {
+        "_id": "mkt_name",
+        "type": "text",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Full Name",
+          "placeholder": "Enter your full name",
+          "required": true,
+          "error_message": "Please enter your name."
+        }
+      },
+      "mkt_email": {
+        "_id": "mkt_email",
+        "type": "email",
+        "parentId": "row_mkt_basics",
+        "attributes": {
+          "label": "Business Email Address",
+          "placeholder": "name@company.com",
+          "required": true,
+          "error_message": "A valid business email address is required to receive the guide."
+        }
+      },
+      "row_mkt_profile": {
+        "_id": "row_mkt_profile",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_job_title",
+          "mkt_company_size"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_job_title": {
+        "_id": "mkt_job_title",
+        "type": "text",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Job Title",
+          "placeholder": "e.g., Marketing Director",
+          "required": true,
+          "error_message": "Please enter your professional title."
+        }
+      },
+      "mkt_company_size": {
+        "_id": "mkt_company_size",
+        "type": "select",
+        "parentId": "row_mkt_profile",
+        "attributes": {
+          "label": "Company Employee Count",
+          "required": true,
+          "default_value": "11-50",
+          "options_list": [
+            {
+              "id": "6vug0uh",
+              "attributes": {
+                "option_label": "Self-Employed / 1 Employee",
+                "option_value": "1"
+              }
+            },
+            {
+              "id": "bev23ok",
+              "attributes": {
+                "option_label": "2 - 10 Employees",
+                "option_value": "2-10"
+              }
+            },
+            {
+              "id": "biiko0h",
+              "attributes": {
+                "option_label": "11 - 50 Employees",
+                "option_value": "11-50"
+              }
+            },
+            {
+              "id": "1o5jpe8",
+              "attributes": {
+                "option_label": "51 - 200 Employees",
+                "option_value": "51-200"
+              }
+            },
+            {
+              "id": "4i8ql6r",
+              "attributes": {
+                "option_label": "201+ Employees",
+                "option_value": "201_plus"
+              }
+            }
+          ]
+        }
+      },
+      "row_mkt_interests": {
+        "_id": "row_mkt_interests",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "mkt_industry",
+          "mkt_topics"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          }
+        }
+      },
+      "mkt_industry": {
+        "_id": "mkt_industry",
+        "type": "select",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Industry Sector",
+          "required": true,
+          "default_value": "tech",
+          "options_list": [
+            {
+              "id": "qa46meq",
+              "attributes": {
+                "option_label": "Technology & SaaS",
+                "option_value": "tech"
+              }
+            },
+            {
+              "id": "7nvbc13",
+              "attributes": {
+                "option_label": "Healthcare & Biotech",
+                "option_value": "health"
+              }
+            },
+            {
+              "id": "r3afmsw",
+              "attributes": {
+                "option_label": "Finance & Accounting",
+                "option_value": "finance"
+              }
+            },
+            {
+              "id": "3alu3ow",
+              "attributes": {
+                "option_label": "E-Commerce & Retail",
+                "option_value": "retail"
+              }
+            },
+            {
+              "id": "p5thums",
+              "attributes": {
+                "option_label": "Education & Non-Profit",
+                "option_value": "education"
+              }
+            }
+          ]
+        }
+      },
+      "mkt_topics": {
+        "_id": "mkt_topics",
+        "type": "checkbox",
+        "parentId": "row_mkt_interests",
+        "attributes": {
+          "label": "Primary Interests / Topics of Study",
+          "required": false,
+          "options_list": [
+            {
+              "id": "w1xloxw",
+              "attributes": {
+                "option_label": "Lead Generation Strategies",
+                "option_value": "lead_gen"
+              }
+            },
+            {
+              "id": "gjx0xkv",
+              "attributes": {
+                "option_label": "Conversion Rate Optimization (CRO)",
+                "option_value": "cro"
+              }
+            },
+            {
+              "id": "7eb9gr0",
+              "attributes": {
+                "option_label": "Automation & Integration workflows",
+                "option_value": "automation"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+]

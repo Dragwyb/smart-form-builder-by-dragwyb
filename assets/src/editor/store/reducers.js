@@ -30,7 +30,8 @@ import {
     UPDATE_ACTIVE_ROOT_CONTAINER,
     RESET_ACTIVE_ROOT_CONTAINER,
     HISTORY_REVERT,
-    ADD_HISTORY_SNAPSHOT
+    ADD_HISTORY_SNAPSHOT,
+    REPLACE_FORM_STATE
 } from './actions';
 
 /**
@@ -68,6 +69,30 @@ const removeFieldsById = (fields, idsToDelete) => {
 
 export default function reducer(state, action) {
     switch (action.type) {
+        case REPLACE_FORM_STATE: {
+            let fieldIds = [];
+            if (action.payload.form.fields) {
+                const existingIds = JSON.stringify(action.payload.form.fields);
+                fieldIds = [...existingIds.matchAll(/"_id"\s*:\s*"([^"]+)"/g)].map(match => match[1]);
+            }
+            return {
+                ...state,
+                form: {
+                    ...state.form,
+                    fields: action.payload.form.fields,
+                    rootContainers: action.payload.form.rootContainers,
+                    advance: action.payload.form.advance,
+                    actions: action.payload.form.actions,
+                    ...(action.payload.form.style ? { style: action.payload.form.style } : {})
+                },
+                styleSelectors: action.payload.styleSelectors,
+                selectedSettingId: null,
+                activeToolbar: DragwybEditor?.EditorToolbars?.Default ?? false,
+                fieldIds,
+                activeRootContainer: null
+            };
+        }
+
 
         case UPDATE_THEME_MODE:
             localStorage.setItem("DragwybEditorTheme", action.payload.themeMode);

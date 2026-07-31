@@ -232,6 +232,7 @@ if ( ! class_exists( 'Dragwyb_Builder_Editor' ) ) {
 
 			$localize_data = array(
 				'ajaxUrl'         => admin_url( 'admin-ajax.php' ),
+				'restUrl'         => esc_url_raw( get_rest_url() ),
 				'pluginUrl'       => esc_url( DRAGWYB_FORM_BUILDER_URL ),
 				'nonce'           => wp_create_nonce( 'dragwyb_editor' ),
 				'formId'          => (int) self::$form_id,

@@ -35,6 +35,7 @@ export const UPDATE_ACTIVE_ROOT_CONTAINER = 'UPDATE_ACTIVE_ROOT_CONTAINER';
 export const RESET_ACTIVE_ROOT_CONTAINER = 'RESET_ACTIVE_ROOT_CONTAINER';
 export const HISTORY_REVERT = 'HISTORY_REVERT';
 export const ADD_HISTORY_SNAPSHOT = 'ADD_HISTORY_SNAPSHOT';
+export const REPLACE_FORM_STATE = 'REPLACE_FORM_STATE';
 
 export const revertToHistory = (index) => ({
     type: HISTORY_REVERT,
@@ -206,3 +207,17 @@ export const addError = (message) => ({
     type: ERROR_NOTICE,
     payload: { message, type: 'error' }
 });
+
+export const replaceFormState = (templateData, styleSelectors = {}) => ({
+    type: REPLACE_FORM_STATE,
+    payload: {
+        form: {
+            fields: templateData.fields || {},
+            rootContainers: templateData.rootContainers || [],
+            advance: templateData.advance || {},
+            actions: templateData.actions || [],
+        },
+        styleSelectors: styleSelectors || {}
+    }
+});
+

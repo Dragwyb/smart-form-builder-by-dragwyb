@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useStore, useDispatch } from 'react-redux';
 import { Utils as Helper } from '../../components/Utils';
 import { SaveBtn } from '../../components/Common';
@@ -9,9 +9,11 @@ import ResponsiveDevices from '../../components/Common/ResponsiveDevices';
 import IconsManager from '../../components/IconsManager';
 
 // Import the icons you requested
-import { FaSun, FaMoon, FaHistory } from 'react-icons/fa';
+import { FaSun, FaMoon, FaHistory, FaFolderPlus } from 'react-icons/fa';
+import TemplateLibrary from './TemplateLibrary';
 
 const Header = () => {
+    const [isTemplateOpen, setIsTemplateOpen] = useState(false);
     // Existing Selectors
     const activeToolbar = useSelector(state => state?.activeToolbar);
     const formStatus = useSelector(state => state?.form?.advance?.form_status || DragwybEditor.formData.status);
@@ -126,6 +128,13 @@ const Header = () => {
                     <FaHistory color='#fff' />
                 </div>
                 <div
+                    className={`dragwyb-editor__templates-toggle${isTemplateOpen ? ' active' : ''}`}
+                    onClick={() => setIsTemplateOpen(!isTemplateOpen)}
+                    title={__('Open Template Library', 'smart-form-builder-by-dragwyb')}
+                >
+                    <FaFolderPlus color='#fff' />
+                </div>
+                <div
                     className="dragwyb-editor__theme-toggle"
                     onClick={toggleTheme}
                     title={themeMode === 'light' ? __('Switch to Dark Mode', 'smart-form-builder-by-dragwyb') : __('Switch to Light Mode', 'smart-form-builder-by-dragwyb')}                >
@@ -142,6 +151,10 @@ const Header = () => {
                 </a>
                 <SaveBtn />
             </div>
+            <TemplateLibrary
+                isOpen={isTemplateOpen}
+                onClose={() => setIsTemplateOpen(false)}
+            />
         </div>
     );
 }
