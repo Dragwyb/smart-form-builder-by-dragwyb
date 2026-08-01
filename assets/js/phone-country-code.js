@@ -7,8 +7,12 @@ class DragwybPhoneCountryCode extends DragwybBuilder.DragwybFormFrontendBase {
 		this.config = window.DragwybPhoneCountryData || {};
 		this.translations = window.CCFEFCountryTranslations || {};
 
-		this.$container.find('.dragwyb-phone-field input[type="tel"][data-country-code="yes"]').each((_, el) => {
-			this.initField(jQuery(el));
+		this.$container.find('.dragwyb-phone-field input[type="tel"]').each((_, el) => {
+			if (el.dataset.countryCode === 'yes') {
+				this.initField(jQuery(el));
+			} else {
+				this.destroyField(el);
+			}
 		});
 
 		this.bindValidation();
@@ -342,15 +346,10 @@ const initPhoneCountryCode = (container, formId) => {
 	new DragwybPhoneCountryCode(container, formId);
 };
 
-const destroyPhoneIti = (input) => {
-	DragwybPhoneCountryCode.prototype.destroyField(input);
-};
-
 jQuery(document).on('Dragwyb:frontendInit', () => {
 	DragwybBuilder.Hooks.addAction('dragwyb/frontend/form_ready', initPhoneCountryCode);
 });
 
 jQuery(document).on('Dragwyb:editorAppLoaded', () => {
 	DragwybBuilder.Hooks.addAction('dragwyb/editorPreview/form_ready', initPhoneCountryCode);
-	DragwybBuilder.Hooks.addAction('dragwyb/eidotPreview/form_ready', initPhoneCountryCode);
 });
