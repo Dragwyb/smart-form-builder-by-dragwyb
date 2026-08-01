@@ -353,36 +353,4 @@ jQuery(document).on('Dragwyb:frontendInit', () => {
 jQuery(document).on('Dragwyb:editorAppLoaded', () => {
 	DragwybBuilder.Hooks.addAction('dragwyb/editorPreview/form_ready', initPhoneCountryCode);
 	DragwybBuilder.Hooks.addAction('dragwyb/eidotPreview/form_ready', initPhoneCountryCode);
-
-	const syncEditorPhoneFields = () => {
-		jQuery('.dragwyb-phone-field input[type="tel"]').each((_, el) => {
-			const $el = jQuery(el);
-
-			if ($el.attr('data-country-code') !== 'yes') {
-				if (el.dataset.dragwybItiInit === '1' || $el.closest('.iti').length) {
-					destroyPhoneIti(el);
-				}
-				return;
-			}
-
-			const $form = $el.closest('.dragwyb-form-wrapper, form.dragwyb-form');
-			if ($form.length) {
-				initPhoneCountryCode($form, $form.attr('data-form-id') || $form.data('form-id') || '');
-			}
-		});
-	};
-
-	if (!document.body.dataset.dragwybPhoneObserver) {
-		document.body.dataset.dragwybPhoneObserver = '1';
-		let debounceTimer = null;
-		new MutationObserver(() => {
-			clearTimeout(debounceTimer);
-			debounceTimer = setTimeout(syncEditorPhoneFields, 50);
-		}).observe(document.body, {
-			childList: true,
-			subtree: true,
-			attributes: true,
-			attributeFilter: ['data-country-code', 'data-iti-config'],
-		});
-	}
 });
