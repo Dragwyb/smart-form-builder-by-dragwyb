@@ -582,7 +582,9 @@ export const editorFormReady = ({ state }) => {
         const formWrp = jQuery(formPreviewIframe).find(`#dragwyb-form-wrapper-${formId}`);
 
         if (formWrp.length > 0) {
-            previewWindow.DragwybBuilder.Hooks.doAction('dragwyb/eidotPreview/form_ready', formWrp, formId);
+            setTimeout(() => {
+                previewWindow.DragwybBuilder.Hooks.doAction('dragwyb/editorPreview/form_ready', formWrp, formId);
+            })
         }
     }
 }
