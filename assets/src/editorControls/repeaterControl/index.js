@@ -17,6 +17,10 @@ class RepeaterControl extends DragwybEditor.editor.extends.ControlBase {
             return;
         }
 
+        if (!repeaterItems || Object.keys(repeaterItems).length <= 0) {
+            return;
+        }
+
         const cssCache = {};
 
         Object.values(repeaterItems).forEach(item => {
