@@ -23,7 +23,8 @@
       "row_project_specs",
       "row_timeline_urgency",
       "row_project_desc",
-      "row_poc_details"
+      "row_poc_details",
+      "row_biz_submit"
     ],
     "fields": {
       "row_biz_header": {
@@ -301,6 +302,37 @@
           "placeholder": "Direct Line",
           "required": false
         }
+      },
+      "row_biz_submit": {
+        "_id": "row_biz_submit",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_submit_btn"
+        ],
+        "attributes": {
+          "columns": 1,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      },
+      "biz_submit_btn": {
+        "_id": "biz_submit_btn",
+        "type": "button",
+        "parentId": "row_biz_submit",
+        "attributes": {
+          "label": "Submit",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "business-submit",
+          "button_width": {
+            "size": 100,
+            "unit": "%"
+          }
+        }
       }
     }
   },
@@ -330,6 +362,7 @@
       "row_project_desc",
       "row_poc_details",
       "row_files_uploads",
+      "row_biz_captcha",
       "row_biz_submit"
     ],
     "fields": {
@@ -660,11 +693,10 @@
         "type": "row",
         "is_root_container": true,
         "children": [
-          "biz_captcha",
           "biz_submit_btn"
         ],
         "attributes": {
-          "columns": 2,
+          "columns": 1,
           "gap": {
             "size": 15,
             "unit": "px"
@@ -675,7 +707,7 @@
       "biz_captcha": {
         "_id": "biz_captcha",
         "type": "captcha",
-        "parentId": "row_biz_submit",
+        "parentId": "row_biz_captcha",
         "attributes": {
           "label": "Verification",
           "theme": "light",
@@ -690,7 +722,27 @@
           "label": "Submit",
           "button_action": "submit",
           "button_style": "primary",
-          "css_classes": "business-submit"
+          "css_classes": "business-submit",
+          "button_width": {
+            "size": 100,
+            "unit": "%"
+          }
+        }
+      },
+      "row_biz_captcha": {
+        "_id": "row_biz_captcha",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_captcha"
+        ],
+        "attributes": {
+          "columns": 1,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
         }
       }
     }
@@ -717,7 +769,8 @@
       "row_biz_header",
       "row_company_info",
       "row_project_specs",
-      "row_timeline_urgency"
+      "row_timeline_urgency",
+      "row_biz_submit"
     ],
     "fields": {
       "row_biz_header": {
@@ -924,6 +977,37 @@
             }
           ]
         }
+      },
+      "row_biz_submit": {
+        "_id": "row_biz_submit",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_submit_btn"
+        ],
+        "attributes": {
+          "columns": 1,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      },
+      "biz_submit_btn": {
+        "_id": "biz_submit_btn",
+        "type": "button",
+        "parentId": "row_biz_submit",
+        "attributes": {
+          "label": "Submit",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "business-submit",
+          "button_width": {
+            "size": 100,
+            "unit": "%"
+          }
+        }
       }
     }
   },
@@ -951,7 +1035,8 @@
       "row_project_specs",
       "row_timeline_urgency",
       "row_project_desc",
-      "row_poc_details"
+      "row_poc_details",
+      "row_biz_submit"
     ],
     "fields": {
       "row_biz_header": {
@@ -1229,6 +1314,37 @@
           "placeholder": "Direct Line",
           "required": false
         }
+      },
+      "row_biz_submit": {
+        "_id": "row_biz_submit",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_submit_btn"
+        ],
+        "attributes": {
+          "columns": 1,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      },
+      "biz_submit_btn": {
+        "_id": "biz_submit_btn",
+        "type": "button",
+        "parentId": "row_biz_submit",
+        "attributes": {
+          "label": "Submit",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "business-submit",
+          "button_width": {
+            "size": 100,
+            "unit": "%"
+          }
+        }
       }
     }
   },
@@ -1258,6 +1374,7 @@
       "row_project_desc",
       "row_poc_details",
       "row_files_uploads",
+      "row_biz_captcha",
       "row_biz_submit"
     ],
     "fields": {
@@ -1588,11 +1705,10 @@
         "type": "row",
         "is_root_container": true,
         "children": [
-          "biz_captcha",
           "biz_submit_btn"
         ],
         "attributes": {
-          "columns": 2,
+          "columns": 1,
           "gap": {
             "size": 15,
             "unit": "px"
@@ -1603,7 +1719,7 @@
       "biz_captcha": {
         "_id": "biz_captcha",
         "type": "captcha",
-        "parentId": "row_biz_submit",
+        "parentId": "row_biz_captcha",
         "attributes": {
           "label": "Verification",
           "theme": "light",
@@ -1618,7 +1734,27 @@
           "label": "Submit",
           "button_action": "submit",
           "button_style": "primary",
-          "css_classes": "business-submit"
+          "css_classes": "business-submit",
+          "button_width": {
+            "size": 100,
+            "unit": "%"
+          }
+        }
+      },
+      "row_biz_captcha": {
+        "_id": "row_biz_captcha",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_captcha"
+        ],
+        "attributes": {
+          "columns": 1,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
         }
       }
     }
@@ -1645,7 +1781,8 @@
       "row_biz_header",
       "row_company_info",
       "row_project_specs",
-      "row_timeline_urgency"
+      "row_timeline_urgency",
+      "row_biz_submit"
     ],
     "fields": {
       "row_biz_header": {
@@ -1852,6 +1989,37 @@
             }
           ]
         }
+      },
+      "row_biz_submit": {
+        "_id": "row_biz_submit",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_submit_btn"
+        ],
+        "attributes": {
+          "columns": 1,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      },
+      "biz_submit_btn": {
+        "_id": "biz_submit_btn",
+        "type": "button",
+        "parentId": "row_biz_submit",
+        "attributes": {
+          "label": "Submit",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "business-submit",
+          "button_width": {
+            "size": 100,
+            "unit": "%"
+          }
+        }
       }
     }
   },
@@ -1879,7 +2047,8 @@
       "row_project_specs",
       "row_timeline_urgency",
       "row_project_desc",
-      "row_poc_details"
+      "row_poc_details",
+      "row_biz_submit"
     ],
     "fields": {
       "row_biz_header": {
@@ -2157,6 +2326,37 @@
           "placeholder": "Direct Line",
           "required": false
         }
+      },
+      "row_biz_submit": {
+        "_id": "row_biz_submit",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_submit_btn"
+        ],
+        "attributes": {
+          "columns": 1,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      },
+      "biz_submit_btn": {
+        "_id": "biz_submit_btn",
+        "type": "button",
+        "parentId": "row_biz_submit",
+        "attributes": {
+          "label": "Submit",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "business-submit",
+          "button_width": {
+            "size": 100,
+            "unit": "%"
+          }
+        }
       }
     }
   },
@@ -2186,6 +2386,7 @@
       "row_project_desc",
       "row_poc_details",
       "row_files_uploads",
+      "row_biz_captcha",
       "row_biz_submit"
     ],
     "fields": {
@@ -2516,11 +2717,10 @@
         "type": "row",
         "is_root_container": true,
         "children": [
-          "biz_captcha",
           "biz_submit_btn"
         ],
         "attributes": {
-          "columns": 2,
+          "columns": 1,
           "gap": {
             "size": 15,
             "unit": "px"
@@ -2531,7 +2731,7 @@
       "biz_captcha": {
         "_id": "biz_captcha",
         "type": "captcha",
-        "parentId": "row_biz_submit",
+        "parentId": "row_biz_captcha",
         "attributes": {
           "label": "Verification",
           "theme": "light",
@@ -2546,7 +2746,27 @@
           "label": "Submit",
           "button_action": "submit",
           "button_style": "primary",
-          "css_classes": "business-submit"
+          "css_classes": "business-submit",
+          "button_width": {
+            "size": 100,
+            "unit": "%"
+          }
+        }
+      },
+      "row_biz_captcha": {
+        "_id": "row_biz_captcha",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_captcha"
+        ],
+        "attributes": {
+          "columns": 1,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
         }
       }
     }
@@ -2573,7 +2793,8 @@
       "row_biz_header",
       "row_company_info",
       "row_project_specs",
-      "row_timeline_urgency"
+      "row_timeline_urgency",
+      "row_biz_submit"
     ],
     "fields": {
       "row_biz_header": {
@@ -2780,6 +3001,37 @@
             }
           ]
         }
+      },
+      "row_biz_submit": {
+        "_id": "row_biz_submit",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_submit_btn"
+        ],
+        "attributes": {
+          "columns": 1,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      },
+      "biz_submit_btn": {
+        "_id": "biz_submit_btn",
+        "type": "button",
+        "parentId": "row_biz_submit",
+        "attributes": {
+          "label": "Submit",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "business-submit",
+          "button_width": {
+            "size": 100,
+            "unit": "%"
+          }
+        }
       }
     }
   },
@@ -2807,7 +3059,8 @@
       "row_project_specs",
       "row_timeline_urgency",
       "row_project_desc",
-      "row_poc_details"
+      "row_poc_details",
+      "row_biz_submit"
     ],
     "fields": {
       "row_biz_header": {
@@ -3085,6 +3338,37 @@
           "placeholder": "Direct Line",
           "required": false
         }
+      },
+      "row_biz_submit": {
+        "_id": "row_biz_submit",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_submit_btn"
+        ],
+        "attributes": {
+          "columns": 1,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      },
+      "biz_submit_btn": {
+        "_id": "biz_submit_btn",
+        "type": "button",
+        "parentId": "row_biz_submit",
+        "attributes": {
+          "label": "Submit",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "business-submit",
+          "button_width": {
+            "size": 100,
+            "unit": "%"
+          }
+        }
       }
     }
   },
@@ -3114,6 +3398,7 @@
       "row_project_desc",
       "row_poc_details",
       "row_files_uploads",
+      "row_biz_captcha",
       "row_biz_submit"
     ],
     "fields": {
@@ -3444,11 +3729,10 @@
         "type": "row",
         "is_root_container": true,
         "children": [
-          "biz_captcha",
           "biz_submit_btn"
         ],
         "attributes": {
-          "columns": 2,
+          "columns": 1,
           "gap": {
             "size": 15,
             "unit": "px"
@@ -3459,7 +3743,7 @@
       "biz_captcha": {
         "_id": "biz_captcha",
         "type": "captcha",
-        "parentId": "row_biz_submit",
+        "parentId": "row_biz_captcha",
         "attributes": {
           "label": "Verification",
           "theme": "light",
@@ -3474,7 +3758,27 @@
           "label": "Submit",
           "button_action": "submit",
           "button_style": "primary",
-          "css_classes": "business-submit"
+          "css_classes": "business-submit",
+          "button_width": {
+            "size": 100,
+            "unit": "%"
+          }
+        }
+      },
+      "row_biz_captcha": {
+        "_id": "row_biz_captcha",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_captcha"
+        ],
+        "attributes": {
+          "columns": 1,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
         }
       }
     }
@@ -3501,7 +3805,8 @@
       "row_biz_header",
       "row_company_info",
       "row_project_specs",
-      "row_timeline_urgency"
+      "row_timeline_urgency",
+      "row_biz_submit"
     ],
     "fields": {
       "row_biz_header": {
@@ -3707,6 +4012,37 @@
               }
             }
           ]
+        }
+      },
+      "row_biz_submit": {
+        "_id": "row_biz_submit",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "biz_submit_btn"
+        ],
+        "attributes": {
+          "columns": 1,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      },
+      "biz_submit_btn": {
+        "_id": "biz_submit_btn",
+        "type": "button",
+        "parentId": "row_biz_submit",
+        "attributes": {
+          "label": "Submit",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "business-submit",
+          "button_width": {
+            "size": 100,
+            "unit": "%"
+          }
         }
       }
     }
