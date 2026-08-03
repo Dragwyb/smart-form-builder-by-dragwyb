@@ -10,57 +10,6 @@ import DragwybControlBase from '../../controlBase';
 
 const controlCache = {}
 
-const STYLE_PRESETS = {
-    'style-1': {
-        form_width: { size: 800, unit: 'px' },
-        form_container_bg: { background_color: '#f8fafc' },
-        form_padding: { top: 30, right: 30, bottom: 30, left: 30, unit: 'px', linked: true },
-        field_spacing: { size: 20, unit: 'px' },
-        label_color: '#475569',
-        input_bg_color: '#ffffff',
-        input_text_color: '#1e293b',
-        input_padding: { top: 10, right: 14, bottom: 10, left: 14, unit: 'px', linked: true },
-        input_border: { border_type: 'solid', border_width: { top: '1', right: '1', bottom: '1', left: '1', unit: 'px' }, border_color: '#94a3b8' },
-        input_focus_border_color: '#2563eb',
-        button_bg_color: '#2563eb',
-        button_text_color: '#ffffff',
-        button_padding: { top: 12, right: 24, bottom: 12, left: 24, unit: 'px', linked: true },
-        button_border: { border_type: 'none', border_width: { top: '0', right: '0', bottom: '0', left: '0', unit: 'px' }, border_radius: { top: '4', right: '4', bottom: '4', left: '4', unit: 'px' }, border_color: '' }
-    },
-    'style-2': {
-        form_width: { size: 600, unit: 'px' },
-        form_container_bg: { background_color: '#ffffff' },
-        form_padding: { top: 20, right: 20, bottom: 20, left: 20, unit: 'px', linked: true },
-        field_spacing: { size: 12, unit: 'px' },
-        label_color: '#18181b',
-        input_bg_color: '#ffffff',
-        input_text_color: '#18181b',
-        input_padding: { top: 8, right: 4, bottom: 8, left: 4, unit: 'px', linked: false },
-        input_border: { border_type: 'solid', border_width: { top: '0', right: '0', bottom: '2', left: '0', unit: 'px' }, border_color: '#18181b' },
-        input_focus_border_color: '#18181b',
-        button_bg_color: '#18181b',
-        button_text_color: '#ffffff',
-        button_padding: { top: 10, right: 20, bottom: 10, left: 20, unit: 'px', linked: true },
-        button_border: { border_type: 'none', border_width: { top: '0', right: '0', bottom: '0', left: '0', unit: 'px' }, border_radius: { top: '0', right: '0', bottom: '0', left: '0', unit: 'px' }, border_color: '' }
-    },
-    'style-3': {
-        form_width: { size: 700, unit: 'px' },
-        form_container_bg: { background_color: '#fffbeb' },
-        form_padding: { top: 40, right: 40, bottom: 40, left: 40, unit: 'px', linked: true },
-        field_spacing: { size: 24, unit: 'px' },
-        label_color: '#78350f',
-        input_bg_color: '#fffdf5',
-        input_text_color: '#1e293b',
-        input_padding: { top: 12, right: 16, bottom: 12, left: 16, unit: 'px', linked: true },
-        input_border: { border_type: 'solid', border_width: { top: '1', right: '1', bottom: '1', left: '1', unit: 'px' }, border_color: '#f59e0b' },
-        input_focus_border_color: '#d97706',
-        button_bg_color: '#d97706',
-        button_text_color: '#ffffff',
-        button_padding: { top: 14, right: 28, bottom: 14, left: 28, unit: 'px', linked: true },
-        button_border: { border_type: 'none', border_width: { top: '0', right: '0', bottom: '0', left: '0', unit: 'px' }, border_radius: { top: '16', right: '16', bottom: '16', left: '16', unit: 'px' }, border_color: '' }
-    }
-};
-
 const TemplateFieldItem = ({ fieldId, template, perviewIFrame }) => {
     if (!fieldId || !template || !template.fields) return null;
     const field = template.fields[fieldId];
@@ -295,7 +244,7 @@ const generateStyle = (fields, formId, controlCache) => {
 
 
 
-const TemplatePreviewIframe = ({ template, styleName, templateId, fullPreviewTemplate = false, height = '220px', updateCSSCache, cssCache, controlCache }) => {
+const TemplatePreviewIframe = ({ template, templateId, fullPreviewTemplate = false, height = '220px', updateCSSCache, cssCache, controlCache }) => {
     const iframeRef = useRef(null);
     const PREVIEW_URL = DragwybEditor?.previewUrl;
     const [mountNode, setMountNode] = useState(null);
@@ -381,7 +330,7 @@ const TemplatePreviewIframe = ({ template, styleName, templateId, fullPreviewTem
             }}
         >
             {mountNode && iframeRef.current && createPortal(
-                <div className={`dragwyb-form-wrapper ${styleName || ''}`} id={`dragwyb-form-wrapper-${DragwybEditor?.formId}`}>
+                <div className={`dragwyb-form-wrapper`} id={`dragwyb-form-wrapper-${DragwybEditor?.formId}`}>
                     <div className='dragwyb-form'>
                         {template.rootContainers && template.rootContainers.map((containerId) => (
                             <TemplateFieldItem
@@ -406,7 +355,6 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
     const [loading, setLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('contact');
     const [searchQuery, setSearchQuery] = useState('');
-    const [stylesMap, setStylesMap] = useState({});
     const [fullPreviewTemplate, setFullPreviewTemplate] = useState(null);
     const [cssCache, setCssCache] = useState({});
 
@@ -430,13 +378,6 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
 
     if (!isOpen) return null;
 
-    const handleStyleChange = (typeKey, value) => {
-        setStylesMap(prev => ({
-            ...prev,
-            [typeKey]: value
-        }));
-    };
-
     const handleUpdateCssCache = (id, css) => {
         if (!cssCache.hasOwnProperty(id)) {
             setCssCache(prev => ({
@@ -447,8 +388,6 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
     }
 
     const handleImport = (templateData, typeKey) => {
-        const selectedStyle = stylesMap[typeKey] || '';
-
         const confirmMsg = __('Warning: Importing this template will overwrite all your current fields. Any unsaved changes will be lost. Do you want to proceed?', 'smart-form-builder-by-dragwyb');
         if (window.confirm(confirmMsg)) {
             let styleSelectors = '';
@@ -595,7 +534,6 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
                             {filteredList.map((item, index) => {
                                 const templateId = item.id;
                                 const tData = item.data;
-                                const currentStyle = stylesMap[templateId] || '';
 
                                 return (
                                     <div key={templateId} className="template-card">
@@ -617,7 +555,7 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
                                                 <button
                                                     className="action-icon-btn preview-btn"
                                                     title={__('Full Screen Preview', 'smart-form-builder-by-dragwyb')}
-                                                    onClick={() => setFullPreviewTemplate({ data: tData, style: currentStyle, templateId })}
+                                                    onClick={() => setFullPreviewTemplate({ data: tData, templateId })}
                                                 >
                                                     <FaEye />
                                                 </button>
@@ -650,7 +588,6 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
                             <h3>
                                 {__('Previewing:', 'smart-form-builder-by-dragwyb')}{' '}
                                 {fullPreviewTemplate.data.advance?.form_name}
-                                <span className="style-badge">{fullPreviewTemplate.style || 'Default Style'}</span>
                             </h3>
                             <button className="close-btn" onClick={() => setFullPreviewTemplate(null)}>
                                 <FaTimes />
@@ -659,7 +596,6 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
                         <div className="full-preview-body">
                             <TemplatePreviewIframe
                                 template={fullPreviewTemplate.data}
-                                styleName={fullPreviewTemplate.style}
                                 templateId={fullPreviewTemplate.templateId}
                                 fullPreviewTemplate={true}
                                 height="100%"
