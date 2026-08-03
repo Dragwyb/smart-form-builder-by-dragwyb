@@ -248,6 +248,7 @@ class DragwybControlBase extends Component {
         this.#updateValue = props.handleChange;
         this.Utils = props.Utils;
         this.selectorKey = props.toolbarId;
+        this.fieldValue = props.fieldValue || {};
 
         if (this.settings.popover) {
             props?.resetControlEventLifting?.(this.resetControl.bind(this));
