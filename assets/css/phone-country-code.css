@@ -5,7 +5,10 @@
 
 .dragwyb-phone-field:has([data-country-code="yes"]) .dragwyb-input-group {
 	position: relative;
-	display: block;
+	/* Keep column-reverse so label stays above input (DOM order is input then label). */
+	display: flex;
+	flex-direction: column-reverse;
+	width: 100%;
 }
 
 .dragwyb-phone-field .dragwyb-intl-container .iti__country-container {
