@@ -1934,7 +1934,7 @@ $dropdown-max-height: 250px;
 
 .templates-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 24px;
     width: 100%;
 }
@@ -1992,7 +1992,7 @@ $dropdown-max-height: 250px;
 
     &__actions-row {
         display: grid;
-        grid-template-columns: 2fr 1fr 1fr;
+        grid-template-columns: 1fr 3fr;
         gap: 12px;
         align-items: center;
 
@@ -2083,11 +2083,22 @@ $dropdown-max-height: 250px;
     padding: 60px 0;
     color: #64748b;
     gap: 12px;
+    margin-block: auto;
 
     .spin {
         font-size: 32px;
         animation: spin 1s linear infinite;
         color: #2563eb;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
     }
 
     p {

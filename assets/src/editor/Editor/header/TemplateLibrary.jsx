@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { replaceFormState } from '../../store/actions';
 import { __ } from '@wordpress/i18n';
-import { FaSearch, FaExpand, FaPlus, FaTimes, FaSpinner, FaEye, FaFolderPlus } from 'react-icons/fa';
+import { FaSearch, FaTimes, FaSpinner, FaEye, FaFolderPlus } from 'react-icons/fa';
 import * as Fields from '../Fields';
 import PreviewIframe from '../PreviewIframe';
 import DragwybControlBase from '../../controlBase';
@@ -401,7 +401,6 @@ const TemplatePreviewIframe = ({ template, styleName, templateId, fullPreviewTem
 
 const TemplateLibrary = ({ isOpen, onClose }) => {
     const dispatch = useDispatch();
-    const currentStyleSelectors = useSelector((state) => state.styleSelectors);
 
     const [templates, setTemplates] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -613,21 +612,7 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
 
                                         {/* 3 columns in one section under the iframe */}
                                         <div className="template-card__actions-row">
-                                            {/* Column 1: Change Style Dropdown */}
-                                            <div className="action-col select-col">
-                                                <select
-                                                    value={currentStyle}
-                                                    onChange={(e) => handleStyleChange(templateId, e.target.value)}
-                                                    className="style-select"
-                                                >
-                                                    <option value="">{__('Default Style', 'smart-form-builder-by-dragwyb')}</option>
-                                                    <option value="style-1">{__('Style 1 (Modern Blue)', 'smart-form-builder-by-dragwyb')}</option>
-                                                    <option value="style-2">{__('Style 2 (Minimalist)', 'smart-form-builder-by-dragwyb')}</option>
-                                                    <option value="style-3">{__('Style 3 (Playful Amber)', 'smart-form-builder-by-dragwyb')}</option>
-                                                </select>
-                                            </div>
-
-                                            {/* Column 2: Full Preview Icon Button */}
+                                            {/* Column 1: Full Preview Icon Button */}
                                             <div className="action-col button-col">
                                                 <button
                                                     className="action-icon-btn preview-btn"
@@ -638,14 +623,14 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
                                                 </button>
                                             </div>
 
-                                            {/* Column 3: Insert Icon Button */}
+                                            {/* Column 2: Insert Icon Button */}
                                             <div className="action-col button-col">
                                                 <button
                                                     className="action-icon-btn insert-btn"
                                                     title={__('Insert Fields into Canvas', 'smart-form-builder-by-dragwyb')}
                                                     onClick={() => handleImport(tData, templateId)}
                                                 >
-                                                    <FaPlus />
+                                                    {__('Insert Form', 'smart-form-builder-by-dragwyb')}
                                                 </button>
                                             </div>
                                         </div>

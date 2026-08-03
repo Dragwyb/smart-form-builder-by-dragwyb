@@ -13,7 +13,7 @@ import { FaSun, FaMoon, FaHistory, FaFolderPlus } from 'react-icons/fa';
 import TemplateLibrary from './TemplateLibrary';
 
 const Header = () => {
-    const [isTemplateOpen, setIsTemplateOpen] = useState(false);
+    const [isTemplateOpen, setIsTemplateOpen] = useState(DragwybEditor?.formData?.rootContainers?.length > 0 ? false : true);
     // Existing Selectors
     const activeToolbar = useSelector(state => state?.activeToolbar);
     const formStatus = useSelector(state => state?.form?.advance?.form_status || DragwybEditor.formData.status);
