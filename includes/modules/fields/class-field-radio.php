@@ -222,7 +222,7 @@ class Field_Radio extends Field_Base {
 		$help     = $this->field_key_exist( $settings, 'help_text', '' );
 		$classes  = $this->field_key_exist( $settings, 'css_classes', '' );
 
-		$layout_class = ( $layout === 'inline' ) ? 'dragwyb-inline' : '';
+		$layout_class = ( $layout === 'inline' ) ? 'dragwyb-inline-options' : '';
 
 		$this->add_field_attributes(
 			'wrapper',
