@@ -192,7 +192,7 @@ class dateField extends DragwybEditor.editor.extends.FieldBase {
 
         return (
             <>
-                <div className="dragwyb-input-group">
+                <div className="dragwyb-input-group" key={useNative ? 'native' : 'flatpickr'}>
                     <input {...inputProps} />
                     {label && <this.RenderLabel
                         id={fieldId}
@@ -671,7 +671,7 @@ class timeField extends DragwybEditor.editor.extends.FieldBase {
 
         return (
             <>
-                <div className="dragwyb-input-group">
+                <div className="dragwyb-input-group" key={useNative ? 'native' : 'flatpickr'}>
                     <input {...inputProps} />
                     {label && <this.RenderLabel
                         id={fieldId}

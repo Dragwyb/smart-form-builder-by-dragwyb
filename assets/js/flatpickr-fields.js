@@ -16,7 +16,16 @@ class DragwybFlatpickrFieldBase extends DragwybBuilder.DragwybFormFrontendBase {
 		});
 	}
 
+	destroyField(input) {
+		if (input && input._flatpickr && typeof input._flatpickr.destroy === 'function') {
+			input._flatpickr.destroy();
+			input._flatpickr = undefined;
+		}
+	}
+
 	initField(input) {
+		this.destroyField(input);
+
 		if (jQuery(input).hasClass('dragwyb-use-native')) {
 			return;
 		}
@@ -47,6 +56,25 @@ class DragwybDateField extends DragwybFlatpickrFieldBase {
 		return 'input.dragwyb-date-field';
 	}
 
+	parseStoredDate(value) {
+		if (typeof value !== 'string') {
+			return value;
+		}
+
+		const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+		if (!match) {
+			return value;
+		}
+
+		const date = new Date(
+			parseInt(match[1], 10),
+			parseInt(match[2], 10) - 1,
+			parseInt(match[3], 10)
+		);
+
+		return Number.isNaN(date.getTime()) ? value : date;
+	}
+
 	resolveBound(bound) {
 		if (bound === null || bound === undefined || bound === '') {
 			return null;
@@ -61,7 +89,7 @@ class DragwybDateField extends DragwybFlatpickrFieldBase {
 			return new Date().fp_incr(days);
 		}
 
-		return bound;
+		return this.parseStoredDate(bound);
 	}
 
 	parseDateList(text) {
@@ -80,12 +108,15 @@ class DragwybDateField extends DragwybFlatpickrFieldBase {
 			if (line.indexOf(':') !== -1 && !/^\d{4}-\d{2}-\d{2}$/.test(line)) {
 				const parts = line.split(':').map((part) => part.trim());
 				if (parts.length === 2 && parts[0] && parts[1]) {
-					items.push({ from: parts[0], to: parts[1] });
+					items.push({
+						from: this.parseStoredDate(parts[0]),
+						to: this.parseStoredDate(parts[1]),
+					});
 					return;
 				}
 			}
 
-			items.push(line);
+			items.push(this.parseStoredDate(line));
 		});
 
 		return items;
@@ -97,6 +128,7 @@ class DragwybDateField extends DragwybFlatpickrFieldBase {
 			allowInput: config.allowInput !== false,
 			dateFormat: config.dateFormat || 'Y-m-d',
 			mode: config.mode || 'single',
+			disableMobile: true,
 		};
 
 		if (config.enableTime) {
@@ -169,6 +201,7 @@ class DragwybTimeField extends DragwybFlatpickrFieldBase {
 			noCalendar: true,
 			dateFormat: config.dateFormat || 'H:i',
 			time_24hr: !!config.time_24hr,
+			disableMobile: true,
 		};
 
 		if (config.minTime) {
