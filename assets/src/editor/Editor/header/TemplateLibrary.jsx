@@ -518,6 +518,20 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
 
     const filteredList = getFilteredTemplates();
 
+    const safeTemplate = (index, activeTab) => {
+        const url = DragwybEditor?.pluginUrl + 'assets/img/templates/' + activeTab + '-template-' + (parseInt(index) + 1) + '.png';
+
+        // Trim spaces and minimize to lowercase for evaluation
+        const cleanedUrl = url.trim();
+
+        // Reject URLs that attempt to execute JavaScript code or local files
+        if (cleanedUrl.toLowerCase().startsWith('javascript:') || cleanedUrl.toLowerCase().startsWith('data:')) {
+            return '#';
+        }
+
+        return cleanedUrl;
+    }
+
     return (
         <div className="dragwyb-template-modal-overlay" onClick={onClose}>
             <div className="dragwyb-template-modal" onClick={(e) => e.stopPropagation()}>
@@ -579,7 +593,7 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
 
                     {!loading && filteredList.length > 0 && (
                         <div className="templates-grid">
-                            {filteredList.map((item) => {
+                            {filteredList.map((item, index) => {
                                 const templateId = item.id;
                                 const tData = item.data;
                                 const currentStyle = stylesMap[templateId] || '';
@@ -594,10 +608,7 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
                                         </div>
 
                                         <div className="template-card__preview">
-                                            {/* <TemplatePreviewIframe
-                                                template={tData}
-                                                styleName={currentStyle}
-                                            /> */}
+                                            <img src={safeTemplate(index, activeTab)} alt={tData.advance?.form_name || __('Prebuilt Form Template', 'smart-form-builder-by-dragwyb')} style={{ width: '100%' }} />
                                         </div>
 
                                         {/* 3 columns in one section under the iframe */}
