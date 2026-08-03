@@ -656,53 +656,6 @@ body {
         }
     }
 
-    &__template-btn {
-        background-color: transparent;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: hsl(var(--dragwyb-primary)/var(--dragwyb-text-opacity, 1));
-        border-radius: 5px;
-        font-size: 1.1rem;
-        text-decoration: none;
-        padding: 0.5rem 1rem;
-        border: 1px solid hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
-
-        &:hover {
-            background-color: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
-            color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
-        }
-    }
-
-    &__templates-toggle,
-    &__theme-toggle,
-    &__preview-toggle {
-        width: 30px;
-        height: 30px;
-        background-color: hsl(var(--dragwyb-primary)/35%);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        border-radius: 50%;
-        text-decoration: none;
-
-        &>div {
-            display: flex;
-        }
-    }
-
-    &__preview-toggle {
-        padding: unset !important;
-    }
-
-    &__preview-toggle svg {
-        width: 1.2rem;
-        margin-right: 0px !important;
-    }
-
     &__body {
         flex: 1;
         display: flex;
@@ -1506,26 +1459,6 @@ $dropdown-max-height: 250px;
     }
 }
 
-/* History Toggle Action */
-.dragwyb-editor__history-toggle {
-    width: 30px;
-    height: 30px;
-    background-color: hsl(var(--dragwyb-background)/16%);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    border-radius: 5px;
-    text-decoration: none;
-    border: 1px solid hsl(var(--dragwyb-background)/16%);
-
-    &:hover,
-    &.active {
-        background-color: hsl(var(--dragwyb-background)/22%);
-    }
-}
-
 /* History Sidebar Panel */
 .dragwyb-history-panel-sidebar {
     height: 100%;
@@ -1694,7 +1627,9 @@ $dropdown-max-height: 250px;
 }
 
 /* Templates Toggle Action */
-.dragwyb-editor__templates-toggle {
+.dragwyb-editor__templates-toggle,
+.dragwyb-editor__history-toggle,
+.dragwyb-editor__theme-toggle {
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -1709,6 +1644,32 @@ $dropdown-max-height: 250px;
 
     svg {
         font-size: 15px;
+    }
+
+    &:hover,
+    &.active {
+        background-color: hsl(var(--dragwyb-background)/22%);
+    }
+}
+
+a.dragwyb-editor__preview-toggle {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    background-color: hsl(var(--dragwyb-background)/16%);
+    transition: background-color 0.2s ease;
+    border: 1px solid hsl(var(--dragwyb-background)/16%);
+    margin-right: 0px;
+    padding: 0px;
+
+    svg {
+        font-size: 15px;
+        color: rgb(255, 255, 255);
+        margin-right: unset;
     }
 
     &:hover,

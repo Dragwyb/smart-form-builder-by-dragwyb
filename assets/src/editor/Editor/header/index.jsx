@@ -138,9 +138,7 @@ const Header = () => {
                     className="dragwyb-editor__theme-toggle"
                     onClick={toggleTheme}
                     title={themeMode === 'light' ? __('Switch to Dark Mode', 'smart-form-builder-by-dragwyb') : __('Switch to Light Mode', 'smart-form-builder-by-dragwyb')}                >
-                    <div>
-                        {themeMode === 'light' ? <FaMoon color='#fff' /> : <FaSun color="#f39c12" />}
-                    </div>
+                    {themeMode === 'light' ? <FaMoon color='#fff' /> : <FaSun color="#f39c12" />}
                 </div>
                 <a href={escUrl(DragwybEditor.previewUrl)} className='dragwyb-editor__preview-toggle' target="_blank" title={__('Frontend Preview', 'smart-form-builder-by-dragwyb')}>
                     <IconsManager icon='far fa-eye' title={__('Preview', 'smart-form-builder-by-dragwyb')} />
