@@ -72,17 +72,33 @@ class dateField extends DragwybEditor.editor.extends.FieldBase {
         const fieldId = s.field_id || this.id;
         const defaultLabel = DragwybEditor?.fields?.fields?.[this.fieldName]?.controls?.label?.default;
         const label = s.label || defaultLabel;
+        const useNative = s.use_native_date === 'yes';
+        const inputClass = [
+            'dragwyb-field-input',
+            'dragwyb-date-field',
+            useNative ? 'dragwyb-use-native' : '',
+        ].filter(Boolean).join(' ');
+
+        const inputProps = {
+            type: 'date',
+            id: fieldId,
+            className: inputClass,
+            placeholder: s.placeholder || ' ',
+            defaultValue: s.default_value,
+            pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}',
+        };
+
+        if (s.min_date) {
+            inputProps.min = s.min_date;
+        }
+        if (s.max_date) {
+            inputProps.max = s.max_date;
+        }
 
         return (
             <>
                 <div className="dragwyb-input-group">
-                    <input
-                        type="date"
-                        id={fieldId}
-                        className="dragwyb-field-input"
-                        placeholder={s.placeholder || ' '}
-                        defaultValue={s.default_value}
-                    />
+                    <input {...inputProps} />
                     {label && <this.RenderLabel
                         id={fieldId}
                         label={label}

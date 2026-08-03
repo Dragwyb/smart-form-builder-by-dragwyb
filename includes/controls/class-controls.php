@@ -31,6 +31,7 @@ class Controls {
 	const TAB            = 'tab';
 	const TEXT           = 'text';
 	const TEXTAREA       = 'textarea';
+	const DATE           = 'date';
 	const WYSIWYG        = 'wysiwyg';
 	const URL            = 'url';
 

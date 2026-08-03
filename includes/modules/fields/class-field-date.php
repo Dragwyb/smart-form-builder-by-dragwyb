@@ -9,6 +9,64 @@ use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
 
 class Field_Date extends Field_Base {
 
+	protected function register_scripts() {
+		return $this->flatpickr_enabled() ? array( 'dragwyb-date-field' ) : array();
+	}
+
+	protected function register_styles() {
+		return $this->flatpickr_enabled() ? array( 'dragwyb-flatpickr' ) : array();
+	}
+
+	/**
+	 * Whether Flatpickr assets should load for this field instance.
+	 */
+	private function flatpickr_enabled(): bool {
+		$settings = $this->get_field_settings();
+		// Empty settings = editor bootstrap; load assets there.
+		// Flatpickr is used unless Native HTML5 is enabled.
+		return empty( $settings ) || $this->field_key_exist( $settings, 'use_native_date', 'no' ) !== 'yes';
+	}
+
+	public function __construct() {
+		parent::__construct();
+		$this->register_date_assets();
+	}
+
+	/**
+	 * Register Flatpickr and date-field scripts/styles.
+	 */
+	private function register_date_assets(): void {
+		if ( ! wp_script_is( 'dragwyb-flatpickr', 'registered' ) ) {
+			wp_register_script(
+				'dragwyb-flatpickr',
+				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/js/flatpickr/flatpickr.js' ),
+				array(),
+				DRAGWYB_FORM_BUILDER_VERSION,
+				true
+			);
+		}
+
+		if ( ! wp_style_is( 'dragwyb-flatpickr', 'registered' ) ) {
+			wp_register_style(
+				'dragwyb-flatpickr',
+				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/css/flatpickr/flatpickr.min.css' ),
+				array(),
+				DRAGWYB_FORM_BUILDER_VERSION,
+				'all'
+			);
+		}
+
+		if ( ! wp_script_is( 'dragwyb-date-field', 'registered' ) ) {
+			wp_register_script(
+				'dragwyb-date-field',
+				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/js/date-field.js' ),
+				array( 'jquery', 'dragwyb-form-frontend', 'dragwyb-flatpickr' ),
+				DRAGWYB_FORM_BUILDER_VERSION,
+				true
+			);
+		}
+	}
+
 	protected function register_field_controls(): void {
 		// ==============================================================
 		// CONTENT TAB
@@ -48,11 +106,21 @@ class Field_Date extends Field_Base {
 			)
 		);
 
-		// Set a date range limit
+		$this->add_control(
+			'use_native_date',
+			array(
+				'type'         => Controls::SWITCHER,
+				'label'        => __( 'Native HTML5', 'smart-form-builder-by-dragwyb' ),
+				'description'  => __( 'Use the browser native date input instead of Flatpickr.', 'smart-form-builder-by-dragwyb' ),
+				'return_value' => 'yes',
+				'default'      => 'no',
+			)
+		);
+
 		$this->add_control(
 			'min_date',
 			array(
-				'type'        => Controls::TEXT,
+				'type'        => Controls::DATE,
 				'label'       => __( 'Min Date', 'smart-form-builder-by-dragwyb' ),
 				'description' => __( 'Earliest allowed date.', 'smart-form-builder-by-dragwyb' ),
 			)
@@ -61,7 +129,7 @@ class Field_Date extends Field_Base {
 		$this->add_control(
 			'max_date',
 			array(
-				'type'        => Controls::TEXT,
+				'type'        => Controls::DATE,
 				'label'       => __( 'Max Date', 'smart-form-builder-by-dragwyb' ),
 				'description' => __( 'Latest allowed date.', 'smart-form-builder-by-dragwyb' ),
 			)
@@ -201,13 +269,21 @@ class Field_Date extends Field_Base {
 	}
 
 	protected function render_field() {
-		$settings    = $this->get_field_settings();
-		$id          = $this->get_the_id();
-		$field_id    = $this->field_key_exist( $settings, 'field_id', uniqid( 'date_' ) );
-		$label       = $this->field_key_exist( $settings, 'label', 'Select Date' );
-		$placeholder = $this->field_key_exist( $settings, 'placeholder', 'YYYY-MM-DD' );
-		$required    = $this->field_key_exist( $settings, 'required', '' ) === 'yes';
-		$classes     = $this->field_key_exist( $settings, 'css_classes', '' );
+		$settings      = $this->get_field_settings();
+		$id            = $this->get_the_id();
+		$field_id      = $this->field_key_exist( $settings, 'field_id', uniqid( 'date_' ) );
+		$label         = $this->field_key_exist( $settings, 'label', 'Select Date' );
+		$placeholder   = $this->field_key_exist( $settings, 'placeholder', 'YYYY-MM-DD' );
+		$required      = $this->field_key_exist( $settings, 'required', '' ) === 'yes';
+		$classes       = $this->field_key_exist( $settings, 'css_classes', '' );
+		$use_native = $this->field_key_exist( $settings, 'use_native_date', 'no' ) === 'yes';
+		$min_date   = $this->field_key_exist( $settings, 'min_date', '' );
+		$max_date   = $this->field_key_exist( $settings, 'max_date', '' );
+
+		$input_class = 'dragwyb-field-input dragwyb-date-field';
+		if ( $use_native ) {
+			$input_class .= ' dragwyb-use-native';
+		}
 
 		$this->add_field_attributes(
 			'wrapper',
@@ -217,16 +293,24 @@ class Field_Date extends Field_Base {
 			)
 		);
 
-		$this->add_field_attributes(
-			'input',
-			array(
-				'type'        => 'date',
-				'id'          => $field_id,
-				'name'        => $field_id,
-				'placeholder' => $placeholder,
-				'class'       => 'dragwyb-field-input',
-			)
+		$input_attrs = array(
+			'type'        => 'date',
+			'id'          => $field_id,
+			'name'        => $field_id,
+			'placeholder' => $placeholder,
+			'class'       => $input_class,
+			'pattern'     => '[0-9]{4}-[0-9]{2}-[0-9]{2}',
 		);
+
+		if ( ! empty( $min_date ) ) {
+			$input_attrs['min'] = $min_date;
+		}
+
+		if ( ! empty( $max_date ) ) {
+			$input_attrs['max'] = $max_date;
+		}
+
+		$this->add_field_attributes( 'input', $input_attrs );
 		?>
 		<div <?php $this->render_field_attributes( 'wrapper' ); ?>>
 			<?php if ( ! empty( $label ) ) : ?>
