@@ -24,12 +24,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'Dragwyb_Builder_Editor' ) ) {
 	class Dragwyb_Builder_Editor {
 
-		private static $form_id        = null;
-		private const Current_Page     = DRAGWYB_PREFIX . '-form-builder';
-		private static ?self $instance = null;
-		private static $initial_load   = false;
-		private static $style_cache    = array();
-		private static $google_fonts   = array();
+		private static $form_id      = null;
+		private const Current_Page   = DRAGWYB_PREFIX . '-form-builder';
+		private static $instance     = null;
+		private static $initial_load = false;
+		private static $style_cache  = array();
+		private static $google_fonts = array();
 
 		public static function instance(): self {
 			if ( null === self::$instance ) {
