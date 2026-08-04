@@ -230,6 +230,9 @@ if ( ! class_exists( 'Dragwyb_Builder_Editor' ) ) {
 				);
 			}
 
+			$style_json_path   = DRAGWYB_FORM_BUILDER_PATH . 'admin/preset-style/style.json';
+			$preset_style_json = wp_json_file_decode( $style_json_path, array( 'associative' => true ) );
+
 			$localize_data = array(
 				'ajaxUrl'         => admin_url( 'admin-ajax.php' ),
 				'restUrl'         => esc_url_raw( get_rest_url() ),
@@ -244,6 +247,7 @@ if ( ! class_exists( 'Dragwyb_Builder_Editor' ) ) {
 				'faIconsList'     => $this->get_fa_icons_list(),
 				'previewUrl'      => home_url( '/?post_type=' . Dragwyb_Post::POST_TYPE . '&p=' . self::$form_id . '&preview_id=' . Form_Preview::generate_key( self::$form_id ) ),
 				'dynamicTags'     => $tags_data,
+				'presetStyle'     => $preset_style_json,
 			);
 
 			$localize_data = apply_filters( 'Dragwyb/Editor/Localize_Settings', $localize_data );

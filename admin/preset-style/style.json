@@ -1,0 +1,207 @@
+{
+  "style-1": {
+    "form_width": {
+      "size": 800,
+      "unit": "px"
+    },
+    "form_container_bg_color": "#f8fafc",
+    "form_padding": {
+      "top": 30,
+      "right": 30,
+      "bottom": 30,
+      "left": 30,
+      "unit": "px",
+      "linked": true
+    },
+    "field_spacing": {
+      "size": 20,
+      "unit": "px"
+    },
+    "label_color": "#475569",
+    "input_bg_color": "#ffffff",
+    "input_text_color": "#1e293b",
+    "input_padding": {
+      "top": 10,
+      "right": 14,
+      "bottom": 10,
+      "left": 14,
+      "unit": "px",
+      "linked": false
+    },
+    "input_border_style": "solid",
+    "input_border_width": {
+      "top": "1",
+      "right": "1",
+      "bottom": "1",
+      "left": "1",
+      "unit": "px",
+      "linked": false
+    },
+    "input_border_color": "#94a3b8",
+    "input_focus_border_color": "#2563eb",
+    "button_bg_color": "#2563eb",
+    "button_text_color": "#ffffff",
+    "button_padding": {
+      "top": 12,
+      "right": 24,
+      "bottom": 12,
+      "left": 24,
+      "unit": "px",
+      "linked": true
+    },
+    "button_border_type": "none",
+    "button_border_width": {
+      "top": "0",
+      "right": "0",
+      "bottom": "0",
+      "left": "0",
+      "unit": "px"
+    },
+    "button_border_radius": {
+      "top": "4",
+      "right": "4",
+      "bottom": "4",
+      "left": "4",
+      "unit": "px"
+    },
+    "button_border_color": ""
+  },
+  "style-2": {
+    "form_width": {
+      "size": 600,
+      "unit": "px"
+    },
+    "form_container_bg_color": "#ffffff",
+    "form_padding": {
+      "top": 20,
+      "right": 20,
+      "bottom": 20,
+      "left": 20,
+      "unit": "px",
+      "linked": true
+    },
+    "field_spacing": {
+      "size": 12,
+      "unit": "px"
+    },
+    "label_color": "#18181b",
+    "input_bg_color": "#ffffff",
+    "input_text_color": "#18181b",
+    "input_padding": {
+      "top": 8,
+      "right": 4,
+      "bottom": 8,
+      "left": 4,
+      "unit": "px",
+      "linked": false
+    },
+    "input_border_type": "solid",
+    "input_border_width": {
+      "top": "0",
+      "right": "0",
+      "bottom": "2",
+      "left": "0",
+      "unit": "px",
+      "linked": false
+    },
+    "input_border_color": "#18181b",
+    "input_focus_border_color": "#18181b",
+    "button_bg_color": "#18181b",
+    "button_text_color": "#ffffff",
+    "button_padding": {
+      "top": 10,
+      "right": 20,
+      "bottom": 10,
+      "left": 20,
+      "unit": "px",
+      "linked": true
+    },
+    "button_border_type": "none",
+    "button_border_width": {
+      "top": "0",
+      "right": "0",
+      "bottom": "0",
+      "left": "0",
+      "unit": "px",
+      "linked": true
+    },
+    "button_border_radius": {
+      "top": "0",
+      "right": "0",
+      "bottom": "0",
+      "left": "0",
+      "unit": "px",
+      "linked": true
+    },
+    "button_border_color": ""
+  },
+  "style-3": {
+    "form_width": {
+      "size": 700,
+      "unit": "px"
+    },
+    "form_container_bg_color": "#fffbeb",
+    "form_padding": {
+      "top": 40,
+      "right": 40,
+      "bottom": 40,
+      "left": 40,
+      "unit": "px",
+      "linked": true
+    },
+    "field_spacing": {
+      "size": 24,
+      "unit": "px"
+    },
+    "label_color": "#78350f",
+    "input_bg_color": "#fffdf5",
+    "input_text_color": "#1e293b",
+    "input_padding": {
+      "top": 12,
+      "right": 16,
+      "bottom": 12,
+      "left": 16,
+      "unit": "px",
+      "linked": true
+    },
+    "input_border_type": "solid",
+    "input_border_width": {
+      "top": "1",
+      "right": "1",
+      "bottom": "1",
+      "left": "1",
+      "unit": "px",
+      "linked": true
+    },
+    "input_border_color": "#f59e0b",
+    "input_focus_border_color": "#d97706",
+    "button_bg_color": "#d97706",
+    "button_text_color": "#ffffff",
+    "button_padding": {
+      "top": 14,
+      "right": 28,
+      "bottom": 14,
+      "left": 28,
+      "unit": "px",
+      "linked": true
+    },
+    "button_border_type": "none",
+    "button_border_width": {
+      "top": "0",
+      "right": "0",
+      "bottom": "0",
+      "left": "0",
+      "unit": "px",
+      "linked": true
+    },
+    "button_border_radius": {
+      "top": "16",
+      "right": "16",
+      "bottom": "16",
+      "left": "16",
+      "unit": "px",
+      "linked": true
+    },
+    "button_border_color": ""
+  }
+}
