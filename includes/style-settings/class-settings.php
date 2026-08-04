@@ -21,6 +21,25 @@ class Settings extends Register_Controls_Base {
 	protected function init(): void {}
 
 	protected function register_controls(): void {
+		// SECTION 0: PRESET STYLE
+		$this->start_section(
+			'section_preset_style',
+			array(
+				'label' => __( 'Form Preset Styles', 'smart-form-builder-by-dragwyb' ),
+			)
+		);
+
+		$this->add_control(
+			'preset_style',
+			array(
+				'type'         => Controls::PRESET_STYLE,
+				'label'        => __( 'Preset Style', 'smart-form-builder-by-dragwyb' ),
+				'label_inline' => true,
+			)
+		);
+
+		$this->end_section();
+
 		// SECTION 1: FORM CONTAINER
 		$this->start_section(
 			'section_form_container',
