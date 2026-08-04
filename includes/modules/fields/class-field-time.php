@@ -331,15 +331,15 @@ class Field_Time extends Field_Base {
 	}
 
 	protected function render_field() {
-		$settings   = $this->get_field_settings();
-		$id         = $this->get_the_id();
-		$field_id   = $this->field_key_exist( $settings, 'field_id', uniqid( 'field_' ) );
-		$label      = $this->field_key_exist( $settings, 'label', 'Time' );
-		$value      = $this->field_key_exist( $settings, 'default_value', '' );
-		$help       = $this->field_key_exist( $settings, 'help_text', '' );
-		$required   = $this->field_key_exist( $settings, 'required', '' ) === 'yes';
-		$classes    = $this->field_key_exist( $settings, 'css_classes', '' );
-		$use_native = $this->field_key_exist( $settings, 'use_native_time', 'no' ) === 'yes';
+		$settings    = $this->get_field_settings();
+		$id          = $this->get_the_id();
+		$field_id    = $this->field_key_exist( $settings, 'field_id', uniqid( 'field_' ) );
+		$label       = $this->field_key_exist( $settings, 'label', 'Time' );
+		$value       = $this->field_key_exist( $settings, 'default_value', '' );
+		$help        = $this->field_key_exist( $settings, 'help_text', '' );
+		$required    = $this->field_key_exist( $settings, 'required', '' ) === 'yes';
+		$classes     = $this->field_key_exist( $settings, 'css_classes', '' );
+		$use_native  = $this->field_key_exist( $settings, 'use_native_time', 'no' ) === 'yes';
 		$placeholder = $this->field_key_exist( $settings, 'placeholder', 'HH:MM' );
 
 		$input_class = 'dragwyb-field-input dragwyb-time-field';
@@ -373,8 +373,8 @@ class Field_Time extends Field_Base {
 				$input_attrs['max'] = $max_time;
 			}
 		} else {
-			$input_attrs['placeholder']        = $placeholder;
-			$input_attrs['data-fp-config']     = wp_json_encode( $this->build_flatpickr_config( $settings ) );
+			$input_attrs['placeholder']    = $placeholder;
+			$input_attrs['data-fp-config'] = wp_json_encode( $this->build_flatpickr_config( $settings ) );
 		}
 
 		$this->add_field_attributes( 'input', $input_attrs );
@@ -414,7 +414,7 @@ class Field_Time extends Field_Base {
 			return;
 		}
 
-		$value = (string) $value;
+		$value      = (string) $value;
 		$value_mins = $this->time_to_minutes( $value );
 		if ( null === $value_mins ) {
 			$error_handler->add_error( $field_id, __( 'Please enter a valid time.', 'smart-form-builder-by-dragwyb' ) );

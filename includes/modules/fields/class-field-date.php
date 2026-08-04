@@ -795,12 +795,7 @@ class Field_Date extends Field_Base {
 		?>
 		<div <?php $this->render_field_attributes( 'wrapper' ); ?>>
 			<?php if ( ! empty( $label ) ) : ?>
-				<label for="<?php echo esc_attr( $field_id ); ?>" class="dragwyb-label">
-					<?php echo esc_html( $label ); ?>
-					<?php if ( $required ) : ?>
-						<span class="required">*</span>
-					<?php endif; ?>
-				</label>
+				<?php $this->render_field_label( $field_id, $label, $required, $settings ); ?>
 			<?php endif; ?>
 
 			<input
@@ -852,7 +847,7 @@ class Field_Date extends Field_Base {
 		$result = '';
 		$length = strlen( $format );
 		for ( $i = 0; $i < $length; $i++ ) {
-			$char = $format[ $i ];
+			$char    = $format[ $i ];
 			$result .= $map[ $char ] ?? $char;
 		}
 
@@ -876,7 +871,7 @@ class Field_Date extends Field_Base {
 		}
 
 		if ( 'multiple' === $mode ) {
-			$sep = '' !== $conjunction ? $conjunction : ', ';
+			$sep   = '' !== $conjunction ? $conjunction : ', ';
 			$parts = array_map( 'trim', explode( $sep, $value ) );
 			if ( 1 === count( $parts ) && ', ' !== $sep ) {
 				$parts = array_map( 'trim', explode( ',', $value ) );
