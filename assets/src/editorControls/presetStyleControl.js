@@ -132,8 +132,5 @@ export default class PresetStyleControl extends DragwybEditor.editor.extends.Con
     if (value && value !== 'default') {
       this.handlePresetChange('default');
     }
-
-    this.setState({ value: undefined });
-    this.updateControls(this.id, undefined);
   }
 }

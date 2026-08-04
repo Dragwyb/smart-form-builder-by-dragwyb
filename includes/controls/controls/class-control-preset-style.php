@@ -40,6 +40,7 @@ class Control_Preset_Style extends Control_Base {
 				$filterd_options[ sanitize_text_field( $key ) ] = sanitize_text_field( $value );
 			}
 		}
+
 		return $filterd_options;
 	}
 }

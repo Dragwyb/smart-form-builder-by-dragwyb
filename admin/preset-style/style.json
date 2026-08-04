@@ -1,6 +1,8 @@
 {
   "default": {
-    "form_width": { "size": 800, "unit": "px" },
+    "preset_style": "default",
+    "form_width": { "size": "", "unit": "px" },
+    "form_container_bg_background": "classic",
     "form_container_bg_color": "#ffffff",
     "form_css_filter_blur": { "size": 0, "unit": "px" },
     "form_padding": { "top": 30, "right": 30, "bottom": 30, "left": 30, "unit": "px", "linked": true },
@@ -8,10 +10,10 @@
     "form_border_width": { "top": 0, "right": 0, "bottom": 0, "left": 0, "unit": "px", "linked": true },
     "form_border_color": "",
     "form_border_radius": { "top": 0, "right": 0, "bottom": 0, "left": 0, "unit": "px", "linked": true },
-    "form_box_shadow_horizontal": { "size": 0, "unit": "px" },
-    "form_box_shadow_vertical": { "size": 0, "unit": "px" },
-    "form_box_shadow_blur": { "size": 0, "unit": "px" },
-    "form_box_shadow_spread": { "size": 0, "unit": "px" },
+    "form_box_shadow_horizontal": { "size": "", "unit": "px" },
+    "form_box_shadow_vertical": { "size": "", "unit": "px" },
+    "form_box_shadow_blur": { "size": "", "unit": "px" },
+    "form_box_shadow_spread": { "size": "", "unit": "px" },
     "form_box_shadow_color": "",
     "field_spacing": { "size": 20, "unit": "px" },
     "label_position": "top",
@@ -62,7 +64,9 @@
     "button_box_shadow_color": ""
   },
   "style_1": {
+    "preset_style": "style_1",
     "form_width": { "size": 750, "unit": "px" },
+        "form_container_bg_background": "classic",
     "form_container_bg_color": "#ffffff",
     "form_css_filter_blur": { "size": 0, "unit": "px" },
     "form_padding": { "top": 40, "right": 40, "bottom": 40, "left": 40, "unit": "px", "linked": true },
@@ -124,8 +128,10 @@
     "button_box_shadow_color": "rgba(15, 23, 42, 0.15)"
   },
   "style_2": {
+    "preset_style": "style_2",
     "form_width": { "size": 650, "unit": "px" },
-    "form_container_bg_color": "#fdfbf7",
+        "form_container_bg_background": "classic",
+"form_container_bg_color": "#fdfbf7",
     "form_css_filter_blur": { "size": 0, "unit": "px" },
     "form_padding": { "top": 45, "right": 45, "bottom": 45, "left": 45, "unit": "px", "linked": true },
     "form_border_style": "solid",
@@ -186,8 +192,10 @@
     "button_box_shadow_color": ""
   },
   "style_3": {
+    "preset_style": "style_3",
     "form_width": { "size": 600, "unit": "px" },
-    "form_container_bg_color": "#ffffff",
+        "form_container_bg_background": "classic",
+"form_container_bg_color": "#ffffff",
     "form_css_filter_blur": { "size": 0, "unit": "px" },
     "form_padding": { "top": 20, "right": 20, "bottom": 20, "left": 20, "unit": "px", "linked": true },
     "form_border_style": "none",
@@ -248,8 +256,10 @@
     "button_box_shadow_color": ""
   },
   "style_4": {
+    "preset_style": "style_4",
     "form_width": { "size": 800, "unit": "px" },
-    "form_container_bg_color": "#09090b",
+       "form_container_bg_background": "classic",
+ "form_container_bg_color": "#09090b",
     "form_css_filter_blur": { "size": 0, "unit": "px" },
     "form_border_style": "solid",
     "form_border_width": { "top": 1, "right": 1, "bottom": 1, "left": 1, "unit": "px", "linked": true },
@@ -310,8 +320,10 @@
     "button_box_shadow_color": "rgba(188, 19, 254, 0.5)"
   },
   "style_5": {
+    "preset_style": "style_5",
     "form_width": { "size": 700, "unit": "px" },
-    "form_container_bg_color": "#1e293b",
+        "form_container_bg_background": "classic",
+"form_container_bg_color": "#1e293b",
     "form_css_filter_blur": { "size": 0, "unit": "px" },
     "form_padding": { "top": 40, "right": 40, "bottom": 40, "left": 40, "unit": "px", "linked": true },
     "form_border_style": "none",
@@ -372,8 +384,10 @@
     "button_box_shadow_color": ""
   },
   "style_6": {
+    "preset_style": "style_6",
     "form_width": { "size": 750, "unit": "px" },
-    "form_container_bg_color": "rgba(255, 255, 255, 0.2)",
+        "form_container_bg_background": "classic",
+"form_container_bg_color": "rgba(255, 255, 255, 0.2)",
     "form_css_filter_blur": { "size": 10, "unit": "px" },
     "form_padding": { "top": 40, "right": 40, "bottom": 40, "left": 40, "unit": "px", "linked": true },
     "form_border_style": "solid",
@@ -434,8 +448,10 @@
     "button_box_shadow_color": ""
   },
   "style_7": {
+    "preset_style": "style_7",
     "form_width": { "size": 750, "unit": "px" },
-    "form_container_bg_color": "rgba(0, 0, 0, 0.4)",
+        "form_container_bg_background": "classic",
+"form_container_bg_color": "rgba(0, 0, 0, 0.4)",
     "form_css_filter_blur": { "size": 10, "unit": "px" },
     "form_padding": { "top": 40, "right": 40, "bottom": 40, "left": 40, "unit": "px", "linked": true },
     "form_border_style": "solid",
