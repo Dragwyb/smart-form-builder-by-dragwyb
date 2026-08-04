@@ -73,8 +73,6 @@
         "parentId": "row_personal_info",
         "attributes": {
           "label": "First Name",
-          "label_color": "#ff9494ff",
-          "input_text_color": "#ffcc00ff",
           "placeholder": "e.g., John",
           "required": true,
           "default_value": "",
