@@ -26,6 +26,27 @@ import PreviewIframe from "./PreviewIframe";
 import PreviewLoading from "./previewLoading";
 import Notice from "../components/Common/Notice";
 
+class SmartKeyboardSensor extends KeyboardSensor {
+    static activators = [
+        {
+            eventName: "onKeyDown",
+            handler: (event, options, context) => {
+                const { target } = event.nativeEvent;
+                if (
+                    target &&
+                    (
+                        ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName) ||
+                        target.isContentEditable
+                    )
+                ) {
+                    return false;
+                }
+                return KeyboardSensor.activators[0].handler(event, options, context);
+            },
+        },
+    ];
+}
+
 const Editor = () => {
     const [activeDrag, setActiveDrag] = useState(null);
     const [dropInfo, setDropInfo] = useState(false);
@@ -67,7 +88,7 @@ const Editor = () => {
 
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
-        useSensor(KeyboardSensor, {
+        useSensor(SmartKeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
         })
     );
