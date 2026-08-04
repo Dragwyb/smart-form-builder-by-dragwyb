@@ -534,18 +534,16 @@ class Field_Phone extends Field_Base {
 
 		$country_enabled = $this->field_key_exist( $settings, 'country_code_enabled', 'no' ) === 'yes';
 
-		$default_country = (string) $this->field_key_exist( $settings, 'country_code_default', 'us' );
-		if ( preg_match( '/[^a-zA-Z]/', $default_country ) ) {
-			$default_country = '';
-		} else {
-			$default_country = strtolower( $default_country );
+		$default_country = strtolower( trim( (string) $this->field_key_exist( $settings, 'country_code_default', 'us' ) ) );
+		if ( ! preg_match( '/^[a-z]{2}$/', $default_country ) ) {
+			$default_country = 'us';
 		}
 
 		$include_countries = $this->normalize_country_list( $this->field_key_exist( $settings, 'country_code_include', '' ) );
 		$exclude_countries = $this->normalize_country_list( $this->field_key_exist( $settings, 'country_code_exclude', '' ) );
 
-		$include_sorted = array_filter( explode( ',', $include_countries ) );
-		$exclude_sorted = array_filter( explode( ',', $exclude_countries ) );
+		$include_sorted = array_values( array_filter( explode( ',', $include_countries ) ) );
+		$exclude_sorted = array_values( array_filter( explode( ',', $exclude_countries ) ) );
 		sort( $include_sorted );
 		sort( $exclude_sorted );
 		$common_countries = ( ! empty( $include_sorted ) && $include_sorted === $exclude_sorted ) ? 'same' : '';

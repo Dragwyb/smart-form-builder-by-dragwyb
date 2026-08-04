@@ -5,7 +5,6 @@
 
 .dragwyb-phone-field:has([data-country-code="yes"]) .dragwyb-input-group {
 	position: relative;
-	/* Keep column-reverse so label stays above input (DOM order is input then label). */
 	display: flex;
 	flex-direction: column-reverse;
 	width: 100%;

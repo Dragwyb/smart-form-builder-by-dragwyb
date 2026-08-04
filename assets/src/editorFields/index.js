@@ -496,13 +496,15 @@ class phoneField extends DragwybEditor.editor.extends.FieldBase {
 
         const includeCountries = normalizeList(s.country_code_include);
         const excludeCountries = normalizeList(s.country_code_exclude);
-        const includeSorted = includeCountries ? includeCountries.split(',').sort().join(',') : '';
-        const excludeSorted = excludeCountries ? excludeCountries.split(',').sort().join(',') : '';
+        const includeList = includeCountries ? includeCountries.split(',') : [];
+        const excludeList = excludeCountries ? excludeCountries.split(',') : [];
+        const includeSorted = includeList.length ? [...includeList].sort().join(',') : '';
+        const excludeSorted = excludeList.length ? [...excludeList].sort().join(',') : '';
         const commonCountries = includeSorted && includeSorted === excludeSorted ? 'same' : '';
 
-        let defaultCountry = String(s.country_code_default || 'us').toLowerCase();
-        if (/[^a-z]/.test(defaultCountry)) {
-            defaultCountry = '';
+        let defaultCountry = String(s.country_code_default || 'us').trim().toLowerCase();
+        if (!/^[a-z]{2}$/.test(defaultCountry)) {
+            defaultCountry = 'us';
         }
 
         const dialCodeVisibility = s.dial_code_visibility || 'show';
@@ -510,7 +512,6 @@ class phoneField extends DragwybEditor.editor.extends.FieldBase {
         const i18n = s.country_internationalisation || 'en';
         const showFlags = s.country_show_flags === 'yes' || s.country_show_flags === undefined ? 'yes' : 'no';
 
-        // Force remount when country-code options change so intl-tel-input re-inits in editor.
         const itiPreviewKey = countryEnabled
             ? [
                 'cc',

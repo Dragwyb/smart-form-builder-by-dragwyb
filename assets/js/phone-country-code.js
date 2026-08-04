@@ -28,11 +28,15 @@ class DragwybPhoneCountryCode extends DragwybBuilder.DragwybFormFrontendBase {
 			.filter((code) => /^[a-z]{2}$/.test(code));
 	}
 
-	getConfigSignature(input) {
-		if (!input) {
-			return '';
+	getAllowedCountries(includeCountries, excludeCountries) {
+		if (!includeCountries.length) {
+			return [];
 		}
-		return String(input.getAttribute('data-iti-config') || '');
+		return includeCountries.filter((code) => !excludeCountries.includes(code));
+	}
+
+	getConfigSignature(input) {
+		return input ? String(input.getAttribute('data-iti-config') || '') : '';
 	}
 
 	destroyField(input) {
@@ -65,23 +69,28 @@ class DragwybPhoneCountryCode extends DragwybBuilder.DragwybFormFrontendBase {
 		}
 
 		const uniqueId = $input.attr('id') || `phone_${Date.now()}`;
-		const includeCountries = this.parseCountryList($input.data('includeCountries'));
-		const excludeCountries = this.parseCountryList($input.data('excludeCountries'));
-		const commonCountries = $input.data('commonCountries') === 'same';
-		const dialCodeVisibility = $input.data('dialCodeVisibility') || 'show';
-		const strictMode = $input.data('strictMode') === 'yes';
+		const includeCountries = this.parseCountryList($input.attr('data-include-countries'));
+		const excludeCountries = this.parseCountryList($input.attr('data-exclude-countries'));
+		const allowedCountries = this.getAllowedCountries(includeCountries, excludeCountries);
+		const commonCountries = $input.attr('data-common-countries') === 'same';
+		const dialCodeVisibility = $input.attr('data-dial-code-visibility') || 'show';
+		const strictMode = $input.attr('data-strict-mode') === 'yes';
 		const showFlags = String($input.attr('data-show-flags') || '') === 'yes';
-		const langCode = $input.data('internationalisation') || 'en';
-		let defaultCountry = String($input.data('defaultCountry') || 'us').toLowerCase();
+		const langCode = $input.attr('data-internationalisation') || 'en';
+		let defaultCountry = String($input.attr('data-default-country') || 'us').trim().toLowerCase();
+		if (!/^[a-z]{2}$/.test(defaultCountry)) {
+			defaultCountry = 'us';
+		}
 
-		if (includeCountries.length && !defaultCountry) {
-			defaultCountry = includeCountries[0];
+		if (allowedCountries.length && !allowedCountries.includes(defaultCountry)) {
+			defaultCountry = allowedCountries[0];
+		} else if (!includeCountries.length && excludeCountries.includes(defaultCountry)) {
+			defaultCountry = excludeCountries.includes('us') ? '' : 'us';
 		}
 
 		const i18nMap = this.translations[langCode] || this.translations.en || {};
-
-		const iti = window.intlTelInput(input, {
-			initialCountry: defaultCountry || 'us',
+		const itiOptions = {
+			initialCountry: defaultCountry,
 			utilsScript: this.config.utilsScript,
 			strictMode: !!strictMode,
 			separateDialCode: dialCodeVisibility === 'separate',
@@ -91,8 +100,6 @@ class DragwybPhoneCountryCode extends DragwybBuilder.DragwybFormFrontendBase {
 			formatAsYouType: true,
 			containerClass: 'dragwyb-intl-container' + (showFlags ? '' : ' iti--hide-flags'),
 			useFullscreenPopup: false,
-			onlyCountries: includeCountries,
-			excludeCountries: excludeCountries,
 			customPlaceholder: (selectedCountryPlaceholder, selectedCountryData) => {
 				if (commonCountries || !selectedCountryData || !selectedCountryPlaceholder || !selectedCountryData.dialCode) {
 					return 'No country found';
@@ -109,7 +116,19 @@ class DragwybPhoneCountryCode extends DragwybBuilder.DragwybFormFrontendBase {
 
 				return `+${selectedCountryData.dialCode} ${placeHolder}`;
 			},
-		});
+		};
+
+		// ITI ignores excludeCountries when onlyCountries is set — pass the filtered list.
+		if (includeCountries.length) {
+			itiOptions.onlyCountries = allowedCountries.length ? allowedCountries : includeCountries;
+		} else if (excludeCountries.length) {
+			itiOptions.excludeCountries = excludeCountries;
+		}
+
+		const iti = window.intlTelInput(input, itiOptions);
+		if (defaultCountry && typeof iti.setCountry === 'function') {
+			iti.setCountry(defaultCountry);
+		}
 
 		input.dataset.dragwybItiInit = '1';
 		input.dataset.dragwybItiConfig = signature;
@@ -119,7 +138,7 @@ class DragwybPhoneCountryCode extends DragwybBuilder.DragwybFormFrontendBase {
 			showFlags,
 		};
 
-		if (commonCountries && iti.countryList) {
+		if ((commonCountries || (includeCountries.length && !allowedCountries.length)) && iti.countryList) {
 			iti.countryList.style.display = 'none';
 		}
 
@@ -141,8 +160,7 @@ class DragwybPhoneCountryCode extends DragwybBuilder.DragwybFormFrontendBase {
 		}
 
 		const meta = this.iti[uniqueId];
-		let previousCountryData = iti.getSelectedCountryData();
-		let previousCode = `+${previousCountryData.dialCode || ''}`;
+		let previousCode = `+${iti.getSelectedCountryData().dialCode || ''}`;
 
 		const handleCountryChange = (e) => {
 			if (meta.showFlags) {
@@ -151,10 +169,6 @@ class DragwybPhoneCountryCode extends DragwybBuilder.DragwybFormFrontendBase {
 
 			const currentCountryData = iti.getSelectedCountryData();
 			const currentCode = `+${currentCountryData.dialCode || ''}`;
-
-			if (e.type === 'countrychange') {
-				previousCountryData = currentCountryData;
-			}
 
 			if (e.currentTarget.value.startsWith(String(currentCountryData.dialCode || ''))) {
 				this.updateCountryCodeHandler(e.currentTarget, '+', previousCode, meta.dialCodeVisibility);
