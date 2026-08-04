@@ -733,7 +733,7 @@ class Frontend_Render {
 			$final_selector = str_replace( '{{WRAPPER}}', $wrapper_id, $final_selector );
 
 			if ( $current_item && is_string( $current_item ) ) {
-				$final_selector = str_replace( '{{CURRENT_ITEM}}', '.' . $current_item, $final_selector );
+				$final_selector = str_replace( '{{CURRENT_ITEM}}', '.repatear-item-' . $current_item, $final_selector );
 			}
 
 			// B. Parse Property (Replace {{VALUE}}, {{UNIT}}, etc.)

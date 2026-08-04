@@ -90,7 +90,6 @@ class Control_Repeater extends Control_Base {
 
 				if ( ! isset( $this->controls ) ) {
 					$this->controls = new Controls();
-
 				}
 
 				$type = $register_fields[ $field ]['type'];
@@ -130,6 +129,25 @@ class Control_Repeater extends Control_Base {
 
 		foreach ( $fields as $field ) {
 			$data[ $field['name'] ] = $field;
+
+			if ( defined( 'DRAGWYB_EDITOR' ) && true === DRAGWYB_EDITOR && isset( $field['selectors'] ) && is_array( $field['selectors'] ) && isset( $field['type'] ) ) {
+				if ( ! isset( $this->controls ) ) {
+					$this->controls = new Controls();
+				}
+
+				$type = $field['type'];
+
+				$control_obj = $this->controls->get_control( $type );
+
+				if ( ! $control_obj ) {
+					continue;
+				}
+
+				$control_obj  = $control_obj::newInstance();
+				$placeholders = $control_obj->get_style_placeholders();
+
+				$data[ $field['name'] ]['selectors_placeholders'] = $placeholders;
+			}
 		}
 
 		return $data;

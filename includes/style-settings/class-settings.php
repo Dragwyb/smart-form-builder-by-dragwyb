@@ -21,6 +21,35 @@ class Settings extends Register_Controls_Base {
 	protected function init(): void {}
 
 	protected function register_controls(): void {
+		// SECTION 0: PRESET STYLE
+		$this->start_section(
+			'section_preset_style',
+			array(
+				'label' => __( 'Form Preset Styles', 'smart-form-builder-by-dragwyb' ),
+			)
+		);
+
+		$this->add_control(
+			'preset_style',
+			array(
+				'type'         => Controls::PRESET_STYLE,
+				'label'        => __( 'Preset Style', 'smart-form-builder-by-dragwyb' ),
+				'options'      => array(
+					'default' => __( 'Default', 'smart-form-builder-by-dragwyb' ),
+					'style_1' => __( 'Modern (label Outlined)', 'smart-form-builder-by-dragwyb' ),
+					'style_2' => __( 'Elegant (label Inside)', 'smart-form-builder-by-dragwyb' ),
+					'style_3' => __( 'Classic (Underline)', 'smart-form-builder-by-dragwyb' ),
+					'style_4' => __( 'Bold (Neon Glow)', 'smart-form-builder-by-dragwyb' ),
+					'style_5' => __( 'Dark', 'smart-form-builder-by-dragwyb' ),
+					'style_6' => __( 'Morphisum (Light)', 'smart-form-builder-by-dragwyb' ),
+					'style_7' => __( 'Morphisum (Dark)', 'smart-form-builder-by-dragwyb' ),
+				),
+				'label_inline' => true,
+			)
+		);
+
+		$this->end_section();
+
 		// SECTION 1: FORM CONTAINER
 		$this->start_section(
 			'section_form_container',

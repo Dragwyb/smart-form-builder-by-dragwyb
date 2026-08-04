@@ -187,7 +187,7 @@ const RenderItem = React.memo(({
                                         return;
                                     }
                                     e.stopPropagation();
-                                    onDelete(field._id);
+                                    onDelete(field, fieldSettings.label);
                                 }}
                                 disabled={isButtonContainer}
                             >
@@ -316,9 +316,23 @@ const Canvas = ({
         }
     }, [Utils, dispatch, onFieldSelect, store]);
 
-    const handleDeleteField = useCallback((id) => {
+    const handleDeleteField = useCallback((fieldValues, fieldType) => {
         onFieldSelect({ id: false });
-        dispatch({ type: "DELETE_FIELD", payload: id });
+        dispatch({ type: "DELETE_FIELD", payload: fieldValues._id });
+
+
+        let fieldLabel = fieldValues?.attributes?.label;
+
+        if (typeof fieldLabel !== 'string' || '' === fieldLabel) {
+            fieldLabel = fieldValues._id;
+        }
+
+        const historyLabel = `Delete ${fieldType}, (${fieldLabel})`;
+
+        dispatch({
+            type: 'ADD_HISTORY_SNAPSHOT',
+            payload: { label: historyLabel }
+        });
     }, [dispatch, onFieldSelect]);
 
     let canvasCls = "dragwyb-canvas";

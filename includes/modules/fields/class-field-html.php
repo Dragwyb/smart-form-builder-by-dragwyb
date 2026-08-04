@@ -33,11 +33,9 @@ class Field_Html extends Field_Base {
 		$this->add_control(
 			'raw_html',
 			array(
-				'type'        => Controls::TEXTAREA,
-				'label'       => __( 'Raw HTML', 'smart-form-builder-by-dragwyb' ),
-				'rows'        => 8,
-				'default'     => '<p>Enter your custom HTML here.</p>',
-				'description' => __( 'Enter standard HTML. Some tags may be stripped for security.', 'smart-form-builder-by-dragwyb' ),
+				'type'    => Controls::WYSIWYG,
+				'label'   => __( 'Raw HTML', 'smart-form-builder-by-dragwyb' ),
+				'default' => '<p>Enter your custom HTML here.</p>',
 			)
 		);
 

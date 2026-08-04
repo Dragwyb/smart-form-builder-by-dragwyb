@@ -1,9 +1,59 @@
 import RepeaterSortable from "./RepeaterSortable.jsx";
+import DragwybControlBase from "../../editor/controlBase";
 
 class RepeaterControl extends DragwybEditor.editor.extends.ControlBase {
 
     controlName() {
         return 'repeater';
+    }
+
+    renderStyleSelector() {
+        const controlType = this.controlName;
+        const designControls = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/DesignControls', ['section', 'tabs']);
+        const { settings, id } = this;
+        const { value: repeaterItems } = this.state;
+
+        if (!designControls || !Array.isArray(designControls) || designControls.includes(controlType)) {
+            return;
+        }
+
+        if (!repeaterItems || Object.keys(repeaterItems).length <= 0) {
+            return;
+        }
+
+        const cssCache = {};
+
+        Object.values(repeaterItems).forEach(item => {
+            const { attributes } = item;
+            const repeaterId = item.id;
+            Object.keys(attributes).forEach(key => {
+                const controlerValue = attributes[key];
+                const controlerSettings = settings.items[key];
+
+                let Control = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/ControlRender/' + controlerSettings.type, false);
+
+                if (!Control || (!Control.prototype instanceof DragwybControlBase || !Control.prototype instanceof DragwybEditor.editor.extends.ControlBase)) {
+                    Control = DragwybEditor.editor.extends.ControlBase;
+                }
+
+                const controlCssSelector = new Control({
+                    id: controlerSettings.name,
+                    toolbarId: 'fields',
+                    selectedSetting: id,
+                    settings: controlerSettings,
+                    value: controlerValue,
+                    Utils: this.Utils,
+                    currentItemId: repeaterId
+                }).renderStyleSelector();
+
+                if (controlCssSelector) {
+                    const uniqueSelector = `${id}_${repeaterId}_${key}`;
+                    cssCache[uniqueSelector] = controlCssSelector;
+                }
+            })
+        })
+
+        return cssCache;
     }
 
     bind() {

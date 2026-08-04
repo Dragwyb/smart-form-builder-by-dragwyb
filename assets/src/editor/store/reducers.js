@@ -28,7 +28,10 @@ import {
     ADD_ROOT_CONTAINERS,
     DELETE_ROOT_CONTAINER,
     UPDATE_ACTIVE_ROOT_CONTAINER,
-    RESET_ACTIVE_ROOT_CONTAINER
+    RESET_ACTIVE_ROOT_CONTAINER,
+    HISTORY_REVERT,
+    ADD_HISTORY_SNAPSHOT,
+    REPLACE_FORM_STATE
 } from './actions';
 
 /**
@@ -66,6 +69,30 @@ const removeFieldsById = (fields, idsToDelete) => {
 
 export default function reducer(state, action) {
     switch (action.type) {
+        case REPLACE_FORM_STATE: {
+            let fieldIds = [];
+            if (action.payload.form.fields) {
+                const existingIds = JSON.stringify(action.payload.form.fields);
+                fieldIds = [...existingIds.matchAll(/"_id"\s*:\s*"([^"]+)"/g)].map(match => match[1]);
+            }
+            return {
+                ...state,
+                form: {
+                    ...state.form,
+                    fields: action.payload.form.fields,
+                    rootContainers: action.payload.form.rootContainers,
+                    advance: action.payload.form.advance,
+                    actions: action.payload.form.actions,
+                    ...(action.payload.form.style ? { style: action.payload.form.style } : {})
+                },
+                styleSelectors: action.payload.styleSelectors,
+                selectedSettingId: null,
+                activeToolbar: DragwybEditor?.EditorToolbars?.Default ?? false,
+                fieldIds,
+                activeRootContainer: null
+            };
+        }
+
 
         case UPDATE_THEME_MODE:
             localStorage.setItem("DragwybEditorTheme", action.payload.themeMode);
@@ -565,6 +592,102 @@ export default function reducer(state, action) {
             return {
                 ...state,
                 styleSelectors: restSelectors
+            };
+        }
+
+        case HISTORY_REVERT: {
+            const targetIndex = action.payload.index;
+            const past = state.history.past;
+            const toolbars = Object.keys(DragwybEditor.EditorToolbars.toolbars);
+            const revertedStates = {};
+
+            if (targetIndex === -1) {
+                toolbars.map(toolbarKey => {
+                    revertedStates[toolbarKey] = JSON.parse(JSON.stringify(DragwybEditor.formData[toolbarKey] || {}));
+                });
+                revertedStates.rootContainers = DragwybEditor?.formData?.rootContainers || [];
+
+                let fieldIds = [];
+
+                if (DragwybEditor?.formData?.fields) {
+                    const existingIds = JSON.stringify(DragwybEditor?.formData?.fields);
+                    fieldIds = [...existingIds.matchAll(/"_id"\s*:\s*"([^"]+)"/g)].map(match => match[1]);
+                }
+
+                return {
+                    ...state,
+                    form: {
+                        ...state.form,
+                        ...revertedStates
+                    },
+                    fieldIds,
+                    styleSelectors: DragwybEditor?.frontendInitialData?.css && typeof DragwybEditor?.frontendInitialData?.css === 'object' ? JSON.parse(JSON.stringify(DragwybEditor.frontendInitialData.css)) : {},
+                    history: {
+                        ...state.history,
+                        currentIndex: -1
+                    }
+                };
+            }
+
+            const targetSnapshot = past[targetIndex];
+            if (!targetSnapshot) return state;
+
+            toolbars.map(toolbarKey => {
+                revertedStates[toolbarKey] = JSON.parse(JSON.stringify(targetSnapshot.form[toolbarKey] || {}));
+            });
+
+            revertedStates.rootContainers = targetSnapshot?.form?.rootContainers || [];
+
+            return {
+                ...state,
+                form: {
+                    ...state.form,
+                    ...revertedStates,
+                },
+                fieldIds: JSON.parse(JSON.stringify(targetSnapshot.fieldIds)),
+                styleSelectors: JSON.parse(JSON.stringify(targetSnapshot.styleSelectors || {})),
+                history: {
+                    ...state.history,
+                    currentIndex: targetIndex
+                }
+            };
+        }
+
+        case ADD_HISTORY_SNAPSHOT: {
+            const { past, currentIndex } = state.history;
+
+            // Truncate future states if we were currently reverted to a past step
+            const cleanPast = past.slice(0, currentIndex + 1);
+            const toolbars = Object.keys(DragwybEditor.EditorToolbars.toolbars);
+
+            const newSnapshot = {
+                form: {
+                    rootContainers: JSON.parse(JSON.stringify(state.form.rootContainers))
+                },
+                fieldIds: JSON.parse(JSON.stringify(state.fieldIds || [])),
+                styleSelectors: JSON.parse(JSON.stringify(state.styleSelectors || {})),
+                label: action.payload.label,
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+            };
+
+            toolbars.map(toolbarKey => {
+                newSnapshot.form[toolbarKey] = JSON.parse(JSON.stringify(state.form[toolbarKey] || {}));
+            })
+
+            // Enforce the size limit of 50 entries
+            let finalPast = [...cleanPast, newSnapshot];
+            let newIndex = cleanPast.length;
+            if (finalPast.length > 50) {
+                finalPast = finalPast.slice(finalPast.length - 50);
+                newIndex = 49;
+            }
+
+            return {
+                ...state,
+                history: {
+                    past: finalPast,
+                    currentIndex: newIndex
+                }
             };
         }
 
