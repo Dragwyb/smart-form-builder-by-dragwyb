@@ -53,11 +53,15 @@ class DragwybControlBase extends Component {
 
         const styleSelectorsData = { key: uniqueSelector, value: this.state.value || this.settings.default, selectors: this.settings.selectors, placeholders: this.getStyleSelectorPlaceholder(this.state.value || this.settings.default, this.settings.selectors_placeholders), toolbarType: this.selectorKey, itemId: this.selectedSetting, initialRender: true };
 
+        if (this.currentItemId) {
+            styleSelectorsData.currentItemId = this.currentItemId;
+        }
+
         if (this?.settings?.responsive_control && this?.settings?.responsive_type) {
             styleSelectorsData.responsiveType = this.settings.responsive_type;
         }
 
-        this.Utils.updateStyleSelectors(styleSelectorsData);
+        return this.Utils.updateStyleSelectors(styleSelectorsData);
     }
 
     componentDidUpdate = (prevProps, prevState) => {
@@ -249,6 +253,7 @@ class DragwybControlBase extends Component {
         this.Utils = props.Utils;
         this.selectorKey = props.toolbarId;
         this.fieldValue = props.fieldValue || {};
+        this.currentItemId = props.currentItemId || false;
 
         if (this.settings.popover) {
             props?.resetControlEventLifting?.(this.resetControl.bind(this));
@@ -298,6 +303,10 @@ class DragwybControlBase extends Component {
             } else {
 
                 const styleSelectorsData = { key: uniqueSelector, value: value, selectors: this.settings.selectors, placeholders: this.getStyleSelectorPlaceholder(value, this.settings.selectors_placeholders), toolbarType: this.selectorKey, itemId: this.selectedSetting };
+
+                if (this.currentItemId) {
+                    styleSelectorsData.currentItemId = this.currentItemId;
+                }
 
                 if (this?.settings?.responsive_control && this?.settings?.responsive_type) {
                     styleSelectorsData.responsiveType = this.settings.responsive_type;

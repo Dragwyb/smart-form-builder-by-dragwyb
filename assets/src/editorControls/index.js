@@ -24,6 +24,7 @@ import HeadingControl from './headingControl';
 import RawHtmlControl from './rawHtmlControl';
 import ImageControl from './imageControl';
 import WysiwygControl from './wysiwygControl';
+import PresetStyleControl from './presetStyleControl';
 
 const initializeControls = () => {
     const defaultControls = {
@@ -50,7 +51,8 @@ const initializeControls = () => {
         'gallery': GalleryControl,
         'image': ImageControl,
         'icon': IconControl,
-        'heading': HeadingControl
+        'heading': HeadingControl,
+        'preset_style': PresetStyleControl
     }
 
     Object.keys(defaultControls).map(key => DragwybBuilder.Hooks.addFilter('Dragwyb/Editor/ControlRender/' + key, () => { return defaultControls[key] }))

@@ -12,7 +12,9 @@ const renderControls = ({
   value,
   repeaterValue,
   updateHandler,
-  Utils
+  Utils,
+  repeaterControlId,
+  currentItemId
 }) => {
   if (!settings.type) {
     return;
@@ -41,6 +43,8 @@ const renderControls = ({
     value={value}
     handleChange={updateHandler}
     Utils={Utils}
+    selectedSetting={repeaterControlId}
+    currentItemId={currentItemId}
   /></div>
 };
 
@@ -55,6 +59,7 @@ const SortableRepeaterItem = ({
   repeaterItems,
   updateTabsHandler,
   activeRepeater,
+  repeaterControlId,
   Utils
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -115,7 +120,9 @@ const SortableRepeaterItem = ({
           repeaterValue: repeaterItem,
           settings: data,
           updateHandler: (key, value) => updateHandler(key, value, index),
-          Utils: Utils
+          Utils: Utils,
+          parentControlId: repeaterControlId,
+          currentItemId: id
         });
       })}
     </div>

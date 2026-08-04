@@ -34,6 +34,7 @@ class Controls {
 	const DATE           = 'date';
 	const WYSIWYG        = 'wysiwyg';
 	const URL            = 'url';
+	const PRESET_STYLE   = 'preset_style';
 
 	const GROUP_TYPOGRAPHY  = 'typography';
 	const GROUP_BORDER      = 'border';

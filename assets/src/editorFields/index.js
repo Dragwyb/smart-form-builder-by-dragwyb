@@ -777,8 +777,6 @@ const StepPreview = ({ attributes, id }) => {
     if (allStepFIelds && allStepFIelds.length > 0) {
         allStepFIelds.forEach(stepField => {
             const stepId = stepField.id.replace('dragwyb-step-', '');
-
-            console.log(stepId);
             stepContainers.push(stepId);
         });
     } else {

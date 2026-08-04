@@ -1,0 +1,1266 @@
+[
+  {
+    "advance": {
+      "form_name": "Product Experience Rating",
+      "form_status": "publish",
+      "form_description": "Rate product features and ease of use to guide updates."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Feedback Survey Submission: {field_satisfaction_rating} Stars",
+          "email_message": "<h3>Customer Feedback details:</h3><p><strong>Customer:</strong> {field_fb_name} ({field_fb_email})</p><p><strong>Rating:</strong> {field_satisfaction_rating} Stars</p><p><strong>Likes:</strong> {field_fb_positives}</p><p><strong>Improvements Needed:</strong><br/>{field_fb_improvements}</p><p><strong>General Testimonial:</strong><br/>{field_fb_comments}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_fb_header",
+      "row_fb_ratings",
+      "row_fb_usage",
+      "row_fb_aspects",
+      "row_fb_detailed_text",
+      "row_fb_demographics",
+      "row_fb_submit_row"
+    ],
+    "fields": {
+      "row_fb_header": {
+        "_id": "row_fb_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "fb_header_html"
+        ],
+        "attributes": {}
+      },
+      "fb_header_html": {
+        "_id": "fb_header_html",
+        "type": "html",
+        "parentId": "row_fb_header",
+        "attributes": {
+          "raw_html": "<div class='feedback-header'><h2>Tell Us What You Think</h2><p>Your feedback is vital. Help us improve our product and services by answering a few quick questions.</p><hr/></div>"
+        }
+      },
+      "row_fb_ratings": {
+        "_id": "row_fb_ratings",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "satisfaction_rating",
+          "recommend_score"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      },
+      "satisfaction_rating": {
+        "_id": "satisfaction_rating",
+        "type": "select",
+        "parentId": "row_fb_ratings",
+        "attributes": {
+          "label": "Satisfaction",
+          "required": true,
+          "default_value": "5",
+          "options_list": [
+            {
+              "_id": "dxfdogi",
+              "attributes": {
+                "option_label": "5 Stars (Excellent)",
+                "option_value": "5"
+              }
+            },
+            {
+              "_id": "38raafu",
+              "attributes": {
+                "option_label": "4 Stars (Good)",
+                "option_value": "4"
+              }
+            },
+            {
+              "_id": "8qbuaby",
+              "attributes": {
+                "option_label": "3 Stars (Average)",
+                "option_value": "3"
+              }
+            },
+            {
+              "_id": "so9762h",
+              "attributes": {
+                "option_label": "2 Stars (Poor)",
+                "option_value": "2"
+              }
+            },
+            {
+              "_id": "xkzuekh",
+              "attributes": {
+                "option_label": "1 Star (Terrible)",
+                "option_value": "1"
+              }
+            }
+          ]
+        }
+      },
+      "recommend_score": {
+        "_id": "recommend_score",
+        "type": "radio",
+        "parentId": "row_fb_ratings",
+        "attributes": {
+          "label": "Recommend",
+          "required": true,
+          "default_value": "10",
+          "layout": "inline",
+          "options_list": [
+            {
+              "_id": "7t2p3q0",
+              "attributes": {
+                "option_label": "Extremely Likely",
+                "option_value": "10"
+              }
+            },
+            {
+              "_id": "259wv74",
+              "attributes": {
+                "option_label": "Neutral / Undecided",
+                "option_value": "5"
+              }
+            }
+          ]
+        }
+      },
+      "row_fb_usage": {
+        "_id": "row_fb_usage",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "usage_duration",
+          "usage_frequency"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      },
+      "usage_duration": {
+        "_id": "usage_duration",
+        "type": "select",
+        "parentId": "row_fb_usage",
+        "attributes": {
+          "label": "Usage Duration",
+          "required": true,
+          "default_value": "6_months",
+          "options_list": [
+            {
+              "_id": "vqvqunc",
+              "attributes": {
+                "option_label": "Less than a month",
+                "option_value": "1_month"
+              }
+            },
+            {
+              "_id": "loksbnt",
+              "attributes": {
+                "option_label": "1 - 6 Months",
+                "option_value": "6_months"
+              }
+            },
+            {
+              "_id": "cdz89ea",
+              "attributes": {
+                "option_label": "6 - 12 Months",
+                "option_value": "1_year"
+              }
+            },
+            {
+              "_id": "0z6kyb1",
+              "attributes": {
+                "option_label": "Over 1 Year",
+                "option_value": "multi_year"
+              }
+            }
+          ]
+        }
+      },
+      "usage_frequency": {
+        "_id": "usage_frequency",
+        "type": "radio",
+        "parentId": "row_fb_usage",
+        "attributes": {
+          "label": "Usage Frequency",
+          "required": true,
+          "default_value": "weekly",
+          "layout": "inline",
+          "options_list": [
+            {
+              "_id": "w48bvdo",
+              "attributes": {
+                "option_label": "Every Day",
+                "option_value": "daily"
+              }
+            },
+            {
+              "_id": "iwwoi5m",
+              "attributes": {
+                "option_label": "A few times a week",
+                "option_value": "weekly"
+              }
+            }
+          ]
+        }
+      },
+      "row_fb_aspects": {
+        "_id": "row_fb_aspects",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "fb_positives",
+          "fb_negatives"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      },
+      "fb_positives": {
+        "_id": "fb_positives",
+        "type": "select",
+        "parentId": "row_fb_aspects",
+        "attributes": {
+          "label": "Best Feature",
+          "required": true,
+          "default_value": "ui",
+          "options_list": [
+            {
+              "_id": "4gq2ts4",
+              "attributes": {
+                "option_label": "Fast Performance",
+                "option_value": "performance"
+              }
+            },
+            {
+              "_id": "jw3ykd7",
+              "attributes": {
+                "option_label": "Intuitive User Interface",
+                "option_value": "ui"
+              }
+            },
+            {
+              "_id": "xsxg1zi",
+              "attributes": {
+                "option_label": "Rich Features & Plugins",
+                "option_value": "features"
+              }
+            },
+            {
+              "_id": "fa7fblt",
+              "attributes": {
+                "option_label": "Quality Customer Support",
+                "option_value": "support"
+              }
+            }
+          ]
+        }
+      },
+      "fb_negatives": {
+        "_id": "fb_negatives",
+        "type": "select",
+        "parentId": "row_fb_aspects",
+        "attributes": {
+          "label": "Needs Improvement",
+          "required": false,
+          "options_list": [
+            {
+              "_id": "8d5rz3y",
+              "attributes": {
+                "option_label": "Pricing / Subscription costs",
+                "option_value": "pricing"
+              }
+            },
+            {
+              "_id": "4h7xz1j",
+              "attributes": {
+                "option_label": "Documentation & Onboarding",
+                "option_value": "docs"
+              }
+            },
+            {
+              "_id": "usoz2id",
+              "attributes": {
+                "option_label": "Mobile App UI Layout",
+                "option_value": "mobile"
+              }
+            },
+            {
+              "_id": "j48mluh",
+              "attributes": {
+                "option_label": "Integration Libraries",
+                "option_value": "integrations"
+              }
+            }
+          ]
+        }
+      },
+      "row_fb_detailed_text": {
+        "_id": "row_fb_detailed_text",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "fb_improvements",
+          "fb_comments"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      },
+      "fb_improvements": {
+        "_id": "fb_improvements",
+        "type": "textarea",
+        "parentId": "row_fb_detailed_text",
+        "attributes": {
+          "label": "Suggestions",
+          "placeholder": "Enter suggestions here...",
+          "required": false,
+          "rows": 5
+        }
+      },
+      "fb_comments": {
+        "_id": "fb_comments",
+        "type": "textarea",
+        "parentId": "row_fb_detailed_text",
+        "attributes": {
+          "label": "Comments",
+          "placeholder": "We would love to hear any other thoughts you have...",
+          "required": false,
+          "rows": 5
+        }
+      },
+      "row_fb_demographics": {
+        "_id": "row_fb_demographics",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "fb_name",
+          "fb_email",
+          "fb_permission"
+        ],
+        "attributes": {
+          "columns": 3,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1,
+          "columns_tablet": 2
+        }
+      },
+      "fb_name": {
+        "_id": "fb_name",
+        "type": "text",
+        "parentId": "row_fb_demographics",
+        "attributes": {
+          "label": "Name",
+          "placeholder": "John Doe",
+          "required": false
+        }
+      },
+      "fb_email": {
+        "_id": "fb_email",
+        "type": "email",
+        "parentId": "row_fb_demographics",
+        "attributes": {
+          "label": "Email",
+          "placeholder": "john@example.com",
+          "required": false
+        }
+      },
+      "fb_permission": {
+        "_id": "fb_permission",
+        "type": "checkbox",
+        "parentId": "row_fb_demographics",
+        "attributes": {
+          "label": "Follow Up",
+          "required": false,
+          "options_list": [
+            {
+              "_id": "4u7l0sd",
+              "attributes": {
+                "option_label": "We may contact you for details",
+                "option_value": "yes"
+              }
+            }
+          ]
+        }
+      },
+      "row_fb_submit_row": {
+        "_id": "row_fb_submit_row",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "fb_submit_btn"
+        ],
+        "attributes": {
+          "columns": 1,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      },
+      "fb_submit_btn": {
+        "_id": "fb_submit_btn",
+        "type": "button",
+        "parentId": "row_fb_submit_row",
+        "attributes": {
+          "label": "Submit Feedback Survey",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "feedback-submit",
+          "button_width": {
+            "size": 100,
+            "unit": "%"
+          }
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Website Experience Rating",
+      "form_status": "publish",
+      "form_description": "Provide feedback on website performance, speed, and usability."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Feedback Survey Submission: {field_satisfaction_rating} Stars",
+          "email_message": "<h3>Customer Feedback details:</h3><p><strong>Customer:</strong> {field_fb_name} ({field_fb_email})</p><p><strong>Rating:</strong> {field_satisfaction_rating} Stars</p><p><strong>Likes:</strong> {field_fb_positives}</p><p><strong>Improvements Needed:</strong><br/>{field_fb_improvements}</p><p><strong>General Testimonial:</strong><br/>{field_fb_comments}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_fb_header",
+      "row_fb_ratings",
+      "row_fb_usage",
+      "row_fb_aspects",
+      "row_fb_detailed_text",
+      "row_fb_demographics",
+      "row_fb_captcha",
+      "row_fb_submit_row"
+    ],
+    "fields": {
+      "row_fb_header": {
+        "_id": "row_fb_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "fb_header_html"
+        ],
+        "attributes": {}
+      },
+      "fb_header_html": {
+        "_id": "fb_header_html",
+        "type": "html",
+        "parentId": "row_fb_header",
+        "attributes": {
+          "raw_html": "<div class='feedback-header'><h2>Tell Us What You Think</h2><p>Your feedback is vital. Help us improve our product and services by answering a few quick questions.</p><hr/></div>"
+        }
+      },
+      "row_fb_ratings": {
+        "_id": "row_fb_ratings",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "satisfaction_rating",
+          "recommend_score"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      },
+      "satisfaction_rating": {
+        "_id": "satisfaction_rating",
+        "type": "select",
+        "parentId": "row_fb_ratings",
+        "attributes": {
+          "label": "Satisfaction",
+          "required": true,
+          "default_value": "5",
+          "options_list": [
+            {
+              "_id": "l6cj6ey",
+              "attributes": {
+                "option_label": "5 Stars (Excellent)",
+                "option_value": "5"
+              }
+            },
+            {
+              "_id": "9ymvkqb",
+              "attributes": {
+                "option_label": "4 Stars (Good)",
+                "option_value": "4"
+              }
+            },
+            {
+              "_id": "34c8ndv",
+              "attributes": {
+                "option_label": "3 Stars (Average)",
+                "option_value": "3"
+              }
+            },
+            {
+              "_id": "zt4ymsa",
+              "attributes": {
+                "option_label": "2 Stars (Poor)",
+                "option_value": "2"
+              }
+            },
+            {
+              "_id": "hab1ahw",
+              "attributes": {
+                "option_label": "1 Star (Terrible)",
+                "option_value": "1"
+              }
+            }
+          ]
+        }
+      },
+      "recommend_score": {
+        "_id": "recommend_score",
+        "type": "radio",
+        "parentId": "row_fb_ratings",
+        "attributes": {
+          "label": "Recommend",
+          "required": true,
+          "default_value": "10",
+          "layout": "inline",
+          "options_list": [
+            {
+              "_id": "29pn72t",
+              "attributes": {
+                "option_label": "Extremely Likely",
+                "option_value": "10"
+              }
+            },
+            {
+              "_id": "4n7onp3",
+              "attributes": {
+                "option_label": "Neutral / Undecided",
+                "option_value": "5"
+              }
+            }
+          ]
+        }
+      },
+      "row_fb_usage": {
+        "_id": "row_fb_usage",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "usage_duration",
+          "usage_frequency"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      },
+      "usage_duration": {
+        "_id": "usage_duration",
+        "type": "select",
+        "parentId": "row_fb_usage",
+        "attributes": {
+          "label": "Usage Duration",
+          "required": true,
+          "default_value": "6_months",
+          "options_list": [
+            {
+              "_id": "6tgpcgg",
+              "attributes": {
+                "option_label": "Less than a month",
+                "option_value": "1_month"
+              }
+            },
+            {
+              "_id": "z2jzoym",
+              "attributes": {
+                "option_label": "1 - 6 Months",
+                "option_value": "6_months"
+              }
+            },
+            {
+              "_id": "rkfyvco",
+              "attributes": {
+                "option_label": "6 - 12 Months",
+                "option_value": "1_year"
+              }
+            },
+            {
+              "_id": "gzsc91t",
+              "attributes": {
+                "option_label": "Over 1 Year",
+                "option_value": "multi_year"
+              }
+            }
+          ]
+        }
+      },
+      "usage_frequency": {
+        "_id": "usage_frequency",
+        "type": "radio",
+        "parentId": "row_fb_usage",
+        "attributes": {
+          "label": "Usage Frequency",
+          "required": true,
+          "default_value": "weekly",
+          "layout": "inline",
+          "options_list": [
+            {
+              "_id": "mr7zlap",
+              "attributes": {
+                "option_label": "Every Day",
+                "option_value": "daily"
+              }
+            },
+            {
+              "_id": "x84ogv9",
+              "attributes": {
+                "option_label": "A few times a week",
+                "option_value": "weekly"
+              }
+            }
+          ]
+        }
+      },
+      "row_fb_aspects": {
+        "_id": "row_fb_aspects",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "fb_positives",
+          "fb_negatives"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      },
+      "fb_positives": {
+        "_id": "fb_positives",
+        "type": "select",
+        "parentId": "row_fb_aspects",
+        "attributes": {
+          "label": "Best Feature",
+          "required": true,
+          "default_value": "ui",
+          "options_list": [
+            {
+              "_id": "a2jj82f",
+              "attributes": {
+                "option_label": "Fast Performance",
+                "option_value": "performance"
+              }
+            },
+            {
+              "_id": "g6vjuxe",
+              "attributes": {
+                "option_label": "Intuitive User Interface",
+                "option_value": "ui"
+              }
+            },
+            {
+              "_id": "dygc8a0",
+              "attributes": {
+                "option_label": "Rich Features & Plugins",
+                "option_value": "features"
+              }
+            },
+            {
+              "_id": "t1u2jk7",
+              "attributes": {
+                "option_label": "Quality Customer Support",
+                "option_value": "support"
+              }
+            }
+          ]
+        }
+      },
+      "fb_negatives": {
+        "_id": "fb_negatives",
+        "type": "select",
+        "parentId": "row_fb_aspects",
+        "attributes": {
+          "label": "Needs Improvement",
+          "required": false,
+          "options_list": [
+            {
+              "_id": "qgiow59",
+              "attributes": {
+                "option_label": "Pricing / Subscription costs",
+                "option_value": "pricing"
+              }
+            },
+            {
+              "_id": "xqz5uun",
+              "attributes": {
+                "option_label": "Documentation & Onboarding",
+                "option_value": "docs"
+              }
+            },
+            {
+              "_id": "tg4t29r",
+              "attributes": {
+                "option_label": "Mobile App UI Layout",
+                "option_value": "mobile"
+              }
+            },
+            {
+              "_id": "quso6pi",
+              "attributes": {
+                "option_label": "Integration Libraries",
+                "option_value": "integrations"
+              }
+            }
+          ]
+        }
+      },
+      "row_fb_detailed_text": {
+        "_id": "row_fb_detailed_text",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "fb_improvements",
+          "fb_comments"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      },
+      "fb_improvements": {
+        "_id": "fb_improvements",
+        "type": "textarea",
+        "parentId": "row_fb_detailed_text",
+        "attributes": {
+          "label": "Suggestions",
+          "placeholder": "Enter suggestions here...",
+          "required": false,
+          "rows": 5
+        }
+      },
+      "fb_comments": {
+        "_id": "fb_comments",
+        "type": "textarea",
+        "parentId": "row_fb_detailed_text",
+        "attributes": {
+          "label": "Comments",
+          "placeholder": "We would love to hear any other thoughts you have...",
+          "required": false,
+          "rows": 5
+        }
+      },
+      "row_fb_demographics": {
+        "_id": "row_fb_demographics",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "fb_name",
+          "fb_email",
+          "fb_permission"
+        ],
+        "attributes": {
+          "columns": 3,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1,
+          "columns_tablet": 2
+        }
+      },
+      "fb_name": {
+        "_id": "fb_name",
+        "type": "text",
+        "parentId": "row_fb_demographics",
+        "attributes": {
+          "label": "Name",
+          "placeholder": "John Doe",
+          "required": false
+        }
+      },
+      "fb_email": {
+        "_id": "fb_email",
+        "type": "email",
+        "parentId": "row_fb_demographics",
+        "attributes": {
+          "label": "Email",
+          "placeholder": "john@example.com",
+          "required": false
+        }
+      },
+      "fb_permission": {
+        "_id": "fb_permission",
+        "type": "checkbox",
+        "parentId": "row_fb_demographics",
+        "attributes": {
+          "label": "Follow Up",
+          "required": false,
+          "options_list": [
+            {
+              "_id": "8l8kxs1",
+              "attributes": {
+                "option_label": "We may contact you for details",
+                "option_value": "yes"
+              }
+            }
+          ]
+        }
+      },
+      "row_fb_submit_row": {
+        "_id": "row_fb_submit_row",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "fb_submit_btn"
+        ],
+        "attributes": {
+          "columns": 1,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      },
+      "fb_captcha": {
+        "_id": "fb_captcha",
+        "type": "captcha",
+        "parentId": "row_fb_captcha",
+        "attributes": {
+          "label": "Spam Protection",
+          "theme": "light",
+          "size": "normal"
+        }
+      },
+      "fb_submit_btn": {
+        "_id": "fb_submit_btn",
+        "type": "button",
+        "parentId": "row_fb_submit_row",
+        "attributes": {
+          "label": "Submit Feedback Survey",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "feedback-submit",
+          "button_width": {
+            "size": 100,
+            "unit": "%"
+          }
+        }
+      },
+      "row_fb_captcha": {
+        "_id": "row_fb_captcha",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "fb_captcha"
+        ],
+        "attributes": {
+          "columns": 1,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      }
+    }
+  },
+  {
+    "advance": {
+      "form_name": "Support Agent Performance",
+      "form_status": "publish",
+      "form_description": "Evaluate your recent chat support agent's helpfulness and knowledge."
+    },
+    "actions": [
+      {
+        "type": "email",
+        "active": true,
+        "settings": {
+          "email_to": "{admin_email}",
+          "email_subject": "New Feedback Survey Submission: {field_satisfaction_rating} Stars",
+          "email_message": "<h3>Customer Feedback details:</h3><p><strong>Customer:</strong> {field_fb_name} ({field_fb_email})</p><p><strong>Rating:</strong> {field_satisfaction_rating} Stars</p><p><strong>Likes:</strong> {field_fb_positives}</p><p><strong>Improvements Needed:</strong><br/>{field_fb_improvements}</p><p><strong>General Testimonial:</strong><br/>{field_fb_comments}</p>",
+          "email_headers": "Content-Type: text/html; charset=UTF-8"
+        }
+      }
+    ],
+    "rootContainers": [
+      "row_fb_header",
+      "row_fb_ratings",
+      "row_fb_usage",
+      "row_fb_aspects",
+      "row_fb_submit_row"
+    ],
+    "fields": {
+      "row_fb_header": {
+        "_id": "row_fb_header",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "fb_header_html"
+        ],
+        "attributes": {}
+      },
+      "fb_header_html": {
+        "_id": "fb_header_html",
+        "type": "html",
+        "parentId": "row_fb_header",
+        "attributes": {
+          "raw_html": "<div class='feedback-header'><h2>Tell Us What You Think</h2><p>Your feedback is vital. Help us improve our product and services by answering a few quick questions.</p><hr/></div>"
+        }
+      },
+      "row_fb_ratings": {
+        "_id": "row_fb_ratings",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "satisfaction_rating",
+          "recommend_score"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      },
+      "satisfaction_rating": {
+        "_id": "satisfaction_rating",
+        "type": "select",
+        "parentId": "row_fb_ratings",
+        "attributes": {
+          "label": "Satisfaction",
+          "required": true,
+          "default_value": "5",
+          "options_list": [
+            {
+              "_id": "6krr7u7",
+              "attributes": {
+                "option_label": "5 Stars (Excellent)",
+                "option_value": "5"
+              }
+            },
+            {
+              "_id": "2cqiii0",
+              "attributes": {
+                "option_label": "4 Stars (Good)",
+                "option_value": "4"
+              }
+            },
+            {
+              "_id": "3yntu3t",
+              "attributes": {
+                "option_label": "3 Stars (Average)",
+                "option_value": "3"
+              }
+            },
+            {
+              "_id": "x50uh9o",
+              "attributes": {
+                "option_label": "2 Stars (Poor)",
+                "option_value": "2"
+              }
+            },
+            {
+              "_id": "dgp2gz7",
+              "attributes": {
+                "option_label": "1 Star (Terrible)",
+                "option_value": "1"
+              }
+            }
+          ]
+        }
+      },
+      "recommend_score": {
+        "_id": "recommend_score",
+        "type": "radio",
+        "parentId": "row_fb_ratings",
+        "attributes": {
+          "label": "Recommend",
+          "required": true,
+          "default_value": "10",
+          "layout": "inline",
+          "options_list": [
+            {
+              "_id": "qmrd2ep",
+              "attributes": {
+                "option_label": "Extremely Likely",
+                "option_value": "10"
+              }
+            },
+            {
+              "_id": "l2y7t8y",
+              "attributes": {
+                "option_label": "Neutral / Undecided",
+                "option_value": "5"
+              }
+            }
+          ]
+        }
+      },
+      "row_fb_usage": {
+        "_id": "row_fb_usage",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "usage_duration",
+          "usage_frequency"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      },
+      "usage_duration": {
+        "_id": "usage_duration",
+        "type": "select",
+        "parentId": "row_fb_usage",
+        "attributes": {
+          "label": "Usage Duration",
+          "required": true,
+          "default_value": "6_months",
+          "options_list": [
+            {
+              "_id": "og1klrx",
+              "attributes": {
+                "option_label": "Less than a month",
+                "option_value": "1_month"
+              }
+            },
+            {
+              "_id": "7ln2mjf",
+              "attributes": {
+                "option_label": "1 - 6 Months",
+                "option_value": "6_months"
+              }
+            },
+            {
+              "_id": "h3198e4",
+              "attributes": {
+                "option_label": "6 - 12 Months",
+                "option_value": "1_year"
+              }
+            },
+            {
+              "_id": "g89z0zk",
+              "attributes": {
+                "option_label": "Over 1 Year",
+                "option_value": "multi_year"
+              }
+            }
+          ]
+        }
+      },
+      "usage_frequency": {
+        "_id": "usage_frequency",
+        "type": "radio",
+        "parentId": "row_fb_usage",
+        "attributes": {
+          "label": "Usage Frequency",
+          "required": true,
+          "default_value": "weekly",
+          "layout": "inline",
+          "options_list": [
+            {
+              "_id": "w5hixx4",
+              "attributes": {
+                "option_label": "Every Day",
+                "option_value": "daily"
+              }
+            },
+            {
+              "_id": "2ccewsl",
+              "attributes": {
+                "option_label": "A few times a week",
+                "option_value": "weekly"
+              }
+            }
+          ]
+        }
+      },
+      "row_fb_aspects": {
+        "_id": "row_fb_aspects",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "fb_positives",
+          "fb_negatives"
+        ],
+        "attributes": {
+          "columns": 2,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      },
+      "fb_positives": {
+        "_id": "fb_positives",
+        "type": "select",
+        "parentId": "row_fb_aspects",
+        "attributes": {
+          "label": "Best Feature",
+          "required": true,
+          "default_value": "ui",
+          "options_list": [
+            {
+              "_id": "lutkftt",
+              "attributes": {
+                "option_label": "Fast Performance",
+                "option_value": "performance"
+              }
+            },
+            {
+              "_id": "zlrz8gv",
+              "attributes": {
+                "option_label": "Intuitive User Interface",
+                "option_value": "ui"
+              }
+            },
+            {
+              "_id": "73txl6b",
+              "attributes": {
+                "option_label": "Rich Features & Plugins",
+                "option_value": "features"
+              }
+            },
+            {
+              "_id": "gfzq6ic",
+              "attributes": {
+                "option_label": "Quality Customer Support",
+                "option_value": "support"
+              }
+            }
+          ]
+        }
+      },
+      "fb_negatives": {
+        "_id": "fb_negatives",
+        "type": "select",
+        "parentId": "row_fb_aspects",
+        "attributes": {
+          "label": "Needs Improvement",
+          "required": false,
+          "options_list": [
+            {
+              "_id": "e5vdqdd",
+              "attributes": {
+                "option_label": "Pricing / Subscription costs",
+                "option_value": "pricing"
+              }
+            },
+            {
+              "_id": "f8rpr1g",
+              "attributes": {
+                "option_label": "Documentation & Onboarding",
+                "option_value": "docs"
+              }
+            },
+            {
+              "_id": "3zqtip7",
+              "attributes": {
+                "option_label": "Mobile App UI Layout",
+                "option_value": "mobile"
+              }
+            },
+            {
+              "_id": "q10gdug",
+              "attributes": {
+                "option_label": "Integration Libraries",
+                "option_value": "integrations"
+              }
+            }
+          ]
+        }
+      },
+      "row_fb_submit_row": {
+        "_id": "row_fb_submit_row",
+        "type": "row",
+        "is_root_container": true,
+        "children": [
+          "fb_submit_btn"
+        ],
+        "attributes": {
+          "columns": 1,
+          "gap": {
+            "size": 15,
+            "unit": "px"
+          },
+          "columns_mobile": 1
+        }
+      },
+      "fb_submit_btn": {
+        "_id": "fb_submit_btn",
+        "type": "button",
+        "parentId": "row_fb_submit_row",
+        "attributes": {
+          "label": "Submit Feedback Survey",
+          "button_action": "submit",
+          "button_style": "primary",
+          "css_classes": "feedback-submit",
+          "button_width": {
+            "size": 100,
+            "unit": "%"
+          }
+        }
+      }
+    }
+  }
+]

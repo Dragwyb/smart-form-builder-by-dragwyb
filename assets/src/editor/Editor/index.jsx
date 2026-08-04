@@ -46,13 +46,17 @@ const Editor = () => {
     }, [dispatch]);
 
     const setSelectedSettingId = useCallback(({ id = false, tab = "fields" }) => {
+        const defaultToolbar = DragwybEditor?.EditorToolbars?.Default ?? false;
+        const activeTab = false === id ? defaultToolbar : tab;
         if (store?.getState()?.selectedSettingId === id) {
+            if (store?.getState()?.activeToolbar !== activeTab) {
+                Utils.setActiveTab({ value: activeTab });
+            }
             return;
         }
         Utils.setSelectedSettingId({ value: id });
         resetSection();
-        const defaultToolbar = DragwybEditor?.EditorToolbars?.Default ?? false;
-        Utils.setActiveTab({ value: false === id ? defaultToolbar : tab });
+        Utils.setActiveTab({ value: activeTab });
     }, [Utils, resetSection]);
 
     const setActiveTabHandler = useCallback((value) => {

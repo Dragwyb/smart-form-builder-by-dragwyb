@@ -691,6 +691,10 @@
         color: var(--dragwyb-html-text-color, var(--dragwyb-input-color));
         margin: var(--dragwyb-html-mt, 0) var(--dragwyb-html-mr, 0) var(--dragwyb-html-mb, 0) var(--dragwyb-html-ml, 0);
         padding: var(--dragwyb-html-pt, 0) var(--dragwyb-html-pr, 0) var(--dragwyb-html-pb, 0) var(--dragwyb-html-pl, 0);
+
+        * {
+            color: var(--dragwyb-html-text-color, var(--dragwyb-input-color));
+        }
     }
 
     /* Captcha Field */
@@ -894,7 +898,7 @@
             padding-bottom: 0;
 
             .dragwyb-step-item {
-                flex: 0 0 16px;
+                flex: 0 0 var(--dragwyb-step-dot-size, 16px);
 
                 .dragwyb-step-dot {
                     width: var(--dragwyb-step-dot-size, 16px);

@@ -72,6 +72,7 @@ const RepeaterSortable = ({ items, settings, updateControls, controlId, Utils, u
             repeaterItem={{ ...item.attributes || {}, ...tabsSettings || {} }}
             repeaterItems={items}
             Utils={Utils}
+            repeaterControlId={controlId}
           />
         ))}
       </SortableContext>
