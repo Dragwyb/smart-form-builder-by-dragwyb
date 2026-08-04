@@ -7,6 +7,7 @@ import { FaSearch, FaTimes, FaSpinner, FaEye, FaFolderPlus } from 'react-icons/f
 import * as Fields from '../Fields';
 import PreviewIframe from '../PreviewIframe';
 import DragwybControlBase from '../../controlBase';
+import store from '../../store';
 
 const controlCache = {}
 
@@ -57,6 +58,28 @@ const TemplateFieldItem = ({ fieldId, template, perviewIFrame }) => {
         </div>
     );
 };
+
+const getExistingSelector = (existingCss, cssCacheObj) => {
+    Object.keys(existingCss).forEach(key => {
+        const entry = existingCss[key];
+        const selector = Object.keys(entry)[0];
+
+        if (key.startsWith('fields_')) {
+            return;
+        };
+
+        if (typeof entry[selector] === 'object') {
+            if (!cssCacheObj.hasOwnProperty(key)) {
+                cssCacheObj[key] = {};
+            }
+
+            getExistingSelector(entry, cssCacheObj[key]);
+            return;
+        }
+
+        cssCacheObj[key] = entry;
+    })
+}
 
 const generateCssStrings = (cssSelectors) => {
     const cssCache = {};
@@ -242,8 +265,6 @@ const generateStyle = (fields, formId, controlCache) => {
     return cssCache;
 }
 
-
-
 const TemplatePreviewIframe = ({ template, templateId, fullPreviewTemplate = false, height = '220px', updateCSSCache, cssCache, controlCache }) => {
     const iframeRef = useRef(null);
     const PREVIEW_URL = DragwybEditor?.previewUrl;
@@ -399,7 +420,13 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
                 handleUpdateCssCache(typeKey, styleSelectors);
             }
 
-            dispatch(replaceFormState(templateData, styleSelectors));
+            const storeState = store.getState();
+            const storeStyleSelectors = storeState.styleSelectors || {};
+
+            const existingStyleSelectors = {};
+            getExistingSelector(storeStyleSelectors, existingStyleSelectors);
+
+            dispatch(replaceFormState(templateData, { ...existingStyleSelectors, ...styleSelectors }));
             onClose();
         }
     };
