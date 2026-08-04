@@ -508,7 +508,7 @@ class phoneField extends DragwybEditor.editor.extends.FieldBase {
         const dialCodeVisibility = s.dial_code_visibility || 'show';
         const strictMode = s.country_strict_mode || 'no';
         const i18n = s.country_internationalisation || 'en';
-        const showFlags = s.country_show_flags || 'yes';
+        const showFlags = s.country_show_flags === 'yes' || s.country_show_flags === undefined ? 'yes' : 'no';
 
         // Force remount when country-code options change so intl-tel-input re-inits in editor.
         const itiPreviewKey = countryEnabled

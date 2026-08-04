@@ -32,6 +32,19 @@
 	box-shadow: none;
 }
 
+.dragwyb-phone-field .dragwyb-intl-container.iti.iti--hide-flags .iti__flag {
+	background-image: var(--iti-path-globe-1x) !important;
+	background-size: contain;
+	background-position: right;
+	background-repeat: no-repeat;
+	box-shadow: none;
+	height: 19px;
+}
+
+.dragwyb-phone-field .dragwyb-intl-container.iti.iti--hide-flags .iti__country-list .iti__flag-box {
+	display: none !important;
+}
+
 .dragwyb-phone-field .dragwyb-intl-container .iti__selected-dial-code {
 	color: var(--dragwyb-input-color, #7a7a7a);
 	font-size: inherit;

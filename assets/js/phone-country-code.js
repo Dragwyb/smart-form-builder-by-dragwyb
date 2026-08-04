@@ -70,7 +70,7 @@ class DragwybPhoneCountryCode extends DragwybBuilder.DragwybFormFrontendBase {
 		const commonCountries = $input.data('commonCountries') === 'same';
 		const dialCodeVisibility = $input.data('dialCodeVisibility') || 'show';
 		const strictMode = $input.data('strictMode') === 'yes';
-		const showFlags = $input.data('showFlags') !== 'no';
+		const showFlags = String($input.attr('data-show-flags') || '') === 'yes';
 		const langCode = $input.data('internationalisation') || 'en';
 		let defaultCountry = String($input.data('defaultCountry') || 'us').toLowerCase();
 
@@ -89,7 +89,7 @@ class DragwybPhoneCountryCode extends DragwybBuilder.DragwybFormFrontendBase {
 			i18n: i18nMap,
 			formatOnDisplay: false,
 			formatAsYouType: true,
-			containerClass: 'dragwyb-intl-container',
+			containerClass: 'dragwyb-intl-container' + (showFlags ? '' : ' iti--hide-flags'),
 			useFullscreenPopup: false,
 			onlyCountries: includeCountries,
 			excludeCountries: excludeCountries,
@@ -123,13 +123,10 @@ class DragwybPhoneCountryCode extends DragwybBuilder.DragwybFormFrontendBase {
 			iti.countryList.style.display = 'none';
 		}
 
-		if (!showFlags) {
-			jQuery(iti.dropdownContent).find('.iti__flag-box').hide();
-			$input.parent().find('.iti__country-container .iti__flag').addClass('iti__globe').css('background-image', '');
-		}
-
 		this.bindCountryCodeSync(iti, uniqueId);
-		this.applyCustomFlags($input);
+		if (showFlags) {
+			this.applyCustomFlags($input);
+		}
 		$input.removeAttr('pattern');
 	}
 
@@ -148,8 +145,9 @@ class DragwybPhoneCountryCode extends DragwybBuilder.DragwybFormFrontendBase {
 		let previousCode = `+${previousCountryData.dialCode || ''}`;
 
 		const handleCountryChange = (e) => {
-			this.applyCustomFlags(jQuery(inputElement));
-			this.handleHideFlag(uniqueId);
+			if (meta.showFlags) {
+				this.applyCustomFlags(jQuery(inputElement));
+			}
 
 			const currentCountryData = iti.getSelectedCountryData();
 			const currentCode = `+${currentCountryData.dialCode || ''}`;
@@ -178,18 +176,6 @@ class DragwybPhoneCountryCode extends DragwybBuilder.DragwybFormFrontendBase {
 			this.ensureDialCodeInValue(uniqueId);
 			this.validateSingleInput(inputElement, uniqueId);
 		});
-	}
-
-	handleHideFlag(uniqueId) {
-		const meta = this.iti[uniqueId];
-		if (!meta || meta.showFlags) {
-			return;
-		}
-		const input = this.getTelInput(meta.iti);
-		if (!input) {
-			return;
-		}
-		jQuery(input).parent().find('.iti__country-container .iti__flag').addClass('iti__globe').css('background-image', '');
 	}
 
 	updateCountryCodeHandler(element, currentCode, previousCode, dialCodeVisibility) {

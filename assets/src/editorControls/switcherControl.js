@@ -12,7 +12,7 @@ export default class SwitcherControl extends DragwybEditor.editor.extends.Contro
         const disabled = settings.disabled || false;
 
         const changeHandler = () => {
-            const updatedValue = value === returnValue ? null : returnValue;
+            const updatedValue = value === returnValue ? '' : returnValue;
             this.updateControlHandler(id, updatedValue)
         }
 
@@ -38,7 +38,6 @@ export default class SwitcherControl extends DragwybEditor.editor.extends.Contro
                         disabled={disabled}
                     />
                     <div className="dragwyb-switcher__label" {...{ 'data-show-label': settings.on_label, 'data-hide-label': settings.off_label }}>
-                        {/* {settings.show_label === true && (value === returnValue ?  : )} */}
                         <span className="dragwyb-switcher__slider">
                         </span>
                     </div>

@@ -573,6 +573,10 @@ class Field_Phone extends Field_Base {
 		);
 
 		if ( $country_enabled ) {
+			$show_flags = array_key_exists( 'country_show_flags', $settings )
+				? ( 'yes' === $settings['country_show_flags'] ? 'yes' : 'no' )
+				: 'yes';
+
 			$iti_config = implode(
 				'|',
 				array(
@@ -583,7 +587,7 @@ class Field_Phone extends Field_Base {
 					$this->field_key_exist( $settings, 'dial_code_visibility', 'show' ),
 					$this->field_key_exist( $settings, 'country_strict_mode', 'no' ),
 					$this->field_key_exist( $settings, 'country_internationalisation', 'en' ),
-					$this->field_key_exist( $settings, 'country_show_flags', 'yes' ),
+					$show_flags,
 				)
 			);
 
@@ -595,7 +599,7 @@ class Field_Phone extends Field_Base {
 			$input_attrs['data-dial-code-visibility'] = $this->field_key_exist( $settings, 'dial_code_visibility', 'show' );
 			$input_attrs['data-strict-mode']          = $this->field_key_exist( $settings, 'country_strict_mode', 'no' );
 			$input_attrs['data-internationalisation'] = $this->field_key_exist( $settings, 'country_internationalisation', 'en' );
-			$input_attrs['data-show-flags']           = $this->field_key_exist( $settings, 'country_show_flags', 'yes' );
+			$input_attrs['data-show-flags']           = $show_flags;
 			$input_attrs['data-iti-config']           = $iti_config;
 			$input_attrs['autocomplete']             = 'tel';
 		}
