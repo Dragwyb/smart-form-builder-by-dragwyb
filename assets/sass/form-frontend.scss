@@ -508,6 +508,7 @@
             padding: var(--dragwyb-input-pt) var(--dragwyb-input-pr) var(--dragwyb-input-pb) var(--dragwyb-input-pl);
             outline: none;
             transition: border-color 0.2s, box-shadow 0.2s;
+            height: unset;
 
             &::placeholder {
                 color: var(--dragwyb-input-placeholder-color);
