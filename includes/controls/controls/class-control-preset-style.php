@@ -26,6 +26,20 @@ class Control_Preset_Style extends Control_Base {
 	}
 
 	protected function sanitize_control( $value, $settings ) {
-		return sanitize_text_field( (string) $value );
+		if ( ! isset( $settings['options'][ $value ] ) ) {
+			return false;
+		}
+
+		return sanitize_text_field( $value );
+	}
+
+	protected function options_setting_sanitize( $value ) {
+		$filterd_options = array();
+		if ( is_array( $value ) ) {
+			foreach ( $value as $key => $value ) {
+				$filterd_options[ sanitize_text_field( $key ) ] = sanitize_text_field( $value );
+			}
+		}
+		return $filterd_options;
 	}
 }

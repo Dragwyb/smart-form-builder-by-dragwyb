@@ -1,6 +1,5 @@
 {
   "default": {
-    "label": "Default (Clean)",
     "form_width": { "size": 800, "unit": "px" },
     "form_container_bg_color": "#ffffff",
     "form_css_filter_blur": { "size": 0, "unit": "px" },
@@ -62,8 +61,7 @@
     "button_box_shadow_spread": { "size": 0, "unit": "px" },
     "button_box_shadow_color": ""
   },
-  "modern": {
-    "label": "Modern (Floating Outlined)",
+  "style_1": {
     "form_width": { "size": 750, "unit": "px" },
     "form_container_bg_color": "#ffffff",
     "form_css_filter_blur": { "size": 0, "unit": "px" },
@@ -125,8 +123,7 @@
     "button_box_shadow_spread": { "size": -2, "unit": "px" },
     "button_box_shadow_color": "rgba(15, 23, 42, 0.15)"
   },
-  "elegant": {
-    "label": "Elegant (Floating Inside)",
+  "style_2": {
     "form_width": { "size": 650, "unit": "px" },
     "form_container_bg_color": "#fdfbf7",
     "form_css_filter_blur": { "size": 0, "unit": "px" },
@@ -188,8 +185,7 @@
     "button_box_shadow_spread": { "size": 0, "unit": "px" },
     "button_box_shadow_color": ""
   },
-  "classic": {
-    "label": "Classic (Material Underline)",
+  "style_3": {
     "form_width": { "size": 600, "unit": "px" },
     "form_container_bg_color": "#ffffff",
     "form_css_filter_blur": { "size": 0, "unit": "px" },
@@ -251,8 +247,7 @@
     "button_box_shadow_spread": { "size": 0, "unit": "px" },
     "button_box_shadow_color": ""
   },
-  "bold": {
-    "label": "Bold (Neon Glow)",
+  "style_4": {
     "form_width": { "size": 800, "unit": "px" },
     "form_container_bg_color": "#09090b",
     "form_css_filter_blur": { "size": 0, "unit": "px" },
@@ -314,8 +309,7 @@
     "button_box_shadow_spread": { "size": 0, "unit": "px" },
     "button_box_shadow_color": "rgba(188, 19, 254, 0.5)"
   },
-  "dark": {
-    "label": "Dark Mode",
+  "style_5": {
     "form_width": { "size": 700, "unit": "px" },
     "form_container_bg_color": "#1e293b",
     "form_css_filter_blur": { "size": 0, "unit": "px" },
@@ -377,8 +371,7 @@
     "button_box_shadow_spread": { "size": 0, "unit": "px" },
     "button_box_shadow_color": ""
   },
-  "glassmorphism_light": {
-    "label": "Glassmorphism Light (Frosted)",
+  "style_6": {
     "form_width": { "size": 750, "unit": "px" },
     "form_container_bg_color": "rgba(255, 255, 255, 0.2)",
     "form_css_filter_blur": { "size": 10, "unit": "px" },
@@ -440,8 +433,7 @@
     "button_box_shadow_spread": { "size": 0, "unit": "px" },
     "button_box_shadow_color": ""
   },
-  "glassmorphism_dark": {
-    "label": "Glassmorphism Dark (Smoked)",
+  "style_7": {
     "form_width": { "size": 750, "unit": "px" },
     "form_container_bg_color": "rgba(0, 0, 0, 0.4)",
     "form_css_filter_blur": { "size": 10, "unit": "px" },

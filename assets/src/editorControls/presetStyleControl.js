@@ -10,7 +10,7 @@ export default class PresetStyleControl extends DragwybEditor.editor.extends.Con
   handlePresetChange = (presetKey) => {
     const { id, Utils } = this;
     const store = window.DragwybStore || {};
-    const dispatch = store.dispatch || (({ type, payload }) => {});
+    const dispatch = store.dispatch || (({ type, payload }) => { });
     const storeState = store.getState ? store.getState() : {};
     const storeStyleSelectors = storeState.styleSelectors || {};
 
@@ -91,22 +91,18 @@ export default class PresetStyleControl extends DragwybEditor.editor.extends.Con
   bind() {
     if (!this.shouldRender()) return <></>;
 
-    const { id } = this;
+    const { id, settings } = this;
+    const options = settings.options || {};
+    const labelInline = settings.label_inline || false;
     const value = this.state.value || '';
-    const presetStyles = window.DragwybEditor?.presetStyle || DragwybEditor?.presetStyle || {};
-
-    const presetOptions = {};
-    Object.keys(presetStyles).forEach((key) => {
-      presetOptions[key] = key.replace('-', ' ').replace(/\b\w/g, (char) => char.toUpperCase());
-    });
 
     return (
       <div className="dragwyb-control dragwyb-control--preset-style" id={`control-${id}`}>
-        <div className="dragwyb-preset-style-row dragwyb-label-inline">
+        <div className={`dragwyb-preset-style-row dragwyb-label-${labelInline ? 'inline' : 'block'}`}>
           <this.RenderLabel attr={{ htmlFor: id }} />
           <div className="dragwyb-preset-style-field">
             <Select
-              options={presetOptions}
+              options={options}
               value={value}
               onChange={(selectedVal) => this.handlePresetChange(selectedVal)}
               placeholder={__('Select Preset Style', 'smart-form-builder-by-dragwyb')}
@@ -116,7 +112,7 @@ export default class PresetStyleControl extends DragwybEditor.editor.extends.Con
         <div className="dragwyb-preset-style-warning">
           <div className="dragwyb-preset-style-warning-icon-wrapper">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 1.5C4.41 1.5 1.5 4.41 1.5 8C1.5 11.59 4.41 14.5 8 14.5C11.59 14.5 14.5 11.59 14.5 8C14.5 4.41 11.59 1.5 8 1.5ZM8 13C5.24 13 3 10.76 3 8C3 5.24 5.24 3 8 3C10.76 3 13 5.24 13 8C13 10.76 10.76 13 8 13ZM7.25 4.5H8.75V8.5H7.25V4.5ZM7.25 9.5H8.75V11H7.25V9.5Z" fill="currentColor"/>
+              <path d="M8 1.5C4.41 1.5 1.5 4.41 1.5 8C1.5 11.59 4.41 14.5 8 14.5C11.59 14.5 14.5 11.59 14.5 8C14.5 4.41 11.59 1.5 8 1.5ZM8 13C5.24 13 3 10.76 3 8C3 5.24 5.24 3 8 3C10.76 3 13 5.24 13 8C13 10.76 10.76 13 8 13ZM7.25 4.5H8.75V8.5H7.25V4.5ZM7.25 9.5H8.75V11H7.25V9.5Z" fill="currentColor" />
             </svg>
           </div>
           <p className="dragwyb-preset-style-warning-text">
@@ -128,5 +124,16 @@ export default class PresetStyleControl extends DragwybEditor.editor.extends.Con
         </div>
       </div>
     );
+  }
+
+  resetControl() {
+    const value = this.state.value;
+
+    if (value && value !== 'default') {
+      this.handlePresetChange('default');
+    }
+
+    this.setState({ value: undefined });
+    this.updateControls(this.id, undefined);
   }
 }
