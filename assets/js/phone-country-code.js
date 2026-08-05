@@ -49,8 +49,36 @@ class DragwybPhoneCountryCode extends DragwybBuilder.DragwybFormFrontendBase {
 			instance.destroy();
 		}
 
+		if (typeof input.dataset.dragwybPlaceholder !== 'undefined') {
+			input.setAttribute('placeholder', input.dataset.dragwybPlaceholder);
+		}
+
+		delete input.dataset.dragwybPlaceholder;
+		delete input.dataset.dragwybPlaceholderApplied;
 		delete input.dataset.dragwybItiInit;
 		delete input.dataset.dragwybItiConfig;
+	}
+
+	/**
+	 * ITI keeps a user-provided placeholder as-is, so strip the dial code prefix
+	 * ourselves when the dial code is hidden or shown in its own box.
+	 */
+	syncPlaceholder(input, dialCodeVisibility) {
+		const current = input.getAttribute('placeholder') || '';
+		if (current !== input.dataset.dragwybPlaceholderApplied) {
+			input.dataset.dragwybPlaceholder = current;
+		}
+
+		const original = input.dataset.dragwybPlaceholder;
+		if (!original) {
+			return;
+		}
+
+		const hideDialCode = dialCodeVisibility === 'hide' || dialCodeVisibility === 'separate';
+		const placeholder = hideDialCode ? original.replace(/^\s*\+\d+[\s-]*/, '') : original;
+
+		input.setAttribute('placeholder', placeholder);
+		input.dataset.dragwybPlaceholderApplied = placeholder;
 	}
 
 	initField($input) {
@@ -59,8 +87,10 @@ class DragwybPhoneCountryCode extends DragwybBuilder.DragwybFormFrontendBase {
 			return;
 		}
 
+		const dialCodeVisibility = input.getAttribute('data-dial-code-visibility') || 'show';
 		const signature = this.getConfigSignature(input);
 		if (input.dataset.dragwybItiInit === '1' && input.dataset.dragwybItiConfig === signature) {
+			this.syncPlaceholder(input, dialCodeVisibility);
 			return;
 		}
 
@@ -73,7 +103,6 @@ class DragwybPhoneCountryCode extends DragwybBuilder.DragwybFormFrontendBase {
 		const excludeCountries = this.parseCountryList($input.attr('data-exclude-countries'));
 		const allowedCountries = this.getAllowedCountries(includeCountries, excludeCountries);
 		const commonCountries = $input.attr('data-common-countries') === 'same';
-		const dialCodeVisibility = $input.attr('data-dial-code-visibility') || 'show';
 		const strictMode = $input.attr('data-strict-mode') === 'yes';
 		const showFlags = String($input.attr('data-show-flags') || '') === 'yes';
 		const langCode = $input.attr('data-internationalisation') || 'en';
@@ -129,6 +158,8 @@ class DragwybPhoneCountryCode extends DragwybBuilder.DragwybFormFrontendBase {
 		if (defaultCountry && typeof iti.setCountry === 'function') {
 			iti.setCountry(defaultCountry);
 		}
+
+		this.syncPlaceholder(input, dialCodeVisibility);
 
 		input.dataset.dragwybItiInit = '1';
 		input.dataset.dragwybItiConfig = signature;
