@@ -10,6 +10,29 @@ use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
 
 class Field_Radio extends Field_Base {
 
+	protected function register_scripts() {
+		return array( 'dragwyb-radio-field' );
+	}
+
+	public function __construct() {
+		parent::__construct();
+
+		if ( ! wp_script_is( 'dragwyb-radio-field', 'registered' ) ) {
+			$js_assets_info = array(
+				'version'      => DRAGWYB_FORM_BUILDER_VERSION,
+				'dependencies' => array( 'jquery', 'dragwyb-form-frontend' ),
+			);
+
+			wp_register_script(
+				'dragwyb-radio-field',
+				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/js/radio-field.js' ),
+				$js_assets_info['dependencies'],
+				esc_attr( $js_assets_info['version'] ),
+				true
+			);
+		}
+	}
+
 	protected function register_field_controls(): void {
 		// ==============================================================
 		// CONTENT TAB
@@ -37,6 +60,23 @@ class Field_Radio extends Field_Base {
 			array(
 				'type'  => Controls::ICON,
 				'label' => __( 'Label Icon', 'smart-form-builder-by-dragwyb' ),
+			)
+		);
+
+		$this->add_control(
+			'radio_style',
+			array(
+				'type'         => Controls::SELECT,
+				'label'        => __( 'Radio Style', 'smart-form-builder-by-dragwyb' ),
+				'options'      => array(
+					'outline'    => __( 'Classic Circle', 'smart-form-builder-by-dragwyb' ),
+					'solid_fill' => __( 'Solid Accent Circle', 'smart-form-builder-by-dragwyb' ),
+					'card'       => __( 'Bordered Box Cards', 'smart-form-builder-by-dragwyb' ),
+					'button'     => __( 'Segmented Button Group', 'smart-form-builder-by-dragwyb' ),
+					'chip'       => __( 'Selection Pills / Chips', 'smart-form-builder-by-dragwyb' ),
+				),
+				'default'      => 'outline',
+				'label_inline' => true,
 			)
 		);
 
@@ -91,7 +131,7 @@ class Field_Radio extends Field_Base {
 					'inline' => __( 'Horizontal (Inline)', 'smart-form-builder-by-dragwyb' ),
 				),
 				'label_inline' => true,
-				'default'      => 'block',
+				'default'      => 'inline',
 			)
 		);
 
@@ -168,11 +208,11 @@ class Field_Radio extends Field_Base {
 		);
 
 		$this->add_control(
-			'toggle_primary_color',
+			'toggle_bg_color',
 			array(
 				'type'      => Controls::COLOR,
-				'label'     => __( 'Primary Color', 'smart-form-builder-by-dragwyb' ),
-				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-toggle-primary-color: {{VALUE}};' ),
+				'label'     => __( 'Background Color', 'smart-form-builder-by-dragwyb' ),
+				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-toggle-bg-color: {{VALUE}};' ),
 			)
 		);
 
@@ -186,10 +226,34 @@ class Field_Radio extends Field_Base {
 		);
 
 		$this->add_control(
+			'toggle_border_width',
+			array(
+				'type'      => Controls::SLIDER,
+				'label'     => __( 'Border Width', 'smart-form-builder-by-dragwyb' ),
+				'range'     => array(
+					'px' => array(
+						'min' => 1,
+						'max' => 10,
+					),
+				),
+				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-toggle-border-width: {{VALUE}}{{UNIT}};' ),
+			)
+		);
+
+		$this->add_control(
+			'toggle_primary_color',
+			array(
+				'type'      => Controls::COLOR,
+				'label'     => __( 'Active / Checked Color', 'smart-form-builder-by-dragwyb' ),
+				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-toggle-primary-color: {{VALUE}};' ),
+			)
+		);
+
+		$this->add_control(
 			'toggle_spacing',
 			array(
 				'type'      => Controls::SLIDER,
-				'label'     => __( 'Spacing', 'smart-form-builder-by-dragwyb' ),
+				'label'     => __( 'Option Spacing', 'smart-form-builder-by-dragwyb' ),
 				'range'     => array(
 					'px' => array(
 						'min' => 0,
@@ -214,15 +278,17 @@ class Field_Radio extends Field_Base {
 	protected function render_field() {
 		$settings = $this->get_field_settings();
 
-		$id       = $this->get_the_id();
-		$field_id = $this->field_key_exist( $settings, 'field_id', uniqid( 'field_' ) );
-		$label    = $this->field_key_exist( $settings, 'label', '' );
-		$options  = $this->field_key_exist( $settings, 'options_list', array() );
-		$layout   = $this->field_key_exist( $settings, 'layout', 'block' );
-		$help     = $this->field_key_exist( $settings, 'help_text', '' );
-		$classes  = $this->field_key_exist( $settings, 'css_classes', '' );
+		$id          = $this->get_the_id();
+		$field_id    = $this->field_key_exist( $settings, 'field_id', uniqid( 'field_' ) );
+		$label       = $this->field_key_exist( $settings, 'label', '' );
+		$options     = $this->field_key_exist( $settings, 'options_list', array() );
+		$layout      = $this->field_key_exist( $settings, 'layout', 'inline' );
+		$radio_style = $this->field_key_exist( $settings, 'radio_style', 'outline' );
+		$help        = $this->field_key_exist( $settings, 'help_text', '' );
+		$classes     = $this->field_key_exist( $settings, 'css_classes', '' );
 
 		$layout_class = ( $layout === 'inline' ) ? 'dragwyb-inline-options' : '';
+		$style_class  = 'dragwyb-radio-style-' . $radio_style;
 
 		$this->add_field_attributes(
 			'wrapper',
@@ -237,7 +303,7 @@ class Field_Radio extends Field_Base {
 			<div class="dragwyb-input-group">
 				<?php $this->render_field_label( '', $label, isset( $required ) ? $required : false, $settings ); ?>
 
-				<div class="dragwyb-options-container <?php echo esc_attr( $layout_class ); ?>">
+				<div class="dragwyb-options-container <?php echo esc_attr( trim( $layout_class . ' ' . $style_class ) ); ?>">
 					<?php
 					foreach ( $options as $index => $opt ) :
 						$opt_id = $field_id . '_' . $index;

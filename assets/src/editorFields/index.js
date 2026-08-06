@@ -282,7 +282,9 @@ class radioField extends DragwybEditor.editor.extends.FieldBase {
         const options = s.options_list || [];
         const defaultLabel = DragwybEditor?.fields?.fields?.[this.fieldName]?.controls?.label?.default;
         const label = s.label || defaultLabel;
-        const layoutClass = s.layout === 'inline' ? 'dragwyb-inline-options' : '';
+        const radioStyle = s.radio_style || 'outline';
+        const styleClass = `dragwyb-radio-style-${radioStyle}`;
+        const layoutClass = s.layout !== 'block' ? 'dragwyb-inline-options' : '';
 
         return (
             <>
@@ -293,11 +295,11 @@ class radioField extends DragwybEditor.editor.extends.FieldBase {
                         required={s.required}
                         settings={s}
                     />}
-                    <div className={`dragwyb-options-container ${layoutClass}`}>
+                    <div className={`dragwyb-options-container ${layoutClass} ${styleClass}`}>
                         {options.map((opt, i) => (
                             !opt.attributes ? null :
-                                <label key={i} className="dragwyb-option-item">
-                                    <input type="radio" name={fieldId} value={opt.attributes.option_value} />
+                                <label key={i} className={`dragwyb-option-item ${i === 0 ? 'is-checked' : ''}`}>
+                                    <input type="radio" name={fieldId} value={opt.attributes.option_value} defaultChecked={i === 0} readOnly />
                                     <span className="dragwyb-radio-label">{opt.attributes.option_label}</span>
                                 </label>
                         ))}
