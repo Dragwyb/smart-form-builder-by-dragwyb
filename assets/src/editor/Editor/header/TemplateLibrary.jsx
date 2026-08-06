@@ -382,6 +382,8 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
     useEffect(() => {
         if (!isOpen) return;
 
+        if (templates && Object.keys(templates).length > 0) return;
+
         setLoading(true);
         fetch(`${DragwybEditor.restUrl}dragwyb/v1/templates`)
             .then(res => res.json())

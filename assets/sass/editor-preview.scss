@@ -117,10 +117,10 @@ html {
         }
 
         &-wrapper {
-            border: 2px dashed hsl(var(--dragwyb-border)/var(--dragwyb-bg-opacity, 1));
+            border: 2px dashed var(--dragwyb-label-color);
             padding: 20px;
             text-align: center;
-            color: hsl(var(--dragwyb-card-foreground)/0.3);
+            color: var(--dragwyb-label-color);
             width: 100%;
             display: flex;
             justify-content: center;
@@ -130,6 +130,7 @@ html {
             border-radius: 5px;
             margin-top: 10px;
             cursor: pointer;
+            box-sizing: border-box;
 
             P {
                 margin: 0;
