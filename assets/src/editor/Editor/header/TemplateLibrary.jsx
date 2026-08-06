@@ -429,6 +429,14 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
             getExistingSelector(storeStyleSelectors, existingStyleSelectors);
 
             dispatch(replaceFormState(templateData, { ...existingStyleSelectors, ...styleSelectors }));
+
+            const historyLabel = `Insert Template: ${templateData?.advance?.form_name}`;
+
+            dispatch({
+                type: 'ADD_HISTORY_SNAPSHOT',
+                payload: { label: historyLabel }
+            });
+
             onClose();
         }
     };

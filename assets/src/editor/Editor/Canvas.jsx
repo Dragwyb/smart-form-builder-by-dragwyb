@@ -42,45 +42,74 @@ const RenderItem = React.memo(({
 
     const isButtonContainer = useMemo(() => {
         return isButtonContainerFunc(field);
-    }, [field])
+    }, [field]);
 
-    if (!field) {
-        return null;
-    }
-
-    const fieldSettings = DragwybEditor.fields.fields[field.type];
+    const fieldSettings = field ? DragwybEditor.fields.fields[field.type] : null;
     const allowedChildren = fieldSettings?.allow_child || false;
     const isRootContainer = field?.is_root_container || false;
-    const childrens = field.children;
+    const childrens = field?.children;
 
-    const { setNodeRef: dropRef } = allowedChildren === true ? useDroppable({
-        id: `canvas-drop-field-${field._id}`,
+    const isDroppableEnabled = Boolean(field && allowedChildren === true);
+    const { setNodeRef: dropRef } = useDroppable({
+        id: field ? `canvas-drop-field-${field._id}` : `canvas-drop-field-disabled-${fieldId}`,
         data: {
             canvasDrop: true,
             currentId: isRootContainer ? 'root' : fieldId,
             index: index,
         },
-    }) : {};
+        disabled: !isDroppableEnabled,
+    });
+
+    const isDraggableEnabled = Boolean(
+        field &&
+        (allowedChildren === true || isRootContainer === true) &&
+        isButtonContainer === false
+    );
 
     const {
         attributes,
         listeners,
         setNodeRef: dragRef,
         isDragging,
-    } = (allowedChildren === true || isRootContainer === true) && isButtonContainer === false ? useDraggable({
-        id: `canvas-drag-field-${field._id}`,
+    } = useDraggable({
+        id: field ? `canvas-drag-field-${field._id}` : `canvas-drag-field-disabled-${fieldId}`,
         data: {
             canvasDrag: true,
             currentId: fieldId,
             index: index,
         },
-    }) : {};
+        disabled: !isDraggableEnabled,
+    });
 
     const setNodeRef = useCallback((Node) => {
         if (!Node) return;
         if (dropRef) dropRef(Node);
         if (dragRef) dragRef(Node);
     }, [dropRef, dragRef]);
+
+    const onRootContainerSelect = useCallback(() => {
+        const id = field?._id;
+
+        if (!id) {
+            return;
+        }
+
+        onFieldSelect({ id });
+    }, [field?._id, onFieldSelect]);
+
+    const onFieldSelectHandler = useCallback((e) => {
+        const id = field?._id;
+
+        if (!id || (isRootContainer && allowedChildren)) {
+            return;
+        }
+
+        onFieldSelect({ id });
+    }, [field?._id, isRootContainer, allowedChildren, onFieldSelect]);
+
+    if (!field) {
+        return null;
+    }
 
     let wrapperClass = [];
     if (field.type !== 'row') {
@@ -103,26 +132,6 @@ const RenderItem = React.memo(({
 
     wrapperClass = DragwybBuilder.Hooks.applyFilter('Dragwyb/Field/WrapperClass', wrapperClass, fieldId, field.type, field.attributes, Utils);
     wrapperClass = DragwybBuilder.Hooks.applyFilter(`Dragwyb/Field/WrapperClass/${field.type}`, wrapperClass, fieldId, field.type, field.attributes, Utils);
-
-    const onRootContainerSelect = useCallback(() => {
-        const id = field._id;
-
-        if (!id) {
-            return;
-        }
-
-        onFieldSelect({ id });
-    }, [field._id, onFieldSelect]);
-
-    const onFieldSelectHandler = useCallback((e) => {
-        const id = field._id;
-
-        if (!id || (isRootContainer && allowedChildren)) {
-            return;
-        }
-
-        onFieldSelect({ id });
-    }, [field._id, isRootContainer, onFieldSelect]);
 
     return (
         <>
@@ -248,6 +257,7 @@ const Canvas = ({
     dropInfo,
     setActiveTab
 }) => {
+
     // const values = useSelector((state) => state.values);
     const values = {};
     const errors = useSelector((state) => state.errors);

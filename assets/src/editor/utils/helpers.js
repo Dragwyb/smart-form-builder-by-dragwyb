@@ -276,6 +276,19 @@ export const AddField = ({ state, type, dispatch, Utils, index = null, parentCon
         })
     }
 
+    let fieldLabel = field?.attributes?.label;
+
+    if (typeof fieldLabel !== 'string' || '' === fieldLabel) {
+        fieldLabel = field._id;
+    }
+
+    const historyLabel = `Add ${type}, (${fieldLabel})`;
+
+    dispatch({
+        type: 'ADD_HISTORY_SNAPSHOT',
+        payload: { label: historyLabel }
+    });
+
     return field;
 };
 
@@ -411,6 +424,8 @@ export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, p
             if (toolbarType === 'fields' && itemId && itemId !== '') {
                 const fieldData = state.form.fields[itemId];
 
+                if (!fieldData) return;
+
                 if (fieldData.type === 'row') {
                     wrapperId += ' #dragwyb-row-' + itemId;
                 } else {
@@ -468,6 +483,10 @@ export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, p
                 }
             });
         });
+
+        if (Object.keys(cssCache).length < 1) {
+            return;
+        }
 
         dispatch(updateStyleSelectorsAction(key, cssCache, responsiveType))
     } catch (e) {

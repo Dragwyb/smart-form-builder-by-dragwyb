@@ -2,11 +2,12 @@ import {
     useDroppable as Droppable,
 } from '@dnd-kit/core';
 
-const useDroppable=({id, data={}})=>{
+const useDroppable=({id, data={}, disabled=false})=>{
     const DroppableProps = Droppable(
         {
             id: id,
-            data
+            data,
+            disabled
         }
     );
 

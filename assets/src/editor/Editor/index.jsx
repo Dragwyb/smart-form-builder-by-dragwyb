@@ -318,6 +318,23 @@ const Editor = () => {
 
                 if (updatedIndex >= 0) {
                     dispatch(updateFieldOrder(active?.data?.current?.currentId, currentDropInfo.targetId, updatedIndex));
+
+                    let fieldLabel = '';
+
+                    if (active?.data?.current?.attributes) {
+                        fieldLabel = active?.data?.current?.attributes?.label;
+                    }
+
+                    if (typeof fieldLabel !== 'string' || '' === fieldLabel) {
+                        fieldLabel = active?.data?.current?.currentId;
+                    }
+
+                    const historyLabel = `Move Field (${fieldLabel})`;
+
+                    dispatch({
+                        type: 'ADD_HISTORY_SNAPSHOT',
+                        payload: { label: historyLabel }
+                    });
                 }
             }
         }
