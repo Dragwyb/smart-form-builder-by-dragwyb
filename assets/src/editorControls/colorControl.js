@@ -39,7 +39,7 @@ export default class ColorControl extends DragwybEditor.editor.extends.ControlBa
         if (this.pickr) {
             try {
                 this.pickr.hide();
-            } catch (e) {}
+            } catch (e) { }
         }
         this.setState({ mode });
     }
@@ -192,7 +192,7 @@ export default class ColorControl extends DragwybEditor.editor.extends.ControlBa
                             className="dragwyb-control__input dragwyb-color-var__input"
                             id={id}
                             name={id}
-                            placeholder="rgb(var(--on-surface-variant))"
+                            placeholder="rgb(var(--primary))"
                             value={value || ''}
                             onChange={(e) => this.handleCustomChange(e.target.value)}
                         />
