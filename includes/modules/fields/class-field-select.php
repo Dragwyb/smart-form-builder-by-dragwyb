@@ -289,7 +289,7 @@ class Field_Select extends Field_Base {
 					foreach ( $repeater_options as $option ) :
 						$option = $this->field_key_exist( $option, 'attributes', array() );
 						?>
-						<option value="<?php echo esc_attr( $option['option_value'] ); ?>">
+						<option value="<?php echo isset($option['option_value']) ? esc_attr( $option['option_value'] ) : ''; ?>">
 							<?php echo esc_html( $option['option_label'] ); ?>
 						</option>
 					<?php endforeach; ?>
