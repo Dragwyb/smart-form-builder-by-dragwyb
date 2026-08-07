@@ -21,6 +21,21 @@ class Control_Color extends Control_Base {
 	}
 
 	protected function sanitize_control( $value, $settings ) {
-		return sanitize_text_field( $value );
+		if ( ! is_string( $value ) || '' === trim( $value ) ) {
+			return '';
+		}
+
+		$value = sanitize_text_field( wp_unslash( $value ) );
+
+		// Remove dangerous CSS injection / XSS characters like ;, {, }, <, >, ", ', and malicious protocols
+		$value = preg_replace( '/[;{}<>\'"]/', '', $value );
+		$value = preg_replace( '/(?:url|expression|javascript)\s*\(/i', '', $value );
+
+		// Validate safe CSS color characters: hex (#), alphanumerics, spaces, dashes, underscores, %, commas, dots, parentheses
+		if ( preg_match( '/^[\#a-zA-Z0-9\s\-_%,.\(\)]+$/', $value ) ) {
+			return trim( $value );
+		}
+
+		return '';
 	}
 }

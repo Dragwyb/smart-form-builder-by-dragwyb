@@ -672,25 +672,67 @@
      Color
      ========================= */
 .dragwyb-control--color {
-  .dragwyb-color__wrapper {
+  .dragwyb-color-row {
     display: flex;
-    gap: 1rem;
-    border: 1px solid hsl(var(--dragwyb-border)/var(--dragwyb-border-opacity, 1));
-    border-radius: 6px;
-    font-size: .8rem;
     align-items: center;
-    justify-content: center;
-    padding: .5rem;
-    cursor: pointer;
+    gap: 8px;
+    width: 100%;
 
-    button.pcr-button {
+    .dragwyb-color__wrapper {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      gap: 1rem;
       border: 1px solid hsl(var(--dragwyb-border)/var(--dragwyb-border-opacity, 1));
+      border-radius: 6px;
+      font-size: .8rem;
+      align-items: center;
+      justify-content: center;
+      padding: .5rem;
+      cursor: pointer;
 
-      &.clear {
-        --pcr-color: transparent !important;
+      button.pcr-button {
+        border: 1px solid hsl(var(--dragwyb-border)/var(--dragwyb-border-opacity, 1));
 
-        &::before {
-          opacity: 1;
+        &.clear {
+          --pcr-color: transparent !important;
+
+          &::before {
+            opacity: 1;
+          }
+        }
+      }
+    }
+
+    .dragwyb-color-var__input {
+      flex: 1;
+      min-width: 0;
+      padding: 6px 10px;
+      border: 1px solid hsl(var(--dragwyb-border)/var(--dragwyb-border-opacity, 1));
+      border-radius: 4px;
+      font-size: 13px;
+      transition: border-color 0.2s ease-in-out;
+      height: 2.5rem;
+
+      &:focus {
+        outline: none;
+        border-color: #0073e6;
+        box-shadow: 0 0 0 2px rgba(0, 115, 230, 0.2);
+      }
+    }
+
+    .dragwyb-color-mode-selector.dragwyb-unit-selector {
+      width: 78px;
+      flex-shrink: 0;
+
+      .dragwyb-select-trigger {
+        height: 2.5rem;
+        padding: 4px 8px;
+        justify-content: space-between;
+
+        .dragwyb-select-value {
+          font-weight: 500;
+          font-size: 12px;
         }
       }
     }
@@ -730,6 +772,13 @@
 
   .dragwyb-color__code {
     margin-right: auto;
+  }
+
+  .dragwyb-color-var__help {
+    font-size: 11px;
+    color: hsl(var(--dragwyb-muted-foreground)/var(--dragwyb-text-opacity, 1));
+    margin: 4px 0 0 0;
+    line-height: 1.35;
   }
 }
 
