@@ -54,31 +54,23 @@ class DragwybPhoneCountryCode extends DragwybBuilder.DragwybFormFrontendBase {
 		}
 
 		delete input.dataset.dragwybPlaceholder;
-		delete input.dataset.dragwybPlaceholderApplied;
 		delete input.dataset.dragwybItiInit;
 		delete input.dataset.dragwybItiConfig;
 	}
 
 	/**
-	 * ITI keeps a user-provided placeholder as-is, so strip the dial code prefix
-	 * ourselves when the dial code is hidden or shown in its own box.
+	 * Strip dial code from a user-provided placeholder when hide/separate.
+	 * Skips empty placeholders so ITI auto-placeholders are left alone.
 	 */
 	syncPlaceholder(input, dialCodeVisibility) {
-		const current = input.getAttribute('placeholder') || '';
-		if (current !== input.dataset.dragwybPlaceholderApplied) {
-			input.dataset.dragwybPlaceholder = current;
-		}
-
 		const original = input.dataset.dragwybPlaceholder;
-		if (!original) {
+		if (!original || !original.trim()) {
 			return;
 		}
 
 		const hideDialCode = dialCodeVisibility === 'hide' || dialCodeVisibility === 'separate';
 		const placeholder = hideDialCode ? original.replace(/^\s*\+\d+[\s-]*/, '') : original;
-
 		input.setAttribute('placeholder', placeholder);
-		input.dataset.dragwybPlaceholderApplied = placeholder;
 	}
 
 	initField($input) {
@@ -96,6 +88,11 @@ class DragwybPhoneCountryCode extends DragwybBuilder.DragwybFormFrontendBase {
 
 		if (input.dataset.dragwybItiInit === '1' || $input.closest('.iti').length) {
 			this.destroyField(input);
+		}
+
+		// Capture the user placeholder before ITI may replace it.
+		if (typeof input.dataset.dragwybPlaceholder === 'undefined') {
+			input.dataset.dragwybPlaceholder = input.getAttribute('placeholder') || '';
 		}
 
 		const uniqueId = $input.attr('id') || `phone_${Date.now()}`;
@@ -140,6 +137,11 @@ class DragwybPhoneCountryCode extends DragwybBuilder.DragwybFormFrontendBase {
 				}
 
 				if (dialCodeVisibility === 'separate' || dialCodeVisibility === 'hide') {
+					return placeHolder;
+				}
+
+				// ITI international examples already include the dial code — don't prepend again.
+				if (/^\s*\+/.test(placeHolder)) {
 					return placeHolder;
 				}
 
