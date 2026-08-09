@@ -168,7 +168,7 @@ class Field_Radio extends Field_Base {
 			array(
 				'type'      => Controls::COLOR,
 				'label'     => __( 'Text Color', 'smart-form-builder-by-dragwyb' ),
-				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-input-color: {{VALUE}};' ),
+				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-option-color: {{VALUE}};' ),
 			)
 		);
 
