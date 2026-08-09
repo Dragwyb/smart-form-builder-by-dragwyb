@@ -249,11 +249,16 @@ class selectField extends DragwybEditor.editor.extends.FieldBase {
         const options = s.options_list || [];
         const defaultLabel = DragwybEditor?.fields?.fields?.[this.fieldName]?.controls?.label?.default;
         const label = s.label || defaultLabel;
+        const defaultValue = s.default_value !== undefined ? String(s.default_value).trim() : '';
+        const isMultiple = s.multiple === 'yes' || s.multiple === true;
+        const defaultVals = isMultiple
+            ? (defaultValue ? defaultValue.split(',').map(v => v.trim()) : [])
+            : (defaultValue ? [defaultValue] : []);
 
         return (
             <>
                 <div className="dragwyb-input-group">
-                    <select id={fieldId} className="dragwyb-field-input" multiple={s.multiple === 'yes'}>
+                    <select id={fieldId} className="dragwyb-field-input" multiple={isMultiple} value={isMultiple ? defaultVals : (defaultVals[0] || '')} readOnly>
                         {options.map((opt, i) => (
                             !opt.attributes ? null :
                                 <option key={i} value={opt.attributes.option_value}>{opt.attributes.option_label}</option>
@@ -285,6 +290,7 @@ class radioField extends DragwybEditor.editor.extends.FieldBase {
         const radioStyle = s.radio_style || 'outline';
         const styleClass = `dragwyb-radio-style-${radioStyle}`;
         const layoutClass = s.layout !== 'block' ? 'dragwyb-inline-options' : '';
+        const defaultValue = s.default_value !== undefined ? String(s.default_value).trim() : '';
 
         return (
             <>
@@ -296,13 +302,17 @@ class radioField extends DragwybEditor.editor.extends.FieldBase {
                         settings={s}
                     />}
                     <div className={`dragwyb-options-container ${layoutClass} ${styleClass}`}>
-                        {options.map((opt, i) => (
-                            !opt.attributes ? null :
-                                <label key={i} className={`dragwyb-option-item ${i === 0 ? 'is-checked' : ''}`}>
-                                    <input type="radio" name={fieldId} value={opt.attributes.option_value} defaultChecked={i === 0} readOnly />
+                        {options.map((opt, i) => {
+                            if (!opt.attributes) return null;
+                            const val = String(opt.attributes.option_value || '');
+                            const isChecked = defaultValue ? val === defaultValue : i === 0;
+                            return (
+                                <label key={i} className={`dragwyb-option-item ${isChecked ? 'is-checked' : ''}`}>
+                                    <input type="radio" name={fieldId} value={val} checked={isChecked} readOnly />
                                     <span className="dragwyb-radio-label">{opt.attributes.option_label}</span>
                                 </label>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
                 {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
@@ -345,6 +355,8 @@ class checkboxField extends DragwybEditor.editor.extends.FieldBase {
         const fieldId = s.field_id || this.id;
         const options = s.options_list || [];
         const layoutClass = s.layout === 'inline' ? 'dragwyb-inline-options' : '';
+        const defaultValue = s.default_value !== undefined ? String(s.default_value).trim() : '';
+        const defaultVals = defaultValue ? defaultValue.split(',').map(v => v.trim()) : [];
 
         return (
             <>
@@ -356,13 +368,17 @@ class checkboxField extends DragwybEditor.editor.extends.FieldBase {
                         settings={s}
                     />}
                     <div className={`dragwyb-options-container ${layoutClass}`}>
-                        {options.map((opt, i) => (
-                            !opt.attributes ? null :
-                                <label key={i} className="dragwyb-option-item">
-                                    <input type="checkbox" name={`${fieldId}[]`} value={opt.attributes.option_value} />
+                        {options.map((opt, i) => {
+                            if (!opt.attributes) return null;
+                            const val = String(opt.attributes.option_value || '');
+                            const isChecked = defaultVals.includes(val);
+                            return (
+                                <label key={i} className={`dragwyb-option-item ${isChecked ? 'is-checked' : ''}`}>
+                                    <input type="checkbox" name={`${fieldId}[]`} value={val} checked={isChecked} readOnly />
                                     <span className="dragwyb-radio-label">{opt.attributes.option_label}</span>
                                 </label>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
                 {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}

@@ -120,6 +120,14 @@ class Field_Radio extends Field_Base {
 			)
 		);
 
+		$this->add_control(
+			'default_value',
+			array(
+				'type'  => Controls::TEXT,
+				'label' => __( 'Default Value', 'smart-form-builder-by-dragwyb' ),
+			)
+		);
+
 		// Choose layout: stacked vertically or side-by-side
 		$this->add_control(
 			'layout',
@@ -311,6 +319,9 @@ class Field_Radio extends Field_Base {
 		$help        = $this->field_key_exist( $settings, 'help_text', '' );
 		$classes     = $this->field_key_exist( $settings, 'css_classes', '' );
 
+		$raw_default_value = (string) $this->field_key_exist( $settings, 'default_value', '' );
+		$default_value     = sanitize_text_field( $raw_default_value );
+
 		$layout_class = ( $layout === 'inline' ) ? 'dragwyb-inline-options' : '';
 		$style_class  = 'dragwyb-radio-style-' . $radio_style;
 
@@ -330,22 +341,29 @@ class Field_Radio extends Field_Base {
 				<div class="dragwyb-options-container <?php echo esc_attr( trim( $layout_class . ' ' . $style_class ) ); ?>">
 					<?php
 					foreach ( $options as $index => $opt ) :
-						$opt_id = $field_id . '_' . $index;
-						$opt    = $this->field_key_exist( $opt, 'attributes', $opt );
+						$opt_id     = $field_id . '_' . $index;
+						$opt        = $this->field_key_exist( $opt, 'attributes', $opt );
+						$opt_val    = sanitize_text_field( (string) ( $opt['option_value'] ?? '' ) );
+						$opt_lbl    = (string) ( $opt['option_label'] ?? '' );
+						$is_checked = ( '' !== $default_value && $opt_val === $default_value );
 
-						$this->add_field_attributes(
-							"input_{$index}",
-							array(
-								'type'  => 'radio',
-								'id'    => $opt_id,
-								'name'  => $field_id,
-								'value' => $opt['option_value'],
-							)
+						$input_attrs = array(
+							'type'  => 'radio',
+							'id'    => $opt_id,
+							'name'  => $field_id,
+							'value' => $opt_val,
 						);
+
+						if ( $is_checked ) {
+							$input_attrs['checked'] = 'checked';
+						}
+
+						$this->add_field_attributes( "input_{$index}", $input_attrs );
+						$item_class = 'dragwyb-option-item' . ( $is_checked ? ' is-checked' : '' );
 						?>
-						<label class="dragwyb-option-item" for="<?php echo esc_attr( $opt_id ); ?>">
+						<label class="<?php echo esc_attr( $item_class ); ?>" for="<?php echo esc_attr( $opt_id ); ?>">
 							<input <?php $this->render_field_attributes( "input_{$index}" ); ?> />
-							<span class="dragwyb-radio-label"><?php echo esc_html( $opt['option_label'] ); ?></span>
+							<span class="dragwyb-radio-label"><?php echo esc_html( $opt_lbl ); ?></span>
 						</label>
 					<?php endforeach; ?>
 				</div>
