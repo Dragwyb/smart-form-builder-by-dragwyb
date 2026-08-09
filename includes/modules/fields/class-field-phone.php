@@ -550,7 +550,7 @@ class Field_Phone extends Field_Base {
 
 		$wrapper_class = $this->field_wrapper_class( $classes, $settings );
 		if ( $country_enabled ) {
-			$wrapper_class .= ' country-code-enabled dragwyb-no-float';
+			$wrapper_class .= ' country-code-enabled';
 		}
 
 		$this->add_field_attributes(

@@ -54,3 +54,24 @@
 .dragwyb-phone-field .dragwyb-intl-container input.dragwyb-field-input {
 	width: 100%;
 }
+
+/* Country code wraps the input in .iti, so float via .iti sibling (not input~label). */
+.dragwyb-form-wrapper.dragwyb-layout-floating .dragwyb-phone-field:has([data-country-code="yes"]) .dragwyb-field-label {
+	margin-left: 2rem;
+}
+
+.dragwyb-form-wrapper.dragwyb-layout-floating .dragwyb-phone-field:has([data-country-code="yes"]) .iti:focus-within ~ .dragwyb-field-label,
+.dragwyb-form-wrapper.dragwyb-layout-floating .dragwyb-phone-field:has([data-country-code="yes"]) .iti:has(.dragwyb-field-input:not(:placeholder-shown)) ~ .dragwyb-field-label {
+	top: 0;
+	margin-left: 0;
+	transform: translateY(-50%) scale(0.85);
+	color: var(--dragwyb-input-focus-border);
+	font-weight: 600;
+}
+
+.dragwyb-form-wrapper.dragwyb-layout-floating.dragwyb-float-outlined .dragwyb-phone-field:has([data-country-code="yes"]) .iti:focus-within ~ .dragwyb-field-label,
+.dragwyb-form-wrapper.dragwyb-layout-floating.dragwyb-float-outlined .dragwyb-phone-field:has([data-country-code="yes"]) .iti:has(.dragwyb-field-input:not(:placeholder-shown)) ~ .dragwyb-field-label {
+	padding: 0 4px;
+	margin-left: -4px;
+	background: linear-gradient(to bottom, var(--dragwyb-row-bg-color, var(--dragwyb-form-bg-color)) 50%, var(--dragwyb-input-focus-bg, var(--dragwyb-form-bg-color, #fff)) 50%);
+}

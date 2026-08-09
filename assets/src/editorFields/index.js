@@ -870,21 +870,4 @@ const initializeFields = () => {
 
 jQuery(document).on('Dragwyb:editorAppLoaded', () => {
     initializeFields();
-
-    DragwybBuilder.Hooks.addFilter('Dragwyb/Field/WrapperClass/phone', (wrapperClass, fieldId, fieldType, attributes) => {
-        if (!Array.isArray(wrapperClass)) {
-            return wrapperClass;
-        }
-
-        if (attributes?.country_code_enabled === 'yes') {
-            if (!wrapperClass.includes('country-code-enabled')) {
-                wrapperClass.push('country-code-enabled');
-            }
-            if (!wrapperClass.includes('dragwyb-no-float')) {
-                wrapperClass.push('dragwyb-no-float');
-            }
-        }
-
-        return wrapperClass;
-    });
 });
