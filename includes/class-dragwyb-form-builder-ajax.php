@@ -118,6 +118,10 @@ class Dragwyb_Form_Builder_Ajax {
 	 * Sort fields
 	 */
 	private function sorting_fields( array $fields, $root_containers ): array {
+		if ( empty( $root_containers ) || ! is_array( $root_containers ) ) {
+			return $fields;
+		}
+
 		$sorted_fields = array();
 		foreach ( $root_containers as $root_container ) {
 			$sorted_fields[ $root_container ] = $fields[ $root_container ] ?? array();
@@ -127,7 +131,7 @@ class Dragwyb_Form_Builder_Ajax {
 			}
 		}
 
-		return $sorted_fields;
+		return ! empty( $sorted_fields ) ? $sorted_fields : $fields;
 	}
 
 	/**
@@ -722,6 +726,13 @@ class Dragwyb_Form_Builder_Ajax {
 			}
 
 			$sanitized_form_data = $this->sanitize_form_data( $raw_form_data, $form_id );
+
+			// Ensure fields and stored meta keys are preserved if stripped by sanitize
+			foreach ( $raw_form_data as $meta_key => $meta_val ) {
+				if ( ! isset( $sanitized_form_data[ $meta_key ] ) || ( 'fields' === $meta_key && empty( $sanitized_form_data['fields'] ) && ! empty( $meta_val ) ) ) {
+					$sanitized_form_data[ $meta_key ] = $meta_val;
+				}
+			}
 
 			$exported_forms[] = array(
 				'id'        => $form_id,
