@@ -701,8 +701,7 @@
                     }
 
                     input[type="radio"] {
-                        background-color: #ffffff;
-                        border-color: var(--dragwyb-toggle-border-color, #d1d5db);
+                        display: none;
 
                         &:checked {
                             background-color: var(--dragwyb-toggle-primary-color, #2563eb);
@@ -799,8 +798,7 @@
                     }
 
                     input[type="radio"] {
-                        width: 14px;
-                        height: 14px;
+                        display: none;
 
                         &:checked {
                             background-color: var(--dragwyb-toggle-primary-color, #2563eb);
