@@ -10,6 +10,17 @@
 	width: 100%;
 }
 
+/* Left layout needs display:contents + .iti on column 2 (input is wrapped). */
+.dragwyb-form-wrapper.dragwyb-layout-left .dragwyb-phone-field:has([data-country-code="yes"]) .dragwyb-input-group {
+	display: contents;
+}
+
+.dragwyb-form-wrapper.dragwyb-layout-left .dragwyb-phone-field:has([data-country-code="yes"]) .iti {
+	grid-column: 2;
+	order: 1;
+	width: 100%;
+}
+
 .dragwyb-phone-field .dragwyb-intl-container .iti__country-container {
 	height: 100%;
 }
