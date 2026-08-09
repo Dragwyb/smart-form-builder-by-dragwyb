@@ -762,7 +762,7 @@
                         border-color: var(--dragwyb-toggle-primary-color, #2563eb);
 
                         .dragwyb-radio-label {
-                            color: #ffffff;
+                            color: var(--dragwyb-option-color, var(--dragwyb-input-color));
                             font-weight: 600;
                         }
                     }
