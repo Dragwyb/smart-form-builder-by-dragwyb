@@ -77,12 +77,12 @@ class Frontend_Render {
 
 	private function initial_config(): void {
 		if ( true === self::$set_initial_config ) {
+			$this->set_toolbar_data();
 			return;
 		}
 
 		$this->set_control();
 		$this->set_module();
-		$this->set_toolbar_data();
 		self::$set_initial_config = true;
 	}
 
@@ -961,7 +961,6 @@ class Frontend_Render {
 		self::$form_id            = null;
 		self::$fields             = array();
 		self::$root_containers    = array();
-		self::$module             = null;
 		self::$field_module_cache = null;
 		self::$form_data          = null;
 		self::$toolbar_data       = array();
