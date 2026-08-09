@@ -286,7 +286,7 @@ class Settings extends Register_Controls_Base {
 					),
 				),
 				'default'   => array(
-					'size' => 5,
+					'size' => 18,
 					'unit' => 'px',
 				),
 				'selectors' => array(
