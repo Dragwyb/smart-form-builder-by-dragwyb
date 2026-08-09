@@ -161,6 +161,25 @@ class Field_Checkbox extends Field_Base {
 		);
 
 		$this->add_control(
+			'option_color',
+			array(
+				'type'      => Controls::COLOR,
+				'label'     => __( 'Text Color', 'smart-form-builder-by-dragwyb' ),
+				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-option-color: {{VALUE}};' ),
+			)
+		);
+
+		$this->add_group_control(
+			'option_typography',
+			array(
+				'type'     => Controls::GROUP_TYPOGRAPHY,
+				'label'    => __( 'Typography', 'smart-form-builder-by-dragwyb' ),
+				'selector' => '{{WRAPPER}}',
+				'prefix'   => 'option',
+			)
+		);
+
+		$this->add_control(
 			'toggle_size',
 			array(
 				'type'      => Controls::SLIDER,

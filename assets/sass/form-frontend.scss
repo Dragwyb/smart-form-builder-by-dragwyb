@@ -607,17 +607,17 @@
                 }
 
                 .dragwyb-radio-label {
-                    font-family: var(--dragwyb-label-typography-family);
-                    font-size: var(--dragwyb-label-typography-size);
-                    font-weight: var(--dragwyb-label-typography-wt);
-                    font-style: var(--dragwyb-label-typography-st);
-                    text-transform: var(--dragwyb-label-typography-ts);
-                    text-decoration: var(--dragwyb-label-typography-dt);
-                    line-height: var(--dragwyb-label-typography-lh);
-                    letter-spacing: var(--dragwyb-label-typography-ls);
-                    word-spacing: var(--dragwyb-label-typography-ws);
-                    text-align: var(--dragwyb-label-typography-align);
-                    color: var(--dragwyb-input-color);
+                    font-family: var(--dragwyb-option-typography-family);
+                    font-size: var(--dragwyb-option-typography-size);
+                    font-weight: var(--dragwyb-option-typography-wt);
+                    font-style: var(--dragwyb-option-typography-st);
+                    text-transform: var(--dragwyb-option-typography-ts);
+                    text-decoration: var(--dragwyb-option-typography-dt);
+                    line-height: var(--dragwyb-option-typography-lh);
+                    letter-spacing: var(--dragwyb-option-typography-ls);
+                    word-spacing: var(--dragwyb-option-typography-ws);
+                    text-align: var(--dragwyb-option-typography-align);
+                    color: var(--dragwyb-option-color, var(--dragwyb-input-color));
                     margin-left: 0;
                 }
             }

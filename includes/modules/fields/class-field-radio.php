@@ -154,31 +154,36 @@ class Field_Radio extends Field_Base {
 
 		$this->end_section();
 
-		// Style the individual option text
+		// Label Style
 		$this->start_section(
-			'section_style_options',
+			'section_style_label',
 			array(
-				'label' => __( 'Options', 'smart-form-builder-by-dragwyb' ),
+				'label' => __( 'Label Appearance', 'smart-form-builder-by-dragwyb' ),
 				'tab'   => self::StyleTab,
 			)
 		);
 
 		$this->add_control(
-			'option_color',
+			'label_color',
 			array(
 				'type'      => Controls::COLOR,
-				'label'     => __( 'Text Color', 'smart-form-builder-by-dragwyb' ),
-				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-input-color: {{VALUE}};' ),
+				'label'     => __( 'Color', 'smart-form-builder-by-dragwyb' ),
+				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-label-color: {{VALUE}};' ),
 			)
 		);
 
-		$this->add_group_control(
-			'option_typography',
+		$this->add_control(
+			'label_spacing',
 			array(
-				'type'     => Controls::GROUP_TYPOGRAPHY,
-				'label'    => __( 'Typography', 'smart-form-builder-by-dragwyb' ),
-				'selector' => '{{WRAPPER}}',
-				'prefix'   => 'option',
+				'type'      => Controls::SLIDER,
+				'label'     => __( 'Bottom Margin', 'smart-form-builder-by-dragwyb' ),
+				'range'     => array(
+					'px' => array(
+						'min' => 0,
+						'max' => 50,
+					),
+				),
+				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-label-spacing: {{VALUE}}{{UNIT}};' ),
 			)
 		);
 
@@ -189,6 +194,25 @@ class Field_Radio extends Field_Base {
 			array(
 				'label' => __( 'Radio Appearance', 'smart-form-builder-by-dragwyb' ),
 				'tab'   => self::StyleTab,
+			)
+		);
+
+		$this->add_control(
+			'option_color',
+			array(
+				'type'      => Controls::COLOR,
+				'label'     => __( 'Text Color', 'smart-form-builder-by-dragwyb' ),
+				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-option-color: {{VALUE}};' ),
+			)
+		);
+
+		$this->add_group_control(
+			'option_typography',
+			array(
+				'type'     => Controls::GROUP_TYPOGRAPHY,
+				'label'    => __( 'Typography', 'smart-form-builder-by-dragwyb' ),
+				'selector' => '{{WRAPPER}}',
+				'prefix'   => 'option',
 			)
 		);
 
