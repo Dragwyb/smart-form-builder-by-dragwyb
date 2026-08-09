@@ -137,6 +137,8 @@ if ( ! class_exists( 'Dragwyb_Builder_Editor' ) ) {
 						'post_title' => 'Form #' . $post_id,
 					)
 				);
+
+				update_post_meta( $post_id, '_dragwyb_initial_form_data_save', 'false' );
 			} else {
 				$form = get_post( (int) $form_id );
 
@@ -248,6 +250,7 @@ if ( ! class_exists( 'Dragwyb_Builder_Editor' ) ) {
 				'previewUrl'      => home_url( '/?post_type=' . Dragwyb_Post::POST_TYPE . '&p=' . self::$form_id . '&preview_id=' . Form_Preview::generate_key( self::$form_id ) ),
 				'dynamicTags'     => $tags_data,
 				'presetStyle'     => $preset_style_json,
+				'isInitialLoad'   => 'false' === get_post_meta( (int) self::$form_id, '_dragwyb_initial_form_data_save', true ),
 			);
 
 			$localize_data = apply_filters( 'Dragwyb/Editor/Localize_Settings', $localize_data );

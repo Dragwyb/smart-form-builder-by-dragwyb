@@ -59,6 +59,11 @@ class Dragwyb_Form_Builder_Ajax {
 		}
 
 		$sanitized_data = $this->sanitize_form_data( $form_data, $form_id );
+		$initial_load   = isset( $_POST['isInitialLoad'] ) ? absint( wp_unslash( $_POST['isInitialLoad'] ) ) : 0;
+
+		if ( $initial_load && 1 === $initial_load ) {
+			delete_post_meta( $form_id, '_dragwyb_initial_form_data_save' );
+		}
 
 		// Update form meta
 		update_post_meta( $form_id, '_dragwyb_form_data', $sanitized_data );
@@ -697,7 +702,7 @@ class Dragwyb_Form_Builder_Ajax {
 			}
 			$form_ids = array_filter( $form_ids );
 		} else {
-			$forms = get_posts(
+			$forms    = get_posts(
 				array(
 					'post_type'      => Dragwyb_Post::post_type(),
 					'posts_per_page' => -1,
@@ -755,7 +760,7 @@ class Dragwyb_Form_Builder_Ajax {
 		}
 
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized in sanitize_form_data
-		$raw_input = wp_unslash( $_POST['import_data'] ?? '' );
+		$raw_input   = wp_unslash( $_POST['import_data'] ?? '' );
 		$import_data = json_decode( $raw_input, true );
 
 		if ( json_last_error() !== JSON_ERROR_NONE || ! is_array( $import_data ) ) {

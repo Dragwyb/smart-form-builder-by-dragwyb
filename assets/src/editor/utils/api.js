@@ -48,6 +48,7 @@ class FormBuilderAPI {
      */
     async saveForm(formData) {
         return this.request('save_form', {
+            isInitialLoad: window?.DragwybEditor?.isInitialLoad || "0",
             form_id: this.formId,
             form_data: JSON.stringify(formData),
         });
