@@ -49,7 +49,7 @@ const RenderItem = React.memo(({
     const isRootContainer = field?.is_root_container || false;
     const childrens = field?.children;
 
-    const isDroppableEnabled = Boolean(field && allowedChildren === true);
+    const isDroppableEnabled = Boolean(field && isRootContainer);
     const { setNodeRef: dropRef } = useDroppable({
         id: field ? `canvas-drop-field-${field._id}` : `canvas-drop-field-disabled-${fieldId}`,
         data: {
