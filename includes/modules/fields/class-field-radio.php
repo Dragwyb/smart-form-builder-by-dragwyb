@@ -154,11 +154,45 @@ class Field_Radio extends Field_Base {
 
 		$this->end_section();
 
-		// Style the individual option text
+		// Label Style
 		$this->start_section(
-			'section_style_options',
+			'section_style_label',
 			array(
-				'label' => __( 'Options', 'smart-form-builder-by-dragwyb' ),
+				'label' => __( 'Label Appearance', 'smart-form-builder-by-dragwyb' ),
+				'tab'   => self::StyleTab,
+			)
+		);
+
+		$this->add_control(
+			'label_color',
+			array(
+				'type'      => Controls::COLOR,
+				'label'     => __( 'Color', 'smart-form-builder-by-dragwyb' ),
+				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-label-color: {{VALUE}};' ),
+			)
+		);
+
+		$this->add_control(
+			'label_spacing',
+			array(
+				'type'      => Controls::SLIDER,
+				'label'     => __( 'Bottom Margin', 'smart-form-builder-by-dragwyb' ),
+				'range'     => array(
+					'px' => array(
+						'min' => 0,
+						'max' => 50,
+					),
+				),
+				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-label-spacing: {{VALUE}}{{UNIT}};' ),
+			)
+		);
+
+		$this->end_section();
+
+		$this->start_section(
+			'section_style_toggle',
+			array(
+				'label' => __( 'Radio Appearance', 'smart-form-builder-by-dragwyb' ),
 				'tab'   => self::StyleTab,
 			)
 		);
@@ -179,16 +213,6 @@ class Field_Radio extends Field_Base {
 				'label'    => __( 'Typography', 'smart-form-builder-by-dragwyb' ),
 				'selector' => '{{WRAPPER}}',
 				'prefix'   => 'option',
-			)
-		);
-
-		$this->end_section();
-
-		$this->start_section(
-			'section_style_toggle',
-			array(
-				'label' => __( 'Radio Appearance', 'smart-form-builder-by-dragwyb' ),
-				'tab'   => self::StyleTab,
 			)
 		);
 
