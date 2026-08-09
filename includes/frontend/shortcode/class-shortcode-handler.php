@@ -52,6 +52,13 @@ class Shortcode_Handler {
 			return '<p>' . esc_html__( 'Form not found or invalid.', 'smart-form-builder-by-dragwyb' ) . '</p>';
 		}
 
+		$form_status = get_post_status( $form_id );
+
+		if ( 'publish' !== $form_status ) {
+			// translators: %s: Form status
+			return '<p>' . esc_html__( sprintf( 'Your current form is in %s status. Please make it as publish to show it on frontend.', ucfirst( $form_status ) ), 'smart-form-builder-by-dragwyb' ) . '</p>';
+		}
+
 		// Load form data from post meta
 		$form_settings = get_post_meta( $form_id, '_dragwyb_form_data', true );
 
