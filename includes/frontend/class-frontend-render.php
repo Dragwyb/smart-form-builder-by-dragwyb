@@ -83,6 +83,7 @@ class Frontend_Render {
 
 		$this->set_control();
 		$this->set_module();
+		$this->set_toolbar_data();
 		self::$set_initial_config = true;
 	}
 
