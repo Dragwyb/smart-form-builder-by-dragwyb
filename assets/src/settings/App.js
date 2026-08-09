@@ -101,6 +101,7 @@ const App = () => {
                     activeTab={activeTab}
                     settings={settings}
                     handleSettingChange={handleSettingChange}
+                    showToast={showToast}
                 />
             </div>
 

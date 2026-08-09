@@ -62,6 +62,7 @@ final class Dragwyb_Form_Builder {
 	 */
 	private function define_constants(): void {
 		define( 'DRAGWYB_PREFIX', 'dragwyb' );
+		define( 'DRAGWYB_TEXT_DOMAIN', 'smart-form-builder-by-dragwyb' );
 		define( 'DRAGWYB_FORM_BUILDER_VERSION', self::VERSION );
 		define( 'DRAGWYB_FORM_BUILDER_PATH', plugin_dir_path( __FILE__ ) );
 		define( 'DRAGWYB_FORM_BUILDER_URL', plugin_dir_url( __FILE__ ) );
