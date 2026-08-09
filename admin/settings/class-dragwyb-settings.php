@@ -91,6 +91,8 @@ class Dragwyb_Settings {
 			);
 		}
 
+		$current_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
+
 		// Localize data for React
 		wp_localize_script(
 			'dragwyb-settings-script',
@@ -102,6 +104,7 @@ class Dragwyb_Settings {
 				'adminNonce' => wp_create_nonce( 'dragwyb_admin_nonce' ),
 				'pluginSlug' => DRAGWYB_TEXT_DOMAIN,
 				'version'    => DRAGWYB_FORM_BUILDER_VERSION,
+				'currentTab' => $current_tab,
 				'i18n'       => array(),
 			)
 		);

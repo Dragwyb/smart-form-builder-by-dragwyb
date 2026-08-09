@@ -4,17 +4,46 @@ import TabContent from './components/TabContent';
 import Toast from './components/Toast';
 
 const App = () => {
+    const { restUrl, nonce, currentTab } = window.DragwybSettingsData || {};
+
+    const validTabs = ['integrations', 'performance', 'fields_manager', 'import_export'];
+
+    const getInitialTab = () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tabParam = urlParams.get('tab') || currentTab;
+        if (tabParam && validTabs.includes(tabParam)) {
+            return tabParam;
+        }
+        return 'integrations';
+    };
+
     const [settings, setSettings] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
-    const [activeTab, setActiveTab] = useState('integrations');
+    const [activeTab, setActiveTabState] = useState(getInitialTab);
     const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
 
-    // Assuming DragwybSettingsData is passed globally from PHP enqueue
-    const { restUrl, nonce } = window.DragwybSettingsData || {};
+    const handleTabChange = (newTab) => {
+        if (!validTabs.includes(newTab)) return;
+        setActiveTabState(newTab);
+        const url = new URL(window.location.href);
+        url.searchParams.set('tab', newTab);
+        window.history.pushState({}, '', url.toString());
+    };
 
     useEffect(() => {
         fetchSettings();
+
+        const handlePopState = () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tabParam = urlParams.get('tab');
+            if (tabParam && validTabs.includes(tabParam)) {
+                setActiveTabState(tabParam);
+            }
+        };
+
+        window.addEventListener('popstate', handlePopState);
+        return () => window.removeEventListener('popstate', handlePopState);
     }, []);
 
     const fetchSettings = async () => {
@@ -96,7 +125,7 @@ const App = () => {
             </div>
 
             <div className="dragwyb-settings-body">
-                <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
+                <TabNavigation activeTab={activeTab} setActiveTab={handleTabChange} />
                 <TabContent
                     activeTab={activeTab}
                     settings={settings}
