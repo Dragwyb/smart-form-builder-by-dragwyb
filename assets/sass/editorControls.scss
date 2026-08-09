@@ -85,6 +85,13 @@
     }
   }
 
+  .dragwyb-control__description {
+    font-size: 12px;
+    line-height: 1.4;
+    color: hsl(var(--dragwyb-muted-foreground));
+    margin-top: 4px;
+  }
+
   .dragwyb-dynamic-dropdown {
     position: absolute;
     top: calc(100% + 2px);

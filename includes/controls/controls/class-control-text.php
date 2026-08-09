@@ -16,6 +16,7 @@ class Control_Text extends Control_Base {
 			'name'          => 'string',
 			'label'         => 'string',
 			'default'       => 'string',
+			'description'   => 'string',
 			'label_inline'  => 'boolean',
 			'dynamic_tag'   => 'custom',
 			'field_id_tags' => 'boolean',

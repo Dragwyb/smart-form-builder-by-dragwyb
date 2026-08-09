@@ -17,6 +17,7 @@ class DragwybControlBase extends Component {
         this.controlName = this.controlName() || props.settings.type;
         this.onInit();
         this.RenderLabel = this.RenderLabel.bind(this);
+        this.RenderDescription = this.RenderDescription.bind(this);
         this.#renderContent(props);
     }
 
@@ -243,6 +244,11 @@ class DragwybControlBase extends Component {
                 </label>
             </>
         );
+    }
+
+    RenderDescription() {
+        if (!this.settings.description) return null;
+        return <div className="dragwyb-control__description">{this.settings.description}</div>;
     }
 
     #setDisplaySetting(props) {
