@@ -724,7 +724,7 @@
 
                 &.dragwyb-inline-options {
                     display: inline-flex;
-                    background-color: #f3f4f6;
+                    background-color: var(--dragwyb-toggle-bg-color, #f9fafb);
                     padding: 4px;
                     border-radius: 10px;
                     border: 1px solid var(--dragwyb-toggle-border-color, #e5e7eb);
