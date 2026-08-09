@@ -947,6 +947,7 @@
 
     /* HTML Field */
     .dragwyb-html-content {
+        background-color: var(--dragwyb-html-bg-color, transparent);
         color: var(--dragwyb-html-text-color, var(--dragwyb-input-color));
         margin: var(--dragwyb-html-mt, 0) var(--dragwyb-html-mr, 0) var(--dragwyb-html-mb, 0) var(--dragwyb-html-ml, 0);
         padding: var(--dragwyb-html-pt, 0) var(--dragwyb-html-pr, 0) var(--dragwyb-html-pb, 0) var(--dragwyb-html-pl, 0);

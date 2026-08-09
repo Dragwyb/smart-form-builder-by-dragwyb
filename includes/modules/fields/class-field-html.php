@@ -50,6 +50,15 @@ class Field_Html extends Field_Base {
 		);
 
 		$this->add_control(
+			'background_color',
+			array(
+				'type'      => Controls::COLOR,
+				'label'     => __( 'Background Color', 'smart-form-builder-by-dragwyb' ),
+				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-html-bg-color: {{VALUE}};' ),
+			)
+		);
+
+		$this->add_control(
 			'text_color',
 			array(
 				'type'      => Controls::COLOR,
