@@ -187,8 +187,12 @@ export const AddField = ({ state, type, dispatch, Utils, index = null, parentCon
 
             if (buttonRootContainer && existingFields[buttonRootContainer].is_root_container === true && (!existingFields[buttonRootContainer].children || existingFields[buttonRootContainer].children.length < 1)) {
                 parentId = buttonRootContainer;
-            } else if (secondLastRootContainer && existingFields[secondLastRootContainer].is_root_container === true && (!existingFields[secondLastRootContainer].children || existingFields[secondLastRootContainer].children.length < 1)) {
-                parentId = secondLastRootContainer;
+            }
+            if (secondLastRootContainer && existingFields[secondLastRootContainer].is_root_container === true && (!existingFields[secondLastRootContainer].children || existingFields[secondLastRootContainer].children.length < 1)) {
+                const rootContainer = existingFields[secondLastRootContainer];
+                if (DragwybEditor?.fields?.fields[rootContainer.type]?.is_root_container === true && DragwybEditor?.fields?.fields[rootContainer.type]?.allow_child === true) {
+                    parentId = secondLastRootContainer;
+                }
             }
 
             if (!parentId) {
