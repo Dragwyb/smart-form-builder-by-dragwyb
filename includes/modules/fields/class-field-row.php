@@ -66,7 +66,7 @@ class Field_Row extends Field_Base {
 			'gap',
 			array(
 				'type'      => Controls::SLIDER,
-				'label'     => __( 'Gap', 'smart-form-builder-by-dragwyb' ),
+				'label'     => __( 'Column Gap', 'smart-form-builder-by-dragwyb' ),
 				'range'     => array(
 					'px' => array(
 						'min' => 0,
@@ -78,7 +78,25 @@ class Field_Row extends Field_Base {
 					'unit' => 'px',
 				),
 				'selectors' => array(
-					'{{WRAPPER}}' => '--dragwyb-row-gap: {{VALUE}}{{UNIT}};',
+					'{{WRAPPER}}' => '--dragwyb-column-gap: {{VALUE}}{{UNIT}};',
+				),
+			)
+		);
+
+		$this->add_control(
+			'row_gap',
+			array(
+				'type'      => Controls::SLIDER,
+				'label'     => __( 'Row Gap', 'smart-form-builder-by-dragwyb' ),
+				'range'     => array(
+					'px' => array(
+						'min' => 0,
+						'max' => 100,
+					),
+				),
+				'units'     => array( 'px', '%' ),
+				'selectors' => array(
+					'{{WRAPPER}}' => '--dragwyb-field-row-gap: {{VALUE}}{{UNIT}};',
 				),
 			)
 		);
@@ -185,9 +203,10 @@ class Field_Row extends Field_Base {
 	}
 
 	protected function render_field() {
-		$settings = $this->get_field_settings();
-		$id       = $this->get_the_id();
-		$classes  = $this->field_key_exist( $settings, 'css_classes', '' );
+		$settings     = $this->get_field_settings();
+		$id           = $this->get_the_id();
+		$classes      = $this->field_key_exist( $settings, 'css_classes', '' );
+		$is_last_root = $this->field_key_exist( $settings, 'is_last_root', false );
 
 		$childrens = $this->field_key_exist( $settings, 'children', array() );
 
@@ -210,21 +229,46 @@ class Field_Row extends Field_Base {
 			'wrapper',
 			array(
 				'id'    => 'dragwyb-row-' . $id,
-				'class' => 'dragwyb-row ' . $classes,
+				'class' => 'dragwyb-row',
 			)
 		);
+
+		if ( $is_last_root ) {
+			$this->add_field_attributes(
+				'wrapper',
+				array(
+					'class' => 'dragwyb-last-row',
+				)
+			);
+		}
+
+		if ( ! empty( $$classes ) ) {
+			$this->add_field_attributes(
+				'wrapper',
+				array(
+					'class' => $classes,
+				)
+			);
+		}
+
+		$total_children = count( $childrens );
+		$children_index = 1;
 
 		// Render a basic row container
 		?>
 		<div <?php $this->render_field_attributes( 'wrapper' ); ?>>
-			<?php foreach ( $childrens as $children ) : ?>
-				<?php $this->render_children( $children ); ?>
-			<?php endforeach; ?>
+			<?php
+			foreach ( $childrens as $children ) :
+				$is_last_children = ( $children_index === $total_children );
+				$this->render_children( $children, $is_last_children );
+				++$children_index;
+			endforeach;
+			?>
 		</div>
 		<?php
 	}
 
-	private function render_children( $children ) {
+	private function render_children( $children, $is_last_children = false ) {
 		$field = $this->get_field_data( $children );
 
 		if ( ! isset( $field['_id'] ) || ! $field['type'] || empty( $field['_id'] ) || empty( $field['type'] ) ) {
@@ -247,13 +291,16 @@ class Field_Row extends Field_Base {
 				$field_module->set_the_id( sanitize_text_field( $field_data['_id'] ) );
 				$field_module->set_frontend_handler( $this->frontend_handler );
 
+				$field_data['attributes'] = array();
+
 				if ( isset( $field['attributes'] ) && ! empty( $field['attributes'] ) ) {
-					$attributes               = $field['attributes'];
-					$field_data['attributes'] = array();
+					$attributes = $field['attributes'];
 					$this->attributes_loop( $attributes, $field_module, $field_data );
+					$field_data['attributes']['is_last_field'] = $is_last_children ? true : false;
 					$field_module->set_field_settings( $field_data['attributes'] );
 				} else {
-					$field_module->set_field_settings( array() );
+					$field_data['attributes']['is_last_field'] = $is_last_children ? true : false;
+					$field_module->set_field_settings( $field_data['attributes'] );
 				}
 
 				$field_module->render();

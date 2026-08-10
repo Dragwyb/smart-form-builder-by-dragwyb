@@ -18,6 +18,7 @@ const RenderItem = React.memo(({
     errors,
     Utils,
     lastContainer = true,
+    lastField = false,
     store,
     perviewIFrame
 }) => {
@@ -114,7 +115,13 @@ const RenderItem = React.memo(({
     let wrapperClass = [];
     if (field.type !== 'row') {
         wrapperClass = ['dragwyb-field-wrapper', `dragwyb-${field.type}-field`];
+        if (lastField) {
+            wrapperClass.push('dragwyb-last-field');
+        }
+    } else if (isButtonContainer) {
+        wrapperClass.push('dragwyb-last-row');
     }
+
     let id = `dragwyb-field-wrapper-${field._id}`;
 
     if (field.css_classes) {
@@ -163,6 +170,7 @@ const RenderItem = React.memo(({
                                             errors={errors}
                                             Utils={Utils}
                                             perviewIFrame={perviewIFrame}
+                                            lastField={childrens.length === childIndex + 1}
                                         />
                                     }
                                 </React.Fragment>

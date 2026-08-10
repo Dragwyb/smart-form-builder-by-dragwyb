@@ -186,7 +186,6 @@
 .dragwyb-form {
     &:not(.dragwyb-step-form) {
         display: flex;
-        gap: var(--dragwyb-field-gap);
         flex-wrap: wrap;
         justify-content: var(--dragwyb-form-justify-content, left);
     }
@@ -214,7 +213,7 @@
 
     /* --- Left Layout --- */
     &.dragwyb-layout-left {
-        .dragwyb-field-wrapper:not(.dragwyb-no-grid) {
+        .dragwyb-field-wrapper {
             display: grid;
             grid-template-columns: minmax(var(--dragwyb-label-width), max-content) 1fr;
             gap: 0.5em 1.5em;
@@ -384,10 +383,18 @@
 
     /* Grid */
     .dragwyb-row {
+
+        &:last-child,
+        &.dragwyb-last-row {
+            .dragwyb-field-wrapper {
+                margin-bottom: 0px !important;
+            }
+        }
+
         display: grid;
         grid-template-columns: repeat(var(--dragwyb-row-columns, 1), 1fr);
         grid-template-rows: repeat(var(--dragwyb-row-rows, 1), 1fr);
-        gap: var(--dragwyb-row-gap, 20px);
+        column-gap: var(--dragwyb-column-gap, 20px);
         width: var(--dragwyb-row-width, 100%);
         padding: var(--dragwyb-row-pt, 0) var(--dragwyb-row-pr, 0) var(--dragwyb-row-pb, 0) var(--dragwyb-row-pl, 0);
         background: var(--dragwyb-row-bg-color, transparent);
@@ -408,8 +415,13 @@
         position: relative;
         box-sizing: border-box;
         width: var(--dragwyb-field-width);
-        flex: 0 0 calc((var(--dragwyb-field-width) * 1%) - (var(--dragwyb-field-gap) * (1 - var(--dragwyb-field-width) / 100)));
         grid-column: span var(--dragwyb-column-span, 1);
+        margin-bottom: var(--dragwyb-field-row-gap, var(--dragwyb-field-gap));
+
+        &:last-child,
+        &.dragwyb-last-field {
+            margin-bottom: var(--dragwyb-field-gap);
+        }
 
         &.dragwyb-field-label-icon-before {
             .dragwyb-field-label {
@@ -986,7 +998,6 @@
 
     .dragwyb-step-field {
         display: flex;
-        gap: var(--dragwyb-field-gap);
         flex-wrap: wrap;
         box-sizing: border-box;
         justify-content: var(--dragwyb-form-justify-content, left);
