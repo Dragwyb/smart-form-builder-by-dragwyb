@@ -1,10 +1,11 @@
 
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import store from '../store';
 
 const updateFieldWrapperClass = (wrapperClass, Id, type, attributes, utils) => {
     if (attributes && attributes.label_icon && attributes.label_icon.icon && attributes.label_icon.icon !== '') {
-        const labelIconsPosition = utils.getToolbarSetting({ toolbar: 'style', settingId: 'label_icon_position', defaultValue: 'before' })
+        const labelIconsPosition = store.getState().form.style.label_icon_position || 'before';
 
         const labelPositionClass = `dragwyb-field-label-icon-${labelIconsPosition}`;
         wrapperClass.push(labelPositionClass)
@@ -67,10 +68,6 @@ const UpdateFormLabelPosition = () => {
         }
 
         const labelIcons = iframeNode.querySelectorAll('.dragwyb-label-icon');
-
-        if (!labelIcons || labelIcons.length === 0) {
-            return;
-        }
 
         const labelPositionClass = `dragwyb-field-label-icon-${labelIconsPosition}`;
 
