@@ -213,7 +213,7 @@
 
     /* --- Left Layout --- */
     &.dragwyb-layout-left {
-        .dragwyb-field-wrapper {
+        .dragwyb-field-wrapper:not(.dragwyb-step-field, .dragwyb-html-field) {
             display: grid;
             grid-template-columns: minmax(var(--dragwyb-label-width), max-content) 1fr;
             gap: 0.5em 1.5em;
@@ -992,7 +992,6 @@
 
     /* Frontend Step field (container wrapping inputs / editor placeholder layout) */
     .dragwyb-field-wrapper.dragwyb-step-field {
-        margin-bottom: calc(var(--dragwyb-field-gap) * -1);
         border: 1px solid transparent;
     }
 

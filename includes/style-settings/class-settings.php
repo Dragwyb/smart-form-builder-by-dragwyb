@@ -708,10 +708,6 @@ class Settings extends Register_Controls_Base {
 			array(
 				'type'      => Controls::SLIDER,
 				'label'     => __( 'Step Bottom Spacing', 'smart-form-builder-by-dragwyb' ),
-				'default'   => array(
-					'size' => 15,
-					'unit' => 'px',
-				),
 				'range'     => array(
 					'px' => array(
 						'min' => 0,
