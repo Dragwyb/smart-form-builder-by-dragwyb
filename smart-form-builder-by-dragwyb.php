@@ -3,9 +3,10 @@
 /**
  * Plugin Name: Smart Form Builder
  * Description: Drag and drop form builder for WordPress
- * Version: 1.1.1
+ * Version: 1.2.0
  * Author: dragwyb
  * Author URI:  https://dragwyb.com/
+ * Plugin URI: https://dragwyb.com/form-builder/
  * Text Domain: smart-form-builder-by-dragwyb
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -27,7 +28,7 @@ final class Dragwyb_Form_Builder {
 	/**
 	 * Plugin version
 	 */
-	const VERSION = '1.1.1';
+	const VERSION = '1.2.0';
 
 	/**
 	 * Plugin instance
@@ -62,6 +63,7 @@ final class Dragwyb_Form_Builder {
 	 */
 	private function define_constants(): void {
 		define( 'DRAGWYB_PREFIX', 'dragwyb' );
+		define( 'DRAGWYB_TEXT_DOMAIN', 'smart-form-builder-by-dragwyb' );
 		define( 'DRAGWYB_FORM_BUILDER_VERSION', self::VERSION );
 		define( 'DRAGWYB_FORM_BUILDER_PATH', plugin_dir_path( __FILE__ ) );
 		define( 'DRAGWYB_FORM_BUILDER_URL', plugin_dir_url( __FILE__ ) );

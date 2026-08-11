@@ -24,6 +24,7 @@ export default class TextControl extends DragwybEditor.editor.extends.ControlBas
                     value={value}
                     onChange={(e) => this.updateControlHandler(id, e.target.value)}
                 />
+                <this.RenderDescription />
             </div>
         );
     }

@@ -22,3 +22,4 @@ composer.lock export-ignore
 vendor/ export-ignore
 .wordpress-org/ export-ignore
 .babelrc export-ignore
+.map export-ignore

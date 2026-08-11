@@ -187,8 +187,12 @@ export const AddField = ({ state, type, dispatch, Utils, index = null, parentCon
 
             if (buttonRootContainer && existingFields[buttonRootContainer].is_root_container === true && (!existingFields[buttonRootContainer].children || existingFields[buttonRootContainer].children.length < 1)) {
                 parentId = buttonRootContainer;
-            } else if (secondLastRootContainer && existingFields[secondLastRootContainer].is_root_container === true && (!existingFields[secondLastRootContainer].children || existingFields[secondLastRootContainer].children.length < 1)) {
-                parentId = secondLastRootContainer;
+            }
+            if (secondLastRootContainer && existingFields[secondLastRootContainer].is_root_container === true && (!existingFields[secondLastRootContainer].children || existingFields[secondLastRootContainer].children.length < 1)) {
+                const rootContainer = existingFields[secondLastRootContainer];
+                if (DragwybEditor?.fields?.fields[rootContainer.type]?.is_root_container === true && DragwybEditor?.fields?.fields[rootContainer.type]?.allow_child === true) {
+                    parentId = secondLastRootContainer;
+                }
             }
 
             if (!parentId) {
@@ -275,6 +279,19 @@ export const AddField = ({ state, type, dispatch, Utils, index = null, parentCon
             }
         })
     }
+
+    let fieldLabel = field?.attributes?.label;
+
+    if (typeof fieldLabel !== 'string' || '' === fieldLabel) {
+        fieldLabel = field._id;
+    }
+
+    const historyLabel = `Add ${type}, (${fieldLabel})`;
+
+    dispatch({
+        type: 'ADD_HISTORY_SNAPSHOT',
+        payload: { label: historyLabel }
+    });
 
     return field;
 };
@@ -411,6 +428,8 @@ export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, p
             if (toolbarType === 'fields' && itemId && itemId !== '') {
                 const fieldData = state.form.fields[itemId];
 
+                if (!fieldData) return;
+
                 if (fieldData.type === 'row') {
                     wrapperId += ' #dragwyb-row-' + itemId;
                 } else {
@@ -468,6 +487,10 @@ export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, p
                 }
             });
         });
+
+        if (Object.keys(cssCache).length < 1) {
+            return;
+        }
 
         dispatch(updateStyleSelectorsAction(key, cssCache, responsiveType))
     } catch (e) {
@@ -582,7 +605,9 @@ export const editorFormReady = ({ state }) => {
         const formWrp = jQuery(formPreviewIframe).find(`#dragwyb-form-wrapper-${formId}`);
 
         if (formWrp.length > 0) {
-            previewWindow.DragwybBuilder.Hooks.doAction('dragwyb/eidotPreview/form_ready', formWrp, formId);
+            setTimeout(() => {
+                previewWindow.DragwybBuilder.Hooks.doAction('dragwyb/editorPreview/form_ready', formWrp, formId);
+            })
         }
     }
 }

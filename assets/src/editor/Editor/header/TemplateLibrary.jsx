@@ -382,6 +382,8 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
     useEffect(() => {
         if (!isOpen) return;
 
+        if (templates && Object.keys(templates).length > 0) return;
+
         setLoading(true);
         fetch(`${DragwybEditor.restUrl}dragwyb/v1/templates`)
             .then(res => res.json())
@@ -427,6 +429,14 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
             getExistingSelector(storeStyleSelectors, existingStyleSelectors);
 
             dispatch(replaceFormState(templateData, { ...existingStyleSelectors, ...styleSelectors }));
+
+            const historyLabel = `Insert Template: ${templateData?.advance?.form_name}`;
+
+            dispatch({
+                type: 'ADD_HISTORY_SNAPSHOT',
+                payload: { label: historyLabel }
+            });
+
             onClose();
         }
     };

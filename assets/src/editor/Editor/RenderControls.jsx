@@ -160,12 +160,13 @@ const RenderControl = ({
             />
             <div key={controlKey} className="dragwyb-setting-row" data-type={settings.type}>
                 <Control
-                    key={selectedTab}
+                    key={settings.picker === 'time' ? `${selectedTab}-${fieldValue?.time_24hr || 'no'}` : selectedTab}
                     id={controlKey}
                     toolbarId={selectedToolbar}
                     selectedSetting={selectedTab}
                     settings={settings}
                     value={fieldVal}
+                    fieldValue={fieldValue}
                     handleChange={handleChange}
                     Utils={Utils}
                     resetControlEventLifting={resetControlEventLifting}

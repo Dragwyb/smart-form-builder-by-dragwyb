@@ -77,6 +77,7 @@ class Frontend_Render {
 
 	private function initial_config(): void {
 		if ( true === self::$set_initial_config ) {
+			$this->set_toolbar_data();
 			return;
 		}
 
@@ -214,9 +215,13 @@ class Frontend_Render {
 		$step_form_current_position = 0;
 		$step_form_index            = 1;
 		$step_navigation_html       = '';
+		$total_root                 = count( self::$root_containers );
+		$root_container_index       = 1;
 
 		foreach ( self::$root_containers as $root_container ) {
-			$row_field = self::$fields[ $root_container ];
+			$row_field  = self::$fields[ $root_container ];
+			$last_field = ( $root_container_index === $total_root );
+			++$root_container_index;
 
 			if ( ! isset( $row_field['_id'] ) || ! isset( $row_field['type'] ) || empty( $row_field['_id'] ) || empty( $row_field['type'] ) ) {
 				continue;
@@ -288,8 +293,10 @@ class Frontend_Render {
 				if ( isset( $row_field['attributes'] ) && ! empty( $row_field['attributes'] ) ) {
 					$attributes = $row_field['attributes'];
 					$this->attributes_loop( $attributes, $type, $field_data );
+					$field_data['attributes']['is_last_root'] = $last_field ? true : false;
 					self::$field_module_cache[ $type ]->set_field_settings( $field_data['attributes'] );
 				} else {
+					$field_data['attributes']['is_last_root'] = $last_field ? true : false;
 					self::$field_module_cache[ $type ]->set_field_settings( $field_data['attributes'] );
 				}
 
@@ -961,7 +968,6 @@ class Frontend_Render {
 		self::$form_id            = null;
 		self::$fields             = array();
 		self::$root_containers    = array();
-		self::$module             = null;
 		self::$field_module_cache = null;
 		self::$form_data          = null;
 		self::$toolbar_data       = array();

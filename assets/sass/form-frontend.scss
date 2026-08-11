@@ -186,7 +186,6 @@
 .dragwyb-form {
     &:not(.dragwyb-step-form) {
         display: flex;
-        gap: var(--dragwyb-field-gap);
         flex-wrap: wrap;
         justify-content: var(--dragwyb-form-justify-content, left);
     }
@@ -214,7 +213,7 @@
 
     /* --- Left Layout --- */
     &.dragwyb-layout-left {
-        .dragwyb-field-wrapper:not(.dragwyb-no-grid) {
+        .dragwyb-field-wrapper:not(.dragwyb-step-field, .dragwyb-html-field) {
             display: grid;
             grid-template-columns: minmax(var(--dragwyb-label-width), max-content) 1fr;
             gap: 0.5em 1.5em;
@@ -384,10 +383,18 @@
 
     /* Grid */
     .dragwyb-row {
+
+        &:last-child,
+        &.dragwyb-last-row {
+            .dragwyb-field-wrapper {
+                margin-bottom: 0px !important;
+            }
+        }
+
         display: grid;
         grid-template-columns: repeat(var(--dragwyb-row-columns, 1), 1fr);
         grid-template-rows: repeat(var(--dragwyb-row-rows, 1), 1fr);
-        gap: var(--dragwyb-row-gap, 20px);
+        column-gap: var(--dragwyb-column-gap, 20px);
         width: var(--dragwyb-row-width, 100%);
         padding: var(--dragwyb-row-pt, 0) var(--dragwyb-row-pr, 0) var(--dragwyb-row-pb, 0) var(--dragwyb-row-pl, 0);
         background: var(--dragwyb-row-bg-color, transparent);
@@ -408,8 +415,13 @@
         position: relative;
         box-sizing: border-box;
         width: var(--dragwyb-field-width);
-        flex: 0 0 calc((var(--dragwyb-field-width) * 1%) - (var(--dragwyb-field-gap) * (1 - var(--dragwyb-field-width) / 100)));
         grid-column: span var(--dragwyb-column-span, 1);
+        margin-bottom: var(--dragwyb-field-row-gap, var(--dragwyb-field-gap));
+
+        &:last-child,
+        &.dragwyb-last-field {
+            margin-bottom: var(--dragwyb-field-gap);
+        }
 
         &.dragwyb-field-label-icon-before {
             .dragwyb-field-label {
@@ -508,6 +520,7 @@
             padding: var(--dragwyb-input-pt) var(--dragwyb-input-pr) var(--dragwyb-input-pb) var(--dragwyb-input-pl);
             outline: none;
             transition: border-color 0.2s, box-shadow 0.2s;
+            height: unset;
 
             &::placeholder {
                 color: var(--dragwyb-input-placeholder-color);
@@ -540,42 +553,298 @@
         .dragwyb-options-container {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: var(--dragwyb-toggle-spacing, 8px);
             margin-top: 5px;
 
             &.dragwyb-inline-options {
                 flex-direction: row;
                 flex-wrap: wrap;
-                gap: 15px;
+                gap: var(--dragwyb-toggle-spacing, 15px);
             }
 
             .dragwyb-option-item {
                 display: flex;
                 align-items: center;
-                gap: var(--dragwyb-toggle-spacing, 8px);
+                gap: 8px;
                 cursor: pointer;
 
-                input {
+                input[type="radio"],
+                input[type="checkbox"] {
+                    appearance: none;
+                    -webkit-appearance: none;
                     width: var(--dragwyb-toggle-size, 16px);
                     height: var(--dragwyb-toggle-size, 16px);
                     margin: 0;
-                    accent-color: var(--dragwyb-toggle-primary-color, var(--dragwyb-btn-bg));
-                    border-color: var(--dragwyb-toggle-border-color, #d1d5db);
+                    background-color: var(--dragwyb-toggle-bg-color, #ffffff);
+                    border: var(--dragwyb-toggle-border-width, 1px) solid var(--dragwyb-toggle-border-color, #d1d5db);
+                    outline: none;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    box-sizing: border-box;
+
+                    &:checked {
+                        background-color: var(--dragwyb-toggle-primary-color, var(--dragwyb-btn-bg, #2563eb));
+                        border-color: var(--dragwyb-toggle-primary-color, var(--dragwyb-btn-bg, #2563eb));
+
+                        &::after {
+                            content: '';
+                            display: block;
+                            width: 40%;
+                            height: 40%;
+                            background-color: #ffffff;
+                        }
+                    }
+                }
+
+                input[type="radio"] {
+                    border-radius: 50%;
+
+                    &::after {
+                        border-radius: 50%;
+                    }
+                }
+
+                input[type="checkbox"] {
+                    border-radius: 4px;
+
+                    &::after {
+                        clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+                        width: 50%;
+                        height: 50%;
+                    }
                 }
 
                 .dragwyb-radio-label {
-                    font-family: var(--dragwyb-label-typography-family);
-                    font-size: var(--dragwyb-label-typography-size);
-                    font-weight: var(--dragwyb-label-typography-wt);
-                    font-style: var(--dragwyb-label-typography-st);
-                    text-transform: var(--dragwyb-label-typography-ts);
-                    text-decoration: var(--dragwyb-label-typography-dt);
-                    line-height: var(--dragwyb-label-typography-lh);
-                    letter-spacing: var(--dragwyb-label-typography-ls);
-                    word-spacing: var(--dragwyb-label-typography-ws);
-                    text-align: var(--dragwyb-label-typography-align);
-                    color: var(--dragwyb-input-color);
-                    margin-left: var(--dragwyb-toggle-spacing, 8px);
+                    font-family: var(--dragwyb-option-typography-family);
+                    font-size: var(--dragwyb-option-typography-size);
+                    font-weight: var(--dragwyb-option-typography-wt);
+                    font-style: var(--dragwyb-option-typography-st);
+                    text-transform: var(--dragwyb-option-typography-ts);
+                    text-decoration: var(--dragwyb-option-typography-dt);
+                    line-height: var(--dragwyb-option-typography-lh);
+                    letter-spacing: var(--dragwyb-option-typography-ls);
+                    word-spacing: var(--dragwyb-option-typography-ws);
+                    text-align: var(--dragwyb-option-typography-align);
+                    color: var(--dragwyb-option-color, var(--dragwyb-input-color));
+                    margin-left: 0;
+                }
+            }
+
+            /* --- Radio Presets --- */
+
+            /* 1. Classic Circle: clean outline, inner dot accent when selected */
+            &.dragwyb-radio-style-outline .dragwyb-option-item input[type="radio"] {
+                background-color: var(--dragwyb-toggle-bg-color, #ffffff);
+                border-color: var(--dragwyb-toggle-border-color, #d1d5db);
+
+                &:hover {
+                    border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+                }
+
+                &:checked {
+                    background-color: var(--dragwyb-toggle-bg-color, #ffffff);
+                    border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+
+                    &::after {
+                        background-color: var(--dragwyb-toggle-primary-color, #2563eb);
+                        width: 48%;
+                        height: 48%;
+                        border-radius: 50%;
+                    }
+                }
+            }
+
+            /* 2. Solid Accent Circle: primary fill circle with white center dot */
+            &.dragwyb-radio-style-solid_fill,
+            &.dragwyb-radio-style-filled {
+                .dragwyb-option-item input[type="radio"] {
+                    background-color: var(--dragwyb-toggle-bg-color, #ffffff);
+                    border-color: var(--dragwyb-toggle-border-color, #d1d5db);
+
+                    &:hover {
+                        border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+                    }
+
+                    &:checked {
+                        background-color: var(--dragwyb-toggle-primary-color, #2563eb);
+                        border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+
+                        &::after {
+                            background-color: #ffffff;
+                            width: 38%;
+                            height: 38%;
+                            border-radius: 50%;
+                        }
+                    }
+                }
+            }
+
+            /* 3. Bordered Box Cards: individual interactive choice cards */
+            &.dragwyb-radio-style-card {
+                gap: var(--dragwyb-toggle-spacing, 10px);
+
+                .dragwyb-option-item {
+                    padding: 10px 16px;
+                    border: var(--dragwyb-toggle-border-width, 1px) solid var(--dragwyb-toggle-border-color, #e5e7eb);
+                    border-radius: 8px;
+                    background-color: var(--dragwyb-toggle-bg-color, #ffffff);
+                    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+                    transition: all 0.2s ease;
+
+                    &:hover {
+                        border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+                        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+                    }
+
+                    &:has(input[type="radio"]:checked),
+                    &.is-checked {
+                        border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+                        background-color: color-mix(in srgb, var(--dragwyb-toggle-primary-color, #2563eb) 6%, #ffffff);
+                        box-shadow: 0 0 0 1px var(--dragwyb-toggle-primary-color, #2563eb), 0 2px 6px rgba(37, 99, 235, 0.1);
+
+                        .dragwyb-radio-label {
+                            font-weight: 500;
+                            color: var(--dragwyb-toggle-primary-color, #111827);
+                        }
+                    }
+
+                    input[type="radio"] {
+                        display: none;
+
+                        &:checked {
+                            background-color: var(--dragwyb-toggle-primary-color, #2563eb);
+                            border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+
+                            &::after {
+                                background-color: #ffffff;
+                                width: 38%;
+                                height: 38%;
+                                border-radius: 50%;
+                            }
+                        }
+                    }
+                }
+            }
+
+            /* 4. Segmented Button Group: cohesive pill/button selector */
+            &.dragwyb-radio-style-button {
+                gap: 6px;
+
+                &.dragwyb-inline-options {
+                    display: inline-flex;
+                    background-color: var(--dragwyb-toggle-bg-color, #f9fafb);
+                    padding: 4px;
+                    border-radius: 10px;
+                    border: 1px solid var(--dragwyb-toggle-border-color, #e5e7eb);
+                    gap: 4px;
+
+                    .dragwyb-option-item {
+                        border-radius: 7px;
+                        border: none;
+                        background: transparent;
+                        box-shadow: none;
+                    }
+                }
+
+                .dragwyb-option-item {
+                    padding: 8px 16px;
+                    border-radius: 8px;
+                    border: 1px solid var(--dragwyb-toggle-border-color, #d1d5db);
+                    background-color: var(--dragwyb-toggle-bg-color, #ffffff);
+                    font-weight: 500;
+                    justify-content: center;
+                    transition: all 0.2s ease;
+
+                    input[type="radio"] {
+                        display: none;
+                    }
+
+                    &:hover {
+                        border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+                        color: var(--dragwyb-toggle-primary-color, #2563eb);
+                    }
+
+                    &:has(input[type="radio"]:checked),
+                    &.is-checked {
+                        background-color: var(--dragwyb-toggle-primary-color, #2563eb);
+                        border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+
+                        .dragwyb-radio-label {
+                            color: var(--dragwyb-option-color, var(--dragwyb-input-color));
+                            font-weight: 600;
+                        }
+                    }
+                }
+            }
+
+            /* 5. Selection Pills / Chips: compact rounded chip options */
+            &.dragwyb-radio-style-chip {
+                gap: 8px;
+
+                .dragwyb-option-item {
+                    padding: 6px 14px;
+                    border-radius: 9999px;
+                    border: 1.5px solid var(--dragwyb-toggle-border-color, #e5e7eb);
+                    background-color: var(--dragwyb-toggle-bg-color, #f9fafb);
+                    transition: all 0.2s ease;
+                    font-size: 13px;
+
+                    &:hover {
+                        border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+                        background-color: #ffffff;
+                    }
+
+                    &:has(input[type="radio"]:checked),
+                    &.is-checked {
+                        border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+                        background-color: color-mix(in srgb, var(--dragwyb-toggle-primary-color, #2563eb) 10%, #ffffff);
+
+                        .dragwyb-radio-label {
+                            color: var(--dragwyb-toggle-primary-color, #2563eb);
+                            font-weight: 600;
+                        }
+                    }
+
+                    input[type="radio"] {
+                        display: none;
+
+                        &:checked {
+                            background-color: var(--dragwyb-toggle-primary-color, #2563eb);
+                            border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+
+                            &::after {
+                                background-color: #ffffff;
+                                width: 36%;
+                                height: 36%;
+                            }
+                        }
+                    }
+                }
+            }
+
+            /* Backward compatibility for soft_fill, ghost, double_ring */
+            &.dragwyb-radio-style-soft_fill,
+            &.dragwyb-radio-style-ghost,
+            &.dragwyb-radio-style-double_ring {
+                .dragwyb-option-item input[type="radio"] {
+                    background-color: var(--dragwyb-toggle-bg-color, #ffffff);
+                    border-color: var(--dragwyb-toggle-border-color, #d1d5db);
+
+                    &:checked {
+                        background-color: var(--dragwyb-toggle-bg-color, #ffffff);
+                        border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+
+                        &::after {
+                            background-color: var(--dragwyb-toggle-primary-color, #2563eb);
+                            width: 50%;
+                            height: 50%;
+                            border-radius: 50%;
+                        }
+                    }
                 }
             }
         }
@@ -688,6 +957,7 @@
 
     /* HTML Field */
     .dragwyb-html-content {
+        background-color: var(--dragwyb-html-bg-color, transparent);
         color: var(--dragwyb-html-text-color, var(--dragwyb-input-color));
         margin: var(--dragwyb-html-mt, 0) var(--dragwyb-html-mr, 0) var(--dragwyb-html-mb, 0) var(--dragwyb-html-ml, 0);
         padding: var(--dragwyb-html-pt, 0) var(--dragwyb-html-pr, 0) var(--dragwyb-html-pb, 0) var(--dragwyb-html-pl, 0);
@@ -722,13 +992,11 @@
 
     /* Frontend Step field (container wrapping inputs / editor placeholder layout) */
     .dragwyb-field-wrapper.dragwyb-step-field {
-        margin-bottom: calc(var(--dragwyb-field-gap) * -1);
         border: 1px solid transparent;
     }
 
     .dragwyb-step-field {
         display: flex;
-        gap: var(--dragwyb-field-gap);
         flex-wrap: wrap;
         box-sizing: border-box;
         justify-content: var(--dragwyb-form-justify-content, left);

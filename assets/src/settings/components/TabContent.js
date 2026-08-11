@@ -1,15 +1,16 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ToggleSwitch from './ToggleSwitch';
+import ImportExportTab from './ImportExportTab';
 
-const TabContent = ({ activeTab, settings, handleSettingChange }) => {
+const TabContent = ({ activeTab, settings, handleSettingChange, showToast }) => {
 
     const renderIntegrations = () => (
         <div className="dragwyb-settings-section">
             <h2>API & Integrations</h2>
             <p className="dragwyb-settings-desc">Manage API keys for third-party services like Google reCAPTCHA.</p>
             {
-                settings.integrations && Object.keys(settings.integrations).map(key => (
+                settings && settings.integrations && Object.keys(settings.integrations).map(key => (
                     <div key={key} className="dragwyb-setting-row">
                         <div className="dragwyb-setting-info">
                             <h4>{settings.integrations[key].label}</h4>
@@ -33,7 +34,7 @@ const TabContent = ({ activeTab, settings, handleSettingChange }) => {
             <h2>Performance & Assets</h2>
             <p className="dragwyb-settings-desc">Control which assets are loaded on the frontend to improve page speed.</p>
             {
-                settings.performance && Object.keys(settings.performance).map(key => (
+                settings && settings.performance && Object.keys(settings.performance).map(key => (
                     <ToggleSwitch
                         key={key}
                         label={settings.performance[key].label}
@@ -54,7 +55,7 @@ const TabContent = ({ activeTab, settings, handleSettingChange }) => {
                 <h2>Fields Manager</h2>
                 <p className="dragwyb-settings-desc">Enable or disable specific fields from appearing in the form builder editor.</p>
                 <div className="dragwyb-fields-grid">
-                    {settings.fields_manager && Object.keys(settings.fields_manager).map(key => (
+                    {settings && settings.fields_manager && Object.keys(settings.fields_manager).map(key => (
                         <div key={key} className="dragwyb-field-toggle-card">
                             <ToggleSwitch
                                 label={settings.fields_manager[key].name}
@@ -81,6 +82,7 @@ const TabContent = ({ activeTab, settings, handleSettingChange }) => {
                     {activeTab === 'integrations' && renderIntegrations()}
                     {activeTab === 'performance' && renderPerformance()}
                     {activeTab === 'fields_manager' && renderFieldsManager()}
+                    {activeTab === 'import_export' && <ImportExportTab showToast={showToast} />}
                 </motion.div>
             </AnimatePresence>
         </div>

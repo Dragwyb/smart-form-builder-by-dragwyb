@@ -70,4 +70,29 @@ class Helper {
 
 		return false;
 	}
+
+	/**
+	 * Register shared Flatpickr script and style once.
+	 */
+	public static function register_flatpickr_assets(): void {
+		if ( ! wp_script_is( 'dragwyb-flatpickr', 'registered' ) ) {
+			wp_register_script(
+				'dragwyb-flatpickr',
+				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/js/flatpickr/flatpickr.js' ),
+				array(),
+				DRAGWYB_FORM_BUILDER_VERSION,
+				true
+			);
+		}
+
+		if ( ! wp_style_is( 'dragwyb-flatpickr', 'registered' ) ) {
+			wp_register_style(
+				'dragwyb-flatpickr',
+				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/css/flatpickr/flatpickr.min.css' ),
+				array(),
+				DRAGWYB_FORM_BUILDER_VERSION,
+				'all'
+			);
+		}
+	}
 }

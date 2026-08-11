@@ -4,6 +4,7 @@ import TextControl from './textControl';
 import SelectControl from './selectControl';
 import MultiSelectControl from './multiSelectControl';
 import TextareaControl from './textareaControl';
+import DateControl from './dateControl';
 import SwitcherControl from './switcherControl';
 import DimensionsControl from './dimensionsControl';
 import RadioControl from './radioControl';
@@ -31,6 +32,7 @@ const initializeControls = () => {
         'select': SelectControl,
         'multiselect': MultiSelectControl,
         'textarea': TextareaControl,
+        'date': DateControl,
         'wysiwyg': WysiwygControl,
         'switcher': SwitcherControl,
         'dimensions': DimensionsControl,

@@ -86,6 +86,15 @@ class Field_Select extends Field_Base {
 		);
 
 		$this->add_control(
+			'default_value',
+			array(
+				'type'        => Controls::TEXT,
+				'label'       => __( 'Default Value', 'smart-form-builder-by-dragwyb' ),
+				'description' => __( 'If multiselect enable then enter multiples values sepearated commos ex one,two', 'smart-form-builder-by-dragwyb' ),
+			)
+		);
+
+		$this->add_control(
 			'multiple',
 			array(
 				'type'  => Controls::SWITCHER,
@@ -253,6 +262,15 @@ class Field_Select extends Field_Base {
 		$multiple         = $this->field_key_exist( $settings, 'multiple', '' ) === 'yes';
 		$classes          = $this->field_key_exist( $settings, 'css_classes', '' );
 
+		$raw_default_value = (string) $this->field_key_exist( $settings, 'default_value', '' );
+		$default_value     = sanitize_text_field( $raw_default_value );
+
+		if ( $multiple ) {
+			$default_vals = array_map( 'sanitize_text_field', array_filter( array_map( 'trim', explode( ',', $default_value ) ), 'strlen' ) );
+		} else {
+			$default_vals = '' !== $default_value ? array( $default_value ) : array();
+		}
+
 		$this->add_field_attributes(
 			'wrapper',
 			array(
@@ -287,10 +305,13 @@ class Field_Select extends Field_Base {
 				>
 					<?php
 					foreach ( $repeater_options as $option ) :
-						$option = $this->field_key_exist( $option, 'attributes', array() );
+						$option      = $this->field_key_exist( $option, 'attributes', array() );
+						$opt_val     = isset( $option['option_value'] ) ? sanitize_text_field( (string) $option['option_value'] ) : '';
+						$opt_label   = isset( $option['option_label'] ) ? (string) $option['option_label'] : '';
+						$is_selected = in_array( $opt_val, $default_vals, true );
 						?>
-						<option value="<?php echo esc_attr( $option['option_value'] ); ?>">
-							<?php echo esc_html( $option['option_label'] ); ?>
+						<option value="<?php echo esc_attr( $opt_val ); ?>" <?php selected( $is_selected, true ); ?>>
+							<?php echo esc_html( $opt_label ); ?>
 						</option>
 					<?php endforeach; ?>
 				</select>

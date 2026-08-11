@@ -17,6 +17,7 @@ class DragwybControlBase extends Component {
         this.controlName = this.controlName() || props.settings.type;
         this.onInit();
         this.RenderLabel = this.RenderLabel.bind(this);
+        this.RenderDescription = this.RenderDescription.bind(this);
         this.#renderContent(props);
     }
 
@@ -245,6 +246,11 @@ class DragwybControlBase extends Component {
         );
     }
 
+    RenderDescription() {
+        if (!this.settings.description) return null;
+        return <div className="dragwyb-control__description">{this.settings.description}</div>;
+    }
+
     #setDisplaySetting(props) {
         this.id = props.id;
         this.settings = props.settings;
@@ -252,6 +258,7 @@ class DragwybControlBase extends Component {
         this.#updateValue = props.handleChange;
         this.Utils = props.Utils;
         this.selectorKey = props.toolbarId;
+        this.fieldValue = props.fieldValue || {};
         this.currentItemId = props.currentItemId || false;
 
         if (this.settings.popover) {

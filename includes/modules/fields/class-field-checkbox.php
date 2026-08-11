@@ -85,6 +85,15 @@ class Field_Checkbox extends Field_Base {
 		);
 
 		$this->add_control(
+			'default_value',
+			array(
+				'type'        => Controls::TEXT,
+				'label'       => __( 'Default Value', 'smart-form-builder-by-dragwyb' ),
+				'description' => __( 'If multiple values, enter values separated by commas e.g. val_1,val_2', 'smart-form-builder-by-dragwyb' ),
+			)
+		);
+
+		$this->add_control(
 			'layout',
 			array(
 				'type'         => Controls::SELECT,
@@ -161,6 +170,25 @@ class Field_Checkbox extends Field_Base {
 		);
 
 		$this->add_control(
+			'option_color',
+			array(
+				'type'      => Controls::COLOR,
+				'label'     => __( 'Text Color', 'smart-form-builder-by-dragwyb' ),
+				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-option-color: {{VALUE}};' ),
+			)
+		);
+
+		$this->add_group_control(
+			'option_typography',
+			array(
+				'type'     => Controls::GROUP_TYPOGRAPHY,
+				'label'    => __( 'Typography', 'smart-form-builder-by-dragwyb' ),
+				'selector' => '{{WRAPPER}}',
+				'prefix'   => 'option',
+			)
+		);
+
+		$this->add_control(
 			'toggle_size',
 			array(
 				'type'      => Controls::SLIDER,
@@ -221,6 +249,10 @@ class Field_Checkbox extends Field_Base {
 		$help     = $this->field_key_exist( $settings, 'help_text', '' );
 		$classes  = $this->field_key_exist( $settings, 'css_classes', '' );
 
+		$raw_default_value = (string) $this->field_key_exist( $settings, 'default_value', '' );
+		$default_value     = sanitize_text_field( $raw_default_value );
+		$default_vals      = array_map( 'sanitize_text_field', array_filter( array_map( 'trim', explode( ',', $default_value ) ), 'strlen' ) );
+
 		$layout_class = ( $layout === 'inline' ) ? 'dragwyb-inline-options' : '';
 
 		$this->add_field_attributes(
@@ -246,19 +278,25 @@ class Field_Checkbox extends Field_Base {
 							continue;
 						}
 
-						$label_text = isset( $opt_attr['option_label'] ) ? $opt_attr['option_label'] : '';
+						$label_text = isset( $opt_attr['option_label'] ) ? (string) $opt_attr['option_label'] : '';
+						$opt_val    = sanitize_text_field( (string) $opt_attr['option_value'] );
+						$is_checked = in_array( $opt_val, $default_vals, true );
 
-						$this->add_field_attributes(
-							"input_{$index}",
-							array(
-								'type'  => 'checkbox',
-								'id'    => $opt_id,
-								'name'  => $field_id . '[]',
-								'value' => $opt_attr['option_value'],
-							)
+						$input_attrs = array(
+							'type'  => 'checkbox',
+							'id'    => $opt_id,
+							'name'  => $field_id . '[]',
+							'value' => $opt_val,
 						);
+
+						if ( $is_checked ) {
+							$input_attrs['checked'] = 'checked';
+						}
+
+						$this->add_field_attributes( "input_{$index}", $input_attrs );
+						$item_class = 'dragwyb-option-item' . ( $is_checked ? ' is-checked' : '' );
 						?>
-						<label class="dragwyb-option-item" for="<?php echo esc_attr( $opt_id ); ?>">
+						<label class="<?php echo esc_attr( $item_class ); ?>" for="<?php echo esc_attr( $opt_id ); ?>">
 							<input <?php $this->render_field_attributes( "input_{$index}" ); ?> />
 							<span class="dragwyb-radio-label"><?php echo esc_html( $label_text ); ?></span>
 						</label>

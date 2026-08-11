@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware } from 'redux';
+import { legacy_createStore as createStore, applyMiddleware } from 'redux';
 import { thunk } from 'redux-thunk';
 import reducer from './reducers';
 
@@ -30,6 +30,21 @@ const initialState = {
         currentIndex: -1
     }
 };
+
+if (window?.DragwybEditor?.isInitialLoad) {
+    if (!initialState.form) {
+        initialState.form = {};
+    }
+
+    if (!initialState.form.advance) {
+        initialState.form.advance = {};
+    }
+
+    if (!initialState.form.advance.form_status) {
+        initialState.form.advance.form_status = "publish";
+        DragwybEditor.formData.status = "publish";
+    }
+}
 
 const store = createStore(reducer, initialState, applyMiddleware(thunk));
 window.DragwybStore = store;

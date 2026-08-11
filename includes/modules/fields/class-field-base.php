@@ -378,7 +378,13 @@ abstract class Field_Base extends Register_Controls_Base {
 	}
 
 	protected function field_wrapper_class( string $classes = '', array $settings = array() ) {
+		$is_last_field = $this->field_key_exist( $settings, 'is_last_field', false );
+
 		$wrapper_class = 'dragwyb-field-wrapper dragwyb-' . esc_attr( $this->type ) . '-field';
+
+		if ( $is_last_field ) {
+			$wrapper_class .= ' dragwyb-last-field';
+		}
 
 		$toolbar_settings = $this->get_toolbars_values( 'style' );
 

@@ -174,7 +174,7 @@ class Fields extends DragwybEditor.editor.extends.ToolbarBase {
     if (key === 'fields' || !key) return false;
     const selectedField = this.getSelectedField(data, key);
 
-    if (setting.fields && selectedField.type && setting.fields[selectedField.type]) {
+    if (selectedField && setting.fields && selectedField.type && setting.fields[selectedField.type]) {
       selectedFieldSettings = setting.fields[selectedField.type];
       selectedFieldSettings.panelHeading = <>{__('Field Settings', 'smart-form-builder-by-dragwyb')} <span>{selectedFieldSettings.label}</span></>;
     }

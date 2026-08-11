@@ -61,6 +61,10 @@ abstract class Control_Base {
 			$control_settings['type'] = 'string';
 		}
 
+		if ( ! isset( $control_settings['description'] ) ) {
+			$control_settings['description'] = 'string';
+		}
+
 		if ( ! isset( $control_settings['selectors'] ) ) {
 			$control_settings['selectors'] = 'custom';
 		}

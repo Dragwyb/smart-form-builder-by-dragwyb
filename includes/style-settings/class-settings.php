@@ -286,7 +286,7 @@ class Settings extends Register_Controls_Base {
 					),
 				),
 				'default'   => array(
-					'size' => 5,
+					'size' => 18,
 					'unit' => 'px',
 				),
 				'selectors' => array(
@@ -528,6 +528,92 @@ class Settings extends Register_Controls_Base {
 
 		$this->end_section();
 
+		// SECTION: RADIO & CHECKBOX FIELDS
+		$this->start_section(
+			'section_radio_style',
+			array(
+				'label' => __( 'Radio & Checkbox Fields', 'smart-form-builder-by-dragwyb' ),
+			)
+		);
+
+		$this->add_control(
+			'option_color',
+			array(
+				'type'      => Controls::COLOR,
+				'label'     => __( 'Text Color', 'smart-form-builder-by-dragwyb' ),
+				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-option-color: {{VALUE}};' ),
+			)
+		);
+
+		$this->add_group_control(
+			'option_typography',
+			array(
+				'type'     => Controls::GROUP_TYPOGRAPHY,
+				'label'    => __( 'Typography', 'smart-form-builder-by-dragwyb' ),
+				'selector' => '{{WRAPPER}}',
+				'prefix'   => 'option',
+			)
+		);
+
+		$this->add_responsive_control(
+			'radio_size',
+			array(
+				'type'      => Controls::SLIDER,
+				'label'     => __( 'Size', 'smart-form-builder-by-dragwyb' ),
+				'range'     => array(
+					'px' => array(
+						'min' => 10,
+						'max' => 50,
+					),
+				),
+				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-toggle-size: {{VALUE}}{{UNIT}};' ),
+			)
+		);
+
+		$this->add_control(
+			'radio_bg_color',
+			array(
+				'type'      => Controls::COLOR,
+				'label'     => __( 'Radio Background Color', 'smart-form-builder-by-dragwyb' ),
+				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-toggle-bg-color: {{VALUE}};' ),
+			)
+		);
+
+		$this->add_control(
+			'radio_border_color',
+			array(
+				'type'      => Controls::COLOR,
+				'label'     => __( 'Border Color', 'smart-form-builder-by-dragwyb' ),
+				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-toggle-border-color: {{VALUE}};' ),
+			)
+		);
+
+		$this->add_control(
+			'radio_active_bg_color',
+			array(
+				'type'      => Controls::COLOR,
+				'label'     => __( 'Active / Checked Color', 'smart-form-builder-by-dragwyb' ),
+				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-toggle-primary-color: {{VALUE}};' ),
+			)
+		);
+
+		$this->add_responsive_control(
+			'radio_option_spacing',
+			array(
+				'type'      => Controls::SLIDER,
+				'label'     => __( 'Option Spacing', 'smart-form-builder-by-dragwyb' ),
+				'range'     => array(
+					'px' => array(
+						'min' => 0,
+						'max' => 50,
+					),
+				),
+				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-toggle-spacing: {{VALUE}}{{UNIT}};' ),
+			)
+		);
+
+		$this->end_section();
+
 		// SECTION 4: STEPS STYLING
 		$this->start_section(
 			'section_steps_style',
@@ -622,10 +708,6 @@ class Settings extends Register_Controls_Base {
 			array(
 				'type'      => Controls::SLIDER,
 				'label'     => __( 'Step Bottom Spacing', 'smart-form-builder-by-dragwyb' ),
-				'default'   => array(
-					'size' => 15,
-					'unit' => 'px',
-				),
 				'range'     => array(
 					'px' => array(
 						'min' => 0,

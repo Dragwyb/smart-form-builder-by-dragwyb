@@ -66,23 +66,134 @@ class emailField extends DragwybEditor.editor.extends.FieldBase {
 
 class dateField extends DragwybEditor.editor.extends.FieldBase {
     fieldName() { return 'date'; }
+
+    buildFpConfig(s) {
+        const isDateTime = s.picker_type === 'datetime';
+        const mode = s.selection_mode || 'single';
+        const allowedFormats = ['Y-m-d', 'Y/m/d', 'd/m/Y', 'd-m-Y', 'm/d/Y', 'm-d-Y'];
+        let dateFormat = allowedFormats.includes(s.date_format) ? s.date_format : 'Y-m-d';
+
+        if (isDateTime) {
+            dateFormat = `${dateFormat} H:i`;
+        }
+
+        const resolveBound = (modeKey, dateKey, daysKey, defaultDays) => {
+            const boundMode = s[modeKey] || 'none';
+            if (boundMode === 'none') {
+                return s[dateKey] || null;
+            }
+            if (boundMode === 'today') {
+                return 'today';
+            }
+            if (boundMode === 'custom') {
+                return s[dateKey] || null;
+            }
+            if (boundMode === 'relative') {
+                return {
+                    type: 'relative',
+                    days: parseInt(s[daysKey] !== undefined && s[daysKey] !== '' ? s[daysKey] : defaultDays, 10) || 0,
+                };
+            }
+            return null;
+        };
+
+        const config = {
+            mode,
+            dateFormat,
+            allowInput: true,
+        };
+
+        if (isDateTime) {
+            config.enableTime = true;
+            config.time_24hr = s.time_24hr === 'yes';
+            if (s.min_time) {
+                config.minTime = s.min_time;
+            }
+            if (s.max_time) {
+                config.maxTime = s.max_time;
+            }
+        }
+
+        if (s.inline_calendar === 'yes') {
+            config.inline = true;
+        }
+        if (s.week_numbers === 'yes') {
+            config.weekNumbers = true;
+        }
+        if (s.alt_input === 'yes') {
+            config.altInput = true;
+            const presets = ['F j, Y', 'M j, Y', 'j F Y', 'd/m/Y', 'm/d/Y', 'Y-m-d', 'l, F j, Y'];
+            if (s.alt_format === 'custom') {
+                config.altFormat = (s.alt_format_custom || 'F j, Y').trim() || 'F j, Y';
+            } else if (s.alt_format && !presets.includes(s.alt_format)) {
+                config.altFormat = s.alt_format;
+            } else {
+                config.altFormat = presets.includes(s.alt_format) ? s.alt_format : 'F j, Y';
+            }
+        }
+
+        if (mode === 'multiple') {
+            config.conjunction = s.conjunction || ', ';
+        }
+
+        if (s.disable_weekends === 'yes') {
+            config.disableWeekends = true;
+        }
+        if (s.disable_dates) {
+            config.disableDates = s.disable_dates;
+        }
+        if (s.enable_dates) {
+            config.enableDates = s.enable_dates;
+        }
+
+        const minDate = resolveBound('min_date_mode', 'min_date', 'min_date_days', 0);
+        const maxDate = resolveBound('max_date_mode', 'max_date', 'max_date_days', 14);
+        if (minDate) {
+            config.minDate = minDate;
+        }
+        if (maxDate) {
+            config.maxDate = maxDate;
+        }
+
+        return config;
+    }
+
     bind() {
         if (!this.shouldRender()) return <></>;
         const s = this.attributes;
         const fieldId = s.field_id || this.id;
         const defaultLabel = DragwybEditor?.fields?.fields?.[this.fieldName]?.controls?.label?.default;
         const label = s.label || defaultLabel;
+        const useNative = s.use_native_date === 'yes';
+        const inputClass = [
+            'dragwyb-field-input',
+            'dragwyb-date-field',
+            useNative ? 'dragwyb-use-native' : '',
+        ].filter(Boolean).join(' ');
+
+        const inputProps = {
+            type: useNative ? 'date' : 'text',
+            id: fieldId,
+            className: inputClass,
+            placeholder: s.placeholder || ' ',
+        };
+
+        if (useNative) {
+            inputProps.pattern = '[0-9]{4}-[0-9]{2}-[0-9]{2}';
+            if (s.min_date) {
+                inputProps.min = s.min_date;
+            }
+            if (s.max_date) {
+                inputProps.max = s.max_date;
+            }
+        } else {
+            inputProps['data-fp-config'] = JSON.stringify(this.buildFpConfig(s));
+        }
 
         return (
             <>
-                <div className="dragwyb-input-group">
-                    <input
-                        type="date"
-                        id={fieldId}
-                        className="dragwyb-field-input"
-                        placeholder={s.placeholder || ' '}
-                        defaultValue={s.default_value}
-                    />
+                <div className="dragwyb-input-group" key={useNative ? 'native' : 'flatpickr'}>
+                    <input {...inputProps} />
                     {label && <this.RenderLabel
                         id={fieldId}
                         label={label}
@@ -138,11 +249,16 @@ class selectField extends DragwybEditor.editor.extends.FieldBase {
         const options = s.options_list || [];
         const defaultLabel = DragwybEditor?.fields?.fields?.[this.fieldName]?.controls?.label?.default;
         const label = s.label || defaultLabel;
+        const defaultValue = s.default_value !== undefined ? String(s.default_value).trim() : '';
+        const isMultiple = s.multiple === 'yes' || s.multiple === true;
+        const defaultVals = isMultiple
+            ? (defaultValue ? defaultValue.split(',').map(v => v.trim()) : [])
+            : (defaultValue ? [defaultValue] : []);
 
         return (
             <>
                 <div className="dragwyb-input-group">
-                    <select id={fieldId} className="dragwyb-field-input" multiple={s.multiple === 'yes'}>
+                    <select id={fieldId} className="dragwyb-field-input" multiple={isMultiple} value={isMultiple ? defaultVals : (defaultVals[0] || '')} readOnly>
                         {options.map((opt, i) => (
                             !opt.attributes ? null :
                                 <option key={i} value={opt.attributes.option_value}>{opt.attributes.option_label}</option>
@@ -171,7 +287,10 @@ class radioField extends DragwybEditor.editor.extends.FieldBase {
         const options = s.options_list || [];
         const defaultLabel = DragwybEditor?.fields?.fields?.[this.fieldName]?.controls?.label?.default;
         const label = s.label || defaultLabel;
-        const layoutClass = s.layout === 'inline' ? 'dragwyb-inline-options' : '';
+        const radioStyle = s.radio_style || 'outline';
+        const styleClass = `dragwyb-radio-style-${radioStyle}`;
+        const layoutClass = s.layout !== 'block' ? 'dragwyb-inline-options' : '';
+        const defaultValue = s.default_value !== undefined ? String(s.default_value).trim() : '';
 
         return (
             <>
@@ -182,14 +301,18 @@ class radioField extends DragwybEditor.editor.extends.FieldBase {
                         required={s.required}
                         settings={s}
                     />}
-                    <div className={`dragwyb-options-container ${layoutClass}`}>
-                        {options.map((opt, i) => (
-                            !opt.attributes ? null :
-                                <label key={i} className="dragwyb-option-item">
-                                    <input type="radio" name={fieldId} value={opt.attributes.option_value} />
+                    <div className={`dragwyb-options-container ${layoutClass} ${styleClass}`}>
+                        {options.map((opt, i) => {
+                            if (!opt.attributes) return null;
+                            const val = String(opt.attributes.option_value || '');
+                            const isChecked = defaultValue ? val === defaultValue : i === 0;
+                            return (
+                                <label key={i} className={`dragwyb-option-item ${isChecked ? 'is-checked' : ''}`}>
+                                    <input type="radio" name={fieldId} value={val} checked={isChecked} readOnly />
                                     <span className="dragwyb-radio-label">{opt.attributes.option_label}</span>
                                 </label>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
                 {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
@@ -232,6 +355,8 @@ class checkboxField extends DragwybEditor.editor.extends.FieldBase {
         const fieldId = s.field_id || this.id;
         const options = s.options_list || [];
         const layoutClass = s.layout === 'inline' ? 'dragwyb-inline-options' : '';
+        const defaultValue = s.default_value !== undefined ? String(s.default_value).trim() : '';
+        const defaultVals = defaultValue ? defaultValue.split(',').map(v => v.trim()) : [];
 
         return (
             <>
@@ -243,13 +368,17 @@ class checkboxField extends DragwybEditor.editor.extends.FieldBase {
                         settings={s}
                     />}
                     <div className={`dragwyb-options-container ${layoutClass}`}>
-                        {options.map((opt, i) => (
-                            !opt.attributes ? null :
-                                <label key={i} className="dragwyb-option-item">
-                                    <input type="checkbox" name={`${fieldId}[]`} value={opt.attributes.option_value} />
+                        {options.map((opt, i) => {
+                            if (!opt.attributes) return null;
+                            const val = String(opt.attributes.option_value || '');
+                            const isChecked = defaultVals.includes(val);
+                            return (
+                                <label key={i} className={`dragwyb-option-item ${isChecked ? 'is-checked' : ''}`}>
+                                    <input type="checkbox" name={`${fieldId}[]`} value={val} checked={isChecked} readOnly />
                                     <span className="dragwyb-radio-label">{opt.attributes.option_label}</span>
                                 </label>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
                 {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
@@ -372,10 +501,76 @@ class phoneField extends DragwybEditor.editor.extends.FieldBase {
         const fieldId = s.field_id || this.id;
         const defaultLabel = DragwybEditor?.fields?.fields?.[this.fieldName]?.controls?.label?.default;
         const label = s.label || defaultLabel;
+        const countryEnabled = s.country_code_enabled === 'yes';
+
+        const normalizeList = (value) => {
+            if (!value || typeof value !== 'string') return '';
+            return value
+                .split(',')
+                .map((code) => code.trim().toLowerCase())
+                .filter((code) => /^[a-z]{2}$/.test(code))
+                .join(',');
+        };
+
+        const includeCountries = normalizeList(s.country_code_include);
+        const excludeCountries = normalizeList(s.country_code_exclude);
+        const includeList = includeCountries ? includeCountries.split(',') : [];
+        const excludeList = excludeCountries ? excludeCountries.split(',') : [];
+        const includeSorted = includeList.length ? [...includeList].sort().join(',') : '';
+        const excludeSorted = excludeList.length ? [...excludeList].sort().join(',') : '';
+        const commonCountries = includeSorted && includeSorted === excludeSorted ? 'same' : '';
+
+        let defaultCountry = String(s.country_code_default || 'us').trim().toLowerCase();
+        if (!/^[a-z]{2}$/.test(defaultCountry)) {
+            defaultCountry = 'us';
+        }
+
+        const dialCodeVisibility = s.dial_code_visibility || 'show';
+        const strictMode = s.country_strict_mode || 'no';
+        const i18n = s.country_internationalisation || 'en';
+        const showFlags = s.country_show_flags === 'yes' || s.country_show_flags === undefined ? 'yes' : 'no';
+
+        const itiPreviewKey = countryEnabled
+            ? [
+                'cc',
+                defaultCountry,
+                includeCountries,
+                excludeCountries,
+                dialCodeVisibility,
+                strictMode,
+                i18n,
+                showFlags,
+            ].join('|')
+            : 'off';
+
+        const inputProps = {
+            type: 'tel',
+            id: fieldId,
+            className: 'dragwyb-field-input',
+            placeholder: s.placeholder || ' ',
+            defaultValue: s.default_value,
+        };
+
+        if (countryEnabled) {
+            Object.assign(inputProps, {
+                'data-country-code': 'yes',
+                'data-default-country': defaultCountry,
+                'data-include-countries': includeCountries,
+                'data-exclude-countries': excludeCountries,
+                'data-common-countries': commonCountries,
+                'data-dial-code-visibility': dialCodeVisibility,
+                'data-strict-mode': strictMode,
+                'data-internationalisation': i18n,
+                'data-show-flags': showFlags,
+                'data-iti-config': itiPreviewKey,
+                autoComplete: 'tel',
+            });
+        }
+
         return (
             <>
-                <div className="dragwyb-input-group">
-                    <input type="tel" id={fieldId} className="dragwyb-field-input" placeholder={s.placeholder || ' '} defaultValue={s.default_value} />
+                <div className="dragwyb-input-group" key={`phone-group-${fieldId}-${itiPreviewKey}`}>
+                    <input {...inputProps} />
                     {label && <this.RenderLabel
                         id={fieldId}
                         label={label}
@@ -441,16 +636,62 @@ class addressField extends DragwybEditor.editor.extends.FieldBase {
 
 class timeField extends DragwybEditor.editor.extends.FieldBase {
     fieldName() { return 'time'; }
+
+    buildFpConfig(s) {
+        const config = {
+            dateFormat: 'H:i',
+            allowInput: true,
+            enableTime: true,
+            noCalendar: true,
+            time_24hr: s.time_24hr === 'yes',
+        };
+
+        if (s.min_time) {
+            config.minTime = s.min_time;
+        }
+        if (s.max_time) {
+            config.maxTime = s.max_time;
+        }
+
+        return config;
+    }
+
     bind() {
         if (!this.shouldRender()) return <></>;
         const s = this.attributes;
         const fieldId = s.field_id || this.id;
         const defaultLabel = DragwybEditor?.fields?.fields?.[this.fieldName]?.controls?.label?.default;
         const label = s.label || defaultLabel;
+        const useNative = s.use_native_time === 'yes';
+        const inputClass = [
+            'dragwyb-field-input',
+            'dragwyb-time-field',
+            useNative ? 'dragwyb-use-native' : '',
+        ].filter(Boolean).join(' ');
+
+        const inputProps = {
+            type: useNative ? 'time' : 'text',
+            id: fieldId,
+            className: inputClass,
+            defaultValue: s.default_value,
+        };
+
+        if (useNative) {
+            if (s.min_time) {
+                inputProps.min = s.min_time;
+            }
+            if (s.max_time) {
+                inputProps.max = s.max_time;
+            }
+        } else {
+            inputProps.placeholder = s.placeholder || 'HH:MM';
+            inputProps['data-fp-config'] = JSON.stringify(this.buildFpConfig(s));
+        }
+
         return (
             <>
-                <div className="dragwyb-input-group">
-                    <input type="time" id={fieldId} className="dragwyb-field-input" defaultValue={s.default_value} />
+                <div className="dragwyb-input-group" key={useNative ? 'native' : 'flatpickr'}>
+                    <input {...inputProps} />
                     {label && <this.RenderLabel
                         id={fieldId}
                         label={label}

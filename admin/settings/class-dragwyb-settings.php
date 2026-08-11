@@ -91,14 +91,21 @@ class Dragwyb_Settings {
 			);
 		}
 
+		$current_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
+
 		// Localize data for React
 		wp_localize_script(
 			'dragwyb-settings-script',
 			'DragwybSettingsData',
 			array(
-				'restUrl' => esc_url_raw( rest_url( 'dragwyb/v1/settings' ) ),
-				'nonce'   => wp_create_nonce( 'wp_rest' ),
-				'i18n'    => array(),
+				'restUrl'    => esc_url_raw( rest_url( 'dragwyb/v1/settings' ) ),
+				'nonce'      => wp_create_nonce( 'wp_rest' ),
+				'ajaxUrl'    => admin_url( 'admin-ajax.php' ),
+				'adminNonce' => wp_create_nonce( 'dragwyb_admin_nonce' ),
+				'pluginSlug' => DRAGWYB_TEXT_DOMAIN,
+				'version'    => DRAGWYB_FORM_BUILDER_VERSION,
+				'currentTab' => $current_tab,
+				'i18n'       => array(),
 			)
 		);
 	}

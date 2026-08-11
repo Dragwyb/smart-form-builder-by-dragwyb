@@ -1,0 +1,88 @@
+.dragwyb-phone-field .dragwyb-intl-container.iti {
+	width: 100%;
+	display: block;
+}
+
+.dragwyb-phone-field:has([data-country-code="yes"]) .dragwyb-input-group {
+	position: relative;
+	display: flex;
+	flex-direction: column-reverse;
+	width: 100%;
+}
+
+/* Left layout needs display:contents + .iti on column 2 (input is wrapped). */
+.dragwyb-form-wrapper.dragwyb-layout-left .dragwyb-phone-field:has([data-country-code="yes"]) .dragwyb-input-group {
+	display: contents;
+}
+
+.dragwyb-form-wrapper.dragwyb-layout-left .dragwyb-phone-field:has([data-country-code="yes"]) .iti {
+	grid-column: 2;
+	order: 1;
+	width: 100%;
+}
+
+.dragwyb-phone-field .dragwyb-intl-container .iti__country-container {
+	height: 100%;
+}
+
+.dragwyb-phone-field .dragwyb-intl-container button.iti__selected-country {
+	background: transparent !important;
+	box-shadow: none !important;
+	padding: 0 6px 0 8px;
+	border: none;
+	border-radius: unset;
+	color: var(--dragwyb-input-color, inherit);
+}
+
+.dragwyb-phone-field .dragwyb-intl-container .iti__country-container .iti__flag:not(.iti__globe) {
+	height: 13px;
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
+	box-shadow: none;
+}
+
+.dragwyb-phone-field .dragwyb-intl-container.iti.iti--hide-flags .iti__flag {
+	background-image: var(--iti-path-globe-1x) !important;
+	background-size: contain;
+	background-position: right;
+	background-repeat: no-repeat;
+	box-shadow: none;
+	height: 19px;
+}
+
+.dragwyb-phone-field .dragwyb-intl-container.iti.iti--hide-flags .iti__country-list .iti__flag-box {
+	display: none !important;
+}
+
+.dragwyb-phone-field .dragwyb-intl-container .iti__selected-dial-code {
+	color: var(--dragwyb-input-color, #7a7a7a);
+	font-size: inherit;
+	font-family: inherit;
+	line-height: inherit;
+}
+
+.dragwyb-phone-field .dragwyb-intl-container input.dragwyb-field-input {
+	width: 100%;
+}
+
+/* Country code wraps the input in .iti, so float via .iti sibling (not input~label). */
+.dragwyb-form-wrapper.dragwyb-layout-floating .dragwyb-phone-field:has([data-country-code="yes"]) .dragwyb-field-label {
+	margin-left: 2rem;
+}
+
+.dragwyb-form-wrapper.dragwyb-layout-floating .dragwyb-phone-field:has([data-country-code="yes"]) .iti:focus-within ~ .dragwyb-field-label,
+.dragwyb-form-wrapper.dragwyb-layout-floating .dragwyb-phone-field:has([data-country-code="yes"]) .iti:has(.dragwyb-field-input:not(:placeholder-shown)) ~ .dragwyb-field-label {
+	top: 0;
+	margin-left: 0;
+	transform: translateY(-50%) scale(0.85);
+	color: var(--dragwyb-input-focus-border);
+	font-weight: 600;
+}
+
+.dragwyb-form-wrapper.dragwyb-layout-floating.dragwyb-float-outlined .dragwyb-phone-field:has([data-country-code="yes"]) .iti:focus-within ~ .dragwyb-field-label,
+.dragwyb-form-wrapper.dragwyb-layout-floating.dragwyb-float-outlined .dragwyb-phone-field:has([data-country-code="yes"]) .iti:has(.dragwyb-field-input:not(:placeholder-shown)) ~ .dragwyb-field-label {
+	padding: 0 4px;
+	margin-left: -4px;
+	background: linear-gradient(to bottom, var(--dragwyb-row-bg-color, var(--dragwyb-form-bg-color)) 50%, var(--dragwyb-input-focus-bg, var(--dragwyb-form-bg-color, #fff)) 50%);
+}

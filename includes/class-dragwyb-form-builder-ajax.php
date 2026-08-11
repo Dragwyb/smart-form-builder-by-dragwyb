@@ -15,6 +15,7 @@ use Dragwyb\Form_Builder\Admin\Db\Submission\Dragwyb_Submission_Db;
 use Dragwyb\Form_Builder\Admin\Db\Error_Log\Dragwyb_Error_Log_Db;
 use Dragwyb\Form_Builder\Includes\Modules\Modules;
 use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Base;
+use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
 
 class Dragwyb_Form_Builder_Ajax {
 
@@ -33,6 +34,8 @@ class Dragwyb_Form_Builder_Ajax {
 		add_action( 'wp_ajax_dragwyb_delete_error', array( $this, 'delete_error' ) );
 		add_action( 'wp_ajax_dragwyb_delete_errors', array( $this, 'delete_errors' ) );
 		add_action( 'wp_ajax_dragwyb_get_export_data', array( $this, 'get_export_data' ) );
+		add_action( 'wp_ajax_dragwyb_export_forms', array( $this, 'export_forms' ) );
+		add_action( 'wp_ajax_dragwyb_import_forms', array( $this, 'import_forms' ) );
 	}
 
 	/**
@@ -56,6 +59,11 @@ class Dragwyb_Form_Builder_Ajax {
 		}
 
 		$sanitized_data = $this->sanitize_form_data( $form_data, $form_id );
+		$initial_load   = isset( $_POST['isInitialLoad'] ) ? absint( wp_unslash( $_POST['isInitialLoad'] ) ) : 0;
+
+		if ( $initial_load && 1 === $initial_load ) {
+			delete_post_meta( $form_id, '_dragwyb_initial_form_data_save' );
+		}
 
 		// Update form meta
 		update_post_meta( $form_id, '_dragwyb_form_data', $sanitized_data );
@@ -115,6 +123,10 @@ class Dragwyb_Form_Builder_Ajax {
 	 * Sort fields
 	 */
 	private function sorting_fields( array $fields, $root_containers ): array {
+		if ( empty( $root_containers ) || ! is_array( $root_containers ) ) {
+			return $fields;
+		}
+
 		$sorted_fields = array();
 		foreach ( $root_containers as $root_container ) {
 			$sorted_fields[ $root_container ] = $fields[ $root_container ] ?? array();
@@ -124,7 +136,7 @@ class Dragwyb_Form_Builder_Ajax {
 			}
 		}
 
-		return $sorted_fields;
+		return ! empty( $sorted_fields ) ? $sorted_fields : $fields;
 	}
 
 	/**
@@ -221,9 +233,9 @@ class Dragwyb_Form_Builder_Ajax {
 
 		$forms = get_posts(
 			array(
-				'post_type'      => 'Dragwyb_Page', // Assuming Dragwyb_Page is the CPT based on class-dragwyb-pages.php
+				'post_type'      => Dragwyb_Post::post_type(),
 				'posts_per_page' => -1,
-				'post_status'    => 'publish',
+				'post_status'    => array( 'publish', 'draft' ),
 				'orderby'        => 'title',
 				'order'          => 'ASC',
 			)
@@ -666,5 +678,163 @@ class Dragwyb_Form_Builder_Ajax {
 				)
 			);
 		}
+	}
+
+	/**
+	 * Export forms via AJAX
+	 */
+	public function export_forms(): void {
+		check_ajax_referer( 'dragwyb_admin_nonce' );
+
+		if ( ! $this->current_user_can_manage_entries() ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied', 'smart-form-builder-by-dragwyb' ) ) );
+		}
+
+		$form_ids    = array();
+		$export_type = isset( $_POST['export_type'] ) ? sanitize_key( wp_unslash( $_POST['export_type'] ) ) : 'all';
+
+		if ( 'selected' === $export_type ) {
+			if ( isset( $_POST['form_id'] ) ) {
+				$form_ids[] = absint( wp_unslash( $_POST['form_id'] ) );
+			} elseif ( isset( $_POST['form_ids'] ) ) {
+				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized via array_map and absint
+				$form_ids = array_map( 'absint', (array) $_POST['form_ids'] );
+			}
+			$form_ids = array_filter( $form_ids );
+		} else {
+			$forms    = get_posts(
+				array(
+					'post_type'      => Dragwyb_Post::post_type(),
+					'posts_per_page' => -1,
+					'post_status'    => array( 'publish', 'draft' ),
+					'fields'         => 'ids',
+				)
+			);
+			$form_ids = array_map( 'absint', $forms );
+		}
+
+		if ( empty( $form_ids ) ) {
+			wp_send_json_error( array( 'message' => __( 'No forms found to export.', 'smart-form-builder-by-dragwyb' ) ) );
+		}
+
+		$exported_forms = array();
+
+		foreach ( $form_ids as $form_id ) {
+			$post = get_post( $form_id );
+			if ( ! $post || Dragwyb_Post::post_type() !== $post->post_type ) {
+				continue;
+			}
+
+			$raw_form_data = get_post_meta( $form_id, '_dragwyb_form_data', true );
+			if ( ! is_array( $raw_form_data ) ) {
+				$raw_form_data = array();
+			}
+
+			$sanitized_form_data = $this->sanitize_form_data( $raw_form_data, $form_id );
+
+			// Ensure fields and stored meta keys are preserved if stripped by sanitize
+			foreach ( $raw_form_data as $meta_key => $meta_val ) {
+				if ( ! isset( $sanitized_form_data[ $meta_key ] ) || ( 'fields' === $meta_key && empty( $sanitized_form_data['fields'] ) && ! empty( $meta_val ) ) ) {
+					$sanitized_form_data[ $meta_key ] = $meta_val;
+				}
+			}
+
+			$exported_forms[] = array(
+				'id'        => $form_id,
+				'title'     => $post->post_title,
+				'form_data' => $sanitized_form_data,
+			);
+		}
+
+		wp_send_json_success( array( 'forms' => $exported_forms ) );
+	}
+
+	/**
+	 * Import forms via AJAX
+	 */
+	public function import_forms(): void {
+		check_ajax_referer( 'dragwyb_admin_nonce' );
+
+		if ( ! $this->current_user_can_manage_entries() ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied', 'smart-form-builder-by-dragwyb' ) ) );
+		}
+
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized in sanitize_form_data
+		$raw_input   = wp_unslash( $_POST['import_data'] ?? '' );
+		$import_data = json_decode( $raw_input, true );
+
+		if ( json_last_error() !== JSON_ERROR_NONE || ! is_array( $import_data ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid JSON data provided.', 'smart-form-builder-by-dragwyb' ) ) );
+		}
+
+		// Handle single object or array of forms
+		if ( isset( $import_data['forms'] ) && is_array( $import_data['forms'] ) ) {
+			$forms_list = $import_data['forms'];
+		} elseif ( isset( $import_data['form_data'] ) || isset( $import_data['title'] ) ) {
+			$forms_list = array( $import_data );
+		} elseif ( isset( $import_data['fields'] ) || isset( $import_data['rootContainers'] ) ) {
+			$forms_list = array( array( 'form_data' => $import_data ) );
+		} else {
+			$forms_list = $import_data;
+		}
+
+		$imported_count = 0;
+		$imported_forms = array();
+
+		foreach ( $forms_list as $item ) {
+			if ( ! is_array( $item ) ) {
+				continue;
+			}
+
+			$form_data = $item['form_data'] ?? ( ( isset( $item['fields'] ) || isset( $item['rootContainers'] ) ) ? $item : array() );
+
+			if ( empty( $form_data ) || ! is_array( $form_data ) ) {
+				continue;
+			}
+
+			$form_title = ! empty( $item['title'] ) ? sanitize_text_field( $item['title'] ) : __( 'Imported Form', 'smart-form-builder-by-dragwyb' );
+
+			// Create form post
+			$new_form_id = wp_insert_post(
+				array(
+					'post_title'  => $form_title,
+					'post_type'   => Dragwyb_Post::post_type(),
+					'post_status' => 'publish',
+				)
+			);
+
+			if ( is_wp_error( $new_form_id ) || ! $new_form_id ) {
+				continue;
+			}
+
+			// Sanitize with newly created form ID
+			$final_sanitized = $this->sanitize_form_data( $form_data, (int) $new_form_id );
+			$save_data       = ! empty( $final_sanitized ) ? $final_sanitized : $form_data;
+
+			update_post_meta( $new_form_id, '_dragwyb_form_data', $save_data );
+			$css_manager = CSS_Manager::instance();
+			$css_manager->clean_cache( (int) $new_form_id );
+
+			++$imported_count;
+			$imported_forms[] = array(
+				'id'    => $new_form_id,
+				'title' => $form_title,
+			);
+		}
+
+		if ( 0 === $imported_count ) {
+			wp_send_json_error( array( 'message' => __( 'No valid form data could be imported.', 'smart-form-builder-by-dragwyb' ) ) );
+		}
+
+		wp_send_json_success(
+			array(
+				'message'  => sprintf(
+					/* translators: %d: number of imported forms */
+					_n( '%d form imported successfully.', '%d forms imported successfully.', $imported_count, 'smart-form-builder-by-dragwyb' ),
+					$imported_count
+				),
+				'imported' => $imported_forms,
+			)
+		);
 	}
 }
