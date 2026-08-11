@@ -156,8 +156,14 @@ If the "Save Submissions" action is enabled on your form, all data points are sa
 * Added: CSS variable & Custom CSS options in the color control to load dynamic styles.
 * Added: Radio field style options directly within field settings.
 * Added: Radio Field Style settings globally in the toolbar style section.
+* Added: Default value option in select, radio and checkbox field.
+* Added: Background color setting in html field.
 * Fixed: HTML field rendering issues by migrating the textarea control to a WYSIWYG control.
+* Fixed: Step & Html field style issue with label left style.
+* Fixed: White space issue with conditional hidden field.
 * Fixed: Resolved minor PHP warnings and errors.
+* Fixed: Trash and draft form display issue now only display publish forms.
+* Tweak: Form status is now set to publish on initial load.
 * Tweak: Improved the editor's top header layout and UI.
 
 = 1.1.1 =
