@@ -155,6 +155,7 @@ class DragwybConditionalFields extends DragwybBuilder.DragwybFormFrontendBase {
         const $wrapper = $field.first().closest('.dragwyb-field-wrapper');
         if ($wrapper.length) {
             $wrapper.find('.dragwyb-error').removeClass('dragwyb-error');
+            $wrapper.find('.dragwyb-field-validation-error, .dragwyb-field-error-message').remove();
         }
     }
 }
