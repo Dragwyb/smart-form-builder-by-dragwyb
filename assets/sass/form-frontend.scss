@@ -921,6 +921,13 @@
         }
     }
 
+    .dragwyb-field-validation-error {
+        color: var(--dragwyb-error-color);
+        font-size: 0.85em;
+        margin-top: 5px;
+        display: block;
+    }
+
     /* Section Break Field */
     .dragwyb-section-title {
         color: var(--dragwyb-section-title-color, var(--dragwyb-label-color));

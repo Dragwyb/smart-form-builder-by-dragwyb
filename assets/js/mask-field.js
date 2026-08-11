@@ -290,14 +290,22 @@ class DragwybMaskField extends DragwybBuilder.DragwybFormFrontendBase {
 	showError(input, message) {
 		const $input = jQuery(input);
 		const $wrapper = $input.closest('.dragwyb-mask-field');
+		const $error = $wrapper.find('.dragwyb-mask-error');
 
 		$input.addClass('dragwyb-error');
+		if ($error.length) {
+			$error.text(message).addClass('is-visible').removeAttr('hidden');
+		}
 		input.setCustomValidity(message || 'Invalid value.');
 	}
 
 	clearError(input) {
 		const $wrapper = jQuery(input).closest('.dragwyb-mask-field');
+		const $error = $wrapper.find('.dragwyb-mask-error');
 		jQuery(input).removeClass('dragwyb-error');
+		if ($error.length) {
+			$error.text('').removeClass('is-visible').attr('hidden', true);
+		}
 		input.setCustomValidity('');
 	}
 

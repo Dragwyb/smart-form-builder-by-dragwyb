@@ -810,6 +810,12 @@
   background-color: var(--dragwyb-error-bg);
   border: 1px solid var(--dragwyb-error-color);
 }
+.dragwyb-form-wrapper .dragwyb-field-validation-error {
+  color: var(--dragwyb-error-color);
+  font-size: 0.85em;
+  margin-top: 5px;
+  display: block;
+}
 .dragwyb-form-wrapper {
   /* Section Break Field */
 }

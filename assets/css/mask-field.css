@@ -2,6 +2,18 @@
 	position: relative;
 }
 
+.dragwyb-mask-error {
+	color: #dc3232;
+	font-size: 13px;
+	margin-top: 6px;
+	display: none;
+	align-items: center;
+	line-height: 1.3;
+}
+
+.dragwyb-mask-error.is-visible {
+	display: flex;
+}
 
 .dragwyb-card-logo {
 	position: absolute;

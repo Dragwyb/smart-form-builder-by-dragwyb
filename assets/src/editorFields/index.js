@@ -706,7 +706,7 @@ class maskField extends DragwybEditor.editor.extends.FieldBase {
                     />}
                     {showCardLogo && <img className="dragwyb-card-logo" src="" alt="" hidden />}
                 </div>
-                {/* <div className={`dragwyb-mask-error error-${maskClass.replace('mask-', '')}`} hidden></div> */}
+                <div className={`dragwyb-mask-error error-${maskClass.replace('mask-', '')}`} hidden></div>
                 {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
             </>
         );
