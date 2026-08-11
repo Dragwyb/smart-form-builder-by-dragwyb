@@ -1,5 +1,5 @@
 # Node dependencies
 node_modules/
-.map
+*.map
 package-lock.json
 *.js.LICENSE.txt

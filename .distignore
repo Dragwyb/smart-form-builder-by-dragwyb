@@ -22,4 +22,4 @@ composer.lock
 vendor/
 .wordpress-org
 .babelrc
-.map
+*.map
