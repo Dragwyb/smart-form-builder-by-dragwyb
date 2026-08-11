@@ -628,7 +628,7 @@ class Field_Mask extends Field_Base {
 					<img class="dragwyb-card-logo" src="" alt="" hidden />
 				<?php endif; ?>
 			</div>
-			<div class="dragwyb-mask-error <?php echo esc_attr( $error_class ); ?>" hidden></div>
+			<!-- <div class="dragwyb-mask-error <?php echo esc_attr( $error_class ); ?>" hidden></div> -->
 			<?php if ( ! empty( $help ) ) : ?>
 				<div class="dragwyb-field-help"><?php echo esc_html( $help ); ?></div>
 			<?php endif; ?>

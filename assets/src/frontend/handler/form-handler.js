@@ -258,6 +258,7 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
 
         // Append error message inside closest .dragwyb-field-wrapper
         const $wrapper = $field.first().closest('.dragwyb-field-wrapper');
+        const $errorMsg = jQuery('<span class="dragwyb-field-validation-error" style="color: #dc3232; font-size: 13px; margin-top: 5px; display: block;"></span>').text(message);
 
         if ($wrapper.length) {
             $wrapper.append($errorMsg);
@@ -306,13 +307,17 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
         const $wrapper = $field.first().closest('.dragwyb-field-wrapper');
         if ($wrapper.length) {
             $wrapper.find('.dragwyb-error').removeClass('dragwyb-error');
+            $wrapper.find('.dragwyb-field-validation-error, .dragwyb-field-error-message').remove();
         } else {
             $field.removeClass('dragwyb-error');
+            $field.parent().find('.dragwyb-field-validation-error, .dragwyb-field-error-message').remove();
+            $field.siblings('.dragwyb-field-validation-error, .dragwyb-field-error-message').remove();
         }
     }
 
     clearErrors() {
         this.elements.$form.find('.dragwyb-error').removeClass('dragwyb-error');
+        this.elements.$form.find('.dragwyb-field-validation-error, .dragwyb-field-error-message').remove();
     }
 }
 
