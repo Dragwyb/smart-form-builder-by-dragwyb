@@ -1,12 +1,12 @@
 === Smart Form Builder ===
 Contributors: dragwyb  
 Tags: contact form, form builder, drag and drop form, custom form, ajax form
-Plugin URI: https://dragwyb.com/form-builder/
-Author URI: https://dragwyb.com/
+Plugin URI: https://dragwyb.com/product/form-builder/?utm_source=wpplugin&utm_medium=plugin_uri&utm_campaign=form_builder_demo
+Author URI: https://dragwyb.com/?utm_source=wpplugin&utm_medium=author_uri&utm_campaign=form_builder_demo
 Requires at least: 5.8  
 Tested up to: 7.0  
 Requires PHP: 7.4  
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -146,6 +146,9 @@ If the "Save Submissions" action is enabled on your form, all data points are sa
 ---
 
 == Changelog ==
+
+= 1.2.1 =
+* Tweak: Update plugin URL in plugin header.
 
 = 1.2.0 =
 * Added: History Tab with revert changes, redo, and undo settings (supports Ctrl+Z & Ctrl+Y shortcuts).
