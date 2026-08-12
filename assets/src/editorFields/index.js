@@ -625,7 +625,9 @@ class maskField extends DragwybEditor.editor.extends.FieldBase {
             return map[s.brazilian_format || 'cpf'] || 'mask-cpf';
         }
         if (maskType === 'ip') return 'mask-ipv4';
+        if (maskType === 'custom') return 'mask-custom';
         return 'mask-phus';
+
     }
 
     getAutoPlaceholder(maskClass, s) {
@@ -650,14 +652,25 @@ class maskField extends DragwybEditor.editor.extends.FieldBase {
             'mask-cep': 'XXXXX-XXX',
             'mask-ipv4': 'XXX.XXX.XXX.XXX',
         };
-
-        if (maskClass === 'mask-moneyc') {
-            const prefix = s.money_prefix !== undefined && s.money_prefix !== '' ? s.money_prefix : '$';
-            const format = s.money_format === 'comma' ? '.' : ',';
-            const decimals = '0'.repeat(Math.max(0, parseInt(s.money_decimal_places || 2, 10) || 2));
-            return `${prefix}0${format}${decimals}`;
+        
+    
+        if (maskClass === 'mask-custom') {
+            return (s.custom_mask || '').replace(/[0A*]/g, 'X');
         }
-
+    
+        if (maskClass === 'mask-moneyc') {
+            const prefix = s.money_prefix !== undefined && s.money_prefix !== ''
+                ? s.money_prefix
+                : '$';
+    
+            const separator = s.money_format === 'comma' ? '.' : ',';
+            const decimals = '0'.repeat(
+                Math.max(0, parseInt(s.money_decimal_places || 2, 10) || 2)
+            );
+    
+            return `${prefix}0${separator}${decimals}`;
+        }
+    
         return placeholders[maskClass] || '';
     }
 
@@ -693,6 +706,7 @@ class maskField extends DragwybEditor.editor.extends.FieldBase {
                         defaultValue={s.default_value}
                         inputMode={inputmode}
                         data-mask-class={maskClass}
+                        data-custom-mask={s.custom_mask || ''}
                         data-moneymask-format={s.money_format || 'dot'}
                         data-moneymask-prefix={s.money_prefix !== undefined ? s.money_prefix : '$'}
                         data-decimal-places={s.money_decimal_places || '2'}

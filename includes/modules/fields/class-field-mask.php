@@ -102,6 +102,7 @@ class Field_Mask extends Field_Base {
 			'mask-ccmy'  => __( 'Invalid expiry date.', 'smart-form-builder-by-dragwyb' ),
 			'mask-ccmyy' => __( 'Invalid expiry date.', 'smart-form-builder-by-dragwyb' ),
 			'mask-ipv4'  => __( 'Invalid IPv4 address.', 'smart-form-builder-by-dragwyb' ),
+			'mask-custom' => __( 'Invalid format.', 'smart-form-builder-by-dragwyb' ),
 		);
 	}
 
@@ -197,9 +198,41 @@ class Field_Mask extends Field_Base {
 					'credit_card' => __( 'Credit Card', 'smart-form-builder-by-dragwyb' ),
 					'brazilian'   => __( 'Brazilian Formats', 'smart-form-builder-by-dragwyb' ),
 					'ip'          => __( 'IP Address', 'smart-form-builder-by-dragwyb' ),
+					'custom' => __( 'Custom Mask', 'smart-form-builder-by-dragwyb' ),
 				),
 				'default'      => 'phone',
 				'label_inline' => true,
+			)
+		);
+
+		$this->add_control(
+			'custom_mask',
+			array(
+				'type'        => Controls::TEXT,
+				'label'       => __( 'Mask Pattern', 'smart-form-builder-by-dragwyb' ),
+				'description' => __( 'Use 0 for numbers, A for letters and * for numbers or letters.', 'smart-form-builder-by-dragwyb' ),
+				'default'     => '',
+				'placeholder' => '0000-0000',
+				'conditions'  => array( 'mask_type' => 'custom' ),
+			)
+		);
+
+		$this->add_control(
+			'custom_mask_help',
+			array(
+				'type'        => Controls::RAW_HTML,
+				'raw'         => '
+					<div class="dragwyb-mask-help">
+						<strong>Mask characters:</strong><br>
+						0 = Number<br>
+						A = Letter<br>
+						* = Number or Letter<br>
+						Other characters are automatically inserted.
+						<br><br>
+						Example: <code>0000-0000</code>
+					</div>
+				',
+				'conditions'  => array( 'mask_type' => 'custom' ),
 			)
 		);
 
@@ -494,9 +527,23 @@ class Field_Mask extends Field_Base {
 			case 'ip':
 				return 'mask-ipv4';
 
+			case 'custom':
+				return 'mask-custom';
+
 			default:
 				return 'mask-phus';
 		}
+	}
+
+	private function get_custom_placeholder( string $pattern ): string {
+		return strtr(
+			$pattern,
+			array(
+				'0' => 'X',
+				'A' => 'X',
+				'*' => 'X',
+			)
+		);
 	}
 
 	/**
@@ -527,6 +574,9 @@ class Field_Mask extends Field_Base {
 			'mask-cnpj'  => 'XX.XXX.XXX/XXXX-XX',
 			'mask-cep'   => 'XXXXX-XXX',
 			'mask-ipv4'  => 'XXX.XXX.XXX.XXX',
+			'mask-custom' => $this->get_custom_placeholder(
+				(string) $this->field_key_exist( $settings, 'custom_mask', '' )
+			),
 		);
 
 		if ( 'mask-moneyc' === $mask_class ) {
@@ -606,6 +656,7 @@ class Field_Mask extends Field_Base {
 			'data-moneymask-format'      => $money_format,
 			'data-moneymask-prefix'      => $money_prefix,
 			'data-decimal-places'        => $money_decimal_places,
+			'data-custom-mask' 			 => $this->field_key_exist($settings,'custom_mask',''),
 			'autocomplete'               => 'off',
 		);
 
@@ -654,7 +705,7 @@ class Field_Mask extends Field_Base {
 		}
 
 		$mask_class = $this->resolve_mask_class( $field_attr );
-		if ( ! $this->is_valid_masked_value( (string) $value, $mask_class ) ) {
+		if ( ! $this->is_valid_masked_value( (string) $value, $mask_class, $field_attr ) ) {
 			$messages = $this->get_error_messages();
 			$message  = $messages[ $mask_class ] ?? __( 'Invalid value format.', 'smart-form-builder-by-dragwyb' );
 			$error_handler->add_error( $field_id, $message );
@@ -668,7 +719,7 @@ class Field_Mask extends Field_Base {
 	 * @param string $mask_class Mask CSS class.
 	 * @return bool
 	 */
-	private function is_valid_masked_value( string $value, string $mask_class ): bool {
+	private function is_valid_masked_value( string $value, string $mask_class, array $settings = array()): bool {
 		switch ( $mask_class ) {
 			case 'mask-phus':
 				return (bool) preg_match( '/^\(\d{3}\) \d{3}-\d{4}$/', $value );
@@ -709,9 +760,33 @@ class Field_Mask extends Field_Base {
 				return $this->is_valid_ipv4( $value );
 			case 'mask-moneyc':
 				return (bool) preg_match( '/^[^0-9]*[0-9]/d*[.,]\d+$/', $value );
+				case 'mask-custom':
+					return $this->is_valid_custom_mask(
+						$value,
+						(string) ( $settings['custom_mask'] ?? '' )
+					);
 			default:
 				return true;
 		}
+	}
+
+	private function is_valid_custom_mask( string $value, string $pattern ): bool {
+		if ( '' === $pattern ) {
+			return false;
+		}
+
+		$regex = '';
+
+		foreach ( str_split( $pattern ) as $char ) {
+			$regex .= match ( $char ) {
+				'0'     => '\d',
+				'A'     => '[A-Za-z]',
+				'*'     => '[A-Za-z0-9]',
+				default => preg_quote( $char, '/' ),
+			};
+		}
+
+		return (bool) preg_match( '/^' . $regex . '$/', $value );
 	}
 
 	/**

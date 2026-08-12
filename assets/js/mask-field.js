@@ -66,6 +66,13 @@ class DragwybMaskField extends DragwybBuilder.DragwybFormFrontendBase {
 
 		this.bindMaskEvents();
 		this.bindValidation();
+		this.initCustomMaskReady();
+	}
+
+	initCustomMaskReady() {
+		document.querySelectorAll('.dragwyb-mask-input').forEach(input => {
+			this.initCustomMask(input);
+		});
 	}
 
 	getMaskClass(input) {
@@ -633,6 +640,210 @@ class DragwybMaskField extends DragwybBuilder.DragwybFormFrontendBase {
 			const num = parseInt(octet, 10);
 			return num >= 0 && num <= 255;
 		});
+	}
+
+	initCustomMask(input) {
+		const pattern = input.dataset.customMask;
+		if (!pattern) return;
+	
+		const isSlot = c => c === '0' || c === 'A' || c === '*';
+	
+		const slots = [...pattern]
+			.map((c, i) => isSlot(c) ? { index: i, type: c } : null)
+			.filter(Boolean);
+	
+		input._maskSlots = slots;
+		input._maskValues = Array(slots.length).fill('');
+	
+		const valid = (char, type) => {
+			if (type === '0') return /\d/.test(char);
+			if (type === 'A') return /[a-z]/i.test(char);
+			return /[a-z0-9]/i.test(char);
+		};
+	
+		const render = () => {
+			let result = '';
+	
+			for (let i = 0; i < pattern.length; i++) {
+				const slotIndex = slots.findIndex(s => s.index === i);
+	
+				if (slotIndex !== -1) {
+					const value = input._maskValues[slotIndex];
+	
+					if (value) {
+						result += value;
+					} else {
+						break;
+					}
+				} else {
+					if (result) result += pattern[i];
+				}
+			}
+	
+			input.value = result;
+		};
+	
+		const nextSlot = pos =>
+			slots.findIndex(s => s.index >= pos);
+	
+		const prevSlot = pos => {
+			for (let i = slots.length - 1; i >= 0; i--) {
+				if (slots[i].index < pos) return i;
+			}
+			return -1;
+		};
+	
+		const cursorAfter = slotIndex => {
+			const next = slots[slotIndex + 1];
+			return next ? next.index : input.value.length;
+		};
+	
+		input.addEventListener('keydown', e => {
+			const pos = input.selectionStart ?? 0;
+			const end = input.selectionEnd ?? pos;
+	
+			// Backspace
+			if (e.key === 'Backspace') {
+				e.preventDefault();
+	
+				if (pos !== end) {
+					slots.forEach((slot, i) => {
+						if (
+							slot.index >= pos &&
+							slot.index < end
+						) {
+							input._maskValues[i] = '';
+						}
+					});
+	
+					render();
+					input.setSelectionRange(pos, pos);
+					return;
+				}
+	
+				const index = prevSlot(pos);
+	
+				if (index !== -1) {
+					input._maskValues[index] = '';
+					render();
+	
+					const cursor = slots[index].index;
+					input.setSelectionRange(cursor, cursor);
+				}
+	
+				return;
+			}
+	
+			// Delete
+			if (e.key === 'Delete') {
+				e.preventDefault();
+	
+				const index = nextSlot(pos);
+	
+				if (index !== -1) {
+					input._maskValues[index] = '';
+					render();
+	
+					input.setSelectionRange(pos, pos);
+				}
+	
+				return;
+			}
+	
+			// Ctrl+C / Ctrl+V / Ctrl+A etc.
+			if (e.ctrlKey || e.metaKey) return;
+	
+			// Navigation keys
+			if (
+				e.key === 'ArrowLeft' ||
+				e.key === 'ArrowRight' ||
+				e.key === 'Home' ||
+				e.key === 'End' ||
+				e.key === 'Tab'
+			) {
+				return;
+			}
+	
+			// Normal character
+			if (e.key.length !== 1) return;
+	
+			const index = nextSlot(pos);
+	
+			if (index === -1 || !valid(e.key, slots[index].type)) {
+				e.preventDefault();
+				return;
+			}
+	
+			e.preventDefault();
+	
+			input._maskValues[index] =
+				slots[index].type === 'A'
+					? e.key.toUpperCase()
+					: e.key;
+	
+			render();
+	
+			const cursor = cursorAfter(index);
+	
+			input.setSelectionRange(cursor, cursor);
+		});
+	
+		input.addEventListener('paste', e => {
+			e.preventDefault();
+	
+			const text = e.clipboardData.getData('text');
+			let pos = input.selectionStart ?? 0;
+	
+			for (const char of text) {
+				const index = nextSlot(pos);
+	
+				if (index === -1) break;
+	
+				if (!valid(char, slots[index].type)) continue;
+	
+				input._maskValues[index] =
+					slots[index].type === 'A'
+						? char.toUpperCase()
+						: char;
+	
+				render();
+	
+				pos = cursorAfter(index);
+			}
+	
+			input.setSelectionRange(pos, pos);
+		});
+	
+		render();
+	}
+	
+	applyCustomMask(value, pattern) {
+		let result = '', index = 0;
+	
+		for (const char of pattern) {
+			if (char === '0' || char === 'A' || char === '*') {
+				const regex =
+					char === '0' ? /[0-9]/ :
+					char === 'A' ? /[a-zA-Z]/ :
+					/[a-zA-Z0-9]/;
+	
+				while (index < value.length && !regex.test(value[index])) {
+					index++;
+				}
+	
+				if (index >= value.length) break;
+	
+				result += char === 'A'
+					? value[index].toUpperCase()
+					: value[index];
+	
+				index++;
+			} else if (index < value.length) {
+				result += char;
+			}
+		}
+	
+		return result;
 	}
 }
 
