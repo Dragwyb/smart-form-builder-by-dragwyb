@@ -196,7 +196,21 @@ export const AddField = ({ state, type, dispatch, Utils, index = null, parentCon
             }
 
             if (!parentId) {
-                const rootContainerId = AddField({ state, type: 'row', dispatch, Utils, index: index });
+                let targetRowIndex = index;
+                const rootContainers = state.form.rootContainers || [];
+                if (rootContainers.length > 0) {
+                    const lastRootId = rootContainers[rootContainers.length - 1];
+                    const lastRootField = existingFields[lastRootId];
+                    const isLastSubmitButton = lastRootField && lastRootField.children && lastRootField.children.some(childId => existingFields[childId]?.type === 'button');
+
+                    if (isLastSubmitButton && type !== 'button') {
+                        if (targetRowIndex === null || targetRowIndex === undefined || targetRowIndex >= rootContainers.length) {
+                            targetRowIndex = rootContainers.length - 1;
+                        }
+                    }
+                }
+
+                const rootContainerId = AddField({ state, type: 'row', dispatch, Utils, index: targetRowIndex });
                 field.parentId = rootContainerId['_id'];
             } else {
                 Utils.updateActiveRootContainer({ rootContainerId: parentId });
