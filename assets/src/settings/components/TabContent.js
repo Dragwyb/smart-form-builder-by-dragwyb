@@ -2,6 +2,8 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ToggleSwitch from './ToggleSwitch';
 import ImportExportTab from './ImportExportTab';
+import SmtpTab from './SmtpTab';
+import GdprPrivacyTab from './GdprPrivacyTab';
 
 const TabContent = ({ activeTab, settings, handleSettingChange, showToast }) => {
 
@@ -82,6 +84,19 @@ const TabContent = ({ activeTab, settings, handleSettingChange, showToast }) => 
                     {activeTab === 'integrations' && renderIntegrations()}
                     {activeTab === 'performance' && renderPerformance()}
                     {activeTab === 'fields_manager' && renderFieldsManager()}
+                    {activeTab === 'smtp' && (
+                        <SmtpTab
+                            settings={settings}
+                            handleSettingChange={handleSettingChange}
+                            showToast={showToast}
+                        />
+                    )}
+                    {activeTab === 'gdpr_privacy' && (
+                        <GdprPrivacyTab
+                            settings={settings}
+                            handleSettingChange={handleSettingChange}
+                        />
+                    )}
                     {activeTab === 'import_export' && <ImportExportTab showToast={showToast} />}
                 </motion.div>
             </AnimatePresence>

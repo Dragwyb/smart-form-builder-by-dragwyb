@@ -6,7 +6,7 @@ import Toast from './components/Toast';
 const App = () => {
     const { restUrl, nonce, currentTab } = window.DragwybSettingsData || {};
 
-    const validTabs = ['integrations', 'performance', 'fields_manager', 'import_export'];
+    const validTabs = ['integrations', 'performance', 'fields_manager', 'smtp', 'gdpr_privacy', 'import_export'];
 
     const getInitialTab = () => {
         const urlParams = new URLSearchParams(window.location.search);

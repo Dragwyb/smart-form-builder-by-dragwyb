@@ -4,6 +4,8 @@ const tabs = [
     { id: 'integrations', label: 'Integrations', icon: 'fa-plug' },
     { id: 'performance', label: 'Performance', icon: 'fa-bolt' },
     { id: 'fields_manager', label: 'Fields Manager', icon: 'fa-list-alt' },
+    { id: 'smtp', label: 'SMTP', icon: 'fa-envelope' },
+    { id: 'gdpr_privacy', label: 'GDPR / Privacy', icon: 'fa-shield-alt' },
     { id: 'import_export', label: 'Import/Export', icon: 'fa-file-import' }
 ];
 

@@ -120,6 +120,117 @@ class Settings_Manager {
 				),
 			),
 			'fields_manager' => array(),
+			'smtp'           => array(
+				'smtp_enabled'      => array(
+					'label'   => __( 'Enable SMTP', 'smart-form-builder-by-dragwyb' ),
+					'type'    => 'bool',
+					'default' => false,
+				),
+				'smtp_host'         => array(
+					'label'   => __( 'SMTP Host', 'smart-form-builder-by-dragwyb' ),
+					'type'    => 'string',
+					'default' => '',
+				),
+				'smtp_port'         => array(
+					'label'   => __( 'SMTP Port', 'smart-form-builder-by-dragwyb' ),
+					'type'    => 'number',
+					'default' => 587,
+				),
+				'smtp_encryption'   => array(
+					'label'        => __( 'Encryption', 'smart-form-builder-by-dragwyb' ),
+					'type'         => 'string',
+					'default'      => 'tls',
+					'valid_values' => array( 'tls', 'ssl', 'none' ),
+				),
+				'smtp_auth'         => array(
+					'label'   => __( 'SMTP Authentication', 'smart-form-builder-by-dragwyb' ),
+					'type'    => 'bool',
+					'default' => true,
+				),
+				'smtp_username'     => array(
+					'label'   => __( 'SMTP Username', 'smart-form-builder-by-dragwyb' ),
+					'type'    => 'string',
+					'default' => '',
+				),
+				'smtp_password'     => array(
+					'label'   => __( 'SMTP Password', 'smart-form-builder-by-dragwyb' ),
+					'type'    => 'string',
+					'default' => '',
+					'mask'    => true,
+				),
+				'smtp_from_email'   => array(
+					'label'   => __( 'From Email', 'smart-form-builder-by-dragwyb' ),
+					'type'    => 'string',
+					'default' => '',
+				),
+				'smtp_from_name'    => array(
+					'label'   => __( 'From Name', 'smart-form-builder-by-dragwyb' ),
+					'type'    => 'string',
+					'default' => '',
+				),
+				'smtp_apply_to_all' => array(
+					'label'   => __( 'Apply to all WordPress emails', 'smart-form-builder-by-dragwyb' ),
+					'type'    => 'bool',
+					'default' => false,
+				),
+			),
+			'gdpr_privacy'   => array(
+				'tracking_enabled'          => array(
+					'label'   => __( 'Enable Visitor Tracking', 'smart-form-builder-by-dragwyb' ),
+					'type'    => 'bool',
+					'default' => true,
+				),
+				'track_admins'              => array(
+					'label'   => __( 'Track Logged-in Administrators', 'smart-form-builder-by-dragwyb' ),
+					'type'    => 'bool',
+					'default' => false,
+				),
+				'session_timeout'           => array(
+					'label'   => __( 'Session Timeout (minutes)', 'smart-form-builder-by-dragwyb' ),
+					'type'    => 'number',
+					'default' => 30,
+				),
+				'cookie_duration'           => array(
+					'label'   => __( 'Cookie Duration (days)', 'smart-form-builder-by-dragwyb' ),
+					'type'    => 'number',
+					'default' => 730,
+				),
+				'gdpr_anonymize_ip'         => array(
+					'label'   => __( 'Anonymize IP Addresses', 'smart-form-builder-by-dragwyb' ),
+					'type'    => 'bool',
+					'default' => false,
+				),
+				'gdpr_respect_dnt'          => array(
+					'label'   => __( 'Respect Do Not Track (DNT)', 'smart-form-builder-by-dragwyb' ),
+					'type'    => 'bool',
+					'default' => false,
+				),
+				'gdpr_disable_user_cookies' => array(
+					'label'   => __( 'Disable Tracking Cookies', 'smart-form-builder-by-dragwyb' ),
+					'type'    => 'bool',
+					'default' => false,
+				),
+				'gdpr_disable_user_details' => array(
+					'label'   => __( 'Disable User Details Collection', 'smart-form-builder-by-dragwyb' ),
+					'type'    => 'bool',
+					'default' => false,
+				),
+				'gdpr_data_retention_days'  => array(
+					'label'   => __( 'Auto-delete tracking data after (days)', 'smart-form-builder-by-dragwyb' ),
+					'type'    => 'number',
+					'default' => 0,
+				),
+				'gdpr_retain_entries'       => array(
+					'label'   => __( 'Retain Form Entries When Cleaning', 'smart-form-builder-by-dragwyb' ),
+					'type'    => 'bool',
+					'default' => true,
+				),
+				'remove_data_on_uninstall'  => array(
+					'label'   => __( 'Remove ALL Data on Uninstall', 'smart-form-builder-by-dragwyb' ),
+					'type'    => 'bool',
+					'default' => false,
+				),
+			),
 		);
 
 		$dragwyb_settings = get_option( 'dragwyb_form_settings', array() );

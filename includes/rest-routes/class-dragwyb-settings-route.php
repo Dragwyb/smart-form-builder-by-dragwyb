@@ -9,6 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Dragwyb\Form_Builder\Admin\Settings\Settings_Manager;
+use Dragwyb\Form_Builder\Includes\Mailer\Dragwyb_Mailer;
 
 /**
  * Class Dragwyb_Settings_Route
@@ -45,6 +46,18 @@ class Dragwyb_Settings_Route {
 				array(
 					'methods'             => \WP_REST_Server::CREATABLE,
 					'callback'            => array( $this, 'update_settings' ),
+					'permission_callback' => array( $this, 'permissions_check' ),
+				),
+			)
+		);
+
+		register_rest_route(
+			'dragwyb/v1',
+			'/settings/test-email',
+			array(
+				array(
+					'methods'             => \WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'send_test_email' ),
 					'permission_callback' => array( $this, 'permissions_check' ),
 				),
 			)
@@ -115,7 +128,7 @@ class Dragwyb_Settings_Route {
 		$default_settings  = $this->default_settings;
 		$existing_settings = get_option( 'dragwyb_form_settings', array() );
 
-		$settings_types = array( 'integrations', 'performance', 'fields_manager' );
+		$settings_types = array( 'integrations', 'performance', 'fields_manager', 'smtp', 'gdpr_privacy' );
 		// Sanitize Integrations Tab
 
 		foreach ( $settings_types as $setting_type ) {
@@ -212,6 +225,35 @@ class Dragwyb_Settings_Route {
 			array(
 				'status' => 'success',
 				'data'   => $templates,
+			)
+		);
+	}
+
+	/**
+	 * Send test email via REST API.
+	 *
+	 * @param \WP_REST_Request $request
+	 * @return \WP_REST_Response
+	 */
+	public function send_test_email( \WP_REST_Request $request ): \WP_REST_Response {
+		$params = $request->get_json_params();
+		$email  = sanitize_email( (string) ( $params['email'] ?? '' ) );
+
+		$result = Dragwyb_Mailer::send_test_email( $email );
+
+		if ( $result['success'] ) {
+			return rest_ensure_response(
+				array(
+					'status'  => 'success',
+					'message' => $result['message'],
+				)
+			);
+		}
+
+		return rest_ensure_response(
+			array(
+				'status'  => 'error',
+				'message' => $result['message'],
 			)
 		);
 	}

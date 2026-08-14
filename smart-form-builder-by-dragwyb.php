@@ -22,6 +22,7 @@ use Dragwyb\Form_Builder\Dragwyb_Form_Builder_Autoload;
 use Dragwyb\Form_Builder\Includes\Dragwyb_Init;
 use Dragwyb\Form_Builder\Admin\Db\Submission\Dragwyb_Submission_Db;
 use Dragwyb\Form_Builder\Admin\Db\Error_Log\Dragwyb_Error_Log_Db;
+use Dragwyb\Form_Builder\Admin\Db\Analytics\Dragwyb_Analytics_Db;
 
 final class Dragwyb_Form_Builder {
 
@@ -73,6 +74,7 @@ final class Dragwyb_Form_Builder {
 	 * Initialize WordPress hooks
 	 */
 	private function init_hooks(): void {
+		self::create_submission_db();
 		$this->init_plugin();
 	}
 
@@ -90,6 +92,12 @@ final class Dragwyb_Form_Builder {
 		if ( ! $error_log_db_version || $error_log_db_version !== Dragwyb_Error_Log_Db::VERSION ) {
 			Dragwyb_Error_Log_Db::create_table();
 			update_option( 'dragwyb_error_log_db_version', Dragwyb_Error_Log_Db::VERSION );
+		}
+
+		$analytics_db_version = get_option( 'dragwyb_analytics_db_version', false );
+		if ( ! $analytics_db_version || $analytics_db_version !== Dragwyb_Analytics_Db::VERSION ) {
+			Dragwyb_Analytics_Db::create_tables();
+			update_option( 'dragwyb_analytics_db_version', Dragwyb_Analytics_Db::VERSION );
 		}
 	}
 

@@ -80,6 +80,16 @@ class Dragwyb_Pages {
 			DRAGWYB_PREFIX . '-error-log',
 			array( $this, 'dragwyb_render_page' )
 		);
+
+		// Add submenu page for analytics
+		add_submenu_page(
+			DRAGWYB_PREFIX . '-form-overview',
+			__( 'Analytics', 'smart-form-builder-by-dragwyb' ),
+			__( 'Analytics', 'smart-form-builder-by-dragwyb' ),
+			'manage_options',
+			DRAGWYB_PREFIX . '-form-analytics',
+			array( $this, 'dragwyb_render_page' )
+		);
 	}
 
 	/**
@@ -90,7 +100,7 @@ class Dragwyb_Pages {
 	}
 
 	private function form_admin_page(): void {
-		$default_pages_names = array( 'form-overview', 'add-form', 'entries', 'error-log' );
+		$default_pages_names = array( 'form-overview', 'add-form', 'entries', 'error-log', 'form-analytics' );
 		$dragwyb_name_space  = Helper::namespace_into_dir_path( __NAMESPACE__ );
 		$dir                 = dirname( $dragwyb_name_space );
 		$dir                 = Helper::dir_path_into_namespace( $dir );
@@ -142,7 +152,7 @@ class Dragwyb_Pages {
 	}
 
 	private static function allowed_pages() {
-		$default_pages = array( 'form-overview', 'entries', 'error-log' );
+		$default_pages = array( 'form-overview', 'entries', 'error-log', 'form-analytics' );
 
 		$allowed_pages = apply_filters( 'Dragwyb_allowed_pages', $default_pages );
 

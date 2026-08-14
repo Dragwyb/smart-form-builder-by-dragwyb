@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Dragwyb\Form_Builder\Includes\After_Submission\Action_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
+use Dragwyb\Form_Builder\Includes\Mailer\Dragwyb_Mailer;
 
 abstract class Email_Action_Base extends Action_Base {
 
@@ -137,7 +138,7 @@ abstract class Email_Action_Base extends Action_Base {
 		};
 
 		add_action( 'wp_mail_failed', $error_handler );
-		$sent = wp_mail( $to, $subject, $message, $headers );
+		$sent = Dragwyb_Mailer::send( $to, $subject, $message, $headers );
 		remove_action( 'wp_mail_failed', $error_handler );
 
 		if ( ! $sent ) {

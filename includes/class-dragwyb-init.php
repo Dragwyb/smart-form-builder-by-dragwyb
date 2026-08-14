@@ -19,6 +19,8 @@ use Dragwyb\Form_Builder\Includes\Frontend\Form_Preview;
 use Dragwyb\Form_Builder\Includes\Frontend\Managers\CSS_Manager;
 use Dragwyb\Form_Builder\Includes\Rest_Routes\Dragwyb_Frontend_Route;
 use Dragwyb\Form_Builder\Includes\Rest_Routes\Dragwyb_Settings_Route;
+use Dragwyb\Form_Builder\Includes\Mailer\Dragwyb_Mailer;
+use Dragwyb\Form_Builder\Includes\Tracker\Dragwyb_Tracker;
 use Dragwyb\Form_Builder\Admin\Feedback\SMFBD_Feedback_Form;
 use Dragwyb\Form_Builder\Admin\Review\Dragwyb_Review_Notice;
 
@@ -36,6 +38,10 @@ class Dragwyb_Init {
 
 	public function init(): void {
 		new Dragwyb_Post();
+
+		// Initialize mailer and tracker
+		Dragwyb_Mailer::instance();
+		Dragwyb_Tracker::instance();
 
 		// Initialize admin
 		if ( is_admin() ) {
