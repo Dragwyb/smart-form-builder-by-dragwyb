@@ -110,16 +110,16 @@
             {
                 label: 'Unique Visitors',
                 key: 'visitors',
-                borderColor: '#4361ee',
-                gradientStart: 'rgba(67, 97, 238, 0.25)',
-                gradientStop: 'rgba(67, 97, 238, 0.01)'
+                borderColor: '#e11d48',
+                gradientStart: 'rgba(225, 29, 72, 0.25)',
+                gradientStop: 'rgba(225, 29, 72, 0.01)'
             },
             {
                 label: 'Total Sessions',
                 key: 'sessions',
-                borderColor: '#06b6d4',
-                gradientStart: 'rgba(6, 182, 212, 0.25)',
-                gradientStop: 'rgba(6, 182, 212, 0.01)'
+                borderColor: '#2563eb',
+                gradientStart: 'rgba(37, 99, 235, 0.25)',
+                gradientStop: 'rgba(37, 99, 235, 0.01)'
             }
         ]);
 
@@ -128,9 +128,9 @@
             {
                 label: 'Unique Visitors',
                 key: 'visitors',
-                borderColor: '#4361ee',
-                gradientStart: 'rgba(67, 97, 238, 0.3)',
-                gradientStop: 'rgba(67, 97, 238, 0.02)'
+                borderColor: '#e11d48',
+                gradientStart: 'rgba(225, 29, 72, 0.3)',
+                gradientStop: 'rgba(225, 29, 72, 0.02)'
             }
         ]);
 
@@ -139,9 +139,9 @@
             {
                 label: 'Total Sessions',
                 key: 'sessions',
-                borderColor: '#06b6d4',
-                gradientStart: 'rgba(6, 182, 212, 0.3)',
-                gradientStop: 'rgba(6, 182, 212, 0.02)'
+                borderColor: '#2563eb',
+                gradientStart: 'rgba(37, 99, 235, 0.3)',
+                gradientStop: 'rgba(37, 99, 235, 0.02)'
             }
         ]);
 
@@ -496,7 +496,7 @@
     }
 
     function renderSourcesChart(sources) {
-        var colors = ['#4361ee', '#3a0ca3', '#7209b7', '#f72585', '#06b6d4', '#10b981', '#f59e0b'];
+        var colors = ['#e11d48', '#2563eb', '#9333ea', '#0284c7', '#16a34a', '#f59e0b', '#7c3aed'];
         renderDoughnutCircleChart('analytics-sources-chart', 'analytics-sources-canvas', sources, 'traffic_source', 'sessions', colors, formatSourceLabel);
     }
 
@@ -523,7 +523,7 @@
     }
 
     function renderDevicesChart(devices) {
-        var deviceColors = { desktop: '#4361ee', mobile: '#f72585', tablet: '#06b6d4' };
+        var deviceColors = { desktop: '#e11d48', mobile: '#2563eb', tablet: '#0284c7' };
         renderDoughnutCircleChart('analytics-devices-chart', 'analytics-devices-canvas', devices, 'device_type', 'total', deviceColors, function (name) {
             return String(name).charAt(0).toUpperCase() + String(name).slice(1);
         });

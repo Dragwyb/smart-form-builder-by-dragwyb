@@ -34,9 +34,16 @@ class Form_Analytics {
 		}
 
 		wp_enqueue_style(
+			DRAGWYB_PREFIX . '-editor-global',
+			esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/css/editor-global.css' ),
+			array(),
+			DRAGWYB_FORM_BUILDER_VERSION
+		);
+
+		wp_enqueue_style(
 			DRAGWYB_PREFIX . '-analytics-style',
 			esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/css/analytics.css' ),
-			array(),
+			array( DRAGWYB_PREFIX . '-editor-global' ),
 			DRAGWYB_FORM_BUILDER_VERSION
 		);
 
