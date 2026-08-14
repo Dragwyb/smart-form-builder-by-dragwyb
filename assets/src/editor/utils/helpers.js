@@ -220,7 +220,7 @@ export const AddField = ({ state, type, dispatch, Utils, index = null, parentCon
         state.form.fields[field._id] = field;
     }
 
-    if (Object.keys(existingFields).length === 0 && type !== 'button') {
+    if (Object.keys(existingFields).length === 0 && type !== 'button' && type !== 'row' && !fieldData.is_root_container) {
         const buttonAddStatus = DragwybEditor?.formData?.addSubmitButton;
 
         if (buttonAddStatus === true) {
