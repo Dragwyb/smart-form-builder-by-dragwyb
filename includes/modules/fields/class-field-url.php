@@ -213,7 +213,7 @@ class Field_Url extends Field_Base {
 	protected function render_field() {
 		$settings    = $this->get_field_settings();
 		$id          = $this->get_the_id();
-		$field_id    = $this->field_key_exist( $settings, 'field_id', uniqid( 'field_' ) );
+		$field_id    = $this->field_key_exist( $settings, 'field_id', $id );
 		$label       = $this->field_key_exist( $settings, 'label', 'URL' );
 		$placeholder = $this->field_key_exist( $settings, 'placeholder', ' ' );
 		$value       = $this->field_key_exist( $settings, 'default_value', '' );

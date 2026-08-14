@@ -237,7 +237,7 @@ class Field_Select extends Field_Base {
 	protected function render_field() {
 		$settings         = $this->get_field_settings();
 		$id               = $this->get_the_id();
-		$field_id         = $this->field_key_exist( $settings, 'field_id', uniqid( 'field_' ) );
+		$field_id         = $this->field_key_exist( $settings, 'field_id', $id );
 		$label            = $this->field_key_exist( $settings, 'label', 'Select Option' );
 		$repeater_options = $this->field_key_exist(
 			$settings,

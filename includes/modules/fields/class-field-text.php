@@ -235,7 +235,7 @@ class Field_Text extends Field_Base {
 	protected function render_field() {
 		$settings    = $this->get_field_settings();
 		$id          = $this->get_the_id();
-		$field_id    = $this->field_key_exist( $settings, 'field_id', uniqid( 'field_' ) );
+		$field_id    = $this->field_key_exist( $settings, 'field_id', $id );
 		$label       = $this->field_key_exist( $settings, 'label', 'Text Field' );
 		$placeholder = $this->field_key_exist( $settings, 'placeholder', ' ' ); // Space for float logic
 		$value       = $this->field_key_exist( $settings, 'default_value', '' );

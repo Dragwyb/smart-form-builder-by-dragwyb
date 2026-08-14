@@ -219,7 +219,7 @@ class Field_Captcha extends Field_Base {
 	protected function render_field() {
 		$settings     = $this->get_field_settings();
 		$id           = $this->get_the_id();
-		$field_id     = $this->field_key_exist( $settings, 'field_id', uniqid( 'field_' ) );
+		$field_id     = $this->field_key_exist( $settings, 'field_id', $id );
 		$captcha_type = $this->field_key_exist( $settings, 'captcha_type', 'recaptcha_v2' );
 		$classes      = $this->field_key_exist( $settings, 'css_classes', '' );
 
