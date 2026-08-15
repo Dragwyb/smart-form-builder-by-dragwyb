@@ -14,7 +14,7 @@ class Field_Mask extends Field_Base {
 	 *
 	 * @var bool
 	 */
-	private static bool $assets_localized = false;
+	private static $assets_localized = false;
 
 	protected function register_scripts() {
 		return array( 'dragwyb-mask-field' );
@@ -83,25 +83,25 @@ class Field_Mask extends Field_Base {
 	 */
 	private function get_error_messages(): array {
 		return array(
-			'mask-cnpj'  => __( 'Invalid CNPJ.', 'smart-form-builder-by-dragwyb' ),
-			'mask-cpf'   => __( 'Invalid CPF.', 'smart-form-builder-by-dragwyb' ),
-			'mask-cep'   => __( 'Invalid CEP (XXXXX-XXX).', 'smart-form-builder-by-dragwyb' ),
-			'mask-phus'  => __( 'Invalid number: (123) 456-7890', 'smart-form-builder-by-dragwyb' ),
-			'mask-ph8'   => __( 'Invalid number: 1234-5678', 'smart-form-builder-by-dragwyb' ),
-			'mask-ddd8'  => __( 'Invalid number: (DDD) 1234-5678', 'smart-form-builder-by-dragwyb' ),
-			'mask-ddd9'  => __( 'Invalid number: (DDD) 91234-5678', 'smart-form-builder-by-dragwyb' ),
-			'mask-dmy'   => __( 'Invalid date: dd/mm/yyyy', 'smart-form-builder-by-dragwyb' ),
-			'mask-mdy'   => __( 'Invalid date: mm/dd/yyyy', 'smart-form-builder-by-dragwyb' ),
-			'mask-hms'   => __( 'Invalid time: hh:mm:ss', 'smart-form-builder-by-dragwyb' ),
-			'mask-hm'    => __( 'Invalid time: hh:mm', 'smart-form-builder-by-dragwyb' ),
-			'mask-dmyhm' => __( 'Invalid date: dd/mm/yyyy hh:mm', 'smart-form-builder-by-dragwyb' ),
-			'mask-mdyhm' => __( 'Invalid date: mm/dd/yyyy hh:mm', 'smart-form-builder-by-dragwyb' ),
-			'mask-my'    => __( 'Invalid date: mm/yyyy', 'smart-form-builder-by-dragwyb' ),
-			'mask-ccs'   => __( 'Invalid credit card number.', 'smart-form-builder-by-dragwyb' ),
-			'mask-cch'   => __( 'Invalid credit card number.', 'smart-form-builder-by-dragwyb' ),
-			'mask-ccmy'  => __( 'Invalid expiry date.', 'smart-form-builder-by-dragwyb' ),
-			'mask-ccmyy' => __( 'Invalid expiry date.', 'smart-form-builder-by-dragwyb' ),
-			'mask-ipv4'  => __( 'Invalid IPv4 address.', 'smart-form-builder-by-dragwyb' ),
+			'mask-cnpj'   => __( 'Invalid CNPJ.', 'smart-form-builder-by-dragwyb' ),
+			'mask-cpf'    => __( 'Invalid CPF.', 'smart-form-builder-by-dragwyb' ),
+			'mask-cep'    => __( 'Invalid CEP (XXXXX-XXX).', 'smart-form-builder-by-dragwyb' ),
+			'mask-phus'   => __( 'Invalid number: (123) 456-7890', 'smart-form-builder-by-dragwyb' ),
+			'mask-ph8'    => __( 'Invalid number: 1234-5678', 'smart-form-builder-by-dragwyb' ),
+			'mask-ddd8'   => __( 'Invalid number: (DDD) 1234-5678', 'smart-form-builder-by-dragwyb' ),
+			'mask-ddd9'   => __( 'Invalid number: (DDD) 91234-5678', 'smart-form-builder-by-dragwyb' ),
+			'mask-dmy'    => __( 'Invalid date: dd/mm/yyyy', 'smart-form-builder-by-dragwyb' ),
+			'mask-mdy'    => __( 'Invalid date: mm/dd/yyyy', 'smart-form-builder-by-dragwyb' ),
+			'mask-hms'    => __( 'Invalid time: hh:mm:ss', 'smart-form-builder-by-dragwyb' ),
+			'mask-hm'     => __( 'Invalid time: hh:mm', 'smart-form-builder-by-dragwyb' ),
+			'mask-dmyhm'  => __( 'Invalid date: dd/mm/yyyy hh:mm', 'smart-form-builder-by-dragwyb' ),
+			'mask-mdyhm'  => __( 'Invalid date: mm/dd/yyyy hh:mm', 'smart-form-builder-by-dragwyb' ),
+			'mask-my'     => __( 'Invalid date: mm/yyyy', 'smart-form-builder-by-dragwyb' ),
+			'mask-ccs'    => __( 'Invalid credit card number.', 'smart-form-builder-by-dragwyb' ),
+			'mask-cch'    => __( 'Invalid credit card number.', 'smart-form-builder-by-dragwyb' ),
+			'mask-ccmy'   => __( 'Invalid expiry date.', 'smart-form-builder-by-dragwyb' ),
+			'mask-ccmyy'  => __( 'Invalid expiry date.', 'smart-form-builder-by-dragwyb' ),
+			'mask-ipv4'   => __( 'Invalid IPv4 address.', 'smart-form-builder-by-dragwyb' ),
 			'mask-custom' => __( 'Invalid format.', 'smart-form-builder-by-dragwyb' ),
 		);
 	}
@@ -198,7 +198,7 @@ class Field_Mask extends Field_Base {
 					'credit_card' => __( 'Credit Card', 'smart-form-builder-by-dragwyb' ),
 					'brazilian'   => __( 'Brazilian Formats', 'smart-form-builder-by-dragwyb' ),
 					'ip'          => __( 'IP Address', 'smart-form-builder-by-dragwyb' ),
-					'custom' => __( 'Custom Mask', 'smart-form-builder-by-dragwyb' ),
+					'custom'      => __( 'Custom Mask', 'smart-form-builder-by-dragwyb' ),
 				),
 				'default'      => 'phone',
 				'label_inline' => true,
@@ -220,8 +220,8 @@ class Field_Mask extends Field_Base {
 		$this->add_control(
 			'custom_mask_help',
 			array(
-				'type'        => Controls::RAW_HTML,
-				'raw'         => '
+				'type'       => Controls::RAW_HTML,
+				'raw'        => '
 					<div class="dragwyb-mask-help">
 						<strong>Mask characters:</strong><br>
 						0 = Number<br>
@@ -232,7 +232,7 @@ class Field_Mask extends Field_Base {
 						Example: <code>0000-0000</code>
 					</div>
 				',
-				'conditions'  => array( 'mask_type' => 'custom' ),
+				'conditions' => array( 'mask_type' => 'custom' ),
 			)
 		);
 
@@ -555,34 +555,34 @@ class Field_Mask extends Field_Base {
 	 */
 	private function get_auto_placeholder( string $mask_class, array $settings ): string {
 		$placeholders = array(
-			'mask-phus'  => '(XXX) XXX-XXXX',
-			'mask-ph8'   => 'XXXX-XXXX',
-			'mask-ddd8'  => '(XX) XXXX-XXXX',
-			'mask-ddd9'  => '(XX) XXXXX-XXXX',
-			'mask-dmy'   => 'XX/XX/XXXX',
-			'mask-mdy'   => 'XX/XX/XXXX',
-			'mask-hm'    => 'XX:XX',
-			'mask-hms'   => 'XX:XX:XX',
-			'mask-dmyhm' => 'XX/XX/XXXX XX:XX',
-			'mask-mdyhm' => 'XX/XX/XXXX XX:XX',
-			'mask-my'    => 'XX/XXXX',
-			'mask-ccs'   => 'XXXX XXXX XXXX XXXX',
-			'mask-cch'   => 'XXXX-XXXX-XXXX-XXXX',
-			'mask-ccmy'  => 'XX/XX',
-			'mask-ccmyy' => 'XX/XXXX',
-			'mask-cpf'   => 'XXX.XXX.XXX-XX',
-			'mask-cnpj'  => 'XX.XXX.XXX/XXXX-XX',
-			'mask-cep'   => 'XXXXX-XXX',
-			'mask-ipv4'  => 'XXX.XXX.XXX.XXX',
+			'mask-phus'   => '(XXX) XXX-XXXX',
+			'mask-ph8'    => 'XXXX-XXXX',
+			'mask-ddd8'   => '(XX) XXXX-XXXX',
+			'mask-ddd9'   => '(XX) XXXXX-XXXX',
+			'mask-dmy'    => 'XX/XX/XXXX',
+			'mask-mdy'    => 'XX/XX/XXXX',
+			'mask-hm'     => 'XX:XX',
+			'mask-hms'    => 'XX:XX:XX',
+			'mask-dmyhm'  => 'XX/XX/XXXX XX:XX',
+			'mask-mdyhm'  => 'XX/XX/XXXX XX:XX',
+			'mask-my'     => 'XX/XXXX',
+			'mask-ccs'    => 'XXXX XXXX XXXX XXXX',
+			'mask-cch'    => 'XXXX-XXXX-XXXX-XXXX',
+			'mask-ccmy'   => 'XX/XX',
+			'mask-ccmyy'  => 'XX/XXXX',
+			'mask-cpf'    => 'XXX.XXX.XXX-XX',
+			'mask-cnpj'   => 'XX.XXX.XXX/XXXX-XX',
+			'mask-cep'    => 'XXXXX-XXX',
+			'mask-ipv4'   => 'XXX.XXX.XXX.XXX',
 			'mask-custom' => $this->get_custom_placeholder(
 				(string) $this->field_key_exist( $settings, 'custom_mask', '' )
 			),
 		);
 
 		if ( 'mask-moneyc' === $mask_class ) {
-			$prefix           = (string) $this->field_key_exist( $settings, 'money_prefix', '$' );
-			$format           = $this->field_key_exist( $settings, 'money_format', 'dot' );
-			$decimal_places   = (int) $this->field_key_exist( $settings, 'money_decimal_places', 2 );
+			$prefix            = (string) $this->field_key_exist( $settings, 'money_prefix', '$' );
+			$format            = $this->field_key_exist( $settings, 'money_format', 'dot' );
+			$decimal_places    = (int) $this->field_key_exist( $settings, 'money_decimal_places', 2 );
 			$decimal_separator = 'dot' === $format ? ',' : '.';
 			$decimals          = str_repeat( '0', max( 0, $decimal_places ) );
 			return $prefix . '0' . $decimal_separator . $decimals;
@@ -602,17 +602,17 @@ class Field_Mask extends Field_Base {
 	}
 
 	protected function render_field() {
-		$settings       = $this->get_field_settings();
-		$id             = $this->get_the_id();
-		$field_id       = $this->field_key_exist( $settings, 'field_id', uniqid( 'field_' ) );
-		$label          = $this->field_key_exist( $settings, 'label', 'Masked Input' );
-		$value          = $this->field_key_exist( $settings, 'default_value', '' );
-		$help           = $this->field_key_exist( $settings, 'help_text', '' );
-		$required       = $this->field_key_exist( $settings, 'required', '' ) === 'yes';
-		$classes        = $this->field_key_exist( $settings, 'css_classes', '' );
-		$mask_class     = $this->resolve_mask_class( $settings );
+		$settings         = $this->get_field_settings();
+		$id               = $this->get_the_id();
+		$field_id         = $this->field_key_exist( $settings, 'field_id', uniqid( 'field_' ) );
+		$label            = $this->field_key_exist( $settings, 'label', 'Masked Input' );
+		$value            = $this->field_key_exist( $settings, 'default_value', '' );
+		$help             = $this->field_key_exist( $settings, 'help_text', '' );
+		$required         = $this->field_key_exist( $settings, 'required', '' ) === 'yes';
+		$classes          = $this->field_key_exist( $settings, 'css_classes', '' );
+		$mask_class       = $this->resolve_mask_class( $settings );
 		$auto_placeholder = $this->field_key_exist( $settings, 'auto_placeholder', 'yes' ) === 'yes';
-		$placeholder    = $this->field_key_exist( $settings, 'placeholder', '' );
+		$placeholder      = $this->field_key_exist( $settings, 'placeholder', '' );
 
 		if ( $auto_placeholder || '' === trim( (string) $placeholder ) ) {
 			$auto = $this->get_auto_placeholder( $mask_class, $settings );
@@ -645,19 +645,19 @@ class Field_Mask extends Field_Base {
 		);
 
 		$input_attrs = array(
-			'type'                       => 'text',
-			'id'                         => $field_id,
-			'name'                       => $field_id,
-			'value'                      => $value,
-			'placeholder'                => $placeholder,
-			'class'                      => 'dragwyb-field-input dragwyb-mask-input ' . $mask_class,
-			'inputmode'                  => $inputmode,
-			'data-mask-class'            => $mask_class,
-			'data-moneymask-format'      => $money_format,
-			'data-moneymask-prefix'      => $money_prefix,
-			'data-decimal-places'        => $money_decimal_places,
-			'data-custom-mask' 			 => $this->field_key_exist($settings,'custom_mask',''),
-			'autocomplete'               => 'off',
+			'type'                  => 'text',
+			'id'                    => $field_id,
+			'name'                  => $field_id,
+			'value'                 => $value,
+			'placeholder'           => $placeholder,
+			'class'                 => 'dragwyb-field-input dragwyb-mask-input ' . $mask_class,
+			'inputmode'             => $inputmode,
+			'data-mask-class'       => $mask_class,
+			'data-moneymask-format' => $money_format,
+			'data-moneymask-prefix' => $money_prefix,
+			'data-decimal-places'   => $money_decimal_places,
+			'data-custom-mask'      => $this->field_key_exist( $settings, 'custom_mask', '' ),
+			'autocomplete'          => 'off',
 		);
 
 		$this->add_field_attributes( 'input', $input_attrs );
@@ -719,7 +719,7 @@ class Field_Mask extends Field_Base {
 	 * @param string $mask_class Mask CSS class.
 	 * @return bool
 	 */
-	private function is_valid_masked_value( string $value, string $mask_class, array $settings = array()): bool {
+	private function is_valid_masked_value( string $value, string $mask_class, array $settings = array() ): bool {
 		switch ( $mask_class ) {
 			case 'mask-phus':
 				return (bool) preg_match( '/^\(\d{3}\) \d{3}-\d{4}$/', $value );
@@ -760,11 +760,11 @@ class Field_Mask extends Field_Base {
 				return $this->is_valid_ipv4( $value );
 			case 'mask-moneyc':
 				return (bool) preg_match( '/^[^0-9]*[0-9]/d*[.,]\d+$/', $value );
-				case 'mask-custom':
-					return $this->is_valid_custom_mask(
-						$value,
-						(string) ( $settings['custom_mask'] ?? '' )
-					);
+			case 'mask-custom':
+				return $this->is_valid_custom_mask(
+					$value,
+					(string) ( $settings['custom_mask'] ?? '' )
+				);
 			default:
 				return true;
 		}
@@ -778,12 +778,20 @@ class Field_Mask extends Field_Base {
 		$regex = '';
 
 		foreach ( str_split( $pattern ) as $char ) {
-			$regex .= match ( $char ) {
-				'0'     => '\d',
-				'A'     => '[A-Za-z]',
-				'*'     => '[A-Za-z0-9]',
-				default => preg_quote( $char, '/' ),
-			};
+			switch ( $char ) {
+				case '0':
+					$regex .= '\d';
+					break;
+				case 'A':
+					$regex .= '[A-Za-z]';
+					break;
+				case '*':
+					$regex .= '[A-Za-z0-9]';
+					break;
+				default:
+					$regex .= preg_quote( $char, '/' );
+					break;
+			}
 		}
 
 		return (bool) preg_match( '/^' . $regex . '$/', $value );
@@ -939,7 +947,7 @@ class Field_Mask extends Field_Base {
 			return false;
 		}
 
-		$sum          = 0;
+		$sum           = 0;
 		$should_double = false;
 
 		for ( $i = $len - 1; $i >= 0; $i-- ) {
