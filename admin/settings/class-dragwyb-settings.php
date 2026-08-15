@@ -105,7 +105,6 @@ class Dragwyb_Settings {
 				'pluginSlug' => DRAGWYB_TEXT_DOMAIN,
 				'version'    => DRAGWYB_FORM_BUILDER_VERSION,
 				'currentTab' => $current_tab,
-				'i18n'       => array(),
 			)
 		);
 	}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import ToggleSwitch from './ToggleSwitch';
+import RenderSettingItem from './RenderSettingItem';
 
-const PROVIDERS = {
+const ProviderSteps = {
     gmail: {
         name: 'Gmail / Google Workspace',
         host: 'smtp.gmail.com',
@@ -105,25 +105,25 @@ const PROVIDERS = {
 
 const SmtpTab = ({ settings, handleSettingChange, showToast }) => {
     const smtpData = settings?.smtp || {};
+    const i18n = window.DragwybSettingsData?.i18n || {};
+    const smtpI18n = i18n.smtp || {};
 
     const getValue = (key, defaultVal = '') => {
         return smtpData[key]?.value !== undefined ? smtpData[key].value : (smtpData[key]?.default ?? defaultVal);
     };
 
     const isEnabled = getValue('smtp_enabled', false) === true || getValue('smtp_enabled', 'no') === 'yes';
-    const isAuth = getValue('smtp_auth', true) === true || getValue('smtp_auth', 'yes') === 'yes';
-    const applyToAll = getValue('smtp_apply_to_all', false) === true || getValue('smtp_apply_to_all', 'no') === 'yes';
 
-    const [selectedProvider, setSelectedProvider] = useState('');
+    const [selectedProvider, setSelectedProvider] = useState(settings?.smtp?.smtp_provider?.value || '');
     const [testEmail, setTestEmail] = useState('');
     const [isTesting, setIsTesting] = useState(false);
     const [testResult, setTestResult] = useState(null);
 
-    const handleProviderChange = (e) => {
-        const pKey = e.target.value;
+    const handleProviderChange = (pKey) => {
         setSelectedProvider(pKey);
-        if (pKey && PROVIDERS[pKey]) {
-            const p = PROVIDERS[pKey];
+        if (pKey && ProviderSteps[pKey]) {
+            const p = ProviderSteps[pKey];
+            handleSettingChange('smtp', 'smtp_provider', pKey);
             handleSettingChange('smtp', 'smtp_host', p.host);
             handleSettingChange('smtp', 'smtp_port', p.port);
             handleSettingChange('smtp', 'smtp_encryption', p.encryption);
@@ -131,9 +131,16 @@ const SmtpTab = ({ settings, handleSettingChange, showToast }) => {
         }
     };
 
+    const handleSettingChangeHandler = (tab, key, value) => {
+        if (key === 'smtp_provider') {
+            handleProviderChange(value);
+        }
+        handleSettingChange(tab, key, value);
+    };
+
     const handleTestEmail = async () => {
         if (!testEmail) {
-            showToast('Please enter a test email address', 'error');
+            showToast(smtpI18n.enter_test_email_error || 'Please enter a test email address', 'error');
             return;
         }
 
@@ -157,203 +164,70 @@ const SmtpTab = ({ settings, handleSettingChange, showToast }) => {
                 setTestResult({ success: true, message: result.message });
                 showToast(result.message, 'success');
             } else {
-                setTestResult({ success: false, message: result.message || 'Test email failed.' });
+                setTestResult({ success: false, message: result.message || smtpI18n.test_email_failed || 'Test email failed.' });
                 showToast('Test email failed', 'error');
             }
         } catch (err) {
-            setTestResult({ success: false, message: 'An error occurred while sending test email.' });
+            setTestResult({ success: false, message: smtpI18n.test_email_error || 'An error occurred while sending test email.' });
             showToast('An error occurred while testing', 'error');
         } finally {
             setIsTesting(false);
         }
     };
 
+    const extraFields = Object.keys(smtpData);
+
     return (
         <div className="dragwyb-settings-section">
-            <h2>Email Delivery (SMTP) Settings</h2>
+            <h2>{smtpI18n.title || 'Email Delivery (SMTP) Settings'}</h2>
             <p className="dragwyb-settings-desc">
-                Route form notification and confirmation emails through your custom SMTP server to ensure high inbox deliverability.
+                {smtpI18n.shortcode_description || smtpI18n.description || i18n.shortcode_description || 'Route form notification and confirmation emails through your custom SMTP server to ensure high inbox deliverability.'}
             </p>
 
-            <ToggleSwitch
-                label="Enable SMTP Delivery"
-                description="Route Smart Form Builder emails via custom SMTP server."
-                checked={isEnabled}
-                onChange={val => handleSettingChange('smtp', 'smtp_enabled', val)}
-            />
-
-            {isEnabled && (
-                <div style={{ marginTop: '20px' }}>
-                    <div className="dragwyb-setting-row" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
-                        <div className="dragwyb-setting-info" style={{ marginBottom: '8px' }}>
-                            <h4>Guided Setup / Preset Provider</h4>
-                            <p style={{ margin: 0, fontSize: '13px', color: '#666' }}>
-                                Select your provider to pre-fill common server parameters and view instructions.
-                            </p>
-                        </div>
-                        <div className="dragwyb-setting-control" style={{ width: '100%', maxWidth: '360px' }}>
-                            <select
-                                value={selectedProvider}
-                                onChange={handleProviderChange}
-                                style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #ccc' }}
-                            >
-                                <option value="">— Choose a provider —</option>
-                                {Object.keys(PROVIDERS).map(key => (
-                                    <option key={key} value={key}>{PROVIDERS[key].name}</option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
-
-                    {selectedProvider && PROVIDERS[selectedProvider] && (
-                        <div style={{
-                            background: '#f0f4fe',
-                            border: '1px solid #c7d2fe',
-                            borderRadius: '8px',
-                            padding: '16px',
-                            margin: '16px 0',
-                            fontSize: '13px',
-                            color: '#1e293b'
-                        }}>
-                            <h4 style={{ margin: '0 0 10px 0', color: '#3b82f6' }}>
-                                <i className="fas fa-info-circle" style={{ marginRight: '6px' }}></i>
-                                {PROVIDERS[selectedProvider].name} Setup Instructions
-                            </h4>
-                            <ol style={{ margin: 0, paddingLeft: '20px' }}>
-                                {PROVIDERS[selectedProvider].steps.map((step, idx) => (
-                                    <li key={idx} style={{ marginBottom: '4px' }}>{step}</li>
-                                ))}
-                            </ol>
-                        </div>
-                    )}
-
-                    <div className="dragwyb-setting-row">
-                        <div className="dragwyb-setting-info">
-                            <h4>SMTP Host</h4>
-                        </div>
-                        <div className="dragwyb-setting-control">
-                            <input
-                                type="text"
-                                value={getValue('smtp_host', '')}
-                                onChange={e => handleSettingChange('smtp', 'smtp_host', e.target.value)}
-                                placeholder="e.g. smtp.example.com"
+            <div>
+                {extraFields.map(key => (
+                    (smtpData[key] && (isEnabled || key === 'smtp_enabled')) && (
+                        <React.Fragment key={key}>
+                            <RenderSettingItem
+                                itemKey={key}
+                                itemData={smtpData[key]}
+                                tabKey="smtp"
+                                handleSettingChange={handleSettingChangeHandler}
                             />
-                        </div>
-                    </div>
-
-                    <div className="dragwyb-setting-row">
-                        <div className="dragwyb-setting-info">
-                            <h4>SMTP Port</h4>
-                        </div>
-                        <div className="dragwyb-setting-control">
-                            <input
-                                type="number"
-                                value={getValue('smtp_port', 587)}
-                                onChange={e => handleSettingChange('smtp', 'smtp_port', parseInt(e.target.value, 10) || 587)}
-                                placeholder="587"
-                                style={{ width: '120px' }}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="dragwyb-setting-row">
-                        <div className="dragwyb-setting-info">
-                            <h4>Encryption</h4>
-                        </div>
-                        <div className="dragwyb-setting-control">
-                            <select
-                                value={getValue('smtp_encryption', 'tls')}
-                                onChange={e => handleSettingChange('smtp', 'smtp_encryption', e.target.value)}
-                                style={{ width: '180px', padding: '8px 12px', borderRadius: '6px', border: '1px solid #ccc' }}
-                            >
-                                <option value="tls">TLS (Port 587)</option>
-                                <option value="ssl">SSL (Port 465)</option>
-                                <option value="none">None (Port 25)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <ToggleSwitch
-                        label="Server Requires Authentication"
-                        checked={isAuth}
-                        onChange={val => handleSettingChange('smtp', 'smtp_auth', val)}
-                    />
-
-                    {isAuth && (
-                        <>
-                            <div className="dragwyb-setting-row">
-                                <div className="dragwyb-setting-info">
-                                    <h4>SMTP Username</h4>
+                            {(key === 'smtp_provider' && selectedProvider && ProviderSteps[selectedProvider]) &&
+                                <div style={{
+                                    background: '#f0f4fe',
+                                    border: '1px solid #c7d2fe',
+                                    borderRadius: '8px',
+                                    padding: '16px',
+                                    margin: '16px 0',
+                                    fontSize: '13px',
+                                    color: '#1e293b'
+                                }}>
+                                    <h4 style={{ margin: '0 0 10px 0', color: '#3b82f6' }}>
+                                        <i className="fas fa-info-circle" style={{ marginRight: '6px' }}></i>
+                                        {smtpData[key].label} {smtpI18n.setup_instructions || 'Setup Instructions'}
+                                    </h4>
+                                    <ol style={{ margin: 0, paddingLeft: '20px' }}>
+                                        {ProviderSteps[selectedProvider]?.steps?.map((step, idx) => (
+                                            <li key={idx} style={{ marginBottom: '4px' }}>{step}</li>
+                                        ))}
+                                    </ol>
                                 </div>
-                                <div className="dragwyb-setting-control">
-                                    <input
-                                        type="text"
-                                        value={getValue('smtp_username', '')}
-                                        onChange={e => handleSettingChange('smtp', 'smtp_username', e.target.value)}
-                                        placeholder="e.g. user@example.com"
-                                    />
-                                </div>
-                            </div>
+                            }
+                        </ React.Fragment>
+                    )
+                ))}
 
-                            <div className="dragwyb-setting-row">
-                                <div className="dragwyb-setting-info">
-                                    <h4>SMTP Password</h4>
-                                </div>
-                                <div className="dragwyb-setting-control">
-                                    <input
-                                        type="password"
-                                        value={getValue('smtp_password', '')}
-                                        onChange={e => handleSettingChange('smtp', 'smtp_password', e.target.value)}
-                                        placeholder="••••••••"
-                                    />
-                                </div>
-                            </div>
-                        </>
-                    )}
-
-                    <div className="dragwyb-setting-row">
-                        <div className="dragwyb-setting-info">
-                            <h4>From Email (Optional)</h4>
-                        </div>
-                        <div className="dragwyb-setting-control">
-                            <input
-                                type="email"
-                                value={getValue('smtp_from_email', '')}
-                                onChange={e => handleSettingChange('smtp', 'smtp_from_email', e.target.value)}
-                                placeholder="noreply@yourdomain.com"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="dragwyb-setting-row">
-                        <div className="dragwyb-setting-info">
-                            <h4>From Name (Optional)</h4>
-                        </div>
-                        <div className="dragwyb-setting-control">
-                            <input
-                                type="text"
-                                value={getValue('smtp_from_name', '')}
-                                onChange={e => handleSettingChange('smtp', 'smtp_from_name', e.target.value)}
-                                placeholder="My Website"
-                            />
-                        </div>
-                    </div>
-
-                    <ToggleSwitch
-                        label="Apply to all site emails"
-                        description="Routes WooCommerce, password resets, and all WordPress emails through this SMTP."
-                        checked={applyToAll}
-                        onChange={val => handleSettingChange('smtp', 'smtp_apply_to_all', val)}
-                    />
-
+                {isEnabled &&
                     <div style={{
                         marginTop: '24px',
                         paddingTop: '20px',
                         borderTop: '1px solid #e2e8f0'
                     }}>
-                        <h3>Send Test Email</h3>
+                        <h3>{smtpI18n.send_test_email_title || 'Send Test Email'}</h3>
                         <p style={{ fontSize: '13px', color: '#64748b' }}>
-                            Save your settings first, then send a test email to verify your SMTP connection.
+                            {smtpI18n.send_test_email_desc || 'Save your settings first, then send a test email to verify your SMTP connection.'}
                         </p>
                         <div style={{ display: 'flex', gap: '10px', marginTop: '12px', alignItems: 'center' }}>
                             <input
@@ -370,7 +244,7 @@ const SmtpTab = ({ settings, handleSettingChange, showToast }) => {
                                 disabled={isTesting}
                                 style={{ padding: '8px 16px' }}
                             >
-                                {isTesting ? 'Sending...' : 'Send Test Email'}
+                                {isTesting ? (smtpI18n.sending || 'Sending...') : (smtpI18n.send_test_btn || 'Send Test Email')}
                             </button>
                         </div>
 
@@ -389,8 +263,8 @@ const SmtpTab = ({ settings, handleSettingChange, showToast }) => {
                             </div>
                         )}
                     </div>
-                </div>
-            )}
+                }
+            </div>
         </div>
     );
 };
