@@ -254,6 +254,10 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
     showFieldError($field, message) {
         this.clearFieldError($field);
 
+        if ($field.hasClass('dragwyb-mask-input')) {
+            return;
+        }
+
         $field.addClass('dragwyb-error');
 
         // Append error message inside closest .dragwyb-field-wrapper
