@@ -87,7 +87,7 @@ const RenderSettingItem = ({ itemKey, itemData, tabKey, handleSettingChange }) =
             {start_section && (
                 <div style={{
                     marginTop: '24px',
-                    paddingTop: '20px',
+                    paddingTop: typeof start_section === 'string' ? '20px' : 0,
                     borderTop: '1px solid #e2e8f0',
                     marginBottom: '16px'
                 }}>
@@ -97,9 +97,10 @@ const RenderSettingItem = ({ itemKey, itemData, tabKey, handleSettingChange }) =
                         </h3>
                     )}
                 </div>
-            )}
+            )
+            }
             {renderControl()}
-        </React.Fragment>
+        </React.Fragment >
     );
 };
 
