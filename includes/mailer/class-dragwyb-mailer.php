@@ -136,7 +136,7 @@ class Dragwyb_Mailer {
 		if ( defined( 'DRAGWYB_SMTP_PASSWORD' ) ) {
 			return (string) DRAGWYB_SMTP_PASSWORD;
 		}
-		return (string) Settings_Manager::instance()->get_setting( 'smtp', 'smtp_password', '' );
+		return (string) Settings_Manager::instance()->get_api_key( 'smtp', 'smtp_password', false );
 	}
 
 	/**

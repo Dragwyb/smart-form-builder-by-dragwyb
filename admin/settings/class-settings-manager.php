@@ -40,6 +40,13 @@ class Settings_Manager {
 	private ?array $settings = null;
 
 	/**
+	 * Unmasked settings cache.
+	 *
+	 * @var array|null
+	 */
+	private ?array $unmasked_settings = null;
+
+	/**
 	 * Retrieve the singleton instance of the class.
 	 *
 	 * @return self
@@ -233,8 +240,9 @@ class Settings_Manager {
 			),
 		);
 
-		$dragwyb_settings = get_option( 'dragwyb_form_settings', array() );
-		$updated_settings = array();
+		$dragwyb_settings  = get_option( 'dragwyb_form_settings', array() );
+		$updated_settings  = array();
+		$unmasked_settings = array();
 
 		if ( ! $this->is_settings_initialized ) {
 			$this->is_settings_initialized = true;
@@ -266,7 +274,8 @@ class Settings_Manager {
 					continue;
 				}
 
-				$updated_settings[ $dragwyb_setting_type ] = $dragwyb_default_settings[ $dragwyb_setting_type ];
+				$updated_settings[ $dragwyb_setting_type ]  = $dragwyb_default_settings[ $dragwyb_setting_type ];
+				$unmasked_settings[ $dragwyb_setting_type ] = array();
 
 				foreach ( $dragwyb_settings[ $dragwyb_setting_type ] as $key => $value ) {
 					if ( ! isset( $value ) || ! isset( $dragwyb_default_settings[ $dragwyb_setting_type ][ $key ] ) || ! isset( $dragwyb_default_settings[ $dragwyb_setting_type ][ $key ]['type'] ) ) {
@@ -290,7 +299,8 @@ class Settings_Manager {
 						$drawyb_setting_value = sanitize_text_field( $value );
 
 						if ( $mask && isset( $default_setting['mask'] ) && true === $default_setting['mask'] ) {
-							$drawyb_setting_value = self::mask_api_key( $drawyb_setting_value );
+							$unmasked_settings[ $dragwyb_setting_type ][ $key ] = $drawyb_setting_value;
+							$drawyb_setting_value                               = self::mask_api_key( $drawyb_setting_value );
 						}
 
 						$updated_settings[ $dragwyb_setting_type ][ $key ]['value'] = $drawyb_setting_value;
@@ -299,7 +309,8 @@ class Settings_Manager {
 			}
 		}
 
-		$this->settings = $updated_settings;
+		$this->settings          = $updated_settings;
+		$this->unmasked_settings = $unmasked_settings;
 	}
 
 	/**
@@ -336,16 +347,30 @@ class Settings_Manager {
 		return isset( $type_settings[ $key ]['value'] ) ? $type_settings[ $key ]['value'] : $default;
 	}
 
+	private function get_unmasked_value( string $type, string $key, $default = '' ) {
+		if ( isset( $this->unmasked_settings[ $type ][ $key ] ) && ! empty( $this->unmasked_settings[ $type ][ $key ] ) ) {
+			return $this->unmasked_settings[ $type ][ $key ];
+		}
+
+		return self::get_setting( $type, $key, $default );
+	}
+
 	/**
 	 * Safely retrieve an API key, with an option to mask it for secure display.
 	 *
+	 * @param string $tab  The settings tab key (e.g., 'integrations').
 	 * @param string $key  The API key identifier (e.g., 'recaptcha_v3_site_key').
 	 * @param bool   $mask Whether to mask the retrieved API key.
 	 * @return string
 	 */
-	final public function get_api_key( string $key, bool $mask = false ): string {
+	final public function get_api_key( string $tab = 'integration', string $key = '', bool $mask = false ): string {
 		// Assuming API keys are stored under the 'integrations' tab based on current structure.
-		$api_settings = $this->get_setting( 'integrations', $key, '' );
+
+		if ( empty( $tab ) || empty( $key ) ) {
+			return '';
+		}
+
+		$api_settings = $this->get_unmasked_value( $tab, $key, '' );
 
 		if ( ! isset( $api_settings ) || empty( $api_settings ) ) {
 			return '';
