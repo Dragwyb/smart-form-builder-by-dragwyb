@@ -83,9 +83,9 @@ class List_Table extends WP_List_Table {
 			'cb'              => '<input type="checkbox" />', // Required for bulk actions
 			'name'            => __( 'Name', 'smart-form-builder-by-dragwyb' ),
 			'shortcode'       => __( 'Shortcode', 'smart-form-builder-by-dragwyb' ),
-			'views'           => __( 'Views', 'smart-form-builder-by-dragwyb' ),
-			'submissions'     => __( 'Submissions', 'smart-form-builder-by-dragwyb' ),
-			'conversion_rate' => __( 'Conversion Rate', 'smart-form-builder-by-dragwyb' ),
+			'views'           => __( 'Views', 'smart-form-builder-by-dragwyb' ) . ' <span class="dragwyb-info-icon" title="' . esc_attr__( 'Form preview count', 'smart-form-builder-by-dragwyb' ) . '">ⓘ</span>',
+			'submissions'     => __( 'Submissions', 'smart-form-builder-by-dragwyb' ) . ' <span class="dragwyb-info-icon" title="' . esc_attr__( 'Form submission count', 'smart-form-builder-by-dragwyb' ) . '">ⓘ</span>',
+			'conversion_rate' => __( 'Conversion Rate', 'smart-form-builder-by-dragwyb' ) . ' <span class="dragwyb-info-icon" title="' . esc_attr__( 'Submission / View ratio', 'smart-form-builder-by-dragwyb' ) . '">ⓘ</span>',
 			'clean_cache'     => __( 'Clean Cache', 'smart-form-builder-by-dragwyb' ),
 			'date'            => __( 'Date', 'smart-form-builder-by-dragwyb' ),
 		);
@@ -127,7 +127,7 @@ class List_Table extends WP_List_Table {
 			case 'shortcode':
 				$shortcode = '[' . DRAGWYB_PREFIX . '-form id="' . $form->ID . '"]';
 				$value     = sprintf(
-					'<code class="dragwyb-shortcode dragwyb-shortcode-value" data-shortcode="%s" title="%s">%s</code>',
+					'<div class="dragwyb-shortcode-box dragwyb-shortcode dragwyb-shortcode-value" data-shortcode="%s" title="%s"><span class="dragwyb-shortcode-text">%s</span><span class="dashicons dashicons-admin-page dragwyb-copy-icon"></span></div>',
 					esc_attr( $shortcode ),
 					esc_attr__( 'Click to copy shortcode', 'smart-form-builder-by-dragwyb' ),
 					esc_html( $shortcode )
@@ -139,15 +139,12 @@ class List_Table extends WP_List_Table {
 				$frontend_views = (int) get_post_meta( $form->ID, '_dragwyb_form_frontend_preview_count', true );
 				$total_views    = $login_views + $frontend_views;
 				$value          = sprintf(
-					'<div class="dragwyb-views-wrap"><span class="dragwyb-views-badge" title="%s"><span class="dashicons dashicons-visibility"></span> %d</span><div class="dragwyb-views-breakdown"><span class="dragwyb-view-tag dragwyb-view-tag-login" title="%s">%s: %d</span><span class="dragwyb-view-tag dragwyb-view-tag-frontend" title="%s">%s: %d</span></div></div>',
-					esc_attr__( 'Total Views', 'smart-form-builder-by-dragwyb' ),
+					'<div class="dragwyb-views-card"><div class="dragwyb-views-header"><span class="dashicons dashicons-visibility"></span> <strong class="dragwyb-views-count">%d</strong></div><div class="dragwyb-views-sub"><div class="dragwyb-view-subrow">%s: %d</div><div class="dragwyb-view-subrow">%s: %d</div></div></div>',
 					$total_views,
-					esc_attr__( 'Logged-in user views', 'smart-form-builder-by-dragwyb' ),
-					esc_html__( 'Login', 'smart-form-builder-by-dragwyb' ),
-					$login_views,
-					esc_attr__( 'Frontend visitor views', 'smart-form-builder-by-dragwyb' ),
 					esc_html__( 'Frontend', 'smart-form-builder-by-dragwyb' ),
-					$frontend_views
+					$frontend_views,
+					esc_html__( 'Login', 'smart-form-builder-by-dragwyb' ),
+					$login_views
 				);
 				break;
 
@@ -155,7 +152,7 @@ class List_Table extends WP_List_Table {
 			case 'entries':
 				$submission_count = isset( $this->submission_counts[ $form->ID ] ) ? $this->submission_counts[ $form->ID ] : 0;
 				$value            = sprintf(
-					'<span class="dragwyb-badge dragwyb-badge-submissions">%d</span>',
+					'<div class="dragwyb-submissions-card"><strong class="dragwyb-submissions-count">%d</strong></div>',
 					$submission_count
 				);
 				break;
@@ -166,10 +163,14 @@ class List_Table extends WP_List_Table {
 				$total_views      = $login_views + $frontend_views;
 				$submission_count = isset( $this->submission_counts[ $form->ID ] ) ? $this->submission_counts[ $form->ID ] : 0;
 
-				$rate  = $total_views > 0 ? ( $submission_count / $total_views ) * 100 : 0;
+				$rate           = $total_views > 0 ? ( $submission_count / $total_views ) * 100 : 0;
+				$rate_formatted = number_format( $rate, 1 ) . '%';
+				$progress_width = min( 100, max( 0, $rate ) );
+
 				$value = sprintf(
-					'<span class="dragwyb-badge dragwyb-badge-conversion">%s%%</span>',
-					number_format( $rate, 1 )
+					'<div class="dragwyb-conversion-wrap"><div class="dragwyb-conversion-value">%s</div><div class="dragwyb-progress-track"><div class="dragwyb-progress-fill" style="width: %f%%;"></div></div></div>',
+					esc_html( $rate_formatted ),
+					$progress_width
 				);
 				break;
 
@@ -178,13 +179,19 @@ class List_Table extends WP_List_Table {
 				break;
 
 			case 'date':
-				$value = get_the_modified_date( 'Y-m-d', $form );
+				$date_str = get_the_modified_date( 'Y-m-d', $form );
+				$time_str = get_the_modified_date( 'h:i A', $form );
+				$value    = sprintf(
+					'<div class="dragwyb-date-cell"><div class="dragwyb-date-wrap"><span class="dragwyb-date-main">%s</span><span class="dragwyb-date-time">%s</span></div></div>',
+					esc_html( $date_str ),
+					esc_html( $time_str )
+				);
 				break;
 
 			case 'clean_cache':
 				if ( $this->css_cache_exist( $form->ID ) ) {
 					$value = sprintf(
-						'<button type="button" id="%s" data-key="%s" data-clean-key="%s" class="button button-small dragwyb-clean-cache-btn">%s</button>',
+						'<button type="button" id="%s" data-key="%s" data-clean-key="%s" class="dragwyb-clean-btn active"><span class="dashicons dashicons-update"></span> %s</button>',
 						esc_attr( 'clean-cache-' . (int) $form->ID ),
 						esc_attr( wp_create_nonce( sanitize_text_field( $form->post_type ) . (int) $form->ID . '-clean-cache' ) ),
 						esc_attr( wp_create_nonce( 'delete_cache_nonce' ) ),
@@ -192,7 +199,7 @@ class List_Table extends WP_List_Table {
 					);
 				} else {
 					$value = sprintf(
-						'<button type="button" id="%s" disabled class="button button-small dragwyb-clean-cache-btn">%s</button>',
+						'<button type="button" id="%s" disabled class="dragwyb-clean-btn disabled"><span class="dashicons dashicons-update"></span> %s</button>',
 						esc_attr( 'clean-cache-' . (int) $form->ID ),
 						esc_html__( 'Clean Cache', 'smart-form-builder-by-dragwyb' )
 					);
@@ -224,11 +231,48 @@ class List_Table extends WP_List_Table {
 	 * @return string
 	 */
 	public function column_name( $form ) {
-		$title   = $this->get_column_name_title( $form );
-		$states  = _post_states( $form, false );
+		$title        = ! empty( $form->post_title ) ? $form->post_title : $form->post_name;
+		$status       = 'publish' === $form->post_status ? __( 'Published', 'smart-form-builder-by-dragwyb' ) : ucfirst( (string) $form->post_status );
+		$status_class = 'publish' === $form->post_status ? 'dragwyb-status-published' : 'dragwyb-status-draft';
+
+		if ( current_user_can( 'edit_post', $form->ID ) ) {
+			$title_html = sprintf(
+				'<a href="%s" class="dragwyb-form-title-link">%s</a>',
+				esc_url( '?page=dragwyb-form-builder&form_id=' . (int) $form->ID ),
+				esc_html( $title )
+			);
+		} else {
+			$title_html = sprintf( '<span class="dragwyb-form-title-text">%s</span>', esc_html( $title ) );
+		}
+
 		$actions = $this->get_column_name_row_actions( $form );
 
-		return $title . $states . $actions;
+		$colors = array(
+			array(
+				'bg'    => '#fff0f5',
+				'color' => '#e11d48',
+			),
+			array(
+				'bg'    => '#faf5ff',
+				'color' => '#9333ea',
+			),
+			array(
+				'bg'    => '#eff6ff',
+				'color' => '#2563eb',
+			),
+			array(
+				'bg'    => '#ecfeff',
+				'color' => '#0891b2',
+			),
+		);
+
+		return sprintf(
+			'<div class="dragwyb-name-cell"><div class="dragwyb-name-meta">%s<span class="dragwyb-status-badge %s">%s</span>%s</div></div>',
+			$title_html,
+			esc_attr( $status_class ),
+			esc_html( $status ),
+			$actions
+		);
 	}
 
 	/**
