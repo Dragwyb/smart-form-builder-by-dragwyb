@@ -12,7 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'Form_Overview' ) ) {
 	class Form_Overview {
 
-		private static ?self $instance = null;
+		/**
+		 * Singleton instance.
+		 *
+		 * @var self|null
+		 */
+		private static $instance = null;
 
 		public static function instance(): self {
 			if ( null === self::$instance ) {
@@ -37,7 +42,7 @@ if ( ! class_exists( 'Form_Overview' ) ) {
 		}
 
 		private function enqueue_admin_assets(): void {
-			wp_enqueue_script( DRAGWYB_PREFIX . '-overview-assets', esc_url( DRAGWYB_FORM_BUILDER_URL . '/assets/js/dragwyb-oveview-assets.js' ), array( 'jquery' ), esc_attr( DRAGWYB_FORM_BUILDER_VERSION ), true );
+			wp_enqueue_script( DRAGWYB_PREFIX . '-overview-assets', esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/js/dragwyb-oveview-assets.js' ), array( 'jquery' ), esc_attr( DRAGWYB_FORM_BUILDER_VERSION ), true );
 
 			wp_localize_script(
 				DRAGWYB_PREFIX . '-overview-assets',
@@ -45,6 +50,13 @@ if ( ! class_exists( 'Form_Overview' ) ) {
 				array(
 					'ajaxurl' => admin_url( 'admin-ajax.php' ),
 				)
+			);
+
+			wp_enqueue_style(
+				'dragwyb-form-editor-global',
+				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/css/editor-global.css' ),
+				array(),
+				esc_attr( $js_assets_info['version'] )
 			);
 		}
 

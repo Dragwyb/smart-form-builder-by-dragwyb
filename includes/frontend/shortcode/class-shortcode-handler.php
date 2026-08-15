@@ -66,6 +66,20 @@ class Shortcode_Handler {
 			return '<p>' . esc_html__( 'No fields found in this form.', 'smart-form-builder-by-dragwyb' ) . '</p>';
 		}
 
+		if ( ! defined( 'DRAGWYB_FORM_PREVIEW' ) ) {
+			if ( is_user_logged_in() ) {
+				// admin form preview count.
+				$get_post_meta = get_post_meta( $form_id, '_dragwyb_form_login_preview_count', true );
+				$get_post_meta = intval( $get_post_meta ) + 1;
+				update_post_meta( $form_id, '_dragwyb_form_login_preview_count', $get_post_meta );
+			} else {
+				// front-end form preview count.
+				$get_post_meta = get_post_meta( $form_id, '_dragwyb_form_frontend_preview_count', true );
+				$get_post_meta = intval( $get_post_meta ) + 1;
+				update_post_meta( $form_id, '_dragwyb_form_frontend_preview_count', $get_post_meta );
+			}
+		}
+
 		self::$frontend_render = Frontend_Render::instance();
 		self::$frontend_render->init( $form_id );
 
