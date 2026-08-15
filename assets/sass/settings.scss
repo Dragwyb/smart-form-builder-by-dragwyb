@@ -5,6 +5,26 @@
     box-shadow: var(--dragwyb-shadow-lg);
     font-family: Roboto, Arial, Helvetica, sans-serif;
 
+    .dragwyb-btn-primary {
+        background: hsl(var(--dragwyb-primary));
+        color: hsl(var(--dragwyb-primary-foreground));
+        border: none;
+        padding: 10px 20px;
+        border-radius: calc(var(--dragwyb-radius) - 2px);
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &:hover {
+            background: hsl(var(--dragwyb-primary-hover));
+        }
+
+        &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+    }
+
     .dragwyb-settings-header {
         position: sticky;
         top: var(--wp-admin--admin-bar--height, 32px);
@@ -20,26 +40,6 @@
             margin: 0;
             font-size: 24px;
             color: hsl(var(--dragwyb-foreground));
-        }
-
-        .dragwyb-btn-primary {
-            background: hsl(var(--dragwyb-primary));
-            color: hsl(var(--dragwyb-primary-foreground));
-            border: none;
-            padding: 10px 20px;
-            border-radius: calc(var(--dragwyb-radius) - 2px);
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-
-            &:hover {
-                background: hsl(var(--dragwyb-primary-hover));
-            }
-
-            &:disabled {
-                opacity: 0.7;
-                cursor: not-allowed;
-            }
         }
     }
 
@@ -93,6 +93,8 @@
             background: hsl(var(--dragwyb-background));
 
             .dragwyb-settings-section {
+                width: 100%;
+
                 h2 {
                     margin-top: 0;
                     color: hsl(var(--dragwyb-foreground));
@@ -102,6 +104,69 @@
                 .dragwyb-settings-desc {
                     color: hsl(var(--dragwyb-muted-foreground));
                     margin-bottom: 30px;
+                }
+
+                .dragwyb-settings-container {
+                    background: hsl(var(--dragwyb-card));
+                    border: 1px solid hsl(var(--dragwyb-border));
+                    border-radius: var(--dragwyb-radius);
+                    padding: 20px 24px;
+                    margin-bottom: 24px;
+                    transition: all 0.2s ease-in-out;
+
+                    h3 {
+                        margin-top: 0;
+                        margin-bottom: 16px;
+                        font-size: 16px;
+                        font-weight: 600;
+                        color: hsl(var(--dragwyb-foreground));
+                    }
+
+                    &.dragwyb-container-primary {
+                        background: #f0f7ff;
+                        border-color: #bfdbfe;
+
+                        h3 {
+                            color: #1e40af;
+                        }
+                    }
+
+                    &.dragwyb-container-warning,
+                    &.dragwyb-container-warrning {
+                        background: #fffbeb;
+                        border-color: #fde68a;
+
+                        h3 {
+                            color: #92400e;
+                        }
+                    }
+
+                    &.dragwyb-container-danger {
+                        background: #fff5f5;
+                        border-color: #fed7d7;
+
+                        h3 {
+                            color: #991b1b;
+                        }
+                    }
+
+                    &.dragwyb-container-success {
+                        background: #f0fdf4;
+                        border-color: #bbf7d0;
+
+                        h3 {
+                            color: #166534;
+                        }
+                    }
+
+                    &.dragwyb-container-info {
+                        background: #f0f9ff;
+                        border-color: #bae6fd;
+
+                        h3 {
+                            color: #0369a1;
+                        }
+                    }
                 }
 
                 .dragwyb-setting-row {

@@ -1,5 +1,5 @@
 import React from 'react';
-import RenderSettingItem from './RenderSettingItem';
+import RenderSettingsGroup from './RenderSettingsGroup';
 
 const GdprPrivacyTab = ({ settings, handleSettingChange }) => {
     const gdprData = settings?.gdpr_privacy || {};
@@ -13,15 +13,11 @@ const GdprPrivacyTab = ({ settings, handleSettingChange }) => {
                 {gdprI18n.shortcode_description || gdprI18n.description || i18n.shortcode_description || 'Configure visitor tracking, cookie behavior, and data protection settings to comply with GDPR, CCPA, and global privacy regulations.'}
             </p>
 
-            {Object.keys(gdprData).map(key => (
-                <RenderSettingItem
-                    key={key}
-                    itemKey={key}
-                    itemData={gdprData[key]}
-                    tabKey="gdpr_privacy"
-                    handleSettingChange={handleSettingChange}
-                />
-            ))}
+            <RenderSettingsGroup
+                tabSettings={gdprData}
+                tabKey="gdpr_privacy"
+                handleSettingChange={handleSettingChange}
+            />
         </div>
     );
 };

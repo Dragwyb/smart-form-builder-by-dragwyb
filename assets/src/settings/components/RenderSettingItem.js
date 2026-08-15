@@ -1,7 +1,7 @@
 import React from 'react';
 import ToggleSwitch from './ToggleSwitch';
 
-const RenderSettingItem = ({ itemKey, itemData, tabKey, handleSettingChange }) => {
+const RenderSettingItem = ({ itemKey, itemData, tabKey, handleSettingChange, hideStartSectionHeader = false }) => {
     if (!itemData) return null;
 
     const {
@@ -84,7 +84,7 @@ const RenderSettingItem = ({ itemKey, itemData, tabKey, handleSettingChange }) =
 
     return (
         <React.Fragment key={itemKey}>
-            {start_section && (
+            {start_section && !hideStartSectionHeader && (
                 <div style={{
                     marginTop: '24px',
                     paddingTop: typeof start_section === 'string' ? '20px' : 0,

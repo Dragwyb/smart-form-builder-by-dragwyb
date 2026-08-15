@@ -141,15 +141,16 @@ class Settings_Manager {
 					'default'     => false,
 				),
 				'smtp_provider'     => array(
-					'label'       => __( 'Guided Setup / Preset Providers', 'smart-form-builder-by-dragwyb' ),
-					'description' => __(
+					'start_section' => __( 'Email Delivery', 'smart-form-builder-by-dragwyb' ),
+					'label'         => __( 'Guided Setup / Preset Providers', 'smart-form-builder-by-dragwyb' ),
+					'description'   => __(
 						'Select your provider to pre-fill common server parameters and view instructions.',
 						'smart-form-builder-by-dragwyb'
 					),
-					'type'        => 'select',
-					'default'     => '',
-					'inline'      => false,
-					'options'     => array(
+					'type'          => 'select',
+					'default'       => '',
+					'inline'        => false,
+					'options'       => array(
 						array(
 							'label' => 'Gmail / Google Workspace',
 							'value' => 'gmail',
@@ -233,10 +234,11 @@ class Settings_Manager {
 					),
 				),
 				'smtp_auth'         => array(
-					'label'       => __( 'Server Requires Authentication', 'smart-form-builder-by-dragwyb' ),
-					'description' => __( 'Enable if your SMTP server requires username and password.', 'smart-form-builder-by-dragwyb' ),
-					'type'        => 'bool',
-					'default'     => true,
+					'start_section' => __( 'SMTP Authentication', 'smart-form-builder-by-dragwyb' ),
+					'label'         => __( 'Server Requires Authentication', 'smart-form-builder-by-dragwyb' ),
+					'description'   => __( 'Enable if your SMTP server requires username and password.', 'smart-form-builder-by-dragwyb' ),
+					'type'          => 'bool',
+					'default'       => true,
 				),
 				'smtp_username'     => array(
 					'label'       => __( 'SMTP Username', 'smart-form-builder-by-dragwyb' ),
@@ -345,6 +347,7 @@ class Settings_Manager {
 				),
 				'remove_data_on_uninstall'  => array(
 					'start_section' => true,
+					'class'         => 'dragwyb-container-danger',
 					'label'         => __( 'Remove ALL Data on Plugin Uninstall', 'smart-form-builder-by-dragwyb' ),
 					'description'   => __( 'Warning: Deleting the plugin will permanently wipe all forms, entries, and analytics tables. Leave unchecked to preserve data across reinstalls.', 'smart-form-builder-by-dragwyb' ),
 					'type'          => 'bool',

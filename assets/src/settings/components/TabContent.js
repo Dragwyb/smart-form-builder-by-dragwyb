@@ -4,7 +4,7 @@ import ToggleSwitch from './ToggleSwitch';
 import ImportExportTab from './ImportExportTab';
 import SmtpTab from './SmtpTab';
 import GdprPrivacyTab from './GdprPrivacyTab';
-import RenderSettingItem from './RenderSettingItem';
+import RenderSettingsGroup from './RenderSettingsGroup';
 
 const TabContent = ({ activeTab, settings, handleSettingChange, showToast }) => {
 
@@ -14,15 +14,11 @@ const TabContent = ({ activeTab, settings, handleSettingChange, showToast }) => 
             <div className="dragwyb-settings-section">
                 {title && <h2>{title}</h2>}
                 {description && <p className="dragwyb-settings-desc">{description}</p>}
-                {Object.keys(tabSettings).map(key => (
-                    <RenderSettingItem
-                        key={key}
-                        itemKey={key}
-                        itemData={tabSettings[key]}
-                        tabKey={tabKey}
-                        handleSettingChange={handleSettingChange}
-                    />
-                ))}
+                <RenderSettingsGroup
+                    tabSettings={tabSettings}
+                    tabKey={tabKey}
+                    handleSettingChange={handleSettingChange}
+                />
             </div>
         );
     };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import RenderSettingItem from './RenderSettingItem';
+import RenderSettingsGroup from './RenderSettingsGroup';
 
 const ProviderSteps = {
     gmail: {
@@ -185,83 +185,78 @@ const SmtpTab = ({ settings, handleSettingChange, showToast }) => {
             </p>
 
             <div>
-                {extraFields.map(key => (
-                    (smtpData[key] && (isEnabled || key === 'smtp_enabled')) && (
-                        <React.Fragment key={key}>
-                            <RenderSettingItem
-                                itemKey={key}
-                                itemData={smtpData[key]}
-                                tabKey="smtp"
-                                handleSettingChange={handleSettingChangeHandler}
-                            />
-                            {(key === 'smtp_provider' && selectedProvider && ProviderSteps[selectedProvider]) &&
-                                <div style={{
-                                    background: '#f0f4fe',
-                                    border: '1px solid #c7d2fe',
-                                    borderRadius: '8px',
-                                    padding: '16px',
-                                    margin: '16px 0',
-                                    fontSize: '13px',
-                                    color: '#1e293b'
-                                }}>
-                                    <h4 style={{ margin: '0 0 10px 0', color: '#3b82f6' }}>
-                                        <i className="fas fa-info-circle" style={{ marginRight: '6px' }}></i>
-                                        {smtpData[key].label} {smtpI18n.setup_instructions || 'Setup Instructions'}
-                                    </h4>
-                                    <ol style={{ margin: 0, paddingLeft: '20px' }}>
-                                        {ProviderSteps[selectedProvider]?.steps?.map((step, idx) => (
-                                            <li key={idx} style={{ marginBottom: '4px' }}>{step}</li>
-                                        ))}
-                                    </ol>
-                                </div>
-                            }
-                        </ React.Fragment>
-                    )
-                ))}
+                <RenderSettingsGroup
+                    tabSettings={smtpData}
+                    tabKey="smtp"
+                    handleSettingChange={handleSettingChangeHandler}
+                    isItemVisible={(key) => isEnabled || key === 'smtp_enabled'}
+                    renderExtraAfterItem={(key, data) => (
+                        (key === 'smtp_provider' && selectedProvider && ProviderSteps[selectedProvider]) ? (
+                            <div style={{
+                                background: '#f0f4fe',
+                                border: '1px solid #c7d2fe',
+                                borderRadius: '8px',
+                                padding: '16px',
+                                margin: '16px 0',
+                                fontSize: '13px',
+                                color: '#1e293b'
+                            }}>
+                                <h4 style={{ margin: '0 0 10px 0', color: '#3b82f6' }}>
+                                    <i className="fas fa-info-circle" style={{ marginRight: '6px' }}></i>
+                                    {data?.label || 'Provider'} {smtpI18n.setup_instructions || 'Setup Instructions'}
+                                </h4>
+                                <ol style={{ margin: 0, paddingLeft: '20px' }}>
+                                    {ProviderSteps[selectedProvider]?.steps?.map((step, idx) => (
+                                        <li key={idx} style={{ marginBottom: '4px' }}>{step}</li>
+                                    ))}
+                                </ol>
+                            </div>
+                        ) : null
+                    )}
+                />
 
                 {isEnabled &&
-                    <div style={{
-                        marginTop: '24px',
-                        paddingTop: '20px',
-                        borderTop: '1px solid #e2e8f0'
-                    }}>
-                        <h3>{smtpI18n.send_test_email_title || 'Send Test Email'}</h3>
-                        <p style={{ fontSize: '13px', color: '#64748b' }}>
-                            {smtpI18n.send_test_email_desc || 'Save your settings first, then send a test email to verify your SMTP connection.'}
-                        </p>
-                        <div style={{ display: 'flex', gap: '10px', marginTop: '12px', alignItems: 'center' }}>
-                            <input
-                                type="email"
-                                value={testEmail}
-                                onChange={e => setTestEmail(e.target.value)}
-                                placeholder="recipient@example.com"
-                                style={{ width: '280px', padding: '8px 12px', borderRadius: '6px', border: '1px solid #ccc' }}
-                            />
-                            <button
-                                type="button"
-                                className="dragwyb-btn-primary"
-                                onClick={handleTestEmail}
-                                disabled={isTesting}
-                                style={{ padding: '8px 16px' }}
-                            >
-                                {isTesting ? (smtpI18n.sending || 'Sending...') : (smtpI18n.send_test_btn || 'Send Test Email')}
-                            </button>
-                        </div>
+                    <div className='dragwyb-setting-row'>
+                        <div className="dragwyb-settings-section">
+                            <div className='dragwyb-settings-container dragwyb-container-danger'>
+                                <h3>{smtpI18n.send_test_email_title || 'Send Test Email'}</h3>
+                                <p style={{ fontSize: '13px', color: '#64748b' }}>
+                                    {smtpI18n.send_test_email_desc || 'Save your settings first, then send a test email to verify your SMTP connection.'}
+                                </p>
+                                <div style={{ display: 'flex', gap: '10px', marginTop: '12px', alignItems: 'center' }}>
+                                    <input
+                                        type="email"
+                                        value={testEmail}
+                                        onChange={e => setTestEmail(e.target.value)}
+                                        placeholder="recipient@example.com"
+                                        style={{ width: '280px', padding: '8px 12px', borderRadius: '6px', border: '1px solid #ccc' }}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="dragwyb-btn-primary"
+                                        onClick={handleTestEmail}
+                                        disabled={isTesting}
+                                    >
+                                        {isTesting ? (smtpI18n.sending || 'Sending...') : (smtpI18n.send_test_btn || 'Send Test Email')}
+                                    </button>
+                                </div>
 
-                        {testResult && (
-                            <div style={{
-                                marginTop: '14px',
-                                padding: '12px 16px',
-                                borderRadius: '6px',
-                                background: testResult.success ? '#f0fdf4' : '#fef2f2',
-                                border: `1px solid ${testResult.success ? '#bbf7d0' : '#fecaca'}`,
-                                color: testResult.success ? '#166534' : '#991b1b',
-                                fontSize: '13px'
-                            }}>
-                                <strong>{testResult.success ? '✓ Success: ' : '✕ Error: '}</strong>
-                                {testResult.message}
+                                {testResult && (
+                                    <div style={{
+                                        marginTop: '14px',
+                                        padding: '12px 16px',
+                                        borderRadius: '6px',
+                                        background: testResult.success ? '#f0fdf4' : '#fef2f2',
+                                        border: `1px solid ${testResult.success ? '#bbf7d0' : '#fecaca'}`,
+                                        color: testResult.success ? '#166534' : '#991b1b',
+                                        fontSize: '13px'
+                                    }}>
+                                        <strong>{testResult.success ? '✓ Success: ' : '✕ Error: '}</strong>
+                                        {testResult.message}
+                                    </div>
+                                )}
                             </div>
-                        )}
+                        </div>
                     </div>
                 }
             </div>
