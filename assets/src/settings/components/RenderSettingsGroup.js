@@ -1,6 +1,58 @@
 import React from 'react';
 import RenderSettingItem from './RenderSettingItem';
 
+export const isValueMatch = (currentVal, expectedVal) => {
+    if (expectedVal === true || expectedVal === 'yes') {
+        return currentVal === true || currentVal === 'yes';
+    }
+    if (expectedVal === false || expectedVal === 'no') {
+        return currentVal === false || currentVal === 'no' || currentVal === undefined || currentVal === null || currentVal === '';
+    }
+    return String(currentVal) === String(expectedVal);
+};
+
+export const evaluateSettingCondition = (condition, tabSettings = {}, allSettings = {}) => {
+    if (!condition || typeof condition !== 'object' || Object.keys(condition).length === 0) {
+        return true;
+    }
+
+    const keys = Object.keys(condition);
+
+    for (let rawKey of keys) {
+        const isNot = rawKey.endsWith('!');
+        const targetKey = isNot ? rawKey.slice(0, -1) : rawKey;
+        const expectedVal = condition[rawKey];
+
+        let targetItem = tabSettings[targetKey];
+        if (!targetItem && allSettings) {
+            for (let tKey in allSettings) {
+                if (allSettings[tKey] && allSettings[tKey][targetKey]) {
+                    targetItem = allSettings[tKey][targetKey];
+                    break;
+                }
+            }
+        }
+
+        const currentVal = targetItem?.value !== undefined ? targetItem.value : (targetItem?.default ?? undefined);
+
+        let conditionMet = false;
+
+        if (Array.isArray(expectedVal)) {
+            const matchesAny = expectedVal.some(val => isValueMatch(currentVal, val));
+            conditionMet = isNot ? !matchesAny : matchesAny;
+        } else {
+            const matches = isValueMatch(currentVal, expectedVal);
+            conditionMet = isNot ? !matches : matches;
+        }
+
+        if (!conditionMet) {
+            return false;
+        }
+    }
+
+    return true;
+};
+
 export const groupSettingsIntoSections = (tabSettings) => {
     if (!tabSettings) return [];
 
@@ -12,7 +64,6 @@ export const groupSettingsIntoSections = (tabSettings) => {
         const item = tabSettings[key];
         if (!item) return;
 
-        // Check if a new section starts
         if (item.start_section || !currentSection) {
             if (currentSection) {
                 sections.push(currentSection);
@@ -27,7 +78,6 @@ export const groupSettingsIntoSections = (tabSettings) => {
 
         currentSection.items.push({ key, data: item });
 
-        // Check if section explicitly ends
         if (item.end_section) {
             sections.push(currentSection);
             currentSection = null;
@@ -41,7 +91,7 @@ export const groupSettingsIntoSections = (tabSettings) => {
     return sections;
 };
 
-const RenderSettingsGroup = ({ tabSettings, tabKey, handleSettingChange, renderExtraAfterItem, isItemVisible }) => {
+const RenderSettingsGroup = ({ tabSettings, allSettings, tabKey, handleSettingChange, renderExtraAfterItem, isItemVisible }) => {
     if (!tabSettings) return null;
 
     const sections = groupSettingsIntoSections(tabSettings);
@@ -50,6 +100,10 @@ const RenderSettingsGroup = ({ tabSettings, tabKey, handleSettingChange, renderE
         <>
             {sections.map((section, idx) => {
                 const visibleItems = section.items.filter(({ key, data }) => {
+                    const cond = data.condition || data.conditions;
+                    if (cond && !evaluateSettingCondition(cond, tabSettings, allSettings)) {
+                        return false;
+                    }
                     return !isItemVisible || isItemVisible(key, data);
                 });
 

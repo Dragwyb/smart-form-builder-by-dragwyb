@@ -187,6 +187,7 @@ const SmtpTab = ({ settings, handleSettingChange, showToast }) => {
             <div>
                 <RenderSettingsGroup
                     tabSettings={smtpData}
+                    allSettings={settings}
                     tabKey="smtp"
                     handleSettingChange={handleSettingChangeHandler}
                     isItemVisible={(key) => isEnabled || key === 'smtp_enabled'}

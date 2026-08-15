@@ -16,6 +16,7 @@ const TabContent = ({ activeTab, settings, handleSettingChange, showToast }) => 
                 {description && <p className="dragwyb-settings-desc">{description}</p>}
                 <RenderSettingsGroup
                     tabSettings={tabSettings}
+                    allSettings={settings}
                     tabKey={tabKey}
                     handleSettingChange={handleSettingChange}
                 />

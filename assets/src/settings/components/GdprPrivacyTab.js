@@ -15,6 +15,7 @@ const GdprPrivacyTab = ({ settings, handleSettingChange }) => {
 
             <RenderSettingsGroup
                 tabSettings={gdprData}
+                allSettings={settings}
                 tabKey="gdpr_privacy"
                 handleSettingChange={handleSettingChange}
             />

@@ -23,7 +23,7 @@ class Settings_Manager {
 	 *
 	 * @var bool
 	 */
-	private bool $is_settings_initialized = false;
+	private $is_settings_initialized = false;
 
 	/**
 	 * Singleton instance.
@@ -37,14 +37,14 @@ class Settings_Manager {
 	 *
 	 * @var array|null
 	 */
-	private ?array $settings = null;
+	private $settings = null;
 
 	/**
 	 * Unmasked settings cache.
 	 *
 	 * @var array|null
 	 */
-	private ?array $unmasked_settings = null;
+	private $unmasked_settings = null;
 
 	/**
 	 * Retrieve the singleton instance of the class.
@@ -142,6 +142,7 @@ class Settings_Manager {
 				),
 				'smtp_provider'     => array(
 					'start_section' => __( 'Email Delivery', 'smart-form-builder-by-dragwyb' ),
+					'condition'     => array( 'smtp_enabled' => true ),
 					'label'         => __( 'Guided Setup / Preset Providers', 'smart-form-builder-by-dragwyb' ),
 					'description'   => __(
 						'Select your provider to pre-fill common server parameters and view instructions.',
@@ -190,6 +191,7 @@ class Settings_Manager {
 					),
 				),
 				'smtp_host'         => array(
+					'condition'   => array( 'smtp_enabled' => true ),
 					'label'       => __( 'SMTP Host', 'smart-form-builder-by-dragwyb' ),
 					'description' => __( 'Configure the hostname of your SMTP server (e.g. smtp.gmail.com).', 'smart-form-builder-by-dragwyb' ),
 					'type'        => 'string',
@@ -206,6 +208,7 @@ class Settings_Manager {
 					),
 				),
 				'smtp_port'         => array(
+					'condition'   => array( 'smtp_enabled' => true ),
 					'label'       => __( 'SMTP Port', 'smart-form-builder-by-dragwyb' ),
 					'description' => __( 'Common ports are 587 (TLS), 465 (SSL), or 25 (None).', 'smart-form-builder-by-dragwyb' ),
 					'type'        => 'number',
@@ -213,6 +216,7 @@ class Settings_Manager {
 					'default'     => 587,
 				),
 				'smtp_encryption'   => array(
+					'condition'    => array( 'smtp_enabled' => true ),
 					'label'        => __( 'Encryption', 'smart-form-builder-by-dragwyb' ),
 					'description'  => __( 'Select security encryption type for outgoing emails.', 'smart-form-builder-by-dragwyb' ),
 					'type'         => 'select',
@@ -235,12 +239,17 @@ class Settings_Manager {
 				),
 				'smtp_auth'         => array(
 					'start_section' => __( 'SMTP Authentication', 'smart-form-builder-by-dragwyb' ),
+					'condition'     => array( 'smtp_enabled' => true ),
 					'label'         => __( 'Server Requires Authentication', 'smart-form-builder-by-dragwyb' ),
 					'description'   => __( 'Enable if your SMTP server requires username and password.', 'smart-form-builder-by-dragwyb' ),
 					'type'          => 'bool',
 					'default'       => true,
 				),
 				'smtp_username'     => array(
+					'condition'   => array(
+						'smtp_enabled' => true,
+						'smtp_auth'    => true,
+					),
 					'label'       => __( 'SMTP Username', 'smart-form-builder-by-dragwyb' ),
 					'description' => __( 'Your SMTP authentication username or email.', 'smart-form-builder-by-dragwyb' ),
 					'type'        => 'string',
@@ -248,6 +257,10 @@ class Settings_Manager {
 					'default'     => '',
 				),
 				'smtp_password'     => array(
+					'condition'   => array(
+						'smtp_enabled' => true,
+						'smtp_auth'    => true,
+					),
 					'label'       => __( 'SMTP Password', 'smart-form-builder-by-dragwyb' ),
 					'description' => __( 'Your SMTP authentication password or app password.', 'smart-form-builder-by-dragwyb' ),
 					'type'        => 'password',
@@ -256,6 +269,7 @@ class Settings_Manager {
 					'mask'        => true,
 				),
 				'smtp_from_email'   => array(
+					'condition'   => array( 'smtp_enabled' => true ),
 					'label'       => __( 'From Email (Optional)', 'smart-form-builder-by-dragwyb' ),
 					'description' => __( 'The email address that form emails will be sent from.', 'smart-form-builder-by-dragwyb' ),
 					'type'        => 'string',
@@ -263,6 +277,7 @@ class Settings_Manager {
 					'default'     => '',
 				),
 				'smtp_from_name'    => array(
+					'condition'   => array( 'smtp_enabled' => true ),
 					'label'       => __( 'From Name (Optional)', 'smart-form-builder-by-dragwyb' ),
 					'description' => __( 'The name that form emails will be sent from.', 'smart-form-builder-by-dragwyb' ),
 					'type'        => 'string',
@@ -270,6 +285,7 @@ class Settings_Manager {
 					'default'     => '',
 				),
 				'smtp_apply_to_all' => array(
+					'condition'   => array( 'smtp_enabled' => true ),
 					'label'       => __( 'Apply to all site emails', 'smart-form-builder-by-dragwyb' ),
 					'description' => __( 'Routes WooCommerce, password resets, and all WordPress emails through this SMTP.', 'smart-form-builder-by-dragwyb' ),
 					'type'        => 'bool',
