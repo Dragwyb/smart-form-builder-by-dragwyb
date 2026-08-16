@@ -146,7 +146,7 @@
     --dragwyb-btn-hover-bg: #1e40af;
     --dragwyb-btn-color: #ffffff;
     --dragwyb-btn-radius: 6px;
-    --dragwyb-btn-width: auto;
+    --dragwyb-btn-width: 100%;
     --dragwyb-btn-pt: 12px;
     --dragwyb-btn-pr: 20px;
     --dragwyb-btn-pb: 12px;
@@ -407,7 +407,7 @@
     }
 
     .dragwyb-button-field {
-        text-align: var(--dragwyb-btn-align, var(--dragwyb-form-justify-content, center));
+        text-align: var(--dragwyb-btn-align, var(--dragwyb-form-justify-content, left));
     }
 
     /* Field Container */

@@ -813,7 +813,7 @@ class Settings extends Register_Controls_Base {
 					'auto'   => 'Auto',
 					'custom' => 'Custom',
 				),
-				'default'      => 'auto',
+				'default'      => 'custom',
 				'label_inline' => true,
 			)
 		);
