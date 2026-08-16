@@ -150,7 +150,7 @@ li#toplevel_page_dragwyb-form-overview .wp-menu-image img {
     box-sizing: border-box !important;
 }
 
-.wp-list-table.dragwyb-forms thead th {
+.wp-list-table.dragwyb-forms thead :where(th, td) {
     border-bottom: 2px solid #f1f5f9 !important;
     background: transparent !important;
     color: #475569 !important;
