@@ -565,7 +565,7 @@
             .dragwyb-option-item {
                 display: flex;
                 align-items: center;
-                gap: 8px;
+                gap: var(--dragwyb-toggle-label-spacing, var(--dragwyb-toggle-spacing, 8px));
                 cursor: pointer;
 
                 input[type="radio"],
@@ -631,6 +631,15 @@
                     text-align: var(--dragwyb-option-typography-align);
                     color: var(--dragwyb-option-color, var(--dragwyb-input-color));
                     margin-left: 0;
+
+                    a {
+                        color: var(--dragwyb-gdpr-link-color, var(--dragwyb-toggle-primary-color, #2563eb));
+                        text-decoration: underline;
+
+                        &:hover {
+                            opacity: 0.85;
+                        }
+                    }
                 }
             }
 

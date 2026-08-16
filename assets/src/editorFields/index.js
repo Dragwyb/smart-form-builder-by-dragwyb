@@ -652,25 +652,25 @@ class maskField extends DragwybEditor.editor.extends.FieldBase {
             'mask-cep': 'XXXXX-XXX',
             'mask-ipv4': 'XXX.XXX.XXX.XXX',
         };
-        
-    
+
+
         if (maskClass === 'mask-custom') {
             return (s.custom_mask || '').replace(/[0A*]/g, 'X');
         }
-    
+
         if (maskClass === 'mask-moneyc') {
             const prefix = s.money_prefix !== undefined && s.money_prefix !== ''
                 ? s.money_prefix
                 : '$';
-    
+
             const separator = s.money_format === 'comma' ? '.' : ',';
             const decimals = '0'.repeat(
                 Math.max(0, parseInt(s.money_decimal_places || 2, 10) || 2)
             );
-    
+
             return `${prefix}0${separator}${decimals}`;
         }
-    
+
         return placeholders[maskClass] || '';
     }
 
@@ -993,6 +993,46 @@ class stepField extends DragwybEditor.editor.extends.FieldBase {
     }
 }
 
+class gdprField extends DragwybEditor.editor.extends.FieldBase {
+    fieldName() { return 'gdpr'; }
+    bind() {
+        if (!this.shouldRender()) return <></>;
+        const s = this.attributes;
+        const fieldId = s.field_id || this.id;
+        const consentText = s.consent_text || 'I consent to this website storing my submitted information so they can respond to my inquiry.';
+        const privacyUrl = s.privacy_policy_url || '';
+
+        let renderConsent = consentText;
+        if (privacyUrl && consentText.toLowerCase().includes('privacy policy')) {
+            renderConsent = consentText.replace(/Privacy Policy/gi, `<a href="${privacyUrl}" target="_blank" rel="noopener noreferrer" onclick="return false;">Privacy Policy</a>`);
+        }
+
+        return (
+            <>
+                <div className="dragwyb-input-group dragwyb-gdpr-field">
+                    {s.label && <this.RenderLabel
+                        id={''}
+                        label={s.label}
+                        required={s.required || 'yes'}
+                        settings={s}
+                    />}
+                    <div className="dragwyb-options-container">
+                        <label className="dragwyb-option-item dragwyb-gdpr-item">
+                            <input type="checkbox" name={fieldId} value="yes" readOnly />
+                            <span className="dragwyb-radio-label">
+                                {privacyUrl && consentText.toLowerCase().includes('privacy policy') ? (
+                                    <span dangerouslySetInnerHTML={{ __html: renderConsent }} />
+                                ) : consentText}
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
+            </>
+        );
+    }
+}
+
 const initializeFields = () => {
     const defaultFields = {
         'text': (args) => new textField(args),
@@ -1018,6 +1058,7 @@ const initializeFields = () => {
         'section': (args) => new sectionField(args),
         'captcha': (args) => new captchaField(args),
         'step': (args) => new stepField(args),
+        'gdpr': (args) => new gdprField(args),
     };
 
     Object.keys(defaultFields).forEach(key =>
