@@ -9,7 +9,7 @@ export default class SuccessMessageAction extends DragwybActionBase {
     run(actionData, response, formHandler) {
         if (!actionData) return;
 
-        // Instantiate and show the new MessageModal component
-        new MessageModal(actionData, 'success');
+        // Instantiate and show MessageModal/MessageDisplay component
+        new MessageModal(actionData, 'success', formHandler);
     }
 }
