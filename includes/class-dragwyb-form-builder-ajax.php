@@ -278,6 +278,12 @@ class Dragwyb_Form_Builder_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Permission denied', 'smart-form-builder-by-dragwyb' ) ) );
 		}
 
+		// Update entry status from 'init' to 'publish' when viewed/opened
+		if ( 'init' === $entry->status ) {
+			$db->update( $id, array( 'status' => 'publish' ) );
+			$entry->status = 'publish';
+		}
+
 		// Decode JSON safely for frontend usage
 		$entry->submission_data_decoded = json_decode( $entry->submission_data, true );
 		if ( json_last_error() !== JSON_ERROR_NONE || ! is_array( $entry->submission_data_decoded ) ) {

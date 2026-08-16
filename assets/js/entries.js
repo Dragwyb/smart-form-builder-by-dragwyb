@@ -337,6 +337,16 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
+    // Helper to un-highlight unread entry row when opened
+    function markRowAsRead(id) {
+        const row = document.getElementById(`entry-row-${id}`);
+        if (row) {
+            row.classList.remove('dragwyb-entry-init');
+            const badge = row.querySelector('.dragwyb-init-badge');
+            if (badge) badge.remove();
+        }
+    }
+
     // Render Table Rows
     function renderTable(entries) {
         if (elements.selectAll) {
@@ -354,6 +364,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const row = document.createElement('tr');
             row.id = `entry-row-${id}`;
 
+            if (entry.status === 'init') {
+                row.classList.add('dragwyb-entry-init');
+            }
+
             // Checkbox column
             const cbCell = document.createElement('td');
             cbCell.className = 'check-column';
@@ -368,6 +382,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const strong = document.createElement('strong');
             strong.textContent = `#${id}`;
             titleCell.appendChild(strong);
+
+            if (entry.status === 'init') {
+                const unreadBadge = document.createElement('span');
+                unreadBadge.className = 'dragwyb-init-badge';
+                unreadBadge.textContent = 'Unread';
+                titleCell.appendChild(unreadBadge);
+            }
 
             const actions = document.createElement('div');
             actions.className = 'row-actions';
@@ -479,6 +500,7 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.modalOverlay.classList.add('dragwyb-active');
 
         fetchEntry(id).then(async entry => {
+            markRowAsRead(id);
             await modalWait(startTime);
 
             clearElement(elements.viewModalBody);
@@ -598,6 +620,7 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.modalOverlay.classList.add('dragwyb-active');
 
         fetchEntry(id).then(async entry => {
+            markRowAsRead(id);
             await modalWait(startTime);
 
             clearElement(elements.editModalBody);

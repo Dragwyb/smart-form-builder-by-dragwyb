@@ -79,6 +79,15 @@ $white: #fff;
                     visibility: visible;
                 }
 
+                &.dragwyb-entry-init {
+                    background-color: #f0f7ff !important;
+
+                    td {
+                        font-weight: 600;
+                        color: #0f172a;
+                    }
+                }
+
                 .row-actions {
                     visibility: hidden;
                     font-size: 13px;
@@ -92,6 +101,21 @@ $white: #fff;
                         text-decoration: none;
                     }
                 }
+            }
+
+            .dragwyb-init-badge {
+                display: inline-block;
+                background-color: #ff004b;
+                color: #ffffff;
+                font-size: 10px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                padding: 2px 7px;
+                border-radius: 10px;
+                margin-left: 8px;
+                vertical-align: middle;
+                box-shadow: 0 1px 3px rgba(255, 0, 75, 0.25);
             }
 
             .dragwyb-loading-state {

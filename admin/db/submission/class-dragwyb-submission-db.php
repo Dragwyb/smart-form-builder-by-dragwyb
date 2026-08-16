@@ -37,7 +37,7 @@ class Dragwyb_Submission_Db {
             ip_address varchar(45) NOT NULL,
             user_agent text NOT NULL,
             submission_data longtext NOT NULL,
-            status varchar(20) DEFAULT 'publish' NOT NULL,
+            status varchar(20) DEFAULT 'init' NOT NULL,
             created_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
             updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
             PRIMARY KEY  (id),
@@ -63,7 +63,7 @@ class Dragwyb_Submission_Db {
 			'ip_address'      => null,
 			'user_agent'      => null,
 			'submission_data' => '{}',
-			'status'          => 'publish',
+			'status'          => 'init',
 			'created_at'      => current_time( 'mysql' ),
 			'updated_at'      => current_time( 'mysql' ),
 		);
