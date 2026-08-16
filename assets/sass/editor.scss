@@ -1882,6 +1882,8 @@ a.dragwyb-editor__preview-toggle {
                 cursor: pointer;
                 outline: none;
                 transition: all 0.15s ease;
+                box-shadow: unset;
+                background-image: unset;
 
                 .dark & {
                     background-color: #1e293b;
@@ -1892,6 +1894,19 @@ a.dragwyb-editor__preview-toggle {
                 &:hover,
                 &:focus {
                     border-color: hsl(var(--dragwyb-primary, 340 90% 55%) / 1);
+                }
+            }
+
+            .dragwyb-dropdown-icon {
+                position: absolute;
+                right: 16px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 14px;
+                color: #0f172a;
+
+                .dark & {
+                    fill: #f1f5f9;
                 }
             }
         }

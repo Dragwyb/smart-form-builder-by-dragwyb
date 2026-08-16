@@ -6,7 +6,8 @@ import { __ } from '@wordpress/i18n';
 import {
     FaSearch, FaTimes, FaSpinner, FaEye, FaFolderPlus,
     FaListAlt, FaThLarge, FaEnvelope, FaBriefcase, FaBullseye,
-    FaCommentDots, FaMagic, FaUser, FaRegEnvelope
+    FaCommentDots, FaMagic, FaUser, FaRegEnvelope,
+    FaChevronDown
 } from 'react-icons/fa';
 
 import * as Fields from '../Fields';
@@ -571,6 +572,7 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
                             <option value="all">{__('All Templates', 'smart-form-builder-by-dragwyb')}</option>
                             <option value="popular">{__('Popular', 'smart-form-builder-by-dragwyb')}</option>
                         </select>
+                        <FaChevronDown className='dragwyb-dropdown-icon' />
                     </div>
                 </div>
 
