@@ -119,9 +119,11 @@ final class Dragwyb_Form_Builder {
 
 		if ( ! get_option( 'dragwyb_form_builder_install_data', false ) ) {
 			update_option( 'dragwyb_form_builder_install_data', gmdate( 'Y-m-d H:i:s' ) );
+			update_option( 'dragwyb_form_initial_version', DRAGWYB_FORM_BUILDER_VERSION );
 		}
 
 		update_option( 'dragwyb_form_builder_activation_data', gmdate( 'Y-m-d H:i:s' ) );
+		update_option( 'dragwyb_form_active_version', DRAGWYB_FORM_BUILDER_VERSION );
 
 		self::create_submission_db();
 	}
