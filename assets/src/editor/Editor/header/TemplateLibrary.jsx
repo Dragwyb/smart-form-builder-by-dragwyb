@@ -3,9 +3,13 @@ import { createPortal } from 'react-dom';
 import { useDispatch } from 'react-redux';
 import { replaceFormState } from '../../store/actions';
 import { __ } from '@wordpress/i18n';
-import { FaSearch, FaTimes, FaSpinner, FaEye, FaFolderPlus } from 'react-icons/fa';
+import {
+    FaSearch, FaTimes, FaSpinner, FaEye, FaFolderPlus,
+    FaListAlt, FaThLarge, FaEnvelope, FaBriefcase, FaBullseye,
+    FaCommentDots, FaMagic, FaUser, FaRegEnvelope
+} from 'react-icons/fa';
+
 import * as Fields from '../Fields';
-import PreviewIframe from '../PreviewIframe';
 import DragwybControlBase from '../../controlBase';
 import store from '../../store';
 
@@ -374,8 +378,10 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
 
     const [templates, setTemplates] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [activeTab, setActiveTab] = useState('contact');
+    const [activeTab, setActiveTab] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
+    const [filterSelect, setFilterSelect] = useState('all');
+    const [showBanner, setShowBanner] = useState(true);
     const [fullPreviewTemplate, setFullPreviewTemplate] = useState(null);
     const [cssCache, setCssCache] = useState({});
 
@@ -442,64 +448,78 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
     };
 
     const categories = [
-        { id: 'contact', name: __('Contact Forms', 'smart-form-builder-by-dragwyb') },
-        { id: 'bussiness', name: __('Business Request', 'smart-form-builder-by-dragwyb') },
-        { id: 'marketing', name: __('Marketing Lead Gen', 'smart-form-builder-by-dragwyb') },
-        { id: 'feedback', name: __('Product Feedback', 'smart-form-builder-by-dragwyb') }
+        { id: 'all', name: __('All Templates', 'smart-form-builder-by-dragwyb'), icon: FaThLarge },
+        { id: 'contact', name: __('Contact Forms', 'smart-form-builder-by-dragwyb'), icon: FaEnvelope },
+        { id: 'bussiness', name: __('Business Request', 'smart-form-builder-by-dragwyb'), icon: FaBriefcase },
+        { id: 'marketing', name: __('Marketing Lead Gen', 'smart-form-builder-by-dragwyb'), icon: FaBullseye },
+        { id: 'feedback', name: __('Product Feedback', 'smart-form-builder-by-dragwyb'), icon: FaCommentDots }
     ];
+
+    const getCategoryIcon = (catId) => {
+        switch (catId) {
+            case 'contact':
+                return FaRegEnvelope;
+            case 'bussiness':
+                return FaBriefcase;
+            case 'marketing':
+                return FaBullseye;
+            case 'feedback':
+                return FaCommentDots;
+            default:
+                return FaUser;
+        }
+    };
+
+    const checkIsPopular = (item, index) => {
+        if (item.popular === true || item.popular === 'true' || item.popular === 1) return true;
+        return false;
+    };
 
     // Filter templates
     const getFilteredTemplates = () => {
         if (!templates) return [];
 
         const query = searchQuery.trim().toLowerCase();
+        const results = [];
 
-        // If searching, search across all categories
-        if (query !== '') {
-            const results = [];
+        Object.keys(templates).forEach(catId => {
+            if (activeTab !== 'all' && catId !== activeTab && query === '') {
+                return;
+            }
 
-            Object.keys(templates).forEach(catId => {
-                const list = templates[catId];
-                if (Array.isArray(list)) {
-                    list.forEach((item, index) => {
-                        const title = (item.advance?.form_name || '').toLowerCase();
-                        const desc = (item.advance?.form_description || '').toLowerCase();
+            const list = templates[catId];
+            if (Array.isArray(list)) {
+                list.forEach((item, index) => {
+                    const title = (item.advance?.form_name || '').toLowerCase();
+                    const desc = (item.advance?.form_description || '').toLowerCase();
+                    const isPopularItem = checkIsPopular(item, index);
 
-                        if (title.includes(query) || desc.includes(query)) {
-                            results.push({
-                                id: `${catId}_${index}`,
-                                category: catId,
-                                data: item
-                            });
-                        }
-                    });
-                }
-            });
-            return results;
-        }
+                    if (filterSelect === 'popular' && !isPopularItem) {
+                        return;
+                    }
 
-        // Otherwise return active category templates
-        const list = templates[activeTab];
-        if (Array.isArray(list)) {
-            return list.map((item, index) => ({
-                id: `${activeTab}_${index}`,
-                category: activeTab,
-                data: item
-            }));
-        }
+                    if (query === '' || title.includes(query) || desc.includes(query)) {
+                        results.push({
+                            id: `${catId}_${index}`,
+                            category: catId,
+                            index,
+                            isPopular: isPopularItem,
+                            data: item
+                        });
+                    }
+                });
+            }
+        });
 
-        return [];
+        return results;
     };
 
     const filteredList = getFilteredTemplates();
 
-    const safeTemplate = (index, activeTab) => {
-        const url = DragwybEditor?.pluginUrl + 'assets/img/templates/' + activeTab + '-template-' + (parseInt(index) + 1) + '.png';
-
-        // Trim spaces and minimize to lowercase for evaluation
+    const safeTemplate = (index, catKey) => {
+        const url = DragwybEditor?.pluginUrl + 'assets/img/templates/' + catKey + '-template-' + (parseInt(index) + 1) + '.png';
         const cleanedUrl = url.trim();
 
-        // Reject URLs that attempt to execute JavaScript code or local files
         if (cleanedUrl.toLowerCase().startsWith('javascript:') || cleanedUrl.toLowerCase().startsWith('data:')) {
             return '#';
         }
@@ -510,22 +530,29 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
     return (
         <div className="dragwyb-template-modal-overlay" onClick={onClose}>
             <div className="dragwyb-template-modal" onClick={(e) => e.stopPropagation()}>
+                {/* Header */}
                 <div className="dragwyb-template-modal__header">
-                    <h2>
-                        <FaFolderPlus className="modal-title-icon" />
-                        {__('Form Template Library', 'smart-form-builder-by-dragwyb')}
-                    </h2>
-                    <button className="close-btn" onClick={onClose}>
+                    <div className="header-title-container">
+                        <div className="header-icon-badge">
+                            <FaListAlt />
+                        </div>
+                        <div>
+                            <h2>{__('Form Template Library', 'smart-form-builder-by-dragwyb')}</h2>
+                            <p className="subtitle">{__('Choose a template to get started quickly', 'smart-form-builder-by-dragwyb')}</p>
+                        </div>
+                    </div>
+                    <button className="close-btn" onClick={onClose} title={__('Close', 'smart-form-builder-by-dragwyb')}>
                         <FaTimes />
                     </button>
                 </div>
 
+                {/* Search & Sort Row */}
                 <div className="dragwyb-template-modal__search-wrapper">
                     <div className="search-bar">
                         <FaSearch className="search-icon" />
                         <input
                             type="text"
-                            placeholder={__('Search templates by name, description...', 'smart-form-builder-by-dragwyb')}
+                            placeholder={__('Search templates by name, description or keyword...', 'smart-form-builder-by-dragwyb')}
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
@@ -535,23 +562,51 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
                             </button>
                         )}
                     </div>
+                    <div className="sort-dropdown-wrapper">
+                        <select
+                            className="sort-dropdown"
+                            value={filterSelect}
+                            onChange={(e) => setFilterSelect(e.target.value)}
+                        >
+                            <option value="all">{__('All Templates', 'smart-form-builder-by-dragwyb')}</option>
+                            <option value="popular">{__('Popular', 'smart-form-builder-by-dragwyb')}</option>
+                        </select>
+                    </div>
                 </div>
 
-                {/* Only show categories buttons if not searching */}
+                {/* Categories Navigation */}
                 {searchQuery.trim() === '' && (
                     <div className="dragwyb-template-modal__categories">
-                        {categories.map((cat) => (
-                            <button
-                                key={cat.id}
-                                className={`category-btn ${activeTab === cat.id ? 'active' : ''}`}
-                                onClick={() => setActiveTab(cat.id)}
-                            >
-                                {cat.name}
-                            </button>
-                        ))}
+                        {categories.map((cat) => {
+                            const Icon = cat.icon;
+                            return (
+                                <button
+                                    key={cat.id}
+                                    className={`category-btn ${activeTab === cat.id ? 'active' : ''}`}
+                                    onClick={() => setActiveTab(cat.id)}
+                                >
+                                    <Icon className="cat-icon" />
+                                    {cat.name}
+                                </button>
+                            );
+                        })}
                     </div>
                 )}
 
+                {/* Banner Strip */}
+                {showBanner && (
+                    <div className="dragwyb-template-modal__banner">
+                        <div className="banner-content">
+                            <FaMagic className="banner-icon" />
+                            <span>{__('Start faster with pre-built templates designed for your needs. Customize everything to match your brand.', 'smart-form-builder-by-dragwyb')}</span>
+                        </div>
+                        <button className="banner-close-btn" onClick={() => setShowBanner(false)}>
+                            <FaTimes />
+                        </button>
+                    </div>
+                )}
+
+                {/* Modal Body / Grid */}
                 <div className="dragwyb-template-modal__body">
                     {loading && (
                         <div className="loading-spinner">
@@ -568,27 +623,39 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
 
                     {!loading && filteredList.length > 0 && (
                         <div className="templates-grid">
-                            {filteredList.map((item, index) => {
+                            {filteredList.map((item) => {
                                 const templateId = item.id;
                                 const tData = item.data;
+                                const CatIcon = getCategoryIcon(item.category);
 
                                 return (
                                     <div key={templateId} className="template-card">
-                                        <div className="template-card__details">
-                                            <h3>{tData.advance?.form_name || __('Prebuilt Form Template', 'smart-form-builder-by-dragwyb')}</h3>
-                                            <p className="description">
-                                                {tData.advance?.form_description || __('Load this layout to replace your editor canvas.', 'smart-form-builder-by-dragwyb')}
-                                            </p>
+                                        {/* Card Header with Category Icon, Titles & Popular Badge */}
+                                        <div className="template-card__header">
+                                            <div className="template-card__icon-box">
+                                                <CatIcon />
+                                            </div>
+                                            <div className="template-card__details">
+                                                <div className="title-row">
+                                                    <h3>{tData.advance?.form_name || __('Prebuilt Form Template', 'smart-form-builder-by-dragwyb')}</h3>
+                                                    {item.isPopular && (
+                                                        <span className="popular-badge">{__('Popular', 'smart-form-builder-by-dragwyb')}</span>
+                                                    )}
+                                                </div>
+                                                <p className="description">
+                                                    {tData.advance?.form_description || __('Load this layout to replace your editor canvas.', 'smart-form-builder-by-dragwyb')}
+                                                </p>
+                                            </div>
                                         </div>
 
+                                        {/* Card Image Preview */}
                                         <div className="template-card__preview">
-                                            <img src={safeTemplate(index, activeTab)} alt={tData.advance?.form_name || __('Prebuilt Form Template', 'smart-form-builder-by-dragwyb')} style={{ width: '100%' }} />
+                                            <img src={safeTemplate(item.index, item.category)} alt={tData.advance?.form_name || __('Prebuilt Form Template', 'smart-form-builder-by-dragwyb')} style={{ width: '100%' }} />
                                         </div>
 
-                                        {/* 3 columns in one section under the iframe */}
+                                        {/* Card Actions Row */}
                                         <div className="template-card__actions-row">
-                                            {/* Column 1: Full Preview Icon Button */}
-                                            <div className="action-col button-col">
+                                            <div className="action-col preview-col">
                                                 <button
                                                     className="action-icon-btn preview-btn"
                                                     title={__('Full Screen Preview', 'smart-form-builder-by-dragwyb')}
@@ -597,15 +664,13 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
                                                     <FaEye />
                                                 </button>
                                             </div>
-
-                                            {/* Column 2: Insert Icon Button */}
-                                            <div className="action-col button-col">
+                                            <div className="action-col insert-col">
                                                 <button
                                                     className="action-icon-btn insert-btn"
                                                     title={__('Insert Fields into Canvas', 'smart-form-builder-by-dragwyb')}
                                                     onClick={() => handleImport(tData, templateId)}
                                                 >
-                                                    {__('Insert Form', 'smart-form-builder-by-dragwyb')}
+                                                    {__('Insert Template', 'smart-form-builder-by-dragwyb')}
                                                 </button>
                                             </div>
                                         </div>
@@ -614,6 +679,21 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
                             })}
                         </div>
                     )}
+                </div>
+
+                {/* Modal Footer */}
+                <div className="dragwyb-template-modal__footer">
+                    <div className="footer-left">
+                        <div className="footer-icon-box">
+                            <FaFolderPlus />
+                        </div>
+                        <div className="footer-text">
+                            <span>{__("Can't find what you need?", 'smart-form-builder-by-dragwyb')} </span>
+                            <a href="#" onClick={(e) => { e.preventDefault(); onClose(); }} className="create-blank-link">
+                                {__('Create a blank form →', 'smart-form-builder-by-dragwyb')}
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -649,3 +729,4 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
 };
 
 export default TemplateLibrary;
+
