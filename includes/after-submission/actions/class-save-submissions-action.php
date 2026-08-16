@@ -8,6 +8,7 @@ use Dragwyb\Form_Builder\Includes\After_Submission\Action_Base;
 use Dragwyb\Form_Builder\Includes\Controls\Controls;
 use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
 use Dragwyb\Form_Builder\Admin\Db\Submission\Dragwyb_Submission_Db;
+use Dragwyb\Form_Builder\Admin\Settings\Settings_Manager;
 
 class Save_Submissions_Action extends Action_Base {
 
@@ -37,30 +38,6 @@ class Save_Submissions_Action extends Action_Base {
 				'label'       => __( 'Save Submissions to Database', 'smart-form-builder-by-dragwyb' ),
 				'default'     => 'no',
 				'description' => __( 'View entries in WP Dashboard > Dragwyb > Submissions', 'smart-form-builder-by-dragwyb' ),
-			)
-		);
-
-		$this->add_control(
-			'collect_user_ip',
-			array(
-				'type'       => Controls::SWITCHER,
-				'label'      => __( 'Collect User IP', 'smart-form-builder-by-dragwyb' ),
-				'default'    => 'no',
-				'conditions' => array(
-					'save_to_db_save_submissions' => 'yes',
-				),
-			)
-		);
-
-		$this->add_control(
-			'collect_user_agent',
-			array(
-				'type'       => Controls::SWITCHER,
-				'label'      => __( 'Collect User Agent', 'smart-form-builder-by-dragwyb' ),
-				'default'    => 'no',
-				'conditions' => array(
-					'save_to_db_save_submissions' => 'yes',
-				),
 			)
 		);
 
@@ -94,14 +71,11 @@ class Save_Submissions_Action extends Action_Base {
 				'submission_data' => $this->get_form_data( $form_data, $form_config ),
 			);
 
-			$collect_ip = isset( $settings['collect_user_ip'] ) && 'yes' === $settings['collect_user_ip'] ? 'yes' : 'no';
-			$collect_ua = isset( $settings['collect_user_agent'] ) && 'yes' === $settings['collect_user_agent'] ? 'yes' : 'no';
+			$disable_details    = Settings_Manager::instance()->get_setting( 'gdpr_privacy', 'gdpr_disable_user_details', false );
+			$is_disable_details = true === $disable_details || 'yes' === $disable_details;
 
-			if ( $collect_ip === 'yes' ) {
+			if ( ! $is_disable_details ) {
 				$insert_data['ip_address'] = $this->get_ip_address();
-			}
-
-			if ( $collect_ua === 'yes' ) {
 				$insert_data['user_agent'] = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_textarea_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
 			}
 
