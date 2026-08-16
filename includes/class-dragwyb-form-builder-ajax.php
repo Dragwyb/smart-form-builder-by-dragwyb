@@ -278,8 +278,7 @@ class Dragwyb_Form_Builder_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Permission denied', 'smart-form-builder-by-dragwyb' ) ) );
 		}
 
-		// Update entry status from 'init' to 'publish' when viewed/opened
-		if ( 'init' === $entry->status ) {
+		if ( 'unread' === $entry->status ) {
 			$db->update( $id, array( 'status' => 'publish' ) );
 			$entry->status = 'publish';
 		}

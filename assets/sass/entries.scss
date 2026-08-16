@@ -79,7 +79,7 @@ $white: #fff;
                     visibility: visible;
                 }
 
-                &.dragwyb-entry-init {
+                &.dragwyb-entry-unread {
                     background-color: #f0f7ff !important;
 
                     td {
@@ -103,7 +103,7 @@ $white: #fff;
                 }
             }
 
-            .dragwyb-init-badge {
+            .dragwyb-unread-badge {
                 display: inline-block;
                 background-color: #ff004b;
                 color: #ffffff;

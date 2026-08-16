@@ -341,8 +341,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function markRowAsRead(id) {
         const row = document.getElementById(`entry-row-${id}`);
         if (row) {
-            row.classList.remove('dragwyb-entry-init');
-            const badge = row.querySelector('.dragwyb-init-badge');
+            row.classList.remove('dragwyb-entry-unread');
+            const badge = row.querySelector('.dragwyb-unread-badge');
             if (badge) badge.remove();
         }
     }
@@ -364,8 +364,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const row = document.createElement('tr');
             row.id = `entry-row-${id}`;
 
-            if (entry.status === 'init') {
-                row.classList.add('dragwyb-entry-init');
+            if (entry.status === 'unread' || entry.status === 'init') {
+                row.classList.add('dragwyb-entry-unread');
             }
 
             // Checkbox column
@@ -383,9 +383,9 @@ document.addEventListener('DOMContentLoaded', () => {
             strong.textContent = `#${id}`;
             titleCell.appendChild(strong);
 
-            if (entry.status === 'init') {
+            if (entry.status === 'unread' || entry.status === 'init') {
                 const unreadBadge = document.createElement('span');
-                unreadBadge.className = 'dragwyb-init-badge';
+                unreadBadge.className = 'dragwyb-unread-badge';
                 unreadBadge.textContent = 'Unread';
                 titleCell.appendChild(unreadBadge);
             }
