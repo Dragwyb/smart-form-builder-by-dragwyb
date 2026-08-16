@@ -33,14 +33,15 @@ class Success_Message_Action extends Action_Base {
 		$this->add_control(
 			'message_position_success_message',
 			array(
-				'type'    => Controls::SELECT,
-				'label'   => __( 'Message Position', 'smart-form-builder-by-dragwyb' ),
-				'options' => array(
+				'type'         => Controls::SELECT,
+				'label'        => __( 'Message Position', 'smart-form-builder-by-dragwyb' ),
+				'options'      => array(
 					'form_bottom' => __( 'Form Bottom', 'smart-form-builder-by-dragwyb' ),
 					'form_place'  => __( 'In Form Place', 'smart-form-builder-by-dragwyb' ),
 					'modal'       => __( 'Modal Popup', 'smart-form-builder-by-dragwyb' ),
 				),
-				'default' => 'form_bottom',
+				'default'      => 'form_bottom',
+				'label_inline' => true,
 			)
 		);
 
