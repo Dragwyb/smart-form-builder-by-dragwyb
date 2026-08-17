@@ -129,6 +129,38 @@ class Dragwyb_Frontend_Route {
 
 		$form_id = intval( $form_id );
 
+		if ( $request->get_param( 'screen_resolution' ) ) {
+			$_POST['screen_resolution'] = sanitize_text_field( (string) $request->get_param( 'screen_resolution' ) );
+		}
+		if ( $request->get_param( 'current_page_url' ) ) {
+			$_POST['current_page_url'] = sanitize_text_field( (string) $request->get_param( 'current_page_url' ) );
+		}
+		if ( $request->get_param( 'referrer_url' ) ) {
+			$_POST['referrer_url'] = sanitize_text_field( (string) $request->get_param( 'referrer_url' ) );
+		}
+		if ( $request->get_param( 'time_to_submit' ) ) {
+			$_POST['time_to_submit'] = sanitize_text_field( (string) $request->get_param( 'time_to_submit' ) );
+		}
+		if ( $request->get_param( 'visitor_journey' ) ) {
+			$_POST['visitor_journey'] = $request->get_param( 'visitor_journey' );
+		}
+
+		if ( is_array( $fields ) ) {
+			foreach ( $fields as $field_item ) {
+				if ( is_array( $field_item ) && isset( $field_item['name'], $field_item['value'] ) ) {
+					if ( 'session_uid' === $field_item['name'] ) {
+						$_POST['session_uid'] = sanitize_text_field( (string) $field_item['value'] );
+					} elseif ( 'session_id' === $field_item['name'] ) {
+						$_POST['session_id'] = sanitize_text_field( (string) $field_item['value'] );
+					} elseif ( 'user_id' === $field_item['name'] ) {
+						$_POST['user_id'] = sanitize_text_field( (string) $field_item['value'] );
+					} elseif ( 'user_session' === $field_item['name'] ) {
+						$_POST['user_session'] = sanitize_text_field( (string) $field_item['value'] );
+					}
+				}
+			}
+		}
+
 		// Instantiate the submission handler
 		$handler = new Form_Submission_Handler(
 			$form_id,

@@ -36,6 +36,22 @@
     }
     setCookie('dragwyb_sid', sessionUid, (parseInt(cfg.sessionTimeout, 10) || 30) / (24 * 60));
 
+    function updateFormHiddenFields() {
+        var sessionUidInputs = document.querySelectorAll('input[name="session_uid"], input[name="user_session"]');
+        for (var i = 0; i < sessionUidInputs.length; i++) {
+            sessionUidInputs[i].value = sessionUid || '';
+        }
+        var sessionIdInputs = document.querySelectorAll('input[name="session_id"], input[name="user_id"]');
+        for (var j = 0; j < sessionIdInputs.length; j++) {
+            sessionIdInputs[j].value = sessionUid || visitorUid || '';
+        }
+    }
+
+    updateFormHiddenFields();
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', updateFormHiddenFields);
+    }
+
     function getDeviceType() {
         var ua = navigator.userAgent;
         if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) return 'tablet';
@@ -104,6 +120,41 @@
             xhr.send(formData);
         }
     }
+
+    // Track visitor journey in sessionStorage
+    try {
+        var journeyKey = 'dragwyb_visitor_journey';
+        var journeyData = JSON.parse(sessionStorage.getItem(journeyKey) || '[]');
+        if (!Array.isArray(journeyData)) journeyData = [];
+
+        var now = new Date();
+        var hours = now.getHours();
+        var minutes = now.getMinutes();
+        var seconds = now.getSeconds();
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        var formattedTime = (hours < 10 ? '0' + hours : hours) + '.' + (minutes < 10 ? '0' + minutes : minutes) + '.' + (seconds < 10 ? '0' + seconds : seconds) + ' ' + ampm;
+
+        var currentUrl = window.location.href;
+        var currentTitle = document.title || currentUrl;
+
+        var last = journeyData[journeyData.length - 1];
+        if (!last || last.url !== currentUrl || (Date.now() - (last.timestamp || 0) > 3000)) {
+            journeyData.push({
+                title: currentTitle,
+                url: currentUrl,
+                time: formattedTime,
+                timestamp: Date.now()
+            });
+
+            if (journeyData.length > 20) {
+                journeyData = journeyData.slice(-20);
+            }
+
+            sessionStorage.setItem(journeyKey, JSON.stringify(journeyData));
+        }
+    } catch (e) {}
 
     // Send pageview
     sendTracking('pageview');

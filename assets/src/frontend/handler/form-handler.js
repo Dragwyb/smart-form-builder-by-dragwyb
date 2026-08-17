@@ -9,6 +9,7 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
     }
 
     init() {
+        this.startTime = performance.now();
         this.bindEvents();
         DragwybBuilder.Hooks.doAction('dragwyb/frontend/form/init' + this.formId, this);
     }
@@ -50,8 +51,22 @@ class DragwybFormHandler extends DragwybBuilder.DragwybFormFrontendBase {
             return;
         }
 
+        const timeToSubmit = this.startTime ? `${Math.max(1, Math.round((performance.now() - this.startTime) / 1000))}s` : '-';
+        const screenRes = (window.screen && window.screen.width && window.screen.height) ? `${window.screen.width}x${window.screen.height}` : '-';
+
+        let visitorJourney = [];
+        try {
+            visitorJourney = JSON.parse(sessionStorage.getItem('dragwyb_visitor_journey') || '[]');
+            if (!Array.isArray(visitorJourney)) visitorJourney = [];
+        } catch (e) {}
+
         const formData = {
-            fields: jQuery(this.elements.$form[0]).serializeArray()
+            fields: jQuery(this.elements.$form[0]).serializeArray(),
+            screen_resolution: screenRes,
+            current_page_url: window.location.href,
+            referrer_url: document.referrer || 'Direct',
+            time_to_submit: timeToSubmit,
+            visitor_journey: visitorJourney
         };
         formData.form_id = this.formId;
         formData.nonce = window.DragwybFrontendData?.[`form_${this.formId}`]?.nonce || '';

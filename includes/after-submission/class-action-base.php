@@ -65,6 +65,9 @@ abstract class Action_Base extends Register_Controls_Base {
 	protected function get_form_data( $form_data, $form_config ) {
 		$data = array();
 		foreach ( $form_data as $field_id => $field_value ) {
+			if ( in_array( $field_id, array( 'session_uid', 'session_id', 'user_id', 'user_session' ), true ) ) {
+				continue;
+			}
 			$data[ $field_id ] = array(
 				'label' => isset( $form_config['fields'][ $field_id ]['attributes']['label'] ) ? $form_config['fields'][ $field_id ]['attributes']['label'] : $field_id,
 				'value' => $field_value,
