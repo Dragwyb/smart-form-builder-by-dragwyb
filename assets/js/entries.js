@@ -505,20 +505,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
             clearElement(elements.viewModalBody);
 
-            // Build premium grid layout
-            const grid = document.createElement('div');
-            grid.className = 'dragwyb-entry-details-grid';
+            // Build modern layout matching screenshot
+            const container = document.createElement('div');
+            container.className = 'dragwyb-entry-modal-wrapper';
 
-            // Left Panel: Submitted Data
-            const leftPanel = document.createElement('div');
-            leftPanel.className = 'dragwyb-detail-section';
-            const leftTitle = document.createElement('h3');
-            leftTitle.textContent = 'Submitted Data Fields';
-            leftPanel.appendChild(leftTitle);
+            // Top Card: Submitted Data
+            const submittedCard = document.createElement('div');
+            submittedCard.className = 'dragwyb-entry-card dragwyb-submitted-card';
 
-            const table = document.createElement('table');
-            table.className = 'dragwyb-detail-table';
-            const tbody = document.createElement('tbody');
+            const cardHeader = document.createElement('div');
+            cardHeader.className = 'dragwyb-card-header';
+
+            const cardTitle = document.createElement('h3');
+            cardTitle.className = 'dragwyb-card-title';
+            cardTitle.textContent = 'Submitted Data';
+
+            const formSub = document.createElement('div');
+            formSub.className = 'dragwyb-form-subtitle';
+            formSub.textContent = `Form: ${entry.form_title || `#${entry.form_id}`}`;
+
+            cardHeader.appendChild(cardTitle);
+            cardHeader.appendChild(formSub);
+            submittedCard.appendChild(cardHeader);
+
+            const submittedBody = document.createElement('div');
+            submittedBody.className = 'dragwyb-card-body';
+
+            const dataList = document.createElement('div');
+            dataList.className = 'dragwyb-submitted-list';
 
             let hasData = false;
             if (entry.submission_data_decoded) {
@@ -526,81 +540,235 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (typeof decoded === 'object' && Object.keys(decoded).length > 0) {
                     hasData = true;
                     for (const [key, value] of Object.entries(decoded)) {
-                        const tr = document.createElement('tr');
-                        const th = document.createElement('th');
+                        const row = document.createElement('div');
+                        row.className = 'dragwyb-submitted-item';
 
                         let label = key;
                         let displayVal = value;
                         if (value && typeof value === 'object' && 'value' in value) {
-                            label = value.label !== key ? `${value.label} (${key})` : value.label;
+                            label = value.label || key;
                             displayVal = value.value;
                         }
 
-                        th.textContent = label;
-                        const td = document.createElement('td');
-                        td.textContent = Array.isArray(displayVal) ? displayVal.join(', ') : (displayVal == null ? '' : String(displayVal));
+                        const labelEl = document.createElement('div');
+                        labelEl.className = 'dragwyb-submitted-label';
+                        labelEl.textContent = label;
 
-                        tr.appendChild(th);
-                        tr.appendChild(td);
-                        tbody.appendChild(tr);
+                        const valueEl = document.createElement('div');
+                        valueEl.className = 'dragwyb-submitted-value';
+                        valueEl.textContent = Array.isArray(displayVal) ? displayVal.join(', ') : (displayVal == null ? '' : String(displayVal));
+
+                        row.appendChild(labelEl);
+                        row.appendChild(valueEl);
+                        dataList.appendChild(row);
                     }
                 }
             }
 
             if (!hasData) {
-                const tr = document.createElement('tr');
-                const td = document.createElement('td');
-                td.colSpan = 2;
-                td.style.color = '#888';
-                td.style.fontStyle = 'italic';
-                td.textContent = 'No submission data recorded.';
-                tr.appendChild(td);
-                tbody.appendChild(tr);
+                const empty = document.createElement('p');
+                empty.className = 'dragwyb-empty-text';
+                empty.textContent = 'No submission data recorded.';
+                dataList.appendChild(empty);
             }
 
-            table.appendChild(tbody);
-            leftPanel.appendChild(table);
+            submittedBody.appendChild(dataList);
+            submittedCard.appendChild(submittedBody);
+            container.appendChild(submittedCard);
 
-            // Right Panel: Metadata
-            const rightPanel = document.createElement('div');
-            rightPanel.className = 'dragwyb-detail-section';
-            const rightTitle = document.createElement('h3');
-            rightTitle.textContent = 'Metadata';
-            rightPanel.appendChild(rightTitle);
+            // Bottom Grid (Two columns)
+            const bottomGrid = document.createElement('div');
+            bottomGrid.className = 'dragwyb-entry-grid-two-col';
 
-            const metaList = document.createElement('ul');
-            metaList.className = 'dragwyb-meta-list';
+            // Left Card: Lead Attribution
+            const leadCard = document.createElement('div');
+            leadCard.className = 'dragwyb-entry-card';
 
-            const addMetaItem = (label, val, className = '') => {
-                const li = document.createElement('li');
-                const strong = document.createElement('strong');
-                strong.textContent = label + ':';
-                li.appendChild(strong);
-                li.appendChild(document.createTextNode(' '));
-                if (className) {
-                    const span = document.createElement('span');
-                    span.className = className;
-                    span.textContent = val;
-                    li.appendChild(span);
+            const leadHeader = document.createElement('div');
+            leadHeader.className = 'dragwyb-card-header';
+
+            const leadTitle = document.createElement('h3');
+            leadTitle.className = 'dragwyb-card-title';
+            leadTitle.textContent = 'Lead Attribution';
+
+            const leadSub = document.createElement('div');
+            leadSub.className = 'dragwyb-card-subtitle';
+            leadSub.textContent = 'How this lead found you';
+
+            leadHeader.appendChild(leadTitle);
+            leadHeader.appendChild(leadSub);
+            leadCard.appendChild(leadHeader);
+
+            const leadBody = document.createElement('div');
+            leadBody.className = 'dragwyb-card-body';
+
+            const leadList = document.createElement('div');
+            leadList.className = 'dragwyb-info-list';
+
+            const leadAttrs = entry.lead_attributes || {};
+
+            const addInfoRow = (parent, label, val, isPill = false) => {
+                const row = document.createElement('div');
+                row.className = 'dragwyb-info-row';
+
+                const labelEl = document.createElement('span');
+                labelEl.className = 'dragwyb-info-label';
+                labelEl.textContent = label;
+
+                const valEl = document.createElement('span');
+                valEl.className = 'dragwyb-info-value';
+
+                if (isPill && val && val !== '-') {
+                    const pill = document.createElement('span');
+                    pill.className = 'dragwyb-pill-badge';
+                    pill.textContent = val;
+                    valEl.appendChild(pill);
                 } else {
-                    li.appendChild(document.createTextNode(val));
+                    valEl.textContent = val || '-';
                 }
-                metaList.appendChild(li);
+
+                row.appendChild(labelEl);
+                row.appendChild(valEl);
+                parent.appendChild(row);
             };
 
-            addMetaItem('Entry ID', entry.id);
-            addMetaItem('Form ID', entry.form_id);
-            addMetaItem('IP Address', entry.ip_address);
-            addMetaItem('Status', entry.status);
-            addMetaItem('Date Submitted', entry.created_at);
-            addMetaItem('User Agent', entry.user_agent, 'user-agent-text');
+            addInfoRow(leadList, 'Traffic Source', leadAttrs.traffic_source || 'Direct', true);
+            addInfoRow(leadList, 'Referrer', leadAttrs.referrer || 'Direct');
+            addInfoRow(leadList, 'Landing Page', leadAttrs.landing_page || '-');
+            addInfoRow(leadList, 'UTM Source', leadAttrs.utm_source || '-');
+            addInfoRow(leadList, 'UTM Medium', leadAttrs.utm_medium || '-');
+            addInfoRow(leadList, 'UTM Campaign', leadAttrs.utm_campaign || '-');
+            addInfoRow(leadList, 'UTM Term', leadAttrs.utm_term || '-');
+            addInfoRow(leadList, 'UTM Content', leadAttrs.utm_content || '-');
 
-            rightPanel.appendChild(metaList);
+            leadBody.appendChild(leadList);
+            leadCard.appendChild(leadBody);
+            bottomGrid.appendChild(leadCard);
 
-            grid.appendChild(leftPanel);
-            grid.appendChild(rightPanel);
+            // Right Card: Visitor Information
+            const visitorCard = document.createElement('div');
+            visitorCard.className = 'dragwyb-entry-card';
 
-            elements.viewModalBody.appendChild(grid);
+            const visitorHeader = document.createElement('div');
+            visitorHeader.className = 'dragwyb-card-header';
+
+            const visitorTitle = document.createElement('h3');
+            visitorTitle.className = 'dragwyb-card-title';
+            visitorTitle.textContent = 'Visitor Information';
+
+            visitorHeader.appendChild(visitorTitle);
+            visitorCard.appendChild(visitorHeader);
+
+            const visitorBody = document.createElement('div');
+            visitorBody.className = 'dragwyb-card-body';
+
+            const visitorList = document.createElement('div');
+            visitorList.className = 'dragwyb-info-list';
+
+            const visitorInfo = entry.visitor_info || {};
+
+            addInfoRow(visitorList, 'Device', visitorInfo.device || '-');
+            addInfoRow(visitorList, 'Browser', visitorInfo.browser || '-');
+            addInfoRow(visitorList, 'Operating System', visitorInfo.os || '-');
+            addInfoRow(visitorList, 'Screen', visitorInfo.screen || '-');
+            addInfoRow(visitorList, 'Language', visitorInfo.language || '-');
+            addInfoRow(visitorList, 'IP Address', visitorInfo.ip_address || '-');
+            addInfoRow(visitorList, 'Time to Submit', visitorInfo.time_to_submit || '-');
+            addInfoRow(visitorList, 'Submitted', entry.created_at_formatted || entry.created_at || '-');
+
+            visitorBody.appendChild(visitorList);
+            visitorCard.appendChild(visitorBody);
+            bottomGrid.appendChild(visitorCard);
+
+            container.appendChild(bottomGrid);
+
+            // Visitor Journey Card
+            const journeyCard = document.createElement('div');
+            journeyCard.className = 'dragwyb-entry-card dragwyb-journey-card';
+
+            const journeyHeader = document.createElement('div');
+            journeyHeader.className = 'dragwyb-card-header';
+
+            const journeyTitle = document.createElement('h3');
+            journeyTitle.className = 'dragwyb-card-title';
+            journeyTitle.textContent = 'Visitor Journey';
+
+            const journeySub = document.createElement('div');
+            journeySub.className = 'dragwyb-card-subtitle';
+            journeySub.textContent = 'Pages viewed in the session leading to this submission';
+
+            journeyHeader.appendChild(journeyTitle);
+            journeyHeader.appendChild(journeySub);
+            journeyCard.appendChild(journeyHeader);
+
+            const journeyBody = document.createElement('div');
+            journeyBody.className = 'dragwyb-card-body';
+
+            const timeline = document.createElement('div');
+            timeline.className = 'dragwyb-journey-timeline';
+
+            const journeyList = Array.isArray(entry.visitor_journey) && entry.visitor_journey.length > 0
+                ? entry.visitor_journey
+                : [
+                    {
+                        title: `Form submitted: ${entry.form_title || `#${entry.form_id}`}`,
+                        url: (entry.lead_attributes && entry.lead_attributes.landing_page) || '-',
+                        time: entry.created_at_formatted || entry.created_at || '-',
+                        type: 'submission'
+                    }
+                ];
+
+            journeyList.forEach(step => {
+                const item = document.createElement('div');
+                item.className = `dragwyb-timeline-item${step.type === 'submission' ? ' is-submission' : ''}`;
+
+                const marker = document.createElement('div');
+                marker.className = `dragwyb-timeline-marker${step.type === 'submission' ? ' marker-submission' : ''}`;
+
+                const content = document.createElement('div');
+                content.className = 'dragwyb-timeline-content';
+
+                const titleRow = document.createElement('div');
+                titleRow.className = 'dragwyb-timeline-title-row';
+
+                const titleText = document.createElement('span');
+                titleText.className = 'dragwyb-timeline-title';
+                titleText.textContent = step.title || step.url;
+
+                titleRow.appendChild(titleText);
+
+                if (step.type === 'submission') {
+                    const badge = document.createElement('span');
+                    badge.className = 'dragwyb-submitted-pill-badge';
+                    badge.textContent = 'Submitted';
+                    titleRow.appendChild(badge);
+                }
+
+                content.appendChild(titleRow);
+
+                if (step.url) {
+                    const urlEl = document.createElement('div');
+                    urlEl.className = 'dragwyb-timeline-url';
+                    urlEl.textContent = step.url;
+                    content.appendChild(urlEl);
+                }
+
+                const timeEl = document.createElement('div');
+                timeEl.className = 'dragwyb-timeline-time';
+                timeEl.textContent = step.time || '';
+
+                item.appendChild(marker);
+                item.appendChild(content);
+                item.appendChild(timeEl);
+
+                timeline.appendChild(item);
+            });
+
+            journeyBody.appendChild(timeline);
+            journeyCard.appendChild(journeyBody);
+            container.appendChild(journeyCard);
+
+            elements.viewModalBody.appendChild(container);
         });
     }
 
