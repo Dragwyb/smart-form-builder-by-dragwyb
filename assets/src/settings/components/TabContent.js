@@ -5,15 +5,29 @@ import ImportExportTab from './ImportExportTab';
 import SmtpTab from './SmtpTab';
 import GdprPrivacyTab from './GdprPrivacyTab';
 import RenderSettingsGroup from './RenderSettingsGroup';
+import {
+    FaPlug,
+    FaTachometerAlt,
+    FaTable
+} from 'react-icons/fa';
 
 const TabContent = ({ activeTab, settings, handleSettingChange, showToast }) => {
 
-    const renderDynamicSection = (tabKey, title, description) => {
+    const renderDynamicSection = (tabKey, title, description, SectionIcon) => {
         const tabSettings = settings?.[tabKey] || {};
         return (
             <div className="dragwyb-settings-section">
-                {title && <h2>{title}</h2>}
-                {description && <p className="dragwyb-settings-desc">{description}</p>}
+                <div className="dragwyb-section-header">
+                    {SectionIcon && (
+                        <div className="dragwyb-section-icon-badge">
+                            <SectionIcon />
+                        </div>
+                    )}
+                    <div className="dragwyb-section-header-meta">
+                        {title && <h2>{title}</h2>}
+                        {description && <p className="dragwyb-settings-desc">{description}</p>}
+                    </div>
+                </div>
                 <RenderSettingsGroup
                     tabSettings={tabSettings}
                     allSettings={settings}
@@ -27,8 +41,15 @@ const TabContent = ({ activeTab, settings, handleSettingChange, showToast }) => 
     const renderFieldsManager = () => {
         return (
             <div className="dragwyb-settings-section">
-                <h2>Fields Manager</h2>
-                <p className="dragwyb-settings-desc">Enable or disable specific fields from appearing in the form builder editor.</p>
+                <div className="dragwyb-section-header">
+                    <div className="dragwyb-section-icon-badge">
+                        <FaTable />
+                    </div>
+                    <div className="dragwyb-section-header-meta">
+                        <h2>Fields Manager</h2>
+                        <p className="dragwyb-settings-desc">Enable or disable specific fields from appearing in the form builder editor.</p>
+                    </div>
+                </div>
                 <div className="dragwyb-fields-grid">
                     {settings && settings.fields_manager && Object.keys(settings.fields_manager).map(key => (
                         <div key={key} className="dragwyb-field-toggle-card">
@@ -45,17 +66,17 @@ const TabContent = ({ activeTab, settings, handleSettingChange, showToast }) => 
     };
 
     return (
-        <div className="dragwyb-settings-content">
+        <div className="dragwyb-settings-main-card">
             <AnimatePresence mode="wait">
                 <motion.div
                     key={activeTab}
-                    initial={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 0, x: 15 }}
                     animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.2 }}
+                    exit={{ opacity: 0, x: -15 }}
+                    transition={{ duration: 0.15 }}
                 >
-                    {activeTab === 'integrations' && renderDynamicSection('integrations', 'API & Integrations', 'Manage API keys for third-party services like Google reCAPTCHA.')}
-                    {activeTab === 'performance' && renderDynamicSection('performance', 'Performance & Assets', 'Control which assets are loaded on the frontend to improve page speed.')}
+                    {activeTab === 'integrations' && renderDynamicSection('integrations', 'API & Integrations', 'Manage API keys for third-party services like Google reCAPTCHA.', FaPlug)}
+                    {activeTab === 'performance' && renderDynamicSection('performance', 'Performance & Assets', 'Control which assets are loaded on the frontend to improve page speed.', FaTachometerAlt)}
                     {activeTab === 'fields_manager' && renderFieldsManager()}
                     {activeTab === 'smtp' && (
                         <SmtpTab

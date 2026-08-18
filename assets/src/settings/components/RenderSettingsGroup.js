@@ -112,7 +112,7 @@ const RenderSettingsGroup = ({ tabSettings, allSettings, tabKey, handleSettingCh
                 const renderContent = () => (
                     <>
                         {section.title && (
-                            <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#1e293b', marginBottom: '16px', marginTop: 0 }}>
+                            <h3>
                                 {section.title}
                             </h3>
                         )}

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ToggleSwitch from './ToggleSwitch';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const RenderSettingItem = ({ itemKey, itemData, tabKey, handleSettingChange, hideStartSectionHeader = false }) => {
     if (!itemData) return null;
@@ -19,14 +20,17 @@ const RenderSettingItem = ({ itemKey, itemData, tabKey, handleSettingChange, hid
         inline = true
     } = itemData;
 
-    const currentValue = value !== undefined ? value : (defaultVal ?? '');
+    const [showPassword, setShowPassword] = useState(false);
 
+    const currentValue = value !== undefined ? value : (defaultVal ?? '');
     const isChecked = currentValue === true || currentValue === 'yes';
 
     const handleValueChange = (newVal) => {
         handleSettingChange(tabKey, itemKey, newVal);
     };
+
     const selectOptions = options || (valid_values ? valid_values.map(v => ({ label: String(v).toUpperCase(), value: v })) : []);
+    const isSecretField = type === 'password' || itemKey.toLowerCase().includes('secret') || itemKey.toLowerCase().includes('key');
 
     const renderControl = () => {
         if (type === 'bool' || type === 'toggle') {
@@ -41,66 +45,79 @@ const RenderSettingItem = ({ itemKey, itemData, tabKey, handleSettingChange, hid
             );
         }
 
-        return <div className={`dragwyb-setting-row ${inline === false ? 'dragwyb-setting-inline' : ''}`} key={itemKey} style={{ flexDirection: inline === false ? 'column' : 'row', alignItems: inline === false ? 'flex-start' : 'center' }}>
-            <div className="dragwyb-setting-info">
-                <h4>{label}</h4>
-                {description && <p>{description}</p>}
-            </div>
-            <div className="dragwyb-setting-control">
-                {type === 'select' ?
-                    <>
+        return (
+            <div
+                className={`dragwyb-setting-row ${inline === false ? 'dragwyb-setting-inline' : ''}`}
+                key={itemKey}
+            >
+                <div className="dragwyb-setting-info">
+                    <h4>{label}</h4>
+                    {description && <p>{description}</p>}
+                </div>
+                <div className="dragwyb-setting-control">
+                    {type === 'select' ? (
                         <select
                             value={currentValue}
                             onChange={e => handleValueChange(e.target.value)}
+                            className="dragwyb-select-control"
                         >
                             {selectOptions.map(opt => (
                                 <option key={opt.value} value={opt.value}>{opt.label}</option>
                             ))}
                         </select>
-                    </>
-                    :
-                    (
-                        type === 'number' ?
+                    ) : type === 'number' ? (
+                        <input
+                            type="number"
+                            min={min}
+                            max={max}
+                            value={currentValue}
+                            onChange={e => handleValueChange(parseInt(e.target.value, 10) || 0)}
+                            placeholder={placeholder}
+                            className="dragwyb-input-control number-input"
+                        />
+                    ) : isSecretField ? (
+                        <div className="dragwyb-input-group">
                             <input
-                                type="number"
-                                min={min}
-                                max={max}
-                                value={currentValue}
-                                onChange={e => handleValueChange(parseInt(e.target.value, 10) || 0)}
-                                placeholder={placeholder}
-                                style={{ width: '100px' }}
-                            /> :
-                            <input
-                                type={type === 'password' ? 'password' : type === 'email' ? 'email' : 'text'}
+                                type={showPassword ? 'text' : 'password'}
                                 value={currentValue}
                                 onChange={e => handleValueChange(e.target.value)}
-                                placeholder={placeholder || 'Enter value'}
+                                placeholder={placeholder || (itemKey.includes('secret') ? 'Enter Secret Key' : 'Enter API Key')}
+                                className="dragwyb-input-control secret-input"
                             />
-                    )
-                }
+                            <button
+                                type="button"
+                                className="dragwyb-password-toggle-btn"
+                                onClick={() => setShowPassword(!showPassword)}
+                                title={showPassword ? 'Hide value' : 'Show value'}
+                            >
+                                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                            </button>
+                        </div>
+                    ) : (
+                        <input
+                            type={type === 'email' ? 'email' : 'text'}
+                            value={currentValue}
+                            onChange={e => handleValueChange(e.target.value)}
+                            placeholder={placeholder || 'Enter value'}
+                            className="dragwyb-input-control"
+                        />
+                    )}
+                </div>
             </div>
-        </div>
+        );
     };
 
     return (
         <React.Fragment key={itemKey}>
             {start_section && !hideStartSectionHeader && (
-                <div style={{
-                    marginTop: '24px',
-                    paddingTop: typeof start_section === 'string' ? '20px' : 0,
-                    borderTop: '1px solid #e2e8f0',
-                    marginBottom: '16px'
-                }}>
+                <div className="dragwyb-start-section-header">
                     {typeof start_section === 'string' && (
-                        <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#1e293b', margin: 0 }}>
-                            {start_section}
-                        </h3>
+                        <h3>{start_section}</h3>
                     )}
                 </div>
-            )
-            }
+            )}
             {renderControl()}
-        </React.Fragment >
+        </React.Fragment>
     );
 };
 

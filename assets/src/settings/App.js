@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import TabNavigation from './components/TabNavigation';
 import TabContent from './components/TabContent';
+import SidebarDetails from './components/SidebarDetails';
 import Toast from './components/Toast';
+import { FaWpforms, FaSave } from 'react-icons/fa';
 
 const App = () => {
     const { restUrl, nonce, currentTab } = window.DragwybSettingsData || {};
@@ -108,30 +110,56 @@ const App = () => {
     };
 
     if (isLoading) {
-        return <div className="dragwyb-settings-loading">Loading settings...</div>;
+        return (
+            <div className="dragwyb-settings-loading">
+                <div className="dragwyb-loading-spinner"></div>
+                <p>Loading settings...</p>
+            </div>
+        );
     }
 
     return (
         <div className="dragwyb-settings-dashboard">
+            {/* Main Header */}
             <div className="dragwyb-settings-header">
-                <h1>Smart Form Builder Settings</h1>
-                <button
-                    className="dragwyb-btn-primary"
-                    onClick={saveSettings}
-                    disabled={isSaving}
-                >
-                    {isSaving ? 'Saving...' : 'Save Settings'}
-                </button>
+                <div className="dragwyb-header-left">
+                    <div className="dragwyb-app-badge-icon">
+                        <FaWpforms />
+                    </div>
+                    <div className="dragwyb-header-title-meta">
+                        <h1>Smart Form Builder Settings</h1>
+                        <p className="dragwyb-header-subtitle">Manage all settings and preferences for your forms.</p>
+                    </div>
+                </div>
+
+                <div className="dragwyb-header-right">
+                    <button
+                        className="dragwyb-btn-save-settings"
+                        onClick={saveSettings}
+                        disabled={isSaving}
+                    >
+                        <FaSave className="dragwyb-btn-icon" />
+                        <span>{isSaving ? 'Saving...' : 'Save Settings'}</span>
+                    </button>
+                </div>
             </div>
 
-            <div className="dragwyb-settings-body">
-                <TabNavigation activeTab={activeTab} setActiveTab={handleTabChange} />
-                <TabContent
-                    activeTab={activeTab}
-                    settings={settings}
-                    handleSettingChange={handleSettingChange}
-                    showToast={showToast}
-                />
+            {/* Horizontal Tabs Bar */}
+            <TabNavigation activeTab={activeTab} setActiveTab={handleTabChange} />
+
+            {/* Dashboard Content Body: 2 Columns */}
+            <div className="dragwyb-settings-body-grid">
+                <div className="dragwyb-settings-main-col">
+                    <TabContent
+                        activeTab={activeTab}
+                        settings={settings}
+                        handleSettingChange={handleSettingChange}
+                        showToast={showToast}
+                    />
+                </div>
+                <div className="dragwyb-settings-sidebar-col">
+                    <SidebarDetails />
+                </div>
             </div>
 
             {toast.show && <Toast message={toast.message} type={toast.type} />}

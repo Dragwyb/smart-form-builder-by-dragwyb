@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Admin\Settings;
 
+use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
-use Dragwyb\Form_Builder\Includes\Helper\Helper;
 
 class Dragwyb_Settings {
 
@@ -93,18 +93,35 @@ class Dragwyb_Settings {
 
 		$current_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
 
+		// Get actual form count
+		$forms_count_obj = wp_count_posts( sanitize_key( Dragwyb_Post::POST_TYPE ) );
+		$total_forms     = isset( $forms_count_obj->publish ) ? (int) $forms_count_obj->publish : 0;
+
+		$extra_plugins = array(
+			array(
+				'name'        => 'AI Chatbot',
+				'description' => 'Add AI Chatbot & Floating chat widgets to your website.',
+				'url'         => admin_url( 'plugin-install.php?tab=plugin-information&plugin=dragwyb-click-to-chat' ),
+			),
+		);
+
 		// Localize data for React
 		wp_localize_script(
 			'dragwyb-settings-script',
 			'DragwybSettingsData',
 			array(
-				'restUrl'    => esc_url_raw( rest_url( 'dragwyb/v1/settings' ) ),
-				'nonce'      => wp_create_nonce( 'wp_rest' ),
-				'ajaxUrl'    => admin_url( 'admin-ajax.php' ),
-				'adminNonce' => wp_create_nonce( 'dragwyb_admin_nonce' ),
-				'pluginSlug' => DRAGWYB_TEXT_DOMAIN,
-				'version'    => DRAGWYB_FORM_BUILDER_VERSION,
-				'currentTab' => $current_tab,
+				'restUrl'          => esc_url_raw( rest_url( 'dragwyb/v1/settings' ) ),
+				'nonce'            => wp_create_nonce( 'wp_rest' ),
+				'ajaxUrl'          => admin_url( 'admin-ajax.php' ),
+				'adminNonce'       => wp_create_nonce( 'dragwyb_admin_nonce' ),
+				'pluginSlug'       => DRAGWYB_TEXT_DOMAIN,
+				'version'          => DRAGWYB_FORM_BUILDER_VERSION,
+				'currentTab'       => $current_tab,
+				'extraPlugins'     => $extra_plugins,
+				'documentationUrl' => esc_url( 'https://dragwyb.com/docs' ),
+				'supportUrl'       => esc_url( 'https://dragwyb.com/contact' ),
+				'morePluginsUrl'   => esc_url( 'https://dragwyb.com/products' ),
+				'total_forms'      => $total_forms > 0 ? number_format( $total_forms ) : '0',
 			)
 		);
 	}
