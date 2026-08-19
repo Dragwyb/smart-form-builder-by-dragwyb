@@ -8,6 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Dragwyb\Form_Builder\Admin\Db\Submission\Dragwyb_Submission_Db;
+
 class Dragwyb_Analytics_Db {
 
 	const VERSION = 'v1';
@@ -137,5 +139,111 @@ class Dragwyb_Analytics_Db {
 		dbDelta( $sql_pageviews );
 		dbDelta( $sql_events );
 		dbDelta( $sql_journey );
+	}
+
+	/**
+	 * Purge tracking data older than a specified number of days.
+	 *
+	 * @param int  $retention_days Number of days of data to retain. Must be > 0.
+	 * @param bool $retain_entries Whether to retain form submission entries.
+	 * @return int Total rows deleted across tables.
+	 */
+	public static function purge_old_tracking_data( int $retention_days, bool $retain_entries = true ): int {
+		if ( $retention_days <= 0 ) {
+			return 0;
+		}
+
+		global $wpdb;
+
+		$pageviews_table   = self::table_name( 'pageviews' );
+		$events_table      = self::table_name( 'events' );
+		$journey_table     = self::table_name( 'journey' );
+		$sessions_table    = self::table_name( 'sessions' );
+		$visitors_table    = self::table_name( 'visitors' );
+		$submissions_table = Dragwyb_Submission_Db::table_name();
+
+		$deleted_count = 0;
+
+		// 1. Delete old pageviews
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$res = $wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$pageviews_table} WHERE created_at < DATE_SUB(NOW(), INTERVAL %d DAY)",
+				$retention_days
+			)
+		);
+		if ( false !== $res ) {
+			$deleted_count += (int) $res;
+		}
+
+		// 2. Delete old events
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$res = $wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$events_table} WHERE created_at < DATE_SUB(NOW(), INTERVAL %d DAY)",
+				$retention_days
+			)
+		);
+		if ( false !== $res ) {
+			$deleted_count += (int) $res;
+		}
+
+		// 3. Delete old journey records
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$res = $wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$journey_table} WHERE created_at < DATE_SUB(NOW(), INTERVAL %d DAY)",
+				$retention_days
+			)
+		);
+		if ( false !== $res ) {
+			$deleted_count += (int) $res;
+		}
+
+		// 4. Delete old sessions
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$res = $wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$sessions_table} WHERE started_at < DATE_SUB(NOW(), INTERVAL %d DAY)",
+				$retention_days
+			)
+		);
+		if ( false !== $res ) {
+			$deleted_count += (int) $res;
+		}
+
+		// 5. Delete old visitors
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$res = $wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$visitors_table} WHERE last_seen < DATE_SUB(NOW(), INTERVAL %d DAY)",
+				$retention_days
+			)
+		);
+		if ( false !== $res ) {
+			$deleted_count += (int) $res;
+		}
+
+		// Clean up orphaned visitors without remaining sessions
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query(
+			"DELETE FROM {$visitors_table} WHERE id NOT IN (SELECT DISTINCT visitor_id FROM {$sessions_table})"
+		);
+
+		// 6. Delete old form submissions if retain_entries is false
+		if ( ! $retain_entries ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$res = $wpdb->query(
+				$wpdb->prepare(
+					"DELETE FROM {$submissions_table} WHERE created_at < DATE_SUB(NOW(), INTERVAL %d DAY)",
+					$retention_days
+				)
+			);
+			if ( false !== $res ) {
+				$deleted_count += (int) $res;
+			}
+		}
+
+		return $deleted_count;
 	}
 }
