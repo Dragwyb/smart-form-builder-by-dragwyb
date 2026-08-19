@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     FaChartLine,
     FaFileAlt,
@@ -10,31 +10,73 @@ import {
     FaBookOpen,
     FaHeadset,
     FaStar,
-    FaCommentDots,
     FaArrowRight
 } from 'react-icons/fa';
 
 const SidebarDetails = () => {
-    const { analyticsData } = window.DragwybSettingsData || {};
-    const [timeRange, setTimeRange] = useState('all');
+    const {
+        restUrl,
+        nonce,
+        analyticsData,
+        extraPlugins = [],
+        documentationUrl = 'https://dragwyb.com/docs',
+        supportUrl = 'https://dragwyb.com/support',
+        morePluginsUrl = 'https://dragwyb.com/plugins',
+        totalForms = '0',
+    } = window.DragwybSettingsData || {};
 
-    // const stats = {
-    //     totalForms: analyticsData?.totalForms || '24',
-    //     totalSubmissions: analyticsData?.totalSubmissions || '1,248',
-    //     uniqueVisitors: analyticsData?.uniqueVisitors || '3,625',
-    //     totalSessions: analyticsData?.totalSessions || '5,482',
-    //     totalPageViews: analyticsData?.totalPageViews || '12,840',
-    //     documentationUrl: analyticsData?.documentationUrl || 'https://dragwyb.com/docs',
-    //     supportUrl: analyticsData?.supportUrl || 'https://dragwyb.com/support',
-    //     morePluginsUrl: analyticsData?.morePluginsUrl || 'https://dragwyb.com/plugins',
-    //     clickToChatInstallUrl: analyticsData?.clickToChatInstallUrl || '#'
-    // };
+    const [timeRange, setTimeRange] = useState('1');
+    const [isFetchingAnalytics, setIsFetchingAnalytics] = useState(false);
 
-    const extraPlugins = window.DragwybSettingsData?.extraPlugins || [];
-    const documentationUrl = window.DragwybSettingsData?.documentationUrl || 'https://dragwyb.com/docs';
-    const supportUrl = window.DragwybSettingsData?.supportUrl || 'https://dragwyb.com/support';
-    const morePluginsUrl = window.DragwybSettingsData?.morePluginsUrl || 'https://dragwyb.com/plugins';
-    const totalForms = window.DragwybSettingsData?.total_forms || '0';
+    // Key-value cache state for analytics: e.g. { all: {...}, '30days': {...}, '7days': {...}, 'today': {...} }
+    const [analyticsCache, setAnalyticsCache] = useState(() => {
+        if (analyticsData) {
+            return { all: analyticsData };
+        }
+        return {};
+    });
+
+    useEffect(() => {
+        // If data for the selected filter already exists in state cache, return early instead of fetching again!
+        if (analyticsCache[timeRange]) {
+            return;
+        }
+
+        const fetchAnalyticsData = async () => {
+            setIsFetchingAnalytics(true);
+            try {
+                const apiBase = restUrl ? restUrl.replace(/\/settings\/?$/, '') : '/wp-json/dragwyb/v1';
+                const response = await fetch(`${apiBase}/analytics?range=${timeRange}`, {
+                    headers: {
+                        'X-WP-Nonce': nonce
+                    }
+                });
+                const result = await response.json();
+                if (result.status === 'success' && result.data) {
+                    setAnalyticsCache(prevCache => ({
+                        ...prevCache,
+                        [timeRange]: result.data
+                    }));
+                }
+            } catch (error) {
+                console.error('Failed to fetch analytics for range:', timeRange, error);
+            } finally {
+                setIsFetchingAnalytics(false);
+            }
+        };
+
+        fetchAnalyticsData();
+    }, [timeRange, analyticsCache, restUrl, nonce]);
+
+    // Retrieve active stats from key-value state cache or fallback
+    const currentStats = analyticsCache[timeRange] || analyticsCache['all'] || analyticsData || {};
+
+    const stats = {
+        totalSubmissions: currentStats.totalSubmissions || '0',
+        uniqueVisitors: currentStats.uniqueVisitors || '0',
+        totalSessions: currentStats.totalSessions || '0',
+        totalPageViews: currentStats.totalPageViews || '0'
+    };
 
     return (
         <aside className="dragwyb-settings-sidebar-details">
@@ -42,18 +84,21 @@ const SidebarDetails = () => {
             <div className="dragwyb-sidebar-card dragwyb-analytics-card">
                 <div className="dragwyb-sidebar-card-header">
                     <div className="dragwyb-sidebar-header-title">
-                        <FaChartLine className="dragwyb-header-icon pink-icon" />
+                        <FaChartLine className="pink-icon" />
                         <span>Form Analytics Overview</span>
+                        {isFetchingAnalytics && (
+                            <span className="dragwyb-analytics-loading-dot" title="Fetching latest stats..."></span>
+                        )}
                     </div>
                     <select
                         className="dragwyb-analytics-filter"
                         value={timeRange}
                         onChange={(e) => setTimeRange(e.target.value)}
                     >
-                        <option value="all">All Time</option>
-                        <option value="30days">Last 30 Days</option>
-                        <option value="7days">Last 7 Days</option>
-                        <option value="today">Today</option>
+                        <option value="-1">All Time</option>
+                        <option value="30">Last 30 Days</option>
+                        <option value="7">Last 7 Days</option>
+                        <option value="1">Today</option>
                     </select>
                 </div>
 
@@ -75,7 +120,7 @@ const SidebarDetails = () => {
                             <FaCheckCircle />
                         </div>
                         <div className="dragwyb-stat-meta">
-                            {/* <div className="dragwyb-stat-value">{stats.totalSubmissions}</div> */}
+                            <div className="dragwyb-stat-value">{stats.totalSubmissions}</div>
                             <div className="dragwyb-stat-label">Total Form Submissions</div>
                         </div>
                     </div>
@@ -86,7 +131,7 @@ const SidebarDetails = () => {
                             <FaUser />
                         </div>
                         <div className="dragwyb-stat-meta">
-                            {/* <div className="dragwyb-stat-value">{stats.uniqueVisitors}</div> */}
+                            <div className="dragwyb-stat-value">{stats.uniqueVisitors}</div>
                             <div className="dragwyb-stat-label">Unique Visitors</div>
                         </div>
                     </div>
@@ -97,7 +142,7 @@ const SidebarDetails = () => {
                             <FaDesktop />
                         </div>
                         <div className="dragwyb-stat-meta">
-                            {/* <div className="dragwyb-stat-value">{stats.totalSessions}</div> */}
+                            <div className="dragwyb-stat-value">{stats.totalSessions}</div>
                             <div className="dragwyb-stat-label">Total Sessions</div>
                         </div>
                     </div>
@@ -108,7 +153,7 @@ const SidebarDetails = () => {
                             <FaEye />
                         </div>
                         <div className="dragwyb-stat-meta">
-                            {/* <div className="dragwyb-stat-value">{stats.totalPageViews}</div> */}
+                            <div className="dragwyb-stat-value">{stats.totalPageViews}</div>
                             <div className="dragwyb-stat-label">Total PageViews</div>
                         </div>
                     </div>

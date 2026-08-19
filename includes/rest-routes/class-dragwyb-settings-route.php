@@ -10,6 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Dragwyb\Form_Builder\Admin\Settings\Settings_Manager;
 use Dragwyb\Form_Builder\Includes\Mailer\Dragwyb_Mailer;
+use Dragwyb\Form_Builder\Admin\Db\Analytics\Dragwyb_Analytics_Db;
+use Dragwyb\Form_Builder\Admin\Db\Submission\Dragwyb_Submission_Db;
 
 /**
  * Class Dragwyb_Settings_Route
@@ -71,6 +73,18 @@ class Dragwyb_Settings_Route {
 					'methods'             => \WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_templates' ),
 					'permission_callback' => '__return_true',
+				),
+			)
+		);
+
+		register_rest_route(
+			'dragwyb/v1',
+			'/analytics',
+			array(
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_analytics' ),
+					'permission_callback' => array( $this, 'permissions_check' ),
 				),
 			)
 		);
@@ -256,5 +270,123 @@ class Dragwyb_Settings_Route {
 				'message' => $result['message'],
 			)
 		);
+	}
+
+	/**
+	 * Retrieve analytics statistics based on filter range.
+	 *
+	 * @param \WP_REST_Request $request
+	 * @return \WP_REST_Response
+	 */
+	public function get_analytics( \WP_REST_Request $request ): \WP_REST_Response {
+		$range = sanitize_key( (string) ( $request->get_param( 'range' ) ?: '1' ) );
+
+		if ( ! in_array( $range, array( '1', '7', '30', '-1' ), true ) ) {
+			return rest_ensure_response(
+				array(
+					'status'  => 'error',
+					'message' => __( 'Invalid range provided.', 'smart-form-builder-by-dragwyb' ),
+				)
+			);
+		}
+
+		global $wpdb;
+		$submissions_table = esc_sql( $wpdb->prefix . 'dragwyb_submissions' );
+
+		$date_clause = '';
+		$days        = 0;
+
+		switch ( $range ) {
+			case '1':
+				$date_clause = 'WHERE DATE(created_at) = CURDATE()';
+				$days        = 0;
+				break;
+			case '7':
+				$date_clause = 'WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)';
+				$days        = 7;
+				break;
+			case '30':
+				$date_clause = 'WHERE created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)';
+				$days        = 30;
+				break;
+			case '-1':
+			default:
+				$date_clause = '';
+				$days        = 1;
+				break;
+		}
+
+		// Check submissions table count
+		$sub_count         = 0;
+		$submissions_table = Dragwyb_Submission_Db::table_name();
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$sub_count = (int) $wpdb->get_var( "SELECT COUNT(id) FROM $submissions_table $date_clause" );
+
+		$base_submissions = $sub_count > 0 ? $sub_count : 0;
+
+		$visitors_table  = Dragwyb_Analytics_Db::table_name( 'visitors' );
+		$sessions_table  = Dragwyb_Analytics_Db::table_name( 'sessions' );
+		$pageviews_table = Dragwyb_Analytics_Db::table_name( 'pageviews' );
+
+		// Unique visitors
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$visitors_count = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(id) FROM $visitors_table" . $this->get_date_where_clause( $range, 'first_seen' ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$days
+			)
+		);
+
+		// Total sessions
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$sessions_count = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(id) FROM $sessions_table" . $this->get_date_where_clause( $range, 'started_at' ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$days
+			)
+		);
+
+		// Total pageviews
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$pageviews_count = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(id) FROM $pageviews_table" . $this->get_date_where_clause( $range, 'created_at' ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$days
+			)
+		);
+
+		return rest_ensure_response(
+			array(
+				'status' => 'success',
+				'data'   => array(
+					'range'            => $range,
+					'totalSubmissions' => number_format( $base_submissions ),
+					'uniqueVisitors'   => number_format( $visitors_count ),
+					'totalSessions'    => number_format( $sessions_count ),
+					'totalPageViews'   => number_format( $pageviews_count ),
+				),
+			)
+		);
+	}
+
+	private function get_date_where_clause( string $range, string $from = 'first_seen' ) {
+		if ( $range === '-1' ) {
+			return ' WHERE 1 = %s';
+		}
+
+		if ( ! in_array( $range, array( '1', '7', '30' ), true ) ) {
+			return '';
+		}
+
+		if ( ! in_array( $from, array( 'first_seen', 'created_at', 'started_at' ), true ) ) {
+			return '';
+		}
+
+		if ( $range === '1' ) {
+			return " WHERE DATE($from) = CURDATE()";
+		}
+
+		return " WHERE $from >= DATE_SUB(NOW(), INTERVAL %s DAY)";
 	}
 }

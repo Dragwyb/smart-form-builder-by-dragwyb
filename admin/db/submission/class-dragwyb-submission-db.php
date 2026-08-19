@@ -20,6 +20,10 @@ class Dragwyb_Submission_Db {
 		return esc_sql( sanitize_text_field( $wpdb->prefix . 'dragwyb_submissions' ) );
 	}
 
+	final public static function table_name(): string {
+		return self::get_table_name();
+	}
+
 	/**
 	 * Create the database table & run migration if needed.
 	 */

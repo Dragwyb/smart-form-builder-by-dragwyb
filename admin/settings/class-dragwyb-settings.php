@@ -121,7 +121,7 @@ class Dragwyb_Settings {
 				'documentationUrl' => esc_url( 'https://dragwyb.com/docs' ),
 				'supportUrl'       => esc_url( 'https://dragwyb.com/contact' ),
 				'morePluginsUrl'   => esc_url( 'https://dragwyb.com/products' ),
-				'total_forms'      => $total_forms > 0 ? number_format( $total_forms ) : '0',
+				'totalForms'       => $total_forms > 0 ? number_format( $total_forms ) : '0',
 			)
 		);
 	}
