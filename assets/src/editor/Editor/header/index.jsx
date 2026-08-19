@@ -149,10 +149,12 @@ const Header = () => {
                 </a>
                 <SaveBtn />
             </div>
-            <TemplateLibrary
-                isOpen={isTemplateOpen}
-                onClose={() => setIsTemplateOpen(false)}
-            />
+            {iframeEle &&
+                <TemplateLibrary
+                    isOpen={isTemplateOpen}
+                    onClose={() => setIsTemplateOpen(false)}
+                />
+            }
         </div>
     );
 }
