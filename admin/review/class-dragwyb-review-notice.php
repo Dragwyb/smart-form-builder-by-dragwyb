@@ -36,6 +36,7 @@ if ( ! class_exists( 'Dragwyb_Review_Notice' ) ) {
 		 */
 		public function __construct() {
 			add_action( 'admin_notices', array( $this, 'print_admin_notice' ) );
+			add_action( 'Dragwyb_Admin_Notices', array( $this, 'print_admin_notice' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 			add_action( 'wp_ajax_smfbd_review_dismiss', array( $this, 'smfbd_review_dismiss' ) );
 		}
