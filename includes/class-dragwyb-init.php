@@ -48,7 +48,6 @@ class Dragwyb_Init {
 			new Dragwyb_Builder_Editor();
 			new Dragwyb_Pages();
 			new Dragwyb_Form_Builder_Ajax();
-			Dragwyb_Settings::instance();
 			Frontend_Render::instance();
 			SMFBD_Feedback_Form::get_instance();
 

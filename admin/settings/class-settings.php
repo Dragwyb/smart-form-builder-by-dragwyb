@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class Dragwyb_Settings {
+class Settings {
 
 	private static ?self $instance = null;
 
@@ -23,23 +23,14 @@ class Dragwyb_Settings {
 	}
 
 	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'register_settings_page' ), 60 );
+		add_action( 'Dragwyb_Menu_Page', array( $this, 'render_page' ), 1 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 	}
 
-	public function register_settings_page(): void {
-		add_submenu_page(
-			DRAGWYB_PREFIX . '-form-overview',
-			__( 'Settings', 'smart-form-builder-by-dragwyb' ),
-			__( 'Settings', 'smart-form-builder-by-dragwyb' ),
-			'manage_options',
-			DRAGWYB_PREFIX . '-settings',
-			array( $this, 'render_settings_page' )
-		);
-	}
-
-	public function render_settings_page(): void {
-		echo '<div class="wrap"><div id="dragwyb-settings-root"></div></div>';
+	public function render_page( $screen ): void {
+		if ( gettype( $screen ) === 'object' && $screen( 'settings' ) ) {
+			echo '<div class="wrap"><div id="dragwyb-settings-root"></div></div>';
+		}
 	}
 
 	public function enqueue_assets( string $hook ): void {
