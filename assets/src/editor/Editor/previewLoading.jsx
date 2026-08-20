@@ -1,14 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 const PreviewLoading = () => {
     const iframeEle = useSelector(state => state?.iframeEle);
     const isTemplateOpen = DragwybEditor?.formData?.rootContainers?.length > 0 ? false : true;
+    const url = new URL(window.location.href);
+    const isInsertTemplate = url.searchParams.get('setup-template');
+    const [isOpenLoading, setIsOpenLoading] = useState(true);
 
-    if (iframeEle || isTemplateOpen) return null;
+    useEffect(() => {
+        if (iframeEle) {
+            if (isInsertTemplate && 'blank' !== isInsertTemplate && isTemplateOpen) {
+                setTimeout(() => {
+                    setIsOpenLoading(false)
+                }, 2000);
+                return;
+            }
+
+            setIsOpenLoading(false);
+            return;
+        }
+    }, [iframeEle])
+
+    if (!isOpenLoading) return null;
 
     const pluginUrl = DragwybEditor.pluginUrl;
-    return (
+    return (isOpenLoading &&
         <div className="dragwyb-editor-loader-wrapper">
             <div className="dragwyb-editor-loader-container">
                 {/* Visual Stage */}

@@ -3,61 +3,21 @@ import React, { useState, useEffect } from 'react';
 // Comprehensive Icon Component
 const Icon = ({ name }) => {
     switch (name) {
-        case 'star-badge':
-            return (
-                <svg viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" /></svg>
-            );
-        case 'close':
-            return (
-                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" /></svg>
-            );
         case 'check':
             return (
                 <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z" /></svg>
-            );
-        case 'drag':
-            return (
-                <svg viewBox="0 0 24 24"><path d="M13 6v5h5V6h-5zm0 12h5v-5h-5v5zM6 11h5V6H6v5zm0 7h5v-5H6v5z" /></svg>
-            );
-        case 'preview':
-            return (
-                <svg viewBox="0 0 24 24"><path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7v2H8v2h8v-2h-2v-2h7c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z" /></svg>
             );
         case 'templates':
             return (
                 <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8 14H5v-6h6v6zm0-8H5V5h6v4zm8 8h-6v-4h6v4zm0-6h-6V5h6v6z" /></svg>
             );
-        case 'brush':
-            return (
-                <svg viewBox="0 0 24 24"><path d="M7 14c-1.66 0-3 1.34-3 3 0 1.31-1.16 2-2 2 .92 1.22 2.49 2 4 2 2.21 0 4-1.79 4-4 0-1.66-1.34-3-3-3zm13.71-9.37l-1.34-1.34a.996.996 0 0 0-1.41 0L9 12.25 11.75 15l8.96-8.96c.39-.39.39-1.02 0-1.41z" /></svg>
-            );
         case 'font':
             return (
                 <svg viewBox="0 0 24 24"><path d="M9.93 13.5h4.14L12 7.98zM20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-4.05 16.5l-1.14-3H9.17l-1.12 3H5.96l5.11-13h1.86l5.11 13h-2.09z" /></svg>
             );
-        case 'multistep':
-            return (
-                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-2h2v2zm0-4h-2V7h2v6z" /></svg>
-            );
-        case 'logic':
-            return (
-                <svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3c0 1.3.84 2.4 2 2.82V11H7a3 3 0 0 0-3 3c0 1.3.84 2.4 2 2.82V19a3 3 0 1 0 6 0v-2.18c1.16-.42 2-1.52 2-2.82a3 3 0 0 0-3-3h-4V7.82c1.16-.42 2-1.52 2-2.82a3 3 0 0 0-3-3z" /></svg>
-            );
-        case 'plane':
-            return (
-                <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" /></svg>
-            );
         case 'mail':
             return (
                 <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" /></svg>
-            );
-        case 'chart':
-            return (
-                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-7h5v7zm7 0h-5V7h5v10z" /></svg>
-            );
-        case 'smtp':
-            return (
-                <svg viewBox="0 0 24 24"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z" /></svg>
             );
         case 'shield':
             return (
@@ -335,110 +295,214 @@ const App = () => {
 
                     {/* STEP 1: OVERVIEW */}
                     {currentStep === 1 && (
-                        <div className="dragwyb-step-content">
+                        <div className="dragwyb-step-content dragwyb-overview-step">
                             <div className="dragwyb-step-header">
                                 <span className="dragwyb-step-tag">STEP 1 OF 5</span>
-                                <h2 className="dragwyb-step-title">Powerful. Flexible. Built for WordPress.</h2>
+                                <h2 className="dragwyb-step-title">Everything You Need to Build Powerful Forms</h2>
                                 <p className="dragwyb-step-description">
-                                    Create stunning forms in minutes with all the tools you need.
+                                    From visual form building and smart automation to email delivery and analytics — create professional forms in minutes.
                                 </p>
                             </div>
 
-                            <div className="dragwyb-overview-grid">
-                                <div className="dragwyb-overview-card">
-                                    <div className="card-icon-box"><Icon name="drag" /></div>
-                                    <h4>Drag & Drop Visual Editor</h4>
-                                    <p>Intuitive canvas to build beautiful forms effortlessly.</p>
+                            {/* Section 1: Highlighted Features */}
+                            <div className="dragwyb-overview-section">
+                                <div className="dragwyb-section-heading">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="#f43f5e">
+                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                    </svg>
+                                    <span>Highlighted Features</span>
                                 </div>
 
-                                <div className="dragwyb-overview-card">
-                                    <div className="card-icon-box"><Icon name="preview" /></div>
-                                    <h4>Responsive Live Preview</h4>
-                                    <p>See how your form looks on desktop, tablet & mobile in real time.</p>
+                                <div className="dragwyb-highlighted-grid">
+                                    {/* Card 1 */}
+                                    <div className="dragwyb-highlight-card">
+                                        <div className="card-icon-circle">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                                <polyline points="22,6 12,13 2,6"></polyline>
+                                            </svg>
+                                        </div>
+                                        <h4>Built-in SMTP</h4>
+                                        <p>Reliable email delivery without any extra SMTP plugin.</p>
+                                    </div>
+
+                                    {/* Card 2 */}
+                                    <div className="dragwyb-highlight-card">
+                                        <div className="card-icon-circle">
+                                            <svg viewBox="0 0 100 30" width="46" height="18" fill="none" stroke="currentColor" strokeWidth="2">
+                                                <circle cx="15" cy="15" r="10" stroke="currentColor" fill="none" />
+                                                <text x="15" y="19" fontSize="11" fontWeight="bold" textAnchor="middle" fill="currentColor" stroke="none">1</text>
+                                                <line x1="27" y1="15" x2="43" y2="15" stroke="currentColor" />
+                                                <circle cx="55" cy="15" r="10" stroke="currentColor" fill="none" />
+                                                <text x="55" y="19" fontSize="11" fontWeight="bold" textAnchor="middle" fill="currentColor" stroke="none">2</text>
+                                                <line x1="67" y1="15" x2="83" y2="15" stroke="currentColor" />
+                                                <circle cx="90" cy="15" r="6" stroke="currentColor" fill="none" />
+                                            </svg>
+                                        </div>
+                                        <h4>Multi-Step Forms</h4>
+                                        <p>Create engaging multi-step forms with a simple drag &amp; drop builder.</p>
+                                    </div>
+
+                                    {/* Card 3 */}
+                                    <div className="dragwyb-highlight-card">
+                                        <div className="card-icon-circle">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M13 2L3 14h7v8l10-12h-7z" />
+                                            </svg>
+                                        </div>
+                                        <h4>After Submission Actions</h4>
+                                        <p>Save entries, send emails, redirect users and perform custom actions.</p>
+                                    </div>
+
+                                    {/* Card 4 */}
+                                    <div className="dragwyb-highlight-card">
+                                        <div className="card-icon-circle">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <rect x="9" y="2" width="6" height="6" rx="1" />
+                                                <rect x="2" y="16" width="6" height="6" rx="1" />
+                                                <rect x="16" y="16" width="6" height="6" rx="1" />
+                                                <path d="M12 8v4M5 12h14M5 12v4M19 12v4" />
+                                            </svg>
+                                        </div>
+                                        <h4>Smart Conditional Logic</h4>
+                                        <p>Show or hide fields dynamically based on user input.</p>
+                                    </div>
+
+                                    {/* Card 5 */}
+                                    <div className="dragwyb-highlight-card">
+                                        <div className="card-icon-circle">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M5 12h3v7H5zM10.5 7h3v12h-3zM16 3h3v16h-3z" />
+                                            </svg>
+                                        </div>
+                                        <h4>Built-in Analytics</h4>
+                                        <p>Track submissions, visitors, sessions, pageviews and engagement.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Section 2: More Powerful Capabilities */}
+                            <div className="dragwyb-overview-section">
+                                <div className="dragwyb-section-heading">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="#f43f5e">
+                                        <path d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 0h6v6h-6v-6z" />
+                                    </svg>
+                                    <span>More Powerful Capabilities</span>
                                 </div>
 
-                                <div className="dragwyb-overview-card">
-                                    <div className="card-icon-box">25+</div>
-                                    <h4>25+ Native Form Fields</h4>
-                                    <p>All essential fields you need to collect any kind of data.</p>
-                                </div>
+                                <div className="dragwyb-capabilities-grid">
+                                    {/* 1 */}
+                                    <div className="dragwyb-capability-card">
+                                        <div className="cap-icon-box">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                <rect x="3" y="3" width="18" height="18" rx="2" strokeDasharray="3 3" />
+                                                <path d="M15 15l5 5m-2.5-7.5l-5 5" strokeLinecap="round" />
+                                            </svg>
+                                        </div>
+                                        <div className="cap-info">
+                                            <h4>Drag &amp; Drop Visual Editor</h4>
+                                        </div>
+                                    </div>
 
-                                <div className="dragwyb-overview-card">
-                                    <div className="card-icon-box"><Icon name="templates" /></div>
-                                    <h4>Inbuilt Templates</h4>
-                                    <p>Start quickly with ready-to-use templates for any purpose.</p>
-                                </div>
+                                    {/* 2 */}
+                                    <div className="dragwyb-capability-card">
+                                        <div className="cap-icon-box">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                <rect x="2" y="3" width="14" height="11" rx="1" />
+                                                <rect x="14" y="8" width="8" height="12" rx="1" />
+                                            </svg>
+                                        </div>
+                                        <div className="cap-info">
+                                            <h4>Responsive Live Preview</h4>
+                                        </div>
+                                    </div>
 
-                                <div className="dragwyb-overview-card">
-                                    <div className="card-icon-box"><Icon name="brush" /></div>
-                                    <h4>Preset Styles</h4>
-                                    <p>Prebuilt style presets to generate and style forms in a few clicks.</p>
-                                </div>
+                                    {/* 3 */}
+                                    <div className="dragwyb-capability-card">
+                                        <div className="cap-icon-box text-badge">25+</div>
+                                        <div className="cap-info">
+                                            <h4>25+ Native Form Fields</h4>
+                                        </div>
+                                    </div>
 
-                                <div className="dragwyb-overview-card">
-                                    <div className="card-icon-box"><Icon name="font" /></div>
-                                    <h4>Separate Field & Global Styles</h4>
-                                    <p>Style individual fields or apply global styles with complete control.</p>
-                                </div>
+                                    {/* 4 */}
+                                    <div className="dragwyb-capability-card">
+                                        <div className="cap-icon-box">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                                <polyline points="14 2 14 8 20 8" />
+                                                <line x1="8" y1="13" x2="16" y2="13" />
+                                                <line x1="8" y1="17" x2="16" y2="17" />
+                                            </svg>
+                                        </div>
+                                        <div className="cap-info">
+                                            <h4>Built-in Templates</h4>
+                                        </div>
+                                    </div>
 
-                                <div className="dragwyb-overview-card">
-                                    <div className="card-icon-box"><Icon name="multistep" /></div>
-                                    <h4>MultiStep Drag & Drop Form</h4>
-                                    <p>Break long forms into beautiful multi-step experiences.</p>
-                                </div>
+                                    {/* 5 */}
+                                    <div className="dragwyb-capability-card">
+                                        <div className="cap-icon-box">
+                                            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 14c-1.66 0-3 1.34-3 3 0 1.31-1.16 2-2 2 .92 1.22 2.49 2 4 2 2.21 0 4-1.79 4-4 0-1.66-1.34-3-3-3zm13.71-9.37l-1.34-1.34a.996.996 0 0 0-1.41 0L9 12.25 11.75 15l8.96-8.96c.39-.39.39-1.02 0-1.41z" /></svg>
+                                        </div>
+                                        <div className="cap-info">
+                                            <h4>Preset Styles</h4>
+                                        </div>
+                                    </div>
 
-                                <div className="dragwyb-overview-card">
-                                    <div className="card-icon-box"><Icon name="logic" /></div>
-                                    <h4>Conditional Field Form</h4>
-                                    <p>Show or hide fields based on user input with smart logic.</p>
-                                </div>
+                                    {/* 6 */}
+                                    <div className="dragwyb-capability-card">
+                                        <div className="cap-icon-box text-badge">Aa</div>
+                                        <div className="cap-info">
+                                            <h4>Separate Field &amp; Global Styles</h4>
+                                        </div>
+                                    </div>
 
-                                <div className="dragwyb-overview-card">
-                                    <div className="card-icon-box"><Icon name="plane" /></div>
-                                    <h4>After Submission Actions</h4>
-                                    <p>Save entries, redirect, show message and more.</p>
-                                </div>
+                                    {/* 7 */}
+                                    <div className="dragwyb-capability-card">
+                                        <div className="cap-icon-box">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                                <polyline points="22,6 12,13 2,6" />
+                                            </svg>
+                                        </div>
+                                        <div className="cap-info">
+                                            <h4>User &amp; Admin Emails</h4>
+                                        </div>
+                                    </div>
 
-                                <div className="dragwyb-overview-card">
-                                    <div className="card-icon-box"><Icon name="mail" /></div>
-                                    <h4>User & Admin Confirmation Mail</h4>
-                                    <p>Send confirmation emails to users and notifications to admins.</p>
-                                </div>
+                                    {/* 8 */}
+                                    <div className="dragwyb-capability-card">
+                                        <div className="cap-icon-box">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                                <path d="M9 12l2 2 4-4" />
+                                            </svg>
+                                        </div>
+                                        <div className="cap-info">
+                                            <h4>CAPTCHA Protection</h4>
+                                        </div>
+                                    </div>
 
-                                <div className="dragwyb-overview-card">
-                                    <div className="card-icon-box"><Icon name="chart" /></div>
-                                    <h4>Analytics Dashboard</h4>
-                                    <p>Track form views, submissions, and conversions with insights.</p>
-                                </div>
+                                    {/* 9 */}
+                                    <div className="dragwyb-capability-card">
+                                        <div className="cap-icon-box text-badge">[/]</div>
+                                        <div className="cap-info">
+                                            <h4>Shortcode Support</h4>
+                                        </div>
+                                    </div>
 
-                                <div className="dragwyb-overview-card">
-                                    <div className="card-icon-box"><Icon name="smtp" /></div>
-                                    <h4>Inbuilt SMTP</h4>
-                                    <p>Send emails reliably using our inbuilt SMTP settings.</p>
-                                </div>
-
-                                <div className="dragwyb-overview-card">
-                                    <div className="card-icon-box"><Icon name="shield" /></div>
-                                    <h4>Captcha Field</h4>
-                                    <p>Protect your forms from spam with reCAPTCHA & hCaptcha support.</p>
-                                </div>
-
-                                <div className="dragwyb-overview-card">
-                                    <div className="card-icon-box"><Icon name="code" /></div>
-                                    <h4>Shortcode Supported</h4>
-                                    <p>Embed forms anywhere using simple shortcodes.</p>
-                                </div>
-
-                                <div className="dragwyb-overview-card">
-                                    <div className="card-icon-box"><Icon name="export" /></div>
-                                    <h4>Import & Export Form</h4>
-                                    <p>Easily import or export your forms with one click.</p>
-                                </div>
-
-                                <div className="dragwyb-overview-card callout-card">
-                                    <div className="card-icon-box"><Icon name="star-badge" /></div>
-                                    <h4>Build Stunning Forms in Minutes</h4>
-                                    <p>Everything you need, all in one powerful builder.</p>
+                                    {/* 10 */}
+                                    <div className="dragwyb-capability-card">
+                                        <div className="cap-icon-box">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                <path d="M7 16V4m0 0L3 8m4-4l4 4m6 4v12m0 0l4-4m-4 4l-4-4" />
+                                            </svg>
+                                        </div>
+                                        <div className="cap-info">
+                                            <h4>Import &amp; Export Forms</h4>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -712,7 +776,7 @@ const App = () => {
                                     </div>
                                 </div>
                                 <a
-                                    href={`${data.editorUrl}&steup-template=${selectedTemplate}`}
+                                    href={`${data.editorUrl}&setup-template=${selectedTemplate}`}
                                     className="banner-btn-link"
                                     onClick={(e) => {
                                         e.preventDefault();
