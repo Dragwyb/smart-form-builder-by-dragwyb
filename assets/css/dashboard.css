@@ -144,10 +144,10 @@
 
 /* Main Dashboard Grid */
 .dragwyb-db-grid {
-	display: grid;
-	grid-template-columns: 1fr 380px;
-	gap: 24px;
-	align-items: start;
+    display: flex;
+    gap: 24px;
+    padding: 24px 28px;
+    align-items: flex-start;
 }
 
 @media (max-width: 1200px) {
@@ -157,10 +157,22 @@
 }
 
 .dragwyb-db-col-left,
-.dragwyb-db-col-right {
+.dragwyb-db-col-right{
 	display: flex;
-	flex-direction: column;
-	gap: 24px;
+    flex-direction: column;
+    gap: 24px;
+}
+	
+
+.dragwyb-db-col-left{
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+}
+
+.dragwyb-db-col-right {
+	width: 380px;
+    flex-shrink: 0;
 }
 
 /* Cards Standard Styling */
