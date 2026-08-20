@@ -1,9 +1,16 @@
 (function() {
     'use strict';
 
-    if (typeof dragwybTrackerCfg === 'undefined') return;
-
     var cfg = dragwybTrackerCfg;
+
+    function isDntEnabled() {
+        var dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+        return dnt === '1' || dnt === 'yes' || dnt === true;
+    }
+
+    if (cfg.respectDnt === '1' && isDntEnabled()) {
+        return;
+    }
 
     function getCookie(name) {
         var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');

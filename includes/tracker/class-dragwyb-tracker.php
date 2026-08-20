@@ -52,6 +52,7 @@ class Dragwyb_Tracker {
 		$cookie_duration = absint( Settings_Manager::instance()->get_setting( 'gdpr_privacy', 'cookie_duration', 730 ) );
 		$disable_cookies = Settings_Manager::instance()->get_setting( 'gdpr_privacy', 'gdpr_disable_user_cookies', false );
 		$disable_details = Settings_Manager::instance()->get_setting( 'gdpr_privacy', 'gdpr_disable_user_details', false );
+		$respect_dnt     = Settings_Manager::instance()->get_setting( 'gdpr_privacy', 'gdpr_respect_dnt', false );
 
 		wp_enqueue_script(
 			'dragwyb-tracker',
@@ -71,12 +72,22 @@ class Dragwyb_Tracker {
 				'cookieDuration' => $cookie_duration > 0 ? $cookie_duration : 730,
 				'disableCookies' => ( true === $disable_cookies || 'yes' === $disable_cookies ) ? '1' : '0',
 				'disableDetails' => ( true === $disable_details || 'yes' === $disable_details ) ? '1' : '0',
+				'respectDnt'     => ( true === $respect_dnt || 'yes' === $respect_dnt ) ? '1' : '0',
 			)
 		);
 	}
 
 	public function handle_tracking(): void {
 		check_ajax_referer( 'dragwyb_track_nonce', 'nonce' );
+
+		$respect_dnt    = Settings_Manager::instance()->get_setting( 'gdpr_privacy', 'gdpr_respect_dnt', false );
+		$is_respect_dnt = true === $respect_dnt || 'yes' === $respect_dnt;
+		$has_dnt_header = ( isset( $_SERVER['HTTP_DNT'] ) && '1' === trim( (string) $_SERVER['HTTP_DNT'] ) ) || ( isset( $_POST['dnt'] ) && '1' === (string) $_POST['dnt'] );
+
+		if ( $is_respect_dnt && $has_dnt_header ) {
+			wp_send_json_success( array( 'status' => 'dnt_ignored' ) );
+			return;
+		}
 
 		$event_type = isset( $_POST['event_type'] ) ? sanitize_text_field( wp_unslash( $_POST['event_type'] ) ) : '';
 		$data       = isset( $_POST['data'] ) ? wp_unslash( $_POST['data'] ) : array();

@@ -190,7 +190,8 @@ class Save_Submissions_Action extends Action_Base {
 
 			$respect_dnt    = Settings_Manager::instance()->get_setting( 'gdpr_privacy', 'gdpr_respect_dnt', false );
 			$is_respect_dnt = true === $respect_dnt || 'yes' === $respect_dnt;
-			$has_dnt_header = isset( $_SERVER['HTTP_DNT'] ) && '1' === trim( (string) $_SERVER['HTTP_DNT'] );
+			$has_dnt_param  = isset( $_REQUEST['dnt'] ) && ( '1' === (string) $_REQUEST['dnt'] || 'yes' === (string) $_REQUEST['dnt'] );
+			$has_dnt_header = ( isset( $_SERVER['HTTP_DNT'] ) && '1' === trim( (string) $_SERVER['HTTP_DNT'] ) ) || $has_dnt_param;
 
 			$tracking_enabled = Settings_Manager::instance()->get_setting( 'gdpr_privacy', 'tracking_enabled', true );
 			$is_tracking_off  = false === $tracking_enabled || 'no' === $tracking_enabled;
@@ -198,10 +199,11 @@ class Save_Submissions_Action extends Action_Base {
 			$disable_cookies = Settings_Manager::instance()->get_setting( 'gdpr_privacy', 'gdpr_disable_user_cookies', false );
 			$is_disable_cook = true === $disable_cookies || 'yes' === $disable_cookies;
 
-			// If DNT is enabled and DNT header is sent by visitor's browser, disable details collection and tracking
+			// If DNT is enabled and DNT header/param is sent by visitor's browser, disable details collection, tracking and cookies
 			if ( $is_respect_dnt && $has_dnt_header ) {
 				$is_disable_det  = true;
 				$is_tracking_off = true;
+				$is_disable_cook = true;
 			}
 
 			$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_textarea_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
