@@ -11,7 +11,6 @@
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
-
 declare(strict_types=1);
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -155,6 +154,8 @@ final class Dragwyb_Form_Builder {
 		if ( ! wp_next_scheduled( 'dragwyb_gdpr_data_retention_cron' ) ) {
 			wp_schedule_event( time(), 'daily', 'dragwyb_gdpr_data_retention_cron' );
 		}
+
+		set_transient( 'dragwyb_activation_redirect', true, 600 );
 	}
 
 	/**

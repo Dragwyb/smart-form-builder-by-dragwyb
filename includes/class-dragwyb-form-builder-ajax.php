@@ -36,6 +36,22 @@ class Dragwyb_Form_Builder_Ajax {
 		add_action( 'wp_ajax_dragwyb_get_export_data', array( $this, 'get_export_data' ) );
 		add_action( 'wp_ajax_dragwyb_export_forms', array( $this, 'export_forms' ) );
 		add_action( 'wp_ajax_dragwyb_import_forms', array( $this, 'import_forms' ) );
+		add_action( 'wp_ajax_dragwyb_onboard_setup_complete', array( $this, 'onboard_setup_complete' ) );
+	}
+
+	/**
+	 * Onboarding setup complete status update.
+	 */
+	public function onboard_setup_complete(): void {
+		check_ajax_referer( 'dragwyb_setup_complete' );
+
+		if ( ! $this->current_user_can_manage_form( 0 ) ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied', 'smart-form-builder-by-dragwyb' ) ) );
+		}
+
+		update_option( 'dragwyb_onboarding_setup_complete', '1' );
+
+		wp_send_json_success( array( 'message' => __( 'Onboarding setup complete', 'smart-form-builder-by-dragwyb' ) ) );
 	}
 
 	/**

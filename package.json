@@ -10,7 +10,9 @@
         "dev:range-slider": "webpack --mode development --env type=range-slider --watch",
         "build:range-slider": "webpack --mode production --env type=range-slider",
         "dev:settings": "webpack --mode development --env type=settings --watch",
-        "build:settings": "webpack --mode production --env type=settings"
+        "build:settings": "webpack --mode production --env type=settings",
+        "dev:onboarding": "webpack --mode development --env type=onboarding --watch",
+        "build:onboarding": "webpack --mode production --env type=onboarding"
     },
     "dependencies": {
         "@dnd-kit/core": "^6.3.1",

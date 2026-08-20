@@ -101,6 +101,18 @@ class Dragwyb_Pages {
 			DRAGWYB_PREFIX . '-settings',
 			array( $this, 'dragwyb_render_page' )
 		);
+
+		if ( ! get_option( 'dragwyb_onboarding_setup_complete' ) ) {
+			// Add submenu page for onboarding
+			add_submenu_page(
+				DRAGWYB_PREFIX . '-form-overview',
+				__( 'Setup', 'smart-form-builder-by-dragwyb' ),
+				__( 'Setup', 'smart-form-builder-by-dragwyb' ),
+				'manage_options',
+				DRAGWYB_PREFIX . '-onboarding',
+				array( $this, 'dragwyb_render_page' )
+			);
+		}
 	}
 
 	/**
@@ -111,7 +123,7 @@ class Dragwyb_Pages {
 	}
 
 	private function form_admin_page(): void {
-		$default_pages_names = array( 'form-overview', 'entries', 'error-log', 'form-analytics', 'settings' );
+		$default_pages_names = array( 'form-overview', 'entries', 'error-log', 'form-analytics', 'settings', 'onboarding' );
 		$dragwyb_name_space  = Helper::namespace_into_dir_path( __NAMESPACE__ );
 		$dir                 = dirname( $dragwyb_name_space );
 		$dir                 = Helper::dir_path_into_namespace( $dir );
@@ -163,7 +175,7 @@ class Dragwyb_Pages {
 	}
 
 	private static function allowed_pages() {
-		$default_pages = array( 'form-overview', 'entries', 'error-log', 'form-analytics', 'settings' );
+		$default_pages = array( 'form-overview', 'entries', 'error-log', 'form-analytics', 'settings', 'onboarding' );
 
 		$allowed_pages = apply_filters( 'Dragwyb_allowed_pages', $default_pages );
 
@@ -265,6 +277,10 @@ class Dragwyb_Pages {
 					}
 				}
 			}
+		}
+
+		if ( 'onboarding' === $page ) {
+			return;
 		}
 
 		// Register this plugin's notices after unrelated notices have been removed.

@@ -168,6 +168,7 @@ const validScssFilesFilter = (scssFiles) => {
 
 module.exports = (env, argv) => {
     let validFolders = [];
+    let validScssFiles = [];
 
     const editorFolders = {
         Scripts: [
@@ -213,6 +214,15 @@ module.exports = (env, argv) => {
         ]
     };
 
+    const onboardingFolders = {
+        Scripts: [
+            'onboarding'
+        ],
+        Styles: [
+            'onboarding'
+        ]
+    };
+
     if (env && env.type === 'editor') {
         console.log("ℹ️  Running Webpack in *editor* mode...");
         validScssFiles = validScssFilesFilter(editorFolders.Styles);
@@ -229,6 +239,10 @@ module.exports = (env, argv) => {
         console.log("ℹ️  Running Webpack in *settings* mode...");
         validScssFiles = validScssFilesFilter(settingsFolders.Styles);
         validFolders = validFoldersFilter(settingsFolders.Scripts);
+    } else if (env && env.type === 'onboarding') {
+        console.log("ℹ️  Running Webpack in *onboarding* mode...");
+        validScssFiles = validScssFilesFilter(onboardingFolders.Styles);
+        validFolders = validFoldersFilter(onboardingFolders.Scripts);
     } else {
         console.warn("⚠️ Invalid build type provided. Use `--env type=editor` or `--env type=frontend`.");
         return defaultConfig;
