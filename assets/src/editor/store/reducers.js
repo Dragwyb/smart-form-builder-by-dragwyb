@@ -34,6 +34,13 @@ import {
     REPLACE_FORM_STATE
 } from './actions';
 
+const isSubmitButtonContainer = (containerId, fields) => {
+    if (!containerId || !fields || !fields[containerId]) return false;
+    const container = fields[containerId];
+    if (!container.children || container.children.length === 0) return false;
+    return container.children.some(childId => fields[childId] && fields[childId].type === 'button');
+};
+
 /**
  * Collects all IDs that need to be deleted (field + all nested children).
  * Returns a Set of field IDs — pure function, no mutation.
@@ -225,8 +232,22 @@ export default function reducer(state, action) {
             }
 
             if (field.is_root_container && !rootContainers.includes(fieldId)) {
-                if (null !== fieldIndex && fieldIndex >= 0) {
-                    rootContainers.splice(fieldIndex, 0, fieldId);
+                let targetIndex = fieldIndex;
+
+                if (rootContainers.length > 0) {
+                    const lastRootId = rootContainers[rootContainers.length - 1];
+                    const isLastSubmitButton = isSubmitButtonContainer(lastRootId, state.form.fields);
+                    const isCurrentSubmitButton = isSubmitButtonContainer(fieldId, { ...state.form.fields, [fieldId]: field });
+
+                    if (isLastSubmitButton && !isCurrentSubmitButton) {
+                        if (targetIndex === null || targetIndex === undefined || targetIndex >= rootContainers.length) {
+                            targetIndex = rootContainers.length - 1;
+                        }
+                    }
+                }
+
+                if (null !== targetIndex && targetIndex >= 0) {
+                    rootContainers.splice(targetIndex, 0, fieldId);
                 } else {
                     rootContainers.push(fieldId);
                 }
@@ -265,9 +286,21 @@ export default function reducer(state, action) {
             }
 
             if (field.is_root_container) {
-                const index = null === fieldIndex ? state.form.fields.length : fieldIndex;
-
                 const rootContainers = [...state.form.rootContainers];
+                let index = null === fieldIndex ? rootContainers.length : fieldIndex;
+
+                if (rootContainers.length > 0) {
+                    const lastRootId = rootContainers[rootContainers.length - 1];
+                    const isLastSubmitButton = isSubmitButtonContainer(lastRootId, state.form.fields);
+                    const isCurrentSubmitButton = isSubmitButtonContainer(field._id, { ...state.form.fields, [field._id]: field });
+
+                    if (isLastSubmitButton && !isCurrentSubmitButton) {
+                        if (index >= rootContainers.length) {
+                            index = rootContainers.length - 1;
+                        }
+                    }
+                }
+
                 rootContainers.splice(index, 0, field._id);
 
                 return {
@@ -336,7 +369,7 @@ export default function reducer(state, action) {
         }
 
         case UPDATE_FIELD_ORDER: {
-            const { currentId, targetId, index } = action.payload;
+            let { currentId, targetId, index } = action.payload;
             const fields = { ...state.form.fields };
 
             if (targetId === 'root') {
@@ -345,6 +378,18 @@ export default function reducer(state, action) {
 
                 if (currentIndex !== -1) {
                     rootContainers.splice(currentIndex, 1);
+                }
+
+                if (rootContainers.length > 0) {
+                    const lastRootId = rootContainers[rootContainers.length - 1];
+                    const isLastSubmitButton = isSubmitButtonContainer(lastRootId, fields);
+                    const isCurrentSubmitButton = isSubmitButtonContainer(currentId, fields);
+
+                    if (isLastSubmitButton && !isCurrentSubmitButton) {
+                        if (index >= rootContainers.length) {
+                            index = rootContainers.length - 1;
+                        }
+                    }
                 }
 
                 rootContainers.splice(index, 0, currentId);

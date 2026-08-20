@@ -18,7 +18,7 @@ class Register_Fields {
 
 	private array $field_manager_setting = array();
 
-	private array $default_fields = array( 'button', 'checkbox', 'date', 'text', 'email', 'hidden', 'number', 'radio', 'textarea', 'select', 'row', 'html', 'section', 'url', 'phone', 'name', 'address', 'time', 'range', 'captcha', 'file', 'step' );
+	private array $default_fields = array( 'button', 'checkbox', 'date', 'text', 'email', 'hidden', 'number', 'radio', 'textarea', 'select', 'row', 'html', 'section', 'url', 'phone', 'name', 'address', 'time', 'range', 'captcha', 'file', 'step', 'mask', 'gdpr' );
 
 	public static function instance(): self {
 		if ( null === self::$instance ) {

@@ -584,6 +584,149 @@ class phoneField extends DragwybEditor.editor.extends.FieldBase {
     }
 }
 
+class maskField extends DragwybEditor.editor.extends.FieldBase {
+    fieldName() { return 'mask'; }
+
+    resolveMaskClass(s) {
+        const maskType = s.mask_type || 'phone';
+        if (maskType === 'phone') {
+            const map = {
+                phone_usa: 'mask-phus',
+                phone_d8: 'mask-ph8',
+                phone_ddd8: 'mask-ddd8',
+                phone_ddd9: 'mask-ddd9',
+            };
+            return map[s.phone_format || 'phone_usa'] || 'mask-phus';
+        }
+        if (maskType === 'datetime') {
+            const map = {
+                dmy: 'mask-dmy',
+                mdy: 'mask-mdy',
+                dmyhm: 'mask-dmyhm',
+                mdyhm: 'mask-mdyhm',
+                hm: 'mask-hm',
+                hms: 'mask-hms',
+                my: 'mask-my',
+            };
+            return map[s.datetime_format || 'dmy'] || 'mask-dmy';
+        }
+        if (maskType === 'money') return 'mask-moneyc';
+        if (maskType === 'credit_card') {
+            const map = {
+                space: 'mask-ccs',
+                hyphen: 'mask-cch',
+                credit_card_date: 'mask-ccmy',
+                credit_card_expiry_date: 'mask-ccmyy',
+            };
+            return map[s.credit_card_options || 'hyphen'] || 'mask-cch';
+        }
+        if (maskType === 'brazilian') {
+            const map = { cpf: 'mask-cpf', cnpj: 'mask-cnpj', cep: 'mask-cep' };
+            return map[s.brazilian_format || 'cpf'] || 'mask-cpf';
+        }
+        if (maskType === 'ip') return 'mask-ipv4';
+        if (maskType === 'custom') return 'mask-custom';
+        return 'mask-phus';
+
+    }
+
+    getAutoPlaceholder(maskClass, s) {
+        const placeholders = {
+            'mask-phus': '(XXX) XXX-XXXX',
+            'mask-ph8': 'XXXX-XXXX',
+            'mask-ddd8': '(XX) XXXX-XXXX',
+            'mask-ddd9': '(XX) XXXXX-XXXX',
+            'mask-dmy': 'XX/XX/XXXX',
+            'mask-mdy': 'XX/XX/XXXX',
+            'mask-hm': 'XX:XX',
+            'mask-hms': 'XX:XX:XX',
+            'mask-dmyhm': 'XX/XX/XXXX XX:XX',
+            'mask-mdyhm': 'XX/XX/XXXX XX:XX',
+            'mask-my': 'XX/XXXX',
+            'mask-ccs': 'XXXX XXXX XXXX XXXX',
+            'mask-cch': 'XXXX-XXXX-XXXX-XXXX',
+            'mask-ccmy': 'XX/XX',
+            'mask-ccmyy': 'XX/XXXX',
+            'mask-cpf': 'XXX.XXX.XXX-XX',
+            'mask-cnpj': 'XX.XXX.XXX/XXXX-XX',
+            'mask-cep': 'XXXXX-XXX',
+            'mask-ipv4': 'XXX.XXX.XXX.XXX',
+        };
+
+
+        if (maskClass === 'mask-custom') {
+            return (s.custom_mask || '').replace(/[0A*]/g, 'X');
+        }
+
+        if (maskClass === 'mask-moneyc') {
+            const prefix = s.money_prefix !== undefined && s.money_prefix !== ''
+                ? s.money_prefix
+                : '$';
+
+            const separator = s.money_format === 'comma' ? '.' : ',';
+            const decimals = '0'.repeat(
+                Math.max(0, parseInt(s.money_decimal_places || 2, 10) || 2)
+            );
+
+            return `${prefix}0${separator}${decimals}`;
+        }
+
+        return placeholders[maskClass] || '';
+    }
+
+    bind() {
+        if (!this.shouldRender()) return <></>;
+        const s = this.attributes;
+        const fieldId = s.field_id || this.id;
+        const defaultLabel = DragwybEditor?.fields?.fields?.[this.fieldName]?.controls?.label?.default;
+        const label = s.label || defaultLabel;
+        const maskClass = this.resolveMaskClass(s);
+        const autoPlaceholder = s.auto_placeholder === 'yes' || s.auto_placeholder === undefined;
+        let placeholder = s.placeholder || '';
+
+        if (autoPlaceholder) {
+            const auto = this.getAutoPlaceholder(maskClass, s);
+            if (auto) placeholder = auto;
+        }
+        if (!placeholder) placeholder = ' ';
+
+        const showCardLogo = maskClass === 'mask-ccs' || maskClass === 'mask-cch';
+        const inputmode = maskClass === 'mask-cnpj'
+            ? 'text'
+            : (['mask-phus', 'mask-ph8', 'mask-ddd8', 'mask-ddd9'].includes(maskClass) ? 'tel' : 'numeric');
+
+        return (
+            <>
+                <div className="dragwyb-input-group">
+                    <input
+                        type="text"
+                        id={fieldId}
+                        className={`dragwyb-field-input dragwyb-mask-input ${maskClass}`}
+                        placeholder={placeholder}
+                        defaultValue={s.default_value}
+                        inputMode={inputmode}
+                        data-mask-class={maskClass}
+                        data-custom-mask={s.custom_mask || ''}
+                        data-moneymask-format={s.money_format || 'dot'}
+                        data-moneymask-prefix={s.money_prefix !== undefined ? s.money_prefix : '$'}
+                        data-decimal-places={s.money_decimal_places || '2'}
+                        autoComplete="off"
+                    />
+                    {label && <this.RenderLabel
+                        id={fieldId}
+                        label={label}
+                        required={s.required}
+                        settings={s}
+                    />}
+                    {showCardLogo && <img className="dragwyb-card-logo" src="" alt="" hidden />}
+                </div>
+                <div className={`dragwyb-mask-error error-${maskClass.replace('mask-', '')}`} hidden></div>
+                {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
+            </>
+        );
+    }
+}
+
 class nameField extends DragwybEditor.editor.extends.FieldBase {
     fieldName() { return 'name'; }
     bind() {
@@ -850,6 +993,46 @@ class stepField extends DragwybEditor.editor.extends.FieldBase {
     }
 }
 
+class gdprField extends DragwybEditor.editor.extends.FieldBase {
+    fieldName() { return 'gdpr'; }
+    bind() {
+        if (!this.shouldRender()) return <></>;
+        const s = this.attributes;
+        const fieldId = s.field_id || this.id;
+        const consentText = s.consent_text || 'I consent to this website storing my submitted information so they can respond to my inquiry.';
+        const privacyUrl = s.privacy_policy_url || '';
+
+        let renderConsent = consentText;
+        if (privacyUrl && consentText.toLowerCase().includes('privacy policy')) {
+            renderConsent = consentText.replace(/Privacy Policy/gi, `<a href="${privacyUrl}" target="_blank" rel="noopener noreferrer" onclick="return false;">Privacy Policy</a>`);
+        }
+
+        return (
+            <>
+                <div className="dragwyb-input-group dragwyb-gdpr-field">
+                    {s.label && <this.RenderLabel
+                        id={''}
+                        label={s.label}
+                        required={s.required || 'yes'}
+                        settings={s}
+                    />}
+                    <div className="dragwyb-options-container">
+                        <label className="dragwyb-option-item dragwyb-gdpr-item">
+                            <input type="checkbox" name={fieldId} value="yes" readOnly />
+                            <span className="dragwyb-radio-label">
+                                {privacyUrl && consentText.toLowerCase().includes('privacy policy') ? (
+                                    <span dangerouslySetInnerHTML={{ __html: renderConsent }} />
+                                ) : consentText}
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                {s.help_text && <div className="dragwyb-field-help">{s.help_text}</div>}
+            </>
+        );
+    }
+}
+
 const initializeFields = () => {
     const defaultFields = {
         'text': (args) => new textField(args),
@@ -866,6 +1049,7 @@ const initializeFields = () => {
         'row': (args) => new rowField(args),
         'url': (args) => new urlField(args),
         'phone': (args) => new phoneField(args),
+        'mask': (args) => new maskField(args),
         'name': (args) => new nameField(args),
         'address': (args) => new addressField(args),
         'time': (args) => new timeField(args),
@@ -874,6 +1058,7 @@ const initializeFields = () => {
         'section': (args) => new sectionField(args),
         'captcha': (args) => new captchaField(args),
         'step': (args) => new stepField(args),
+        'gdpr': (args) => new gdprField(args),
     };
 
     Object.keys(defaultFields).forEach(key =>

@@ -3,8 +3,9 @@ import { useSelector } from 'react-redux';
 
 const PreviewLoading = () => {
     const iframeEle = useSelector(state => state?.iframeEle);
+    const isTemplateOpen = DragwybEditor?.formData?.rootContainers?.length > 0 ? false : true;
 
-    if (iframeEle) return null;
+    if (iframeEle || isTemplateOpen) return null;
 
     const pluginUrl = DragwybEditor.pluginUrl;
     return (

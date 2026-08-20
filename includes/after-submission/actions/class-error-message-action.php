@@ -31,6 +31,21 @@ class Error_Message_Action extends Action_Base {
 		);
 
 		$this->add_control(
+			'message_position_error_message',
+			array(
+				'type'         => Controls::SELECT,
+				'label'        => __( 'Message Position', 'smart-form-builder-by-dragwyb' ),
+				'options'      => array(
+					'form_bottom' => __( 'Form Bottom', 'smart-form-builder-by-dragwyb' ),
+					'form_place'  => __( 'In Form Place', 'smart-form-builder-by-dragwyb' ),
+					'modal'       => __( 'Modal Popup', 'smart-form-builder-by-dragwyb' ),
+				),
+				'default'      => 'form_bottom',
+				'label_inline' => true,
+			)
+		);
+
+		$this->add_control(
 			'message_title_error_message',
 			array(
 				'type'    => Controls::TEXT,
@@ -87,8 +102,9 @@ class Error_Message_Action extends Action_Base {
 		if ( $form_submission->has_errors() ) {
 			$settings = $form_config['after-submission'] ?? array();
 
-			$title   = $settings['message_title_error_message'] ?? __( 'Error', 'smart-form-builder-by-dragwyb' );
-			$message = $settings['message_text_error_message'] ?? __( 'Something went wrong. Please try again.', 'smart-form-builder-by-dragwyb' );
+			$position = $settings['message_position_error_message'] ?? 'form_bottom';
+			$title    = $settings['message_title_error_message'] ?? __( 'Error', 'smart-form-builder-by-dragwyb' );
+			$message  = $settings['message_text_error_message'] ?? __( 'Something went wrong. Please try again.', 'smart-form-builder-by-dragwyb' );
 
 			$icon_data = array(
 				'icon' => 'exclamation-circle',
@@ -103,6 +119,7 @@ class Error_Message_Action extends Action_Base {
 			$text_color = $settings['message_text_color_error_message'] ?? '#b91c1c';
 
 			$data = array(
+				'position'   => sanitize_text_field( $position ),
 				'title'      => sanitize_text_field( $title ),
 				'message'    => sanitize_textarea_field( $message ),
 				'icon'       => Icons_Manager::get_icon_html( $icon_data ),

@@ -133,7 +133,7 @@ const RenderItem = React.memo(({
         id = `dragwyb-${field.type}-${field._id}`;
     }
 
-    if (['button', 'file', 'radio', 'checkbox', 'range'].includes(field.type)) {
+    if (['button', 'file', 'radio', 'checkbox', 'range', 'gdpr'].includes(field.type)) {
         wrapperClass.push("dragwyb-no-float");
     }
 

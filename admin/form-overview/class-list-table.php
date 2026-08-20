@@ -21,7 +21,19 @@ class List_Table extends WP_List_Table {
 	public $per_page;
 	private $count;
 	private $view;
-	private string $upload_dir;
+	/**
+	 * Upload directory.
+	 *
+	 * @var string
+	 */
+	private $upload_dir;
+
+	/**
+	 * Cached submission counts indexed by form ID.
+	 *
+	 * @var array
+	 */
+	private $submission_counts = array();
 
 	/**
 	 * Primary class constructor.
@@ -68,13 +80,14 @@ class List_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'cb'          => '<input type="checkbox" />', // Required for bulk actions
-			'name'        => __( 'Name', 'smart-form-builder-by-dragwyb' ),
-			'author'      => __( 'Author', 'smart-form-builder-by-dragwyb' ),
-			'shortcode'   => __( 'Shortcode', 'smart-form-builder-by-dragwyb' ),
-			'id'          => __( 'ID', 'smart-form-builder-by-dragwyb' ),
-			'clean_cache' => __( 'Clean Cache', 'smart-form-builder-by-dragwyb' ),
-			'date'        => __( 'Date', 'smart-form-builder-by-dragwyb' ),
+			'cb'              => '<input type="checkbox" />', // Required for bulk actions
+			'name'            => __( 'Name', 'smart-form-builder-by-dragwyb' ),
+			'shortcode'       => __( 'Shortcode', 'smart-form-builder-by-dragwyb' ),
+			'views'           => __( 'Views', 'smart-form-builder-by-dragwyb' ) . ' <span class="dragwyb-info-icon" title="' . esc_attr__( 'Form preview count', 'smart-form-builder-by-dragwyb' ) . '">ⓘ</span>',
+			'submissions'     => __( 'Submissions', 'smart-form-builder-by-dragwyb' ) . ' <span class="dragwyb-info-icon" title="' . esc_attr__( 'Form submission count', 'smart-form-builder-by-dragwyb' ) . '">ⓘ</span>',
+			'conversion_rate' => __( 'Conversion Rate', 'smart-form-builder-by-dragwyb' ) . ' <span class="dragwyb-info-icon" title="' . esc_attr__( 'Submission / View ratio', 'smart-form-builder-by-dragwyb' ) . '">ⓘ</span>',
+			'clean_cache'     => __( 'Clean Cache', 'smart-form-builder-by-dragwyb' ),
+			'date'            => __( 'Date', 'smart-form-builder-by-dragwyb' ),
 		);
 
 		// Modify columns via a filter
@@ -111,36 +124,74 @@ class List_Table extends WP_List_Table {
 	 */
 	public function column_default( $form, $column_name ) {
 		switch ( $column_name ) {
-			case 'id':
-				$value = $form->ID;
+			case 'shortcode':
+				$shortcode = '[' . DRAGWYB_PREFIX . '-form id="' . $form->ID . '"]';
+				$value     = sprintf(
+					'<div class="dragwyb-shortcode-box dragwyb-shortcode dragwyb-shortcode-value" data-shortcode="%s" title="%s"><span class="dragwyb-shortcode-text">%s</span><span class="dashicons dashicons-admin-page dragwyb-copy-icon"></span></div>',
+					esc_attr( $shortcode ),
+					esc_attr__( 'Click to copy shortcode', 'smart-form-builder-by-dragwyb' ),
+					esc_html( $shortcode )
+				);
 				break;
 
-			case 'shortcode':
-				$value = esc_html( '[' . DRAGWYB_PREFIX . '-form id="' . $form->ID . '"]' );
+			case 'views':
+				$login_views    = (int) get_post_meta( $form->ID, '_dragwyb_form_login_preview_count', true );
+				$frontend_views = (int) get_post_meta( $form->ID, '_dragwyb_form_frontend_preview_count', true );
+				$total_views    = $login_views + $frontend_views;
+				$value          = sprintf(
+					'<div class="dragwyb-views-card"><div class="dragwyb-views-header"><span class="dashicons dashicons-visibility"></span> <strong class="dragwyb-views-count">%d</strong></div><div class="dragwyb-views-sub"><div class="dragwyb-view-subrow">%s: %d</div><div class="dragwyb-view-subrow">%s: %d</div></div></div>',
+					$total_views,
+					esc_html__( 'Frontend', 'smart-form-builder-by-dragwyb' ),
+					$frontend_views,
+					esc_html__( 'Login', 'smart-form-builder-by-dragwyb' ),
+					$login_views
+				);
+				break;
+
+			case 'submissions':
+			case 'entries':
+				$submission_count = isset( $this->submission_counts[ $form->ID ] ) ? $this->submission_counts[ $form->ID ] : 0;
+				$value            = sprintf(
+					'<div class="dragwyb-submissions-card"><strong class="dragwyb-submissions-count">%d</strong></div>',
+					$submission_count
+				);
+				break;
+
+			case 'conversion_rate':
+				$login_views      = (int) get_post_meta( $form->ID, '_dragwyb_form_login_preview_count', true );
+				$frontend_views   = (int) get_post_meta( $form->ID, '_dragwyb_form_frontend_preview_count', true );
+				$total_views      = $login_views + $frontend_views;
+				$submission_count = isset( $this->submission_counts[ $form->ID ] ) ? $this->submission_counts[ $form->ID ] : 0;
+
+				$rate           = $total_views > 0 ? ( $submission_count / $total_views ) * 100 : 0;
+				$rate_formatted = number_format( $rate, 1 ) . '%';
+				$progress_width = min( 100, max( 0, $rate ) );
+
+				$value = sprintf(
+					'<div class="dragwyb-conversion-wrap"><div class="dragwyb-conversion-value">%s</div><div class="dragwyb-progress-track"><div class="dragwyb-progress-fill" style="width: %f%%;"></div></div></div>',
+					esc_html( $rate_formatted ),
+					$progress_width
+				);
 				break;
 
 			case 'created':
 				$value = get_the_date( 'Y-m-d', $form );
 				break;
 
-			case 'entries':
-				$entry_count = get_post_meta( $form->ID, '_form_entries_count', true ) ?: 0;
-				$value       = '<span class="form-entries-count">' . esc_html( $entry_count ) . '</span>';
-				break;
-
 			case 'date':
-				$value = get_the_modified_date( 'Y-m-d', $form );
-				break;
-
-			case 'author':
-				$author = get_user_by( 'ID', $form->post_author );
-				$value  = $author ? esc_html( $author->display_name ) : '';
+				$date_str = get_the_modified_date( 'Y-m-d', $form );
+				$time_str = get_the_modified_date( 'h:i A', $form );
+				$value    = sprintf(
+					'<div class="dragwyb-date-cell"><div class="dragwyb-date-wrap"><span class="dragwyb-date-main">%s</span><span class="dragwyb-date-time">%s</span></div></div>',
+					esc_html( $date_str ),
+					esc_html( $time_str )
+				);
 				break;
 
 			case 'clean_cache':
 				if ( $this->css_cache_exist( $form->ID ) ) {
 					$value = sprintf(
-						'<button type="button" id="%s" data-key="%s" data-clean-key="%s" class="button">%s</button>',
+						'<button type="button" id="%s" data-key="%s" data-clean-key="%s" class="dragwyb-clean-btn active"><span class="dashicons dashicons-update"></span> %s</button>',
 						esc_attr( 'clean-cache-' . (int) $form->ID ),
 						esc_attr( wp_create_nonce( sanitize_text_field( $form->post_type ) . (int) $form->ID . '-clean-cache' ) ),
 						esc_attr( wp_create_nonce( 'delete_cache_nonce' ) ),
@@ -148,7 +199,7 @@ class List_Table extends WP_List_Table {
 					);
 				} else {
 					$value = sprintf(
-						'<button type="button" id="%s" disabled class="button">%s</button>',
+						'<button type="button" id="%s" disabled class="dragwyb-clean-btn disabled"><span class="dashicons dashicons-update"></span> %s</button>',
 						esc_attr( 'clean-cache-' . (int) $form->ID ),
 						esc_html__( 'Clean Cache', 'smart-form-builder-by-dragwyb' )
 					);
@@ -180,11 +231,48 @@ class List_Table extends WP_List_Table {
 	 * @return string
 	 */
 	public function column_name( $form ) {
-		$title   = $this->get_column_name_title( $form );
-		$states  = _post_states( $form, false );
+		$title        = ! empty( $form->post_title ) ? $form->post_title : $form->post_name;
+		$status       = 'publish' === $form->post_status ? __( 'Published', 'smart-form-builder-by-dragwyb' ) : ucfirst( (string) $form->post_status );
+		$status_class = 'publish' === $form->post_status ? 'dragwyb-status-published' : 'dragwyb-status-draft';
+
+		if ( current_user_can( 'edit_post', $form->ID ) ) {
+			$title_html = sprintf(
+				'<a href="%s" class="dragwyb-form-title-link">%s</a>',
+				esc_url( '?page=dragwyb-form-builder&form_id=' . (int) $form->ID ),
+				esc_html( $title )
+			);
+		} else {
+			$title_html = sprintf( '<span class="dragwyb-form-title-text">%s</span>', esc_html( $title ) );
+		}
+
 		$actions = $this->get_column_name_row_actions( $form );
 
-		return $title . $states . $actions;
+		$colors = array(
+			array(
+				'bg'    => '#fff0f5',
+				'color' => '#e11d48',
+			),
+			array(
+				'bg'    => '#faf5ff',
+				'color' => '#9333ea',
+			),
+			array(
+				'bg'    => '#eff6ff',
+				'color' => '#2563eb',
+			),
+			array(
+				'bg'    => '#ecfeff',
+				'color' => '#0891b2',
+			),
+		);
+
+		return sprintf(
+			'<div class="dragwyb-name-cell"><div class="dragwyb-name-meta">%s<span class="dragwyb-status-badge %s">%s</span>%s</div></div>',
+			$title_html,
+			esc_attr( $status_class ),
+			esc_html( $status ),
+			$actions
+		);
 	}
 
 	/**
@@ -348,7 +436,6 @@ class List_Table extends WP_List_Table {
 		$sortable              = array(
 			'id'      => array( 'ID', false ),
 			'name'    => array( 'title', false ),
-			'author'  => array( 'author', false ),
 			'created' => array( 'date', false ),
 		);
 		$this->_column_headers = array( $columns, $hidden, $sortable );
@@ -391,6 +478,30 @@ class List_Table extends WP_List_Table {
 		);
 
 		$this->items = get_posts( $args );
+
+		$this->submission_counts = array();
+		if ( ! empty( $this->items ) && is_array( $this->items ) ) {
+			$form_ids = wp_list_pluck( $this->items, 'ID' );
+			$form_ids = array_map( 'absint', array_filter( $form_ids ) );
+			if ( ! empty( $form_ids ) ) {
+				global $wpdb;
+				$table_name   = $wpdb->prefix . 'dragwyb_submissions';
+				$placeholders = implode( ',', array_fill( 0, count( $form_ids ), '%d' ) );
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+				$results = $wpdb->get_results(
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					$wpdb->prepare(
+						"SELECT form_id, COUNT(id) as total_count FROM {$table_name} WHERE form_id IN ({$placeholders}) GROUP BY form_id",
+						...$form_ids
+					)
+				);
+				if ( ! empty( $results ) ) {
+					foreach ( $results as $row ) {
+						$this->submission_counts[ (int) $row->form_id ] = (int) $row->total_count;
+					}
+				}
+			}
+		}
 
 		$post_counts = wp_count_posts( Dragwyb_Post::POST_TYPE );
 

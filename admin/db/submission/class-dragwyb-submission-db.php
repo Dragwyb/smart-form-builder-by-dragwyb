@@ -10,8 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Dragwyb_Submission_Db {
 
-
-	const VERSION = 'v1';
+	const VERSION = '1.1';
 
 	/**
 	 * Get the table name with the WP prefix.
@@ -21,8 +20,12 @@ class Dragwyb_Submission_Db {
 		return esc_sql( sanitize_text_field( $wpdb->prefix . 'dragwyb_submissions' ) );
 	}
 
+	final public static function table_name(): string {
+		return self::get_table_name();
+	}
+
 	/**
-	 * Create the database table.
+	 * Create the database table & run migration if needed.
 	 */
 	public static function create_table(): void {
 		global $wpdb;
@@ -33,11 +36,9 @@ class Dragwyb_Submission_Db {
 		$sql = "CREATE TABLE $table_name (
             id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
             form_id bigint(20) unsigned NOT NULL,
-            user_id bigint(20) unsigned DEFAULT NULL,
-            ip_address varchar(45) NOT NULL,
-            user_agent text NOT NULL,
             submission_data longtext NOT NULL,
-            status varchar(20) DEFAULT 'publish' NOT NULL,
+            extra_data longtext DEFAULT NULL,
+            status varchar(20) DEFAULT 'unread' NOT NULL,
             created_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
             updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
             PRIMARY KEY  (id),
@@ -46,6 +47,78 @@ class Dragwyb_Submission_Db {
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
+
+		self::migrate_v1_to_v2();
+	}
+
+	/**
+	 * Migrate v1 data to v2 extra_data column structure.
+	 */
+	public static function migrate_v1_to_v2(): void {
+		global $wpdb;
+		$table_name = self::get_table_name();
+
+		// Check if extra_data column exists
+		$column_exists = $wpdb->get_results(
+			$wpdb->prepare( "SHOW COLUMNS FROM $table_name LIKE %s", 'extra_data' )
+		);
+
+		if ( empty( $column_exists ) ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->query( "ALTER TABLE $table_name ADD COLUMN extra_data longtext DEFAULT NULL" );
+		}
+
+		// Query rows where extra_data is NULL or empty
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$rows = $wpdb->get_results( "SELECT * FROM $table_name WHERE extra_data IS NULL OR extra_data = '' OR extra_data = '{}'" );
+
+		if ( ! empty( $rows ) ) {
+			foreach ( $rows as $row ) {
+				$extra_data = array(
+					'visitor_info'    => array(
+						'user_id'        => isset( $row->user_id ) ? (int) $row->user_id : null,
+						'ip_address'     => ! empty( $row->ip_address ) ? (string) $row->ip_address : '-',
+						'user_agent'     => ! empty( $row->user_agent ) ? (string) $row->user_agent : '-',
+						'device'         => '-',
+						'browser'        => '-',
+						'os'             => '-',
+						'screen'         => '-',
+						'language'       => '-',
+						'time_to_submit' => '-',
+					),
+					'lead_attributes' => array(
+						'traffic_source' => 'Direct',
+						'referrer'       => 'Direct',
+						'landing_page'   => '-',
+						'utm_source'     => '-',
+						'utm_medium'     => '-',
+						'utm_campaign'   => '-',
+						'utm_term'       => '-',
+						'utm_content'    => '-',
+					),
+				);
+
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$wpdb->update(
+					$table_name,
+					array( 'extra_data' => wp_json_encode( $extra_data ) ),
+					array( 'id' => $row->id )
+				);
+			}
+		}
+
+		// Drop old v1 columns: user_id, ip_address, user_agent
+		$old_columns = array( 'user_id', 'ip_address', 'user_agent' );
+		foreach ( $old_columns as $col ) {
+			$has_col = $wpdb->get_results(
+				$wpdb->prepare( "SHOW COLUMNS FROM $table_name LIKE %s", $col )
+			);
+
+			if ( ! empty( $has_col ) ) {
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$wpdb->query( "ALTER TABLE $table_name DROP COLUMN `$col`" );
+			}
+		}
 	}
 
 	/**
@@ -59,11 +132,9 @@ class Dragwyb_Submission_Db {
 
 		$defaults = array(
 			'form_id'         => 0,
-			'user_id'         => get_current_user_id() ?: null,
-			'ip_address'      => null,
-			'user_agent'      => null,
 			'submission_data' => '{}',
-			'status'          => 'publish',
+			'extra_data'      => '{}',
+			'status'          => 'unread',
 			'created_at'      => current_time( 'mysql' ),
 			'updated_at'      => current_time( 'mysql' ),
 		);
@@ -80,17 +151,19 @@ class Dragwyb_Submission_Db {
 			$data['submission_data'] = wp_json_encode( $data['submission_data'] );
 		}
 
+		if ( is_array( $data['extra_data'] ) || is_object( $data['extra_data'] ) ) {
+			$data['extra_data'] = wp_json_encode( $data['extra_data'] );
+		}
+
 		$table_name = esc_sql( self::get_table_name() );
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$inserted = $wpdb->query(
 			$wpdb->prepare(
-				"INSERT INTO $table_name (form_id, user_id, ip_address, user_agent, submission_data, status, created_at, updated_at) VALUES (%d, %d, %s, %s, %s, %s, %s, %s)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				"INSERT INTO $table_name (form_id, submission_data, extra_data, status, created_at, updated_at) VALUES (%d, %s, %s, %s, %s, %s)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				absint( $data['form_id'] ),
-				absint( $data['user_id'] ),
-				sanitize_text_field( $data['ip_address'] ),
-				sanitize_text_field( $data['user_agent'] ),
 				$data['submission_data'],
+				$data['extra_data'],
 				sanitize_text_field( $data['status'] ),
 				sanitize_text_field( $data['created_at'] ),
 				sanitize_text_field( $data['updated_at'] )
@@ -149,7 +222,7 @@ class Dragwyb_Submission_Db {
 
 		$args = wp_parse_args( $args, $defaults );
 
-		$allowed_orderby = array( 'id', 'form_id', 'ip_address', 'created_at' );
+		$allowed_orderby = array( 'id', 'form_id', 'created_at' );
 		$orderby         = in_array( $args['orderby'], $allowed_orderby, true ) ? $args['orderby'] : 'created_at';
 		$order           = strtoupper( $args['order'] ) === 'ASC' ? 'ASC' : 'DESC';
 
@@ -213,7 +286,7 @@ class Dragwyb_Submission_Db {
 
 		if ( ! empty( $args['search'] ) ) {
 			$search         = '%' . $wpdb->esc_like( sanitize_text_field( $args['search'] ) ) . '%';
-			$where[]        = '(ip_address LIKE %s OR submission_data LIKE %s)';
+			$where[]        = '(submission_data LIKE %s OR extra_data LIKE %s)';
 			$query_params[] = $search;
 			$query_params[] = $search;
 		}
@@ -239,15 +312,15 @@ class Dragwyb_Submission_Db {
 		$set_parts = array();
 		$values    = array();
 
-		$allowed_columns = array( 'form_id', 'user_id', 'ip_address', 'user_agent', 'submission_data', 'status', 'created_at', 'updated_at' );
+		$allowed_columns = array( 'form_id', 'submission_data', 'extra_data', 'status', 'created_at', 'updated_at' );
 
 		foreach ( $data as $key => $value ) {
 			if ( ! in_array( $key, $allowed_columns, true ) ) {
 				continue;
 			}
-			$format      = in_array( $key, array( 'form_id', 'user_id' ), true ) ? '%d' : '%s';
+			$format      = 'form_id' === $key ? '%d' : '%s';
 			$set_parts[] = '`' . sanitize_key( $key ) . '` = ' . $format;
-			$values[]    = $value;
+			$values[]    = is_array( $value ) || is_object( $value ) ? wp_json_encode( $value ) : $value;
 		}
 
 		$values[] = $id;
@@ -307,4 +380,3 @@ class Dragwyb_Submission_Db {
 		);
 	}
 }
-

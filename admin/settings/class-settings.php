@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Dragwyb\Form_Builder\Admin\Settings;
 
+use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use Dragwyb\Form_Builder\Includes\Helper\Helper;
-
-class Dragwyb_Settings {
+class Settings {
 
 	private static ?self $instance = null;
 
@@ -23,23 +23,14 @@ class Dragwyb_Settings {
 	}
 
 	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'register_settings_page' ), 60 );
+		add_action( 'Dragwyb_Menu_Page', array( $this, 'render_page' ), 1 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 	}
 
-	public function register_settings_page(): void {
-		add_submenu_page(
-			DRAGWYB_PREFIX . '-form-overview',
-			__( 'Settings', 'smart-form-builder-by-dragwyb' ),
-			__( 'Settings', 'smart-form-builder-by-dragwyb' ),
-			'manage_options',
-			DRAGWYB_PREFIX . '-settings',
-			array( $this, 'render_settings_page' )
-		);
-	}
-
-	public function render_settings_page(): void {
-		echo '<div class="wrap"><div id="dragwyb-settings-root"></div></div>';
+	public function render_page( $screen ): void {
+		if ( gettype( $screen ) === 'object' && $screen( 'settings' ) ) {
+			echo '<div class="wrap"><div id="dragwyb-settings-root"></div></div>';
+		}
 	}
 
 	public function enqueue_assets( string $hook ): void {
@@ -93,19 +84,35 @@ class Dragwyb_Settings {
 
 		$current_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
 
+		// Get actual form count
+		$forms_count_obj = wp_count_posts( sanitize_key( Dragwyb_Post::POST_TYPE ) );
+		$total_forms     = isset( $forms_count_obj->publish ) ? (int) $forms_count_obj->publish : 0;
+
+		$extra_plugins = array(
+			array(
+				'name'        => 'AI Chatbot',
+				'description' => 'Add AI Chatbot & Floating chat widgets to your website.',
+				'url'         => admin_url( 'plugin-install.php?tab=plugin-information&plugin=dragwyb-click-to-chat' ),
+			),
+		);
+
 		// Localize data for React
 		wp_localize_script(
 			'dragwyb-settings-script',
 			'DragwybSettingsData',
 			array(
-				'restUrl'    => esc_url_raw( rest_url( 'dragwyb/v1/settings' ) ),
-				'nonce'      => wp_create_nonce( 'wp_rest' ),
-				'ajaxUrl'    => admin_url( 'admin-ajax.php' ),
-				'adminNonce' => wp_create_nonce( 'dragwyb_admin_nonce' ),
-				'pluginSlug' => DRAGWYB_TEXT_DOMAIN,
-				'version'    => DRAGWYB_FORM_BUILDER_VERSION,
-				'currentTab' => $current_tab,
-				'i18n'       => array(),
+				'restUrl'          => esc_url_raw( rest_url( 'dragwyb/v1/settings' ) ),
+				'nonce'            => wp_create_nonce( 'wp_rest' ),
+				'ajaxUrl'          => admin_url( 'admin-ajax.php' ),
+				'adminNonce'       => wp_create_nonce( 'dragwyb_admin_nonce' ),
+				'pluginSlug'       => DRAGWYB_TEXT_DOMAIN,
+				'version'          => DRAGWYB_FORM_BUILDER_VERSION,
+				'currentTab'       => $current_tab,
+				'extraPlugins'     => $extra_plugins,
+				'documentationUrl' => esc_url( 'https://dragwyb.com/docs' ),
+				'supportUrl'       => esc_url( 'https://dragwyb.com/contact' ),
+				'morePluginsUrl'   => esc_url( 'https://dragwyb.com/products' ),
+				'totalForms'       => $total_forms > 0 ? number_format( $total_forms ) : '0',
 			)
 		);
 	}

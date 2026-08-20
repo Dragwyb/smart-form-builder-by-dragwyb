@@ -146,7 +146,7 @@
     --dragwyb-btn-hover-bg: #1e40af;
     --dragwyb-btn-color: #ffffff;
     --dragwyb-btn-radius: 6px;
-    --dragwyb-btn-width: auto;
+    --dragwyb-btn-width: 100%;
     --dragwyb-btn-pt: 12px;
     --dragwyb-btn-pr: 20px;
     --dragwyb-btn-pb: 12px;
@@ -407,7 +407,7 @@
     }
 
     .dragwyb-button-field {
-        text-align: var(--dragwyb-btn-align, var(--dragwyb-form-justify-content, center));
+        text-align: var(--dragwyb-btn-align, var(--dragwyb-form-justify-content, left));
     }
 
     /* Field Container */
@@ -565,7 +565,7 @@
             .dragwyb-option-item {
                 display: flex;
                 align-items: center;
-                gap: 8px;
+                gap: var(--dragwyb-toggle-label-spacing, var(--dragwyb-toggle-spacing, 8px));
                 cursor: pointer;
 
                 input[type="radio"],
@@ -631,6 +631,15 @@
                     text-align: var(--dragwyb-option-typography-align);
                     color: var(--dragwyb-option-color, var(--dragwyb-input-color));
                     margin-left: 0;
+
+                    a {
+                        color: var(--dragwyb-gdpr-link-color, var(--dragwyb-toggle-primary-color, #2563eb));
+                        text-decoration: underline;
+
+                        &:hover {
+                            opacity: 0.85;
+                        }
+                    }
                 }
             }
 
@@ -1315,5 +1324,82 @@
         opacity: 0.9;
         margin: 0;
         font-family: inherit;
+    }
+}
+
+/* Inline Form Message Component (In Form Place / Form Bottom) */
+.dragwyb-inline-message-box {
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 20px 0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+
+    .dragwyb-inline-message-content {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .dragwyb-inline-message-icon {
+        font-size: 32px;
+        line-height: 1;
+        flex-shrink: 0;
+
+        svg {
+            width: 32px;
+            height: 32px;
+            fill: currentColor;
+        }
+    }
+
+    .dragwyb-inline-message-title {
+        margin: 0 0 6px 0;
+        font-size: 18px;
+        font-weight: 600;
+        font-family: inherit;
+    }
+
+    .dragwyb-inline-message-text {
+        font-size: 14px;
+        line-height: 1.5;
+        opacity: 0.9;
+        font-family: inherit;
+    }
+}
+
+.dragwyb-bottom-message-box {
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 8px;
+    padding: 14px 0px 0px;
+    margin: 0px;
+
+    .dragwyb-inline-message-content {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .dragwyb-inline-message-icon {
+        font-size: 20px;
+        line-height: 1;
+        flex-shrink: 0;
+
+        svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+    }
+
+    .dragwyb-inline-message-title {
+        display: none !important;
+    }
+
+    .dragwyb-inline-message-text {
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.4;
+        margin: 0;
     }
 }

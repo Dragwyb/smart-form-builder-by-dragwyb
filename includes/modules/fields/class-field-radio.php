@@ -311,7 +311,7 @@ class Field_Radio extends Field_Base {
 		$settings = $this->get_field_settings();
 
 		$id          = $this->get_the_id();
-		$field_id    = $this->field_key_exist( $settings, 'field_id', uniqid( 'field_' ) );
+		$field_id    = $this->field_key_exist( $settings, 'field_id', $id );
 		$label       = $this->field_key_exist( $settings, 'label', '' );
 		$options     = $this->field_key_exist( $settings, 'options_list', array() );
 		$layout      = $this->field_key_exist( $settings, 'layout', 'inline' );

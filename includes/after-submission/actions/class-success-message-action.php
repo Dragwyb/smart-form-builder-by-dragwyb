@@ -31,6 +31,21 @@ class Success_Message_Action extends Action_Base {
 		);
 
 		$this->add_control(
+			'message_position_success_message',
+			array(
+				'type'         => Controls::SELECT,
+				'label'        => __( 'Message Position', 'smart-form-builder-by-dragwyb' ),
+				'options'      => array(
+					'form_bottom' => __( 'Form Bottom', 'smart-form-builder-by-dragwyb' ),
+					'form_place'  => __( 'In Form Place', 'smart-form-builder-by-dragwyb' ),
+					'modal'       => __( 'Modal Popup', 'smart-form-builder-by-dragwyb' ),
+				),
+				'default'      => 'form_bottom',
+				'label_inline' => true,
+			)
+		);
+
+		$this->add_control(
 			'message_title_success_message',
 			array(
 				'type'    => Controls::TEXT,
@@ -86,8 +101,9 @@ class Success_Message_Action extends Action_Base {
 	public function process_submission( $form_id, $form_data, $form_config, Form_Submission_Handler $form_submission ) {
 		$settings = $form_config['after-submission'] ?? array();
 
-		$title   = $settings['message_title_success_message'] ?? __( 'Success!', 'smart-form-builder-by-dragwyb' );
-		$message = $settings['message_text_success_message'] ?? __( 'Your form has been submitted successfully.', 'smart-form-builder-by-dragwyb' );
+		$position = $settings['message_position_success_message'] ?? 'form_bottom';
+		$title    = $settings['message_title_success_message'] ?? __( 'Success!', 'smart-form-builder-by-dragwyb' );
+		$message  = $settings['message_text_success_message'] ?? __( 'Your form has been submitted successfully.', 'smart-form-builder-by-dragwyb' );
 
 		$icon_data = array(
 			'icon' => 'check-circle',
@@ -102,6 +118,7 @@ class Success_Message_Action extends Action_Base {
 		$text_color = $settings['message_text_color_success_message'] ?? '#15803d';
 
 		$data = array(
+			'position'   => sanitize_text_field( $position ),
 			'title'      => sanitize_text_field( $title ),
 			'message'    => sanitize_textarea_field( $message ),
 			'icon'       => Icons_Manager::get_icon_html( $icon_data ),

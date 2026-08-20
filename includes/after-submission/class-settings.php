@@ -67,7 +67,7 @@ class Settings extends Register_Controls_Base {
 			array(
 				'type'    => Controls::MULTISELECT,
 				'label'   => __( 'After Submissions Actions', 'smart-form-builder-by-dragwyb' ),
-				'default' => array(),
+				'default' => array( 'success_message' ),
 				'options' => $options,
 			)
 		);

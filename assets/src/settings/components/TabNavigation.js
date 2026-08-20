@@ -1,28 +1,38 @@
 import React from 'react';
+import {
+    FaPlug,
+    FaTachometerAlt,
+    FaTable,
+    FaEnvelope,
+    FaShieldAlt,
+    FaExchangeAlt
+} from 'react-icons/fa';
 
 const tabs = [
-    { id: 'integrations', label: 'Integrations', icon: 'fa-plug' },
-    { id: 'performance', label: 'Performance', icon: 'fa-bolt' },
-    { id: 'fields_manager', label: 'Fields Manager', icon: 'fa-list-alt' },
-    { id: 'import_export', label: 'Import/Export', icon: 'fa-file-import' }
+    { id: 'integrations', label: 'Integrations', Icon: FaPlug },
+    { id: 'performance', label: 'Performance', Icon: FaTachometerAlt },
+    { id: 'fields_manager', label: 'Fields Manager', Icon: FaTable },
+    { id: 'smtp', label: 'SMTP', Icon: FaEnvelope },
+    { id: 'gdpr_privacy', label: 'GDPR / Privacy', Icon: FaShieldAlt },
+    { id: 'import_export', label: 'Import / Export', Icon: FaExchangeAlt }
 ];
 
 const TabNavigation = ({ activeTab, setActiveTab }) => {
     return (
-        <div className="dragwyb-settings-sidebar">
-            <ul className="dragwyb-settings-tabs">
-                {tabs.map(tab => (
-                    <li 
-                        key={tab.id} 
-                        className={activeTab === tab.id ? 'active' : ''}
-                        onClick={() => setActiveTab(tab.id)}
+        <nav className="dragwyb-settings-nav-bar">
+            <ul className="dragwyb-settings-horizontal-tabs">
+                {tabs.map(({ id, label, Icon }) => (
+                    <li
+                        key={id}
+                        className={`dragwyb-tab-item ${activeTab === id ? 'active' : ''}`}
+                        onClick={() => setActiveTab(id)}
                     >
-                        <i className={`fas ${tab.icon}`}></i>
-                        {tab.label}
+                        <Icon className="dragwyb-tab-icon" />
+                        <span>{label}</span>
                     </li>
                 ))}
             </ul>
-        </div>
+        </nav>
     );
 };
 

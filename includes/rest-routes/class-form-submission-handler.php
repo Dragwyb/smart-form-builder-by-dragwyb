@@ -138,6 +138,13 @@ class Form_Submission_Handler {
 			return;
 		}
 
+		unset(
+			$this->sanitized_data['session_uid'],
+			$this->sanitized_data['session_id'],
+			$this->sanitized_data['user_id'],
+			$this->sanitized_data['user_session']
+		);
+
 		if ( ! $this->has_errors() ) {
 			do_action( 'Dragwyb/Form/Submission/Before_Processing', $this->sanitized_data, $this->form_config, $this );
 		}

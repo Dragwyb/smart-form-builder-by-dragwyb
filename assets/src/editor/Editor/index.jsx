@@ -284,20 +284,39 @@ const Editor = () => {
             }
         }
 
-        const finalId = currentDropInfo !== false && currentDropInfo.index !== undefined ? currentDropInfo : { targetId: over.data.current.currentId, index: over.data.current.index };
+        const finalId = currentDropInfo !== false && currentDropInfo.index !== undefined
+            ? currentDropInfo
+            : { targetId: over.data.current.currentId, index: over.data.current.index };
 
+        let finalIndex = finalId.index;
         if (isFromSidebar) {
             const type = active.data.current.type;
+            const state = store.getState();
+            const rootContainers = state.form.rootContainers || [];
+            const fields = state.form.fields || {};
+
+            if (rootContainers.length > 0) {
+                const lastRootId = rootContainers[rootContainers.length - 1];
+                const lastRootField = fields[lastRootId];
+                const isLastSubmitButton = lastRootField && lastRootField.children && lastRootField.children.some(childId => fields[childId]?.type === 'button');
+
+                if (isLastSubmitButton && type !== 'button') {
+                    if ((finalId.targetId === 'root' || !currentDropInfo?.targetId || currentDropInfo?.targetId === 'root') && (finalIndex === undefined || finalIndex >= rootContainers.length)) {
+                        finalIndex = rootContainers.length - 1;
+                    }
+                }
+            }
+
             const addFieldData = {
                 type,
                 Utils,
-                index: finalId.index,
+                index: finalIndex,
             }
 
             if (currentDropInfo && currentDropInfo.targetId && currentDropInfo.targetId !== 'root') {
                 addFieldData.parentContainer = {
                     rootContainerId: currentDropInfo.targetId,
-                    activeColumnIndex: finalId.index
+                    activeColumnIndex: finalIndex
                 };
             }
 

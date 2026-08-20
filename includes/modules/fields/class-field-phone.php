@@ -524,7 +524,7 @@ class Field_Phone extends Field_Base {
 	protected function render_field() {
 		$settings    = $this->get_field_settings();
 		$id          = $this->get_the_id();
-		$field_id    = $this->field_key_exist( $settings, 'field_id', uniqid( 'field_' ) );
+		$field_id    = $this->field_key_exist( $settings, 'field_id', $id );
 		$label       = $this->field_key_exist( $settings, 'label', 'Phone Number' );
 		$placeholder = $this->field_key_exist( $settings, 'placeholder', ' ' );
 		$value       = $this->field_key_exist( $settings, 'default_value', '' );
@@ -599,7 +599,7 @@ class Field_Phone extends Field_Base {
 			$input_attrs['data-internationalisation'] = $this->field_key_exist( $settings, 'country_internationalisation', 'en' );
 			$input_attrs['data-show-flags']           = $show_flags;
 			$input_attrs['data-iti-config']           = $iti_config;
-			$input_attrs['autocomplete']             = 'tel';
+			$input_attrs['autocomplete']              = 'tel';
 		}
 
 		$this->add_field_attributes( 'input', $input_attrs );

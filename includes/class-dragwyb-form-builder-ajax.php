@@ -209,6 +209,8 @@ class Dragwyb_Form_Builder_Ajax {
 				$entry->submission_data_summary      = esc_html( wp_trim_words( $entry->submission_data, 10, '...' ) );
 				$entry->submission_data_summary_text = sanitize_text_field( wp_trim_words( $entry->submission_data, 10, '...' ) );
 			}
+			$extra                       = ! empty( $entry->extra_data ) ? json_decode( $entry->extra_data, true ) : array();
+			$entry->ip_address           = $extra['visitor_info']['ip_address'] ?? ( $entry->ip_address ?? '-' );
 			$entry->created_at_formatted = wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $entry->created_at ) );
 		}
 
@@ -278,11 +280,118 @@ class Dragwyb_Form_Builder_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Permission denied', 'smart-form-builder-by-dragwyb' ) ) );
 		}
 
+		if ( 'unread' === $entry->status ) {
+			$db->update( $id, array( 'status' => 'publish' ) );
+			$entry->status = 'publish';
+		}
+
 		// Decode JSON safely for frontend usage
 		$entry->submission_data_decoded = json_decode( $entry->submission_data, true );
 		if ( json_last_error() !== JSON_ERROR_NONE || ! is_array( $entry->submission_data_decoded ) ) {
 			$entry->submission_data_decoded = array();
 		}
+
+		$extra_data = ! empty( $entry->extra_data ) ? json_decode( $entry->extra_data, true ) : array();
+		if ( json_last_error() !== JSON_ERROR_NONE || ! is_array( $extra_data ) ) {
+			$extra_data = array();
+		}
+
+		$visitor_info = isset( $extra_data['visitor_info'] ) && is_array( $extra_data['visitor_info'] ) ? $extra_data['visitor_info'] : array();
+		$lead_attrs   = isset( $extra_data['lead_attributes'] ) && is_array( $extra_data['lead_attributes'] ) ? $extra_data['lead_attributes'] : array();
+
+		$entry->visitor_info = wp_parse_args(
+			$visitor_info,
+			array(
+				'user_id'        => isset( $entry->user_id ) ? $entry->user_id : null,
+				'ip_address'     => isset( $entry->ip_address ) ? $entry->ip_address : '-',
+				'user_agent'     => isset( $entry->user_agent ) ? $entry->user_agent : '-',
+				'device'         => '-',
+				'browser'        => '-',
+				'os'             => '-',
+				'screen'         => '-',
+				'language'       => '-',
+				'time_to_submit' => '-',
+			)
+		);
+
+		$entry->lead_attributes = wp_parse_args(
+			$lead_attrs,
+			array(
+				'traffic_source' => 'Direct',
+				'referrer'       => 'Direct',
+				'landing_page'   => '-',
+				'utm_source'     => '-',
+				'utm_medium'     => '-',
+				'utm_campaign'   => '-',
+				'utm_term'       => '-',
+				'utm_content'    => '-',
+			)
+		);
+
+		$visitor_journey = array();
+		$db_session_id   = ! empty( $extra_data['session_id'] ) ? absint( $extra_data['session_id'] ) : 0;
+		$db_session_uid  = ! empty( $extra_data['session_uid'] ) ? sanitize_text_field( $extra_data['session_uid'] ) : '';
+
+		global $wpdb;
+		$journey_table = \Dragwyb\Form_Builder\Admin\Db\Analytics\Dragwyb_Analytics_Db::table_name( 'journey' );
+		$journey_rows  = array();
+
+		if ( $db_session_id > 0 ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$journey_rows = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT * FROM {$journey_table} WHERE session_id = %d ORDER BY id ASC",
+					$db_session_id
+				)
+			);
+		} elseif ( ! empty( $db_session_uid ) ) {
+			$sessions_table = \Dragwyb\Form_Builder\Admin\Db\Analytics\Dragwyb_Analytics_Db::table_name( 'sessions' );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$found_session_id = (int) $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT id FROM {$sessions_table} WHERE session_uid = %s ORDER BY id DESC LIMIT 1",
+					$db_session_uid
+				)
+			);
+
+			if ( $found_session_id > 0 ) {
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+				$journey_rows = $wpdb->get_results(
+					$wpdb->prepare(
+						"SELECT * FROM {$journey_table} WHERE session_id = %d ORDER BY id ASC",
+						$found_session_id
+					)
+				);
+			}
+		}
+
+		if ( ! empty( $journey_rows ) && is_array( $journey_rows ) ) {
+			foreach ( $journey_rows as $j_row ) {
+				$visitor_journey[] = array(
+					'title' => ! empty( $j_row->page_title ) ? $j_row->page_title : ( ! empty( $j_row->action_detail ) ? $j_row->action_detail : $j_row->page_url ),
+					'url'   => $j_row->page_url,
+					'time'  => wp_date( 'g:i:s A', strtotime( $j_row->created_at ) ),
+					'type'  => 'submission' === $j_row->action_type ? 'submission' : 'pageview',
+				);
+			}
+		} elseif ( isset( $extra_data['visitor_journey'] ) && is_array( $extra_data['visitor_journey'] ) && ! empty( $extra_data['visitor_journey'] ) ) {
+			$visitor_journey = $extra_data['visitor_journey'];
+		}
+
+		if ( empty( $visitor_journey ) ) {
+			$visitor_journey = array(
+				array(
+					'title' => sprintf( __( 'Form submitted: %s', 'smart-form-builder-by-dragwyb' ), $entry->form_title ),
+					'url'   => $entry->lead_attributes['landing_page'] ?? '-',
+					'time'  => wp_date( 'g:i:s A', strtotime( $entry->created_at ) ),
+					'type'  => 'submission',
+				),
+			);
+		}
+
+		$entry->visitor_journey      = $visitor_journey;
+		$entry->form_title           = get_the_title( $entry->form_id ) ?: '#' . $entry->form_id;
+		$entry->created_at_formatted = wp_date( 'F j, Y g:i:s A', strtotime( $entry->created_at ) );
 
 		wp_send_json_success( array( 'entry' => $entry ) );
 	}

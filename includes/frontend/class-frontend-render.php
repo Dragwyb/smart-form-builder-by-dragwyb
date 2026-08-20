@@ -312,6 +312,8 @@ class Frontend_Render {
 
 		$fields_html = ob_get_clean();
 		$form_html   = '<form class="dragwyb-form' . ( $is_steps_form ? ' dragwyb-step-form' : '' ) . '" id="dragwyb-form-' . esc_attr( self::$form_id ) . '" data-step-indicator="' . esc_attr( $step_indicator_type ) . '">';
+		$form_html  .= '<input type="hidden" name="session_uid" value="" />';
+		$form_html  .= '<input type="hidden" name="session_id" value="" />';
 		if ( $is_steps_form ) {
 			if ( ! empty( $step_navigation_html ) ) {
 				$form_html .= '<div class="dragwyb-step-indicator-container' . ( 'numbers' === $step_indicator_type ? ' step-has-title' : '' ) . '"><div class="dragwyb-step-indicator">' . $step_navigation_html . '</div></div>';

@@ -200,7 +200,7 @@ class Field_File extends Field_Base {
 	protected function render_field() {
 		$settings = $this->get_field_settings();
 		$id       = $this->get_the_id();
-		$field_id = $this->field_key_exist( $settings, 'field_id', uniqid( 'field_' ) );
+		$field_id = $this->field_key_exist( $settings, 'field_id', $id );
 		$label    = $this->field_key_exist( $settings, 'label', 'Upload File' );
 		$help     = $this->field_key_exist( $settings, 'help_text', '' );
 		$required = $this->field_key_exist( $settings, 'required', '' ) === 'yes';

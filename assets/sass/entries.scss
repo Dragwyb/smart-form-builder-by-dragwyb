@@ -79,6 +79,15 @@ $white: #fff;
                     visibility: visible;
                 }
 
+                &.dragwyb-entry-unread {
+                    background-color: #f0f7ff !important;
+
+                    td {
+                        font-weight: 600;
+                        color: #0f172a;
+                    }
+                }
+
                 .row-actions {
                     visibility: hidden;
                     font-size: 13px;
@@ -92,6 +101,21 @@ $white: #fff;
                         text-decoration: none;
                     }
                 }
+            }
+
+            .dragwyb-unread-badge {
+                display: inline-block;
+                background-color: #ff004b;
+                color: #ffffff;
+                font-size: 10px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                padding: 2px 7px;
+                border-radius: 10px;
+                margin-left: 8px;
+                vertical-align: middle;
+                box-shadow: 0 1px 3px rgba(255, 0, 75, 0.25);
             }
 
             .dragwyb-loading-state {
@@ -184,7 +208,7 @@ $white: #fff;
 .dragwyb-modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 100000;
     display: none;
     justify-content: center;
@@ -194,10 +218,11 @@ $white: #fff;
     transition: opacity 0.25s ease-out;
 
     .dragwyb-entries-loading {
-        padding: 0;
+        padding: 20px;
         margin: 0;
         text-align: center;
-        font-size: 20px;
+        font-size: 16px;
+        color: #64748b;
     }
 
     &.dragwyb-active {
@@ -210,17 +235,17 @@ $white: #fff;
     }
 
     .dragwyb-modal {
-        background: $white;
-        width: 600px;
-        max-width: 90%;
-        max-height: 85vh;
-        border-radius: 8px;
+        background: #f8fafc;
+        width: 80%;
+        max-width: 95%;
+        max-height: 90vh;
+        border-radius: 12px;
         display: flex;
         flex-direction: column;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
-        transform: scale(0.95);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        transform: scale(0.98);
         transition: transform 0.25s ease-out;
-        border: 1px solid #dcdcdc;
+        border: 1px solid #e2e8f0;
         overflow: hidden;
 
         &-header {
@@ -228,21 +253,21 @@ $white: #fff;
             justify-content: space-between;
             align-items: center;
             padding: 16px 24px;
-            border-bottom: 1px solid #e5e7eb;
-            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            background: #ffffff;
 
             h2 {
                 margin: 0;
                 font-size: 18px;
-                color: #1e293b;
-                font-weight: 600;
+                color: #0f172a;
+                font-weight: 700;
             }
 
             .dragwyb-modal-close {
                 background: none;
                 border: none;
                 cursor: pointer;
-                color: #64748b;
+                color: #94a3b8;
                 transition: color 0.2s ease;
                 padding: 4px;
                 display: flex;
@@ -258,6 +283,7 @@ $white: #fff;
             padding: 24px;
             overflow-y: auto;
             flex: 1;
+            background: #f8fafc;
 
             .dragwyb-modal-field {
                 margin-bottom: 15px;
@@ -271,17 +297,17 @@ $white: #fff;
 
                 input {
                     width: 100%;
-                    padding: 6px 10px;
+                    padding: 8px 12px;
                     border: 1px solid #cbd5e1;
-                    border-radius: 4px;
+                    border-radius: 6px;
                 }
             }
         }
 
         &-footer {
             padding: 16px 24px;
-            border-top: 1px solid #e5e7eb;
-            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            background: #ffffff;
             display: flex;
             justify-content: flex-end;
             gap: 10px;
@@ -289,131 +315,230 @@ $white: #fff;
     }
 }
 
-/* Premium Grid Layout for Details in Entries & Error Logs */
-.dragwyb-entry-details-grid,
-.dragwyb-error-details-grid {
+/* Modern Card Layout for Entry View Modal */
+.dragwyb-entry-modal-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+.dragwyb-entry-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+
+    .dragwyb-card-header {
+        margin-bottom: 16px;
+
+        .dragwyb-card-title {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .dragwyb-form-subtitle,
+        .dragwyb-card-subtitle {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 3px;
+        }
+    }
+
+    .dragwyb-submitted-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+
+        .dragwyb-submitted-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f1f5f9;
+
+            &:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+
+            .dragwyb-submitted-label {
+                font-size: 13px;
+                font-weight: 600;
+                color: #0f172a;
+            }
+
+            .dragwyb-submitted-value {
+                font-size: 13px;
+                color: #475569;
+                word-break: break-word;
+            }
+        }
+
+        .dragwyb-empty-text {
+            color: #94a3b8;
+            font-style: italic;
+            margin: 0;
+        }
+    }
+}
+
+.dragwyb-entry-grid-two-col {
     display: grid;
     grid-template-columns: 1fr;
     gap: 20px;
 
     @media (min-width: 768px) {
-        grid-template-columns: 1.2fr 0.8fr;
+        grid-template-columns: 1fr 1fr;
     }
 }
 
-.dragwyb-detail-section {
-    background: #fafafa;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    padding: 16px;
+.dragwyb-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 
-    h3 {
-        margin-top: 0;
-        margin-bottom: 12px;
-        font-size: 14px;
-        color: #475569;
-        border-bottom: 1px solid #e5e7eb;
-        padding-bottom: 8px;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-
-    &.errors-section {
-        background: #fff5f5;
-        border-color: #fbcfe8;
-
-        h3 {
-            color: #b91c1c;
-            border-color: #fecdd3;
-        }
-    }
-}
-
-.dragwyb-detail-table {
-    width: 100%;
-    border-collapse: collapse;
-
-    th,
-    td {
-        padding: 8px 12px;
-        text-align: left;
-        border-bottom: 1px solid #f1f5f9;
-    }
-
-    th {
-        font-weight: 600;
-        color: #64748b;
-        width: 35%;
-    }
-
-    td {
-        color: #334155;
-        word-break: break-word;
-    }
-
-    tr:last-child {
-
-        td,
-        th {
-            border-bottom: none;
-        }
-    }
-}
-
-.dragwyb-error-detail-card {
-    background: $white;
-    border: 1px solid #fee2e2;
-    border-left: 4px solid #ef4444;
-    border-radius: 4px;
-    padding: 10px 14px;
-    margin-bottom: 10px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
-
-    &:last-child {
-        margin-bottom: 0;
-    }
-
-    .error-field-name {
-        font-weight: 600;
-        color: #991b1b;
-        margin-bottom: 4px;
-    }
-
-    .error-message {
-        color: #7f1d1d;
+    .dragwyb-info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         font-size: 13px;
-    }
-}
+        padding-bottom: 10px;
+        border-bottom: 1px solid #f1f5f9;
 
-.dragwyb-meta-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+        &:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
 
-    li {
-        margin-bottom: 8px;
-        color: #475569;
-
-        strong {
+        .dragwyb-info-label {
+            font-weight: 600;
             color: #0f172a;
         }
 
-        span.user-agent-text {
-            display: block;
-            font-family: monospace;
-            background: #f1f5f9;
-            padding: 6px;
-            border-radius: 4px;
-            font-size: 11px;
-            margin-top: 4px;
+        .dragwyb-info-value {
+            color: #475569;
+            text-align: right;
             word-break: break-all;
+
+            .dragwyb-pill-badge {
+                display: inline-block;
+                background-color: #f1f5f9;
+                color: #64748b;
+                font-size: 12px;
+                font-weight: 500;
+                padding: 3px 12px;
+                border-radius: 12px;
+            }
         }
     }
 }
 
-.dragwyb-entries-modal,
+.dragwyb-journey-card {
+    margin-top: 20px;
+
+    .dragwyb-card-subtitle {
+        font-size: 12px;
+        color: #94a3b8;
+        margin-top: 4px;
+        font-weight: 400;
+    }
+}
+
+.dragwyb-journey-timeline {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-left: 6px;
+
+    .dragwyb-timeline-item {
+        position: relative;
+        display: flex;
+        align-items: flex-start;
+        padding-left: 28px;
+        padding-bottom: 24px;
+
+        &:last-child {
+            padding-bottom: 0;
+        }
+
+        &::before {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 14px;
+            bottom: -10px;
+            border-left: 2px dashed #cbd5e1;
+        }
+
+        &:last-child::before {
+            display: none;
+        }
+
+        .dragwyb-timeline-marker {
+            position: absolute;
+            left: 0;
+            top: 4px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #a5b4fc;
+            z-index: 1;
+
+            &.marker-submission {
+                background-color: #10b981;
+            }
+        }
+
+        .dragwyb-timeline-content {
+            flex: 1;
+            padding-right: 16px;
+
+            .dragwyb-timeline-title-row {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+
+                .dragwyb-timeline-title {
+                    font-size: 13px;
+                    font-weight: 600;
+                    color: #0f172a;
+                }
+
+                .dragwyb-submitted-pill-badge {
+                    display: inline-block;
+                    background-color: #d1fae5;
+                    color: #059669;
+                    font-size: 11px;
+                    font-weight: 600;
+                    padding: 2px 10px;
+                    border-radius: 10px;
+                }
+            }
+
+            .dragwyb-timeline-url {
+                font-size: 12px;
+                color: #94a3b8;
+                word-break: break-all;
+                margin-top: 3px;
+            }
+        }
+
+        .dragwyb-timeline-time {
+            font-size: 12px;
+            color: #64748b;
+            white-space: nowrap;
+            font-weight: 500;
+            padding-top: 1px;
+        }
+    }
+}
+
 .dragwyb-error-modal {
-    width: 800px !important;
+    width: 880px !important;
 }
 
 /* Export Modal */

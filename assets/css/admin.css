@@ -1,3 +1,445 @@
-li#toplevel_page_dragwyb-form-overview .wp-menu-image img{
+li#toplevel_page_dragwyb-form-overview .wp-menu-image img {
     padding-top: 5px;
+}
+
+/* ==========================================================================
+   Smart Form Builder - Overview Page UI Redesign
+   ========================================================================== */
+
+.dragwyb-overview-wrap {
+    max-width: 100%;
+    margin: 20px 20px 20px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+/* Top Header Card */
+.dragwyb-overview-header-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid #f1f5f9;
+}
+
+.dragwyb-header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.dragwyb-header-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: #fff0f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dragwyb-header-title {
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    margin: 0 0 4px 0 !important;
+    padding: 0 !important;
+    line-height: 1.2 !important;
+}
+
+.dragwyb-header-desc {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0;
+}
+
+.dragwyb-btn-create {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #e11d48;
+    color: #ffffff !important;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none !important;
+    box-shadow: 0 4px 12px rgba(225, 29, 72, 0.25);
+    transition: all 0.2s ease;
+}
+
+.dragwyb-btn-create:hover {
+    background: #be123c;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(225, 29, 72, 0.35);
+}
+
+.dragwyb-btn-create .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+}
+
+/* Table Section Container Card */
+.dragwyb-overview-table-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid #f1f5f9;
+}
+
+.dragwyb-overview-table-card .subsubsub {
+    margin-bottom: 16px;
+    font-size: 13px;
+}
+
+/* Dynamic Fluid Column Widths */
+.wp-list-table.dragwyb-forms .column-cb {
+    width: 3%;
+}
+
+.wp-list-table.dragwyb-forms .column-name {
+    width: 23%;
+}
+
+.wp-list-table.dragwyb-forms .column-shortcode {
+    width: 22%;
+}
+
+.wp-list-table.dragwyb-forms .column-views {
+    width: 13%;
+}
+
+.wp-list-table.dragwyb-forms .column-submissions {
+    width: 11%;
+}
+
+.wp-list-table.dragwyb-forms .column-conversion_rate {
+    width: 11%;
+}
+
+.wp-list-table.dragwyb-forms .column-clean_cache {
+    width: 9%;
+}
+
+.wp-list-table.dragwyb-forms .column-date {
+    width: 8%;
+}
+
+/* Column Info Icon */
+.dragwyb-info-icon {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-left: 4px;
+    cursor: help;
+}
+
+/* WP List Table Base Overrides */
+.wp-list-table.dragwyb-forms {
+    border: none !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    table-layout: auto !important;
+    box-sizing: border-box !important;
+}
+
+.wp-list-table.dragwyb-forms thead :where(th, td) {
+    border-bottom: 2px solid #f1f5f9 !important;
+    background: transparent !important;
+    color: #475569 !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    padding: 12px 8px !important;
+    box-sizing: border-box !important;
+}
+
+.wp-list-table.dragwyb-forms tbody tr {
+    transition: background-color 0.15s ease !important;
+}
+
+.wp-list-table.dragwyb-forms tbody tr:hover {
+    background-color: #f8fafc !important;
+}
+
+.wp-list-table.dragwyb-forms tbody td {
+    border-top: 1px solid #f1f5f9 !important;
+    padding: 12px 8px !important;
+    vertical-align: middle !important;
+    box-sizing: border-box !important;
+}
+
+/* Name Column Cell */
+.dragwyb-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.dragwyb-form-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.dragwyb-form-icon .dashicons {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.dragwyb-name-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.dragwyb-form-title-link {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a !important;
+    text-decoration: none !important;
+}
+
+.dragwyb-form-title-link:hover {
+    color: #e11d48 !important;
+}
+
+.dragwyb-status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    width: fit-content;
+}
+
+.dragwyb-status-published {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.dragwyb-status-draft {
+    background: #f3e8ff;
+    color: #7e22ce;
+}
+
+/* Shortcode Box */
+.dragwyb-shortcode-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff0f5;
+    border: 1px solid #fecdd3;
+    border-radius: 8px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.dragwyb-shortcode-box::selection,
+.dragwyb-shortcode-box::-moz-selection {
+    background: transparent;
+    color: inherit;
+}
+
+.dragwyb-shortcode-box:hover {
+    background: #ffe4e6;
+    border-color: #fda4af;
+}
+
+.dragwyb-shortcode-box.copied {
+    background: #dcfce7 !important;
+    border-color: #86efac !important;
+}
+
+.dragwyb-shortcode-box.copied .dragwyb-shortcode-text,
+.dragwyb-shortcode-box.copied .dragwyb-copy-icon {
+    color: #15803d !important;
+}
+
+.dragwyb-shortcode-text {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: #e11d48;
+}
+
+.dragwyb-copy-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    color: #e11d48;
+}
+
+/* Views Card */
+.dragwyb-views-card {
+    background: #f0f7ff;
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 110px;
+}
+
+.dragwyb-views-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #2563eb;
+}
+
+.dragwyb-views-header .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+.dragwyb-views-count {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e3a8a;
+}
+
+.dragwyb-views-sub {
+    font-size: 11px;
+    color: #64748b;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+/* Submissions Card */
+.dragwyb-submissions-card {
+    background: #f0fdf4;
+    border-radius: 10px;
+    padding: 12px 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #16a34a;
+}
+
+.dragwyb-submissions-card .dashicons {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.dragwyb-submissions-count {
+    font-size: 16px;
+    font-weight: 700;
+    color: #15803d;
+}
+
+/* Conversion Rate */
+.dragwyb-conversion-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dragwyb-conversion-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: #e11d48;
+}
+
+.dragwyb-progress-track {
+    width: 90px;
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.dragwyb-progress-fill {
+    height: 100%;
+    background: #e11d48;
+    border-radius: 3px;
+    transition: width 0.4s ease;
+}
+
+/* Clean Cache Button */
+.dragwyb-clean-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.dragwyb-clean-btn.active {
+    background: #fff0f5;
+    border: 1px solid #fecdd3;
+    color: #e11d48;
+}
+
+.dragwyb-clean-btn.active:hover {
+    background: #e11d48;
+    color: #ffffff;
+    border-color: #e11d48;
+}
+
+.dragwyb-clean-btn.disabled {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+.dragwyb-clean-btn .dashicons {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+}
+
+/* Date Cell */
+.dragwyb-date-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #64748b;
+}
+
+.dragwyb-date-cell .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+.dragwyb-date-wrap {
+    display: flex;
+    flex-direction: column;
+}
+
+.dragwyb-date-main {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.dragwyb-date-time {
+    font-size: 11px;
+    color: #64748b;
 }
