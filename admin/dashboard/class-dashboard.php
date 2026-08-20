@@ -303,7 +303,7 @@ class Dashboard {
 								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
 								<?php esc_html_e( 'Free Support', 'smart-form-builder-by-dragwyb' ); ?>
 							</a>
-							<a href="https://dragwyb.com/contact" target="_blank" rel="noopener noreferrer" class="dragwyb-btn-premium">
+							<a href="https://dragwyb.com/contact/?utm_source=dashboard&utm_medium=contact&utm_campaign=form-builder" target="_blank" rel="noopener noreferrer" class="dragwyb-btn-premium">
 								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>
 								<?php esc_html_e( 'Premium Support', 'smart-form-builder-by-dragwyb' ); ?>
 							</a>
@@ -338,7 +338,7 @@ class Dashboard {
 						</div>
 
 						<div class="dragwyb-promo-footer">
-							<a href="https://dragwyb.com/products" target="_blank" rel="noopener noreferrer" class="dragwyb-link-arrow">
+							<a href="https://dragwyb.com/products/?utm_source=dashboard&utm_medium=plugin&utm_campaign=form-builder" target="_blank" rel="noopener noreferrer" class="dragwyb-link-arrow">
 								<?php esc_html_e( 'View All Plugins', 'smart-form-builder-by-dragwyb' ); ?> &rarr;
 							</a>
 						</div>
