@@ -46,15 +46,35 @@ class Dragwyb_Pages {
 			__( 'Smart Forms', 'smart-form-builder-by-dragwyb' ),
 			__( 'Smart Forms', 'smart-form-builder-by-dragwyb' ),
 			'manage_options',
-			DRAGWYB_PREFIX . '-form-overview',
+			DRAGWYB_PREFIX . '-dashboard',
 			array( $this, 'dragwyb_render_page' ),
 			esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/img/menu-logo.svg' ),
 			58
 		);
 
+		// Add submenu page for Dashboard (Default)
+		add_submenu_page(
+			DRAGWYB_PREFIX . '-dashboard',
+			__( 'Dashboard', 'smart-form-builder-by-dragwyb' ),
+			__( 'Dashboard', 'smart-form-builder-by-dragwyb' ),
+			'manage_options',
+			DRAGWYB_PREFIX . '-dashboard',
+			array( $this, 'dragwyb_render_page' )
+		);
+
+		// Add submenu page for Form List (All Forms)
+		add_submenu_page(
+			DRAGWYB_PREFIX . '-dashboard',
+			__( 'Forms', 'smart-form-builder-by-dragwyb' ),
+			__( 'Forms', 'smart-form-builder-by-dragwyb' ),
+			'manage_options',
+			DRAGWYB_PREFIX . '-form-overview',
+			array( $this, 'dragwyb_render_page' )
+		);
+
 		// Add submenu page for adding a form
 		add_submenu_page(
-			DRAGWYB_PREFIX . '-form-overview',
+			DRAGWYB_PREFIX . '-dashboard',
 			__( 'Add Form', 'smart-form-builder-by-dragwyb' ),
 			__( 'Add Form', 'smart-form-builder-by-dragwyb' ),
 			'manage_options',
@@ -64,7 +84,7 @@ class Dragwyb_Pages {
 
 		// Add submenu page for entries
 		add_submenu_page(
-			DRAGWYB_PREFIX . '-form-overview',
+			DRAGWYB_PREFIX . '-dashboard',
 			__( 'Entries', 'smart-form-builder-by-dragwyb' ),
 			__( 'Entries', 'smart-form-builder-by-dragwyb' ),
 			'manage_options',
@@ -74,7 +94,7 @@ class Dragwyb_Pages {
 
 		// Add submenu page for error logs
 		add_submenu_page(
-			DRAGWYB_PREFIX . '-form-overview',
+			DRAGWYB_PREFIX . '-dashboard',
 			__( 'Error Log', 'smart-form-builder-by-dragwyb' ),
 			__( 'Error Log', 'smart-form-builder-by-dragwyb' ),
 			'manage_options',
@@ -84,7 +104,7 @@ class Dragwyb_Pages {
 
 		// Add submenu page for analytics
 		add_submenu_page(
-			DRAGWYB_PREFIX . '-form-overview',
+			DRAGWYB_PREFIX . '-dashboard',
 			__( 'Analytics', 'smart-form-builder-by-dragwyb' ),
 			__( 'Analytics', 'smart-form-builder-by-dragwyb' ),
 			'manage_options',
@@ -94,7 +114,7 @@ class Dragwyb_Pages {
 
 		// Add submenu page for settings
 		add_submenu_page(
-			DRAGWYB_PREFIX . '-form-overview',
+			DRAGWYB_PREFIX . '-dashboard',
 			__( 'Settings', 'smart-form-builder-by-dragwyb' ),
 			__( 'Settings', 'smart-form-builder-by-dragwyb' ),
 			'manage_options',
@@ -105,7 +125,7 @@ class Dragwyb_Pages {
 		if ( ! get_option( 'dragwyb_onboarding_setup_complete' ) ) {
 			// Add submenu page for onboarding
 			add_submenu_page(
-				DRAGWYB_PREFIX . '-form-overview',
+				DRAGWYB_PREFIX . '-dashboard',
 				__( 'Setup', 'smart-form-builder-by-dragwyb' ),
 				__( 'Setup', 'smart-form-builder-by-dragwyb' ),
 				'manage_options',
@@ -123,7 +143,7 @@ class Dragwyb_Pages {
 	}
 
 	private function form_admin_page(): void {
-		$default_pages_names = array( 'form-overview', 'entries', 'error-log', 'form-analytics', 'settings', 'onboarding' );
+		$default_pages_names = array( 'dashboard', 'form-overview', 'entries', 'error-log', 'form-analytics', 'settings', 'onboarding' );
 		$dragwyb_name_space  = Helper::namespace_into_dir_path( __NAMESPACE__ );
 		$dir                 = dirname( $dragwyb_name_space );
 		$dir                 = Helper::dir_path_into_namespace( $dir );
@@ -175,7 +195,7 @@ class Dragwyb_Pages {
 	}
 
 	private static function allowed_pages() {
-		$default_pages = array( 'form-overview', 'entries', 'error-log', 'form-analytics', 'settings', 'onboarding' );
+		$default_pages = array( 'dashboard', 'form-overview', 'entries', 'error-log', 'form-analytics', 'settings', 'onboarding' );
 
 		$allowed_pages = apply_filters( 'Dragwyb_allowed_pages', $default_pages );
 
