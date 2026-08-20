@@ -92,7 +92,7 @@ if ( ! class_exists( 'Form_Overview' ) ) {
 					<div class="dragwyb-header-right">
 						<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . DRAGWYB_PREFIX . '-form-builder' ) ); ?>" class="dragwyb-btn-create">
 							<span class="dashicons dashicons-plus-alt2"></span>
-							<?php esc_html_e( 'Create New Form', 'smart-form-builder-by-dragwyb' ); ?>
+							<?php esc_html_e( 'Add Form', 'smart-form-builder-by-dragwyb' ); ?>
 						</a>
 					</div>
 				</div>
@@ -117,6 +117,12 @@ if ( ! class_exists( 'Form_Overview' ) ) {
 					</ul>
 					<form method="get">
 						<input type="hidden" name="page" value="<?php echo esc_attr( DRAGWYB_PREFIX ); ?>-form-overview">
+						<?php
+						// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+						if ( ! empty( $_GET['post_status'] ) ) :
+							?>
+							<input type="hidden" name="post_status" value="<?php echo esc_attr( sanitize_key( wp_unslash( $_GET['post_status'] ) ) ); ?>">
+						<?php endif; ?>
 						<?php
 						$form_table->search_box( 'search', 'search_id' );
 						$form_table->display();

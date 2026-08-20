@@ -61,6 +61,9 @@ class Dragwyb_Init {
 
 		add_action( 'admin_init', array( $this, 'initial_files' ) );
 
+		// Add plugin action links
+		add_filter( 'plugin_action_links_' . plugin_basename( DRAGWYB_FORM_BUILDER_FILE ), array( $this, 'add_plugin_action_links' ) );
+
 		// Enqueue admin assets
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_assets' ) );
 	}
@@ -126,6 +129,15 @@ class Dragwyb_Init {
 			esc_attr( DRAGWYB_FORM_BUILDER_VERSION ),
 			'all'
 		);
+	}
+
+	public function add_plugin_action_links( $links ) {
+
+		$dragwyb_dashboard              = array();
+		$dragwyb_dashboard['dashboard'] = '<a href="' . esc_url( admin_url( 'admin.php?page=' . DRAGWYB_PREFIX . '-dashboard' ) ) . '">' . __( 'Dashboard', 'dragwyb-form-builder' ) . '</a>';
+		$links                          = array_merge( $dragwyb_dashboard, $links );
+
+		return $links;
 	}
 
 	private function review_notice() {

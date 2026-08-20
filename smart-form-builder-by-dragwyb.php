@@ -11,7 +11,6 @@
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
-
 declare(strict_types=1);
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -67,8 +66,9 @@ final class Dragwyb_Form_Builder {
 		define( 'DRAGWYB_PREFIX', 'dragwyb' );
 		define( 'DRAGWYB_TEXT_DOMAIN', 'smart-form-builder-by-dragwyb' );
 		define( 'DRAGWYB_FORM_BUILDER_VERSION', self::VERSION );
-		define( 'DRAGWYB_FORM_BUILDER_PATH', plugin_dir_path( __FILE__ ) );
-		define( 'DRAGWYB_FORM_BUILDER_URL', plugin_dir_url( __FILE__ ) );
+		define( 'DRAGWYB_FORM_BUILDER_FILE', __FILE__ );
+		define( 'DRAGWYB_FORM_BUILDER_PATH', plugin_dir_path( DRAGWYB_FORM_BUILDER_FILE ) );
+		define( 'DRAGWYB_FORM_BUILDER_URL', plugin_dir_url( DRAGWYB_FORM_BUILDER_FILE ) );
 	}
 
 	/**
@@ -155,6 +155,8 @@ final class Dragwyb_Form_Builder {
 		if ( ! wp_next_scheduled( 'dragwyb_gdpr_data_retention_cron' ) ) {
 			wp_schedule_event( time(), 'daily', 'dragwyb_gdpr_data_retention_cron' );
 		}
+
+		set_transient( 'dragwyb_activation_redirect', true, 600 );
 	}
 
 	/**

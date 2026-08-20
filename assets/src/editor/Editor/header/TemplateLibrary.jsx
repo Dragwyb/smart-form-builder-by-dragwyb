@@ -385,6 +385,23 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
     const [showBanner, setShowBanner] = useState(true);
     const [fullPreviewTemplate, setFullPreviewTemplate] = useState(null);
     const [cssCache, setCssCache] = useState({});
+    const url = new URL(window.location.href);
+    const [isInsertTemplate, setIsInsertTemplate] = useState(url.searchParams.get('setup-template'));
+
+    useEffect(() => {
+        const isEmptyForm = DragwybEditor?.formData?.rootContainers?.length > 0 ? false : true;
+
+        if (isEmptyForm && isInsertTemplate && isInsertTemplate !== 'blank' && templates) {
+            const template = templates[isInsertTemplate];
+            for (let i = 0; i < template.length; i++) {
+                if (template[i].popular) {
+                    handleImport(template[i], `${isInsertTemplate}_${i}`, false);
+                    setIsInsertTemplate(false);
+                    break;
+                }
+            }
+        }
+    }, [templates])
 
     useEffect(() => {
         if (!isOpen) return;
@@ -406,8 +423,6 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
             });
     }, [isOpen]);
 
-    if (!isOpen) return null;
-
     const handleUpdateCssCache = (id, css) => {
         if (!cssCache.hasOwnProperty(id)) {
             setCssCache(prev => ({
@@ -417,35 +432,38 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
         }
     }
 
-    const handleImport = (templateData, typeKey) => {
+    const handleImport = (templateData, typeKey, alertMsg = true) => {
         const confirmMsg = __('Warning: Importing this template will overwrite all your current fields. Any unsaved changes will be lost. Do you want to proceed?', 'smart-form-builder-by-dragwyb');
-        if (window.confirm(confirmMsg)) {
-            let styleSelectors = '';
 
-            if (cssCache[typeKey]) {
-                styleSelectors = cssCache[typeKey];
-            } else {
-                styleSelectors = generateStyle(templateData.fields, DragwybEditor?.formId, controlCache);
-                handleUpdateCssCache(typeKey, styleSelectors);
-            }
-
-            const storeState = store.getState();
-            const storeStyleSelectors = storeState.styleSelectors || {};
-
-            const existingStyleSelectors = {};
-            getExistingSelector(storeStyleSelectors, existingStyleSelectors);
-
-            dispatch(replaceFormState(templateData, { ...existingStyleSelectors, ...styleSelectors }));
-
-            const historyLabel = `Insert Template: ${templateData?.advance?.form_name}`;
-
-            dispatch({
-                type: 'ADD_HISTORY_SNAPSHOT',
-                payload: { label: historyLabel }
-            });
-
-            onClose();
+        if (alertMsg && !window.confirm(confirmMsg)) {
+            return;
         }
+
+        let styleSelectors = '';
+
+        if (cssCache[typeKey]) {
+            styleSelectors = cssCache[typeKey];
+        } else {
+            styleSelectors = generateStyle(templateData.fields, DragwybEditor?.formId, controlCache);
+            handleUpdateCssCache(typeKey, styleSelectors);
+        }
+
+        const storeState = store.getState();
+        const storeStyleSelectors = storeState.styleSelectors || {};
+
+        const existingStyleSelectors = {};
+        getExistingSelector(storeStyleSelectors, existingStyleSelectors);
+
+        dispatch(replaceFormState(templateData, { ...existingStyleSelectors, ...styleSelectors }));
+
+        const historyLabel = `Insert Template: ${templateData?.advance?.form_name}`;
+
+        dispatch({
+            type: 'ADD_HISTORY_SNAPSHOT',
+            payload: { label: historyLabel }
+        });
+
+        onClose();
     };
 
     const categories = [
@@ -455,6 +473,8 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
         { id: 'marketing', name: __('Marketing Lead Gen', 'smart-form-builder-by-dragwyb'), icon: FaBullseye },
         { id: 'feedback', name: __('Product Feedback', 'smart-form-builder-by-dragwyb'), icon: FaCommentDots }
     ];
+
+    if (!isOpen || (isInsertTemplate && 'blank' !== isInsertTemplate)) return null;
 
     const getCategoryIcon = (catId) => {
         switch (catId) {

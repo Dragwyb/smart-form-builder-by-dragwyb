@@ -36,6 +36,17 @@ class CSS_Manager {
 		$this->upload_url = $this->get_upload_dir_url( $dragwyb_upload_info['baseurl'] ) . '/dragwyb-forms/css/';
 
 		add_action( 'wp_ajax_dragwyb_clean_form_cache', array( $this, 'clean_cache_request' ) );
+		add_action( 'wp_trash_post', array( $this, 'on_delete_or_trash_form' ) );
+		add_action( 'before_delete_post', array( $this, 'on_delete_or_trash_form' ) );
+	}
+
+	/**
+	 * Automatically clean cache when a form is moved to trash or deleted.
+	 */
+	public function on_delete_or_trash_form( int $post_id ): void {
+		if ( get_post_type( $post_id ) === Dragwyb_Post::POST_TYPE ) {
+			$this->clean_cache( $post_id );
+		}
 	}
 
 	/**

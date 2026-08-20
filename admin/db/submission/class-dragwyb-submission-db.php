@@ -218,6 +218,7 @@ class Dragwyb_Submission_Db {
 			'order'   => 'DESC',
 			'search'  => '',
 			'form_id' => 0,
+			'status'  => 'publish',
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -289,6 +290,11 @@ class Dragwyb_Submission_Db {
 			$where[]        = '(submission_data LIKE %s OR extra_data LIKE %s)';
 			$query_params[] = $search;
 			$query_params[] = $search;
+		}
+
+		if ( ! empty( $args['status'] ) ) {
+			$where[]        = 'status = %s';
+			$query_params[] = $args['status'];
 		}
 
 		return ! empty( $where ) ? 'WHERE ' . implode( ' AND ', $where ) : '';

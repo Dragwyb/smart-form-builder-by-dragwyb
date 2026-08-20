@@ -73,11 +73,20 @@ class Settings {
 			);
 		}
 
+		if ( file_exists( DRAGWYB_FORM_BUILDER_PATH . 'assets/css/dashboard.css' ) ) {
+			wp_enqueue_style(
+				'dragwyb-dashboard-style',
+				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/css/dashboard.css' ),
+				array(),
+				esc_attr( $js_assets_info['version'] )
+			);
+		}
+
 		if ( file_exists( DRAGWYB_FORM_BUILDER_PATH . 'assets/css/settings.css' ) ) {
 			wp_enqueue_style(
 				'dragwyb-settings-style',
 				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/css/settings.css' ),
-				array(),
+				array( 'dragwyb-dashboard-style' ),
 				esc_attr( $js_assets_info['version'] )
 			);
 		}
@@ -90,9 +99,10 @@ class Settings {
 
 		$extra_plugins = array(
 			array(
-				'name'        => 'AI Chatbot',
+				'name'        => 'AI Chatbot & Floating widget',
 				'description' => 'Add AI Chatbot & Floating chat widgets to your website.',
 				'url'         => admin_url( 'plugin-install.php?tab=plugin-information&plugin=dragwyb-click-to-chat' ),
+				'icon'        => 'chatbot-ai.png',
 			),
 		);
 
@@ -101,18 +111,19 @@ class Settings {
 			'dragwyb-settings-script',
 			'DragwybSettingsData',
 			array(
-				'restUrl'          => esc_url_raw( rest_url( 'dragwyb/v1/settings' ) ),
-				'nonce'            => wp_create_nonce( 'wp_rest' ),
-				'ajaxUrl'          => admin_url( 'admin-ajax.php' ),
-				'adminNonce'       => wp_create_nonce( 'dragwyb_admin_nonce' ),
-				'pluginSlug'       => DRAGWYB_TEXT_DOMAIN,
-				'version'          => DRAGWYB_FORM_BUILDER_VERSION,
-				'currentTab'       => $current_tab,
-				'extraPlugins'     => $extra_plugins,
-				'documentationUrl' => esc_url( 'https://dragwyb.com/docs' ),
-				'supportUrl'       => esc_url( 'https://dragwyb.com/contact' ),
-				'morePluginsUrl'   => esc_url( 'https://dragwyb.com/products' ),
-				'totalForms'       => $total_forms > 0 ? number_format( $total_forms ) : '0',
+				'restUrl'        => esc_url_raw( rest_url( 'dragwyb/v1/settings' ) ),
+				'nonce'          => wp_create_nonce( 'wp_rest' ),
+				'ajaxUrl'        => admin_url( 'admin-ajax.php' ),
+				'adminNonce'     => wp_create_nonce( 'dragwyb_admin_nonce' ),
+				'pluginSlug'     => DRAGWYB_TEXT_DOMAIN,
+				'version'        => DRAGWYB_FORM_BUILDER_VERSION,
+				'puginUrl'       => esc_url( DRAGWYB_FORM_BUILDER_URL ),
+				'currentTab'     => $current_tab,
+				'extraPlugins'   => $extra_plugins,
+				'freeSupportUrl' => esc_url( 'https://wordpress.org/support/plugin/smart-form-builder-by-dragwyb/' ),
+				'supportUrl'     => esc_url( 'https://dragwyb.com/contact/?utm_source=settings&utm_medium=contact&utm_campaign=form-builder' ),
+				'morePluginsUrl' => esc_url( 'https://dragwyb.com/products/?utm_source=settings&utm_medium=plugin&utm_campaign=form-builder' ),
+				'totalForms'     => $total_forms > 0 ? number_format( $total_forms ) : '0',
 			)
 		);
 	}
