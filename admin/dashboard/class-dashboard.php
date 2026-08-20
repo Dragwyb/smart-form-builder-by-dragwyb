@@ -294,10 +294,7 @@ class Dashboard {
 					<!-- Support Card -->
 					<div class="dragwyb-db-card dragwyb-support-card">
 						<div class="dragwyb-support-icon">
-							<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<circle cx="20" cy="20" r="20" fill="#FFE4E6"/>
-								<path d="M20 11C15.03 11 11 15.03 11 20C11 24.97 15.03 29 20 29C24.97 29 29 24.97 29 20C29 15.03 24.97 11 20 11ZM20 27C16.13 27 13 23.87 13 20C13 16.13 16.13 13 20 13C23.87 13 27 16.13 27 20C27 23.87 23.87 27 20 27ZM17.5 17.5L22.5 22.5M22.5 17.5L17.5 22.5" stroke="#E11D48" stroke-width="2" stroke-linecap="round"/>
-							</svg>
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M320 128C241 128 175.3 185.3 162.3 260.7C171.6 257.7 181.6 256 192 256L208 256C234.5 256 256 277.5 256 304L256 400C256 426.5 234.5 448 208 448L192 448C139 448 96 405 96 352L96 288C96 164.3 196.3 64 320 64C443.7 64 544 164.3 544 288L544 456.1C544 522.4 490.2 576.1 423.9 576.1L336 576L304 576C277.5 576 256 554.5 256 528C256 501.5 277.5 480 304 480L336 480C362.5 480 384 501.5 384 528L384 528L424 528C463.8 528 496 495.8 496 456L496 435.1C481.9 443.3 465.5 447.9 448 447.9L432 447.9C405.5 447.9 384 426.4 384 399.9L384 303.9C384 277.4 405.5 255.9 432 255.9L448 255.9C458.4 255.9 468.3 257.5 477.7 260.6C464.7 185.3 399.1 127.9 320 127.9z"/></svg>
 						</div>
 						<h3 class="dragwyb-support-title"><?php esc_html_e( 'Support', 'smart-form-builder-by-dragwyb' ); ?></h3>
 						<p class="dragwyb-support-desc"><?php esc_html_e( "Need help? We're here for you.", 'smart-form-builder-by-dragwyb' ); ?></p>
@@ -327,15 +324,17 @@ class Dashboard {
 
 						<div class="dragwyb-plugin-feature-box">
 							<div class="plugin-icon-bubble">
-								<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+								<img src="<?php echo esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/images/chatbot-ai.png' ); ?>" loading="lazy" alt=""/>
 							</div>
 							<div class="plugin-info">
-								<h4 class="plugin-name"><?php esc_html_e( 'Click To Chat – Floating Chat Widget', 'smart-form-builder-by-dragwyb' ); ?></h4>
+								<h4 class="plugin-name"><?php esc_html_e( 'AI Chatbot & Floating widget', 'smart-form-builder-by-dragwyb' ); ?></h4>
 								<p class="plugin-desc"><?php esc_html_e( 'Add WhatsApp, Messenger, Telegram & more chat widgets to your site.', 'smart-form-builder-by-dragwyb' ); ?></p>
 							</div>
-							<a href="<?php echo esc_url( admin_url( 'plugin-install.php?tab=plugin-information&plugin=dragwyb-click-to-chat' ) ); ?>" class="dragwyb-btn-install" target="_blank" rel="noopener noreferrer">
+							<div class="dragwyb-plugin-btn-wrapper">
+								<a href="<?php echo esc_url( admin_url( 'plugin-install.php?tab=plugin-information&plugin=dragwyb-click-to-chat' ) ); ?>" class="dragwyb-btn-install" target="_blank" rel="noopener noreferrer">
 								<?php esc_html_e( 'Install Now', 'smart-form-builder-by-dragwyb' ); ?>
-							</a>
+								</a>
+							</div>
 						</div>
 
 						<div class="dragwyb-promo-footer">

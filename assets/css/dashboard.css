@@ -216,7 +216,6 @@
 .dragwyb-db-select:hover,
 .dragwyb-db-select-sm:hover {
 	border-color: #cbd5e1;
-	background: #ffffff;
 }
 
 .dragwyb-db-icon-btn {
@@ -416,7 +415,22 @@
 }
 
 .dragwyb-support-icon {
+	width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: hsl(var(--dragwyb-primary)/0.1);
+    color: hsl(var(--dragwyb-primary));
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 	margin-bottom: 12px;
+	margin-inline: auto;
+	padding: 5px;
+}
+
+.dragwyb-support-icon svg{
+	fill: currentColor;
 }
 
 .dragwyb-support-title {
@@ -514,24 +528,26 @@
 }
 
 .dragwyb-plugin-feature-box {
-	background: #f8fafc;
-	border: 1px solid #f1f5f9;
-	border-radius: 12px;
-	padding: 16px;
-	display: flex;
-	flex-direction: column;
-	gap: 12px;
-	margin-bottom: 16px;
+    background: #fff1f2;
+    border: 1px solid #ffe0e2;
+    border-radius: 12px;
+    padding: 16px;
+    gap: 12px;
+    margin-bottom: 16px;
+    display: grid;
+    grid-template-columns: 40px 1fr;
 }
 
 .plugin-icon-bubble {
 	width: 40px;
 	height: 40px;
-	border-radius: 50%;
-	background: hsl(var(--dragwyb-primary));
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+.plugin-icon-bubble img{
+	width: 100%;
 }
 
 .plugin-name {
@@ -546,6 +562,11 @@
 	color: #64748b;
 	margin: 0;
 	line-height: 1.4;
+}
+
+.dragwyb-plugin-btn-wrapper{
+	grid-column: 1 / -1;
+	text-align: center;
 }
 
 .dragwyb-btn-install {
