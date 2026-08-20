@@ -23,19 +23,28 @@ class Dragwyb_Tracker {
 	}
 
 	private function __construct() {
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_tracker' ) );
+		add_action( 'wp_ajax_dragwyb_track', array( $this, 'handle_tracking' ) );
+		add_action( 'wp_ajax_nopriv_dragwyb_track', array( $this, 'handle_tracking' ) );
+	}
+
+	private function is_disbale_track_user() {
 		$enabled = Settings_Manager::instance()->get_setting( 'gdpr_privacy', 'tracking_enabled', true );
 		if ( false === $enabled || 'no' === $enabled ) {
-			return;
+			return true;
 		}
 
 		$respect_dnt = Settings_Manager::instance()->get_setting( 'gdpr_privacy', 'gdpr_respect_dnt', false );
 		if ( ( true === $respect_dnt || 'yes' === $respect_dnt ) && isset( $_SERVER['HTTP_DNT'] ) && '1' === $_SERVER['HTTP_DNT'] ) {
-			return;
+			return true;
 		}
 
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_tracker' ) );
-		add_action( 'wp_ajax_dragwyb_track', array( $this, 'handle_tracking' ) );
-		add_action( 'wp_ajax_nopriv_dragwyb_track', array( $this, 'handle_tracking' ) );
+		$track_admins = Settings_Manager::instance()->get_setting( 'gdpr_privacy', 'track_admins', false );
+		if ( is_user_logged_in() && true !== $track_admins ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public function enqueue_tracker(): void {
@@ -43,8 +52,7 @@ class Dragwyb_Tracker {
 			return;
 		}
 
-		$track_admins = Settings_Manager::instance()->get_setting( 'gdpr_privacy', 'track_admins', false );
-		if ( current_user_can( 'manage_options' ) && true !== $track_admins && 'yes' !== $track_admins ) {
+		if ( $this->is_disbale_track_user() ) {
 			return;
 		}
 
@@ -79,6 +87,10 @@ class Dragwyb_Tracker {
 
 	public function handle_tracking(): void {
 		check_ajax_referer( 'dragwyb_track_nonce', 'nonce' );
+
+		if ( $this->is_disbale_track_user() ) {
+			return;
+		}
 
 		$respect_dnt    = Settings_Manager::instance()->get_setting( 'gdpr_privacy', 'gdpr_respect_dnt', false );
 		$is_respect_dnt = true === $respect_dnt || 'yes' === $respect_dnt;
