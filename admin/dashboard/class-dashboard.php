@@ -299,9 +299,9 @@ class Dashboard {
 						<h3 class="dragwyb-support-title"><?php esc_html_e( 'Support', 'smart-form-builder-by-dragwyb' ); ?></h3>
 						<p class="dragwyb-support-desc"><?php esc_html_e( "Need help? We're here for you.", 'smart-form-builder-by-dragwyb' ); ?></p>
 						<div class="dragwyb-support-actions">
-							<a href="https://dragwyb.com/docs" target="_blank" rel="noopener noreferrer" class="dragwyb-btn-doc">
+							<a href="https://wordpress.org/support/plugin/smart-form-builder-by-dragwyb/" target="_blank" rel="noopener noreferrer" class="dragwyb-btn-doc">
 								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-								<?php esc_html_e( 'Documentation', 'smart-form-builder-by-dragwyb' ); ?>
+								<?php esc_html_e( 'Free Support', 'smart-form-builder-by-dragwyb' ); ?>
 							</a>
 							<a href="https://dragwyb.com/contact" target="_blank" rel="noopener noreferrer" class="dragwyb-btn-premium">
 								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>
@@ -328,7 +328,7 @@ class Dashboard {
 							</div>
 							<div class="plugin-info">
 								<h4 class="plugin-name"><?php esc_html_e( 'AI Chatbot & Floating widget', 'smart-form-builder-by-dragwyb' ); ?></h4>
-								<p class="plugin-desc"><?php esc_html_e( 'Add WhatsApp, Messenger, Telegram & more chat widgets to your site.', 'smart-form-builder-by-dragwyb' ); ?></p>
+								<p class="plugin-desc"><?php esc_html_e( 'Add AI Chatbot & Floating chat widgets to your website.', 'smart-form-builder-by-dragwyb' ); ?></p>
 							</div>
 							<div class="dragwyb-plugin-btn-wrapper">
 								<a href="<?php echo esc_url( admin_url( 'plugin-install.php?tab=plugin-information&plugin=dragwyb-click-to-chat' ) ); ?>" class="dragwyb-btn-install" target="_blank" rel="noopener noreferrer">
