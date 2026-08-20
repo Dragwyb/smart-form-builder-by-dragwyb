@@ -92,7 +92,7 @@ if ( ! class_exists( 'Form_Overview' ) ) {
 					<div class="dragwyb-header-right">
 						<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . DRAGWYB_PREFIX . '-form-builder' ) ); ?>" class="dragwyb-btn-create">
 							<span class="dashicons dashicons-plus-alt2"></span>
-							<?php esc_html_e( 'Create New Form', 'smart-form-builder-by-dragwyb' ); ?>
+							<?php esc_html_e( 'Add Form', 'smart-form-builder-by-dragwyb' ); ?>
 						</a>
 					</div>
 				</div>
