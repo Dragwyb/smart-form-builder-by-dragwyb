@@ -118,6 +118,12 @@ if ( ! class_exists( 'Form_Overview' ) ) {
 					<form method="get">
 						<input type="hidden" name="page" value="<?php echo esc_attr( DRAGWYB_PREFIX ); ?>-form-overview">
 						<?php
+						// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+						if ( ! empty( $_GET['post_status'] ) ) :
+							?>
+							<input type="hidden" name="post_status" value="<?php echo esc_attr( sanitize_key( wp_unslash( $_GET['post_status'] ) ) ); ?>">
+						<?php endif; ?>
+						<?php
 						$form_table->search_box( 'search', 'search_id' );
 						$form_table->display();
 						?>
