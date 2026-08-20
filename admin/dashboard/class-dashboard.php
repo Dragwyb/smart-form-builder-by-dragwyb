@@ -224,7 +224,7 @@ class Dashboard {
 						<div class="dragwyb-db-card-header">
 							<div class="dragwyb-db-card-title">
 								<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-								<h2><?php esc_html_e( 'Form Analytics Overview', 'smart-form-builder-by-dragwyb' ); ?></h2>
+								<h2><?php esc_html_e( 'Analytics Overview', 'smart-form-builder-by-dragwyb' ); ?></h2>
 							</div>
 							<select id="dragwyb-db-stats-timeframe" class="dragwyb-db-select-sm">
 								<option value="today"><?php esc_html_e( 'Today', 'smart-form-builder-by-dragwyb' ); ?></option>

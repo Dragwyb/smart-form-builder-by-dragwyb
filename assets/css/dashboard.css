@@ -256,7 +256,7 @@
 	display: flex;
 	align-items: center;
 	gap: 14px;
-	padding: 16px;
+	padding: 10px;
 	border-radius: 12px;
 	transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -304,7 +304,7 @@
 }
 
 .stat-number {
-	font-size: 22px;
+	font-size: 18px;
 	font-weight: 800;
 	line-height: 1.1;
 }
