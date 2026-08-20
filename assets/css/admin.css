@@ -376,44 +376,6 @@ li#toplevel_page_dragwyb-form-overview .wp-menu-image img {
     transition: width 0.4s ease;
 }
 
-/* Clean Cache Button */
-.dragwyb-clean-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 6px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.dragwyb-clean-btn.active {
-    background: #fff0f5;
-    border: 1px solid #fecdd3;
-    color: #e11d48;
-}
-
-.dragwyb-clean-btn.active:hover {
-    background: #e11d48;
-    color: #ffffff;
-    border-color: #e11d48;
-}
-
-.dragwyb-clean-btn.disabled {
-    background: #f1f5f9;
-    border: 1px solid #e2e8f0;
-    color: #94a3b8;
-    cursor: not-allowed;
-}
-
-.dragwyb-clean-btn .dashicons {
-    font-size: 14px;
-    width: 14px;
-    height: 14px;
-}
-
 /* Date Cell */
 .dragwyb-date-cell {
     display: flex;

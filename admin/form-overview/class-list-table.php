@@ -86,7 +86,6 @@ class List_Table extends WP_List_Table {
 			'views'           => __( 'Views', 'smart-form-builder-by-dragwyb' ) . ' <span class="dragwyb-info-icon" title="' . esc_attr__( 'Form preview count', 'smart-form-builder-by-dragwyb' ) . '">ⓘ</span>',
 			'submissions'     => __( 'Submissions', 'smart-form-builder-by-dragwyb' ) . ' <span class="dragwyb-info-icon" title="' . esc_attr__( 'Form submission count', 'smart-form-builder-by-dragwyb' ) . '">ⓘ</span>',
 			'conversion_rate' => __( 'Conversion Rate', 'smart-form-builder-by-dragwyb' ) . ' <span class="dragwyb-info-icon" title="' . esc_attr__( 'Submission / View ratio', 'smart-form-builder-by-dragwyb' ) . '">ⓘ</span>',
-			'clean_cache'     => __( 'Clean Cache', 'smart-form-builder-by-dragwyb' ),
 			'date'            => __( 'Date', 'smart-form-builder-by-dragwyb' ),
 		);
 
@@ -188,37 +187,11 @@ class List_Table extends WP_List_Table {
 				);
 				break;
 
-			case 'clean_cache':
-				if ( $this->css_cache_exist( $form->ID ) ) {
-					$value = sprintf(
-						'<button type="button" id="%s" data-key="%s" data-clean-key="%s" class="dragwyb-clean-btn active"><span class="dashicons dashicons-update"></span> %s</button>',
-						esc_attr( 'clean-cache-' . (int) $form->ID ),
-						esc_attr( wp_create_nonce( sanitize_text_field( $form->post_type ) . (int) $form->ID . '-clean-cache' ) ),
-						esc_attr( wp_create_nonce( 'delete_cache_nonce' ) ),
-						esc_html__( 'Clean Cache', 'smart-form-builder-by-dragwyb' )
-					);
-				} else {
-					$value = sprintf(
-						'<button type="button" id="%s" disabled class="dragwyb-clean-btn disabled"><span class="dashicons dashicons-update"></span> %s</button>',
-						esc_attr( 'clean-cache-' . (int) $form->ID ),
-						esc_html__( 'Clean Cache', 'smart-form-builder-by-dragwyb' )
-					);
-				}
-				break;
-
 			default:
 				$value = '';
 		}
 
 		return apply_filters( 'dragwyb_form_overview_column_value', $value, $form, $column_name );
-	}
-
-	private function css_cache_exist( $form_id ) {
-		$unique    = get_post_meta( $form_id, '_dragwyb_form_assets_id', true ) ?: 0;
-		$file_name = 'form-' . $form_id . '-' . $unique . '.css';
-
-		$file_path = $this->upload_dir . $file_name;
-		return file_exists( $file_path );
 	}
 
 	/**
