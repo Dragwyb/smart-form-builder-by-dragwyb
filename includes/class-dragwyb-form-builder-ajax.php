@@ -16,6 +16,7 @@ use Dragwyb\Form_Builder\Admin\Db\Error_Log\Dragwyb_Error_Log_Db;
 use Dragwyb\Form_Builder\Includes\Modules\Modules;
 use Dragwyb\Form_Builder\Includes\Modules\Fields\Field_Base;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
+use Dragwyb\Form_Builder\Admin\Db\Analytics\Dragwyb_Analytics_Db;
 
 class Dragwyb_Form_Builder_Ajax {
 
@@ -349,23 +350,23 @@ class Dragwyb_Form_Builder_Ajax {
 		$db_session_uid  = ! empty( $extra_data['session_uid'] ) ? sanitize_text_field( $extra_data['session_uid'] ) : '';
 
 		global $wpdb;
-		$journey_table = \Dragwyb\Form_Builder\Admin\Db\Analytics\Dragwyb_Analytics_Db::table_name( 'journey' );
+		$journey_table = esc_sql( Dragwyb_Analytics_Db::table_name( 'journey' ) );
 		$journey_rows  = array();
 
 		if ( $db_session_id > 0 ) {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$journey_rows = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT * FROM {$journey_table} WHERE session_id = %d ORDER BY id ASC",
+					"SELECT * FROM {$journey_table} WHERE session_id = %d ORDER BY id ASC", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					$db_session_id
 				)
 			);
 		} elseif ( ! empty( $db_session_uid ) ) {
-			$sessions_table = \Dragwyb\Form_Builder\Admin\Db\Analytics\Dragwyb_Analytics_Db::table_name( 'sessions' );
+			$sessions_table = esc_sql( Dragwyb_Analytics_Db::table_name( 'sessions' ) );
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$found_session_id = (int) $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT id FROM {$sessions_table} WHERE session_uid = %s ORDER BY id DESC LIMIT 1",
+					"SELECT id FROM {$sessions_table} WHERE session_uid = %s ORDER BY id DESC LIMIT 1", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					$db_session_uid
 				)
 			);
@@ -374,7 +375,7 @@ class Dragwyb_Form_Builder_Ajax {
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 				$journey_rows = $wpdb->get_results(
 					$wpdb->prepare(
-						"SELECT * FROM {$journey_table} WHERE session_id = %d ORDER BY id ASC",
+						"SELECT * FROM {$journey_table} WHERE session_id = %d ORDER BY id ASC", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 						$found_session_id
 					)
 				);
@@ -397,6 +398,7 @@ class Dragwyb_Form_Builder_Ajax {
 		if ( empty( $visitor_journey ) ) {
 			$visitor_journey = array(
 				array(
+					// translators: %s is the form title
 					'title' => sprintf( __( 'Form submitted: %s', 'smart-form-builder-by-dragwyb' ), $entry->form_title ),
 					'url'   => $entry->lead_attributes['landing_page'] ?? '-',
 					'time'  => wp_date( 'g:i:s A', strtotime( $entry->created_at ) ),
@@ -736,9 +738,8 @@ class Dragwyb_Form_Builder_Ajax {
 		}
 
 		$type    = isset( $_POST['type'] ) ? sanitize_key( wp_unslash( $_POST['type'] ) ) : 'entries';
-		$raw_ids = isset( $_POST['ids'] ) ? wp_unslash( $_POST['ids'] ) : array();
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized below via array_map and absint
-		$ids = array_map( 'absint', (array) $raw_ids );
+		$raw_ids = isset( $_POST['ids'] ) ? wp_unslash( $_POST['ids'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized below via array_map and absint
+		$ids     = array_map( 'absint', (array) $raw_ids );
 
 		if ( ! empty( $ids ) ) {
 			// Fetch specific IDs
@@ -825,9 +826,8 @@ class Dragwyb_Form_Builder_Ajax {
 			if ( isset( $_POST['form_id'] ) ) {
 				$form_ids[] = absint( wp_unslash( $_POST['form_id'] ) );
 			} elseif ( isset( $_POST['form_ids'] ) ) {
-				$raw_form_ids = wp_unslash( $_POST['form_ids'] );
-				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized via array_map and absint
-				$form_ids = array_map( 'absint', (array) $raw_form_ids );
+				$raw_form_ids = wp_unslash( $_POST['form_ids'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized via array_map and absint
+				$form_ids     = array_map( 'absint', (array) $raw_form_ids );
 			}
 			$form_ids = array_filter( $form_ids );
 		} else {

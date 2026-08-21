@@ -56,21 +56,19 @@ class Dragwyb_Submission_Db {
 	 */
 	public static function migrate_v1_to_v2(): void {
 		global $wpdb;
-		$table_name = self::get_table_name();
+		$table_name = esc_sql( self::get_table_name() );
 
 		// Check if extra_data column exists
-		$column_exists = $wpdb->get_results(
-			$wpdb->prepare( "SHOW COLUMNS FROM $table_name LIKE %s", 'extra_data' )
+		$column_exists = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+			$wpdb->prepare( "SHOW COLUMNS FROM $table_name LIKE %s", 'extra_data' ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		);
 
 		if ( empty( $column_exists ) ) {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$wpdb->query( "ALTER TABLE $table_name ADD COLUMN extra_data longtext DEFAULT NULL" );
+			$wpdb->query( "ALTER TABLE $table_name ADD COLUMN extra_data longtext DEFAULT NULL" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
 		}
 
 		// Query rows where extra_data is NULL or empty
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$rows = $wpdb->get_results( "SELECT * FROM $table_name WHERE extra_data IS NULL OR extra_data = '' OR extra_data = '{}'" );
+		$rows = $wpdb->get_results( "SELECT * FROM $table_name WHERE extra_data IS NULL OR extra_data = '' OR extra_data = '{}'" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 
 		if ( ! empty( $rows ) ) {
 			foreach ( $rows as $row ) {
@@ -110,12 +108,12 @@ class Dragwyb_Submission_Db {
 		// Drop old v1 columns: user_id, ip_address, user_agent
 		$old_columns = array( 'user_id', 'ip_address', 'user_agent' );
 		foreach ( $old_columns as $col ) {
-			$has_col = $wpdb->get_results(
-				$wpdb->prepare( "SHOW COLUMNS FROM $table_name LIKE %s", $col )
+			$has_col = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+				$wpdb->prepare( "SHOW COLUMNS FROM $table_name LIKE %s", $col ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			);
 
 			if ( ! empty( $has_col ) ) {
-				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.SchemaChange
 				$wpdb->query( "ALTER TABLE $table_name DROP COLUMN `$col`" );
 			}
 		}
@@ -380,7 +378,7 @@ class Dragwyb_Submission_Db {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 		return $wpdb->query(
 			$wpdb->prepare(
-				"DELETE FROM $table_name WHERE id IN ($format)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				"DELETE FROM $table_name WHERE id IN ($format)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 				...$ids
 			)
 		);

@@ -94,7 +94,7 @@ class Dragwyb_Tracker {
 
 		$respect_dnt    = Settings_Manager::instance()->get_setting( 'gdpr_privacy', 'gdpr_respect_dnt', false );
 		$is_respect_dnt = true === $respect_dnt || 'yes' === $respect_dnt;
-		$has_dnt_header = ( isset( $_SERVER['HTTP_DNT'] ) && '1' === trim( (string) $_SERVER['HTTP_DNT'] ) ) || ( isset( $_POST['dnt'] ) && '1' === (string) $_POST['dnt'] );
+		$has_dnt_header = ( isset( $_SERVER['HTTP_DNT'] ) && '1' === trim( sanitize_text_field( wp_unslash( $_SERVER['HTTP_DNT'] ) ) ) ) || ( isset( $_POST['dnt'] ) && '1' === sanitize_text_field( wp_unslash( $_POST['dnt'] ) ) );
 
 		if ( $is_respect_dnt && $has_dnt_header ) {
 			wp_send_json_success( array( 'status' => 'dnt_ignored' ) );
@@ -102,7 +102,7 @@ class Dragwyb_Tracker {
 		}
 
 		$event_type = isset( $_POST['event_type'] ) ? sanitize_text_field( wp_unslash( $_POST['event_type'] ) ) : '';
-		$data       = isset( $_POST['data'] ) ? wp_unslash( $_POST['data'] ) : array();
+		$data       = isset( $_POST['data'] ) ? wp_unslash( $_POST['data'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		if ( is_string( $data ) ) {
 			$data = json_decode( stripslashes( $data ), true );

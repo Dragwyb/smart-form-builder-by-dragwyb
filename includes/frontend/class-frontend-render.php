@@ -319,8 +319,9 @@ class Frontend_Render {
 				$form_html .= '<div class="dragwyb-step-indicator-container' . ( 'numbers' === $step_indicator_type ? ' step-has-title' : '' ) . '"><div class="dragwyb-step-indicator">' . $step_navigation_html . '</div></div>';
 			} elseif ( 'progress' === $step_indicator_type ) {
 				$form_html .= '<div class="dragwyb-step-indicator-container" id="indicator-bar" style="display: block;">
-            <div class="dragwyb-step-progress-wrapper">
-                <span class="dragwyb-step-progress-text" id="progress-text">' . esc_html__( 'Step 1 of ' . $step_form_index, 'smart-form-builder-by-dragwyb' ) . '</span>
+            <div class="dragwyb-step-progress-wrapper">';
+				// translators: %d is the number of steps.
+				$form_html .= '<span class="dragwyb-step-progress-text" id="progress-text">' . sprintf( esc_html__( 'Step 1 of %d', 'smart-form-builder-by-dragwyb' ), $step_form_index ) . '</span>
                 <div class="dragwyb-step-progress-bar">
                     <div class="dragwyb-step-progress-fill" id="progress-fill"></div>
                 </div>

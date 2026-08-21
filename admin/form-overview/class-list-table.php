@@ -465,13 +465,13 @@ class List_Table extends WP_List_Table {
 			$form_ids = array_map( 'absint', array_filter( $form_ids ) );
 			if ( ! empty( $form_ids ) ) {
 				global $wpdb;
-				$table_name   = $wpdb->prefix . 'dragwyb_submissions';
+				$table_name   = esc_sql( $wpdb->prefix . 'dragwyb_submissions' );
 				$placeholders = implode( ',', array_fill( 0, count( $form_ids ), '%d' ) );
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 				$results = $wpdb->get_results(
 					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					$wpdb->prepare(
-						"SELECT form_id, COUNT(id) as total_count FROM {$table_name} WHERE form_id IN ({$placeholders}) GROUP BY form_id",
+						"SELECT form_id, COUNT(id) as total_count FROM {$table_name} WHERE form_id IN ({$placeholders}) GROUP BY form_id", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 						...$form_ids
 					)
 				);

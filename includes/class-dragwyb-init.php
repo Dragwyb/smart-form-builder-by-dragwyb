@@ -134,7 +134,7 @@ class Dragwyb_Init {
 	public function add_plugin_action_links( $links ) {
 
 		$dragwyb_dashboard              = array();
-		$dragwyb_dashboard['dashboard'] = '<a href="' . esc_url( admin_url( 'admin.php?page=' . DRAGWYB_PREFIX . '-dashboard' ) ) . '">' . __( 'Dashboard', 'dragwyb-form-builder' ) . '</a>';
+		$dragwyb_dashboard['dashboard'] = '<a href="' . esc_url( admin_url( 'admin.php?page=' . DRAGWYB_PREFIX . '-dashboard' ) ) . '">' . __( 'Dashboard', 'smart-form-builder-by-dragwyb' ) . '</a>';
 		$links                          = array_merge( $dragwyb_dashboard, $links );
 
 		return $links;

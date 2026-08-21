@@ -121,7 +121,7 @@ if ( ! class_exists( 'Form_Overview' ) ) {
 						// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 						if ( ! empty( $_GET['post_status'] ) ) :
 							?>
-							<input type="hidden" name="post_status" value="<?php echo esc_attr( sanitize_key( wp_unslash( $_GET['post_status'] ) ) ); ?>">
+							<input type="hidden" name="post_status" value="<?php echo esc_attr( sanitize_key( wp_unslash( $_GET['post_status'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>">
 						<?php endif; ?>
 						<?php
 						$form_table->search_box( 'search', 'search_id' );

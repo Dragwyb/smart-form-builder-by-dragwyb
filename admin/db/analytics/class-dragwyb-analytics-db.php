@@ -16,7 +16,7 @@ class Dragwyb_Analytics_Db {
 
 	public static function table_name( string $name ): string {
 		global $wpdb;
-		$allowed = array( 'visitors', 'sessions', 'pageviews', 'events', 'journey' );
+		$allowed    = array( 'visitors', 'sessions', 'pageviews', 'events', 'journey' );
 		$clean_name = in_array( $name, $allowed, true ) ? $name : sanitize_key( $name );
 		return $wpdb->prefix . 'dragwyb_' . $clean_name;
 	}
@@ -161,12 +161,12 @@ class Dragwyb_Analytics_Db {
 
 		global $wpdb;
 
-		$pageviews_table   = self::table_name( 'pageviews' );
-		$events_table      = self::table_name( 'events' );
-		$journey_table     = self::table_name( 'journey' );
-		$sessions_table    = self::table_name( 'sessions' );
-		$visitors_table    = self::table_name( 'visitors' );
-		$submissions_table = Dragwyb_Submission_Db::table_name();
+		$pageviews_table   = esc_sql( self::table_name( 'pageviews' ) );
+		$events_table      = esc_sql( self::table_name( 'events' ) );
+		$journey_table     = esc_sql( self::table_name( 'journey' ) );
+		$sessions_table    = esc_sql( self::table_name( 'sessions' ) );
+		$visitors_table    = esc_sql( self::table_name( 'visitors' ) );
+		$submissions_table = esc_sql( Dragwyb_Submission_Db::table_name() );
 
 		$deleted_count = 0;
 
@@ -174,7 +174,7 @@ class Dragwyb_Analytics_Db {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$res = $wpdb->query(
 			$wpdb->prepare(
-				"DELETE FROM {$pageviews_table} WHERE created_at < DATE_SUB(NOW(), INTERVAL %d DAY)",
+				"DELETE FROM {$pageviews_table} WHERE created_at < DATE_SUB(NOW(), INTERVAL %d DAY)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$retention_days
 			)
 		);
@@ -186,7 +186,7 @@ class Dragwyb_Analytics_Db {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$res = $wpdb->query(
 			$wpdb->prepare(
-				"DELETE FROM {$events_table} WHERE created_at < DATE_SUB(NOW(), INTERVAL %d DAY)",
+				"DELETE FROM {$events_table} WHERE created_at < DATE_SUB(NOW(), INTERVAL %d DAY)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$retention_days
 			)
 		);
@@ -198,7 +198,7 @@ class Dragwyb_Analytics_Db {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$res = $wpdb->query(
 			$wpdb->prepare(
-				"DELETE FROM {$journey_table} WHERE created_at < DATE_SUB(NOW(), INTERVAL %d DAY)",
+				"DELETE FROM {$journey_table} WHERE created_at < DATE_SUB(NOW(), INTERVAL %d DAY)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$retention_days
 			)
 		);
@@ -210,7 +210,7 @@ class Dragwyb_Analytics_Db {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$res = $wpdb->query(
 			$wpdb->prepare(
-				"DELETE FROM {$sessions_table} WHERE started_at < DATE_SUB(NOW(), INTERVAL %d DAY)",
+				"DELETE FROM {$sessions_table} WHERE started_at < DATE_SUB(NOW(), INTERVAL %d DAY)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$retention_days
 			)
 		);
@@ -222,7 +222,7 @@ class Dragwyb_Analytics_Db {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$res = $wpdb->query(
 			$wpdb->prepare(
-				"DELETE FROM {$visitors_table} WHERE last_seen < DATE_SUB(NOW(), INTERVAL %d DAY)",
+				"DELETE FROM {$visitors_table} WHERE last_seen < DATE_SUB(NOW(), INTERVAL %d DAY)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$retention_days
 			)
 		);
@@ -233,7 +233,7 @@ class Dragwyb_Analytics_Db {
 		// Clean up orphaned visitors without remaining sessions
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->query(
-			"DELETE FROM {$visitors_table} WHERE id NOT IN (SELECT DISTINCT visitor_id FROM {$sessions_table})"
+			"DELETE FROM {$visitors_table} WHERE id NOT IN (SELECT DISTINCT visitor_id FROM {$sessions_table})" // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		);
 
 		// 6. Delete old form submissions if retain_entries is false
@@ -241,7 +241,7 @@ class Dragwyb_Analytics_Db {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$res = $wpdb->query(
 				$wpdb->prepare(
-					"DELETE FROM {$submissions_table} WHERE created_at < DATE_SUB(NOW(), INTERVAL %d DAY)",
+					"DELETE FROM {$submissions_table} WHERE created_at < DATE_SUB(NOW(), INTERVAL %d DAY)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					$retention_days
 				)
 			);

@@ -91,6 +91,7 @@ class Settings {
 			);
 		}
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$current_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
 
 		// Get actual form count

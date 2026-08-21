@@ -10,6 +10,7 @@ use Dragwyb\Form_Builder\Includes\Rest_Routes\Form_Submission_Handler;
 use Dragwyb\Form_Builder\Admin\Db\Submission\Dragwyb_Submission_Db;
 use Dragwyb\Form_Builder\Admin\Settings\Settings_Manager;
 use Dragwyb\Form_Builder\Admin\Db\Analytics\Dragwyb_Analytics_Db;
+use Dragwyb\Form_Builder\Includes\Frontend\Frontend_Render;
 
 class Save_Submissions_Action extends Action_Base {
 
@@ -175,6 +176,17 @@ class Save_Submissions_Action extends Action_Base {
 	}
 
 	public function process_submission( $form_id, $form_data, $form_config, Form_Submission_Handler $form_submission ) {
+		$nonce  = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ) : '';
+		$action = Frontend_Render::get_submission_key( $form_id );
+
+		if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $action ) ) {
+			return new \WP_Error(
+				'rest_forbidden',
+				__( 'Invalid submission token.', 'smart-form-builder-by-dragwyb' ),
+				array( 'status' => 403 )
+			);
+		}
+
 		$settings   = $form_config['after-submission'] ?? array();
 		$save_to_db = $settings['save_to_db_save_submissions'] ?? 'yes';
 
@@ -192,7 +204,7 @@ class Save_Submissions_Action extends Action_Base {
 			$is_respect_dnt = true === $respect_dnt || 'yes' === $respect_dnt;
 			$dnt_val        = isset( $_REQUEST['dnt'] ) ? sanitize_key( wp_unslash( $_REQUEST['dnt'] ) ) : '';
 			$has_dnt_param  = ( '1' === $dnt_val || 'yes' === $dnt_val );
-			$has_dnt_header = ( isset( $_SERVER['HTTP_DNT'] ) && '1' === trim( (string) $_SERVER['HTTP_DNT'] ) ) || $has_dnt_param;
+			$has_dnt_header = ( isset( $_SERVER['HTTP_DNT'] ) && '1' === trim( sanitize_text_field( wp_unslash( $_SERVER['HTTP_DNT'] ) ) ) ) || $has_dnt_param;
 
 			$tracking_enabled = Settings_Manager::instance()->get_setting( 'gdpr_privacy', 'tracking_enabled', true );
 			$is_tracking_off  = false === $tracking_enabled || 'no' === $tracking_enabled;
@@ -285,13 +297,13 @@ class Save_Submissions_Action extends Action_Base {
 			$db_session_id = null;
 
 			if ( ! empty( $visitor_uid ) ) {
-				$visitors_table = Dragwyb_Analytics_Db::table_name( 'visitors' );
-				$db_visitor_id  = (int) $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$visitors_table} WHERE visitor_uid = %s", $visitor_uid ) );
+				$visitors_table = esc_sql( Dragwyb_Analytics_Db::table_name( 'visitors' ) );
+				$db_visitor_id  = (int) $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$visitors_table} WHERE visitor_uid = %s", $visitor_uid ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 			}
 
 			if ( ! empty( $session_uid ) && $db_visitor_id ) {
-				$sessions_table = Dragwyb_Analytics_Db::table_name( 'sessions' );
-				$db_session_id  = (int) $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$sessions_table} WHERE visitor_id = %d AND session_uid = %s ORDER BY id DESC LIMIT 1", $db_visitor_id, $session_uid ) );
+				$sessions_table = esc_sql( Dragwyb_Analytics_Db::table_name( 'sessions' ) );
+				$db_session_id  = (int) $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$sessions_table} WHERE visitor_id = %d AND session_uid = %s ORDER BY id DESC LIMIT 1", $db_visitor_id, $session_uid ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 			}
 
 			if ( ! $is_tracking_off && ! $is_disable_det ) {
@@ -306,8 +318,10 @@ class Save_Submissions_Action extends Action_Base {
 							'visitor_id'    => $db_visitor_id,
 							'session_id'    => $db_session_id,
 							'action_type'   => 'submission',
+							// translators: %s is the form title
 							'action_detail' => sprintf( __( 'Form submitted: %s', 'smart-form-builder-by-dragwyb' ), $form_title ),
 							'page_url'      => $landing,
+							// translators: %s is the form title
 							'page_title'    => sprintf( __( 'Form submitted: %s', 'smart-form-builder-by-dragwyb' ), $form_title ),
 							'created_at'    => current_time( 'mysql' ),
 						),

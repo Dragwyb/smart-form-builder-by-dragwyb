@@ -56,7 +56,7 @@ class Shortcode_Handler {
 
 		if ( 'publish' !== $form_status ) {
 			// translators: %s: Form status
-			return '<p>' . esc_html__( sprintf( 'Your current form is in %s status. Please make it as publish to show it on frontend.', ucfirst( $form_status ) ), 'smart-form-builder-by-dragwyb' ) . '</p>';
+			return '<p>' . sprintf( esc_html__( 'Your current form is in %s status. Please make it as publish to show it on frontend.', 'smart-form-builder-by-dragwyb' ), ucfirst( $form_status ) ) . '</p>';
 		}
 
 		// Load form data from post meta

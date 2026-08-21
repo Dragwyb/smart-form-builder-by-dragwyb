@@ -226,6 +226,7 @@ class Dragwyb_Mailer {
 
 		return array(
 			'success' => false,
+			// translators: %s is the detail of the error
 			'message' => ( $error_message ? sprintf( __( 'Send failed: %s', 'smart-form-builder-by-dragwyb' ), $error_message ) : __( 'Send failed.', 'smart-form-builder-by-dragwyb' ) ) . $detail . $hint,
 		);
 	}

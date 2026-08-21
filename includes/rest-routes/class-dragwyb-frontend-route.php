@@ -114,8 +114,20 @@ class Dragwyb_Frontend_Route {
 	 * @return \WP_REST_Response|\WP_Error The response or error object.
 	 */
 	public function submit_form( \WP_REST_Request $request ) {
-		$form_id = $request->get_param( 'form_id' );
-		$fields  = $request->get_param( 'fields' );
+
+		$nonce   = $request->get_param( 'nonce' );
+		$form_id = absint( $request->get_param( 'form_id' ) );
+		$action  = Frontend_Render::get_submission_key( $form_id );
+
+		if ( empty( $nonce ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $nonce ) ), $action ) ) {
+			return new \WP_Error(
+				'rest_forbidden',
+				__( 'Invalid submission token.', 'smart-form-builder-by-dragwyb' ),
+				array( 'status' => 403 )
+			);
+		}
+
+		$fields = $request->get_param( 'fields' );
 
 		if ( ! $form_id ) {
 			return new \WP_Error( 'invalid_form', __( 'Invalid form ID.', 'smart-form-builder-by-dragwyb' ), array( 'status' => 400 ) );
@@ -129,6 +141,7 @@ class Dragwyb_Frontend_Route {
 
 		$form_id = intval( $form_id );
 
+		$_POST['nonce'] = $nonce;
 		if ( $request->get_param( 'screen_resolution' ) ) {
 			$_POST['screen_resolution'] = sanitize_text_field( (string) $request->get_param( 'screen_resolution' ) );
 		}

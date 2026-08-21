@@ -33,6 +33,7 @@ class Onboarding {
 	 */
 	public function handle_first_time_activation_redirect(): void {
 		if ( get_transient( 'dragwyb_activation_redirect' ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( ! isset( $_GET['activate-multi'] ) && current_user_can( 'manage_options' ) ) {
 				delete_transient( 'dragwyb_activation_redirect' );
 				$dargwyb_already_setuped = false;
