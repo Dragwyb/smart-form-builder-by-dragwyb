@@ -190,7 +190,8 @@ class Save_Submissions_Action extends Action_Base {
 
 			$respect_dnt    = Settings_Manager::instance()->get_setting( 'gdpr_privacy', 'gdpr_respect_dnt', false );
 			$is_respect_dnt = true === $respect_dnt || 'yes' === $respect_dnt;
-			$has_dnt_param  = isset( $_REQUEST['dnt'] ) && ( '1' === (string) $_REQUEST['dnt'] || 'yes' === (string) $_REQUEST['dnt'] );
+			$dnt_val        = isset( $_REQUEST['dnt'] ) ? sanitize_key( wp_unslash( $_REQUEST['dnt'] ) ) : '';
+			$has_dnt_param  = ( '1' === $dnt_val || 'yes' === $dnt_val );
 			$has_dnt_header = ( isset( $_SERVER['HTTP_DNT'] ) && '1' === trim( (string) $_SERVER['HTTP_DNT'] ) ) || $has_dnt_param;
 
 			$tracking_enabled = Settings_Manager::instance()->get_setting( 'gdpr_privacy', 'tracking_enabled', true );
@@ -230,17 +231,17 @@ class Save_Submissions_Action extends Action_Base {
 			}
 
 			$landing = isset( $_REQUEST['current_page_url'] ) && ! empty( $_REQUEST['current_page_url'] )
-				? sanitize_text_field( wp_unslash( $_REQUEST['current_page_url'] ) )
-				: ( isset( $_POST['current_page_url'] ) ? sanitize_text_field( wp_unslash( $_POST['current_page_url'] ) ) : ( isset( $_SERVER['HTTP_REFERER'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '-' ) );
+				? esc_url_raw( wp_unslash( $_REQUEST['current_page_url'] ) )
+				: ( isset( $_POST['current_page_url'] ) ? esc_url_raw( wp_unslash( $_POST['current_page_url'] ) ) : ( isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '-' ) );
 
 			$raw_referrer = isset( $_REQUEST['referrer_url'] ) && ! empty( $_REQUEST['referrer_url'] )
-				? sanitize_text_field( wp_unslash( $_REQUEST['referrer_url'] ) )
-				: ( isset( $_POST['referrer_url'] ) ? sanitize_text_field( wp_unslash( $_POST['referrer_url'] ) ) : 'Direct' );
+				? esc_url_raw( wp_unslash( $_REQUEST['referrer_url'] ) )
+				: ( isset( $_POST['referrer_url'] ) ? esc_url_raw( wp_unslash( $_POST['referrer_url'] ) ) : 'Direct' );
 
 			$site_host     = wp_parse_url( home_url(), PHP_URL_HOST );
 			$referrer_host = wp_parse_url( $raw_referrer, PHP_URL_HOST );
 
-			if ( empty( $raw_referrer ) || 'Direct' === $raw_referrer || ( $referrer_host && $site_host && strtolower( $referrer_host ) === strtolower( $site_host ) ) ) {
+			if ( empty( $raw_referrer ) || 'Direct' === $raw_referrer || ( $referrer_host && $site_host && strtolower( (string) $referrer_host ) === strtolower( (string) $site_host ) ) ) {
 				$referrer = 'Direct';
 			} else {
 				$referrer = $raw_referrer;
