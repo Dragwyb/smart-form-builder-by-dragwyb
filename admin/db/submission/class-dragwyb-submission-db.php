@@ -216,7 +216,7 @@ class Dragwyb_Submission_Db {
 			'order'   => 'DESC',
 			'search'  => '',
 			'form_id' => 0,
-			'status'  => 'publish',
+			'status'  => array( 'publish' ),
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -286,13 +286,19 @@ class Dragwyb_Submission_Db {
 		if ( ! empty( $args['search'] ) ) {
 			$search         = '%' . $wpdb->esc_like( sanitize_text_field( $args['search'] ) ) . '%';
 			$where[]        = '(submission_data LIKE %s OR extra_data LIKE %s)';
-			$query_params[] = $search;
-			$query_params[] = $search;
+			$query_params[] = sanitize_text_field( $search );
+			$query_params[] = sanitize_text_field( $search );
 		}
 
 		if ( ! empty( $args['status'] ) ) {
-			$where[]        = 'status = %s';
-			$query_params[] = $args['status'];
+			if ( is_array( $args['status'] ) ) {
+				$placeholders = implode( ', ', array_fill( 0, count( $args['status'] ), '%s' ) );
+				$where[]      = "status IN ($placeholders)";
+				$query_params = array_merge( $query_params, array_map( 'sanitize_text_field', $args['status'] ) );
+			} else {
+				$where[]        = 'status = %s';
+				$query_params[] = sanitize_text_field( $args['status'] );
+			}
 		}
 
 		return ! empty( $where ) ? 'WHERE ' . implode( ' AND ', $where ) : '';

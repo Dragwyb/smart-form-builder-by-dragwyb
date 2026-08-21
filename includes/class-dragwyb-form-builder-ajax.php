@@ -101,10 +101,9 @@ class Dragwyb_Form_Builder_Ajax {
 	private function sanitize_form_data( array $data, int $form_id ): array {
 
 		defined( 'DRAGWYB_EDITOR_SAVE_AJAX' ) || define( 'DRAGWYB_EDITOR_SAVE_AJAX', true );
-		$sanitize_data  = array();
-		$toolbar_obj    = Toolbars::instance();
-		$toolbars       = $toolbar_obj->get_toolbars();
-		$toolbars_cache = array();
+		$sanitize_data = array();
+		$toolbar_obj   = Toolbars::instance();
+		$toolbars      = $toolbar_obj->get_toolbars();
 
 		foreach ( $data as $key => $value ) {
 			if ( $key === 'id' ) {
@@ -121,14 +120,9 @@ class Dragwyb_Form_Builder_Ajax {
 					if ( $key === 'fields' ) {
 						$toolbar_data = $this->sorting_fields( $toolbar_data, $data['rootContainers'] ?? array() );
 					}
-					$sanitize_data[ $key ]  = $toolbar_data;
-					$toolbars_cache[ $key ] = $toolbar;
+					$sanitize_data[ $key ] = $toolbar_data;
 				}
-			}
-		}
 
-		if ( count( $toolbars_cache ) > 0 ) {
-			foreach ( $toolbars_cache as $toolbar ) {
 				$toolbar->settings_updated();
 			}
 		}
@@ -196,6 +190,7 @@ class Dragwyb_Form_Builder_Ajax {
 			'order'   => $order,
 			'search'  => isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '',
 			'form_id' => isset( $_POST['form_id'] ) ? absint( wp_unslash( $_POST['form_id'] ) ) : 0,
+			'status'  => array( 'publish', 'unread' ),
 		);
 
 		$entries = $db->get_all( $args );
