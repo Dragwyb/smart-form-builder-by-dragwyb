@@ -239,6 +239,7 @@ if ( ! class_exists( 'Dragwyb_Builder_Editor' ) ) {
 				'ajaxUrl'         => admin_url( 'admin-ajax.php' ),
 				'restUrl'         => esc_url_raw( get_rest_url() ),
 				'pluginUrl'       => esc_url( DRAGWYB_FORM_BUILDER_URL ),
+				'restNonce'       => wp_create_nonce( 'wp_rest' ),
 				'nonce'           => wp_create_nonce( 'dragwyb_editor' ),
 				'formId'          => (int) self::$form_id,
 				'editorContainer' => esc_html( self::Current_Page ) . '-editor-container',

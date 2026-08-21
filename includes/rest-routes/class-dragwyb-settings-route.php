@@ -72,7 +72,7 @@ class Dragwyb_Settings_Route {
 				array(
 					'methods'             => \WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_templates' ),
-					'permission_callback' => '__return_true',
+					'permission_callback' => array( $this, 'permissions_check_templates' ),
 				),
 			)
 		);
@@ -98,6 +98,18 @@ class Dragwyb_Settings_Route {
 	public function permissions_check() {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return new \WP_Error( 'rest_forbidden', __( 'You do not have permissions to manage settings.', 'smart-form-builder-by-dragwyb' ), array( 'status' => rest_authorization_required_code() ) );
+		}
+		return true;
+	}
+
+	/**
+	 * Check permissions for template library endpoint.
+	 *
+	 * @return bool|\WP_Error
+	 */
+	public function permissions_check_templates() {
+		if ( ! current_user_can( 'edit_posts' ) && ! current_user_can( 'manage_options' ) ) {
+			return new \WP_Error( 'rest_forbidden', __( 'You do not have permissions to view templates.', 'smart-form-builder-by-dragwyb' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 		return true;
 	}
@@ -253,21 +265,35 @@ class Dragwyb_Settings_Route {
 		$params = $request->get_json_params();
 		$email  = sanitize_email( (string) ( $params['email'] ?? '' ) );
 
+		if ( empty( $email ) || ! is_email( $email ) ) {
+			return rest_ensure_response(
+				array(
+					'status'  => 'error',
+					'message' => __( 'Invalid email address provided.', 'smart-form-builder-by-dragwyb' ),
+				)
+			);
+		}
+
 		$result = Dragwyb_Mailer::send_test_email( $email );
 
-		if ( $result['success'] ) {
+		if ( ! empty( $result['success'] ) ) {
 			return rest_ensure_response(
 				array(
 					'status'  => 'success',
-					'message' => $result['message'],
+					'message' => __( 'Test email sent successfully.', 'smart-form-builder-by-dragwyb' ),
 				)
 			);
+		}
+
+		if ( ! empty( $result['message'] ) ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( 'Dragwyb send test email error: ' . $result['message'] );
 		}
 
 		return rest_ensure_response(
 			array(
 				'status'  => 'error',
-				'message' => $result['message'],
+				'message' => __( 'Failed to send test email. Please verify your SMTP settings and server logs.', 'smart-form-builder-by-dragwyb' ),
 			)
 		);
 	}
@@ -291,7 +317,6 @@ class Dragwyb_Settings_Route {
 		}
 
 		global $wpdb;
-		$submissions_table = esc_sql( $wpdb->prefix . 'dragwyb_submissions' );
 
 		$date_clause = '';
 		$days        = 0;

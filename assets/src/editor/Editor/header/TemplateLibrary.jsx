@@ -409,7 +409,15 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
         if (templates && Object.keys(templates).length > 0) return;
 
         setLoading(true);
-        fetch(`${DragwybEditor.restUrl}dragwyb/v1/templates`)
+        fetch(`${DragwybEditor.restUrl}dragwyb/v1/templates`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-WP-Nonce': DragwybEditor.restNonce
+                },
+            }
+        )
             .then(res => res.json())
             .then(res => {
                 if (res.status === 'success' || res.data) {
