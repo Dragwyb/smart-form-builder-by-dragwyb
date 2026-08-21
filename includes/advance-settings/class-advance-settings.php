@@ -42,23 +42,24 @@ class Advance_Settings extends Toolbar_Base {
 	protected function update_toolbar(): void {
 		$settings = $this->get_display_settings();
 
-		if ( $settings ) {
-			$form_id = $this->get_form_id();
+		$form_id = $this->get_form_id();
 
-			$post_update = array();
+		$post_update = array();
 
-			if ( isset( $settings['form_name'] ) ) {
-				$post_update['post_title'] = sanitize_text_field( $settings['form_name'] );
-			}
-			if ( isset( $settings['form_status'] ) ) {
-				$post_update['post_status'] = sanitize_text_field( $settings['form_status'] );
-			}
+		$post_status = get_post_status( $form_id );
 
-			if ( ! empty( $post_update ) ) {
-				$post_update['ID'] = $form_id;
+		if ( isset( $settings['form_name'] ) ) {
+			$post_update['post_title'] = sanitize_text_field( $settings['form_name'] );
+		}
+		if ( isset( $settings['form_status'] ) ) {
+			$post_update['post_status'] = sanitize_text_field( $settings['form_status'] );
+		} elseif ( 'draft' !== $post_status ) {
+			$post_update['post_status'] = 'draft';
+		}
 
-				$post_update = wp_update_post( $post_update );
-			}
+		if ( ! empty( $post_update ) ) {
+			$post_update['ID'] = $form_id;
+			wp_update_post( $post_update );
 		}
 	}
 
