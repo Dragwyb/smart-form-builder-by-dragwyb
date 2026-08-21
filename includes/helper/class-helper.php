@@ -78,7 +78,7 @@ class Helper {
 		if ( ! wp_script_is( 'dragwyb-flatpickr', 'registered' ) ) {
 			wp_register_script(
 				'dragwyb-flatpickr',
-				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/js/flatpickr/flatpickr.js' ),
+				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/lib/flatpickr/flatpickr.js' ),
 				array(),
 				DRAGWYB_FORM_BUILDER_VERSION,
 				true
