@@ -49,9 +49,9 @@ class Form_Analytics {
 
 		wp_enqueue_script(
 			DRAGWYB_PREFIX . '-chartjs',
-			'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js',
+			esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/lib/chartjs/chart.umd.min.js' ),
 			array(),
-			'4.4.1',
+			'4.5.1',
 			true
 		);
 
@@ -63,9 +63,9 @@ class Form_Analytics {
 			true
 		);
 
-		$days       = isset( $_GET['days'] ) ? absint( wp_unslash( $_GET['days'] ) ) : 30;
+		$days       = isset( $_GET['days'] ) ? absint( wp_unslash( $_GET['days'] ) ) : 30; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$valid_tabs = array( 'traffic', 'pages', 'sources', 'devices', 'live' );
-		$tab_param  = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
+		$tab_param  = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$active_tab = in_array( $tab_param, $valid_tabs, true ) ? $tab_param : 'traffic';
 
 		wp_localize_script(
@@ -89,9 +89,9 @@ class Form_Analytics {
 			return;
 		}
 
-		$days       = isset( $_GET['days'] ) ? absint( wp_unslash( $_GET['days'] ) ) : 30;
+		$days       = isset( $_GET['days'] ) ? absint( wp_unslash( $_GET['days'] ) ) : 30; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$valid_tabs = array( 'traffic', 'pages', 'sources', 'devices', 'live' );
-		$tab_param  = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
+		$tab_param  = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$active_tab = in_array( $tab_param, $valid_tabs, true ) ? $tab_param : 'traffic';
 		?>
 		<div class="dragwyb-analytics-wrap">
@@ -332,11 +332,11 @@ class Form_Analytics {
 
 		if ( $min_date ) {
 			$start_time = strtotime( $min_date );
-			$end_time   = strtotime( date( 'Y-m-d' ) );
+			$end_time   = strtotime( gmdate( 'Y-m-d' ) );
 
 			// Generate entries starting ONLY from the date analytics first recorded data
 			for ( $time = $start_time; $time <= $end_time; $time += 86400 ) {
-				$date_key               = date( 'Y-m-d', $time );
+				$date_key               = gmdate( 'Y-m-d', $time );
 				$daily_map[ $date_key ] = array(
 					'date_val' => $date_key,
 					'visitors' => 0,
@@ -390,7 +390,7 @@ class Form_Analytics {
 		// Live Visitors (Active in last 5 minutes)
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$live_visitors = $wpdb->get_results(
-			'SELECT s.session_uid, v.visitor_uid, s.entry_page, s.exit_page, s.device_type, s.browser, s.ip_address, s.ended_at FROM ' . Dragwyb_Analytics_Db::table_name( 'sessions' ) . ' s JOIN ' . Dragwyb_Analytics_Db::table_name( 'visitors' ) . ' v ON s.visitor_id = v.id WHERE s.ended_at >= DATE_SUB(NOW(), INTERVAL 5 MINUTE) ORDER BY s.ended_at DESC LIMIT 20',
+			'SELECT s.session_uid, v.visitor_uid, s.entry_page, s.exit_page, s.device_type, s.browser, s.ip_address, s.ended_at FROM ' . esc_sql( Dragwyb_Analytics_Db::table_name( 'sessions' ) ) . ' s JOIN ' . esc_sql( Dragwyb_Analytics_Db::table_name( 'visitors' ) ) . ' v ON s.visitor_id = v.id WHERE s.ended_at >= DATE_SUB(NOW(), INTERVAL 5 MINUTE) ORDER BY s.ended_at DESC LIMIT 20', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			ARRAY_A
 		);
 

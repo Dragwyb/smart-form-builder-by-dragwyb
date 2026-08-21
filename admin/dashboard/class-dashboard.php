@@ -51,9 +51,9 @@ class Dashboard {
 
 		wp_enqueue_script(
 			DRAGWYB_PREFIX . '-chartjs',
-			'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js',
+			esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/lib/chartjs/chart.umd.min.js' ),
 			array(),
-			'4.4.1',
+			'4.5.1',
 			true
 		);
 
@@ -86,10 +86,9 @@ class Dashboard {
 			return;
 		}
 
-		$current_page = sanitize_text_field( wp_unslash( $_GET['page'] ?? '' ) );
-		$builder_url  = admin_url( 'admin.php?page=' . DRAGWYB_PREFIX . '-form-builder' );
-		$entries_url  = admin_url( 'admin.php?page=' . DRAGWYB_PREFIX . '-entries' );
-		$logo_url     = DRAGWYB_FORM_BUILDER_URL . 'assets/img/menu-logo.svg';
+		$builder_url = admin_url( 'admin.php?page=' . DRAGWYB_PREFIX . '-form-builder' );
+		$entries_url = admin_url( 'admin.php?page=' . DRAGWYB_PREFIX . '-entries' );
+		$logo_url    = DRAGWYB_FORM_BUILDER_URL . 'assets/img/menu-logo.svg';
 		?>
 		<div class="dragwyb-dashboard-wrap">
 
@@ -369,7 +368,7 @@ class Dashboard {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$raw_chart_data = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT DATE(created_at) as date_val, COUNT(id) as total FROM {$submissions_table} WHERE created_at >= DATE_SUB(NOW(), INTERVAL %d DAY) GROUP BY DATE(created_at) ORDER BY date_val ASC",
+				"SELECT DATE(created_at) as date_val, COUNT(id) as total FROM {$submissions_table} WHERE created_at >= DATE_SUB(NOW(), INTERVAL %d DAY) GROUP BY DATE(created_at) ORDER BY date_val ASC", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$chart_days
 			),
 			ARRAY_A
@@ -390,13 +389,13 @@ class Dashboard {
 		}
 
 		for ( $t = $start_time; $t <= $end_time; $t += 86400 ) {
-			$d_key          = date( 'Y-m-d', $t );
-			$chart_labels[] = date( 'M d', $t );
+			$d_key          = gmdate( 'Y-m-d', $t );
+			$chart_labels[] = gmdate( 'M d', $t );
 			$chart_values[] = $db_map[ $d_key ] ?? 0;
 		}
 
 		// 2. Overview Stat Tiles
-		$timeframe = sanitize_text_field( $_POST['stats_timeframe'] ?? 'all' );
+		$timeframe = sanitize_text_field( wp_unslash( $_POST['stats_timeframe'] ?? 'all' ) );
 
 		// Forms count
 		$forms_obj   = wp_count_posts( Dragwyb_Post::POST_TYPE );
@@ -428,14 +427,14 @@ class Dashboard {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$unique_visitors = (int) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(id) FROM $visitors_table" . $this->get_date_where_clause( $range, 'first_seen' ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				"SELECT COUNT(id) FROM $visitors_table" . $this->get_date_where_clause( $range, 'first_seen' ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 				$days
 			)
 		);
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$total_sessions = (int) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(id) FROM $sessions_table" . $this->get_date_where_clause( $range, 'started_at' ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				"SELECT COUNT(id) FROM $sessions_table" . $this->get_date_where_clause( $range, 'started_at' ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 				$days
 			)
 		);
@@ -443,7 +442,7 @@ class Dashboard {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$total_pageviews = (int) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(id) FROM $pageviews_table" . $this->get_date_where_clause( $range, 'created_at' ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				"SELECT COUNT(id) FROM $pageviews_table" . $this->get_date_where_clause( $range, 'created_at' ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 				$days
 			)
 		);
@@ -497,10 +496,11 @@ class Dashboard {
 
 				// Form title
 				$form_post = get_post( (int) $row->form_id );
+				// translators: %d is the form id
 				$form_name = $form_post ? $form_post->post_title : sprintf( __( 'Form #%d', 'smart-form-builder-by-dragwyb' ), $row->form_id );
 
 				// Formatted date
-				$submitted_on = date( 'M d, Y h:i A', strtotime( $row->created_at ) );
+				$submitted_on = gmdate( 'M d, Y h:i A', strtotime( $row->created_at ) );
 
 				// IP Address
 				$ip_address = $extra_data['visitor_info']['ip_address'] ?? '192.168.1.1';
