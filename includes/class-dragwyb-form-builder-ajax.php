@@ -544,8 +544,9 @@ class Dragwyb_Form_Builder_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Permission denied', 'smart-form-builder-by-dragwyb' ) ) );
 		}
 
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- IDs are sanitized via array_map and absint
-		$ids = isset( $_POST['ids'] ) ? array_map( 'absint', (array) $_POST['ids'] ) : array();
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- IDs are unslashed and sanitized via absint
+		$raw_ids = isset( $_POST['ids'] ) ? wp_unslash( $_POST['ids'] ) : array();
+		$ids     = array_map( 'absint', (array) $raw_ids );
 		if ( empty( $ids ) ) {
 			wp_send_json_error( array( 'message' => __( 'No IDs provided', 'smart-form-builder-by-dragwyb' ) ) );
 		}
@@ -703,8 +704,9 @@ class Dragwyb_Form_Builder_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Permission denied', 'smart-form-builder-by-dragwyb' ) ) );
 		}
 
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- IDs are sanitized via array_map and absint
-		$ids = isset( $_POST['ids'] ) ? array_map( 'absint', (array) $_POST['ids'] ) : array();
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- IDs are unslashed and sanitized via absint
+		$raw_ids = isset( $_POST['ids'] ) ? wp_unslash( $_POST['ids'] ) : array();
+		$ids     = array_map( 'absint', (array) $raw_ids );
 		if ( empty( $ids ) ) {
 			wp_send_json_error( array( 'message' => __( 'No IDs provided', 'smart-form-builder-by-dragwyb' ) ) );
 		}
@@ -733,9 +735,10 @@ class Dragwyb_Form_Builder_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Permission denied', 'smart-form-builder-by-dragwyb' ) ) );
 		}
 
-		$type = isset( $_POST['type'] ) ? sanitize_key( wp_unslash( $_POST['type'] ) ) : 'entries';
+		$type    = isset( $_POST['type'] ) ? sanitize_key( wp_unslash( $_POST['type'] ) ) : 'entries';
+		$raw_ids = isset( $_POST['ids'] ) ? wp_unslash( $_POST['ids'] ) : array();
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized below via array_map and absint
-		$ids = isset( $_POST['ids'] ) ? array_map( 'absint', (array) $_POST['ids'] ) : array();
+		$ids = array_map( 'absint', (array) $raw_ids );
 
 		if ( ! empty( $ids ) ) {
 			// Fetch specific IDs
@@ -822,8 +825,9 @@ class Dragwyb_Form_Builder_Ajax {
 			if ( isset( $_POST['form_id'] ) ) {
 				$form_ids[] = absint( wp_unslash( $_POST['form_id'] ) );
 			} elseif ( isset( $_POST['form_ids'] ) ) {
+				$raw_form_ids = wp_unslash( $_POST['form_ids'] );
 				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized via array_map and absint
-				$form_ids = array_map( 'absint', (array) $_POST['form_ids'] );
+				$form_ids = array_map( 'absint', (array) $raw_form_ids );
 			}
 			$form_ids = array_filter( $form_ids );
 		} else {
@@ -856,13 +860,6 @@ class Dragwyb_Form_Builder_Ajax {
 			}
 
 			$sanitized_form_data = $this->sanitize_form_data( $raw_form_data, $form_id );
-
-			// Ensure fields and stored meta keys are preserved if stripped by sanitize
-			foreach ( $raw_form_data as $meta_key => $meta_val ) {
-				if ( ! isset( $sanitized_form_data[ $meta_key ] ) || ( 'fields' === $meta_key && empty( $sanitized_form_data['fields'] ) && ! empty( $meta_val ) ) ) {
-					$sanitized_form_data[ $meta_key ] = $meta_val;
-				}
-			}
 
 			$exported_forms[] = array(
 				'id'        => $form_id,
@@ -934,9 +931,12 @@ class Dragwyb_Form_Builder_Ajax {
 
 			// Sanitize with newly created form ID
 			$final_sanitized = $this->sanitize_form_data( $form_data, (int) $new_form_id );
-			$save_data       = ! empty( $final_sanitized ) ? $final_sanitized : $form_data;
+			if ( empty( $final_sanitized ) ) {
+				wp_delete_post( $new_form_id, true );
+				continue;
+			}
 
-			update_post_meta( $new_form_id, '_dragwyb_form_data', $save_data );
+			update_post_meta( $new_form_id, '_dragwyb_form_data', $final_sanitized );
 			$css_manager = CSS_Manager::instance();
 			$css_manager->clean_cache( (int) $new_form_id );
 
