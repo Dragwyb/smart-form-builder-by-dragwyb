@@ -51,7 +51,7 @@ class Error_Logs_Action extends Action_Base {
 			$handler_errors  = $form_submission->get_errors();
 			$errors_array    = array();
 			foreach ( $handler_errors->get_error_codes() as $code ) {
-				$errors_array[ $code ] = $handler_errors->get_error_message( $code );
+				$errors_array[ sanitize_text_field( $code ) ] = sanitize_text_field( wp_unslash( $handler_errors->get_error_message( $code ) ) );
 			}
 
 			$error_db = new \Dragwyb\Form_Builder\Admin\Db\Error_Log\Dragwyb_Error_Log_Db();
