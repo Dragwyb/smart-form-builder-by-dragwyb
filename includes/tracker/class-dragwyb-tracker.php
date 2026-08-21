@@ -137,7 +137,9 @@ class Dragwyb_Tracker {
 			}
 			wp_send_json_success( array( 'status' => 'ok' ) );
 		} catch ( \Exception $e ) {
-			wp_send_json_error( array( 'message' => $e->getMessage() ) );
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( 'Dragwyb tracker error: ' . $e->getMessage() );
+			wp_send_json_error( array( 'message' => __( 'Failed to record tracking data.', 'smart-form-builder-by-dragwyb' ) ) );
 		}
 	}
 
@@ -539,7 +541,8 @@ class Dragwyb_Tracker {
 			} elseif ( in_array( $clean_key, $int_keys, true ) ) {
 				$sanitized[ $clean_key ] = absint( $value );
 			} elseif ( in_array( $clean_key, array( 'visitor_uid', 'session_uid' ), true ) ) {
-				$sanitized[ $clean_key ] = preg_replace( '/[^a-zA-Z0-9_\-]/', '', (string) $value );
+				$val                     = preg_replace( '/[^a-zA-Z0-9_\-]/', '', (string) $value );
+				$sanitized[ $clean_key ] = substr( $val, 0, 64 );
 			} else {
 				$sanitized[ $clean_key ] = sanitize_text_field( (string) $value );
 			}
@@ -548,20 +551,31 @@ class Dragwyb_Tracker {
 	}
 
 	private function get_client_ip(): string {
-		$headers = array( 'HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_REAL_IP', 'REMOTE_ADDR' );
-		foreach ( $headers as $header ) {
-			if ( ! empty( $_SERVER[ $header ] ) ) {
-				$ip = explode( ',', sanitize_text_field( wp_unslash( $_SERVER[ $header ] ) ) );
-				$ip = trim( $ip[0] );
-				if ( filter_var( $ip, FILTER_VALIDATE_IP ) ) {
-					$anonymize = Settings_Manager::instance()->get_setting( 'gdpr_privacy', 'gdpr_anonymize_ip', false );
-					if ( true === $anonymize || 'yes' === $anonymize ) {
-						return self::anonymize_ip( $ip );
+		$ip = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0' ) );
+
+		$use_proxy_headers = apply_filters( 'dragwyb_trusted_proxy_headers', false );
+		if ( $use_proxy_headers ) {
+			$headers = array( 'HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_REAL_IP' );
+			foreach ( $headers as $header ) {
+				if ( ! empty( $_SERVER[ $header ] ) ) {
+					$raw_ip    = explode( ',', sanitize_text_field( wp_unslash( $_SERVER[ $header ] ) ) );
+					$candidate = trim( $raw_ip[0] );
+					if ( filter_var( $candidate, FILTER_VALIDATE_IP ) ) {
+						$ip = $candidate;
+						break;
 					}
-					return $ip;
 				}
 			}
 		}
+
+		if ( filter_var( $ip, FILTER_VALIDATE_IP ) ) {
+			$anonymize = Settings_Manager::instance()->get_setting( 'gdpr_privacy', 'gdpr_anonymize_ip', false );
+			if ( true === $anonymize || 'yes' === $anonymize ) {
+				return self::anonymize_ip( $ip );
+			}
+			return $ip;
+		}
+
 		return '0.0.0.0';
 	}
 
