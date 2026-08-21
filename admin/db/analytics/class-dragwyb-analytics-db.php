@@ -16,7 +16,9 @@ class Dragwyb_Analytics_Db {
 
 	public static function table_name( string $name ): string {
 		global $wpdb;
-		return $wpdb->prefix . 'dragwyb_' . $name;
+		$allowed = array( 'visitors', 'sessions', 'pageviews', 'events', 'journey' );
+		$clean_name = in_array( $name, $allowed, true ) ? $name : sanitize_key( $name );
+		return $wpdb->prefix . 'dragwyb_' . $clean_name;
 	}
 
 	public static function create_tables(): void {
@@ -150,6 +152,10 @@ class Dragwyb_Analytics_Db {
 	 */
 	public static function purge_old_tracking_data( int $retention_days, bool $retain_entries = true ): int {
 		if ( $retention_days <= 0 ) {
+			return 0;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) && ! ( defined( 'DOING_CRON' ) && DOING_CRON ) ) {
 			return 0;
 		}
 
