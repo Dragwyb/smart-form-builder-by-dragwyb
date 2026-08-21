@@ -558,6 +558,9 @@ class Dashboard {
 	private function extract_field_value( array $sub_data, array $keys ): string {
 		foreach ( $keys as $key ) {
 			if ( isset( $sub_data[ $key ] ) && ! empty( $sub_data[ $key ] ) ) {
+				if ( isset( $sub_data[ $key ]['type'] ) ) {
+					unset( $sub_data[ $key ]['type'] );
+				}
 				return is_array( $sub_data[ $key ] ) ? implode( ', ', $sub_data[ $key ] ) : (string) $sub_data[ $key ];
 			}
 		}
