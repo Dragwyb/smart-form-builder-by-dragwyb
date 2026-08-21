@@ -63,9 +63,9 @@ class Form_Analytics {
 			true
 		);
 
-		$days       = absint( $_GET['days'] ?? 30 );
+		$days       = isset( $_GET['days'] ) ? absint( wp_unslash( $_GET['days'] ) ) : 30;
 		$valid_tabs = array( 'traffic', 'pages', 'sources', 'devices', 'live' );
-		$tab_param  = sanitize_key( $_GET['tab'] ?? '' );
+		$tab_param  = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
 		$active_tab = in_array( $tab_param, $valid_tabs, true ) ? $tab_param : 'traffic';
 
 		wp_localize_script(
@@ -89,9 +89,9 @@ class Form_Analytics {
 			return;
 		}
 
-		$days       = absint( $_GET['days'] ?? 30 );
+		$days       = isset( $_GET['days'] ) ? absint( wp_unslash( $_GET['days'] ) ) : 30;
 		$valid_tabs = array( 'traffic', 'pages', 'sources', 'devices', 'live' );
-		$tab_param  = sanitize_key( $_GET['tab'] ?? '' );
+		$tab_param  = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
 		$active_tab = in_array( $tab_param, $valid_tabs, true ) ? $tab_param : 'traffic';
 		?>
 		<div class="dragwyb-analytics-wrap">
@@ -258,7 +258,7 @@ class Form_Analytics {
 		}
 
 		global $wpdb;
-		$days = absint( $_POST['days'] ?? 30 );
+		$days = isset( $_POST['days'] ) ? absint( wp_unslash( $_POST['days'] ) ) : 30;
 		if ( $days <= 0 ) {
 			$days = 30;
 		}
