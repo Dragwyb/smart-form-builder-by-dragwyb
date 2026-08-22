@@ -15,7 +15,6 @@ const ToolbarSettings = () => {
   const formData = useSelector(state => state.form);
   const toolbarRef = useRef(null);
   const historyTimeoutRef = useRef(null);
-  const sidebarRef = useRef(null);
   const pendingHistoryDispatchRef = useRef(null);
   const lastSettingRef = useRef(setting);
 
@@ -62,34 +61,6 @@ const ToolbarSettings = () => {
       lastSettingRef.current = setting;
     }
   }, [setting]);
-
-  useEffect(() => {
-    const $sidebar = window.jQuery(sidebarRef.current);
-    const rootElement = document.querySelector('.dragwyb-editor');
-    if ($sidebar.length) {
-      $sidebar.resizable({
-        helper: "resizable-helper",
-        minWidth: 315,
-        maxWidth: 700,
-        resize: function (event, ui) {
-          // ✅ Update CSS variable on resize
-          rootElement.style.setProperty(
-            "--panel-width",
-            ui.size.width + "px"
-          );
-        },
-        stop: function (event, ui) {
-          $sidebar[0].style = '';
-        },
-      });
-    }
-
-    return () => {
-      if ($sidebar.length && $sidebar.data("ui-resizable")) {
-        $sidebar.resizable("destroy");
-      }
-    };
-  }, []);
 
   const updateToolBar = useCallback(({ key, value, selectedToolBarId, toolbarObj }) => {
     if (!DragwybEditor.EditorToolbars || !DragwybEditor.EditorToolbars.toolbars || !DragwybEditor.EditorToolbars.toolbars[key]) {
@@ -147,7 +118,7 @@ const ToolbarSettings = () => {
   }
 
   if (setting === 'history') {
-    return <div className="dragwyb-editor__sidebar" ref={sidebarRef}>
+    return <div className="dragwyb-editor__sidebar">
       <HistoryPanel onClose={() => dispatch(updateActiveToolbar(DragwybEditor?.EditorToolbars?.Default ?? 'fields'))} />
     </div>;
   }
@@ -172,7 +143,7 @@ const ToolbarSettings = () => {
 
   const toolbarValues = toolbarRef.current.getToolbarValue();
 
-  return <div className="dragwyb-editor__sidebar" ref={sidebarRef} >
+  return <div className="dragwyb-editor__sidebar">
     {toolbarHTML && toolbarHTML}
     {setting !== 'fields' && settings && settings.controls && (
       <div className="dragwyb-editor__settings">

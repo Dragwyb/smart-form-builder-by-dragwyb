@@ -16,7 +16,6 @@ const FieldSettingsSidebar = ({ onFieldSelect }) => {
 
   const toolbarRef = useRef(null);
   const historyTimeoutRef = useRef(null);
-  const sidebarRef = useRef(null);
   const pendingHistoryDispatchRef = useRef(null);
 
   const dispatch = useDispatch();
@@ -46,43 +45,6 @@ const FieldSettingsSidebar = ({ onFieldSelect }) => {
       }
     };
   }, [selectedFieldId]);
-
-  // Resizable from Left edge (handle: 'w')
-  useEffect(() => {
-    if (!selectedField) return;
-
-    const $sidebar = window.jQuery(sidebarRef.current);
-    const rootElement = document.querySelector('.dragwyb-editor');
-    if ($sidebar.length) {
-      $sidebar.resizable({
-        handles: "w",
-        minWidth: 315,
-        maxWidth: 700,
-        resize: function (event, ui) {
-          if (rootElement) {
-            rootElement.style.setProperty(
-              "--panel-width-right",
-              ui.size.width + "px"
-            );
-          }
-          // Prevent jQuery UI from modifying left style which breaks right-side pinning
-          $sidebar.css({
-            left: "",
-            width: ui.size.width + "px"
-          });
-        },
-        stop: function (event, ui) {
-          $sidebar.css({ left: "" });
-        },
-      });
-    }
-
-    return () => {
-      if ($sidebar.length && $sidebar.data("ui-resizable")) {
-        $sidebar.resizable("destroy");
-      }
-    };
-  }, [selectedField]);
 
   const updateToolBar = useCallback(({ key, value, selectedToolBarId, toolbarObj }) => {
     if (!DragwybEditor.EditorToolbars || !DragwybEditor.EditorToolbars.toolbars || !DragwybEditor.EditorToolbars.toolbars[key]) {
@@ -199,7 +161,7 @@ const FieldSettingsSidebar = ({ onFieldSelect }) => {
   const displayLabel = selectedField?.attributes?.label || fieldTypeLabel;
 
   return (
-    <div className="dragwyb-editor__field-sidebar" ref={sidebarRef}>
+    <div className="dragwyb-editor__field-sidebar">
       <div className="dragwyb-editor__field-sidebar-header">
         <div className="dragwyb-editor__field-sidebar-title-group">
           {fieldIcon && (
