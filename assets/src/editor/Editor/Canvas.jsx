@@ -157,14 +157,23 @@ const RenderItem = React.memo(({
     wrapperClass = DragwybBuilder.Hooks.applyFilter('Dragwyb/Field/WrapperClass', wrapperClass, fieldId, field.type, field.attributes, Utils);
     wrapperClass = DragwybBuilder.Hooks.applyFilter(`Dragwyb/Field/WrapperClass/${field.type}`, wrapperClass, fieldId, field.type, field.attributes, Utils);
 
-    const isIndicatorVisible = dropInfo && (
-        (!isRootContainer && (dropInfo.fieldId === field._id || (dropInfo.targetId === field.parentId && dropInfo.index === index))) ||
-        (isRootContainer && (dropInfo.fieldId === field._id || (dropInfo.targetId === 'root' && dropInfo.index === index)))
+    const isIndicatorBefore = Boolean(
+        dropInfo && (
+            (!isRootContainer && dropInfo.targetId === field.parentId && dropInfo.index === index) ||
+            (isRootContainer && dropInfo.targetId === 'root' && dropInfo.index === index)
+        )
+    );
+
+    const isIndicatorAfter = Boolean(
+        dropInfo && (
+            (!isRootContainer && lastField && dropInfo.targetId === field.parentId && dropInfo.index === index + 1) ||
+            (isRootContainer && lastContainer && dropInfo.targetId === 'root' && dropInfo.index === index + 1)
+        )
     );
 
     return (
         <>
-            {isIndicatorVisible && (
+            {isIndicatorBefore && (
                 <div className="dragwyb-editor-indicator"></div>
             )}
             {!isDragging &&
@@ -313,6 +322,9 @@ const RenderItem = React.memo(({
                     )}
                 </div>
             }
+            {isIndicatorAfter && (
+                <div className="dragwyb-editor-indicator"></div>
+            )}
         </>
     );
 });
