@@ -1,52 +1,10 @@
 .dragwyb-analytics-wrap {
-    padding: 24px;
-    font-family: var(--dragwyb-font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-    color: hsl(var(--dragwyb-foreground, 210 15% 15%));
-}
-
-.dragwyb-admin-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-}
-
-.dragwyb-brand-header {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.dragwyb-brand-icon {
-    width: 48px;
-    height: 48px;
-    background: hsl(var(--dragwyb-primary, 340 90% 55%));
-    color: hsl(var(--dragwyb-primary-foreground, 220 20% 98%));
-    border-radius: var(--dragwyb-radius, 12px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    box-shadow: var(--dragwyb-shadow-sm);
-}
-
-.dragwyb-brand-icon img {
-    max-width: 28px;
-    max-height: 28px;
-}
-
-.dragwyb-admin-title {
-    margin: 0;
-    font-size: 24px;
-    font-weight: 800;
-    color: hsl(var(--dragwyb-foreground, 210 15% 15%));
-    letter-spacing: -0.02em;
-}
-
-.dragwyb-admin-subtitle {
-    margin: 4px 0 0 0;
-    font-size: 14px;
-    color: hsl(var(--dragwyb-muted-foreground, 210 12% 45%));
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    color: #0f172a;
+    background-color: #f8fafc;
+    margin: 15px calc(1rem  + 20px) 20px 1rem;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 .dragwyb-select-sm {
@@ -73,7 +31,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 16px;
-    margin-bottom: 24px;
+    padding: 24px 28px;
 }
 
 .dragwyb-stat-card {
@@ -107,32 +65,40 @@
 
 /* Tabs */
 .dragwyb-analytics-tabs {
+    background: #fff;
+    border-block: 1px solid #e2e8f0;
+    padding: 0 28px;
+    list-style: none;
+    margin: 0;
     display: flex;
-    gap: 8px;
-    border-bottom: 2px solid hsl(var(--dragwyb-border, 210 12% 88%));
-    margin-bottom: 24px;
+    gap: 12px;
 }
 
 .dragwyb-atab {
     background: none;
     border: none;
-    padding: 12px 20px;
+    padding: 14px 16px;
+    color: #64748b;
     font-size: 14px;
-    font-weight: 600;
-    color: hsl(var(--dragwyb-muted-foreground, 210 12% 45%));
+    font-weight: 500;
+    border-bottom: 2px solid rgba(0,0,0,0);
+    transition: all .2s ease;
+    white-space: nowrap;
     cursor: pointer;
-    border-bottom: 3px solid transparent;
-    margin-bottom: -2px;
-    transition: all 0.2s ease;
 }
 
 .dragwyb-atab:hover {
-    color: hsl(var(--dragwyb-primary, 340 90% 55%));
+    color: #0f172a !important;
 }
 
 .dragwyb-atab.active {
-    color: hsl(var(--dragwyb-primary, 340 90% 55%));
-    border-bottom-color: hsl(var(--dragwyb-primary, 340 90% 55%));
+    color: hsl(var(--dragwyb-primary)) !important;
+    font-weight: 600;
+    border-bottom-color: hsl(var(--dragwyb-primary));
+}
+
+.dragwyb-atab-content-container {
+    padding: 24px 28px;
 }
 
 .dragwyb-atab-content {

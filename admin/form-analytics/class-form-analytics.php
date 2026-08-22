@@ -94,31 +94,30 @@ class Form_Analytics {
 		$tab_param  = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$active_tab = in_array( $tab_param, $valid_tabs, true ) ? $tab_param : 'traffic';
 		?>
-		<div class="dragwyb-analytics-wrap">
-			<div class="dragwyb-admin-header">
-				<div class="dragwyb-brand-header">
-					<div class="dragwyb-brand-icon">
-						<?php
-						$logo_url  = DRAGWYB_FORM_BUILDER_URL . 'assets/img/menu-logo.svg';
-						$logo_html = '<img src="' . esc_url( $logo_url ) . '"/>';
-						echo wp_kses_post( $logo_html );
-						?>
-					</div>
-					<div>
-						<h1 class="dragwyb-admin-title"><?php esc_html_e( 'Analytics & Traffic', 'smart-form-builder-by-dragwyb' ); ?></h1>
-						<p class="dragwyb-admin-subtitle"><?php esc_html_e( 'Monitor your visitor engagement, session trends, and conversions in real-time.', 'smart-form-builder-by-dragwyb' ); ?></p>
-					</div>
+		<div class="dragwyb-dashboard-header">
+			<div class="dragwyb-db-brand">
+				<div class="dragwyb-db-logo">
+					<?php
+					$logo_url  = DRAGWYB_FORM_BUILDER_URL . 'assets/img/menu-logo.svg';
+					$logo_html = '<img src="' . esc_url( $logo_url ) . '"/>';
+					echo wp_kses_post( $logo_html );
+					?>
 				</div>
-				<div class="dragwyb-date-filter">
-					<select id="dragwyb-analytics-days" class="dragwyb-select-sm">
-						<option value="7" <?php selected( $days, 7 ); ?>><?php esc_html_e( 'Last 7 Days', 'smart-form-builder-by-dragwyb' ); ?></option>
-						<option value="14" <?php selected( $days, 14 ); ?>><?php esc_html_e( 'Last 14 Days', 'smart-form-builder-by-dragwyb' ); ?></option>
-						<option value="30" <?php selected( $days, 30 ); ?>><?php esc_html_e( 'Last 30 Days', 'smart-form-builder-by-dragwyb' ); ?></option>
-						<option value="90" <?php selected( $days, 90 ); ?>><?php esc_html_e( 'Last 90 Days', 'smart-form-builder-by-dragwyb' ); ?></option>
-					</select>
+				<div class="dragwyb-header-title-meta">
+					<h1 class="dragwyb-db-brand-name"><?php esc_html_e( 'Analytics & Traffic', 'smart-form-builder-by-dragwyb' ); ?></h1>
+					<p class="dragwyb-db-sub-title"><?php esc_html_e( 'Monitor your visitor engagement, session trends, and conversions in real-time.', 'smart-form-builder-by-dragwyb' ); ?></p>
 				</div>
 			</div>
-
+			<div class="dragwyb-date-filter">
+				<select id="dragwyb-analytics-days" class="dragwyb-select-sm">
+					<option value="7" <?php selected( $days, 7 ); ?>><?php esc_html_e( 'Last 7 Days', 'smart-form-builder-by-dragwyb' ); ?></option>
+					<option value="14" <?php selected( $days, 14 ); ?>><?php esc_html_e( 'Last 14 Days', 'smart-form-builder-by-dragwyb' ); ?></option>
+					<option value="30" <?php selected( $days, 30 ); ?>><?php esc_html_e( 'Last 30 Days', 'smart-form-builder-by-dragwyb' ); ?></option>
+					<option value="90" <?php selected( $days, 90 ); ?>><?php esc_html_e( 'Last 90 Days', 'smart-form-builder-by-dragwyb' ); ?></option>
+				</select>
+			</div>
+		</div>
+		<div class="dragwyb-analytics-wrap">
 			<!-- Quick Overview Stats -->
 			<div class="dragwyb-stats-grid">
 				<div class="dragwyb-stat-card">
@@ -156,7 +155,8 @@ class Form_Analytics {
 				<button class="dragwyb-atab <?php echo 'live' === $active_tab ? 'active' : ''; ?>" data-tab="live"><?php esc_html_e( 'Live Visitors', 'smart-form-builder-by-dragwyb' ); ?></button>
 			</div>
 
-			<!-- Tab 1: Traffic Overview -->
+			<div class="dragwyb-atab-content-container">
+				<!-- Tab 1: Traffic Overview -->
 			<div class="dragwyb-atab-content <?php echo 'traffic' === $active_tab ? 'active' : ''; ?>" id="atab-traffic">
 				<!-- Combined Overview Chart -->
 				<div class="dragwyb-card dragwyb-chart-card" style="margin-bottom:24px;">
@@ -246,6 +246,7 @@ class Form_Analytics {
 					</h3>
 					<div id="analytics-live-table"><p class="dragwyb-loading"><?php esc_html_e( 'Loading...', 'smart-form-builder-by-dragwyb' ); ?></p></div>
 				</div>
+			</div>
 			</div>
 		</div>
 		<?php
