@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Plugin Name: Smart Form Builder
- * Description: Drag and drop form builder for WordPress
- * Version: 1.2.1
+ * Plugin Name: Dragwyb Forms – Contact Forms, Conditional Form, MultiStep Form, Analytics, SMTP
+ * Description: A Contact form plugin. Create custom forms, multi-step layouts, and lead generation forms with a visual React editor, built-in SMTP, and GDPR compliance.
+ * Version: 1.3.0
  * Author: dragwyb
  * Author URI:  https://dragwyb.com/?utm_source=wpplugin&utm_medium=author_uri&utm_campaign=form_builder_demo
  * Plugin URI: https://dragwyb.com/product/form-builder/?utm_source=wpplugin&utm_medium=plugin_uri&utm_campaign=form_builder_demo
@@ -29,7 +29,7 @@ final class Dragwyb_Form_Builder {
 	/**
 	 * Plugin version
 	 */
-	const VERSION = '1.2.1';
+	const VERSION = '1.3.0';
 
 	/**
 	 * Plugin instance
