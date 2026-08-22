@@ -78,7 +78,7 @@ class Helper {
 		if ( ! wp_script_is( 'dragwyb-flatpickr', 'registered' ) ) {
 			wp_register_script(
 				'dragwyb-flatpickr',
-				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/lib/flatpickr/flatpickr.js' ),
+				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/lib/flatpickr/js/flatpickr.min.js' ),
 				array(),
 				DRAGWYB_FORM_BUILDER_VERSION,
 				true
@@ -88,7 +88,7 @@ class Helper {
 		if ( ! wp_style_is( 'dragwyb-flatpickr', 'registered' ) ) {
 			wp_register_style(
 				'dragwyb-flatpickr',
-				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/css/flatpickr/flatpickr.min.css' ),
+				esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/lib/flatpickr/css/flatpickr.min.css' ),
 				array(),
 				DRAGWYB_FORM_BUILDER_VERSION,
 				'all'
