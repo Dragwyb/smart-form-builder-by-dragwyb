@@ -6,7 +6,7 @@
  * Version: 1.3.0
  * Author: dragwyb
  * Author URI:  https://dragwyb.com/?utm_source=wpplugin&utm_medium=author_uri&utm_campaign=form_builder_demo
- * Plugin URI: https://dragwyb.com/product/form-builder/?utm_source=wpplugin&utm_medium=plugin_uri&utm_campaign=form_builder_demo
+ * Plugin URI: https://dragwyb.com/product/form/?utm_source=wpplugin&utm_medium=plugin_uri&utm_campaign=form_builder_demo
  * Text Domain: smart-form-builder-by-dragwyb
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html

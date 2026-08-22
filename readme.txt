@@ -1,7 +1,7 @@
 === Dragwyb Forms – Contact Forms, Conditional Form, MultiStep Form, Analytics, SMTP ===
 Contributors: dragwyb  
 Tags: contact form, forms, custom form, smtp, analytics
-Plugin URI: https://dragwyb.com/product/form-builder/?utm_source=wpplugin&utm_medium=plugin_uri&utm_campaign=form_builder_demo
+Plugin URI: https://dragwyb.com/product/form/?utm_source=wpplugin&utm_medium=plugin_uri&utm_campaign=form_builder_demo
 Author URI: https://dragwyb.com/?utm_source=wpplugin&utm_medium=author_uri&utm_campaign=form_builder_demo
 Requires at least: 5.9
 Tested up to: 7.1 
@@ -18,7 +18,7 @@ Welcome to **Dragwyb Forms**—the fastest, most intuitive **WordPress contact f
 
 Whether you are capturing leads, collecting user surveys, or designing inquiry forms for Gutenberg and Elementor, Dragwyb Forms provides enterprise-level features with absolute ease of use. 
 
-*   **[Live Demo](https://dragwyb.com/demo/form-builder/?utm_source=wpplugin&utm_medium=readme&utm_campaign=dragwyb_form)** — Test the fastest WordPress forms today!
+*   **[Live Demo](https://dragwyb.com/demo/form/?utm_source=wpplugin&utm_medium=readme&utm_campaign=dragwyb_form)** — Test the fastest WordPress forms today!
 
 ### ⚡ Zero Database Bloat (A Faster WordPress)
 Traditional form plugins choke your database by creating dozens of `wp_postmeta` rows for a single form submission. Dragwyb Forms eliminates this performance bottleneck. We use an optimized **custom database table** (`dragwyb_submissions`) with structured JSON payloads, guaranteeing your website stays lightning-fast even with tens of thousands of entries.
@@ -60,7 +60,7 @@ Construct highly optimized forms using a comprehensive suite of fields:
 
 *   **Input Masking (New!):** Enforce strict data formatting for zip codes, phone numbers, and custom ID formats to ensure pristine data collection.
 *   **Phone Field:** Features country code.
-*   **Advanced Date & Time:** Powered by Flatpickr for flawless calendar UI.
+*   **Advanced Date & Time:** Powered by Flatpickr for flawless calendar UI, Captcha.
 *   **Standard Fields:** Text, Email, WYSIWYG, Number, Dropdowns, Checkboxes, Radio Buttons, File Uploads, Range Sliders, GDPR, Hidden Fields, Custom HTML, and more.
 
 ## 👉 Check out our other plugin:
