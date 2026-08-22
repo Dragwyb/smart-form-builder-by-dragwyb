@@ -1,7 +1,10 @@
 /* Smart Form Builder Settings Styles */
+body.smart-forms_page_dragwyb-settings .dragwyb-dashboard-header {
+    display: none;
+}
 
 .dragwyb-settings-dashboard {
-    margin: 20px auto;
+    margin: 15px calc(1rem + 20px) 20px 1rem;
     max-width: 1380px;
     background: #f8fafc;
     border-radius: 12px;
@@ -11,85 +14,6 @@
 
     * {
         box-sizing: border-box;
-    }
-
-    /* 1. Header Bar */
-    .dragwyb-settings-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px 28px;
-        background: #ffffff;
-        border-bottom: 1px solid #e2e8f0;
-
-        .dragwyb-header-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-
-            .dragwyb-app-badge-icon {
-                width: 44px;
-                height: 44px;
-                background: hsl(var(--dragwyb-primary)/0.1);
-                color: hsl(var(--dragwyb-primary));
-                border-radius: 10px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 22px;
-                flex-shrink: 0;
-            }
-
-            .dragwyb-header-title-meta {
-                h1 {
-                    margin: 0;
-                    font-size: 22px;
-                    font-weight: 700;
-                    color: #0f172a;
-                    line-height: 1.2;
-                }
-
-                .dragwyb-header-subtitle {
-                    margin: 4px 0 0 0;
-                    font-size: 13px;
-                    color: #64748b;
-                }
-            }
-        }
-
-        .dragwyb-header-right {
-            .dragwyb-btn-save-settings {
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                background: hsl(var(--dragwyb-primary));
-                color: #ffffff;
-                border: none;
-                padding: 10px 22px;
-                border-radius: 8px;
-                font-size: 14px;
-                font-weight: 600;
-                cursor: pointer;
-                transition: all 0.2s ease;
-                box-shadow: 0 2px 8px rgba(230, 0, 92, 0.25);
-
-                &:hover {
-                    background: #c2004d;
-                    transform: translateY(-1px);
-                    box-shadow: 0 4px 12px rgba(230, 0, 92, 0.35);
-                }
-
-                &:disabled {
-                    opacity: 0.7;
-                    cursor: not-allowed;
-                    transform: none;
-                }
-
-                .dragwyb-btn-icon {
-                    font-size: 15px;
-                }
-            }
-        }
     }
 
     /* 2. Horizontal Navigation Bar */
@@ -118,6 +42,7 @@
                 border-bottom: 2px solid transparent;
                 transition: all 0.2s ease;
                 white-space: nowrap;
+                margin: 0;
 
                 .dragwyb-tab-icon {
                     font-size: 16px;
@@ -157,10 +82,10 @@
 
             .dragwyb-settings-main-card {
                 background: #ffffff;
-                border: 1px solid #e2e8f0;
-                border-radius: 12px;
-                padding: 24px 28px;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+                border-radius: 14px;
+                border: 1px solid #f1f5f9;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.02);
+                padding: 20px 24px;
 
                 .dragwyb-settings-section {
                     width: 100%;

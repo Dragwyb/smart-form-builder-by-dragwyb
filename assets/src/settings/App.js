@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import TabNavigation from './components/TabNavigation';
 import TabContent from './components/TabContent';
 import SidebarDetails from './components/SidebarDetails';
@@ -20,10 +20,14 @@ const App = () => {
     };
 
     const [settings, setSettings] = useState(null);
+    const settingsRef = useRef(settings);
     const [isLoading, setIsLoading] = useState(true);
-    const [isSaving, setIsSaving] = useState(false);
     const [activeTab, setActiveTabState] = useState(getInitialTab);
     const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+
+    useEffect(() => {
+        settingsRef.current = settings;
+    }, [settings]);
 
     const handleTabChange = (newTab) => {
         if (!validTabs.includes(newTab)) return;
@@ -32,6 +36,14 @@ const App = () => {
         url.searchParams.set('tab', newTab);
         window.history.pushState({}, '', url.toString());
     };
+
+    const handleSaveClick = (e) => {
+        const btnWrapper = e.target.classList.contains('dragwyb-btn-primary-add') ? e.target : e.target.closest('.dragwyb-btn-primary-add');
+
+        if (btnWrapper) {
+            saveSettings(btnWrapper.querySelector('span'), settingsRef.current);
+        }
+    }
 
     useEffect(() => {
         fetchSettings();
@@ -44,8 +56,18 @@ const App = () => {
             }
         };
 
+        const saveBtn = document.querySelector('.dragwyb-db-header-actions .dragwyb-btn-primary-add');
+        if (saveBtn) {
+            saveBtn.addEventListener('click', handleSaveClick);
+        }
+
         window.addEventListener('popstate', handlePopState);
-        return () => window.removeEventListener('popstate', handlePopState);
+        return () => {
+            window.removeEventListener('popstate', handlePopState);
+            if (saveBtn) {
+                saveBtn.removeEventListener('click', handleSaveClick);
+            }
+        };
     }, []);
 
     const fetchSettings = async () => {
@@ -66,8 +88,9 @@ const App = () => {
         }
     };
 
-    const saveSettings = async () => {
-        setIsSaving(true);
+    const saveSettings = async (ele, settings) => {
+        if (!ele) return;
+        ele.innerText = 'Saving...';
         try {
             const response = await fetch(restUrl, {
                 method: 'POST',
@@ -85,10 +108,11 @@ const App = () => {
             } else {
                 showToast(result.message || 'Failed to save settings', 'error');
             }
+            ele.innerText = 'Save Settings';
         } catch (error) {
             showToast('An error occurred while saving', 'error');
         } finally {
-            setIsSaving(false);
+            ele.innerText = 'Save Settings';
         }
     };
 
@@ -120,30 +144,6 @@ const App = () => {
 
     return (
         <div className="dragwyb-settings-dashboard">
-            {/* Main Header */}
-            <div className="dragwyb-settings-header">
-                <div className="dragwyb-header-left">
-                    <div className="dragwyb-app-badge-icon">
-                        <FaWpforms />
-                    </div>
-                    <div className="dragwyb-header-title-meta">
-                        <h1>Smart Form Builder Settings</h1>
-                        <p className="dragwyb-header-subtitle">Manage all settings and preferences for your forms.</p>
-                    </div>
-                </div>
-
-                <div className="dragwyb-header-right">
-                    <button
-                        className="dragwyb-btn-save-settings"
-                        onClick={saveSettings}
-                        disabled={isSaving}
-                    >
-                        <FaSave className="dragwyb-btn-icon" />
-                        <span>{isSaving ? 'Saving...' : 'Save Settings'}</span>
-                    </button>
-                </div>
-            </div>
-
             {/* Horizontal Tabs Bar */}
             <TabNavigation activeTab={activeTab} setActiveTab={handleTabChange} />
 

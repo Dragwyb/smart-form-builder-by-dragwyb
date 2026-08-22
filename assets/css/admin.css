@@ -3,7 +3,7 @@ li#toplevel_page_dragwyb-form-overview .wp-menu-image img {
 }
 
 
-body:where(.toplevel_page_dragwyb-dashboard,.smart-forms_page_dragwyb-form-overview) .notice{
+body:where(.toplevel_page_dragwyb-dashboard,.smart-forms_page_dragwyb-form-overview,.smart-forms_page_dragwyb-form-analytics,.smart-forms_page_dragwyb-settings) .notice{
 	display: none;
 }
 
@@ -84,12 +84,19 @@ body:where(.toplevel_page_dragwyb-dashboard,.smart-forms_page_dragwyb-form-overv
 	text-decoration: none !important;
 	transition: all 0.2s ease;
 	box-shadow: 0 2px 4px rgba(225, 29, 72, 0.2);
+    border-width: 0px;
+    cursor: pointer;
 }
 
 .dragwyb-btn-primary-add:hover {
 	background-color: #be123c;
 	box-shadow: 0 4px 8px rgba(225, 29, 72, 0.3);
 	transform: translateY(-1px);
+}
+
+.dragwyb-btn-primary-add svg{
+    width: 18px;
+    height: 18px;
 }
 
 /* Table Section Container Card */
