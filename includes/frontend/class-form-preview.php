@@ -83,13 +83,14 @@ class Form_Preview {
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_editor_preview_styles' ), 999999 );
 
 			// Setup default heartbeat options
-			// add_filter(
-			// 'heartbeat_settings',
-			// function ( $settings ) {
-			// $settings['interval'] = 15;
-			// return $settings;
-			// }
-			// );
+			add_filter(
+				'heartbeat_settings',
+				function ( $settings ) {
+					$settings['interval'] = 15;
+					return $settings;
+				}
+			);
+
 			do_action( 'Dragwyb/Editor/Preview/Init' );
 			$frontend_render      = Frontend_Render::instance();
 			self::$form_id        = $form_id;
