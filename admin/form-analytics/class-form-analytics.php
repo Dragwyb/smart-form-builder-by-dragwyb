@@ -117,35 +117,36 @@ class Form_Analytics {
 				</select>
 			</div>
 		</div>
-		<div class="dragwyb-analytics-wrap">
-			<!-- Quick Overview Stats -->
-			<div class="dragwyb-stats-grid">
-				<div class="dragwyb-stat-card">
-					<div class="dragwyb-stat-label"><?php esc_html_e( 'Form Submissions', 'smart-form-builder-by-dragwyb' ); ?></div>
-					<div class="dragwyb-stat-value" id="stat-submissions">-</div>
-				</div>
-				<div class="dragwyb-stat-card">
-					<div class="dragwyb-stat-label"><?php esc_html_e( 'Unique Visitors', 'smart-form-builder-by-dragwyb' ); ?></div>
-					<div class="dragwyb-stat-value" id="stat-visitors">-</div>
-				</div>
-				<div class="dragwyb-stat-card">
-					<div class="dragwyb-stat-label"><?php esc_html_e( 'Total Sessions', 'smart-form-builder-by-dragwyb' ); ?></div>
-					<div class="dragwyb-stat-value" id="stat-sessions">-</div>
-				</div>
-				<div class="dragwyb-stat-card">
-					<div class="dragwyb-stat-label"><?php esc_html_e( 'Total Pageviews', 'smart-form-builder-by-dragwyb' ); ?></div>
-					<div class="dragwyb-stat-value" id="stat-pageviews">-</div>
-				</div>
-				<div class="dragwyb-stat-card">
-					<div class="dragwyb-stat-label"><?php esc_html_e( 'Avg Session Duration', 'smart-form-builder-by-dragwyb' ); ?></div>
-					<div class="dragwyb-stat-value" id="stat-duration">-</div>
-				</div>
-				<div class="dragwyb-stat-card">
-					<div class="dragwyb-stat-label"><?php esc_html_e( 'Bounce Rate', 'smart-form-builder-by-dragwyb' ); ?></div>
-					<div class="dragwyb-stat-value" id="stat-bounce">-</div>
-				</div>
-			</div>
 
+		<!-- Quick Overview Stats -->
+		<div class="dragwyb-stats-grid">
+			<div class="dragwyb-stat-card">
+				<div class="dragwyb-stat-label"><?php esc_html_e( 'Form Submissions', 'smart-form-builder-by-dragwyb' ); ?></div>
+				<div class="dragwyb-stat-value" id="stat-submissions">-</div>
+			</div>
+			<div class="dragwyb-stat-card">
+				<div class="dragwyb-stat-label"><?php esc_html_e( 'Unique Visitors', 'smart-form-builder-by-dragwyb' ); ?></div>
+				<div class="dragwyb-stat-value" id="stat-visitors">-</div>
+			</div>
+			<div class="dragwyb-stat-card">
+				<div class="dragwyb-stat-label"><?php esc_html_e( 'Total Sessions', 'smart-form-builder-by-dragwyb' ); ?></div>
+				<div class="dragwyb-stat-value" id="stat-sessions">-</div>
+			</div>
+			<div class="dragwyb-stat-card">
+				<div class="dragwyb-stat-label"><?php esc_html_e( 'Total Pageviews', 'smart-form-builder-by-dragwyb' ); ?></div>
+				<div class="dragwyb-stat-value" id="stat-pageviews">-</div>
+			</div>
+			<div class="dragwyb-stat-card">
+				<div class="dragwyb-stat-label"><?php esc_html_e( 'Avg Session Duration', 'smart-form-builder-by-dragwyb' ); ?></div>
+				<div class="dragwyb-stat-value" id="stat-duration">-</div>
+			</div>
+			<div class="dragwyb-stat-card">
+				<div class="dragwyb-stat-label"><?php esc_html_e( 'Bounce Rate', 'smart-form-builder-by-dragwyb' ); ?></div>
+				<div class="dragwyb-stat-value" id="stat-bounce">-</div>
+			</div>
+		</div>
+
+		<div class="dragwyb-analytics-wrap">
 			<!-- Analytics Tabs -->
 			<div class="dragwyb-analytics-tabs">
 				<button class="dragwyb-atab <?php echo 'traffic' === $active_tab ? 'active' : ''; ?>" data-tab="traffic"><?php esc_html_e( 'Traffic Overview', 'smart-form-builder-by-dragwyb' ); ?></button>

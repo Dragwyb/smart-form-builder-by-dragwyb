@@ -31,13 +31,13 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 16px;
-    padding: 24px 28px;
+    padding: 1rem calc(1rem + 20px) 1rem 1rem;
 }
 
 .dragwyb-stat-card {
-    background: hsl(var(--dragwyb-card, 0 0% 100%));
+    background: #fff;
     border-radius: var(--dragwyb-radius, 12px);
-    padding: 20px;
+    padding: 12px;
     border: 1px solid hsl(var(--dragwyb-card-border, 210 12% 92%));
     box-shadow: var(--dragwyb-shadow-sm);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -50,7 +50,7 @@
 
 .dragwyb-stat-label {
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 500;
     color: hsl(var(--dragwyb-muted-foreground, 210 12% 45%));
     margin-bottom: 8px;
     text-transform: uppercase;
@@ -58,15 +58,15 @@
 }
 
 .dragwyb-stat-value {
-    font-size: 26px;
-    font-weight: 800;
+    font-size: 20px;
+    font-weight: 700;
     color: hsl(var(--dragwyb-foreground, 210 15% 15%));
 }
 
 /* Tabs */
 .dragwyb-analytics-tabs {
     background: #fff;
-    border-block: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
     padding: 0 28px;
     list-style: none;
     margin: 0;
