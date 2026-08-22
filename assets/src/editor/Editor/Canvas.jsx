@@ -50,20 +50,22 @@ const RenderItem = React.memo(({
     const isRootContainer = field?.is_root_container || false;
     const childrens = field?.children;
 
-    const isDroppableEnabled = Boolean(field && isRootContainer);
+    const isDroppableEnabled = Boolean(field);
     const { setNodeRef: dropRef } = useDroppable({
         id: field ? `canvas-drop-field-${field._id}` : `canvas-drop-field-disabled-${fieldId}`,
         data: {
             canvasDrop: true,
-            currentId: isRootContainer ? 'root' : fieldId,
+            currentId: isRootContainer ? 'root' : (field.parentId || 'root'),
+            fieldId: field?._id,
             index: index,
+            isChild: !isRootContainer,
+            isRootContainer: isRootContainer,
         },
         disabled: !isDroppableEnabled,
     });
 
     const isDraggableEnabled = Boolean(
         field &&
-        (allowedChildren === true || isRootContainer === true) &&
         isButtonContainer === false
     );
 
@@ -78,6 +80,10 @@ const RenderItem = React.memo(({
             canvasDrag: true,
             currentId: fieldId,
             index: index,
+            parentId: isRootContainer ? 'root' : (field.parentId || 'root'),
+            isRootContainer: isRootContainer,
+            type: field?.type,
+            attributes: field?.attributes,
         },
         disabled: !isDraggableEnabled,
     });
@@ -105,6 +111,10 @@ const RenderItem = React.memo(({
             return;
         }
 
+        if (e && e.stopPropagation) {
+            e.stopPropagation();
+        }
+
         onFieldSelect({ id });
     }, [field?._id, isRootContainer, allowedChildren, onFieldSelect]);
 
@@ -112,9 +122,12 @@ const RenderItem = React.memo(({
         return null;
     }
 
+    const selectedSettingId = useSelector((state) => state.selectedSettingId);
+    const isSelected = selectedSettingId === field._id;
+
     let wrapperClass = [];
     if (field.type !== 'row') {
-        wrapperClass = ['dragwyb-field-wrapper', `dragwyb-${field.type}-field`];
+        wrapperClass = ['dragwyb-field-wrapper', `dragwyb-${field.type}-field`, 'dragwyb-has-actions'];
         if (lastField) {
             wrapperClass.push('dragwyb-last-field');
         }
@@ -133,6 +146,10 @@ const RenderItem = React.memo(({
         id = `dragwyb-${field.type}-${field._id}`;
     }
 
+    if (isSelected) {
+        wrapperClass.push('selected');
+    }
+
     if (['button', 'file', 'radio', 'checkbox', 'range', 'gdpr'].includes(field.type)) {
         wrapperClass.push("dragwyb-no-float");
     }
@@ -140,9 +157,14 @@ const RenderItem = React.memo(({
     wrapperClass = DragwybBuilder.Hooks.applyFilter('Dragwyb/Field/WrapperClass', wrapperClass, fieldId, field.type, field.attributes, Utils);
     wrapperClass = DragwybBuilder.Hooks.applyFilter(`Dragwyb/Field/WrapperClass/${field.type}`, wrapperClass, fieldId, field.type, field.attributes, Utils);
 
+    const isIndicatorVisible = dropInfo && (
+        (!isRootContainer && (dropInfo.fieldId === field._id || (dropInfo.targetId === field.parentId && dropInfo.index === index))) ||
+        (isRootContainer && (dropInfo.fieldId === field._id || (dropInfo.targetId === 'root' && dropInfo.index === index)))
+    );
+
     return (
         <>
-            {dropInfo && dropInfo.index === index && (dropInfo.targetId === fieldId || (isRootContainer && dropInfo.targetId === 'root')) && (
+            {isIndicatorVisible && (
                 <div className="dragwyb-editor-indicator"></div>
             )}
             {!isDragging &&
@@ -150,8 +172,6 @@ const RenderItem = React.memo(({
                     ref={setNodeRef}
                     className={wrapperClass.join(' ')}
                     onClick={onFieldSelectHandler}
-                    {...listeners}
-                    {...attributes}
                     id={id}
                 >
                     <Fields.Preview fields={[field]} values={values} errors={errors} childrens={childrens} Utils={Utils} perviewIFrame={perviewIFrame}>
@@ -171,40 +191,119 @@ const RenderItem = React.memo(({
                                             Utils={Utils}
                                             perviewIFrame={perviewIFrame}
                                             lastField={childrens.length === childIndex + 1}
+                                            store={store}
                                         />
                                     }
                                 </React.Fragment>
                             ))
                         )}
                     </Fields.Preview>
-                    {isRootContainer && false === dropInfo && (
+                    {!isRootContainer && false === dropInfo && (
                         <div className="field-actions">
+                            {field.parentId && (
+                                <button
+                                    type="button"
+                                    title={__("Select Row", "smart-form-builder-by-dragwyb")}
+                                    className="select-row"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onFieldSelect({ id: field.parentId });
+                                    }}
+                                >
+                                    <span className="dashicons dashicons-grid-view"></span>
+                                </button>
+                            )}
                             <button
+                                type="button"
+                                title={__("Drag", "smart-form-builder-by-dragwyb")}
+                                className="drag-handle"
+                                {...listeners}
+                                {...attributes}
+                            >
+                                <span className="dashicons dashicons-move"></span>
+                            </button>
+                            <button
+                                type="button"
                                 title={__("Duplicate", "smart-form-builder-by-dragwyb")}
                                 className="duplicate"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    onDuplicate(field);
+                                    onDuplicate(field, index);
                                 }}
                             >
                                 <span className="dashicons dashicons-admin-page"></span>
                             </button>
                             <button
-                                title={sprintf(__('Edit %s', 'smart-form-builder-by-dragwyb'), fieldSettings.label)}
+                                type="button"
+                                title={sprintf(__('Edit %s', 'smart-form-builder-by-dragwyb'), fieldSettings?.label || field.type)}
                                 className="settings"
-                                onClick={onRootContainerSelect}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onFieldSelect({ id: field._id });
+                                }}
                             >
-                                <span className="dashicons dashicons-menu"></span>
+                                <span className="dashicons dashicons-edit"></span>
                             </button>
                             <button
-                                title={isButtonContainer ? __("Cannot delete button", "smart-form-builder-by-dragwyb") : __("Delete", "smart-form-builder-by-dragwyb")}
+                                type="button"
+                                title={field.type === 'button' ? __("Cannot delete button", "smart-form-builder-by-dragwyb") : __("Delete", "smart-form-builder-by-dragwyb")}
+                                className={`delete ${field.type === 'button' ? 'disabled' : ''}`}
+                                onClick={(e) => {
+                                    if (field.type === 'button') {
+                                        return;
+                                    }
+                                    e.stopPropagation();
+                                    onDelete(field, fieldSettings?.label || field.type);
+                                }}
+                                disabled={field.type === 'button'}
+                            >
+                                <span className="dashicons dashicons-trash"></span>
+                            </button>
+                        </div>
+                    )}
+                    {isRootContainer && false === dropInfo && (
+                        <div className="field-actions">
+                            <button
+                                type="button"
+                                title={__("Drag Row", "smart-form-builder-by-dragwyb")}
+                                className="drag-handle"
+                                {...listeners}
+                                {...attributes}
+                            >
+                                <span className="dashicons dashicons-move"></span>
+                            </button>
+                            <button
+                                type="button"
+                                title={__("Duplicate Row", "smart-form-builder-by-dragwyb")}
+                                className="duplicate"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onDuplicate(field, index);
+                                }}
+                            >
+                                <span className="dashicons dashicons-admin-page"></span>
+                            </button>
+                            <button
+                                type="button"
+                                title={sprintf(__('Edit %s', 'smart-form-builder-by-dragwyb'), fieldSettings?.label || field.type)}
+                                className="settings"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onRootContainerSelect();
+                                }}
+                            >
+                                <span className="dashicons dashicons-edit"></span>
+                            </button>
+                            <button
+                                type="button"
+                                title={isButtonContainer ? __("Cannot delete button row", "smart-form-builder-by-dragwyb") : __("Delete Row", "smart-form-builder-by-dragwyb")}
                                 className={`delete ${isButtonContainer ? 'disabled' : ''}`}
                                 onClick={(e) => {
                                     if (isButtonContainer) {
                                         return;
                                     }
                                     e.stopPropagation();
-                                    onDelete(field, fieldSettings.label);
+                                    onDelete(field, fieldSettings?.label || field.type);
                                 }}
                                 disabled={isButtonContainer}
                             >
@@ -366,7 +465,7 @@ const Canvas = ({
                         className="dragwyb-form-wrapper"
                         id={`dragwyb-form-wrapper-${DragwybEditor.formId}`}
                     >
-                        <form className="dragwyb-form" action="#" onSubmit={(e) => { e.preventDefault(); return false; }}>
+                        <form className="dragwyb-form" action="#" autoComplete="off" onSubmit={(e) => { e.preventDefault(); return false; }}>
                             {rootContainers && rootContainers.length > 0 && (
                                 <>
                                     {rootContainers.map((fieldKey, index) => (

@@ -194,7 +194,7 @@ const Editor = () => {
             return;
         }
 
-        if (over.data.current.rowDropColumn) {
+        if (over.data.current?.rowDropColumn) {
             setDropInfo(prev => prev !== false ? false : prev);
             return;
         }
@@ -208,11 +208,11 @@ const Editor = () => {
             return;
         }
 
-        let newDropInfo = over.data.current.currentId;
+        let newDropInfo = over.data.current?.currentId;
 
         // If simply hovering a container/wrapper, just set index
-        if (over.data.current.canvasFieldDrop || over.data.current.addInitialField) {
-            const dropObj = { targetId: newDropInfo, index: 0 };
+        if (over.data.current?.canvasFieldDrop || over.data.current?.addInitialField) {
+            const dropObj = { targetId: newDropInfo || 'root', index: 0 };
             setDropInfo(prev => {
                 if (!prev || prev.targetId !== dropObj.targetId || prev.index !== dropObj.index) {
                     return dropObj;
@@ -223,9 +223,8 @@ const Editor = () => {
         }
 
         // 1. Get the live, normalized coordinates of both items
-        const activeRect = active.rect.current.translated;
+        const activeRect = active.rect.current?.translated;
         const overRect = over.rect;
-
 
         if (!activeRect || !overRect) return;
 
@@ -235,18 +234,25 @@ const Editor = () => {
         // 3. Calculate the 50% middle line of the hovered item
         const overMiddleY = overRect.top + (overRect.height / 2);
 
-        let targetIndex = over.data.current.index;
-        let targetId = over.data.current.currentId;
+        let targetIndex = over.data.current?.index ?? 0;
+        let targetId = over.data.current?.currentId || 'root';
+        let fieldId = over.data.current?.fieldId;
 
         // 4. Check if the center of the dragged item crosses the 50% mark
         if (activeMiddleY > overMiddleY) {
             targetIndex = targetIndex + 1;
         }
 
-        const dropObj = { targetId, index: targetIndex };
+        const dropObj = {
+            targetId,
+            fieldId,
+            index: targetIndex,
+            isChild: over.data.current?.isChild,
+            isRoot: over.data.current?.isRootContainer
+        };
 
         setDropInfo(prev => {
-            if (!prev || prev.targetId !== dropObj.targetId || prev.index !== dropObj.index) {
+            if (!prev || prev.targetId !== dropObj.targetId || prev.fieldId !== dropObj.fieldId || prev.index !== dropObj.index) {
                 return dropObj;
             }
             return prev;
@@ -274,12 +280,12 @@ const Editor = () => {
             currentDropInfo = {
                 targetId,
                 index: targetColIndex
-            }
+            };
         }
 
-        const finalId = currentDropInfo !== false && currentDropInfo.index !== undefined
+        const finalId = currentDropInfo !== false && currentDropInfo?.index !== undefined
             ? currentDropInfo
-            : { targetId: over.data.current.currentId, index: over.data.current.index };
+            : { targetId: over.data.current?.currentId || 'root', index: over.data.current?.index ?? 0 };
 
         let finalIndex = finalId.index;
         if (isFromSidebar) {
@@ -304,7 +310,7 @@ const Editor = () => {
                 type,
                 Utils,
                 index: finalIndex,
-            }
+            };
 
             if (currentDropInfo && currentDropInfo.targetId && currentDropInfo.targetId !== 'root') {
                 addFieldData.parentContainer = {
@@ -316,41 +322,39 @@ const Editor = () => {
             const newField = Utils.AddField(addFieldData);
             setSelectedSettingId({ id: newField._id });
         } else if (isCanvasDrag) {
-            if (active?.data?.current?.currentId && currentDropInfo && currentDropInfo.targetId && currentDropInfo.index >= 0) {
-                const currentIndex = active?.data?.current?.index;
-                let updatedIndex = currentDropInfo.index;
+            const currentId = active?.data?.current?.currentId;
+            const sourceParentId = active?.data?.current?.parentId || 'root';
+            const sourceIndex = active?.data?.current?.index;
+            const targetId = currentDropInfo?.targetId || over.data.current?.currentId || 'root';
+            let updatedIndex = currentDropInfo?.index !== undefined ? currentDropInfo.index : over.data.current?.index;
 
-                if (updatedIndex > currentIndex) {
+            if (currentId && targetId && updatedIndex !== undefined && updatedIndex >= 0) {
+                if (sourceParentId === targetId && updatedIndex > sourceIndex) {
                     updatedIndex = updatedIndex - 1;
                 }
 
-                if (updatedIndex === currentIndex) {
+                if (sourceParentId === targetId && updatedIndex === sourceIndex) {
                     return;
                 }
 
-                if (updatedIndex >= 0) {
-                    dispatch(updateFieldOrder(active?.data?.current?.currentId, currentDropInfo.targetId, updatedIndex));
+                dispatch(updateFieldOrder(currentId, targetId, updatedIndex, sourceParentId));
 
-                    let fieldLabel = '';
-
-                    if (active?.data?.current?.attributes) {
-                        fieldLabel = active?.data?.current?.attributes?.label;
-                    }
-
-                    if (typeof fieldLabel !== 'string' || '' === fieldLabel) {
-                        fieldLabel = active?.data?.current?.currentId;
-                    }
-
-                    const historyLabel = `Move Field (${fieldLabel})`;
-
-                    dispatch({
-                        type: 'ADD_HISTORY_SNAPSHOT',
-                        payload: { label: historyLabel }
-                    });
+                let fieldLabel = '';
+                if (active?.data?.current?.attributes) {
+                    fieldLabel = active?.data?.current?.attributes?.label;
                 }
+                if (typeof fieldLabel !== 'string' || '' === fieldLabel) {
+                    fieldLabel = currentId;
+                }
+
+                const historyLabel = `Move Field (${fieldLabel})`;
+                dispatch({
+                    type: 'ADD_HISTORY_SNAPSHOT',
+                    payload: { label: historyLabel }
+                });
             }
         }
-    }, [dropInfo, Utils, setSelectedSettingId, dispatch]);
+    }, [dropInfo, Utils, setSelectedSettingId, dispatch, store]);
 
     const handleDragCancel = useCallback(() => setActiveDrag(null), []);
 

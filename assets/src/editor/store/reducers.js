@@ -369,11 +369,15 @@ export default function reducer(state, action) {
         }
 
         case UPDATE_FIELD_ORDER: {
-            let { currentId, targetId, index } = action.payload;
+            let { currentId, targetId, index, sourceParentId, newContainerId } = action.payload;
             const fields = { ...state.form.fields };
+            let rootContainers = [...state.form.rootContainers];
+            const currentField = fields[currentId];
 
-            if (targetId === 'root') {
-                const rootContainers = [...state.form.rootContainers];
+            if (!currentField) return state;
+
+            // Case 1: Moving a ROOT container among rootContainers
+            if (currentField.is_root_container && targetId === 'root') {
                 const currentIndex = rootContainers.indexOf(currentId);
 
                 if (currentIndex !== -1) {
@@ -404,27 +408,109 @@ export default function reducer(state, action) {
                 };
             }
 
-            if (fields[targetId]) {
-                const children = [...(fields[targetId].children || [])];
-                const currentIndex = children.indexOf(currentId);
+            // Case 2: Moving a CHILD field to 'root' (outside any container)
+            // -> Auto-insert a new root container (row) and place the dragged field inside it
+            if (!currentField.is_root_container && targetId === 'root') {
+                const oldParentId = currentField.parentId || sourceParentId;
+                const newRowId = newContainerId || ('row_' + (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)));
 
-                if (currentIndex !== -1) {
-                    children.splice(currentIndex, 1);
+                // Remove from old parent container
+                if (oldParentId && fields[oldParentId] && fields[oldParentId].children) {
+                    const filteredChildren = fields[oldParentId].children.filter(id => id !== currentId);
+                    fields[oldParentId] = {
+                        ...fields[oldParentId],
+                        children: filteredChildren
+                    };
+
+                    // If old parent container is now empty and was a root container, remove it
+                    if (filteredChildren.length === 0 && fields[oldParentId].is_root_container) {
+                        rootContainers = rootContainers.filter(id => id !== oldParentId);
+                        delete fields[oldParentId];
+                    }
                 }
 
-                children.splice(index, 0, currentId);
+                // Create new root container (row)
+                const newRowField = {
+                    _id: newRowId,
+                    type: 'row',
+                    is_root_container: true,
+                    attributes: { columns: 1 },
+                    children: [currentId]
+                };
+                fields[newRowId] = newRowField;
+
+                // Update current field parentId
+                fields[currentId] = {
+                    ...currentField,
+                    parentId: newRowId
+                };
+
+                // Place newRowId into rootContainers at target index
+                if (rootContainers.length > 0) {
+                    const lastRootId = rootContainers[rootContainers.length - 1];
+                    const isLastSubmitButton = isSubmitButtonContainer(lastRootId, fields);
+                    if (isLastSubmitButton && index >= rootContainers.length) {
+                        index = rootContainers.length - 1;
+                    }
+                }
+
+                rootContainers.splice(index, 0, newRowId);
 
                 return {
                     ...state,
                     form: {
                         ...state.form,
-                        fields: {
-                            ...fields,
-                            [targetId]: {
-                                ...fields[targetId],
-                                children
-                            }
-                        }
+                        fields,
+                        rootContainers
+                    }
+                };
+            }
+
+            // Case 3: Moving into a container (targetId is a container ID)
+            if (fields[targetId]) {
+                const oldParentId = currentField.parentId || sourceParentId;
+                const targetChildren = [...(fields[targetId].children || [])];
+
+                // If moving from a different container, remove from old parent
+                if (oldParentId && oldParentId !== targetId && fields[oldParentId] && fields[oldParentId].children) {
+                    const filteredChildren = fields[oldParentId].children.filter(id => id !== currentId);
+                    fields[oldParentId] = {
+                        ...fields[oldParentId],
+                        children: filteredChildren
+                    };
+
+                    // If old parent container is now empty and was a root container, remove it
+                    if (filteredChildren.length === 0 && fields[oldParentId].is_root_container) {
+                        rootContainers = rootContainers.filter(id => id !== oldParentId);
+                        delete fields[oldParentId];
+                    }
+                } else {
+                    // Moving within the same container
+                    const currentIndex = targetChildren.indexOf(currentId);
+                    if (currentIndex !== -1) {
+                        targetChildren.splice(currentIndex, 1);
+                    }
+                }
+
+                // Insert into target container children
+                targetChildren.splice(index, 0, currentId);
+
+                fields[targetId] = {
+                    ...fields[targetId],
+                    children: targetChildren
+                };
+
+                fields[currentId] = {
+                    ...currentField,
+                    parentId: targetId
+                };
+
+                return {
+                    ...state,
+                    form: {
+                        ...state.form,
+                        fields,
+                        rootContainers
                     }
                 };
             }

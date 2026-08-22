@@ -130,9 +130,9 @@ export const deleteField = (fieldId) => ({
     payload: fieldId
 });
 
-export const updateFieldOrder = (currentId, targetId, index) => ({
+export const updateFieldOrder = (currentId, targetId, index, sourceParentId = null, newContainerId = null) => ({
     type: UPDATE_FIELD_ORDER,
-    payload: { currentId, targetId, index }
+    payload: { currentId, targetId, index, sourceParentId, newContainerId }
 });
 
 export const updateToolbarSettings = (id, value, selectedToolBarId) => {
