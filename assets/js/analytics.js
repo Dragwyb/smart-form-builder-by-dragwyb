@@ -261,23 +261,43 @@
                     },
                     scales: {
                         x: {
-                            grid: { display: false, drawBorder: false },
+                            border: {
+                                display: true,
+                                color: '#94a3b8', // Forces a dark, visible X-axis line
+                                width: 1
+                            },
+                            grid: {
+                                display: true,
+                                color: '#cbd3deff',
+                                drawTicks: false
+                            },
                             ticks: {
                                 color: '#94a3b8',
                                 font: { size: 11 },
                                 maxRotation: 0,
                                 autoSkip: true,
-                                maxTicksLimit: 12
-                            }
+                                maxTicksLimit: 12,
+                                padding: 6
+                            },
                         },
                         y: {
+                            border: {
+                                display: true,
+                                color: '#94a3b8', // Forces a dark, visible Y-axis line
+                                width: 1
+                            },
                             beginAtZero: true,
-                            grid: { color: '#f1f5f9', drawBorder: false },
+                            grid: {
+                                display: true,
+                                color: '#cbd3deff', // Keeps the inner horizontal grid lines light
+                                drawTicks: false  // Stops tick marks from bleeding over the border
+                            },
                             ticks: {
                                 color: '#94a3b8',
                                 font: { size: 11 },
                                 precision: 0,
-                                stepSize: 1
+                                stepSize: 1,
+                                padding: 8 // Adds a gap between the numbers and the new Y-axis line
                             }
                         }
                     }
@@ -328,6 +348,17 @@
             ctx.stroke();
             ctx.fillText(yVal, 10, yPos + 4);
         }
+
+        // Draw Axes Borders (Fallback Canvas)
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        // Y Axis Border
+        ctx.moveTo(padding.left, padding.top);
+        ctx.lineTo(padding.left, padding.top + chartH);
+        // X Axis Border
+        ctx.lineTo(padding.left + chartW, padding.top + chartH);
+        ctx.stroke();
 
         // Plot Datasets
         var pointCount = dailyStats.length;

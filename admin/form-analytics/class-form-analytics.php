@@ -338,7 +338,7 @@ class Form_Analytics {
 
 			// Generate entries starting ONLY from the date analytics first recorded data
 			for ( $time = $start_time; $time <= $end_time; $time += 86400 ) {
-				$date_key               = gmdate( 'Y-m-d', $time );
+				$date_key               = gmdate( 'm-d-y', $time );
 				$daily_map[ $date_key ] = array(
 					'date_val' => $date_key,
 					'visitors' => 0,
