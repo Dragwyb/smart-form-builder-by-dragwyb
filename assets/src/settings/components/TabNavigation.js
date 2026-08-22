@@ -9,7 +9,7 @@ import {
 } from 'react-icons/fa';
 
 const tabs = [
-    { id: 'integrations', label: 'Integrations', Icon: FaPlug },
+    { id: 'integrations', label: 'API Keys', Icon: FaPlug },
     { id: 'performance', label: 'Performance', Icon: FaTachometerAlt },
     { id: 'fields_manager', label: 'Fields Manager', Icon: FaTable },
     { id: 'smtp', label: 'SMTP', Icon: FaEnvelope },

@@ -559,6 +559,7 @@ class Dashboard {
 			if ( isset( $sub_data[ $key ] ) && ! empty( $sub_data[ $key ] ) ) {
 				if ( isset( $sub_data[ $key ]['type'] ) ) {
 					unset( $sub_data[ $key ]['type'] );
+					unset( $sub_data[ $key ]['label'] );
 				}
 				return is_array( $sub_data[ $key ] ) ? implode( ', ', $sub_data[ $key ] ) : (string) $sub_data[ $key ];
 			}
