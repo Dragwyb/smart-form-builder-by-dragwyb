@@ -96,13 +96,14 @@ export const updateField = (fieldId, field) => ({
     payload: { fieldId, field }
 });
 
-export const updateSectionSettings = (Id, value) => ({
+export const updateSectionSettings = (Id, value, tabId = 'fields') => ({
     type: UPDATE_SECTION_SETTINGS,
-    payload: { Id, value }
+    payload: { Id, value, tabId }
 })
 
-export const resetSectionSettings = () => ({
-    type: RESET_SECTION_SETTINGS
+export const resetSectionSettings = (tabId = null) => ({
+    type: RESET_SECTION_SETTINGS,
+    payload: { tabId }
 })
 
 export const updateactivePopoverKey = (value) => ({

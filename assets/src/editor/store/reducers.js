@@ -468,8 +468,13 @@ export default function reducer(state, action) {
             };
         }
 
-        case UPDATE_SECTION_SETTINGS:
-            if (state.sectionSettings && state.sectionSettings[action.payload.Id] && state.sectionSettings[action.payload.Id] === action.payload.value) {
+        case UPDATE_SECTION_SETTINGS: {
+            const tabId = action.payload.tabId || 'fields';
+            const key = action.payload.Id;
+            const value = action.payload.value;
+            const currentTabSettings = (state.sectionSettings && state.sectionSettings[tabId]) || {};
+
+            if (currentTabSettings[key] === value) {
                 return state;
             }
 
@@ -477,11 +482,29 @@ export default function reducer(state, action) {
                 ...state,
                 sectionSettings: {
                     ...state.sectionSettings,
-                    [action.payload.Id]: action.payload.value
+                    [tabId]: {
+                        ...currentTabSettings,
+                        [key]: value
+                    }
                 }
             };
+        }
 
-        case RESET_SECTION_SETTINGS:
+        case RESET_SECTION_SETTINGS: {
+            const tabId = action.payload?.tabId;
+            if (tabId) {
+                if (!state.sectionSettings || !state.sectionSettings[tabId] || Object.keys(state.sectionSettings[tabId]).length < 1) {
+                    return state;
+                }
+                return {
+                    ...state,
+                    sectionSettings: {
+                        ...state.sectionSettings,
+                        [tabId]: {}
+                    }
+                };
+            }
+
             if (Object.keys(state.sectionSettings || {}).length < 1) {
                 return state;
             }
@@ -490,6 +513,7 @@ export default function reducer(state, action) {
                 ...state,
                 sectionSettings: {}
             };
+        }
 
         case UPDATE_POPOVER_INITIALIZE:
             {

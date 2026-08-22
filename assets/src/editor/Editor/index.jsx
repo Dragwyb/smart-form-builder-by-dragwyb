@@ -22,6 +22,7 @@ import { Utils as Helper } from "../components/Utils";
 import ToolBar from "../Toolbar/Toolbar";
 import Header from "./header";
 import ToolbarSettings from "../Toolbar/ToolbarSettings";
+import FieldSettingsSidebar from "./FieldSettingsSidebar";
 import PreviewIframe from "./PreviewIframe";
 import PreviewLoading from "./previewLoading";
 import Notice from "../components/Common/Notice";
@@ -63,28 +64,20 @@ const Editor = () => {
     }, [store, dispatch]);
 
     const resetSection = useCallback(() => {
-        dispatch(resetSectionSettings());
+        dispatch(resetSectionSettings('fields'));
     }, [dispatch]);
 
-    const setSelectedSettingId = useCallback(({ id = false, tab = "fields" }) => {
-        const defaultToolbar = DragwybEditor?.EditorToolbars?.Default ?? false;
-        const activeTab = false === id ? defaultToolbar : tab;
+    const setSelectedSettingId = useCallback(({ id = false }) => {
         if (store?.getState()?.selectedSettingId === id) {
-            if (store?.getState()?.activeToolbar !== activeTab) {
-                Utils.setActiveTab({ value: activeTab });
-            }
             return;
         }
         Utils.setSelectedSettingId({ value: id });
         resetSection();
-        Utils.setActiveTab({ value: activeTab });
     }, [Utils, resetSection]);
 
     const setActiveTabHandler = useCallback((value) => {
-        Utils.setSelectedSettingId({ value: false });
-        resetSection();
         Utils.setActiveTab({ value: value });
-    }, [Utils, resetSection]);
+    }, [Utils]);
 
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -377,9 +370,8 @@ const Editor = () => {
                 >
                     <ToolBar
                         setActiveTab={setActiveTabHandler}
-                        setSettingId={setSelectedSettingId}
                     />
-                    <ToolbarSettings onFieldSelect={setSelectedSettingId} />
+                    <ToolbarSettings />
 
                     {/* The Iframe Shield: Crucial for dragging over iframe */}
                     {activeDrag && (
@@ -403,6 +395,7 @@ const Editor = () => {
                             setActiveTab={setActiveTabHandler}
                         />
                     </PreviewIframe>
+                    <FieldSettingsSidebar onFieldSelect={setSelectedSettingId} />
                     {activeDrag && <SidebarFieldOverlay data={activeDrag} />}
                 </DndContext>
             </div>

@@ -8,7 +8,7 @@ import { useDraggable, useDroppable } from "../components/Common";
 import { updateActiveToolbar } from "../store/actions";
 import HistoryPanel from "../Editor/header/HistoryPanel";
 
-const ToolbarSettings = ({ onFieldSelect }) => {
+const ToolbarSettings = () => {
   // --- 1. Hook Declarations (Must be at the top level) ---
   const setting = useSelector(state => state.activeToolbar);
   const selectedToolbar = useSelector(state => state.selectedSettingId);
@@ -99,24 +99,6 @@ const ToolbarSettings = ({ onFieldSelect }) => {
     Utils.updateToolbarSetting({ id: key, value, selectedToolBarId });
   }, [Utils]);
 
-  const handleDeleteField = useCallback((id, fieldVlaues, fieldType) => {
-    onFieldSelect({ id: false });
-    dispatch({ type: "DELETE_FIELD", payload: id });
-
-    let fieldLabel = fieldVlaues?.label;
-
-    if (typeof fieldLabel !== 'string' || '' === fieldLabel) {
-      fieldLabel = fieldVlaues.field_id;
-    }
-
-    const historyLabel = `Delete ${fieldType}, (${fieldLabel})`;
-
-    dispatch({
-      type: 'ADD_HISTORY_SNAPSHOT',
-      payload: { label: historyLabel }
-    });
-  }, [dispatch]);
-
   const onSettingChangeHandler = useCallback((key, value) => {
     toolbarRef.current.updateToolbarHandler(key, value);
 
@@ -171,15 +153,16 @@ const ToolbarSettings = ({ onFieldSelect }) => {
   }
 
   // --- 3. Normal Render Logic ---
-  const toolbarData = selectedToolbar && formData[setting];
+  const toolbarTabId = setting === 'fields' ? 'fields' : selectedToolbar;
+  const toolbarData = formData[setting];
   const toolbarSettings = DragwybEditor[setting];
 
   let toolBarHtml = false;
-  let toolBarObject = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/toolbarRender/' + setting, toolBarHtml, setting, selectedToolbar, toolbarData, toolbarSettings, updateToolBar, { ...Utils, ...extensibleUtils });
+  let toolBarObject = DragwybBuilder.Hooks.applyFilter('Dragwyb/Editor/toolbarRender/' + setting, toolBarHtml, setting, toolbarTabId, toolbarData, toolbarSettings, updateToolBar, { ...Utils, ...extensibleUtils });
 
   if (!(toolBarObject instanceof DragwybToolbarBase || toolBarObject instanceof DragwybEditor.editor.extends.ToolbarBase)) {
     toolBarHtml = false;
-    toolBarObject = new DragwybToolbarBase([toolBarHtml, setting, selectedToolbar, toolbarData, toolbarSettings, updateToolBar, { ...Utils, ...extensibleUtils }]);
+    toolBarObject = new DragwybToolbarBase([toolBarHtml, setting, toolbarTabId, toolbarData, toolbarSettings, updateToolBar, { ...Utils, ...extensibleUtils }]);
   }
 
   const settings = toolBarObject.getToolbarSettings();
@@ -191,7 +174,7 @@ const ToolbarSettings = ({ onFieldSelect }) => {
 
   return <div className="dragwyb-editor__sidebar" ref={sidebarRef} >
     {toolbarHTML && toolbarHTML}
-    {settings && settings.controls && <>
+    {setting !== 'fields' && settings && settings.controls && (
       <div className="dragwyb-editor__settings">
         <FieldSettings
           selectedTab={setting}
@@ -200,13 +183,7 @@ const ToolbarSettings = ({ onFieldSelect }) => {
           onSettingChange={onSettingChangeHandler}
         />
       </div>
-      <div className='dragwyb-editor__settings__footer'>
-        {setting === 'fields' && selectedToolbar !== 'fields' && <button onClick={() => handleDeleteField(selectedToolbar, toolbarValues, settings.label)}>
-          <span className="dashicons dashicons-trash"></span>
-          {__('Delete', 'dragwyb-form-builder')} {settings.label || ''}
-        </button>}
-      </div>
-    </>}
+    )}
   </div>;
 };
 

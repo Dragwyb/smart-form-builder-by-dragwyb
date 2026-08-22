@@ -3,11 +3,22 @@ import { useEffect, useRef, useCallback } from "react";
 import DragwybToolbarBase from "../toolbarBase";
 import shouldRenderField from "./shouldRenderField";
 
-const ControlsConditions = ({ conditions, updateHandler, controlKey, isResponsiveControl, responsiveType: controlResponsiveType }) => {
-    const setting = useSelector(state => state.activeToolbar);
-    const selectedToolbar = useSelector(state => state.selectedSettingId);
+const ControlsConditions = ({
+    conditions,
+    updateHandler,
+    controlKey,
+    isResponsiveControl,
+    responsiveType: controlResponsiveType,
+    toolbarId,
+    settingId
+}) => {
+    const activeToolbar = useSelector(state => state.activeToolbar);
+    const activeSelectedSetting = useSelector(state => state.selectedSettingId);
+    const setting = toolbarId || activeToolbar;
+    const selectedToolbar = settingId !== undefined ? settingId : activeSelectedSetting;
+    const tabScope = setting || 'fields';
     const formData = useSelector(state => state.form);
-    const sectionSettings = useSelector(state => state.sectionSettings);
+    const sectionSettings = useSelector(state => state.sectionSettings?.[tabScope] || {});
     const activeToolbarData = formData?.[setting] || {};
     const responsiveType = useSelector(state => state.responsiveType);
 

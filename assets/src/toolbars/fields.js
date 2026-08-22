@@ -148,19 +148,6 @@ class Fields extends DragwybEditor.editor.extends.ToolbarBase {
 
     if (!this.shouldRender()) return;
 
-    if (this.settingId && 'fields' !== this.settingId) {
-      return <div className='dragwyb-fields-settings'>
-        <div className='dragwyb-fields-settings__tabs'>
-          <div className='dragwyb-fields-settings__tab' onClick={() => Utils.setSelectedSettingId({ value: false })}>
-            <p>{__('Add Fields', 'smart-form-builder-by-dragwyb')}</p>
-          </div>
-          <div className='dragwyb-fields-settings__tab active'>
-            <p>{__('Field Settings', 'smart-form-builder-by-dragwyb')}</p>
-          </div>
-        </div>
-      </div>
-    }
-
     return <div className="dragwyb-controls" id={`dragwyb-controls__${this.toolBarName}`}> <Sidebar Utils={Utils} addFieldHandler={this.addFieldHandler} /></div>;
   }
 
