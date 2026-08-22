@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin Name: Dragwyb Forms – Contact Forms, Conditional Form, MultiStep Form, Analytics, SMTP
+ * Plugin Name: Dragwyb Forms
  * Description: A Contact form plugin. Create custom forms, multi-step layouts, and lead generation forms with a visual React editor, built-in SMTP, and GDPR compliance.
  * Version: 1.3.0
  * Author: dragwyb
