@@ -5,7 +5,7 @@ import store from '../store';
 
 const updateFieldWrapperClass = (wrapperClass, Id, type, attributes, utils) => {
     if (attributes && attributes.label_icon && attributes.label_icon.icon && attributes.label_icon.icon !== '') {
-        const labelIconsPosition = store.getState().form.style.label_icon_position || 'before';
+        const labelIconsPosition = store.getState()?.form?.style?.label_icon_position || 'before';
 
         const labelPositionClass = `dragwyb-field-label-icon-${labelIconsPosition}`;
         wrapperClass.push(labelPositionClass)
