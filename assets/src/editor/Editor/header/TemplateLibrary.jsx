@@ -477,7 +477,7 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
     const categories = [
         { id: 'all', name: __('All Templates', 'smart-form-builder-by-dragwyb'), icon: FaThLarge },
         { id: 'contact', name: __('Contact Forms', 'smart-form-builder-by-dragwyb'), icon: FaEnvelope },
-        { id: 'bussiness', name: __('Business Request', 'smart-form-builder-by-dragwyb'), icon: FaBriefcase },
+        { id: 'business', name: __('Business Request', 'smart-form-builder-by-dragwyb'), icon: FaBriefcase },
         { id: 'marketing', name: __('Marketing Lead Gen', 'smart-form-builder-by-dragwyb'), icon: FaBullseye },
         { id: 'feedback', name: __('Product Feedback', 'smart-form-builder-by-dragwyb'), icon: FaCommentDots }
     ];
@@ -488,7 +488,7 @@ const TemplateLibrary = ({ isOpen, onClose }) => {
         switch (catId) {
             case 'contact':
                 return FaRegEnvelope;
-            case 'bussiness':
+            case 'business':
                 return FaBriefcase;
             case 'marketing':
                 return FaBullseye;
