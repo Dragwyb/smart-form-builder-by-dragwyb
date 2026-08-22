@@ -315,7 +315,7 @@ class Form_Analytics {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$raw_daily_stats = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT DATE(started_at) as date_val, COUNT(DISTINCT visitor_id) as visitors, COUNT(id) as sessions FROM $sessions_table WHERE started_at >= DATE_SUB(NOW(), INTERVAL %d DAY) GROUP BY DATE(started_at) ORDER BY date_val ASC", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				"SELECT DATE_FORMAT(started_at, '%%m-%%d-%%y') as date_val, COUNT(DISTINCT visitor_id) as visitors, COUNT(id) as sessions FROM $sessions_table WHERE started_at >= DATE_SUB(NOW(), INTERVAL %d DAY) GROUP BY DATE(started_at) ORDER BY date_val ASC", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$days
 			),
 			ARRAY_A
