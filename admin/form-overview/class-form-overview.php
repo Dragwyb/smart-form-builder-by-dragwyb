@@ -43,7 +43,7 @@ if ( ! class_exists( 'Form_Overview' ) ) {
 
 		private function enqueue_admin_assets(): void {
 			wp_enqueue_style( 'dashicons' );
-			wp_enqueue_script( DRAGWYB_PREFIX . '-overview-assets', esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/js/dragwyb-oveview-assets.js' ), array( 'jquery' ), esc_attr( DRAGWYB_FORM_BUILDER_VERSION ), true );
+			wp_enqueue_script( DRAGWYB_PREFIX . '-overview-assets', esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/js/dragwyb-overview-assets.js' ), array( 'jquery' ), esc_attr( DRAGWYB_FORM_BUILDER_VERSION ), true );
 
 			wp_localize_script(
 				DRAGWYB_PREFIX . '-overview-assets',
@@ -72,30 +72,33 @@ if ( ! class_exists( 'Form_Overview' ) ) {
 
 			// Prepare and display the table
 			$form_table->prepare_items();
+			$logo_url    = DRAGWYB_FORM_BUILDER_URL . 'assets/img/menu-logo.svg';
+			$builder_url = admin_url( 'admin.php?page=' . DRAGWYB_PREFIX . '-form-builder' );
 			?>
 
-			<div class="wrap dragwyb-overview-wrap">
-				<!-- Header Row Card -->
-				<div class="dragwyb-overview-header-card">
-					<div class="dragwyb-header-left">
-						<div class="dragwyb-header-icon">
-							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<rect width="24" height="24" rx="6" fill="#FFF0F5"/>
-								<path d="M7 6H17M7 10H17M7 14H13M7 18H11" stroke="#E11D48" stroke-width="2" stroke-linecap="round"/>
-							</svg>
-						</div>
-						<div class="dragwyb-header-text">
-							<p class="dragwyb-header-title"><?php esc_html_e( 'All Forms', 'smart-form-builder-by-dragwyb' ); ?></p>
-							<p class="dragwyb-header-desc"><?php esc_html_e( 'Manage and analyze your forms performance', 'smart-form-builder-by-dragwyb' ); ?></p>
-						</div>
+			<!-- Header Row Card -->
+			<div class="dragwyb-dashboard-header">
+				<div class="dragwyb-db-brand">
+					<div class="dragwyb-db-logo">
+						<img src="<?php echo esc_url( $logo_url ); ?>" alt="Smart Form Builder Logo" />
 					</div>
-					<div class="dragwyb-header-right">
-						<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . DRAGWYB_PREFIX . '-form-builder' ) ); ?>" class="dragwyb-btn-create">
-							<span class="dashicons dashicons-plus-alt2"></span>
-							<?php esc_html_e( 'Add Form', 'smart-form-builder-by-dragwyb' ); ?>
-						</a>
+					<div class="dragwyb-header-title-meta">
+						<h1 class="dragwyb-db-brand-name"><?php esc_html_e( 'All Forms', 'smart-form-builder-by-dragwyb' ); ?></h1>
+						<p class="dragwyb-db-sub-title"><?php esc_html_e( 'Manage and analyze your forms performance', 'smart-form-builder-by-dragwyb' ); ?></p>
 					</div>
 				</div>
+				<div class="dragwyb-db-header-actions">
+					<a href="<?php echo esc_url( $builder_url ); ?>" class="dragwyb-btn-primary-add">
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+							<line x1="12" y1="5" x2="12" y2="19"></line>
+							<line x1="5" y1="12" x2="19" y2="12"></line>
+						</svg>
+						<?php esc_html_e( 'Add Form', 'smart-form-builder-by-dragwyb' ); ?>
+					</a>
+				</div>
+			</div>
+
+			<div class="wrap dragwyb-overview-wrap">
 
 				<!-- Table Section Container -->
 				<div class="dragwyb-overview-table-card">

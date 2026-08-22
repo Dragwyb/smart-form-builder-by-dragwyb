@@ -90,30 +90,29 @@ class Dashboard {
 		$entries_url = admin_url( 'admin.php?page=' . DRAGWYB_PREFIX . '-entries' );
 		$logo_url    = DRAGWYB_FORM_BUILDER_URL . 'assets/img/menu-logo.svg';
 		?>
-		<div class="dragwyb-dashboard-wrap">
-
-			<!-- Top Header Bar -->
-			<div class="dragwyb-dashboard-header">
-				<div class="dragwyb-db-brand">
-					<div class="dragwyb-db-logo">
-						<img src="<?php echo esc_url( $logo_url ); ?>" alt="Smart Form Builder Logo" />
-					</div>
-					<div class="dragwyb-db-title-group">
-						<h1 class="dragwyb-db-brand-name"><?php esc_html_e( 'Smart Form Builder', 'smart-form-builder-by-dragwyb' ); ?></h1>
-						<span class="dragwyb-db-sub-title"><?php esc_html_e( 'Dashboard', 'smart-form-builder-by-dragwyb' ); ?></span>
-					</div>
+		<!-- Top Header Bar -->
+		<div class="dragwyb-dashboard-header">
+			<div class="dragwyb-db-brand">
+				<div class="dragwyb-db-logo">
+					<img src="<?php echo esc_url( $logo_url ); ?>" alt="Smart Form Builder Logo" />
 				</div>
-				<div class="dragwyb-db-header-actions">
-					<a href="<?php echo esc_url( $builder_url ); ?>" class="dragwyb-btn-primary-add">
-						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-							<line x1="12" y1="5" x2="12" y2="19"></line>
-							<line x1="5" y1="12" x2="19" y2="12"></line>
-						</svg>
-						<?php esc_html_e( 'Add Form', 'smart-form-builder-by-dragwyb' ); ?>
-					</a>
+				<div class="dragwyb-db-title-group">
+					<h1 class="dragwyb-db-brand-name"><?php esc_html_e( 'Smart Form Builder', 'smart-form-builder-by-dragwyb' ); ?></h1>
+					<span class="dragwyb-db-sub-title"><?php esc_html_e( 'Dashboard', 'smart-form-builder-by-dragwyb' ); ?></span>
 				</div>
 			</div>
+			<div class="dragwyb-db-header-actions">
+				<a href="<?php echo esc_url( $builder_url ); ?>" class="dragwyb-btn-primary-add">
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+						<line x1="12" y1="5" x2="12" y2="19"></line>
+						<line x1="5" y1="12" x2="19" y2="12"></line>
+					</svg>
+					<?php esc_html_e( 'Add Form', 'smart-form-builder-by-dragwyb' ); ?>
+				</a>
+			</div>
+		</div>
 
+		<div class="dragwyb-dashboard-wrap">
 			<!-- Navigation Bar Tabs -->
 			<div class="dragwyb-db-nav-tabs">
 				<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . DRAGWYB_PREFIX . '-dashboard' ) ); ?>" class="dragwyb-db-nav-item active">
