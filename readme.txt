@@ -132,6 +132,14 @@ Yes. From the robust Entries Dashboard, you can filter, view, bulk-delete, and e
 
 ---
 
+== Contribute ==
+
+Dragwyb Forms is an open-source project, and we welcome contributions from the community. 
+
+* **GitHub Repository:** [https://github.com/Dragwyb/smart-form-builder-by-dragwyb](https://github.com/Dragwyb/smart-form-builder-by-dragwyb)
+* **Report Bugs:** Please report any issues or bugs on the [GitHub Issues page](https://github.com/Dragwyb/smart-form-builder-by-dragwyb/issues).
+* **Pull Requests:** Feel free to fork the repository and submit pull requests for review.
+
 == Screenshots ==
 
 1. Dashboard: A comprehensive overview featuring unread entries, total submissions, and quick analytics.
