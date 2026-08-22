@@ -376,8 +376,8 @@ export default function reducer(state, action) {
 
             if (!currentField) return state;
 
-            // Case 1: Moving a ROOT container among rootContainers
-            if (currentField.is_root_container && targetId === 'root') {
+            // Case 1: Moving a ROOT container (row) - ALWAYS moves among rootContainers
+            if (currentField.is_root_container) {
                 const currentIndex = rootContainers.indexOf(currentId);
 
                 if (currentIndex !== -1) {
@@ -394,6 +394,13 @@ export default function reducer(state, action) {
                             index = rootContainers.length - 1;
                         }
                     }
+                }
+
+                if (index > rootContainers.length) {
+                    index = rootContainers.length;
+                }
+                if (index < 0) {
+                    index = 0;
                 }
 
                 rootContainers.splice(index, 0, currentId);

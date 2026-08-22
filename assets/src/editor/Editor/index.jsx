@@ -208,6 +208,53 @@ const Editor = () => {
             return;
         }
 
+        const isDraggingRoot = Boolean(active.data.current?.isRootContainer);
+        const state = store.getState();
+        const rootContainers = state.form.rootContainers || [];
+
+        // If dragging a ROOT container:
+        if (isDraggingRoot) {
+            let overRootId = 'root';
+            if (over.data.current?.isRootContainer) {
+                overRootId = over.data.current.fieldId || over.data.current.currentId;
+            } else if (over.data.current?.isChild) {
+                overRootId = over.data.current.parentId;
+            } else if (over.data.current?.currentId && over.data.current.currentId !== 'root') {
+                overRootId = over.data.current.currentId;
+            }
+
+            let rootIndex = rootContainers.indexOf(overRootId);
+            if (rootIndex === -1) {
+                rootIndex = over.data.current?.index ?? 0;
+            }
+
+            const activeRect = active.rect.current?.translated;
+            const overRect = over.rect;
+
+            if (activeRect && overRect) {
+                const activeMiddleY = activeRect.top + (activeRect.height / 2) + 10;
+                const overMiddleY = overRect.top + (overRect.height / 2);
+                if (activeMiddleY > overMiddleY) {
+                    rootIndex = rootIndex + 1;
+                }
+            }
+
+            const dropObj = {
+                targetId: 'root',
+                fieldId: overRootId !== 'root' ? overRootId : null,
+                index: rootIndex,
+                isRoot: true
+            };
+
+            setDropInfo(prev => {
+                if (!prev || prev.targetId !== dropObj.targetId || prev.fieldId !== dropObj.fieldId || prev.index !== dropObj.index) {
+                    return dropObj;
+                }
+                return prev;
+            });
+            return;
+        }
+
         let newDropInfo = over.data.current?.currentId;
 
         // If simply hovering a container/wrapper, just set index
@@ -257,7 +304,7 @@ const Editor = () => {
             }
             return prev;
         });
-    }, []);
+    }, [store]);
 
     const handleDragEnd = useCallback((event) => {
         let currentDropInfo = dropInfo;
@@ -323,9 +370,10 @@ const Editor = () => {
             setSelectedSettingId({ id: newField._id });
         } else if (isCanvasDrag) {
             const currentId = active?.data?.current?.currentId;
-            const sourceParentId = active?.data?.current?.parentId || 'root';
+            const isDraggingRoot = Boolean(active?.data?.current?.isRootContainer);
+            const sourceParentId = isDraggingRoot ? 'root' : (active?.data?.current?.parentId || 'root');
             const sourceIndex = active?.data?.current?.index;
-            const targetId = currentDropInfo?.targetId || over.data.current?.currentId || 'root';
+            const targetId = isDraggingRoot ? 'root' : (currentDropInfo?.targetId || over.data.current?.currentId || 'root');
             let updatedIndex = currentDropInfo?.index !== undefined ? currentDropInfo.index : over.data.current?.index;
 
             if (currentId && targetId && updatedIndex !== undefined && updatedIndex >= 0) {
@@ -347,7 +395,7 @@ const Editor = () => {
                     fieldLabel = currentId;
                 }
 
-                const historyLabel = `Move Field (${fieldLabel})`;
+                const historyLabel = `Move ${isDraggingRoot ? 'Row' : 'Field'} (${fieldLabel})`;
                 dispatch({
                     type: 'ADD_HISTORY_SNAPSHOT',
                     payload: { label: historyLabel }
