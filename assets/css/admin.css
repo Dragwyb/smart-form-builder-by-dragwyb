@@ -80,7 +80,7 @@ body:where(.toplevel_page_dragwyb-dashboard,.smart-forms_page_dragwyb-form-overv
 	font-weight: 600;
 	font-size: 14px;
 	padding: 10px 18px;
-	border-radius: 8px;
+	border-radius: 8px !important;
 	text-decoration: none !important;
 	transition: all 0.2s ease;
 	box-shadow: 0 2px 4px rgba(225, 29, 72, 0.2);
@@ -92,6 +92,10 @@ body:where(.toplevel_page_dragwyb-dashboard,.smart-forms_page_dragwyb-form-overv
 	background-color: #be123c;
 	box-shadow: 0 4px 8px rgba(225, 29, 72, 0.3);
 	transform: translateY(-1px);
+}
+
+.dragwyb-btn-primary-add:focus{
+    box-shadow: unset;
 }
 
 .dragwyb-btn-primary-add svg{
