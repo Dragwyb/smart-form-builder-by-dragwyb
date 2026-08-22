@@ -22,6 +22,7 @@ import { Utils as Helper } from "../components/Utils";
 import ToolBar from "../Toolbar/Toolbar";
 import Header from "./header";
 import ToolbarSettings from "../Toolbar/ToolbarSettings";
+import FieldSettingsSidebar from "./FieldSettingsSidebar";
 import PreviewIframe from "./PreviewIframe";
 import PreviewLoading from "./previewLoading";
 import Notice from "../components/Common/Notice";
@@ -63,28 +64,20 @@ const Editor = () => {
     }, [store, dispatch]);
 
     const resetSection = useCallback(() => {
-        dispatch(resetSectionSettings());
+        dispatch(resetSectionSettings('fields'));
     }, [dispatch]);
 
-    const setSelectedSettingId = useCallback(({ id = false, tab = "fields" }) => {
-        const defaultToolbar = DragwybEditor?.EditorToolbars?.Default ?? false;
-        const activeTab = false === id ? defaultToolbar : tab;
+    const setSelectedSettingId = useCallback(({ id = false }) => {
         if (store?.getState()?.selectedSettingId === id) {
-            if (store?.getState()?.activeToolbar !== activeTab) {
-                Utils.setActiveTab({ value: activeTab });
-            }
             return;
         }
         Utils.setSelectedSettingId({ value: id });
         resetSection();
-        Utils.setActiveTab({ value: activeTab });
     }, [Utils, resetSection]);
 
     const setActiveTabHandler = useCallback((value) => {
-        Utils.setSelectedSettingId({ value: false });
-        resetSection();
         Utils.setActiveTab({ value: value });
-    }, [Utils, resetSection]);
+    }, [Utils]);
 
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -201,7 +194,7 @@ const Editor = () => {
             return;
         }
 
-        if (over.data.current.rowDropColumn) {
+        if (over.data.current?.rowDropColumn) {
             setDropInfo(prev => prev !== false ? false : prev);
             return;
         }
@@ -215,11 +208,58 @@ const Editor = () => {
             return;
         }
 
-        let newDropInfo = over.data.current.currentId;
+        const isDraggingRoot = Boolean(active.data.current?.isRootContainer);
+        const state = store.getState();
+        const rootContainers = state.form.rootContainers || [];
+
+        // If dragging a ROOT container:
+        if (isDraggingRoot) {
+            let overRootId = 'root';
+            if (over.data.current?.isRootContainer) {
+                overRootId = over.data.current.fieldId || over.data.current.currentId;
+            } else if (over.data.current?.isChild) {
+                overRootId = over.data.current.parentId;
+            } else if (over.data.current?.currentId && over.data.current.currentId !== 'root') {
+                overRootId = over.data.current.currentId;
+            }
+
+            let rootIndex = rootContainers.indexOf(overRootId);
+            if (rootIndex === -1) {
+                rootIndex = over.data.current?.index ?? 0;
+            }
+
+            const activeRect = active.rect.current?.translated;
+            const overRect = over.rect;
+
+            if (activeRect && overRect) {
+                const activeMiddleY = activeRect.top + (activeRect.height / 2) + 10;
+                const overMiddleY = overRect.top + (overRect.height / 2);
+                if (activeMiddleY > overMiddleY) {
+                    rootIndex = rootIndex + 1;
+                }
+            }
+
+            const dropObj = {
+                targetId: 'root',
+                fieldId: overRootId !== 'root' ? overRootId : null,
+                index: rootIndex,
+                isRoot: true
+            };
+
+            setDropInfo(prev => {
+                if (!prev || prev.targetId !== dropObj.targetId || prev.fieldId !== dropObj.fieldId || prev.index !== dropObj.index) {
+                    return dropObj;
+                }
+                return prev;
+            });
+            return;
+        }
+
+        let newDropInfo = over.data.current?.currentId;
 
         // If simply hovering a container/wrapper, just set index
-        if (over.data.current.canvasFieldDrop || over.data.current.addInitialField) {
-            const dropObj = { targetId: newDropInfo, index: 0 };
+        if (over.data.current?.canvasFieldDrop || over.data.current?.addInitialField) {
+            const dropObj = { targetId: newDropInfo || 'root', index: 0 };
             setDropInfo(prev => {
                 if (!prev || prev.targetId !== dropObj.targetId || prev.index !== dropObj.index) {
                     return dropObj;
@@ -230,9 +270,8 @@ const Editor = () => {
         }
 
         // 1. Get the live, normalized coordinates of both items
-        const activeRect = active.rect.current.translated;
+        const activeRect = active.rect.current?.translated;
         const overRect = over.rect;
-
 
         if (!activeRect || !overRect) return;
 
@@ -242,23 +281,30 @@ const Editor = () => {
         // 3. Calculate the 50% middle line of the hovered item
         const overMiddleY = overRect.top + (overRect.height / 2);
 
-        let targetIndex = over.data.current.index;
-        let targetId = over.data.current.currentId;
+        let targetIndex = over.data.current?.index ?? 0;
+        let targetId = over.data.current?.currentId || 'root';
+        let fieldId = over.data.current?.fieldId;
 
         // 4. Check if the center of the dragged item crosses the 50% mark
         if (activeMiddleY > overMiddleY) {
             targetIndex = targetIndex + 1;
         }
 
-        const dropObj = { targetId, index: targetIndex };
+        const dropObj = {
+            targetId,
+            fieldId,
+            index: targetIndex,
+            isChild: over.data.current?.isChild,
+            isRoot: over.data.current?.isRootContainer
+        };
 
         setDropInfo(prev => {
-            if (!prev || prev.targetId !== dropObj.targetId || prev.index !== dropObj.index) {
+            if (!prev || prev.targetId !== dropObj.targetId || prev.fieldId !== dropObj.fieldId || prev.index !== dropObj.index) {
                 return dropObj;
             }
             return prev;
         });
-    }, []);
+    }, [store]);
 
     const handleDragEnd = useCallback((event) => {
         let currentDropInfo = dropInfo;
@@ -281,12 +327,12 @@ const Editor = () => {
             currentDropInfo = {
                 targetId,
                 index: targetColIndex
-            }
+            };
         }
 
-        const finalId = currentDropInfo !== false && currentDropInfo.index !== undefined
+        const finalId = currentDropInfo !== false && currentDropInfo?.index !== undefined
             ? currentDropInfo
-            : { targetId: over.data.current.currentId, index: over.data.current.index };
+            : { targetId: over.data.current?.currentId || 'root', index: over.data.current?.index ?? 0 };
 
         let finalIndex = finalId.index;
         if (isFromSidebar) {
@@ -311,7 +357,7 @@ const Editor = () => {
                 type,
                 Utils,
                 index: finalIndex,
-            }
+            };
 
             if (currentDropInfo && currentDropInfo.targetId && currentDropInfo.targetId !== 'root') {
                 addFieldData.parentContainer = {
@@ -323,41 +369,40 @@ const Editor = () => {
             const newField = Utils.AddField(addFieldData);
             setSelectedSettingId({ id: newField._id });
         } else if (isCanvasDrag) {
-            if (active?.data?.current?.currentId && currentDropInfo && currentDropInfo.targetId && currentDropInfo.index >= 0) {
-                const currentIndex = active?.data?.current?.index;
-                let updatedIndex = currentDropInfo.index;
+            const currentId = active?.data?.current?.currentId;
+            const isDraggingRoot = Boolean(active?.data?.current?.isRootContainer);
+            const sourceParentId = isDraggingRoot ? 'root' : (active?.data?.current?.parentId || 'root');
+            const sourceIndex = active?.data?.current?.index;
+            const targetId = isDraggingRoot ? 'root' : (currentDropInfo?.targetId || over.data.current?.currentId || 'root');
+            let updatedIndex = currentDropInfo?.index !== undefined ? currentDropInfo.index : over.data.current?.index;
 
-                if (updatedIndex > currentIndex) {
+            if (currentId && targetId && updatedIndex !== undefined && updatedIndex >= 0) {
+                if (sourceParentId === targetId && updatedIndex > sourceIndex) {
                     updatedIndex = updatedIndex - 1;
                 }
 
-                if (updatedIndex === currentIndex) {
+                if (sourceParentId === targetId && updatedIndex === sourceIndex) {
                     return;
                 }
 
-                if (updatedIndex >= 0) {
-                    dispatch(updateFieldOrder(active?.data?.current?.currentId, currentDropInfo.targetId, updatedIndex));
+                dispatch(updateFieldOrder(currentId, targetId, updatedIndex, sourceParentId));
 
-                    let fieldLabel = '';
-
-                    if (active?.data?.current?.attributes) {
-                        fieldLabel = active?.data?.current?.attributes?.label;
-                    }
-
-                    if (typeof fieldLabel !== 'string' || '' === fieldLabel) {
-                        fieldLabel = active?.data?.current?.currentId;
-                    }
-
-                    const historyLabel = `Move Field (${fieldLabel})`;
-
-                    dispatch({
-                        type: 'ADD_HISTORY_SNAPSHOT',
-                        payload: { label: historyLabel }
-                    });
+                let fieldLabel = '';
+                if (active?.data?.current?.attributes) {
+                    fieldLabel = active?.data?.current?.attributes?.label;
                 }
+                if (typeof fieldLabel !== 'string' || '' === fieldLabel) {
+                    fieldLabel = currentId;
+                }
+
+                const historyLabel = `Move ${isDraggingRoot ? 'Row' : 'Field'} (${fieldLabel})`;
+                dispatch({
+                    type: 'ADD_HISTORY_SNAPSHOT',
+                    payload: { label: historyLabel }
+                });
             }
         }
-    }, [dropInfo, Utils, setSelectedSettingId, dispatch]);
+    }, [dropInfo, Utils, setSelectedSettingId, dispatch, store]);
 
     const handleDragCancel = useCallback(() => setActiveDrag(null), []);
 
@@ -377,9 +422,8 @@ const Editor = () => {
                 >
                     <ToolBar
                         setActiveTab={setActiveTabHandler}
-                        setSettingId={setSelectedSettingId}
                     />
-                    <ToolbarSettings onFieldSelect={setSelectedSettingId} />
+                    <ToolbarSettings />
 
                     {/* The Iframe Shield: Crucial for dragging over iframe */}
                     {activeDrag && (
@@ -403,6 +447,7 @@ const Editor = () => {
                             setActiveTab={setActiveTabHandler}
                         />
                     </PreviewIframe>
+                    <FieldSettingsSidebar onFieldSelect={setSelectedSettingId} />
                     {activeDrag && <SidebarFieldOverlay data={activeDrag} />}
                 </DndContext>
             </div>

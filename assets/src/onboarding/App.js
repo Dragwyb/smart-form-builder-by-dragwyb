@@ -641,9 +641,9 @@ const App = () => {
 
                                 <div
                                     className={`tpl-card ${selectedTemplate === 'business' ? 'selected' : ''}`}
-                                    onClick={() => handleSelectTemplate('business')}
+                                    onClick={() => handleSelectTemplate('bussiness')}
                                 >
-                                    {selectedTemplate === 'business' && <div className="tpl-check-badge">✓</div>}
+                                    {selectedTemplate === 'bussiness' && <div className="tpl-check-badge">✓</div>}
                                     <div className="tpl-icon-box"><Icon name="briefcase" /></div>
                                     <div className="tpl-body">
                                         <h4>Business Form</h4>

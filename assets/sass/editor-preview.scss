@@ -1,6 +1,7 @@
 body {
     background: transparent !important;
     min-height: 100%;
+    margin: 0px;
 }
 
 html {
@@ -94,6 +95,10 @@ html {
                 color: hsl(var(--dragwyb-primary) / var(--dragwyb-border-opacity, 1));
             }
         }
+    }
+
+    .dragwyb-field-wrapper {
+        border: 1px solid transparent;
     }
 
     &__add-field {
@@ -220,21 +225,16 @@ html {
             margin: 0 !important;
         }
 
-        &:hover {
-            border-color: hsl(var(--dragwyb-primary) / var(--dragwyb-border-opacity, 1));
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
         &.selected {
             border-color: hsl(var(--dragwyb-primary) / var(--dragwyb-border-opacity, 1));
-            box-shadow: 0 0 0 1px var(--rimary-color);
+            box-shadow: 0 0 0 1px hsl(var(--dragwyb-primary) / var(--dragwyb-border-opacity, 1));
         }
 
         &.dragging {
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .field-actions {
+        &>.field-actions {
             position: absolute;
             top: 0px;
             left: 50%;
@@ -245,23 +245,35 @@ html {
             padding: 0;
             overflow: hidden;
             height: 23px;
+            background: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 
             button {
-                padding: 3px 4px;
+                padding: 3px 5px;
                 border: none;
-                background: none;
+                background: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
                 cursor: pointer;
                 color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
                 box-shadow: unset;
                 line-height: 1;
                 border-radius: 0;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+
+                &.drag-handle {
+                    cursor: grab;
+
+                    &:active {
+                        cursor: grabbing;
+                    }
+                }
 
                 &:hover {
                     background: hsl(var(--dragwyb-primary-hover)/var(--dragwyb-bg-opacity, 1)) !important;
                 }
 
                 &:disabled {
-                    // opacity: 0.5;
                     cursor: not-allowed;
                     background-color: hsl(var(--dragwyb-muted)) !important;
                     color: hsl(var(--dragwyb-muted-foreground)) !important;
@@ -272,19 +284,15 @@ html {
                     height: auto !important;
 
                     &::before {
-                        font-size: 17px;
+                        font-size: 15px;
                     }
                 }
             }
         }
 
-        &:hover .field-actions {
+        &.selected>.field-actions {
             display: flex;
             position: absolute;
-
-            button {
-                background: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
-            }
         }
     }
 

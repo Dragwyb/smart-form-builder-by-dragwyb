@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 
 const ImportExportTab = ({ showToast }) => {
     const { ajaxUrl, adminNonce, pluginSlug, version } = window.DragwybSettingsData || {};
@@ -19,6 +19,27 @@ const ImportExportTab = ({ showToast }) => {
     const [isImporting, setIsImporting] = useState(false);
     const [importSearchQuery, setImportSearchQuery] = useState('');
     const [isImportDropdownOpen, setIsImportDropdownOpen] = useState(false);
+
+    // Refs for click outside handling
+    const exportDropdownRef = useRef(null);
+    const importDropdownRef = useRef(null);
+
+    // Close dropdowns when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (exportDropdownRef.current && !exportDropdownRef.current.contains(event.target)) {
+                setIsExportDropdownOpen(false);
+            }
+            if (importDropdownRef.current && !importDropdownRef.current.contains(event.target)) {
+                setIsImportDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     // Fetch forms list on mount
     useEffect(() => {
@@ -320,7 +341,7 @@ const ImportExportTab = ({ showToast }) => {
                             {isFetchingForms ? (
                                 <div style={{ fontSize: '14px', color: 'hsl(var(--dragwyb-muted-foreground))' }}>Loading forms...</div>
                             ) : (
-                                <div style={{ position: 'relative' }}>
+                                <div ref={exportDropdownRef} style={{ position: 'relative' }}>
                                     <div
                                         onClick={() => setIsExportDropdownOpen(!isExportDropdownOpen)}
                                         style={{
@@ -524,7 +545,7 @@ const ImportExportTab = ({ showToast }) => {
                                 Select Form(s) to Import:
                             </label>
 
-                            <div style={{ position: 'relative' }}>
+                            <div ref={importDropdownRef} style={{ position: 'relative' }}>
                                 <div
                                     onClick={() => setIsImportDropdownOpen(!isImportDropdownOpen)}
                                     style={{

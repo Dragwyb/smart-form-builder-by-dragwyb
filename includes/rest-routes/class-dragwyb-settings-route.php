@@ -231,7 +231,7 @@ class Dragwyb_Settings_Route {
 
 		$templates = array(
 			'contact'   => array(),
-			'bussiness' => array(),
+			'business'  => array(),
 			'marketing' => array(),
 			'feedback'  => array(),
 		);

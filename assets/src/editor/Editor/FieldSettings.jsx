@@ -9,10 +9,12 @@ import RenderPopoverControls from './RenderPopoverControls';
 const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingChange }) => {
     const dispatch = useDispatch();
     const store = useStore();
+    const tabScope = selectedTab || 'fields';
 
-    const getSectionSettings = () => {
-        return store.getState().sectionSettings;
-    }
+    const getSectionSettings = useCallback(() => {
+        return store.getState().sectionSettings?.[tabScope] || {};
+    }, [store, tabScope]);
+
     const defautlActiveSection = useCallback((key) => {
         const sectionSettings = getSectionSettings();
 
@@ -25,7 +27,7 @@ const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingCh
         }
 
         sectionUpdateHandler(key, true);
-    }, [toolbarSettings]);
+    }, [toolbarSettings, getSectionSettings]);
 
     const defautlActiveTab = useCallback((key, settings) => {
         const sectionSettings = getSectionSettings();
@@ -35,19 +37,19 @@ const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingCh
         }
 
         tabsUpdateHandler(key, Object.keys(settings.tabs)[0]);
-    }, []);
+    }, [getSectionSettings]);
 
     const tabsUpdateHandler = useCallback((key, value) => {
         if ('header_controls' === key) {
-            dispatch(resetSectionSettings());
+            dispatch(resetSectionSettings(tabScope));
         }
 
-        dispatch(updateSectionSettings(key, value));
-    }, [dispatch]);
+        dispatch(updateSectionSettings(key, value, tabScope));
+    }, [dispatch, tabScope]);
 
     const sectionUpdateHandler = useCallback((key, value) => {
-        dispatch(updateSectionSettings('section', value ? key : ''));
-    }, [dispatch]);
+        dispatch(updateSectionSettings('section', value ? key : '', tabScope));
+    }, [dispatch, tabScope]);
 
     const handleChange = useCallback((key, value, type = null, from) => {
         if (!(from instanceof DragwybControlBase || from instanceof DragwybEditor.editor.extends.ControlBase)) return;

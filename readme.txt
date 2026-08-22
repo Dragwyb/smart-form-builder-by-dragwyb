@@ -1,12 +1,12 @@
 === Dragwyb Forms – Contact Forms, Conditional Form, MultiStep Form, Analytics, SMTP ===
 Contributors: dragwyb  
 Tags: contact form, forms, custom form, smtp, analytics
-Plugin URI: https://dragwyb.com/product/form-builder/?utm_source=wpplugin&utm_medium=plugin_uri&utm_campaign=form_builder_demo
+Plugin URI: https://dragwyb.com/product/form/?utm_source=wpplugin&utm_medium=plugin_uri&utm_campaign=form_builder_demo
 Author URI: https://dragwyb.com/?utm_source=wpplugin&utm_medium=author_uri&utm_campaign=form_builder_demo
 Requires at least: 5.9
 Tested up to: 7.1 
 Requires PHP: 7.4  
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,7 +18,7 @@ Welcome to **Dragwyb Forms**—the fastest, most intuitive **WordPress contact f
 
 Whether you are capturing leads, collecting user surveys, or designing inquiry forms for Gutenberg and Elementor, Dragwyb Forms provides enterprise-level features with absolute ease of use. 
 
-*   **[Live Demo](https://dragwyb.com/demo/form-builder/?utm_source=wpplugin&utm_medium=readme&utm_campaign=dragwyb_form)** — Test the fastest WordPress forms today!
+*   **[Live Demo](https://dragwyb.com/demo/form/?utm_source=wpplugin&utm_medium=readme&utm_campaign=dragwyb_form)** — Test the fastest WordPress forms today!
 
 ### ⚡ Zero Database Bloat (A Faster WordPress)
 Traditional form plugins choke your database by creating dozens of `wp_postmeta` rows for a single form submission. Dragwyb Forms eliminates this performance bottleneck. We use an optimized **custom database table** (`dragwyb_submissions`) with structured JSON payloads, guaranteeing your website stays lightning-fast even with tens of thousands of entries.
@@ -60,7 +60,7 @@ Construct highly optimized forms using a comprehensive suite of fields:
 
 *   **Input Masking (New!):** Enforce strict data formatting for zip codes, phone numbers, and custom ID formats to ensure pristine data collection.
 *   **Phone Field:** Features country code.
-*   **Advanced Date & Time:** Powered by Flatpickr for flawless calendar UI.
+*   **Advanced Date & Time:** Powered by Flatpickr for flawless calendar UI, Captcha.
 *   **Standard Fields:** Text, Email, WYSIWYG, Number, Dropdowns, Checkboxes, Radio Buttons, File Uploads, Range Sliders, GDPR, Hidden Fields, Custom HTML, and more.
 
 ## 👉 Check out our other plugin:
@@ -80,6 +80,27 @@ Construct highly optimized forms using a comprehensive suite of fields:
 1. Download the plugin ZIP file from the WordPress repository.
 2. Navigate to **Plugins** → **Add New** → **Upload Plugin**.
 3. Select the ZIP file, install, and click **Activate**.
+
+---
+
+== External Services ==
+
+This plugin utilizes the following libraries:
+
+*   **Pickr:** A high-performance color picker library. Used for design customization features.
+    *   **Source:** [https://github.com/Simonwep/pickr](https://github.com/Simonwep/pickr)
+    *   **Local Paths:** `assets/lib/pickr/css/index.css`, `assets/lib/pickr/js/index.js`
+*   **Flatpickr:** Lightweight and powerful datetime picker.
+    *   **Source:** [https://github.com/flatpickr/flatpickr](https://github.com/flatpickr/flatpickr)
+    *   **Local Paths:** `assets/lib/flatpickr/js/flatpickr.min.js`,`assets/lib/flatpickr/css/flatpickr.min.css`
+*   **Font Awesome (Free):** Used for providing iconography within the editor and frontend forms.
+    *   **Source/License:** [https://fontawesome.com/license/free](https://fontawesome.com/license/free)
+    *   **Local Path:** `assets/font-awesome/v5/all.min.css`
+*   **Chart.js:** A simple yet flexible JavaScript charting library for creating data visualizations.
+    *   **Source:** [https://www.chartjs.org/](https://www.chartjs.org/)
+    *   **Local Paths:** `assets/lib/chartjs/chart.umd.min.js`
+* **Dragwyb Feedback API:** Used to submit optional user feedback and diagnostic reports directly to the developers from the WordPress admin dashboard (https://feedback.dragwyb.com). Data is only sent when the site administrator explicitly submits the feedback form.
+    *  **Privacy Policy:** https://dragwyb.com/privacy-policy/
 
 ---
 
@@ -124,6 +145,16 @@ Yes. From the robust Entries Dashboard, you can filter, view, bulk-delete, and e
 ---
 
 == Changelog ==
+
+= 1.3.1 =
+* Fixed: Form not created with the business template during onboarding setup.
+* Fixed: Radio field validation error message issue.
+* Fixed: Export form dropdown modal closing issue.
+* Improved: Editor UI to show field settings in the right sidebar.
+* Improved: Editor field drag & drop experience.
+* Tweak: Update plugin name to Dragwyb Forms.
+* Tweak: Update incorrect form demos link.
+* Tweak: Mention external libraries in the readme.
 
 = 1.3.0 =
 * Added: "Input Mask" field to automatically format user input (like phone numbers or zip codes).

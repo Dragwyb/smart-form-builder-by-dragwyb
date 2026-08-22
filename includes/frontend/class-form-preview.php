@@ -83,13 +83,14 @@ class Form_Preview {
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_editor_preview_styles' ), 999999 );
 
 			// Setup default heartbeat options
-			// add_filter(
-			// 'heartbeat_settings',
-			// function ( $settings ) {
-			// $settings['interval'] = 15;
-			// return $settings;
-			// }
-			// );
+			add_filter(
+				'heartbeat_settings',
+				function ( $settings ) {
+					$settings['interval'] = 15;
+					return $settings;
+				}
+			);
+
 			do_action( 'Dragwyb/Editor/Preview/Init' );
 			$frontend_render      = Frontend_Render::instance();
 			self::$form_id        = $form_id;
@@ -153,7 +154,7 @@ class Form_Preview {
 		$editor_url = admin_url( 'admin.php?page=' . DRAGWYB_PREFIX . '-form-builder&form_id=' . $form_id );
 		$logo_url   = DRAGWYB_FORM_BUILDER_URL . 'assets/img/menu-logo.svg';
 		$logo_html  = '<img src="' . esc_url( $logo_url ) . '" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 6px; margin-top: -2px;" />';
-		$title      = $logo_html . __( 'Smart Form', 'smart-form-builder-by-dragwyb' );
+		$title      = $logo_html . __( 'Edit Form', 'smart-form-builder-by-dragwyb' );
 
 		$wp_admin_bar->add_node(
 			array(

@@ -21,8 +21,9 @@ const RenderControl = ({
 }) => {
     const [isStyleSelectorAdd, setIsStyleSelectorAdd] = useState(false);
 
-    // Proper useSelector at top level instead of useStore().getState() in helper
-    const sectionSettings = useSelector((state) => state.sectionSettings || {});
+    const tabScope = selectedToolbar || selectedTab || 'fields';
+    // Proper useSelector for scoped sectionSettings
+    const sectionSettings = useSelector((state) => state.sectionSettings?.[tabScope] || {});
 
     // Determine validity upfront (no early returns before hooks)
     const isValid = settings && typeof settings === "object" && settings.type && DragwybEditor.controlTypes?.[settings.type];
@@ -137,6 +138,8 @@ const RenderControl = ({
             updateHandler={conditionUpdateHandler}
             isResponsiveControl={settings.responsive_control}
             responsiveType={settings.responsive_type}
+            toolbarId={selectedToolbar}
+            settingId={selectedTab}
         />;
     }
 
@@ -157,6 +160,8 @@ const RenderControl = ({
                 responsiveType={settings.responsive_type}
                 isResponsiveControl={settings.responsive_control}
                 updateHandler={conditionUpdateHandler}
+                toolbarId={selectedToolbar}
+                settingId={selectedTab}
             />
             <div key={controlKey} className="dragwyb-setting-row" data-type={settings.type}>
                 <Control

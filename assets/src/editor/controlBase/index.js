@@ -209,7 +209,7 @@ class DragwybControlBase extends Component {
                     {isDynamicSupported && (
                         <span
                             id={`dynamic-btn-${this.id}`}
-                            className={`dragwyb-control__dynamic${this.state.value ? ' has-reset' : ''}`}
+                            className={`dragwyb-control__dynamic${this.state.value && this.state.value !== defaultValue ? ' has-reset' : ''}`}
                             onClick={(e) => {
                                 e.preventDefault();
                                 this.setState(prev => ({ showDynamicMenu: !prev.showDynamicMenu }));

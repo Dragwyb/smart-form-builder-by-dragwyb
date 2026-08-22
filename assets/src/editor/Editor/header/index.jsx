@@ -94,7 +94,6 @@ const Header = () => {
     }, [dispatch, themeMode]);
 
     const setActiveTabHandler = useCallback((value) => {
-        Utils.setSelectedSettingId({ value: value });
         Utils.setActiveTab({ value: value });
     }, [Utils]);
 

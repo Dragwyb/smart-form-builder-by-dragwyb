@@ -404,8 +404,10 @@ class Field_Radio extends Field_Base {
 			}
 		}
 
-		if ( ! in_array( $value, $option_values, true ) ) {
-			$error_handler->add_error( $field_id, __( 'Invalid option selected', 'smart-form-builder-by-dragwyb' ) );
+		foreach ( $value as $val ) {
+			if ( ! in_array( $val, $option_values, true ) ) {
+				$error_handler->add_error( $field_id, __( 'Invalid option selected', 'smart-form-builder-by-dragwyb' ) );
+			}
 		}
 	}
 
