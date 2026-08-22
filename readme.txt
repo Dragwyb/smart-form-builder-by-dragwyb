@@ -6,7 +6,7 @@ Author URI: https://dragwyb.com/?utm_source=wpplugin&utm_medium=author_uri&utm_c
 Requires at least: 5.9
 Tested up to: 7.1 
 Requires PHP: 7.4  
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -145,6 +145,16 @@ Yes. From the robust Entries Dashboard, you can filter, view, bulk-delete, and e
 ---
 
 == Changelog ==
+
+= 1.3.1 =
+* Fixed: Form not created with the business template during onboarding setup.
+* Fixed: Radio field validation error message issue.
+* Fixed: Export form dropdown modal closing issue.
+* Improved: Editor UI to show field settings in the right sidebar.
+* Improved: Editor field drag & drop experience.
+* Tweak: Update plugin name to Dragwyb Forms.
+* Tweak: Update incorrect form demos link.
+* Tweak: Mention external libraries in the readme.
 
 = 1.3.0 =
 * Added: "Input Mask" field to automatically format user input (like phone numbers or zip codes).
