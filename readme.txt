@@ -83,6 +83,27 @@ Construct highly optimized forms using a comprehensive suite of fields:
 
 ---
 
+== External Services ==
+
+This plugin utilizes the following libraries:
+
+*   **Pickr:** A high-performance color picker library. Used for design customization features.
+    *   **Source:** [https://github.com/Simonwep/pickr](https://github.com/Simonwep/pickr)
+    *   **Local Paths:** `assets/lib/pickr/css/index.css`, `assets/lib/pickr/js/index.js`
+*   **Flatpickr:** Lightweight and powerful datetime picker.
+    *   **Source:** [https://github.com/flatpickr/flatpickr](https://github.com/flatpickr/flatpickr)
+    *   **Local Paths:** `assets/lib/flatpickr/js/flatpickr.min.js`,`assets/lib/flatpickr/css/flatpickr.min.css`
+*   **Font Awesome (Free):** Used for providing iconography within the editor and frontend forms.
+    *   **Source/License:** [https://fontawesome.com/license/free](https://fontawesome.com/license/free)
+    *   **Local Path:** `assets/font-awesome/v5/all.min.css`
+*   **Chart.js:** A simple yet flexible JavaScript charting library for creating data visualizations.
+    *   **Source:** [https://www.chartjs.org/](https://www.chartjs.org/)
+    *   **Local Paths:** `assets/lib/chartjs/chart.umd.min.js`
+* **Dragwyb Feedback API:** Used to submit optional user feedback and diagnostic reports directly to the developers from the WordPress admin dashboard (https://feedback.dragwyb.com). Data is only sent when the site administrator explicitly submits the feedback form.
+    *  **Privacy Policy:** https://dragwyb.com/privacy-policy/
+
+---
+
 == Frequently Asked Questions ==
 
 #### Is this WordPress contact form plugin completely free?
