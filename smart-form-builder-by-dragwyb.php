@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Plugin Name: Dragwyb Forms
- * Description: A Contact form plugin. Create custom forms, multi-step layouts, and lead generation forms with a visual React editor, built-in SMTP, and GDPR compliance.
+ * Plugin Name: Dragwyb Forms – Contact Forms, Conditional Form, MultiStep Form, Analytics, SMTP
+ * Plugin URI: https://dragwyb.com/product/form/?utm_source=wpplugin&utm_medium=plugin_uri&utm_campaign=form_builder_demo
+ * Description: A fast, lightweight drag-and-drop WordPress contact form plugin. Create multi-step forms, conditional logic, and lead gen forms with built-in SMTP.
  * Version: 1.3.1
  * Author: dragwyb
  * Author URI:  https://dragwyb.com/?utm_source=wpplugin&utm_medium=author_uri&utm_campaign=form_builder_demo
- * Plugin URI: https://dragwyb.com/product/form/?utm_source=wpplugin&utm_medium=plugin_uri&utm_campaign=form_builder_demo
  * Text Domain: smart-form-builder-by-dragwyb
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html

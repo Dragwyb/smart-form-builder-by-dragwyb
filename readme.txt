@@ -1,6 +1,6 @@
 === Dragwyb Forms – Contact Forms, Conditional Form, MultiStep Form, Analytics, SMTP ===
 Contributors: dragwyb  
-Tags: contact form, forms, custom form, smtp, analytics
+Tags: contact form, multi-step form, conditional logic, smtp, lead generation
 Plugin URI: https://dragwyb.com/product/form/?utm_source=wpplugin&utm_medium=plugin_uri&utm_campaign=form_builder_demo
 Author URI: https://dragwyb.com/?utm_source=wpplugin&utm_medium=author_uri&utm_campaign=form_builder_demo
 Requires at least: 5.9
@@ -10,20 +10,20 @@ Stable tag: 1.3.1
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Create unlimited contact forms, save entries, conditional fields, multi-step form, lead generation forms, built-in SMTP, and GDPR compliance.
+A fast, lightweight drag-and-drop WordPress contact form plugin. Create multi-step forms, conditional logic, and lead gen forms with built-in SMTP.
 
 == Description ==
 
-Welcome to **Dragwyb Forms**—the fastest, most intuitive **WordPress contact form** plugin. Engineered specifically for speed and performance, our lightweight React-powered editor allows you to build everything from a simple **contact form** to complex, high-converting **custom forms**—without writing a single line of code and without slowing down your website.
+Dragwyb Forms is a fast, drag-and-drop **WordPress form plugin**. Engineered specifically for speed and performance, our lightweight React-powered editor allows you to create everything from a simple **contact form** to a complex **multi-step form**—without writing a single line of code and without slowing down your website.
 
-Whether you are capturing leads, collecting user surveys, or designing inquiry forms for Gutenberg and Elementor, Dragwyb Forms provides enterprise-level features with absolute ease of use. 
+Whether you are capturing leads, building **conditional logic** workflows, or designing inquiry forms for Gutenberg and Elementor, Dragwyb Forms provides enterprise-level features with absolute ease of use. 
 
-*   **[Live Demo](https://dragwyb.com/demo/form/?utm_source=wpplugin&utm_medium=readme&utm_campaign=dragwyb_form)** — Test the fastest WordPress forms today!
+*   **[Live Demo](https://dragwyb.com/demo/form/?utm_source=wpplugin&utm_medium=readme&utm_campaign=dragwyb_form)** — Test the fastest WordPress contact form today!
 
-### ⚡ Zero Database Bloat (A Faster WordPress)
+### ⚡ A Faster WordPress Form Plugin with Zero Database Bloat
 Traditional form plugins choke your database by creating dozens of `wp_postmeta` rows for a single form submission. Dragwyb Forms eliminates this performance bottleneck. We use an optimized **custom database table** (`dragwyb_submissions`) with structured JSON payloads, guaranteeing your website stays lightning-fast even with tens of thousands of entries.
 
-### 📈 Built for Marketing & Conversions
+### 📈 High-Converting Lead Generation Forms & Analytics
 Stop guessing how your forms are performing. With our newly integrated **Analytics Dashboard**, you can track form views, submission rates, and conversions in real-time. Automatically capture **UTM parameters and device data** with every entry to see exactly where your leads are coming from. 
 
 ---
@@ -63,7 +63,7 @@ Construct highly optimized forms using a comprehensive suite of fields:
 *   **Advanced Date & Time:** Powered by Flatpickr for flawless calendar UI, Captcha.
 *   **Standard Fields:** Text, Email, WYSIWYG, Number, Dropdowns, Checkboxes, Radio Buttons, File Uploads, Range Sliders, GDPR, Hidden Fields, Custom HTML, and more.
 
-## 👉 Check out our other plugin:
+## 👉 Check out our other plugins:
 
 * **[Flipbox Addon for Elementor](https://wordpress.org/plugins/ultimate-flipbox-addon-for-elementor/)** — Stunning 3D flip boxes for your site.
 * **[Click To Chat](https://wordpress.org/plugins/dragwyb-click-to-chat/)** — AI chatbot & floating social chat widgets.
