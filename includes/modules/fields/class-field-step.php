@@ -40,7 +40,7 @@ class Field_Step extends Field_Base {
 		$this->type              = 'step';
 		$this->name              = __( 'Step Break', 'smart-form-builder-by-dragwyb' );
 		$this->icon              = 'fas fa-shoe-prints';
-		$this->category          = 'structure';
+		$this->category          = 'advanced-fields';
 		$this->keywords          = array( 'step', 'break', 'page', 'wizard' );
 		$this->allow_child       = false;
 		$this->is_root_container = true;

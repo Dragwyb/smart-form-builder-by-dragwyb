@@ -135,6 +135,37 @@ class CSS_Manager {
 		$wp_filesystem->put_contents( $path, $content, FS_CHMOD_FILE );
 	}
 
+	/**
+	 * Retrieve the generated CSS string for a form (from cached file or dynamically generated).
+	 */
+	public function get_form_css( int $form_id, ?Frontend_Render $frontend = null ): string {
+		$unique_id = get_post_meta( $form_id, '_dragwyb_form_assets_id', true );
+		$file_name = 'form-' . $form_id . '-' . $unique_id . '.css';
+		$file_path = $this->upload_dir . $file_name;
+
+		if ( file_exists( $file_path ) && ! empty( $unique_id ) ) {
+			global $wp_filesystem;
+			if ( empty( $wp_filesystem ) ) {
+				require_once ABSPATH . '/wp-admin/includes/file.php';
+				WP_Filesystem();
+			}
+			$css = $wp_filesystem ? $wp_filesystem->get_contents( $file_path ) : @file_get_contents( $file_path );
+			if ( ! empty( $css ) ) {
+				return (string) $css;
+			}
+		}
+
+		if ( null === $frontend ) {
+			$frontend = Frontend_Render::instance();
+			$frontend->init( $form_id );
+		}
+
+		$this->frontend = $frontend;
+		$style_content  = $this->generate_css_content();
+
+		return ! empty( $style_content['css'] ) ? (string) $style_content['css'] : '';
+	}
+
 	final public function clean_cache( int $form_id ) {
 		return $this->delete_cache_file( $form_id );
 	}

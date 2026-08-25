@@ -17,7 +17,7 @@ class Field_Html extends Field_Base {
 		$this->type     = 'html';
 		$this->name     = __( 'HTML', 'smart-form-builder-by-dragwyb' );
 		$this->icon     = 'fas fa-code';
-		$this->category = 'structure';
+		$this->category = 'advanced-fields';
 		$this->keywords = array( 'code', 'markup', 'custom' );
 	}
 

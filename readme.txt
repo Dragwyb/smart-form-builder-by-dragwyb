@@ -6,7 +6,7 @@ Author URI: https://dragwyb.com/?utm_source=wpplugin&utm_medium=author_uri&utm_c
 Requires at least: 5.9
 Tested up to: 7.1 
 Requires PHP: 7.4  
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,54 +14,68 @@ A fast, lightweight drag-and-drop WordPress contact form plugin. Create multi-st
 
 == Description ==
 
-Dragwyb Forms is a fast, drag-and-drop **WordPress form plugin**. Engineered specifically for speed and performance, our lightweight React-powered editor allows you to create everything from a simple **contact form** to a complex **multi-step form**—without writing a single line of code and without slowing down your website.
+Dragwyb Forms is a simple, fast, and powerful **form plugin**. Whether you are a beginner looking to quickly add a **contact form** to your site, or a developer needing advanced **conditional logic** and custom integrations, this tool has you covered.
 
-Whether you are capturing leads, building **conditional logic** workflows, or designing inquiry forms for Gutenberg and Elementor, Dragwyb Forms provides enterprise-level features with absolute ease of use. 
+Our visual drag-and-drop editor makes designing forms incredibly easy without touching a single line of code, while our optimized backend ensures your website stays lightning fast.
 
-*   **[Live Demo](https://dragwyb.com/demo/form/?utm_source=wpplugin&utm_medium=readme&utm_campaign=dragwyb_form)** — Test the fastest WordPress contact form today!
+== Live Demo ==
 
-### ⚡ A Faster WordPress Form Plugin with Zero Database Bloat
-Traditional form plugins choke your database by creating dozens of `wp_postmeta` rows for a single form submission. Dragwyb Forms eliminates this performance bottleneck. We use an optimized **custom database table** (`dragwyb_submissions`) with structured JSON payloads, guaranteeing your website stays lightning-fast even with tens of thousands of entries.
+Explore live examples of the **Dragwyb Forms** in action:
 
-### 📈 High-Converting Lead Generation Forms & Analytics
-Stop guessing how your forms are performing. With our newly integrated **Analytics Dashboard**, you can track form views, submission rates, and conversions in real-time. Automatically capture **UTM parameters and device data** with every entry to see exactly where your leads are coming from. 
+🔗 [Forms Demo Page](https://dragwyb.com/demo/form/?utm_source=wpplugin&utm_medium=readme&utm_campaign=dragwyb_form)
 
 ---
 
-### 🚀 Core Features & SEO Benefits
+## 🏆 Key Features (Made for Everyone)
 
-*   **⚡ Visual React Editor:** Experience a zero-lag, drag-and-drop form editor. Add, reorder, and style fields instantly without waiting for page reloads.
-*   **📧 Built-in SMTP Delivery:** Never miss a lead to the spam folder. Our native SMTP integration ensures your notification emails and auto-responders land directly in the inbox.
-*   **🛡️ Complete GDPR Compliance:** Stay legally protected globally. Utilize built-in GDPR fields, mandatory consent checkboxes, and seamless privacy policy integrations.
-*   **🔀 Smart Conditional Logic:** Increase conversion rates by dynamically showing or hiding specific fields based on user input, creating a personalized experience.
-*   **📑 Multi-Step Forms:** Break intimidating, long forms into engaging, bite-sized steps complete with progress bars and customizable navigation buttons.
-*   **📚 Professionally Designed Templates:** Skip the setup phase. Choose from a rich Template Library to launch contact forms, surveys, and lead magnets in seconds.
-*   **🛡️ Invisible Anti-Spam:** Keep your inbox clean with native support for **Google reCAPTCHA v2, reCAPTCHA v3, hCaptcha**, and our built-in invisible Honeypot.
-*   **📱 100% Mobile Responsive Grid:** Build complex, multi-column layouts using a native grid system that looks flawless on any desktop, tablet, or smartphone.
+### 🖱️ Easy Drag-and-Drop Design
+**For Beginners:** Create forms by simply dragging fields onto the screen. No coding required.  
+
+### ⚡ Blazing Fast Performance
+**For Beginners:** Your website won't slow down, no matter how many form entries you get.  
+
+### 🔀 Smart Conditional Logic
+Show or hide specific questions based on what the user selects. This keeps your forms short, clean, and highly relevant, which boosts your overall **lead generation**.
+
+### 📑 Multi-Step Forms
+Break long, boring surveys or quote requests into bite-sized pages with a progress bar. This makes filling out forms feel much less overwhelming for your visitors.
+
+### 📧 Reliable Email Delivery (Built-in SMTP)
+Stop worrying about your leads going to the spam folder. Use our built-in SMTP settings to ensure your form notifications land straight in your inbox.
+
+### 🎨 Native Elementor & Gutenberg Support
+Use our new **"Smart Form" Gutenberg Block** or **"Smart Form" Elementor Widget** to easily embed your forms. Select your form from a dropdown and see a live preview directly inside your page editor.
 
 ---
 
-## ⚙️ Advanced Design & Form Controls
+## 🔥 Everything Included Inside
 
-Take absolute control over your form’s functionality and aesthetics directly within the WordPress dashboard:
+Here is a simple breakdown of what you can do with this custom form plugin:
 
-### 1. Codeless Global Styling
-*   **1-Click Presets:** Instantly apply 8 premium styles: Default, Modern Outlined, Elegant, Classic Underline, Neon Glow, Dark Neon, and Glassmorphism (Light & Dark).
-*   **Deep Visual Customization:** Customize container backgrounds, floating labels, input focus borders, button hover states, and Google Fonts without touching CSS.
-*   **Advanced Developer Tools:** Inject CSS variables and custom CSS directly into color controls for pixel-perfect brand matching.
+### Form Fields & Layouts
+*   **Ready-to-use Templates:** Start instantly with pre-made templates for contact forms, surveys, and more.
+*   **Mobile Friendly:** Automatically looks great on phones, tablets, and desktops.
+*   **Standard Fields:** Checkbox, Text, Email, Hidden, Number, Radio, Textarea, Select, Button, Name, Address, Phone (with country code selector), Date/Time (with beautiful Flatpickr date/time calendars) and more.
+*   **Advanced Fields:** HTML, Step Field, URL, Range Slider, Captcha, File Upload, Input masking, GDPR Consent.
+*   **Structure Fields:** Row, Section Break. 
 
-### 2. Intelligent Form Actions
-*   **Submission Routing:** Set up instant URL redirects, send targeted SMTP emails, or trigger dynamic success/error messages upon submission.
-*   **Flexible Feedback UI:** Display success or error messages exactly how you want—inline after the form, replacing the form entirely, or inside a clean modal popup.
-*   **Dynamic Data Tags:** Map user-submitted fields natively into your email notifications and confirmation messages.
+### Styling & Design
+*   **1-Click Styles:** Choose from 8 beautiful presets like Elegant, Modern, or Glassmorphism.
+*   **Easy Customization:** Change colors, fonts, and button styles globally without knowing CSS.
+*   **Developer Friendly:** Easily add your own CSS variables or custom CSS for pixel-perfect design.
 
-### 3. High-Performance Form Fields
-Construct highly optimized forms using a comprehensive suite of fields:
+### Analytics & Marketing
+*   **Live Dashboard:** Track how many people view and submit your forms directly in WordPress.
+*   **Lead Tracking:** Automatically capture UTM tags and device types so you know where your traffic comes from.
+*   **Post-Submission Actions:** Redirect users to a "Thank You" page, show a popup, or send an auto-responder email.
 
-*   **Input Masking (New!):** Enforce strict data formatting for zip codes, phone numbers, and custom ID formats to ensure pristine data collection.
-*   **Phone Field:** Features country code.
-*   **Advanced Date & Time:** Powered by Flatpickr for flawless calendar UI, Captcha.
-*   **Standard Fields:** Text, Email, WYSIWYG, Number, Dropdowns, Checkboxes, Radio Buttons, File Uploads, Range Sliders, GDPR, Hidden Fields, Custom HTML, and more.
+### Security & Privacy
+*   **Spam Protection:** Keep your inbox safe with built-in Honeypot, Google reCAPTCHA (v2/v3), and hCaptcha.
+*   **GDPR Ready:** Easily add consent checkboxes and link to your privacy policy to stay legally compliant.
+
+---
+
+👉 [View Live Demo](https://dragwyb.com/demo/form/?utm_source=wpplugin&utm_medium=readme&utm_campaign=dragwyb_form)
 
 ## 👉 Check out our other plugins:
 
@@ -153,6 +167,13 @@ Dragwyb Forms is an open-source project, and we welcome contributions from the c
 ---
 
 == Changelog ==
+
+= 1.3.2 =
+* Added: "Smart Form" Gutenberg Block for seamless form embedding natively in the WordPress editor with editor preview.
+* Added: "Smart Form" Elementor Widget to easily embed forms inside Elementor page layouts with editor preview.
+* Fixed: Row root container select issue.
+* Improved: Fields category Structure.
+* Tweak: Textual changes in readme.
 
 = 1.3.1 =
 * Fixed: Form not created with the business template during onboarding setup.

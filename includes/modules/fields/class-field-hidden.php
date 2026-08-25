@@ -13,7 +13,7 @@ class Field_Hidden extends Field_Base {
 		$this->type     = 'hidden';
 		$this->name     = __( 'Hidden Field', 'smart-form-builder-by-dragwyb' );
 		$this->icon     = 'fas fa-eye-slash';
-		$this->category = 'advanced-fields';
+		$this->category = 'standard-fields';
 		$this->keywords = array( 'invisible', 'secret', 'tracking' );
 	}
 

@@ -223,6 +223,13 @@ module.exports = (env, argv) => {
         ]
     };
 
+    const gutenbergFolders = {
+        Scripts: [
+            'gutenberg'
+        ],
+        Styles: []
+    };
+
     if (env && env.type === 'editor') {
         console.log("ℹ️  Running Webpack in *editor* mode...");
         validScssFiles = validScssFilesFilter(editorFolders.Styles);
@@ -243,6 +250,10 @@ module.exports = (env, argv) => {
         console.log("ℹ️  Running Webpack in *onboarding* mode...");
         validScssFiles = validScssFilesFilter(onboardingFolders.Styles);
         validFolders = validFoldersFilter(onboardingFolders.Scripts);
+    } else if (env && env.type === 'gutenberg') {
+        console.log("ℹ️  Running Webpack in *gutenberg* mode...");
+        validScssFiles = validScssFilesFilter(gutenbergFolders.Styles);
+        validFolders = validFoldersFilter(gutenbergFolders.Scripts);
     } else {
         console.warn("⚠️ Invalid build type provided. Use `--env type=editor` or `--env type=frontend`.");
         return defaultConfig;
