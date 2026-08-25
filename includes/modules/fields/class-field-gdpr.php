@@ -17,7 +17,7 @@ class Field_Gdpr extends Field_Base {
 		$this->type     = 'gdpr';
 		$this->name     = __( 'GDPR Consent', 'smart-form-builder-by-dragwyb' );
 		$this->icon     = 'fas fa-shield-alt';
-		$this->category = 'standard-fields';
+		$this->category = 'advanced-fields';
 		$this->keywords = array( 'gdpr', 'consent', 'privacy', 'agreement', 'checkbox', 'terms' );
 	}
 

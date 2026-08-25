@@ -17,7 +17,7 @@ class Field_Name extends Field_Base {
 		$this->type     = 'name';
 		$this->name     = __( 'Name Field', 'smart-form-builder-by-dragwyb' );
 		$this->icon     = 'fas fa-user';
-		$this->category = 'advanced-fields';
+		$this->category = 'standard-fields';
 		$this->keywords = array( 'first', 'last', 'person', 'user' );
 	}
 

@@ -176,7 +176,7 @@ class Field_Phone extends Field_Base {
 		$this->type     = 'phone';
 		$this->name     = __( 'Phone Field', 'smart-form-builder-by-dragwyb' );
 		$this->icon     = 'fas fa-phone';
-		$this->category = 'advanced-fields';
+		$this->category = 'standard-fields';
 		$this->keywords = array( 'mobile', 'contact', 'number', 'telephone', 'cell', 'country', 'dial' );
 	}
 

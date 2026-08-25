@@ -13,7 +13,7 @@ class Field_Button extends Field_Base {
 		$this->type     = 'button';
 		$this->name     = __( 'Button', 'smart-form-builder-by-dragwyb' );
 		$this->icon     = 'fa fa-mouse-pointer';
-		$this->category = 'structure';
+		$this->category = 'standard-fields';
 		$this->keywords = array( 'submit', 'send', 'action' );
 	}
 
