@@ -34,7 +34,6 @@ class rowField extends DragwybEditor.editor.extends.FieldBase {
         const missingColumns = totalColumns - childrenIds.length;
 
         const addFields = (e) => {
-            e.stopPropagation();
             const columnEle = e.target.classList.contains('dragwyb-field__add-column')
                 ? e.target
                 : e.target.closest('.dragwyb-field__add-column');
@@ -43,7 +42,6 @@ class rowField extends DragwybEditor.editor.extends.FieldBase {
                 rootContainerId: this.id,
                 activeColumnIndex: parseInt(columnEle.dataset.index)
             });
-            this.Utils.setSelectedSettingId({ value: false });
             this.Utils.setActiveTab({ value: 'fields' });
         }
 
