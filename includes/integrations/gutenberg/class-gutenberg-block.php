@@ -129,7 +129,7 @@ class Gutenberg_Block {
 
 			if ( ! empty( $form_css ) ) {
 				$form_css_escaped = wp_strip_all_tags( $form_css );
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Dynamic CSS generated and sanitized by CSS_Manager for editor preview.
+				// Dynamic CSS generated and sanitized by CSS_Manager for editor preview.
 				$rendered_form = '<style id="dragwyb-form-preview-style-' . esc_attr( (string) $form_id ) . '">' . $form_css_escaped . '</style>' . $rendered_form;
 			}
 		}

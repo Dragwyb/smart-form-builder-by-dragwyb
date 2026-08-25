@@ -57,8 +57,9 @@ class Integrations_Manager {
 
 		if ( ! empty( $posts ) && is_array( $posts ) ) {
 			foreach ( $posts as $post ) {
-				$title = ! empty( $post->post_title ) ? $post->post_title : sprintf( __( 'Form #%d (No Title)', 'smart-form-builder-by-dragwyb' ), $post->ID );
-				$suffix = ( 'draft' === $post->post_status ) ? ' - [' . __( 'Draft', 'smart-form-builder-by-dragwyb' ) . ']' : '';
+				// translators: %d is Form ID.
+				$title                         = ! empty( $post->post_title ) ? $post->post_title : sprintf( __( 'Form #%d (No Title)', 'smart-form-builder-by-dragwyb' ), $post->ID );
+				$suffix                        = ( 'draft' === $post->post_status ) ? ' - [' . __( 'Draft', 'smart-form-builder-by-dragwyb' ) . ']' : '';
 				$options[ (string) $post->ID ] = sprintf( '%1$s (#%2$d)%3$s', $title, $post->ID, $suffix );
 			}
 		}
