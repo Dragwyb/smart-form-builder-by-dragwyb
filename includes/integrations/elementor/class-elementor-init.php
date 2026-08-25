@@ -90,6 +90,7 @@ class Elementor_Init {
 						var container = window.parent.elementor.getContainer(modelId);
 						if (container) {
 							container.settings.setExternalChange("form_id", formId);
+							container.render();
 						}
 					}
 				});
