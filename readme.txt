@@ -171,7 +171,8 @@ Dragwyb Forms is an open-source project, and we welcome contributions from the c
 = 1.3.2 =
 * Added: "Smart Form" Gutenberg Block for seamless form embedding natively in the WordPress editor.
 * Added: "Smart Form" Elementor Widget to easily embed forms inside Elementor page layouts.
-* Added: Ability to select forms by title or ID directly from block/widget settings.
+* Fixed: Row root container select issue.
+* Improved: Fields category Structure.
 
 = 1.3.1 =
 * Fixed: Form not created with the business template during onboarding setup.
