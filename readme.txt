@@ -6,7 +6,7 @@ Author URI: https://dragwyb.com/?utm_source=wpplugin&utm_medium=author_uri&utm_c
 Requires at least: 5.9
 Tested up to: 7.1 
 Requires PHP: 7.4  
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,6 +31,7 @@ Stop guessing how your forms are performing. With our newly integrated **Analyti
 ### 🚀 Core Features & SEO Benefits
 
 *   **⚡ Visual React Editor:** Experience a zero-lag, drag-and-drop form editor. Add, reorder, and style fields instantly without waiting for page reloads.
+*   **🎨 Native Editor Integrations (New!):** Easily embed your forms using our new "Smart Form" Gutenberg Block and "Smart Form" for Elementor. Select your form by title or ID and view a live, real-time preview directly inside the page editor.
 *   **📧 Built-in SMTP Delivery:** Never miss a lead to the spam folder. Our native SMTP integration ensures your notification emails and auto-responders land directly in the inbox.
 *   **🛡️ Complete GDPR Compliance:** Stay legally protected globally. Utilize built-in GDPR fields, mandatory consent checkboxes, and seamless privacy policy integrations.
 *   **🔀 Smart Conditional Logic:** Increase conversion rates by dynamically showing or hiding specific fields based on user input, creating a personalized experience.
@@ -58,7 +59,7 @@ Take absolute control over your form’s functionality and aesthetics directly w
 ### 3. High-Performance Form Fields
 Construct highly optimized forms using a comprehensive suite of fields:
 
-*   **Input Masking (New!):** Enforce strict data formatting for zip codes, phone numbers, and custom ID formats to ensure pristine data collection.
+*   **Input Masking:** Enforce strict data formatting for zip codes, phone numbers, and custom ID formats to ensure pristine data collection.
 *   **Phone Field:** Features country code.
 *   **Advanced Date & Time:** Powered by Flatpickr for flawless calendar UI, Captcha.
 *   **Standard Fields:** Text, Email, WYSIWYG, Number, Dropdowns, Checkboxes, Radio Buttons, File Uploads, Range Sliders, GDPR, Hidden Fields, Custom HTML, and more.
@@ -153,6 +154,11 @@ Dragwyb Forms is an open-source project, and we welcome contributions from the c
 ---
 
 == Changelog ==
+
+= 1.3.2 =
+* Added: "Smart Form" Gutenberg Block for seamless form embedding natively in the WordPress editor.
+* Added: "Smart Form" Elementor Widget to easily embed forms inside Elementor page layouts.
+* Added: Ability to select forms by title or ID directly from block/widget settings.
 
 = 1.3.1 =
 * Fixed: Form not created with the business template during onboarding setup.
