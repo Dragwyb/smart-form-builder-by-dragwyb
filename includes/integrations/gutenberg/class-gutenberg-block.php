@@ -31,11 +31,10 @@ class Gutenberg_Block {
 	public function init(): void {
 		add_action( 'init', array( $this, 'register_block' ) );
 		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_editor_assets' ) );
-		add_action( 'enqueue_block_assets', array( $this, 'enqueue_block_assets' ) );
 	}
 
 	/**
-	 * Register the Gutenberg block.
+	 * Register the Gutenberg block and its editor assets.
 	 */
 	public function register_block(): void {
 		if ( ! function_exists( 'register_block_type' ) ) {
@@ -46,7 +45,7 @@ class Gutenberg_Block {
 		$asset      = file_exists( $asset_file )
 			? require $asset_file
 			: array(
-				'dependencies' => array( 'wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n', 'wp-server-side-render' ),
+				'dependencies' => array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-i18n', 'wp-server-side-render' ),
 				'version'      => DRAGWYB_FORM_BUILDER_VERSION,
 			);
 
@@ -67,7 +66,7 @@ class Gutenberg_Block {
 			)
 		);
 
-		// Register frontend styles for Gutenberg block editor
+		// Register static frontend styles for block editor & frontend
 		wp_register_style(
 			'dragwyb-form-frontend-style',
 			DRAGWYB_FORM_BUILDER_URL . 'assets/css/form-frontend.css',
@@ -104,33 +103,8 @@ class Gutenberg_Block {
 	 * Enqueue editor assets on enqueue_block_editor_assets hook.
 	 */
 	public function enqueue_editor_assets(): void {
-		wp_enqueue_style(
-			'dragwyb-form-frontend-style',
-			DRAGWYB_FORM_BUILDER_URL . 'assets/css/form-frontend.css',
-			array(),
-			DRAGWYB_FORM_BUILDER_VERSION
-		);
-
-		wp_enqueue_style(
-			'dragwyb-flatpickr-style',
-			DRAGWYB_FORM_BUILDER_URL . 'assets/lib/flatpickr/css/flatpickr.min.css',
-			array(),
-			DRAGWYB_FORM_BUILDER_VERSION
-		);
-	}
-
-	/**
-	 * Enqueue frontend block assets (loads in both editor iframe and frontend).
-	 */
-	public function enqueue_block_assets(): void {
-		if ( is_admin() ) {
-			wp_enqueue_style(
-				'dragwyb-form-frontend-style',
-				DRAGWYB_FORM_BUILDER_URL . 'assets/css/form-frontend.css',
-				array(),
-				DRAGWYB_FORM_BUILDER_VERSION
-			);
-		}
+		wp_enqueue_style( 'dragwyb-form-frontend-style' );
+		wp_enqueue_style( 'dragwyb-flatpickr-style' );
 	}
 
 	/**
@@ -148,21 +122,16 @@ class Gutenberg_Block {
 
 		$rendered_form = do_shortcode( '[dragwyb-form id="' . $form_id . '"]' );
 
-		// When rendering inside Gutenberg editor preview (REST request / admin preview):
+		// In block editor preview (REST request / admin), inject dynamic form CSS in a <style> tag.
 		if ( ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || is_admin() ) {
-			$css_manager      = CSS_Manager::instance();
-			$form_css         = $css_manager->get_form_css( $form_id );
-			$frontend_css_url = DRAGWYB_FORM_BUILDER_URL . 'assets/css/form-frontend.css';
-			$flatpickr_css    = DRAGWYB_FORM_BUILDER_URL . 'assets/lib/flatpickr/css/flatpickr.min.css';
-
-			$preview_assets  = '<link rel="stylesheet" id="dragwyb-form-frontend-css" href="' . esc_url( $frontend_css_url ) . '?ver=' . esc_attr( DRAGWYB_FORM_BUILDER_VERSION ) . '" type="text/css" media="all" />';
-			$preview_assets .= '<link rel="stylesheet" id="dragwyb-flatpickr-preview-css" href="' . esc_url( $flatpickr_css ) . '?ver=' . esc_attr( DRAGWYB_FORM_BUILDER_VERSION ) . '" type="text/css" media="all" />';
+			$css_manager = CSS_Manager::instance();
+			$form_css    = $css_manager->get_form_css( $form_id );
 
 			if ( ! empty( $form_css ) ) {
-				$preview_assets .= '<style id="dragwyb-form-preview-custom-css-' . esc_attr( (string) $form_id ) . '">' . $form_css . '</style>';
+				$form_css_escaped = wp_strip_all_tags( $form_css );
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Dynamic CSS generated and sanitized by CSS_Manager for editor preview.
+				$rendered_form = '<style id="dragwyb-form-preview-style-' . esc_attr( (string) $form_id ) . '">' . $form_css_escaped . '</style>' . $rendered_form;
 			}
-
-			return $preview_assets . $rendered_form;
 		}
 
 		return $rendered_form;
