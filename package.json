@@ -12,7 +12,9 @@
         "dev:settings": "webpack --mode development --env type=settings --watch",
         "build:settings": "webpack --mode production --env type=settings",
         "dev:onboarding": "webpack --mode development --env type=onboarding --watch",
-        "build:onboarding": "webpack --mode production --env type=onboarding"
+        "build:onboarding": "webpack --mode production --env type=onboarding",
+        "dev:gutenberg": "webpack --mode development --env type=gutenberg --watch",
+        "build:gutenberg": "webpack --mode production --env type=gutenberg"
     },
     "dependencies": {
         "@dnd-kit/core": "^6.3.1",

@@ -23,6 +23,7 @@ use Dragwyb\Form_Builder\Includes\Mailer\Dragwyb_Mailer;
 use Dragwyb\Form_Builder\Includes\Tracker\Dragwyb_Tracker;
 use Dragwyb\Form_Builder\Admin\Feedback\SMFBD_Feedback_Form;
 use Dragwyb\Form_Builder\Admin\Review\Dragwyb_Review_Notice;
+use Dragwyb\Form_Builder\Includes\Integrations\Integrations_Manager;
 
 class Dragwyb_Init {
 
@@ -58,6 +59,7 @@ class Dragwyb_Init {
 		new Dragwyb_Settings_Route();
 		Form_Preview::instance();
 		Shortcode_Handler::instance();
+		Integrations_Manager::instance()->init();
 
 		add_action( 'admin_init', array( $this, 'initial_files' ) );
 
