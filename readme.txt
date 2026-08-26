@@ -389,7 +389,6 @@ Dragwyb Forms is an open-source project, and contributions from the community ar
 * Improved: Editor field drag-and-drop experience.
 * Tweak: Updated plugin name to Dragwyb Forms.
 * Tweak: Updated incorrect form demo link.
-* Tweak: Added external library information to the readme.
 
 = 1.3.0 =
 * Added: Input Mask field for automatically formatting user input such as phone numbers or ZIP codes.
