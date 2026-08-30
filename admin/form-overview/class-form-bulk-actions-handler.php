@@ -15,10 +15,10 @@ class Form_Bulk_Actions_Handler {
 
 	private static ?self $instance = null;
 
-	private static $trashed   = 0;
-	private static $locked    = 0;
-	private static $untrashed = 0;
-	private static $deleted   = 0;
+	private $trashed   = 0;
+	private $locked    = 0;
+	private $untrashed = 0;
+	private $deleted   = 0;
 
 	public static function instance( $post_type ): self {
 		if ( null === self::$instance ) {
