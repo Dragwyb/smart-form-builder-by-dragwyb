@@ -6,7 +6,7 @@ Author URI: https://dragwyb.com/?utm_source=wpplugin&utm_medium=author_uri&utm_c
 Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.3.2
+Stable tag: 1.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -373,6 +373,9 @@ Dragwyb Forms is an open-source project, and contributions from the community ar
 7. Plugin Settings – Configure APIs, SMTP, GDPR settings, performance options, and other plugin settings.
 
 == Changelog ==
+
+= 1.3.3 =
+* Fixed: PHP error while deleting the form.
 
 = 1.3.2 =
 * Added: "Smart Form" Gutenberg Block for seamless form embedding in the native WordPress editor with editor preview.

@@ -4,7 +4,7 @@
  * Plugin Name: Dragwyb Forms
  * Plugin URI: https://dragwyb.com/product/form/?utm_source=wpplugin&utm_medium=plugin_uri&utm_campaign=form_builder_demo
  * Description: A fast, lightweight drag-and-drop WordPress contact form plugin. Create multi-step forms, conditional logic, and lead gen forms with built-in SMTP.
- * Version: 1.3.2
+ * Version: 1.3.3
  * Author: dragwyb
  * Author URI:  https://dragwyb.com/?utm_source=wpplugin&utm_medium=author_uri&utm_campaign=form_builder_demo
  * Text Domain: smart-form-builder-by-dragwyb
@@ -29,7 +29,7 @@ final class Dragwyb_Form_Builder {
 	/**
 	 * Plugin version
 	 */
-	const VERSION = '1.3.2';
+	const VERSION = '1.3.3';
 
 	/**
 	 * Plugin instance
