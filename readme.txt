@@ -1,6 +1,6 @@
-=== Dragwyb Forms – Contact Form Builder, Conditional & Multi-Step Forms, SMTP ===
+=== Dragwyb Forms – Contact Form & Form Builder ===
 Contributors: dragwyb
-Tags: contact form, form builder, conditional logic, multi-step form, lead generation
+Tags: contact form, form builder, conditional logic, multi step forms, lead generation
 Plugin URI: https://dragwyb.com/product/form/?utm_source=wpplugin&utm_medium=plugin_uri&utm_campaign=form_builder_demo
 Author URI: https://dragwyb.com/?utm_source=wpplugin&utm_medium=author_uri&utm_campaign=form_builder_demo
 Requires at least: 5.9
@@ -8,84 +8,210 @@ Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 1.3.3
 License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-A fast, lightweight drag-and-drop WordPress form builder for creating contact forms, conditional forms, multi-step forms, and lead generation forms with built-in SMTP.
+A free drag-and-drop form builder for contact, multi-step, conditional, and lead generation forms with built-in SMTP.
 
 == Description ==
 
-Dragwyb Forms is a fast and lightweight **drag-and-drop WordPress form builder** that helps you create **contact forms, conditional forms, multi-step forms, lead generation forms, surveys, quote request forms, and custom forms** without writing code.
+Dragwyb Forms is a **free WordPress form builder** for creating professional **contact forms, lead generation forms, multi-step forms, conditional forms, surveys, quote request forms, and custom forms** without writing code.
 
-Build simple contact forms or advanced forms with **conditional logic, multi-step layouts, built-in SMTP, form analytics, UTM tracking, spam protection, file uploads, and flexible post-submission actions**.
+Create forms visually with an easy-to-use **drag-and-drop form builder**. Add fields, organize layouts, configure validation, customize styling, and control what happens after visitors submit a form.
 
-The visual drag-and-drop editor makes it easy to build and customize forms, while optimized frontend loading and database handling help keep your website fast.
+Build simple contact forms or advanced workflows with **conditional logic, multi-step forms, built-in SMTP, form analytics, UTM tracking, spam protection, file uploads, input masking, form templates, and flexible post-submission actions**.
 
-== Live Demo ==
+Dragwyb Forms is designed for WordPress websites that need a flexible form builder for collecting enquiries, leads, customer information, survey responses, applications, support requests, and other form submissions.
 
-Explore live examples of **Dragwyb Forms** in action:
+### Why Choose Dragwyb Forms?
 
-🔗 [Forms Demo Page](https://dragwyb.com/demo/form/?utm_source=wpplugin&utm_medium=readme&utm_campaign=dragwyb_form)
+Dragwyb Forms combines an easy-to-use visual form builder with advanced features for creating different types of forms.
 
----
+* Create forms visually with a drag-and-drop editor.
+* Build contact, lead generation, survey, quote, and custom forms.
+* Create conditional forms using conditional logic.
+* Create multi-step forms with progress indicators.
+* Configure SMTP without installing a separate SMTP plugin.
+* Track form views, submissions, conversions, and UTM campaigns.
+* Embed forms using Elementor or Gutenberg.
+* Protect forms with multiple spam prevention options.
+* Allow visitors to upload files.
+* Manage form submissions from the WordPress dashboard.
+* Start quickly with ready-to-use form templates.
 
-## Build Any Type of WordPress Form
+### WordPress Form Builder
 
-Dragwyb Forms gives you the flexibility to create forms for a wide range of use cases.
+Create and customize forms visually without coding.
 
-* **Contact Forms** – Create simple and customizable contact forms for your website.
-* **Conditional Forms** – Dynamically show or hide fields based on user selections or previous answers.
-* **Multi-Step Forms** – Break long forms into multiple steps with progress indicators and custom navigation.
-* **Lead Generation Forms** – Capture leads and collect valuable customer information.
-* **Survey Forms** – Collect feedback, responses, and customer insights.
-* **Quote Request Forms** – Build detailed enquiry and quote request forms.
-* **Custom Forms** – Combine fields, layouts, styling, and conditional logic to create forms for your specific workflow.
+The drag-and-drop editor lets you add fields, arrange layouts, configure field settings, and customize the appearance of your forms.
 
----
+Use Dragwyb Forms to create:
 
-## Powerful WordPress Form Builder Features
+* Contact forms
+* Lead generation forms
+* Multi-step forms
+* Conditional forms
+* Survey forms
+* Quote request forms
+* Registration forms
+* Application forms
+* Support forms
+* Enquiry forms
+* Custom forms
 
-### 🖱️ Easy Drag-and-Drop Form Builder
+### Contact Form Builder
 
-Create and customize forms visually by dragging fields into place. Build forms without writing code and see your changes directly inside the editor.
+Create customizable contact forms for your website using flexible fields and layout options.
 
-### ⚡ Fast and Lightweight
+Add common fields such as:
 
-Dragwyb Forms is designed to provide powerful form-building features while keeping frontend loading optimized.
+* Name
+* Email
+* Phone
+* Text
+* Textarea
+* Number
+* Select
+* Radio
+* Checkbox
+* Date
+* Time
+* Address
+* URL
+* Hidden
 
-### 🔀 Smart Conditional Logic
+Configure required fields, validation, default values, styling, and submission behavior to create forms that fit your website.
 
-Show or hide specific fields based on what users select or enter. Create cleaner, more personalized forms and collect only the information you need.
+### Conditional Logic
 
-Conditional logic helps you build smarter forms for lead generation, surveys, quote requests, registrations, and other custom workflows.
+Create dynamic forms using conditional logic.
 
-### 📑 Multi-Step Forms
+Show or hide fields based on a visitor's selections or previous answers.
 
-Turn long forms into simple step-by-step experiences.
+Conditional logic can be useful for:
 
-Add step fields to divide your forms into multiple pages, display progress indicators, and customize previous and next navigation buttons.
+* Lead generation forms
+* Surveys
+* Quote request forms
+* Application forms
+* Registration forms
+* Enquiry forms
+* Custom workflows
 
-Multi-step forms can help make long or complex forms easier for visitors to complete.
+### Multi-Step Forms
 
-### 📧 Built-in SMTP
+Create multi-step forms by dividing longer forms into multiple sections.
 
-Configure SMTP settings directly inside Dragwyb Forms to improve the reliability of form notification emails.
+Add Step fields, progress indicators, and customizable previous and next buttons to make complex forms easier for visitors to complete.
+
+Multi-step forms can be useful for applications, surveys, quote requests, registrations, and other forms that require multiple sections.
+
+### Lead Generation Forms
+
+Create forms for collecting leads and customer information.
+
+Combine form fields, conditional logic, hidden fields, UTM tracking, analytics, and post-submission actions to create lead collection workflows.
+
+### Form Analytics
+
+Monitor form performance from your WordPress dashboard.
+
+Track:
+
+* Form views
+* Form submissions
+* Conversion data
+* Visitor device information
+* UTM campaign parameters
+
+Use analytics data to understand how visitors interact with your forms and identify which forms and campaigns generate submissions.
+
+### UTM Tracking
+
+Capture UTM campaign information with form submissions.
+
+Dragwyb Forms can store parameters such as:
+
+* utm_source
+* utm_medium
+* utm_campaign
+* utm_term
+* utm_content
+
+Use UTM information to understand which marketing campaigns and traffic sources generate form submissions.
+
+### Built-in SMTP
+
+Configure SMTP directly inside Dragwyb Forms to improve the reliability of form notification emails.
 
 Send form notifications without requiring a separate SMTP plugin.
 
-### 📊 Form Analytics & UTM Tracking
+### Form Templates
 
-Track how visitors interact with your forms directly inside WordPress.
+Start creating forms faster with ready-to-use templates.
 
-* Track form views and submissions.
-* Monitor form performance and conversions.
-* Capture UTM parameters from your marketing campaigns.
-* Store visitor device information with form entries.
+Choose a template, customize its fields and styling, and publish the form when it is ready.
 
-Understand where your leads come from and identify which forms are performing best.
+Templates can be used for contact forms, surveys, business forms, lead generation forms, and other common workflows.
 
-### 🎯 Flexible Post-Submission Actions
+### Elementor Integration
+
+Add forms to Elementor layouts using the dedicated **Smart Form Elementor Widget**.
+
+Select a form and preview it directly inside the Elementor editor.
+
+### Gutenberg Integration
+
+Add forms to the native WordPress block editor using the **Smart Form Gutenberg Block**.
+
+Select a form and preview it directly inside the WordPress editor.
+
+### Spam Protection
+
+Protect forms against unwanted submissions with multiple spam prevention options.
+
+Supported methods include:
+
+* Honeypot protection
+* Google reCAPTCHA v2
+* Google reCAPTCHA v3
+* hCaptcha
+
+### File Uploads
+
+Allow visitors to upload files through your forms.
+
+File upload fields can be useful for:
+
+* Support requests
+* Applications
+* Documents
+* Attachments
+* Enquiries
+* Custom workflows
+
+### Input Masking
+
+Automatically format structured user input with input masks.
+
+Use input masking for values such as:
+
+* Phone numbers
+* ZIP codes
+* Postal codes
+* Identification numbers
+* Other structured values
+
+### GDPR & Privacy
+
+Add GDPR consent fields to your forms and connect them with your website's privacy policy.
+
+The available privacy features can help you collect consent information from visitors. Website owners are responsible for determining the privacy and legal requirements applicable to their websites.
+
+### Post-Submission Actions
 
 Choose what happens after a visitor submits a form.
+
+Available actions include:
 
 * Display a success message.
 * Replace the form with a success message.
@@ -93,106 +219,82 @@ Choose what happens after a visitor submits a form.
 * Redirect visitors to a custom thank-you page.
 * Send autoresponder emails.
 
-### 🎨 Elementor & Gutenberg Integration
+### Form Fields
 
-Embed your forms directly inside popular WordPress editors.
+Build forms using a collection of standard and advanced fields.
 
-Use the **Smart Form Gutenberg Block** to select and preview forms inside the WordPress block editor.
+Available fields include:
 
-Use the **Smart Form Elementor Widget** to add forms directly to Elementor page layouts.
+* Text
+* Email
+* Number
+* Textarea
+* Select
+* Checkbox
+* Radio
+* Name
+* Address
+* Phone
+* Date
+* Time
+* URL
+* Hidden
+* HTML
+* Step
+* Range Slider
+* Captcha
+* File Upload
+* Input Mask
+* GDPR Consent
 
-### 🛡️ Spam Protection & Privacy
+### Form Layouts
 
-Protect your forms using multiple spam prevention options.
+Organize your forms using flexible layout options.
 
-* Built-in Honeypot protection.
-* Google reCAPTCHA v2 and v3 support.
-* hCaptcha support.
-* GDPR consent field.
-* Privacy policy linking options.
+Use:
 
----
+* Rows
+* Section Breaks
+* Step fields
+* Multiple columns
+* Custom field layouts
 
-## Everything Included Inside
+Create simple forms or advanced layouts for longer workflows.
 
-### Form Fields & Layouts
-
-Build simple or advanced forms using a wide range of fields and layout options.
-
-* **Ready-to-use Templates:** Start quickly with pre-built templates for contact forms, surveys, business forms, and more.
-* **Mobile Friendly:** Forms automatically adapt to phones, tablets, and desktop devices.
-* **Standard Fields:** Checkbox, Text, Email, Hidden, Number, Radio, Textarea, Select, Button, Name, Address, Phone, Date, Time, and more.
-* **Phone Field:** Include an optional country code selector.
-* **Date & Time:** Create date and time fields with Flatpickr-powered calendars.
-* **Advanced Fields:** HTML, Step, URL, Range Slider, Captcha, File Upload, Input Mask, and GDPR Consent.
-* **Structure Fields:** Organize your forms using Rows and Section Breaks.
-
-### Form Styling & Design
+### Form Styling
 
 Customize the appearance of your forms without writing CSS.
 
-* **Preset Styles:** Choose from multiple ready-to-use form style presets.
-* **Global Styling:** Customize colors, typography, buttons, and other design options.
-* **Custom CSS:** Add your own CSS or use CSS variables for advanced customization.
-* **Field Styling:** Customize supported field styles directly from the form editor.
+Available styling options include:
+
+* Form style presets
+* Global styling
+* Typography controls
+* Button styling
+* Field styling
+* Color controls
+* CSS variables
+* Custom CSS
 
 ### Entry Management
 
-Manage your form submissions directly inside WordPress.
+Manage form submissions directly from your WordPress dashboard.
 
-* View submitted form entries.
-* Filter and manage submissions.
-* Bulk delete entries when needed.
-* Export form entries for external use.
-* View and manage error logs.
+You can:
 
-### Analytics & Lead Tracking
-
-Understand how your forms are performing.
-
-* Track form views.
-* Track form submissions.
-* Monitor conversion data.
-* Capture UTM campaign parameters.
-* Store visitor device information.
-* Review submission and tracking data from the WordPress dashboard.
-
-### Form Templates
-
-Start faster with ready-to-use form templates.
-
-Choose a template, customize the fields and styling, and publish your form when it is ready.
-
-### Input Masking
-
-Automatically format user input for fields such as:
-
-* Phone numbers.
-* ZIP or postal codes.
-* Other structured input formats.
-
-### File Uploads
-
-Allow users to upload files directly through your forms.
-
-Use file upload fields for applications, support requests, documents, attachments, and other workflows.
-
-### Spam Protection
-
-Keep unwanted submissions under control with:
-
-* Honeypot protection.
-* Google reCAPTCHA v2.
-* Google reCAPTCHA v3.
-* hCaptcha.
-
-### GDPR & Privacy
-
-Add GDPR consent fields to your forms and connect them with your website's privacy policy.
+* View submitted entries.
+* Filter submissions.
+* Manage entries.
+* Bulk delete entries.
+* Export form entries.
+* View error logs.
+* Export error logs.
 
 ### Performance
 
 Dragwyb Forms is designed with performance in mind.
+
+The plugin includes:
 
 * Optimized frontend asset loading.
 * Per-form styling generation.
@@ -200,38 +302,45 @@ Dragwyb Forms is designed with performance in mind.
 * Custom database storage for form data.
 * REST API-based AJAX functionality.
 
----
+== Live Demo ==
 
-## Why Choose Dragwyb Forms?
+Explore live examples of Dragwyb Forms:
 
-Dragwyb Forms combines an easy-to-use visual form builder with advanced functionality for users who need more than a basic contact form.
+https://dragwyb.com/demo/form/
 
-Create simple contact forms or build advanced workflows with:
+== Features ==
 
-* Drag-and-drop form building.
-* Conditional logic.
-* Multi-step forms.
-* Built-in SMTP.
-* Form analytics.
-* UTM tracking.
-* Lead generation tools.
-* Spam protection.
-* File uploads.
-* Input masking.
-* Form templates.
-* Post-submission actions.
-* Elementor integration.
-* Gutenberg integration.
-* Entry management and exports.
-
----
-
-👉 [View Live Demo](https://dragwyb.com/demo/form/?utm_source=wpplugin&utm_medium=readme&utm_campaign=dragwyb_form)
-
-## Check Out Our Other Plugins
-
-* **[Flipbox Addon for Elementor](https://wordpress.org/plugins/ultimate-flipbox-addon-for-elementor/)** – Create interactive 3D flip boxes for your Elementor website.
-* **[Click To Chat](https://wordpress.org/plugins/dragwyb-click-to-chat/)** – Add AI chatbot and floating social chat widgets to your website.
+* Free WordPress form builder
+* Drag-and-drop form editor
+* Contact form builder
+* Unlimited forms
+* Unlimited submissions
+* Conditional logic
+* Multi-step forms
+* Lead generation forms
+* Survey forms
+* Quote request forms
+* Form templates
+* Form analytics
+* UTM tracking
+* Built-in SMTP
+* Elementor widget
+* Gutenberg block
+* File upload fields
+* Input masking
+* Spam protection
+* Honeypot protection
+* Google reCAPTCHA v2
+* Google reCAPTCHA v3
+* hCaptcha
+* GDPR consent field
+* Custom CSS
+* Form style presets
+* Responsive forms
+* Form entry management
+* Entry export
+* Error logs
+* Post-submission actions
 
 == Installation ==
 
@@ -245,11 +354,90 @@ Create simple contact forms or build advanced workflows with:
 
 ### Method 2: Manual Installation
 
-1. Download the plugin ZIP file from the WordPress plugin directory.
+1. Download the Dragwyb Forms ZIP file from the plugin directory.
 2. Go to **Plugins → Add New → Upload Plugin**.
 3. Select the Dragwyb Forms ZIP file.
 4. Click **Install Now**.
 5. Activate the plugin.
+6. Open Dragwyb Forms from your WordPress dashboard.
+
+== Frequently Asked Questions ==
+
+= Is Dragwyb Forms free? =
+
+Yes. The core version of Dragwyb Forms is free and includes the visual form builder, unlimited forms, and unlimited submissions.
+
+= Can I create a contact form? =
+
+Yes. Dragwyb Forms includes a contact form builder with common fields such as name, email, phone, text, textarea, select, checkbox, radio, date, and more.
+
+= Can I create forms without coding? =
+
+Yes. The drag-and-drop form builder allows you to create and customize forms without writing code.
+
+= Can I create multi-step forms? =
+
+Yes. Use the Step field to divide longer forms into multiple steps with progress indicators and previous and next navigation buttons.
+
+= Does Dragwyb Forms support conditional logic? =
+
+Yes. Conditional logic lets you show or hide fields based on a visitor's selections or previous answers.
+
+= Does Dragwyb Forms include SMTP? =
+
+Yes. Dragwyb Forms includes built-in SMTP settings for configuring email delivery for form notifications.
+
+= Can I create lead generation forms? =
+
+Yes. You can create lead generation forms and use conditional logic, UTM tracking, hidden fields, analytics, and post-submission actions.
+
+= Can I track form submissions? =
+
+Yes. The analytics dashboard can track form views, submissions, and conversion data.
+
+= Does Dragwyb Forms support UTM tracking? =
+
+Yes. Dragwyb Forms can capture UTM parameters and store them with form submissions.
+
+= Does Dragwyb Forms work with Elementor? =
+
+Yes. Dragwyb Forms includes a dedicated Elementor widget for embedding forms into Elementor page layouts.
+
+= Does Dragwyb Forms work with Gutenberg? =
+
+Yes. Dragwyb Forms includes a Gutenberg block for selecting and previewing forms inside the WordPress block editor.
+
+= Does Dragwyb Forms support spam protection? =
+
+Yes. The plugin supports Honeypot, Google reCAPTCHA v2, Google reCAPTCHA v3, and hCaptcha.
+
+= Can visitors upload files through a form? =
+
+Yes. Add a File Upload field to allow visitors to submit files through your forms.
+
+= Can I create surveys and quote request forms? =
+
+Yes. The flexible form builder and conditional logic can be used to create surveys, quote request forms, enquiry forms, and other custom forms.
+
+= Does Dragwyb Forms include form templates? =
+
+Yes. Dragwyb Forms includes ready-to-use form templates that you can customize for your website.
+
+= Can I export form entries? =
+
+Yes. Form entries can be viewed, filtered, managed, bulk deleted, and exported from the dashboard.
+
+= Is Dragwyb Forms responsive? =
+
+Yes. Forms are designed to work across desktop, tablet, and mobile devices.
+
+= Does Dragwyb Forms support GDPR? =
+
+The plugin includes a GDPR consent field and privacy policy options. Website owners should determine the legal requirements applicable to their website and users.
+
+= Will Dragwyb Forms slow down my website? =
+
+Dragwyb Forms is designed with performance in mind and includes optimized frontend asset loading and per-form resource handling.
 
 == External Services ==
 
@@ -259,28 +447,28 @@ This plugin includes or integrates with the following libraries and services:
 
 Pickr is a color picker library used for form design customization.
 
-* **Source:** [https://github.com/Simonwep/pickr](https://github.com/Simonwep/pickr)
+* **Source:** https://github.com/Simonwep/pickr
 * **Local Paths:** `assets/lib/pickr/css/index.css`, `assets/lib/pickr/js/index.js`
 
 ### Flatpickr
 
 Flatpickr is used for date and time field functionality.
 
-* **Source:** [https://github.com/flatpickr/flatpickr](https://github.com/flatpickr/flatpickr)
+* **Source:** https://github.com/flatpickr/flatpickr
 * **Local Paths:** `assets/lib/flatpickr/js/flatpickr.min.js`, `assets/lib/flatpickr/css/flatpickr.min.css`
 
 ### Font Awesome Free
 
 Font Awesome Free is used for icons within the editor and frontend forms.
 
-* **Source and License:** [https://fontawesome.com/license/free](https://fontawesome.com/license/free)
+* **Source and License:** https://fontawesome.com/license/free
 * **Local Path:** `assets/font-awesome/v5/all.min.css`
 
 ### Chart.js
 
 Chart.js is used to display analytics and data visualizations inside the plugin.
 
-* **Source:** [https://www.chartjs.org/](https://www.chartjs.org/)
+* **Source:** https://www.chartjs.org/
 * **Local Path:** `assets/lib/chartjs/chart.umd.min.js`
 
 ### Dragwyb Feedback API
@@ -289,88 +477,35 @@ The Dragwyb Feedback API is used to submit optional user feedback and diagnostic
 
 Data is only sent when the site administrator explicitly submits the feedback form.
 
-* **Service:** `https://feedback.dragwyb.com`
-* **Privacy Policy:** [https://dragwyb.com/privacy-policy/](https://dragwyb.com/privacy-policy/)
+* **Service:** https://feedback.dragwyb.com
+* **Privacy Policy:** https://dragwyb.com/privacy-policy/
 
-== Frequently Asked Questions ==
+== Privacy ==
 
-= Is Dragwyb Forms free? =
+Dragwyb Forms may store form submissions and related form data in the WordPress database.
 
-Yes. The core features of Dragwyb Forms, including the visual editor, unlimited forms, and unlimited submissions, are available for free.
+Depending on the features configured by the website administrator, form entries may contain information submitted by website visitors.
 
-= Can I create contact forms? =
-
-Yes. You can create customizable WordPress contact forms using the drag-and-drop form builder.
-
-= Can I create multi-step forms? =
-
-Yes. Add the Step field to divide long forms into multiple steps and create a simpler form-filling experience with progress indicators and navigation buttons.
-
-= Does Dragwyb Forms support conditional logic? =
-
-Yes. You can create conditional forms by showing or hiding fields based on a user's previous selections or answers.
-
-= Does the plugin include SMTP? =
-
-Yes. Dragwyb Forms includes built-in SMTP settings that allow you to configure email delivery for form notifications.
-
-= Can I track form views and submissions? =
-
-Yes. The built-in analytics dashboard allows you to track form views, submissions, and conversion data.
-
-= Does the plugin support UTM tracking? =
-
-Yes. Dragwyb Forms can capture UTM parameters and store them with form submissions to help identify where leads originate.
-
-= Can I use Dragwyb Forms with Elementor? =
-
-Yes. Dragwyb Forms includes a Smart Form Elementor widget for embedding forms inside Elementor layouts.
-
-= Can I use Dragwyb Forms with Gutenberg? =
-
-Yes. Dragwyb Forms includes a Smart Form Gutenberg block that allows you to select and preview forms directly inside the WordPress editor.
-
-= Does the plugin include spam protection? =
-
-Yes. Dragwyb Forms supports Honeypot protection, Google reCAPTCHA v2 and v3, and hCaptcha.
-
-= Can I create GDPR-compliant forms? =
-
-The plugin includes a GDPR consent field and privacy policy options that can help you collect consent. Your specific legal compliance requirements may vary depending on your website and applicable laws.
-
-= Will Dragwyb Forms slow down my website? =
-
-The plugin is designed with performance in mind and includes optimized frontend asset loading, per-form styling, script controls, custom database storage, and REST API-based AJAX functionality.
-
-= Can I export form submission data? =
-
-Yes. You can view, filter, manage, bulk delete, and export form entries and error logs from the plugin dashboard.
-
-= Can I upload files through a form? =
-
-Yes. Use the File Upload field to allow visitors to submit files through your forms.
-
-= Does Dragwyb Forms include form templates? =
-
-Yes. The plugin includes ready-to-use form templates that you can customize for your own requirements.
+Website administrators are responsible for configuring their forms and privacy settings according to their applicable privacy and data protection requirements.
 
 == Contribute ==
 
 Dragwyb Forms is an open-source project, and contributions from the community are welcome.
 
-* **GitHub Repository:** [https://github.com/Dragwyb/smart-form-builder-by-dragwyb](https://github.com/Dragwyb/smart-form-builder-by-dragwyb)
-* **Report Bugs:** Please report issues on the [GitHub Issues page](https://github.com/Dragwyb/smart-form-builder-by-dragwyb/issues).
-* **Pull Requests:** Feel free to fork the repository and submit pull requests for review.
+* **GitHub Repository:** https://github.com/Dragwyb/smart-form-builder-by-dragwyb
+* **Report Bugs:** https://github.com/Dragwyb/smart-form-builder-by-dragwyb/issues
+
+Pull requests and bug reports are welcome.
 
 == Screenshots ==
 
-1. Dashboard – View unread entries, total submissions, recent activity, and quick analytics.
-2. Form Management – Create, edit, delete, and manage forms and view entry counts from one place.
+1. Dashboard – View form activity, submissions, recent entries, and analytics.
+2. Form Management – Create, edit, delete, and manage forms and view entry counts.
 3. Template Library – Browse and select ready-to-use form templates.
-4. Drag-and-Drop Form Builder – Build and customize forms with a visual editor and live preview.
+4. Drag-and-Drop Form Builder – Create and customize forms with the visual editor.
 5. Form Analytics – Track form views, submissions, conversions, visitor data, and UTM information.
 6. Entry Management – View, filter, manage, and export form submissions.
-7. Plugin Settings – Configure APIs, SMTP, GDPR settings, performance options, and other plugin settings.
+7. Plugin Settings – Configure SMTP, APIs, GDPR, performance, and other plugin settings.
 
 == Changelog ==
 
@@ -378,8 +513,8 @@ Dragwyb Forms is an open-source project, and contributions from the community ar
 * Fixed: PHP error while deleting the form.
 
 = 1.3.2 =
-* Added: "Smart Form" Gutenberg Block for seamless form embedding in the native WordPress editor with editor preview.
-* Added: "Smart Form" Elementor Widget for embedding forms inside Elementor page layouts with editor preview.
+* Added: Smart Form Gutenberg Block for embedding forms in the native WordPress editor with editor preview.
+* Added: Smart Form Elementor Widget for embedding forms inside Elementor page layouts with editor preview.
 * Fixed: Row root container selection issue.
 * Improved: Fields category structure.
 * Tweak: Textual changes in readme.
@@ -388,13 +523,13 @@ Dragwyb Forms is an open-source project, and contributions from the community ar
 * Fixed: Form was not created correctly with the business template during onboarding.
 * Fixed: Radio field validation error message issue.
 * Fixed: Export form dropdown modal closing issue.
-* Improved: Editor UI to show field settings in the right sidebar.
+* Improved: Form editor UI to show field settings in the right sidebar.
 * Improved: Editor field drag-and-drop experience.
 * Tweak: Updated plugin name to Dragwyb Forms.
-* Tweak: Updated incorrect form demo link.
+* Tweak: Updated form demo link.
 
 = 1.3.0 =
-* Added: Input Mask field for automatically formatting user input such as phone numbers or ZIP codes.
+* Added: Input Mask field.
 * Added: GDPR field and Privacy Policy settings.
 * Added: Built-in SMTP email settings.
 * Added: Analytics Dashboard for tracking form views, submissions, and conversions.
@@ -481,12 +616,17 @@ Dragwyb Forms is an open-source project, and contributions from the community ar
 
 == Upgrade Notice ==
 
-= 1.3.0 =
+= 1.3.3 =
 
-*Important:* Version 1.3.0 introduced the Analytics Dashboard, GDPR settings, built-in SMTP, and the Input Mask field.
+Bug fixes and improvements for Dragwyb Forms.
 
 == Admin Notice ==
 
-= 1.3.0 =
+= 1.3.3 =
 
-*Important:* This major update introduced a new Analytics Dashboard, built-in SMTP settings, and GDPR-related form options.
+Update to the latest version to receive the latest bug fixes and improvements.
+
+== Other Plugins by Dragwyb ==
+
+* **Flipbox Addon for Elementor** – Create interactive 3D flip boxes for Elementor.
+* **Click To Chat** – Add AI chatbot and floating social chat widgets to your website.
