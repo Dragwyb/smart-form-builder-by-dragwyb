@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Dragwyb\Form_Builder\Includes\Helper\Helper;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Editor\Dragwyb_Builder_Editor;
 use Dragwyb\Form_Builder\Admin\Form_Overview\Form_Overview;
+use Dragwyb\Form_Builder\Admin\Settings\Settings_Manager;
 
 class Dragwyb_Pages {
 
@@ -306,7 +307,9 @@ class Dragwyb_Pages {
 		// Register this plugin's notices after unrelated notices have been removed.
 		add_action(
 			'admin_notices',
-			array( $this, 'display_admin_notices' ),
+			function () use ( $page ) {
+				$this->display_admin_notices( $page );
+			},
 			PHP_INT_MAX
 		);
 	}
@@ -316,7 +319,67 @@ class Dragwyb_Pages {
 	 *
 	 * @return void
 	 */
-	public function display_admin_notices() {
+	public function display_admin_notices( $page = '' ) {
+		$this->display_tracking_disabled_notice( $page );
 		do_action( 'Dragwyb_Admin_Notices' );
 	}
+
+	/**
+	 * Display an info notice when visitor tracking is disabled in settings.
+	 *
+	 * @return void
+	 */
+	public function display_tracking_disabled_notice( $page = '' ): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$tracking_enabled = Settings_Manager::instance()->get_setting( 'gdpr_privacy', 'tracking_enabled', false );
+
+		if ( true === $tracking_enabled || 'yes' === $tracking_enabled || '1' === $tracking_enabled || 1 === $tracking_enabled ) {
+			return;
+		}
+
+		$settings_url = admin_url( 'admin.php?page=' . DRAGWYB_PREFIX . '-settings&tab=gdpr_privacy' );
+		?>
+		<div class="notice dragwyb-tracking-notice">
+			<div class="dragwyb-tracking-notice-inner">
+				<div class="dragwyb-tracking-notice-left">
+					<div class="dragwyb-tracking-notice-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<circle cx="12" cy="12" r="10"></circle>
+							<line x1="12" y1="16" x2="12" y2="12"></line>
+							<line x1="12" y1="8" x2="12.01" y2="8"></line>
+						</svg>
+					</div>
+					<div class="dragwyb-tracking-notice-content">
+						<div class="dragwyb-tracking-notice-header">
+							<span class="dragwyb-tracking-notice-title"><?php esc_html_e( 'Visitor Tracking is Disabled', 'smart-form-builder-by-dragwyb' ); ?></span>
+							<span class="dragwyb-tracking-notice-badge"><?php esc_html_e( 'Disabled', 'smart-form-builder-by-dragwyb' ); ?></span>
+						</div>
+						<p class="dragwyb-tracking-notice-desc">
+							<?php esc_html_e( 'Visitor tracking is currently turned off in Settings. Form analytics, pageviews, and traffic source attribution will not be recorded.', 'smart-form-builder-by-dragwyb' ); ?>
+						</p>
+					</div>
+				</div>
+				<?php
+				if ( 'settings' !== $page ) :
+					?>
+				<div class="dragwyb-tracking-notice-actions">
+					<a href="<?php echo esc_url( $settings_url ); ?>" class="dragwyb-tracking-notice-btn dragwyb-btn-primary-add">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+							<circle cx="12" cy="12" r="3"/>
+						</svg>
+						<span><?php esc_html_e( 'Configure in Settings', 'smart-form-builder-by-dragwyb' ); ?></span>
+					</a>
+				</div>
+					<?php
+				endif;
+				?>
+			</div>
+		</div>
+		<?php
+	}
 }
+

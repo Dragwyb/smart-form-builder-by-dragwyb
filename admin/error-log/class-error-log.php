@@ -38,6 +38,13 @@ class Error_Log {
 			esc_attr( DRAGWYB_FORM_BUILDER_VERSION )
 		);
 
+		wp_enqueue_style(
+			DRAGWYB_PREFIX . '-editor-global',
+			esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/css/editor-global.css' ),
+			array(),
+			DRAGWYB_FORM_BUILDER_VERSION
+		);
+
 		wp_enqueue_script(
 			DRAGWYB_PREFIX . '-error-log-script',
 			esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/js/error-log.js' ),

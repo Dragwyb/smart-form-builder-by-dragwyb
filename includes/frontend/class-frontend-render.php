@@ -21,6 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Frontend_Render {
 
 	private static $form_id;
+	private static $toolbar_cahce_id;
 	private static $fields = array();
 
 	private static $control = null;
@@ -76,6 +77,10 @@ class Frontend_Render {
 	}
 
 	private function initial_config(): void {
+		if ( self::$toolbar_cahce_id === self::$form_id ) {
+			return;
+		}
+
 		if ( true === self::$set_initial_config ) {
 			$this->set_toolbar_data();
 			return;
@@ -102,6 +107,8 @@ class Frontend_Render {
 		if ( empty( self::$form_data ) ) {
 			return;
 		}
+
+		self::$toolbar_cahce_id = self::$form_id;
 
 		foreach ( self::$form_data as $key => $value ) {
 			if ( $key === 'id' ) {
@@ -969,6 +976,7 @@ class Frontend_Render {
 
 	private function clean_old_data(): void {
 		self::$form_id            = null;
+		self::$toolbar_cahce_id   = null;
 		self::$fields             = array();
 		self::$root_containers    = array();
 		self::$field_module_cache = null;

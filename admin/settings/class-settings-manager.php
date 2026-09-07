@@ -294,19 +294,23 @@ class Settings_Manager {
 			),
 			'gdpr_privacy'   => array(
 				'tracking_enabled'          => array(
-					'start_section' => __( 'Visitor Tracking Settings', 'smart-form-builder-by-dragwyb' ),
-					'label'         => __( 'Enable Visitor Tracking', 'smart-form-builder-by-dragwyb' ),
-					'description'   => __( 'Collect visitor analytics, pageviews, and traffic source attribution across your website.', 'smart-form-builder-by-dragwyb' ),
-					'type'          => 'bool',
-					'default'       => true,
-				),
-				'track_admins'              => array(
-					'label'       => __( 'Track Logged-in Administrators', 'smart-form-builder-by-dragwyb' ),
-					'description' => __( 'Include site administrators in visitor analytics and session metrics.', 'smart-form-builder-by-dragwyb' ),
+					'label'       => __( 'Enable Visitor Tracking', 'smart-form-builder-by-dragwyb' ),
+					'description' => __( 'Collect visitor analytics, pageviews, and traffic source attribution across your website.', 'smart-form-builder-by-dragwyb' ),
 					'type'        => 'bool',
 					'default'     => false,
 				),
+
+				'track_admins'              => array(
+					'start_section' => __( 'Visitor Tracking Settings', 'smart-form-builder-by-dragwyb' ),
+					'condition'     => array( 'tracking_enabled' => true ),
+					'label'         => __( 'Track Logged-in Administrators', 'smart-form-builder-by-dragwyb' ),
+					'description'   => __( 'Include site administrators in visitor analytics and session metrics.', 'smart-form-builder-by-dragwyb' ),
+					'type'          => 'bool',
+					'default'       => false,
+				),
+
 				'session_timeout'           => array(
+					'condition'   => array( 'tracking_enabled' => true ),
 					'label'       => __( 'Session Timeout (minutes)', 'smart-form-builder-by-dragwyb' ),
 					'description' => __( 'A new session starts after this many minutes of inactivity (default: 30).', 'smart-form-builder-by-dragwyb' ),
 					'type'        => 'number',
@@ -314,40 +318,52 @@ class Settings_Manager {
 					'max'         => 120,
 					'default'     => 30,
 				),
+
 				'cookie_duration'           => array(
+					'condition'   => array( 'tracking_enabled' => true ),
 					'label'       => __( 'Cookie Duration (days)', 'smart-form-builder-by-dragwyb' ),
-					'description' => __( 'How long the visitor identification cookie persists (730 = 2 years).', 'smart-form-builder-by-dragwyb' ),
+					'description' => __( 'How long the visitor identification cookie persists.', 'smart-form-builder-by-dragwyb' ),
 					'type'        => 'number',
 					'min'         => 1,
 					'max'         => 730,
 					'default'     => 730,
 				),
+
 				'gdpr_anonymize_ip'         => array(
 					'start_section' => __( 'Privacy & Data Anonymization', 'smart-form-builder-by-dragwyb' ),
+					'condition'     => array( 'tracking_enabled' => true ),
 					'label'         => __( 'Anonymize IP Addresses', 'smart-form-builder-by-dragwyb' ),
-					'description'   => __( 'Removes the last octet of IPv4 addresses (e.g. 192.168.1.100 becomes 192.168.1.0) before storing.', 'smart-form-builder-by-dragwyb' ),
+					'description'   => __( 'Removes the last octet of IPv4 addresses before storing.', 'smart-form-builder-by-dragwyb' ),
 					'type'          => 'bool',
 					'default'       => false,
 				),
+
 				'gdpr_respect_dnt'          => array(
+					'condition'   => array( 'tracking_enabled' => true ),
 					'label'       => __( 'Respect Do Not Track (DNT) Browser Header', 'smart-form-builder-by-dragwyb' ),
 					'description' => __( 'When enabled, tracking is completely disabled for visitors whose browser sends the DNT header.', 'smart-form-builder-by-dragwyb' ),
 					'type'        => 'bool',
 					'default'     => false,
 				),
+
 				'gdpr_disable_user_cookies' => array(
+					'condition'   => array( 'tracking_enabled' => true ),
 					'label'       => __( 'Disable Tracking Cookies', 'smart-form-builder-by-dragwyb' ),
-					'description' => __( 'Prevents the plugin from setting visitor identification cookies. Tracking operates per-session without tracking returning visitors.', 'smart-form-builder-by-dragwyb' ),
+					'description' => __( 'Prevents the plugin from setting visitor identification cookies.', 'smart-form-builder-by-dragwyb' ),
 					'type'        => 'bool',
 					'default'     => false,
 				),
+
 				'gdpr_disable_user_details' => array(
+					'condition'   => array( 'tracking_enabled' => true ),
 					'label'       => __( 'Disable User Details Collection', 'smart-form-builder-by-dragwyb' ),
 					'description' => __( 'Prevents recording IP address, user agent, and browser/OS details with form submissions and pageviews.', 'smart-form-builder-by-dragwyb' ),
 					'type'        => 'bool',
 					'default'     => false,
 				),
+
 				'gdpr_data_retention_days'  => array(
+					'condition'   => array( 'tracking_enabled' => true ),
 					'label'       => __( 'Auto-delete tracking data after (days)', 'smart-form-builder-by-dragwyb' ),
 					'description' => __( 'Automatically delete visitor tracking data older than this many days (0 = keep forever).', 'smart-form-builder-by-dragwyb' ),
 					'type'        => 'number',
@@ -355,12 +371,15 @@ class Settings_Manager {
 					'max'         => 3650,
 					'default'     => 0,
 				),
+
 				'gdpr_retain_entries'       => array(
+					'condition'   => array( 'tracking_enabled' => true ),
 					'label'       => __( 'Retain Form Entries When Cleaning Tracking Data', 'smart-form-builder-by-dragwyb' ),
 					'description' => __( 'When checked, auto-delete only purges analytics sessions/pageviews but keeps form submission leads.', 'smart-form-builder-by-dragwyb' ),
 					'type'        => 'bool',
 					'default'     => true,
 				),
+
 				'remove_data_on_uninstall'  => array(
 					'start_section' => true,
 					'class'         => 'dragwyb-container-danger',

@@ -423,3 +423,184 @@ body:where(.toplevel_page_dragwyb-dashboard,.smart-forms_page_dragwyb-form-overv
     font-size: 11px;
     color: #64748b;
 }
+
+/* ==========================================================================
+   Smart Forms - Tracking Disabled Info Notice (Executive Redesign)
+   ========================================================================== */
+
+.dragwyb-tracking-notice {
+    align-items: center;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    padding: 16px 28px !important;
+    box-shadow: 0 4px 20px -4px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+    position: relative;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    overflow: hidden;
+}
+
+body:not(.smart-forms_page_dragwyb-entries, .smart-forms_page_dragwyb-error-log) .dragwyb-tracking-notice{
+    margin: 15px calc(1rem + 20px) 15px 1rem !important;
+}
+
+/* Left Accent Gradient Strip */
+.dragwyb-tracking-notice::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: hsl(var(--dragwyb-primary));
+}
+
+.dragwyb-tracking-notice-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 20px;
+}
+
+.dragwyb-tracking-notice-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Modern Rounded Icon Badge */
+.dragwyb-tracking-notice-icon {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    border-radius: 10px;
+    background: hsl(var(--dragwyb-primary)/0.1);
+    border: 1px solid hsl(var(--dragwyb-primary)/0.1);
+    color: hsl(var(--dragwyb-primary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.dragwyb-tracking-notice-icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.dragwyb-tracking-notice-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.dragwyb-tracking-notice-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 3px;
+}
+
+.dragwyb-tracking-notice-title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+}
+
+/* Subtle Status Pill */
+.dragwyb-tracking-notice-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.4;
+    background: hsl(var(--dragwyb-primary)/0.1);
+    color: hsl(var(--dragwyb-primary));
+    border: 1px solid hsl(var(--dragwyb-primary)/0.1);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.dragwyb-tracking-notice-badge::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: hsl(var(--dragwyb-primary));
+}
+
+.dragwyb-tracking-notice-desc {
+    margin: 0 !important;
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.5;
+}
+
+.dragwyb-tracking-notice-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.dragwyb-tracking-notice .dragwyb-tracking-notice-btn svg {
+    width: 15px;
+    height: 15px;
+    transition: transform 0.3s ease;
+}
+
+.dragwyb-tracking-notice .dragwyb-tracking-notice-btn:hover svg {
+    transform: rotate(45deg);
+}
+
+@media (max-width: 960px) {
+    .dragwyb-tracking-notice {
+        padding: 16px 20px !important;
+    }
+    .dragwyb-tracking-notice-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+    }
+    .dragwyb-tracking-notice-left {
+        width: 100%;
+    }
+    .dragwyb-tracking-notice-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    .dragwyb-tracking-notice.is-dismissible .notice-dismiss {
+        top: 16px !important;
+        transform: none !important;
+    }
+}
+
+.dragwyb-tracking-notice {
+    display: grid !important;
+    grid-template-rows: 1fr;
+    overflow: hidden;
+    transition: all 300ms ease;
+}
+
+.dragwyb-tracking-notice.hide-notice {
+    grid-template-rows: 0fr;
+    padding-block: 0px !important;
+    border: 0px !important;
+    box-shadow: unset !important;
+    opacity: 0 !important;
+}
+
+.dragwyb-tracking-notice-inner {
+    min-height: 0;
+    overflow: hidden;
+}
