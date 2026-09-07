@@ -58,6 +58,8 @@ Use Dragwyb Forms to create:
 * Enquiry forms
 * Custom forms
 
+### 👉 [Explore live examples of Dragwyb Forms](https://dragwyb.com/demo/form/?utm_source=wpplugin&utm_medium=readme&utm_campaign=dragwyb_form)
+
 ### Contact Form Builder
 
 Create customizable contact forms for your website using flexible fields and layout options.
@@ -304,9 +306,8 @@ The plugin includes:
 
 == Live Demo ==
 
-Explore live examples of Dragwyb Forms:
+👉 [Explore live demos of Dragwyb Forms](https://dragwyb.com/demo/form/?utm_source=wpplugin&utm_medium=readme&utm_campaign=dragwyb_form)
 
-https://dragwyb.com/demo/form/
 
 == Features ==
 
@@ -635,5 +636,5 @@ Update to the latest version to receive the latest bug fixes and improvements.
 
 == Other Plugins by Dragwyb ==
 
-* **Flipbox Addon for Elementor** – Create interactive 3D flip boxes for Elementor.
-* **Click To Chat** – Add AI chatbot and floating social chat widgets to your website.
+* **[Flipbox Addon for Elementor](https://wordpress.org/plugins/ultimate-flipbox-addon-for-elementor/)** – Create interactive 3D flip boxes for your Elementor website.
+* **[Click To Chat](https://wordpress.org/plugins/dragwyb-click-to-chat/)** – Add AI chatbot and floating social chat widgets to your website.
