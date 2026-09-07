@@ -71,8 +71,8 @@
     --success-color: #00a32a;
     --error-color: #d63638;
 
-    --panel-width: 320px;
-    --panel-width-right: 320px;
+    --panel-width: 344px;
+    --panel-width-right: 326px;
 
     --cubic-transition: all cubic-bezier(0.4, 0, 0.2, 1) 150ms;
 
@@ -950,12 +950,10 @@ body {
 
             &:hover {
                 color: hsl(var(--dragwyb-primary));
-                background-color: hsl(var(--dragwyb-primary) / 5%);
             }
 
             &.active {
                 color: hsl(var(--dragwyb-primary));
-                background-color: hsl(var(--dragwyb-primary)/12%);
 
                 &::after {
                     background-color: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
@@ -1089,19 +1087,18 @@ body {
             padding: 5px 15px 15px 15px;
             display: grid;
             gap: 15px 10px;
-            grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             grid-auto-rows: min-content;
 
             .field-type {
                 transition: all 0.2s ease;
                 cursor: move;
                 text-align: center;
-                background-color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
                 border: 1px solid hsl(var(--dragwyb-input)/var(--dragwyb-border-opacity, 1));
                 display: flex;
                 align-items: center;
-                padding: 10px;
-                gap: 8px;
+                padding: 8px;
+                gap: 6px;
                 color: hsl(var(--dragwyb-card-foreground)/var(--dragwyb-text-opacity, 1));
                 border-radius: 4px;
 
