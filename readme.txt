@@ -6,7 +6,7 @@ Author URI: https://dragwyb.com/?utm_source=wpplugin&utm_medium=author_uri&utm_c
 Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.3.3
+Stable tag: 1.3.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -508,6 +508,13 @@ Pull requests and bug reports are welcome.
 7. Plugin Settings – Configure SMTP, APIs, GDPR, performance, and other plugin settings.
 
 == Changelog ==
+
+= 1.3.4 =
+* Fixed: JavaScript editor errors that could occasionally cause the form editor to appear blank.
+* Improved: Disabled visitor tracking by default for new installations.
+* Improved: Form loading performance with optimized code and improved frontend processing.
+* Improved: Form Editor UI and overall usability.
+* Tweak: Textual changes in readme.
 
 = 1.3.3 =
 * Fixed: PHP error while deleting the form.
