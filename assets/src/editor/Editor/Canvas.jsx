@@ -55,7 +55,7 @@ const RenderItem = React.memo(({
         id: field ? `canvas-drop-field-${field._id}` : `canvas-drop-field-disabled-${fieldId}`,
         data: {
             canvasDrop: true,
-            currentId: isRootContainer ? 'root' : (field.parentId || 'root'),
+            currentId: isRootContainer ? 'root' : (field?.parentId || 'root'),
             fieldId: field?._id,
             index: index,
             isChild: !isRootContainer,
@@ -80,7 +80,7 @@ const RenderItem = React.memo(({
             canvasDrag: true,
             currentId: fieldId,
             index: index,
-            parentId: isRootContainer ? 'root' : (field.parentId || 'root'),
+            parentId: isRootContainer ? 'root' : (field?.parentId || 'root'),
             isRootContainer: isRootContainer,
             type: field?.type,
             attributes: field?.attributes,
