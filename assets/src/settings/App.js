@@ -117,6 +117,20 @@ const App = () => {
     };
 
     const handleSettingChange = (tab, key, value) => {
+
+        if (key === 'tracking_enabled') {
+            const trackingNotice = document.querySelector('.dragwyb-tracking-notice');
+
+            if (trackingNotice) {
+                if (value) {
+                    trackingNotice.classList.remove('show-notice');
+                    trackingNotice.classList.add('hide-notice');
+                } else {
+                    trackingNotice.classList.remove('hide-notice');
+                    trackingNotice.classList.add('show-notice');
+                }
+            }
+        }
         setSettings(prev => ({
             ...prev,
             [tab]: {
