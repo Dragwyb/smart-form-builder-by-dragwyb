@@ -199,8 +199,9 @@ class Settings extends Register_Controls_Base {
 				'type'         => Controls::SELECT,
 				'label'        => __( 'Floating Style', 'smart-form-builder-by-dragwyb' ),
 				'options'      => array(
-					'outlined' => __( 'Outlined (On Border)', 'smart-form-builder-by-dragwyb' ),
-					'inside'   => __( 'Inside (Filled / Box)', 'smart-form-builder-by-dragwyb' ),
+					'outlined'    => __( 'Outlined (On Border)', 'smart-form-builder-by-dragwyb' ),
+					'inside'      => __( 'Inside (Filled / Box)', 'smart-form-builder-by-dragwyb' ),
+					'inside-hide' => __( 'Inside & Hide on Type', 'smart-form-builder-by-dragwyb' ),
 				),
 				'default'      => 'outlined',
 				'label_inline' => true,
