@@ -135,7 +135,7 @@ class Control_Background extends Group_Control_Base {
 		$prefix            = isset( $settings['prefix'] ) && ! empty( $settings['prefix'] ) ? $settings['prefix'] : 'form';
 
 		$direct_selectors = array(
-			'color'      => 'background-color: {{VALUE}};',
+			'color'      => 'background: {{VALUE}};',
 			'image'      => 'background-image: url("{{URL}}");',
 			'position'   => 'background-position: {{VALUE}};',
 			'attachment' => 'background-attachment: {{VALUE}};',

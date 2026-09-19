@@ -138,7 +138,7 @@ class Field_Textarea extends Field_Base {
 				'type'      => Controls::COLOR,
 				'label'     => __( 'Background Color', 'smart-form-builder-by-dragwyb' ),
 				'selectors' => array(
-					'{{WRAPPER}} .dragwyb-field-input' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}} .dragwyb-field-input' => 'background: {{VALUE}};',
 					'{{WRAPPER}}'                      => '--dragwyb-input-bg: {{VALUE}};',
 				),
 			)
@@ -177,7 +177,7 @@ class Field_Textarea extends Field_Base {
 				'label'     => __( 'Active Border Color', 'smart-form-builder-by-dragwyb' ),
 				'selectors' => array(
 					'{{WRAPPER}} .dragwyb-field-input:focus' => 'border-color: {{VALUE}};',
-					'{{WRAPPER}}'                            => '--dragwyb-input-focus-border: {{VALUE}};',
+					'{{WRAPPER}}' => '--dragwyb-input-focus-border: {{VALUE}};',
 				),
 			)
 		);

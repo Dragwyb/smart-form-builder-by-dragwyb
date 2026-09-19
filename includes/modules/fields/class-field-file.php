@@ -81,7 +81,7 @@ class Field_File extends Field_Base {
 			'free_limit_notice',
 			array(
 				'type' => Controls::RAW_HTML,
-				'raw'  => '<div style="background-color: #f0f9ff; border: 1px solid #bae6fd; padding: 10px; border-radius: 4px; font-size: 12px; margin-top: 10px;">' .
+				'raw'  => '<div style="background: #f0f9ff; border: 1px solid #bae6fd; padding: 10px; border-radius: 4px; font-size: 12px; margin-top: 10px;">' .
 					'<strong>Free Version Limits:</strong><br/>' .
 					'- Max File Size: 2MB<br/>' .
 					'- Allowed Extensions: jpg, jpeg, png, pdf, doc, docx, txt<br/>' .
@@ -151,7 +151,7 @@ class Field_File extends Field_Base {
 				'type'      => Controls::COLOR,
 				'label'     => __( 'Background Color', 'smart-form-builder-by-dragwyb' ),
 				'selectors' => array(
-					'{{WRAPPER}} .dragwyb-field-input' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}} .dragwyb-field-input' => 'background: {{VALUE}};',
 					'{{WRAPPER}}'                      => '--dragwyb-input-bg: {{VALUE}};',
 				),
 			)
@@ -187,7 +187,8 @@ class Field_File extends Field_Base {
 				'size_units' => array( 'px', 'em', '%' ),
 				'selectors'  => array(
 					'{{WRAPPER}} .dragwyb-field-input' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-					'{{WRAPPER}}'                      => '--dragwyb-input-pt: {{TOP}}{{UNIT}}; --dragwyb-input-pr: {{RIGHT}}{{UNIT}}; --dragwyb-input-pb: {{BOTTOM}}{{UNIT}}; --dragwyb-input-pl: {{LEFT}}{{UNIT}};' ),
+					'{{WRAPPER}}'                      => '--dragwyb-input-pt: {{TOP}}{{UNIT}}; --dragwyb-input-pr: {{RIGHT}}{{UNIT}}; --dragwyb-input-pb: {{BOTTOM}}{{UNIT}}; --dragwyb-input-pl: {{LEFT}}{{UNIT}};',
+				),
 				'separator'  => 'before',
 			)
 		);
@@ -203,7 +204,7 @@ class Field_File extends Field_Base {
 				'label'     => __( 'Active Border Color', 'smart-form-builder-by-dragwyb' ),
 				'selectors' => array(
 					'{{WRAPPER}} .dragwyb-field-input:focus' => 'border-color: {{VALUE}};',
-					'{{WRAPPER}}'                            => '--dragwyb-input-focus-border: {{VALUE}};',
+					'{{WRAPPER}}' => '--dragwyb-input-focus-border: {{VALUE}};',
 				),
 			)
 		);

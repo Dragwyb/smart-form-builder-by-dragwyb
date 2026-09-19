@@ -114,7 +114,7 @@ class Field_Button extends Field_Base {
 				'type'      => Controls::COLOR,
 				'label'     => __( 'Background Color', 'smart-form-builder-by-dragwyb' ),
 				'selectors' => array(
-					'{{WRAPPER}} button' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}} button' => 'background: {{VALUE}};',
 					'{{WRAPPER}}'        => '--dragwyb-btn-bg: {{VALUE}};',
 				),
 			)
@@ -154,7 +154,7 @@ class Field_Button extends Field_Base {
 				'type'      => Controls::COLOR,
 				'label'     => __( 'Background Color', 'smart-form-builder-by-dragwyb' ),
 				'selectors' => array(
-					'{{WRAPPER}} button:hover' => 'background-color: {{VALUE}};',
+					'{{WRAPPER}} button:hover' => 'background: {{VALUE}};',
 					'{{WRAPPER}}'              => '--dragwyb-btn-hover-bg: {{VALUE}};',
 				),
 			)
