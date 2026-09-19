@@ -34,6 +34,7 @@ class Control_Css_Filter extends Group_Control_Base {
 			'variable_selector',
 			'conditions',
 			'prefix',
+			'backdrop',
 		);
 	}
 
@@ -105,6 +106,7 @@ class Control_Css_Filter extends Group_Control_Base {
 		$selector          = isset( $settings['selector'] ) && ! empty( $settings['selector'] ) ? $settings['selector'] : false;
 		$variable_selector = isset( $settings['variable_selector'] ) && ! empty( $settings['variable_selector'] ) ? $settings['variable_selector'] : '{{WRAPPER}}';
 		$prefix            = isset( $settings['prefix'] ) && ! empty( $settings['prefix'] ) ? $settings['prefix'] : 'form';
+		$filter_property   = isset( $settings['backdrop'] ) && true === $settings['backdrop'] ? 'backdrop-filter' : 'filter';
 
 		$selectors = array(
 			'blur'       => array( '--dragwyb-' . $prefix . '-filter-blur' => '{{VALUE}}{{UNIT}}' ),
@@ -114,7 +116,7 @@ class Control_Css_Filter extends Group_Control_Base {
 			'hue'        => array( '--dragwyb-' . $prefix . '-filter-hue' => '{{VALUE}}deg' ),
 		);
 
-		$filter_rule = 'filter: brightness(var(--dragwyb-' . $prefix . '-filter-brightness, 100%)) contrast(var(--dragwyb-' . $prefix . '-filter-contrast, 100%)) saturate(var(--dragwyb-' . $prefix . '-filter-saturate, 100%)) blur(var(--dragwyb-' . $prefix . '-filter-blur, 0px)) hue-rotate(var(--dragwyb-' . $prefix . '-filter-hue, 0deg));';
+		$filter_rule = $filter_property . ': brightness(var(--dragwyb-' . $prefix . '-filter-brightness, 100%)) contrast(var(--dragwyb-' . $prefix . '-filter-contrast, 100%)) saturate(var(--dragwyb-' . $prefix . '-filter-saturate, 100%)) blur(var(--dragwyb-' . $prefix . '-filter-blur, 0px)) hue-rotate(var(--dragwyb-' . $prefix . '-filter-hue, 0deg));';
 
 		$map = array(
 			'blur'       => array(

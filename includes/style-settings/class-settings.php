@@ -73,6 +73,7 @@ class Settings extends Register_Controls_Base {
 				'type'     => Controls::GROUP_CSS_FILTER,
 				'label'    => __( 'CSS Filter', 'smart-form-builder-by-dragwyb' ),
 				'selector' => '{{WRAPPER}}',
+				'backdrop' => true,
 			)
 		);
 
@@ -444,7 +445,7 @@ class Settings extends Register_Controls_Base {
 				'label'     => __( 'Placeholder Color', 'smart-form-builder-by-dragwyb' ),
 				'selectors' => array(
 					'{{WRAPPER}} .dragwyb-field-input::placeholder' => 'color: {{VALUE}};',
-					'{{WRAPPER}}'                                  => '--dragwyb-input-placeholder-color: {{VALUE}};',
+					'{{WRAPPER}}' => '--dragwyb-input-placeholder-color: {{VALUE}};',
 				),
 			)
 		);
@@ -460,7 +461,7 @@ class Settings extends Register_Controls_Base {
 				'label'     => __( 'Background Color', 'smart-form-builder-by-dragwyb' ),
 				'selectors' => array(
 					'{{WRAPPER}} .dragwyb-field-input:focus' => 'background-color: {{VALUE}};',
-					'{{WRAPPER}}'                            => '--dragwyb-input-focus-bg: {{VALUE}};',
+					'{{WRAPPER}}' => '--dragwyb-input-focus-bg: {{VALUE}};',
 				),
 			)
 		);
@@ -472,7 +473,7 @@ class Settings extends Register_Controls_Base {
 				'label'     => __( 'Border Color', 'smart-form-builder-by-dragwyb' ),
 				'selectors' => array(
 					'{{WRAPPER}} .dragwyb-field-input:focus' => 'border-color: {{VALUE}};',
-					'{{WRAPPER}}'                            => '--dragwyb-input-focus-border: {{VALUE}};',
+					'{{WRAPPER}}' => '--dragwyb-input-focus-border: {{VALUE}};',
 				),
 			)
 		);
@@ -1001,7 +1002,7 @@ class Settings extends Register_Controls_Base {
 				'label'      => __( 'Text Color', 'smart-form-builder-by-dragwyb' ),
 				'selectors'  => array(
 					'{{WRAPPER}} button.dragwyb-button-prev' => 'color: {{VALUE}};',
-					'{{WRAPPER}}'                            => '--dragwyb-prev-btn-color: {{VALUE}};',
+					'{{WRAPPER}}' => '--dragwyb-prev-btn-color: {{VALUE}};',
 				),
 				'conditions' => array(
 					'step_indicator_type!' => 'none',
@@ -1016,7 +1017,7 @@ class Settings extends Register_Controls_Base {
 				'label'      => __( 'Background Color', 'smart-form-builder-by-dragwyb' ),
 				'selectors'  => array(
 					'{{WRAPPER}} button.dragwyb-button-prev' => 'background-color: {{VALUE}};',
-					'{{WRAPPER}}'                            => '--dragwyb-prev-btn-bg: {{VALUE}};',
+					'{{WRAPPER}}' => '--dragwyb-prev-btn-bg: {{VALUE}};',
 				),
 				'conditions' => array(
 					'step_indicator_type!' => 'none',
@@ -1040,7 +1041,7 @@ class Settings extends Register_Controls_Base {
 				'label'     => __( 'Text Color', 'smart-form-builder-by-dragwyb' ),
 				'selectors' => array(
 					'{{WRAPPER}} button.dragwyb-button-prev:hover' => 'color: {{VALUE}};',
-					'{{WRAPPER}}'                                  => '--dragwyb-prev-btn-hover-color: {{VALUE}};',
+					'{{WRAPPER}}' => '--dragwyb-prev-btn-hover-color: {{VALUE}};',
 				),
 			)
 		);
@@ -1052,7 +1053,7 @@ class Settings extends Register_Controls_Base {
 				'label'     => __( 'Background Color', 'smart-form-builder-by-dragwyb' ),
 				'selectors' => array(
 					'{{WRAPPER}} button.dragwyb-button-prev:hover' => 'background-color: {{VALUE}};',
-					'{{WRAPPER}}'                                  => '--dragwyb-prev-btn-hover-bg: {{VALUE}};',
+					'{{WRAPPER}}' => '--dragwyb-prev-btn-hover-bg: {{VALUE}};',
 				),
 			)
 		);
