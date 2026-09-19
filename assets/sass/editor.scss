@@ -3196,33 +3196,13 @@ a.dragwyb-editor__preview-toggle {
             overflow: hidden;
             position: relative;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
             box-sizing: border-box;
         }
-    }
 
-    .dragwyb-preset-interactive-form {
-        width: 100%;
-        box-sizing: border-box;
-
-        input,
-        textarea {
-            &::placeholder {
-                color: #9ca3af;
-                font-size: 10.5px;
-            }
-        }
-
-        &.is-dark {
-
-            input,
-            textarea {
-                &::placeholder {
-                    color: #cbd5e1;
-                    opacity: 0.8;
-                }
-            }
+        &__preview-inner {
+            width: 100%;
+            box-sizing: border-box;
         }
     }
 

@@ -1,319 +1,531 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import { __ } from '@wordpress/i18n';
 import { FaSearch, FaTimes, FaCheck } from 'react-icons/fa';
 
+import DragwybControlBase from '../../controlBase';
+
 /**
- * Helper to extract size string or px from control value
+ * Cache for instantiated Control classes
  */
-const getDimensionValue = (val, fallback = 0) => {
-    if (!val && val !== 0) return `${fallback}px`;
-    if (typeof val === 'number') return `${val}px`;
-    if (typeof val === 'string') return val.trim().endsWith('px') || val.trim().endsWith('%') ? val : `${val}px`;
-    if (typeof val === 'object' && val !== null) {
-        const obj = typeof val.size === 'object' && val.size !== null ? val.size : val;
-        if (obj.top !== undefined || obj.right !== undefined || obj.bottom !== undefined || obj.left !== undefined) {
-            const unit = obj.unit || val.unit || 'px';
-            return `${obj.top || 0}${unit} ${obj.right || 0}${unit} ${obj.bottom || 0}${unit} ${obj.left || 0}${unit}`;
-        }
-        if (val.size !== undefined && val.size !== '' && typeof val.size !== 'object') {
-            return `${val.size}${val.unit || 'px'}`;
-        }
+const controlCache = {};
+
+/**
+ * Cache for generated CSS string per preset to avoid re-generating styles
+ */
+const presetCssCache = {};
+
+/**
+ * Get or cache control instance class
+ */
+const getControl = (type, cache = controlCache) => {
+    if (cache.hasOwnProperty(type)) {
+        return cache[type];
     }
-    return `${fallback}px`;
+
+    let Ctrl = window.DragwybBuilder?.Hooks?.applyFilter(
+        "Dragwyb/Editor/ControlRender/" + type,
+        false
+    );
+
+    const isValidControl =
+        Ctrl &&
+        (Ctrl.prototype instanceof DragwybControlBase ||
+            Ctrl.prototype instanceof window.DragwybEditor?.editor?.extends?.ControlBase);
+
+    if (!isValidControl) {
+        Ctrl = DragwybControlBase || window.DragwybEditor?.editor?.extends?.ControlBase;
+    }
+
+    cache[type] = Ctrl;
+    return Ctrl;
 };
 
 /**
- * Helper to extract border radius
+ * Convert css selectors cache object into formatted CSS string
  */
-const getBorderRadius = (val, fallback = 0) => {
-    if (!val && val !== 0) return `${fallback}px`;
-    if (typeof val === 'number') return `${val}px`;
-    if (typeof val === 'string') return val;
-    if (typeof val === 'object' && val !== null) {
-        const obj = typeof val.size === 'object' && val.size !== null ? val.size : val;
-        if (obj.top !== undefined || obj.right !== undefined || obj.bottom !== undefined || obj.left !== undefined) {
-            const unit = obj.unit || val.unit || 'px';
-            return `${obj.top || 0}${unit} ${obj.right || 0}${unit} ${obj.bottom || 0}${unit} ${obj.left || 0}${unit}`;
-        }
-        if (val.size !== undefined && val.size !== '' && typeof val.size !== 'object') {
-            return `${val.size}${val.unit || 'px'}`;
+const generateCssStrings = (cssSelectors) => {
+    const cssRulesMap = {};
+    let cssString = "";
+
+    if (!cssSelectors || typeof cssSelectors !== 'object') {
+        return cssString;
+    }
+
+    Object.keys(cssSelectors).forEach((key) => {
+        const entry = cssSelectors[key];
+        if (!entry || typeof entry !== 'object') return;
+
+        Object.keys(entry).forEach((selector) => {
+            const rawRule = entry[selector];
+
+            if (!selector) return;
+
+            if (typeof rawRule === 'object' && rawRule !== null) {
+                if (Object.keys(rawRule).length > 0) {
+                    cssString += generateCssStrings({ [selector]: rawRule });
+                }
+                return;
+            }
+
+            if (typeof rawRule === 'string') {
+                let rule = rawRule.trim();
+                if (!rule) return;
+                rule = rule.endsWith(';') ? rule : rule + ';';
+
+                if (!cssRulesMap[selector]) {
+                    cssRulesMap[selector] = [];
+                }
+                cssRulesMap[selector].push(rule);
+            }
+        });
+    });
+
+    for (const selector in cssRulesMap) {
+        if (Object.prototype.hasOwnProperty.call(cssRulesMap, selector)) {
+            const rules = cssRulesMap[selector].join(' ');
+            cssString += `${selector} { ${rules} }\n`;
         }
     }
-    return `${fallback}px`;
+
+    return cssString;
 };
 
 /**
- * Interactive Live Preview for each Preset Card
+ * Extract CSS rules replacing {{WRAPPER}} and placeholders with control values
  */
-const InteractivePresetPreview = ({ presetKey, styles }) => {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [message, setMessage] = useState('');
-    const [focusedField, setFocusedField] = useState(null);
-    const [isBtnHovered, setIsBtnHovered] = useState(false);
+const extractCSS = ({ key, value, selectors, placeholders, toolbarType, itemId, currentItemId, responsiveType = 'desktop', formId, fieldType, cssCache }) => {
+    const tempCssCache = {};
 
-    const labelPosition = styles?.label_position || 'top';
-    const floatingStyle = styles?.floating_style || 'outlined';
-    const isFloating = labelPosition === 'floating';
+    if (!placeholders || Object.keys(placeholders).length === 0 || !selectors) {
+        return;
+    }
 
-    // Form Container Style
-    const formContainerStyle = useMemo(() => {
-        const style = {
-            width: '100%',
-            boxSizing: 'border-box',
-            padding: '10px 12px',
-            borderRadius: '8px',
-            position: 'relative',
-            transition: 'all 0.2s ease',
-            backgroundColor: '#ffffff',
-            border: '1px solid #e5e7eb',
-        };
+    Object.keys(selectors).forEach((selector) => {
+        let wrapperId = formId;
 
-        if (presetKey === 'theme' || presetKey === 'clean') {
-            style.backgroundColor = '#ffffff';
-            style.border = '1px solid #e5e7eb';
-        } else if (presetKey === 'card') {
-            style.backgroundColor = '#ffffff';
-            style.border = '1px solid #e5e7eb';
-            style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.06)';
-        } else if (presetKey === 'modern') {
-            style.backgroundColor = '#ffffff';
-            style.border = '1px solid #e5e7eb';
-            style.borderRadius = '10px';
-        } else if (presetKey === 'soft') {
-            style.backgroundColor = '#fff7fa';
-            style.border = '1px solid #ffe4ec';
-            style.borderRadius = '10px';
-        } else if (presetKey === 'outline') {
-            style.backgroundColor = '#ffffff';
-            style.border = '1px solid #e5e7eb';
-        } else if (presetKey === 'filled') {
-            style.backgroundColor = '#f0f4f8';
-            style.border = '1px solid #e2e8f0';
-        } else if (presetKey === 'glass') {
-            style.backgroundColor = 'rgba(255, 255, 255, 0.25)';
-            style.backdropFilter = 'blur(8px)';
-            style.WebkitBackdropFilter = 'blur(8px)';
-            style.border = '1px solid rgba(255, 255, 255, 0.45)';
-            style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.08)';
-        } else if (presetKey === 'dark') {
-            style.backgroundColor = '#111827';
-            style.border = '1px solid #1f2937';
-            style.boxShadow = '0 4px 14px rgba(0, 0, 0, 0.4)';
-        } else if (presetKey === 'gradient') {
-            style.backgroundColor = '#ffffff';
-            style.border = '1px solid #e5e7eb';
-            style.boxShadow = '0 2px 10px rgba(139, 92, 246, 0.08)';
-        } else if (presetKey === 'minimal') {
-            style.backgroundColor = '#ffffff';
-            style.border = '1px solid #e5e7eb';
-        } else if (presetKey === 'elevated') {
-            style.backgroundColor = '#ffffff';
-            style.border = '1px solid #e5e7eb';
-            style.boxShadow = '0 10px 22px -4px rgba(0, 0, 0, 0.12), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
-        } else if (presetKey === 'side_border') {
-            style.backgroundColor = '#ffffff';
-            style.border = '1px solid #e5e7eb';
-            style.borderLeft = '4px solid #f4256a';
-            style.borderRadius = '6px';
-        } else if (presetKey === 'top_accent') {
-            style.backgroundColor = '#ffffff';
-            style.border = '1px solid #e5e7eb';
-            style.borderTop = '4px solid #f4256a';
-            style.borderRadius = '6px';
-        } else if (presetKey === 'transparent') {
-            style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
-            style.backdropFilter = 'blur(8px)';
-            style.WebkitBackdropFilter = 'blur(8px)';
-            style.border = '1px solid rgba(255, 255, 255, 0.2)';
-            style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.2)';
-        }
-
-        return style;
-    }, [presetKey]);
-
-    // Input Base Styles
-    const getInputStyle = useCallback((fieldName) => {
-        const isFocused = focusedField === fieldName;
-        let border = '1px solid #e2e8f0';
-        let bg = '#ffffff';
-        let color = '#111827';
-        let borderRadius = '6px';
-        let borderBottom = null;
-
-        if (presetKey === 'outline') {
-            border = '1px solid #94a3b8';
-        } else if (presetKey === 'filled') {
-            bg = '#e2e8f0';
-            border = '1px solid transparent';
-            color = '#1f2937';
-        } else if (presetKey === 'modern') {
-            borderRadius = '20px';
-            border = '1px solid #e2e8f0';
-        } else if (presetKey === 'soft') {
-            borderRadius = '8px';
-            border = '1px solid #e2e8f0';
-        } else if (presetKey === 'glass') {
-            bg = 'rgba(255, 255, 255, 0.35)';
-            border = '1px solid rgba(255, 255, 255, 0.5)';
-            color = '#ffffff';
-        } else if (presetKey === 'dark') {
-            bg = '#1f2937';
-            border = '1px solid #374151';
-            color = '#f9fafb';
-        } else if (presetKey === 'minimal') {
-            bg = 'transparent';
-            border = 'none';
-            borderBottom = '1.5px solid #9ca3af';
-            borderRadius = '0px';
-        } else if (presetKey === 'transparent') {
-            bg = 'rgba(255, 255, 255, 0.12)';
-            border = '1px solid rgba(255, 255, 255, 0.25)';
-            color = '#ffffff';
-        }
-
-        if (isFocused) {
-            if (presetKey === 'minimal') {
-                borderBottom = '1.5px solid #f4256a';
-            } else if (presetKey === 'glass' || presetKey === 'transparent') {
-                border = '1px solid #ffffff';
-            } else if (presetKey === 'dark') {
-                border = '1px solid #f4256a';
+        if (toolbarType === 'fields' && itemId && itemId !== '') {
+            if (fieldType === 'row') {
+                wrapperId += ' #dragwyb-row-' + itemId;
             } else {
-                border = '1px solid #f4256a';
+                wrapperId += ' #dragwyb-field-wrapper-' + itemId;
             }
         }
 
-        const inputStyle = {
-            width: '100%',
-            boxSizing: 'border-box',
-            backgroundColor: bg,
-            color,
-            border,
-            borderRadius,
-            padding: '5px 8px',
-            fontSize: '11px',
-            outline: 'none',
-            transition: 'all 0.15s ease',
-            fontFamily: 'inherit',
-            display: 'block',
-        };
+        let targetSelector = selector.replaceAll("{{WRAPPER}}", `#dragwyb-form-wrapper-${wrapperId}`);
 
-        if (borderBottom) {
-            inputStyle.borderBottom = borderBottom;
+        if (currentItemId && '' !== currentItemId && targetSelector.includes('{{CURRENT_ITEM}}')) {
+            targetSelector = targetSelector.replaceAll('{{CURRENT_ITEM}}', `.repeat-item-${currentItemId}`);
         }
 
-        return inputStyle;
-    }, [presetKey, focusedField]);
+        tempCssCache[targetSelector] = selectors[selector];
 
-    // Submit button style
-    const buttonStyle = useMemo(() => {
-        let bg = '#f4256a';
-        let color = '#ffffff';
-        let border = 'none';
-        let borderRadius = '6px';
+        Object.keys(placeholders).forEach((placeholder) => {
+            if (placeholder === 'VALUE' && placeholders[placeholder] === true && ['string', 'number', 'BigInt'].includes(typeof value)) {
+                tempCssCache[targetSelector] = tempCssCache[targetSelector].replaceAll("{{VALUE}}", value);
+            } else if (value && typeof value === 'object' && placeholders[placeholder] !== undefined) {
+                tempCssCache[targetSelector] = tempCssCache[targetSelector].replaceAll("{{" + placeholder + "}}", value[placeholders[placeholder]]);
+            }
+        });
+    });
 
-        if (presetKey === 'modern') {
-            bg = 'linear-gradient(90deg, #f4256a 0%, #8b5cf6 100%)';
-            borderRadius = '20px';
-        } else if (presetKey === 'soft') {
-            borderRadius = '8px';
-        } else if (presetKey === 'outline') {
-            bg = '#ffffff';
-            color = '#f4256a';
-            border = '1px solid #f4256a';
-        } else if (presetKey === 'filled') {
-            bg = '#2563eb';
-        } else if (presetKey === 'gradient') {
-            bg = 'linear-gradient(90deg, #ec4899 0%, #8b5cf6 100%)';
-            borderRadius = '6px';
+    // Remove any remaining placeholders and their empty property declarations
+    Object.keys(tempCssCache).forEach((cacheKey) => {
+        if (tempCssCache[cacheKey].includes('{{') && tempCssCache[cacheKey].includes('}}')) {
+            let cleanSelectors = tempCssCache[cacheKey].replace(/[^\s:;"'#,()]*\{\{[A-Z0-9_]+\}\}[^\s:;"'#,()]*/g, '');
+
+            cleanSelectors = cleanSelectors.split(';');
+
+            let newCleanSelectors = [];
+
+            cleanSelectors.forEach((cleanSelector) => {
+                const splitValue = cleanSelector.split(':');
+                let valueExist = false;
+
+                if (splitValue && splitValue[1]) {
+                    if (splitValue[1].trim() !== '') {
+                        valueExist = splitValue.join(':');
+                    } else {
+                        valueExist = false;
+                    }
+                }
+                if (valueExist && valueExist.trim() !== '') {
+                    newCleanSelectors.push(valueExist);
+                }
+            });
+
+            if (newCleanSelectors.length > 0) {
+                tempCssCache[cacheKey] = newCleanSelectors.join(';') + ';';
+            } else {
+                delete tempCssCache[cacheKey];
+            }
+        }
+    });
+
+    if (tempCssCache && Object.keys(tempCssCache).length > 0) {
+        if (responsiveType !== 'desktop') {
+            if (!cssCache[responsiveType]) {
+                cssCache[responsiveType] = {};
+            }
+            cssCache[responsiveType][key] = tempCssCache;
+        } else {
+            cssCache[key] = tempCssCache;
+        }
+    }
+};
+
+/**
+ * Dynamically generate style rules for toolbar controls (e.g. 'style' toolbar)
+ */
+const generateStyleForToolbar = (toolbarId, toolbarValues, formId, cache = controlCache) => {
+    const cssCache = {};
+    const toolbarSettings = window.DragwybEditor?.[toolbarId]?.controls || {};
+
+    if (!toolbarSettings || Object.keys(toolbarSettings).length === 0) {
+        return cssCache;
+    }
+
+    Object.keys(toolbarSettings).forEach((controlKey) => {
+        const controlConfig = toolbarSettings[controlKey];
+        if (!controlConfig) return;
+
+        const value = toolbarValues?.[controlKey] !== undefined ? toolbarValues[controlKey] : controlConfig.default;
+        if (value === undefined || value === null || value === '') {
+            return;
         }
 
-        const isGradient = typeof bg === 'string' && bg.includes('gradient');
+        let rendered = false;
+        if (controlConfig.type) {
+            try {
+                const Control = getControl(controlConfig.type, cache);
+                if (Control) {
+                    new Control({
+                        id: controlKey,
+                        toolbarId: toolbarId,
+                        selectedSetting: false,
+                        settings: controlConfig,
+                        value: value,
+                        Utils: {
+                            updateStyleSelectors: (props) => {
+                                rendered = true;
+                                return extractCSS({ ...props, formId, cssCache });
+                            }
+                        },
+                    }).renderStyleSelector();
+                }
+            } catch (err) {
+                // fallback to direct extractCSS below
+            }
+        }
 
-        return {
-            width: '100%',
-            height: '26px',
-            background: isGradient ? bg : undefined,
-            backgroundColor: isGradient ? undefined : bg,
-            color,
-            border,
-            borderRadius,
-            padding: '0 10px',
-            fontSize: '11px',
-            fontWeight: 600,
-            cursor: 'pointer',
-            transition: 'all 0.15s ease',
-            textAlign: 'center',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxSizing: 'border-box',
-            outline: 'none',
-            opacity: isBtnHovered ? 0.9 : 1,
-        };
-    }, [presetKey, isBtnHovered]);
+        // Direct extractCSS fallback if not already extracted
+        if (!rendered && controlConfig.selectors && controlConfig.selectors_placeholders) {
+            const uniqueSelector = `${toolbarId}_${controlKey}`;
+            extractCSS({
+                key: uniqueSelector,
+                value: value,
+                selectors: controlConfig.selectors,
+                placeholders: controlConfig.selectors_placeholders,
+                toolbarType: toolbarId,
+                itemId: false,
+                formId,
+                cssCache,
+                responsiveType: controlConfig.responsive_control && controlConfig.responsive_type ? controlConfig.responsive_type : 'desktop'
+            });
+        }
+    });
 
-    const isDarkTheme = ['dark', 'glass', 'transparent'].includes(presetKey);
+    return cssCache;
+};
+
+/**
+ * Retrieve compiled CSS for preset and cache to avoid recomputing
+ */
+const getPresetCompiledCss = (presetKey, styles, formId) => {
+    if (presetCssCache[presetKey]) {
+        return presetCssCache[presetKey];
+    }
+
+    const cssCacheObject = generateStyleForToolbar('style', styles, formId, controlCache);
+
+    const tableStyleSelectors = cssCacheObject['tablet'] || {};
+    const mobileStyleSelectors = cssCacheObject['mobile'] || {};
+
+    delete cssCacheObject['tablet'];
+    delete cssCacheObject['mobile'];
+
+    let cssString = generateCssStrings(cssCacheObject);
+
+    if (Object.keys(tableStyleSelectors).length > 0) {
+        cssString += `@media (max-width: 768px) {\n${generateCssStrings(tableStyleSelectors)}\n}`;
+    }
+
+    if (Object.keys(mobileStyleSelectors).length > 0) {
+        cssString += `@media (max-width: 480px) {\n${generateCssStrings(mobileStyleSelectors)}\n}`;
+    }
+
+    presetCssCache[presetKey] = cssString;
+    return cssString;
+};
+
+/**
+ * Cached Preview Iframe URL with dragwyb_iframe_mode=true
+ */
+const PREVIEW_URL = window.DragwybEditor?.previewUrl || (typeof DragwybEditor !== 'undefined' ? DragwybEditor?.previewUrl : '');
+const PREVIEW_IFRAME_URL = PREVIEW_URL ? `${PREVIEW_URL}&dragwyb_iframe_mode=true` : '';
+
+/**
+ * Dynamic Preset Preview Component rendering real form HTML inside an isolated iframe
+ */
+const DynamicPresetPreview = React.memo(({ presetKey, styles, onApply }) => {
+    const iframeRef = useRef(null);
+    const [mountNode, setMountNode] = useState(null);
+    const formId = `preset_${presetKey}`;
+
+    // Memoize the iframe source URL
+    const iframeSrc = useMemo(() => {
+        return PREVIEW_IFRAME_URL;
+    }, []);
+
+    const compiledCss = useMemo(() => {
+        return getPresetCompiledCss(presetKey, styles, formId);
+    }, [presetKey, styles, formId]);
+
+    const labelPosition = styles?.label_position || 'top';
+    const floatingStyle = styles?.floating_style || 'outlined';
+    const formBgType = styles?.form_container_bg_background || 'color';
+    const stepIndicatorType = styles?.step_indicator_type || 'number';
+
+    const wrapperClasses = useMemo(() => {
+        const classes = ['dragwyb-form-wrapper'];
+        if (labelPosition) {
+            classes.push(`dragwyb-layout-${labelPosition}`);
+            if (labelPosition === 'floating') {
+                classes.push(`dragwyb-float-${floatingStyle}`);
+            }
+        }
+        if (formBgType) {
+            classes.push(`dragwyb-bg-${formBgType}`);
+        }
+        return classes.join(' ');
+    }, [labelPosition, floatingStyle, formBgType]);
+
+    // Initialize iframe document and inject dynamic styles
+    const initIframe = useCallback((event) => {
+        const iframe = event.target || iframeRef.current;
+        if (!iframe || !iframe.contentWindow) return;
+        const doc = iframe.contentWindow.document;
+        if (!doc || !doc.body) return;
+
+        // Ensure transparent background for glass/gradient preset cards
+        if (doc.documentElement) {
+            doc.documentElement.style.background = 'transparent';
+        }
+        if (doc.body) {
+            doc.body.style.background = 'transparent';
+            doc.body.style.margin = '0';
+            doc.body.style.padding = '0';
+            doc.body.style.overflowX = 'hidden';
+        }
+
+        // Localize DragwybEditor onto iframe window if needed
+        const iframeWindow = doc.defaultView || iframe.contentWindow;
+        if (iframeWindow && window.DragwybEditor) {
+            if (!iframeWindow.hasOwnProperty('DragwybEditor')) {
+                iframeWindow.DragwybEditor = {};
+            }
+            if (!iframeWindow.hasOwnProperty('faIconsList')) {
+                iframeWindow.DragwybEditor.faIconsList = window.DragwybEditor.faIconsList;
+            }
+            const editorToolBars = window.DragwybEditor?.EditorToolbars?.toolbars;
+            if (editorToolBars) {
+                Object.keys(editorToolBars).forEach((key) => {
+                    if (!iframeWindow.DragwybEditor.hasOwnProperty(key)) {
+                        iframeWindow.DragwybEditor[key] = window.DragwybEditor[key];
+                    }
+                });
+            }
+        }
+
+        // Base styling for iframe (transparent bg + sleek custom scrollbar)
+        let baseStyleTag = doc.getElementById('dragwyb-preset-base-style');
+        if (!baseStyleTag && doc.head) {
+            baseStyleTag = doc.createElement('style');
+            baseStyleTag.id = 'dragwyb-preset-base-style';
+            baseStyleTag.textContent = `
+                html, body {
+                    background: transparent !important;
+                    overflow-x: hidden !important;
+                }
+                body {
+                    scrollbar-width: thin;
+                    scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
+                }
+                body::-webkit-scrollbar {
+                    width: 4px;
+                }
+                body::-webkit-scrollbar-thumb {
+                    background-color: rgba(148, 163, 184, 0.4);
+                    border-radius: 4px;
+                }
+            `;
+            doc.head.appendChild(baseStyleTag);
+        }
+
+        // Inject dynamic preset CSS into iframe head
+        let styleTag = doc.getElementById('dragwyb-preset-dynamic-style');
+        if (!styleTag && doc.head) {
+            styleTag = doc.createElement('style');
+            styleTag.id = 'dragwyb-preset-dynamic-style';
+            doc.head.appendChild(styleTag);
+        }
+        if (styleTag) {
+            styleTag.textContent = compiledCss;
+        }
+
+        setMountNode(doc.body);
+    }, [compiledCss]);
+
+    // Keep dynamic styles in iframe head in sync without reloading the iframe
+    useEffect(() => {
+        if (!mountNode && iframeRef.current && iframeRef.current.contentWindow) {
+            try {
+                const doc = iframeRef.current.contentWindow.document;
+                if (doc && doc.body) {
+                    setMountNode(doc.body);
+                }
+            } catch (e) {
+                // Cross-origin fallback safety
+            }
+        }
+        if (mountNode && mountNode.ownerDocument) {
+            const doc = mountNode.ownerDocument;
+            let styleTag = doc.getElementById('dragwyb-preset-dynamic-style');
+            if (!styleTag && doc.head) {
+                styleTag = doc.createElement('style');
+                styleTag.id = 'dragwyb-preset-dynamic-style';
+                doc.head.appendChild(styleTag);
+            }
+            if (styleTag && styleTag.textContent !== compiledCss) {
+                styleTag.textContent = compiledCss;
+            }
+        }
+    }, [compiledCss, mountNode]);
+
+    // Live form content rendered into the iframe body
+    const formContent = useMemo(() => {
+        return (
+            <div
+                className={wrapperClasses}
+                id={`dragwyb-form-wrapper-${formId}`}
+                data-step-indicator={stepIndicatorType}
+            >
+                <form
+                    className="dragwyb-form"
+                    id={`dragwyb-form-${formId}`}
+                    data-step-indicator={stepIndicatorType}
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                    }}
+                >
+                    <div id={`dragwyb-row-${formId}_header`} className="dragwyb-row">
+                        <div
+                            id={`dragwyb-field-wrapper-${formId}_name`}
+                            className="dragwyb-field-wrapper dragwyb-text-field dragwyb-last-field"
+                        >
+                            <div className="dragwyb-input-group">
+                                <input
+                                    type="text"
+                                    id={`field_${formId}_name`}
+                                    name={`field_${formId}_name`}
+                                    defaultValue=""
+                                    placeholder=" "
+                                    className="dragwyb-field-input"
+                                    onClick={(e) => e.stopPropagation()}
+                                />
+                                <label
+                                    htmlFor={`field_${formId}_name`}
+                                    className="dragwyb-field-label"
+                                >
+                                    {__('Your Name', 'smart-form-builder-by-dragwyb')}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id={`dragwyb-row-${formId}_email_row`} className="dragwyb-row">
+                        <div
+                            id={`dragwyb-field-wrapper-${formId}_email`}
+                            className="dragwyb-field-wrapper dragwyb-email-field dragwyb-last-field"
+                        >
+                            <div className="dragwyb-input-group">
+                                <input
+                                    type="email"
+                                    id={`field_${formId}_email`}
+                                    name={`field_${formId}_email`}
+                                    defaultValue=""
+                                    placeholder=" "
+                                    className="dragwyb-field-input"
+                                    onClick={(e) => e.stopPropagation()}
+                                />
+                                <label
+                                    htmlFor={`field_${formId}_email`}
+                                    className="dragwyb-field-label"
+                                >
+                                    {__('Your Email', 'smart-form-builder-by-dragwyb')}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id={`dragwyb-row-${formId}_submit`} className="dragwyb-row dragwyb-last-row">
+                        <div
+                            id={`dragwyb-field-wrapper-${formId}_submit_btn`}
+                            className="dragwyb-field-wrapper dragwyb-button-field dragwyb-last-field business-submit dragwyb-no-float"
+                        >
+                            <button
+                                type="button"
+                                id={`btn_${formId}_submit`}
+                                className="dragwyb-btn dragwyb-btn-submit"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    onApply?.();
+                                }}
+                            >
+                                {__('Submit', 'smart-form-builder-by-dragwyb')}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        );
+    }, [wrapperClasses, formId, stepIndicatorType, onApply]);
 
     return (
-        <div className={`dragwyb-preset-interactive-form ${isDarkTheme ? 'is-dark' : ''}`} style={formContainerStyle}>
-            {/* Field 1: Name */}
-            <div style={{ position: 'relative', marginBottom: '6px' }}>
-                <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    onClick={(e) => e.stopPropagation()}
-                    onFocus={() => setFocusedField('name')}
-                    onBlur={() => setFocusedField(null)}
-                    placeholder={__('Your Name', 'smart-form-builder-by-dragwyb')}
-                    style={getInputStyle('name')}
-                />
-            </div>
-
-            {/* Field 2: Email */}
-            <div style={{ position: 'relative', marginBottom: '6px' }}>
-                <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    onClick={(e) => e.stopPropagation()}
-                    onFocus={() => setFocusedField('email')}
-                    onBlur={() => setFocusedField(null)}
-                    placeholder={__('Your Email', 'smart-form-builder-by-dragwyb')}
-                    style={getInputStyle('email')}
-                />
-            </div>
-
-            {/* Field 3: Message */}
-            <div style={{ position: 'relative', marginBottom: '8px' }}>
-                <textarea
-                    rows={2}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    onClick={(e) => e.stopPropagation()}
-                    onFocus={() => setFocusedField('message')}
-                    onBlur={() => setFocusedField(null)}
-                    placeholder={__('Message', 'smart-form-builder-by-dragwyb')}
-                    style={{ ...getInputStyle('message'), minHeight: '36px', height: '36px', resize: 'vertical' }}
-                />
-            </div>
-
-            {/* Field 4: Submit Button */}
-            <button
-                type="button"
-                style={buttonStyle}
-                onMouseEnter={() => setIsBtnHovered(true)}
-                onMouseLeave={() => setIsBtnHovered(false)}
-            >
-                {__('Submit', 'smart-form-builder-by-dragwyb')}
-            </button>
+        <div className="preset-card__preview-inner">
+            <iframe
+                ref={iframeRef}
+                onLoad={initIframe}
+                src={iframeSrc}
+                title={`Preset Preview ${presetKey}`}
+                className="preset-card__iframe"
+                style={{
+                    width: '100%',
+                    height: '285px',
+                    border: 'none',
+                    backgroundColor: 'transparent',
+                    display: 'block',
+                    overflow: 'hidden',
+                }}
+            />
+            {mountNode && createPortal(formContent, mountNode)}
         </div>
     );
-};
+});
+
+const InteractivePresetPreview = DynamicPresetPreview;
 
 /**
  * Main Preset Modal Component
@@ -444,10 +656,30 @@ const PresetModal = ({ isOpen, onClose, Utils }) => {
             const controlConfig = styleControls[controlKey];
             const val = mergedPresetStyle[controlKey] !== undefined ? mergedPresetStyle[controlKey] : controlConfig?.default;
 
+            if (val === undefined || val === null || val === '') return;
+
+            let applied = false;
+            if (controlConfig?.type) {
+                try {
+                    const Control = getControl(controlConfig.type, controlCache);
+                    if (Control) {
+                        new Control({
+                            id: controlKey,
+                            toolbarId: 'style',
+                            selectedSetting: false,
+                            settings: controlConfig,
+                            value: val,
+                            Utils: Utils,
+                        }).renderStyleSelector();
+                        applied = true;
+                    }
+                } catch (err) {
+                    // Fallback to direct updateStyleSelectors
+                }
+            }
+
             if (
-                val !== undefined &&
-                val !== null &&
-                val !== '' &&
+                !applied &&
                 controlConfig?.selectors &&
                 controlConfig?.selectors_placeholders
             ) {
@@ -586,6 +818,7 @@ const PresetModal = ({ isOpen, onClose, Utils }) => {
                                             <InteractivePresetPreview
                                                 presetKey={preset.key}
                                                 styles={preset.styles}
+                                                onApply={() => handlePresetClick(preset)}
                                             />
                                         </div>
                                     </div>
