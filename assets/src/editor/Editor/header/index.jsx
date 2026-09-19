@@ -9,11 +9,13 @@ import ResponsiveDevices from '../../components/Common/ResponsiveDevices';
 import IconsManager from '../../components/IconsManager';
 
 // Import the icons you requested
-import { FaSun, FaMoon, FaHistory, FaFolderPlus } from 'react-icons/fa';
+import { FaSun, FaMoon, FaHistory, FaFolderPlus, FaPalette } from 'react-icons/fa';
 import TemplateLibrary from './TemplateLibrary';
+import PresetModal from './PresetModal';
 
 const Header = () => {
     const [isTemplateOpen, setIsTemplateOpen] = useState(DragwybEditor?.formData?.rootContainers?.length > 0 ? false : true);
+    const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
     // Existing Selectors
     const activeToolbar = useSelector(state => state?.activeToolbar);
     const formStatus = useSelector(state => state?.form?.advance?.form_status || DragwybEditor.formData.status);
@@ -127,6 +129,13 @@ const Header = () => {
                     <FaHistory color='#fff' />
                 </div>
                 <div
+                    className={`dragwyb-editor__presets-toggle${isPresetModalOpen ? ' active' : ''}`}
+                    onClick={() => setIsPresetModalOpen(true)}
+                    title={__('Preset Styles', 'smart-form-builder-by-dragwyb')}
+                >
+                    <FaPalette color='#fff' />
+                </div>
+                <div
                     className={`dragwyb-editor__templates-toggle${isTemplateOpen ? ' active' : ''}`}
                     onClick={() => setIsTemplateOpen(!isTemplateOpen)}
                     title={__('Open Template Library', 'smart-form-builder-by-dragwyb')}
@@ -148,12 +157,19 @@ const Header = () => {
                 </a>
                 <SaveBtn />
             </div>
-            {iframeEle &&
-                <TemplateLibrary
-                    isOpen={isTemplateOpen}
-                    onClose={() => setIsTemplateOpen(false)}
-                />
-            }
+            {iframeEle && (
+                <>
+                    <TemplateLibrary
+                        isOpen={isTemplateOpen}
+                        onClose={() => setIsTemplateOpen(false)}
+                    />
+                    <PresetModal
+                        isOpen={isPresetModalOpen}
+                        onClose={() => setIsPresetModalOpen(false)}
+                        Utils={Utils}
+                    />
+                </>
+            )}
         </div>
     );
 }
