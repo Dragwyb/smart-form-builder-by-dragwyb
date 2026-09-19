@@ -3015,17 +3015,41 @@ a.dragwyb-editor__preview-toggle {
         border: 1px solid #e5e7eb;
         border-radius: 12px;
         padding: 12px 14px 14px 14px;
-        cursor: pointer;
+        cursor: default;
         display: flex;
         flex-direction: column;
         gap: 10px;
-        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.2s ease;
         position: relative;
         box-sizing: border-box;
 
+        &--glass {
+            background: linear-gradient(135deg, #fbcfe8 0%, #fed7aa 35%, #bfdbfe 70%, #f472b6 100%);
+            padding: 8px;
+        }
+
+        &--gradient {
+            background: linear-gradient(180deg, #e0f2fe 0%, #eff6ff 50%, #f5f3ff 100%);
+            padding: 8px;
+        }
+
+        &--transparent {
+            background: linear-gradient(135deg, #475569 0%, #334155 50%, #1e293b 100%);
+            padding: 8px;
+        }
+
         &:hover {
-            border-color: #cbd5e1;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            transform: translateY(-4px);
+            border-color: #f4256a;
+            box-shadow: 0 12px 24px -4px rgba(244, 37, 106, 0.16), 0 4px 10px -2px rgba(0, 0, 0, 0.05);
+
+            .preset-card__top {
+
+                .preset-card__num,
+                .preset-card__name {
+                    color: #f4256a;
+                }
+            }
         }
 
         .dark & {
@@ -3033,19 +3057,34 @@ a.dragwyb-editor__preview-toggle {
             border-color: #334155;
 
             &:hover {
-                border-color: #475569;
+                border-color: #f4256a;
+                box-shadow: 0 12px 24px -4px rgba(244, 37, 106, 0.25), 0 6px 12px -2px rgba(0, 0, 0, 0.3);
+
+                .preset-card__top {
+
+                    .preset-card__num,
+                    .preset-card__name {
+                        color: #f4256a;
+                    }
+                }
             }
         }
 
         &--applied {
             border: 2px solid #f4256a !important;
             box-shadow: 0 0 0 1px #f4256a, 0 4px 14px rgba(244, 37, 106, 0.12) !important;
+
+            &:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 0 0 1px #f4256a, 0 14px 28px rgba(244, 37, 106, 0.25) !important;
+            }
         }
 
         &__top {
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: space-between;
+            gap: 6px;
             font-size: 13px;
             font-weight: 700;
             line-height: 1.2;
@@ -3053,6 +3092,13 @@ a.dragwyb-editor__preview-toggle {
 
             .dark & {
                 color: #f1f5f9;
+            }
+
+            .preset-card__title-wrap {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                min-width: 0;
             }
 
             .preset-card__num {
@@ -3067,9 +3113,79 @@ a.dragwyb-editor__preview-toggle {
             .preset-card__name {
                 font-weight: 700;
                 color: #0f172a;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
 
                 .dark & {
                     color: #f1f5f9;
+                }
+            }
+
+            .preset-card__apply-btn {
+                background-color: #f8fafc;
+                border: 1px solid #e2e8f0;
+                color: #475569;
+                font-size: 13px;
+                font-weight: 600;
+                padding: 5px 8px;
+                border-radius: 6px;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                flex-shrink: 0;
+                transition: all .15s ease;
+                line-height: 1.2;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, .03);
+
+                &:hover {
+                    background-color: #f4256a;
+                    border-color: #f4256a;
+                    color: #ffffff;
+                    box-shadow: 0 2px 8px rgba(244, 37, 106, 0.25);
+                }
+
+                &.is-applied {
+                    background-color: #ecfdf5;
+                    border-color: #a7f3d0;
+                    color: #059669;
+                    cursor: default;
+
+                    .apply-icon {
+                        font-size: 9px;
+                    }
+
+                    &:hover {
+                        background-color: #ecfdf5;
+                        border-color: #a7f3d0;
+                        color: #059669;
+                        box-shadow: none;
+                    }
+                }
+
+                .dark & {
+                    background-color: #1e293b;
+                    border-color: #334155;
+                    color: #cbd5e1;
+
+                    &:hover {
+                        background-color: #f4256a;
+                        border-color: #f4256a;
+                        color: #ffffff;
+                    }
+
+                    &.is-applied {
+                        background-color: rgba(16, 185, 129, 0.15);
+                        border-color: rgba(16, 185, 129, 0.3);
+                        color: #34d399;
+
+                        &:hover {
+                            background-color: rgba(16, 185, 129, 0.15);
+                            border-color: rgba(16, 185, 129, 0.3);
+                            color: #34d399;
+                        }
+                    }
                 }
             }
         }
@@ -3083,21 +3199,6 @@ a.dragwyb-editor__preview-toggle {
             align-items: center;
             justify-content: center;
             box-sizing: border-box;
-
-            &--glass {
-                background: linear-gradient(135deg, #fbcfe8 0%, #fed7aa 35%, #bfdbfe 70%, #f472b6 100%);
-                padding: 8px;
-            }
-
-            &--gradient {
-                background: linear-gradient(180deg, #e0f2fe 0%, #eff6ff 50%, #f5f3ff 100%);
-                padding: 8px;
-            }
-
-            &--transparent {
-                background: linear-gradient(135deg, #475569 0%, #334155 50%, #1e293b 100%);
-                padding: 8px;
-            }
         }
     }
 

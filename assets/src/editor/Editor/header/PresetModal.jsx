@@ -2,7 +2,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import { __ } from '@wordpress/i18n';
-import { FaSearch, FaTimes } from 'react-icons/fa';
+import { FaSearch, FaTimes, FaCheck } from 'react-icons/fa';
 
 /**
  * Helper to extract size string or px from control value
@@ -256,30 +256,17 @@ const InteractivePresetPreview = ({ presetKey, styles }) => {
         };
     }, [presetKey, isBtnHovered]);
 
-    const headerColor = ['dark', 'glass', 'transparent'].includes(presetKey) ? '#ffffff' : '#111827';
     const isDarkTheme = ['dark', 'glass', 'transparent'].includes(presetKey);
 
     return (
         <div className={`dragwyb-preset-interactive-form ${isDarkTheme ? 'is-dark' : ''}`} style={formContainerStyle}>
-            {/* Form Title */}
-            <h4
-                style={{
-                    margin: '0 0 8px 0',
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    color: headerColor,
-                    letterSpacing: '-0.1px',
-                }}
-            >
-                {__('Contact Us', 'smart-form-builder-by-dragwyb')}
-            </h4>
-
             {/* Field 1: Name */}
             <div style={{ position: 'relative', marginBottom: '6px' }}>
                 <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
                     onFocus={() => setFocusedField('name')}
                     onBlur={() => setFocusedField(null)}
                     placeholder={__('Your Name', 'smart-form-builder-by-dragwyb')}
@@ -293,6 +280,7 @@ const InteractivePresetPreview = ({ presetKey, styles }) => {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
                     onFocus={() => setFocusedField('email')}
                     onBlur={() => setFocusedField(null)}
                     placeholder={__('Your Email', 'smart-form-builder-by-dragwyb')}
@@ -306,6 +294,7 @@ const InteractivePresetPreview = ({ presetKey, styles }) => {
                     rows={2}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
                     onFocus={() => setFocusedField('message')}
                     onBlur={() => setFocusedField(null)}
                     placeholder={__('Message', 'smart-form-builder-by-dragwyb')}
@@ -492,6 +481,15 @@ const PresetModal = ({ isOpen, onClose, Utils }) => {
         }
     }, [Utils, store, baseStyles, dispatch]);
 
+    // Handle Preset Card Click with confirmation alert
+    const handlePresetClick = useCallback((preset) => {
+        const confirmMessage = __('Do you want to apply preset style? It will overwrite or change your existing styles.', 'smart-form-builder-by-dragwyb');
+        if (!window.confirm(confirmMessage)) {
+            return;
+        }
+        handleApplyPreset(preset);
+    }, [handleApplyPreset]);
+
     if (!isOpen) return null;
 
     return createPortal(
@@ -551,21 +549,40 @@ const PresetModal = ({ isOpen, onClose, Utils }) => {
                                 return (
                                     <div
                                         key={preset.key}
-                                        className={`preset-card ${isApplied ? 'preset-card--applied' : ''}`}
-                                        onClick={() => handleApplyPreset(preset)}
+                                        className={`preset-card preset-card--${preset.key} ${isApplied ? 'preset-card--applied' : ''}`}
                                     >
-                                        {/* Card Top: 01 Name */}
+                                        {/* Card Top: 01 Name + Apply button */}
                                         <div className="preset-card__top">
-                                            <span className="preset-card__num">
-                                                {String(preset.number || index + 1).padStart(2, '0')}
-                                            </span>
-                                            <span className="preset-card__name">
-                                                {preset.name}
-                                            </span>
+                                            <div className="preset-card__title-wrap">
+                                                <span className="preset-card__num">
+                                                    {String(preset.number || index + 1).padStart(2, '0')}
+                                                </span>
+                                                <span className="preset-card__name">
+                                                    {preset.name}
+                                                </span>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                className={`preset-card__apply-btn ${isApplied ? 'is-applied' : ''}`}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handlePresetClick(preset);
+                                                }}
+                                                title={isApplied ? __('Currently Active', 'smart-form-builder-by-dragwyb') : __('Apply this preset', 'smart-form-builder-by-dragwyb')}
+                                            >
+                                                {isApplied ? (
+                                                    <>
+                                                        <FaCheck className="apply-icon" />
+                                                        <span>{__('Applied', 'smart-form-builder-by-dragwyb')}</span>
+                                                    </>
+                                                ) : (
+                                                    <span>{__('Apply', 'smart-form-builder-by-dragwyb')}</span>
+                                                )}
+                                            </button>
                                         </div>
 
                                         {/* Live Interactive Form Preview */}
-                                        <div className={`preset-card__preview-wrapper preset-card__preview-wrapper--${preset.key}`}>
+                                        <div className="preset-card__preview-wrapper">
                                             <InteractivePresetPreview
                                                 presetKey={preset.key}
                                                 styles={preset.styles}
