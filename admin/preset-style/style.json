@@ -4,19 +4,11 @@
   "base": {
     "form_width": {
       "top": "",
-      "right": "",
-      "bottom": "",
-      "left": "",
-      "unit": "px",
-      "linked": true
+      "unit": "px"
     },
     "field_spacing": {
-      "top": 20,
-      "right": 20,
-      "bottom": 20,
-      "left": 20,
-      "unit": "px",
-      "linked": true
+      "size": 20,
+      "unit": "px"
     },
     "label_position": "top",
     "floating_active_color": "",
@@ -33,63 +25,35 @@
     "input_focus_border_color": "",
     "input_focus_bg_color": "",
     "input_focus_box_shadow_horizontal": {
-      "top": 0,
-      "right": 0,
-      "bottom": 0,
-      "left": 0,
-      "unit": "px",
-      "linked": true
+      "size": 0,
+      "unit": "px"
     },
     "input_focus_box_shadow_vertical": {
-      "top": 0,
-      "right": 0,
-      "bottom": 0,
-      "left": 0,
-      "unit": "px",
-      "linked": true
+      "size": 0,
+      "unit": "px"
     },
     "input_focus_box_shadow_blur": {
-      "top": 0,
-      "right": 0,
-      "bottom": 0,
-      "left": 0,
-      "unit": "px",
-      "linked": true
+      "size": 0,
+      "unit": "px"
     },
     "input_focus_box_shadow_spread": {
-      "top": 0,
-      "right": 0,
-      "bottom": 0,
-      "left": 0,
-      "unit": "px",
-      "linked": true
+      "size": 0,
+      "unit": "px"
     },
     "input_focus_box_shadow_color": "",
     "step_indicator_type": "numbers",
     "step_divider_style": "solid",
     "step_dot_size": {
-      "top": 30,
-      "right": 30,
-      "bottom": 30,
-      "left": 30,
-      "unit": "px",
-      "linked": true
+      "size": 30,
+      "unit": "px"
     },
     "step_divider_thickness": {
-      "top": 2,
-      "right": 2,
-      "bottom": 2,
-      "left": 2,
-      "unit": "px",
-      "linked": true
+      "size": 2,
+      "unit": "px"
     },
     "step_bottom_spacing": {
-      "top": 24,
-      "right": 24,
-      "bottom": 24,
-      "left": 24,
-      "unit": "px",
-      "linked": true
+      "size": 24,
+      "unit": "px"
     },
     "step_active_color": "",
     "step_inactive_color": "",
@@ -120,12 +84,8 @@
         "form_container_bg_background": "",
         "form_container_bg_color": "",
         "form_css_filter_blur": {
-          "top": "",
-          "right": "",
-          "bottom": "",
-          "left": "",
-          "unit": "px",
-          "linked": true
+          "size": "",
+          "unit": "px"
         },
         "form_padding": {
           "top": "",
@@ -154,36 +114,20 @@
           "linked": true
         },
         "form_box_shadow_horizontal": {
-          "top": "",
-          "right": "",
-          "bottom": "",
-          "left": "",
-          "unit": "px",
-          "linked": true
+          "size": "",
+          "unit": "px"
         },
         "form_box_shadow_vertical": {
-          "top": "",
-          "right": "",
-          "bottom": "",
-          "left": "",
-          "unit": "px",
-          "linked": true
+          "size": "",
+          "unit": "px"
         },
         "form_box_shadow_blur": {
-          "top": "",
-          "right": "",
-          "bottom": "",
-          "left": "",
-          "unit": "px",
-          "linked": true
+          "size": "",
+          "unit": "px"
         },
         "form_box_shadow_spread": {
-          "top": "",
-          "right": "",
-          "bottom": "",
-          "left": "",
-          "unit": "px",
-          "linked": true
+          "size": "",
+          "unit": "px"
         },
         "form_box_shadow_color": "",
         "input_bg_color": "",
@@ -230,6 +174,42 @@
           "left": "",
           "unit": "px",
           "linked": true
+        },
+        "field_spacing": {
+          "size": "",
+          "unit": "px"
+        },
+        "input_padding": {
+          "top": "",
+          "right": "",
+          "bottom": "",
+          "left": "",
+          "unit": "px",
+          "linked": true
+        },
+        "input_focus_box_shadow_horizontal": {
+          "size": "",
+          "unit": "px"
+        },
+        "input_focus_box_shadow_vertical": {
+          "size": "",
+          "unit": "px"
+        },
+        "input_focus_box_shadow_blur": {
+          "size": "",
+          "unit": "px"
+        },
+        "input_focus_box_shadow_spread": {
+          "size": "",
+          "unit": "px"
+        },
+        "button_padding": {
+          "top": "",
+          "right": "",
+          "bottom": "",
+          "left": "",
+          "unit": "px",
+          "linked": true
         }
       }
     },
@@ -243,12 +223,8 @@
         "form_container_bg_background": "classic",
         "form_container_bg_color": "#ffffff",
         "form_css_filter_blur": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_padding": {
           "top": 24,
@@ -277,36 +253,20 @@
           "linked": true
         },
         "form_box_shadow_horizontal": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_vertical": {
-          "top": 1,
-          "right": 1,
-          "bottom": 1,
-          "left": 1,
-          "unit": "px",
-          "linked": true
+          "size": 1,
+          "unit": "px"
         },
         "form_box_shadow_blur": {
-          "top": 3,
-          "right": 3,
-          "bottom": 3,
-          "left": 3,
-          "unit": "px",
-          "linked": true
+          "size": 1,
+          "unit": "px"
         },
         "form_box_shadow_spread": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_color": "rgba(0,0,0,0.04)",
         "input_bg_color": "#ffffff",
@@ -366,12 +326,8 @@
         "form_container_bg_background": "classic",
         "form_container_bg_color": "#ffffff",
         "form_css_filter_blur": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_padding": {
           "top": 28,
@@ -400,36 +356,20 @@
           "linked": true
         },
         "form_box_shadow_horizontal": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_vertical": {
-          "top": 10,
-          "right": 10,
-          "bottom": 10,
-          "left": 10,
-          "unit": "px",
-          "linked": true
+          "size": 10,
+          "unit": "px"
         },
         "form_box_shadow_blur": {
-          "top": 25,
-          "right": 25,
-          "bottom": 25,
-          "left": 25,
-          "unit": "px",
-          "linked": true
+          "size": 25,
+          "unit": "px"
         },
         "form_box_shadow_spread": {
-          "top": -5,
-          "right": -5,
-          "bottom": -5,
-          "left": -5,
-          "unit": "px",
-          "linked": true
+          "size": -5,
+          "unit": "px"
         },
         "form_box_shadow_color": "rgba(0,0,0,0.08)",
         "input_bg_color": "#ffffff",
@@ -490,12 +430,8 @@
         "form_container_bg_background": "classic",
         "form_container_bg_color": "#ffffff",
         "form_css_filter_blur": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_padding": {
           "top": 28,
@@ -524,36 +460,20 @@
           "linked": true
         },
         "form_box_shadow_horizontal": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_vertical": {
-          "top": 8,
-          "right": 8,
-          "bottom": 8,
-          "left": 8,
-          "unit": "px",
-          "linked": true
+          "size": 8,
+          "unit": "px"
         },
         "form_box_shadow_blur": {
-          "top": 20,
-          "right": 20,
-          "bottom": 20,
-          "left": 20,
-          "unit": "px",
-          "linked": true
+          "size": 20,
+          "unit": "px"
         },
         "form_box_shadow_spread": {
-          "top": -4,
-          "right": -4,
-          "bottom": -4,
-          "left": -4,
-          "unit": "px",
-          "linked": true
+          "size": -4,
+          "unit": "px"
         },
         "form_box_shadow_color": "rgba(0,0,0,0.05)",
         "input_bg_color": "#ffffff",
@@ -622,12 +542,8 @@
         "form_container_bg_background": "classic",
         "form_container_bg_color": "#fff7fa",
         "form_css_filter_blur": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_padding": {
           "top": 28,
@@ -656,36 +572,20 @@
           "linked": true
         },
         "form_box_shadow_horizontal": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_vertical": {
-          "top": 4,
-          "right": 4,
-          "bottom": 4,
-          "left": 4,
-          "unit": "px",
-          "linked": true
+          "size": 4,
+          "unit": "px"
         },
         "form_box_shadow_blur": {
-          "top": 12,
-          "right": 12,
-          "bottom": 12,
-          "left": 12,
-          "unit": "px",
-          "linked": true
+          "size": 12,
+          "unit": "px"
         },
         "form_box_shadow_spread": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_color": "rgba(244,37,106,0.05)",
         "input_bg_color": "#ffffff",
@@ -754,12 +654,8 @@
         "form_container_bg_background": "classic",
         "form_container_bg_color": "#ffffff",
         "form_css_filter_blur": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_padding": {
           "top": 24,
@@ -788,36 +684,20 @@
           "linked": true
         },
         "form_box_shadow_horizontal": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_vertical": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_blur": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_spread": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_color": "",
         "input_bg_color": "#ffffff",
@@ -877,12 +757,8 @@
         "form_container_bg_background": "classic",
         "form_container_bg_color": "#f0f4f8",
         "form_css_filter_blur": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_padding": {
           "top": 24,
@@ -911,36 +787,20 @@
           "linked": true
         },
         "form_box_shadow_horizontal": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_vertical": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_blur": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_spread": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_color": "",
         "input_bg_color": "#e2e8f0",
@@ -1000,12 +860,8 @@
         "form_container_bg_background": "classic",
         "form_container_bg_color": "rgba(255, 255, 255, 0.08)",
         "form_css_filter_blur": {
-          "top": 16,
-          "right": 16,
-          "bottom": 16,
-          "left": 16,
-          "unit": "px",
-          "linked": true
+          "size": 16,
+          "unit": "px"
         },
         "form_padding": {
           "top": 28,
@@ -1034,36 +890,20 @@
           "linked": true
         },
         "form_box_shadow_horizontal": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_vertical": {
-          "top": 8,
-          "right": 8,
-          "bottom": 8,
-          "left": 8,
-          "unit": "px",
-          "linked": true
+          "size": 8,
+          "unit": "px"
         },
         "form_box_shadow_blur": {
-          "top": 32,
-          "right": 32,
-          "bottom": 32,
-          "left": 32,
-          "unit": "px",
-          "linked": true
+          "size": 32,
+          "unit": "px"
         },
         "form_box_shadow_spread": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_color": "rgba(0,0,0,0.3)",
         "input_bg_color": "rgba(255,255,255,0.08)",
@@ -1125,12 +965,8 @@
         "form_container_bg_background": "classic",
         "form_container_bg_color": "#111827",
         "form_css_filter_blur": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_padding": {
           "top": 28,
@@ -1159,36 +995,20 @@
           "linked": true
         },
         "form_box_shadow_horizontal": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_vertical": {
-          "top": 10,
-          "right": 10,
-          "bottom": 10,
-          "left": 10,
-          "unit": "px",
-          "linked": true
+          "size": 10,
+          "unit": "px"
         },
         "form_box_shadow_blur": {
-          "top": 25,
-          "right": 25,
-          "bottom": 25,
-          "left": 25,
-          "unit": "px",
-          "linked": true
+          "size": 25,
+          "unit": "px"
         },
         "form_box_shadow_spread": {
-          "top": -5,
-          "right": -5,
-          "bottom": -5,
-          "left": -5,
-          "unit": "px",
-          "linked": true
+          "size": -5,
+          "unit": "px"
         },
         "form_box_shadow_color": "rgba(0,0,0,0.5)",
         "input_bg_color": "#1f2937",
@@ -1249,12 +1069,8 @@
         "form_container_bg_background": "classic",
         "form_container_bg_color": "#ffffff",
         "form_css_filter_blur": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_padding": {
           "top": 28,
@@ -1283,36 +1099,20 @@
           "linked": true
         },
         "form_box_shadow_horizontal": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_vertical": {
-          "top": 8,
-          "right": 8,
-          "bottom": 8,
-          "left": 8,
-          "unit": "px",
-          "linked": true
+          "size": 8,
+          "unit": "px"
         },
         "form_box_shadow_blur": {
-          "top": 24,
-          "right": 24,
-          "bottom": 24,
-          "left": 24,
-          "unit": "px",
-          "linked": true
+          "size": 24,
+          "unit": "px"
         },
         "form_box_shadow_spread": {
-          "top": -4,
-          "right": -4,
-          "bottom": -4,
-          "left": -4,
-          "unit": "px",
-          "linked": true
+          "size": -4,
+          "unit": "px"
         },
         "form_box_shadow_color": "rgba(0,0,0,0.08)",
         "input_bg_color": "#ffffff",
@@ -1381,12 +1181,8 @@
         "form_container_bg_background": "classic",
         "form_container_bg_color": "#ffffff",
         "form_css_filter_blur": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_padding": {
           "top": 24,
@@ -1415,36 +1211,20 @@
           "linked": true
         },
         "form_box_shadow_horizontal": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_vertical": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_blur": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_spread": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_color": "",
         "input_bg_color": "transparent",
@@ -1504,12 +1284,8 @@
         "form_container_bg_background": "classic",
         "form_container_bg_color": "#ffffff",
         "form_css_filter_blur": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_padding": {
           "top": 32,
@@ -1538,36 +1314,20 @@
           "linked": true
         },
         "form_box_shadow_horizontal": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_vertical": {
-          "top": 20,
-          "right": 20,
-          "bottom": 20,
-          "left": 20,
-          "unit": "px",
-          "linked": true
+          "size": 20,
+          "unit": "px"
         },
         "form_box_shadow_blur": {
-          "top": 35,
-          "right": 35,
-          "bottom": 35,
-          "left": 35,
-          "unit": "px",
-          "linked": true
+          "size": 35,
+          "unit": "px"
         },
         "form_box_shadow_spread": {
-          "top": -5,
-          "right": -5,
-          "bottom": -5,
-          "left": -5,
-          "unit": "px",
-          "linked": true
+          "size": -5,
+          "unit": "px"
         },
         "form_box_shadow_color": "rgba(0,0,0,0.14)",
         "input_bg_color": "#ffffff",
@@ -1627,12 +1387,8 @@
         "form_container_bg_background": "classic",
         "form_container_bg_color": "#ffffff",
         "form_css_filter_blur": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_padding": {
           "top": 28,
@@ -1661,36 +1417,20 @@
           "linked": true
         },
         "form_box_shadow_horizontal": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_vertical": {
-          "top": 4,
-          "right": 4,
-          "bottom": 4,
-          "left": 4,
-          "unit": "px",
-          "linked": true
+          "size": 4,
+          "unit": "px"
         },
         "form_box_shadow_blur": {
-          "top": 16,
-          "right": 16,
-          "bottom": 16,
-          "left": 16,
-          "unit": "px",
-          "linked": true
+          "size": 16,
+          "unit": "px"
         },
         "form_box_shadow_spread": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_color": "rgba(0,0,0,0.06)",
         "input_bg_color": "#ffffff",
@@ -1750,12 +1490,8 @@
         "form_container_bg_background": "classic",
         "form_container_bg_color": "#ffffff",
         "form_css_filter_blur": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_padding": {
           "top": 28,
@@ -1784,36 +1520,20 @@
           "linked": true
         },
         "form_box_shadow_horizontal": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_vertical": {
-          "top": 4,
-          "right": 4,
-          "bottom": 4,
-          "left": 4,
-          "unit": "px",
-          "linked": true
+          "size": 4,
+          "unit": "px"
         },
         "form_box_shadow_blur": {
-          "top": 16,
-          "right": 16,
-          "bottom": 16,
-          "left": 16,
-          "unit": "px",
-          "linked": true
+          "size": 16,
+          "unit": "px"
         },
         "form_box_shadow_spread": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_color": "rgba(0,0,0,0.06)",
         "input_bg_color": "#ffffff",
@@ -1874,12 +1594,8 @@
         "form_container_bg_background": "classic",
         "form_container_bg_color": "rgba(255, 255, 255, 0.12)",
         "form_css_filter_blur": {
-          "top": 12,
-          "right": 12,
-          "bottom": 12,
-          "left": 12,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_padding": {
           "top": 28,
@@ -1908,36 +1624,20 @@
           "linked": true
         },
         "form_box_shadow_horizontal": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_vertical": {
-          "top": 8,
-          "right": 8,
-          "bottom": 8,
-          "left": 8,
-          "unit": "px",
-          "linked": true
+          "size": 8,
+          "unit": "px"
         },
         "form_box_shadow_blur": {
-          "top": 24,
-          "right": 24,
-          "bottom": 24,
-          "left": 24,
-          "unit": "px",
-          "linked": true
+          "size": 24,
+          "unit": "px"
         },
         "form_box_shadow_spread": {
-          "top": 0,
-          "right": 0,
-          "bottom": 0,
-          "left": 0,
-          "unit": "px",
-          "linked": true
+          "size": 0,
+          "unit": "px"
         },
         "form_box_shadow_color": "rgba(0,0,0,0.2)",
         "input_bg_color": "rgba(255,255,255,0.1)",
