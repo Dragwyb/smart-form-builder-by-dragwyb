@@ -150,94 +150,239 @@
         }
     }
 
-    /* --- Floating Layout (Material) --- */
+    /* --- Floating Layout (Material & Modern Modes) --- */
     &.dragwyb-layout-floating {
+        // Country-code enabled phone field offset
+        &.dragwyb-float-inside,
+        &.dragwyb-float-outside,
+        &.dragwyb-float-outlined,
+        &.dragwyb-float-inside-hide {
+            .dragwyb-field-wrapper.country-code-enabled .dragwyb-field-label,
+            .dragwyb-input-group:has(.iti, .iti__flag-container, .iti__selected-country, .country-code-enabled) .dragwyb-field-label {
+                margin-left: 48px !important;
+            }
+        }
+
         .dragwyb-field-wrapper:not(.dragwyb-no-float) {
             .dragwyb-input-group {
-                position: relative;
-            }
-
-            .dragwyb-field-label {
-                position: absolute;
-                top: 50%;
-                left: var(--dragwyb-input-pl, 16px);
-                transform: translateY(-50%);
-                z-index: 10;
-                margin: 0;
-                pointer-events: none;
-                background-color: transparent;
-                color: var(--dragwyb-input-placeholder-color, #9ca3af);
-                transition: all 0.2s ease-out;
-                transform-origin: left center;
+                position: relative !important;
+                display: block !important;
             }
 
             .dragwyb-field-input {
-                &::placeholder {
-                    color: transparent;
-                }
+                display: block !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
 
-                &:focus~.dragwyb-field-label,
-                &:not(:placeholder-shown)~.dragwyb-field-label {
-                    top: 0;
-                    transform: translateY(-50%) scale(0.85);
-                    color: var(--dragwyb-input-focus-border, #1d4ed8);
-                    font-weight: 600;
+                &:not(:focus):placeholder-shown::placeholder {
+                    opacity: 0 !important;
+                    color: transparent !important;
                 }
             }
 
-            textarea.dragwyb-field-input {
-                ~.dragwyb-field-label {
-                    top: 1.5em;
-                    transform: none;
+            .dragwyb-field-label {
+                position: absolute !important;
+                left: var(--dragwyb-input-pl, 14px) !important;
+                top: 50% !important;
+                transform: translateY(-50%) !important;
+                transform-origin: left center !important;
+                transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                z-index: 2 !important;
+                line-height: 1 !important;
+                margin: 0 !important;
+                pointer-events: none !important;
+                background-color: transparent !important;
+                color: var(--dragwyb-input-placeholder-color, #9ca3af);
+            }
+
+            &:has(textarea) .dragwyb-field-label,
+            textarea.dragwyb-field-input ~ .dragwyb-field-label {
+                top: 20px !important;
+                transform: none !important;
+            }
+
+            // Generic Active / Focus-within state
+            .dragwyb-input-group:focus-within,
+            .dragwyb-input-group:has(input:not(:placeholder-shown)),
+            .dragwyb-input-group:has(textarea:not(:placeholder-shown)),
+            .dragwyb-input-group:has(.dragwyb-has-value),
+            .dragwyb-field-wrapper:focus-within,
+            .dragwyb-field-wrapper:has(input:not(:placeholder-shown)),
+            .dragwyb-field-wrapper:has(textarea:not(:placeholder-shown)),
+            .dragwyb-field-wrapper:has(.dragwyb-has-value),
+            &.dragwyb-has-value {
+                .dragwyb-field-label {
+                    top: 0 !important;
+                    transform: translateY(-50%) scale(0.8) !important;
+                    color: var(--dragwyb-float-active, var(--dragwyb-input-focus-border, #1d4ed8)) !important;
+                }
+            }
+
+            .dragwyb-field-input:focus ~ .dragwyb-field-label,
+            .dragwyb-field-input:not(:placeholder-shown) ~ .dragwyb-field-label {
+                top: 0 !important;
+                transform: translateY(-50%) scale(0.8) !important;
+                color: var(--dragwyb-float-active, var(--dragwyb-input-focus-border, #1d4ed8)) !important;
+            }
+        }
+
+        // ==========================================
+        // Sub-Variant 1: Float Inside
+        // ==========================================
+        &.dragwyb-float-inside {
+            .dragwyb-field-wrapper:not(.dragwyb-no-float) {
+                margin-bottom: 12px;
+
+                .dragwyb-field-input {
+                    background-color: var(--dragwyb-form-bg-filled, #f3f4f6);
+                    border: none;
+                    border-bottom: 2px solid var(--dragwyb-input-border-color, #d1d5db);
+                    border-radius: 6px 6px 0 0;
+                    padding-top: calc(var(--dragwyb-input-pt, 0px) + var(--dragwyb-label-typography-size, 14px) + 4px);
+                    height: calc(var(--dragwyb-input-pt, 0px) + var(--dragwyb-label-typography-size, 14px) + 20px + var(--dragwyb-input-typography-size, 14px) + var(--dragwyb-input-pb, 0px));
+
+                    &:focus {
+                        background-color: #e5e7eb;
+                        box-shadow: none;
+                        border-color: var(--dragwyb-float-active, var(--dragwyb-input-focus-border, #1d4ed8));
+                    }
                 }
 
-                &:focus~.dragwyb-field-label,
-                &:not(:placeholder-shown)~.dragwyb-field-label {
-                    top: 0;
-                    transform: translateY(-50%) scale(0.85);
+                .dragwyb-field-label {
+                    left: var(--dragwyb-input-pl, 14px) !important;
+                    transform-origin: left top !important;
+                }
+
+                // Active inside state: moves to top: 6px, scale 0.78
+                .dragwyb-input-group:focus-within,
+                .dragwyb-input-group:has(input:not(:placeholder-shown)),
+                .dragwyb-input-group:has(textarea:not(:placeholder-shown)),
+                .dragwyb-input-group:has(.dragwyb-has-value),
+                .dragwyb-field-wrapper:focus-within,
+                .dragwyb-field-wrapper:has(input:not(:placeholder-shown)),
+                .dragwyb-field-wrapper:has(textarea:not(:placeholder-shown)),
+                .dragwyb-field-wrapper:has(.dragwyb-has-value),
+                &.dragwyb-has-value {
+                    .dragwyb-field-label {
+                        top: 6px !important;
+                        transform: translateY(0) scale(0.78) !important;
+                        color: var(--dragwyb-float-active, var(--dragwyb-input-focus-border, #1d4ed8)) !important;
+                    }
+                }
+
+                .dragwyb-field-input:focus ~ .dragwyb-field-label,
+                .dragwyb-field-input:not(:placeholder-shown) ~ .dragwyb-field-label {
+                    top: 6px !important;
+                    transform: translateY(0) scale(0.78) !important;
+                    color: var(--dragwyb-float-active, var(--dragwyb-input-focus-border, #1d4ed8)) !important;
+                }
+            }
+
+            .dragwyb-field-wrapper:not(.dragwyb-no-float):where(.dragwyb-field-label-icon-before, .dragwyb-field-label-icon-after) .dragwyb-field-input {
+                padding-top: calc(var(--dragwyb-input-pt, 0px) + var(--dragwyb-label-typography-size, 14px) + (var(--dragwyb-label-icon-size, var(--dragwyb-input-typography-size, 14px)) - var(--dragwyb-input-typography-size, 14px)));
+                height: calc(var(--dragwyb-input-pt, 0px) + var(--dragwyb-label-typography-size, 14px) + 20px + var(--dragwyb-input-typography-size, 14px) + (var(--dragwyb-label-icon-size, var(--dragwyb-input-typography-size, 14px)) - var(--dragwyb-input-typography-size, 14px)) + var(--dragwyb-input-pb, 0px));
+            }
+        }
+
+        // ==========================================
+        // Sub-Variant 2: Float Outside / Outlined
+        // ==========================================
+        &.dragwyb-float-outlined,
+        &.dragwyb-float-outside {
+            .dragwyb-field-wrapper:not(.dragwyb-no-float) {
+                margin-top: 10px !important;
+                margin-bottom: 12px;
+
+                .dragwyb-input-group {
+                    margin-top: 10px !important;
+                }
+
+                .dragwyb-field-label {
+                    left: var(--dragwyb-input-pl, 12px) !important;
+                    transform-origin: left center !important;
+                    background-color: transparent !important;
+                }
+
+                // Active outside state: moves to top: 0, translateY(-50%), scale 0.8
+                .dragwyb-input-group:focus-within,
+                .dragwyb-input-group:has(input:not(:placeholder-shown)),
+                .dragwyb-input-group:has(textarea:not(:placeholder-shown)),
+                .dragwyb-input-group:has(.dragwyb-has-value),
+                .dragwyb-field-wrapper:focus-within,
+                .dragwyb-field-wrapper:has(input:not(:placeholder-shown)),
+                .dragwyb-field-wrapper:has(textarea:not(:placeholder-shown)),
+                .dragwyb-field-wrapper:has(.dragwyb-has-value),
+                &.dragwyb-has-value {
+                    .dragwyb-field-label {
+                        top: 0 !important;
+                        transform: translateY(-50%) scale(0.8) !important;
+                        background-color: var(--dragwyb-float-bg, var(--dragwyb-input-bg, var(--dragwyb-row-bg-color, var(--dragwyb-form-bg-color, #ffffff)))) !important;
+                        padding: 0 5px !important;
+                        border-radius: 2px !important;
+                        font-weight: 600 !important;
+                        color: var(--dragwyb-float-active, var(--dragwyb-input-focus-border, #1d4ed8)) !important;
+                    }
+                }
+
+                .dragwyb-field-input:focus ~ .dragwyb-field-label,
+                .dragwyb-field-input:not(:placeholder-shown) ~ .dragwyb-field-label {
+                    top: 0 !important;
+                    transform: translateY(-50%) scale(0.8) !important;
+                    background-color: var(--dragwyb-float-bg, var(--dragwyb-input-bg, var(--dragwyb-row-bg-color, var(--dragwyb-form-bg-color, #ffffff)))) !important;
+                    padding: 0 5px !important;
+                    border-radius: 2px !important;
+                    font-weight: 600 !important;
+                    color: var(--dragwyb-float-active, var(--dragwyb-input-focus-border, #1d4ed8)) !important;
                 }
             }
         }
 
-        /* Sub-Variants */
-        &.dragwyb-float-outlined .dragwyb-field-wrapper:not(.dragwyb-no-float) .dragwyb-field-input {
+        // ==========================================
+        // Sub-Variant 3: Inside & Hide on Text
+        // ==========================================
+        &.dragwyb-float-inside-hide {
+            .dragwyb-field-wrapper:not(.dragwyb-no-float) {
+                margin-bottom: 12px;
 
-            &:focus~.dragwyb-field-label,
-            &:not(:placeholder-shown)~.dragwyb-field-label {
-                padding: 0 4px;
-                margin-left: -4px;
-                background: linear-gradient(to bottom, var(--dragwyb-row-bg-color, var(--dragwyb-form-bg-color, transparent)) 50%, var(--dragwyb-input-focus-bg, #ffffff) 50%);
+                .dragwyb-field-label {
+                    left: var(--dragwyb-input-pl, 14px) !important;
+                    top: 50% !important;
+                    transform: translateY(-50%) !important;
+                    pointer-events: none !important;
+                    transition: opacity 0.3s ease, visibility 0.3s ease !important;
+                    z-index: 2 !important;
+                    line-height: 1 !important;
+                }
+
+                .dragwyb-input-group:has(input:focus),
+                .dragwyb-input-group:has(textarea:focus),
+                .dragwyb-input-group:has(input:not(:placeholder-shown)),
+                .dragwyb-input-group:has(textarea:not(:placeholder-shown)),
+                .dragwyb-input-group:has(.dragwyb-has-value),
+                .dragwyb-field-wrapper:has(input:focus),
+                .dragwyb-field-wrapper:has(textarea:focus),
+                .dragwyb-field-wrapper:has(input:not(:placeholder-shown)),
+                .dragwyb-field-wrapper:has(textarea:not(:placeholder-shown)),
+                .dragwyb-field-wrapper:has(.dragwyb-has-value),
+                &.dragwyb-has-value {
+                    .dragwyb-field-label {
+                        opacity: 0 !important;
+                        visibility: hidden !important;
+                    }
+                }
+
+                .dragwyb-field-input:focus ~ .dragwyb-field-label,
+                .dragwyb-field-input:not(:placeholder-shown) ~ .dragwyb-field-label {
+                    opacity: 0 !important;
+                    visibility: hidden !important;
+                }
             }
-        }
-
-        &.dragwyb-float-inside .dragwyb-field-wrapper:not(.dragwyb-no-float) .dragwyb-field-input {
-            background-color: var(--dragwyb-form-bg-filled, #f3f4f6);
-            border: none;
-            border-bottom: 2px solid var(--dragwyb-input-border-color, #d1d5db);
-            border-radius: 6px 6px 0 0;
-            padding-top: calc(var(--dragwyb-input-pt, 0px) + var(--dragwyb-label-typography-size, 14px));
-            height: calc(var(--dragwyb-input-pt, 0px) + var(--dragwyb-label-typography-size, 14px) + 20px + var(--dragwyb-input-typography-size, 14px) + var(--dragwyb-input-pb, 0px));
-
-            &:focus {
-                background-color: #e5e7eb;
-                box-shadow: none;
-                border-color: var(--dragwyb-float-active, var(--dragwyb-input-focus-border, #1d4ed8));
-            }
-
-            &:focus~.dragwyb-field-label,
-            &:not(:placeholder-shown)~.dragwyb-field-label {
-                top: calc(var(--dragwyb-input-pt, 0px) / 2);
-                transform: translateY(0) scale(0.75);
-            }
-        }
-
-        &.dragwyb-float-inside .dragwyb-field-wrapper:not(.dragwyb-no-float):where(.dragwyb-field-label-icon-before, .dragwyb-field-label-icon-after) .dragwyb-field-input {
-            padding-top: calc(var(--dragwyb-input-pt, 0px) + var(--dragwyb-label-typography-size, 14px) + (var(--dragwyb-label-icon-size, var(--dragwyb-input-typography-size, 14px)) - var(--dragwyb-input-typography-size, 14px)));
-            height: calc(var(--dragwyb-input-pt, 0px) + var(--dragwyb-label-typography-size, 14px) + 20px + var(--dragwyb-input-typography-size, 14px) + (var(--dragwyb-label-icon-size, var(--dragwyb-input-typography-size, 14px)) - var(--dragwyb-input-typography-size, 14px)) + var(--dragwyb-input-pb, 0px));
         }
     }
 
-    /* --- Hidden Layout --- */
+    // ==========================================
+    // Hide Label Mode
+    // ==========================================
     &.dragwyb-layout-hidden {
         .dragwyb-field-label {
             display: none !important;
@@ -331,8 +476,9 @@
     /* Field Label - Unnested for clean, low-specificity matching */
     .dragwyb-field-label {
         font-family: inherit;
-        display: flex;
+        display: inline-flex;
         align-items: center;
+        gap: 6px;
         width: fit-content;
         color: var(--dragwyb-label-color, inherit);
         margin-bottom: var(--dragwyb-label-spacing, 6px);
@@ -340,14 +486,18 @@
         transition: var(--dragwyb-transition, all 0.2s ease);
 
         span.dragwyb-field-label-text {
-            display: flex;
+            display: inline-flex;
             align-items: center;
+            line-height: 1.4;
         }
 
-        svg {
+        svg,
+        .dragwyb-label-icon {
             fill: currentColor;
             stroke: currentColor;
             width: var(--dragwyb-label-icon-size, 1em);
+            height: var(--dragwyb-label-icon-size, 1em);
+            vertical-align: -0.125em;
         }
 
         .dragwyb-required {
