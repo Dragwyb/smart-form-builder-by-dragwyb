@@ -724,10 +724,7 @@ export default function reducer(state, action) {
                 ...state,
                 styleSelectors: {
                     ...state.styleSelectors || {},
-                    [action.payload.key]: {
-                        ...(state.styleSelectors?.[action.payload.key] || {}),
-                        ...action.payload.value
-                    }
+                    [action.payload.key]: action.payload.value
                 }
             }
 

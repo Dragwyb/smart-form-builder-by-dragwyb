@@ -467,39 +467,39 @@ export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, p
                     cssCache[targetSelector] = cssCache[targetSelector].replaceAll("{{" + placeholder + "}}", value[placeholders[placeholder]]);
                 }
             });
+        });
 
-            // Remove any remaining placeholders and their surrounding text until space or special characters
-            Object.keys(cssCache).forEach((selector) => {
-                if (cssCache[selector].includes('{{') && cssCache[selector].includes('}}')) {
-                    let cleanSelectors = cssCache[selector].replace(/[^\s:;"'#,()]*\{\{[A-Z0-9_]+\}\}[^\s:;"'#,()]*/g, '');
+        // Remove any remaining placeholders and their surrounding text until space or special characters
+        Object.keys(cssCache).forEach((cacheKey) => {
+            if (cssCache[cacheKey].includes('{{') && cssCache[cacheKey].includes('}}')) {
+                let cleanSelectors = cssCache[cacheKey].replace(/[^\s:;"'#,()]*\{\{[A-Z0-9_]+\}\}[^\s:;"'#,()]*/g, '');
 
-                    cleanSelectors = cleanSelectors.split(';');
+                cleanSelectors = cleanSelectors.split(';');
 
-                    let newCleanSelectors = [];
+                let newCleanSelectors = [];
 
-                    cleanSelectors.forEach((cleanSelector) => {
-                        const splitValue = cleanSelector.split(':');
-                        let valueExist = false;
+                cleanSelectors.forEach((cleanSelector) => {
+                    const splitValue = cleanSelector.split(':');
+                    let valueExist = false;
 
-                        if (splitValue && splitValue[1]) {
-                            if (splitValue[1].trim() !== '') {
-                                valueExist = splitValue.join(':');
-                            } else {
-                                valueExist = false;
-                            }
+                    if (splitValue && splitValue[1]) {
+                        if (splitValue[1].trim() !== '') {
+                            valueExist = splitValue.join(':');
+                        } else {
+                            valueExist = false;
                         }
-                        if (valueExist && valueExist.trim() !== '') {
-                            newCleanSelectors.push(valueExist);
-                        }
-                    });
-
-                    if (newCleanSelectors.length > 0) {
-                        cssCache[selector] = newCleanSelectors.join(';');
-                    } else {
-                        delete cssCache[selector];
                     }
+                    if (valueExist && valueExist.trim() !== '') {
+                        newCleanSelectors.push(valueExist);
+                    }
+                });
+
+                if (newCleanSelectors.length > 0) {
+                    cssCache[cacheKey] = newCleanSelectors.join(';') + ';';
+                } else {
+                    delete cssCache[cacheKey];
                 }
-            });
+            }
         });
 
         if (Object.keys(cssCache).length < 1) {
