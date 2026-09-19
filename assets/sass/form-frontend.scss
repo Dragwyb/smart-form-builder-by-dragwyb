@@ -2,12 +2,12 @@
 .dragwyb-form-wrapper {
     // ... (Keeping your existing CSS variables exactly as they are)
     --dragwyb-form-typography-family: inherit;
-    --dragwyb-form-typography-size: 16px;
-    --dragwyb-form-typography-wt: 400;
+    --dragwyb-form-typography-size: inherit;
+    --dragwyb-form-typography-wt: inherit;
     --dragwyb-form-typography-ts: none;
     --dragwyb-form-typography-st: normal;
     --dragwyb-form-typography-dt: none;
-    --dragwyb-form-typography-lh: 1.5;
+    --dragwyb-form-typography-lh: inherit;
     --dragwyb-form-typography-ls: 0px;
     --dragwyb-form-typography-ws: 0px;
     --dragwyb-form-typography-align: left;
@@ -30,12 +30,12 @@
     --dragwyb-form-filter-saturate: 100%;
     --dragwyb-form-filter-hue: 0deg;
     --dragwyb-form-width: 100%;
-    --dragwyb-form-pt: 40px;
-    --dragwyb-form-pr: 40px;
-    --dragwyb-form-pb: 40px;
-    --dragwyb-form-pl: 40px;
-    --dragwyb-form-mt: 20px;
-    --dragwyb-form-mb: 20px;
+    --dragwyb-form-pt: ;
+    --dragwyb-form-pr: ;
+    --dragwyb-form-pb: ;
+    --dragwyb-form-pl: ;
+    --dragwyb-form-mt: ;
+    --dragwyb-form-mb: ;
     --dragwyb-field-gap: 15px;
     --dragwyb-field-width: 100%;
     --dragwyb-form-border-top-width: ;
@@ -346,30 +346,8 @@
 
 // Fields Element Styling
 .dragwyb-form-wrapper {
-    font-family: var(--dragwyb-form-typography-family);
-    font-size: var(--dragwyb-form-typography-size);
-    font-weight: var(--dragwyb-form-typography-wt);
-    font-style: var(--dragwyb-form-typography-st);
-    text-transform: var(--dragwyb-form-typography-ts);
-    text-decoration: var(--dragwyb-form-typography-dt);
-    line-height: var(--dragwyb-form-typography-lh);
-    letter-spacing: var(--dragwyb-form-typography-ls);
-    word-spacing: var(--dragwyb-form-typography-ws);
-    text-align: var(--dragwyb-form-typography-align);
     box-sizing: border-box;
-    width: var(--dragwyb-form-width);
-    margin: var(--dragwyb-form-mt) var(--dragwyb-form-mr, auto) var(--dragwyb-form-mb) var(--dragwyb-form-ml, auto);
-    padding: var(--dragwyb-form-pt) var(--dragwyb-form-pr) var(--dragwyb-form-pb) var(--dragwyb-form-pl);
-    background: var(--dragwyb-form-bg-color);
-    backdrop-filter: brightness(var(--dragwyb-form-filter-brightness, 100%)) contrast(var(--dragwyb-form-filter-contrast, 100%)) saturate(var(--dragwyb-form-filter-saturate, 100%)) blur(var(--dragwyb-form-filter-blur, 0px)) hue-rotate(var(--dragwyb-form-filter-hue, 0deg));
-    border: 0px var(--dragwyb-form-border-style) var(--dragwyb-form-border-color);
-    border-top-width: var(--dragwyb-form-border-top-width);
-    border-bottom-width: var(--dragwyb-form-border-bottom-width);
-    border-left-width: var(--dragwyb-form-border-left-width);
-    border-right-width: var(--dragwyb-form-border-right-width);
-    border-radius: var(--dragwyb-form-border-left-radius) var(--dragwyb-form-border-top-radius) var(--dragwyb-form-border-right-radius) var(--dragwyb-form-border-bottom-radius);
-    box-shadow: var(--dragwyb-form-box-shadow-position) var(--dragwyb-form-box-shadow-h) var(--dragwyb-form-box-shadow-v) var(--dragwyb-form-box-shadow-blur) var(--dragwyb-form-box-shadow-spread) var(--dragwyb-form-box-shadow-color);
-    text-shadow: var(--dragwyb-form-text-shadow-h) var(--dragwyb-form-text-shadow-v) var(--dragwyb-form-text-shadow-blur) var(--dragwyb-form-text-shadow-color);
+    width: var(--dragwyb-form-width, 100%);
 
     &.dragwyb-bg-image {
         background-image: var(--dragwyb-form-bg-image, none);

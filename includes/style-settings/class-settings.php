@@ -144,7 +144,7 @@ class Settings extends Register_Controls_Base {
 					),
 				),
 				'selectors' => array(
-					'{{WRAPPER}}' => '--dragwyb-form-width: {{VALUE}}{{UNIT}};',
+					'{{WRAPPER}}' => 'width: {{VALUE}}{{UNIT}}; --dragwyb-form-width: {{VALUE}}{{UNIT}};',
 				),
 			)
 		);
@@ -156,7 +156,7 @@ class Settings extends Register_Controls_Base {
 				'label'     => __( 'Margin', 'smart-form-builder-by-dragwyb' ),
 				'units'     => array( 'px', 'em', '%' ),
 				'selectors' => array(
-					'{{WRAPPER}}' => '--dragwyb-form-mt: {{TOP}}{{UNIT}}; --dragwyb-form-mr: {{RIGHT}}{{UNIT}}; --dragwyb-form-mb: {{BOTTOM}}{{UNIT}}; --dragwyb-form-ml: {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}}' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}; --dragwyb-form-mt: {{TOP}}{{UNIT}}; --dragwyb-form-mr: {{RIGHT}}{{UNIT}}; --dragwyb-form-mb: {{BOTTOM}}{{UNIT}}; --dragwyb-form-ml: {{LEFT}}{{UNIT}};',
 				),
 			)
 		);
@@ -167,16 +167,8 @@ class Settings extends Register_Controls_Base {
 				'type'      => Controls::DIMENSIONS,
 				'label'     => __( 'Padding', 'smart-form-builder-by-dragwyb' ),
 				'units'     => array( 'px', 'em', '%' ),
-				'default'   => array(
-					'top'    => 20,
-					'right'  => 20,
-					'bottom' => 20,
-					'left'   => 20,
-					'unit'   => 'px',
-					'linked' => false,
-				),
 				'selectors' => array(
-					'{{WRAPPER}}' => '--dragwyb-form-pt: {{TOP}}{{UNIT}}; --dragwyb-form-pr: {{RIGHT}}{{UNIT}}; --dragwyb-form-pb: {{BOTTOM}}{{UNIT}}; --dragwyb-form-pl: {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}}' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}; --dragwyb-form-pt: {{TOP}}{{UNIT}}; --dragwyb-form-pr: {{RIGHT}}{{UNIT}}; --dragwyb-form-pb: {{BOTTOM}}{{UNIT}}; --dragwyb-form-pl: {{LEFT}}{{UNIT}};',
 				),
 			)
 		);
