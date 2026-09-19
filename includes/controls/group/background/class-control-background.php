@@ -42,7 +42,9 @@ class Control_Background extends Group_Control_Base {
 			'size',
 			'bg_width',
 			'selector',
+			'variable_selector',
 			'conditions',
+			'prefix',
 		);
 	}
 
@@ -50,7 +52,7 @@ class Control_Background extends Group_Control_Base {
 		return $this->sanitize_control( $value );
 	}
 
-	protected function sanitize_control( $value, $settings ) {
+	protected function sanitize_control( $value, $settings = null ) {
 		if ( ! is_array( $value ) ) {
 			return array();
 		}
@@ -60,7 +62,11 @@ class Control_Background extends Group_Control_Base {
 			$sanitized['selector'] = sanitize_text_field( $value['selector'] );
 		}
 
-		foreach ( array( 'background', 'color', 'color_b', 'gradient_type', 'gradient_position', 'position', 'attachment', 'repeat', 'size' ) as $key ) {
+		if ( isset( $value['variable_selector'] ) ) {
+			$sanitized['variable_selector'] = sanitize_text_field( $value['variable_selector'] );
+		}
+
+		foreach ( array( 'background', 'color', 'color_b', 'gradient_type', 'gradient_position', 'position', 'attachment', 'repeat', 'size', 'prefix' ) as $key ) {
 			if ( isset( $value[ $key ] ) ) {
 				$sanitized[ $key ] = sanitize_text_field( $value[ $key ] );
 			}
@@ -90,14 +96,21 @@ class Control_Background extends Group_Control_Base {
 	}
 
 	private function get_display_settings(): array {
+		$defaults       = $this->default_setting();
 		$valid_settings = $this->valid_default_settings();
 		$user_data      = isset( $this->data['settings'] ) && is_array( $this->data['settings'] )
 			? $this->data['settings']
 			: $this->data;
 
+		// Ensure we handle the root selector if passed directly in data
 		if ( isset( $this->data['selector'] ) && empty( $user_data['selector'] ) ) {
 			$user_data['selector'] = $this->data['selector'];
 		}
+		if ( isset( $this->data['variable_selector'] ) && empty( $user_data['variable_selector'] ) ) {
+			$user_data['variable_selector'] = $this->data['variable_selector'];
+		}
+
+		$user_data = array_replace_recursive( $defaults, $user_data );
 
 		$valid_user_data = array();
 
@@ -115,27 +128,36 @@ class Control_Background extends Group_Control_Base {
 	}
 
 	protected function register_group_controls(): void {
-		$settings = $this->get_display_settings();
-		$id       = $this->string_sanitize( $this->id );
-		$selector = isset( $settings['selector'] ) && ! empty( $settings['selector'] ) ? $settings['selector'] : false;
+		$settings          = $this->get_display_settings();
+		$id                = $this->string_sanitize( $this->id );
+		$selector          = isset( $settings['selector'] ) && ! empty( $settings['selector'] ) ? $settings['selector'] : false;
+		$variable_selector = isset( $settings['variable_selector'] ) && ! empty( $settings['variable_selector'] ) ? $settings['variable_selector'] : '{{WRAPPER}}';
+		$prefix            = isset( $settings['prefix'] ) && ! empty( $settings['prefix'] ) ? $settings['prefix'] : 'form';
 
-		$prefix = isset( $settings['prefix'] ) && ! empty( $settings['prefix'] ) ? $settings['prefix'] : 'form';
+		$direct_selectors = array(
+			'color'      => 'background-color: {{VALUE}};',
+			'image'      => 'background-image: url("{{URL}}");',
+			'position'   => 'background-position: {{VALUE}};',
+			'attachment' => 'background-attachment: {{VALUE}};',
+			'repeat'     => 'background-repeat: {{VALUE}};',
+			'size'       => 'background-size: {{VALUE}};',
+		);
 
-		$selectors = array(
-			'color'             => array( '--dragwyb-' . $prefix . '-bg-color' => '{{VALUE}}' ),
-			'color_stop'        => array( '--dragwyb-' . $prefix . '-bg-color-stop' => '{{VALUE}}{{UNIT}}' ),
-			'color_b'           => array( '--dragwyb-' . $prefix . '-bg-color-b' => '{{VALUE}}' ),
-			'color_b_stop'      => array( '--dragwyb-' . $prefix . '-bg-color-b-stop' => '{{VALUE}}{{UNIT}}' ),
-			'gradient_angle'    => array( '--dragwyb-' . $prefix . '-bg-gradient-angle' => '{{VALUE}}{{UNIT}}' ),
-			'gradient_position' => array( '--dragwyb-' . $prefix . '-bg-gradient-position' => '{{VALUE}}' ),
-			'image'             => array( '--dragwyb-' . $prefix . '-bg-image' => 'url("{{URL}}")' ),
-			'position'          => array( '--dragwyb-' . $prefix . '-bg-position' => '{{VALUE}}' ),
-			'xpos'              => array( '--dragwyb-' . $prefix . '-bg-xpos' => '{{VALUE}}{{UNIT}}' ),
-			'ypos'              => array( '--dragwyb-' . $prefix . '-bg-ypos' => '{{VALUE}}{{UNIT}}' ),
-			'attachment'        => array( '--dragwyb-' . $prefix . '-bg-attachment' => '{{VALUE}}' ),
-			'repeat'            => array( '--dragwyb-' . $prefix . '-bg-repeat' => '{{VALUE}}' ),
-			'size'              => array( '--dragwyb-' . $prefix . '-bg-size' => '{{VALUE}}' ),
-			'bg_width'          => array( '--dragwyb-' . $prefix . '-bg-width' => '{{VALUE}}{{UNIT}}' ),
+		$var_selectors = array(
+			'color'             => '--dragwyb-' . $prefix . '-bg-color: {{VALUE}};',
+			'color_stop'        => '--dragwyb-' . $prefix . '-bg-color-stop: {{VALUE}}{{UNIT}};',
+			'color_b'           => '--dragwyb-' . $prefix . '-bg-color-b: {{VALUE}};',
+			'color_b_stop'      => '--dragwyb-' . $prefix . '-bg-color-b-stop: {{VALUE}}{{UNIT}};',
+			'gradient_angle'    => '--dragwyb-' . $prefix . '-bg-gradient-angle: {{VALUE}}{{UNIT}};',
+			'gradient_position' => '--dragwyb-' . $prefix . '-bg-gradient-position: {{VALUE}};',
+			'image'             => '--dragwyb-' . $prefix . '-bg-image: url("{{URL}}");',
+			'position'          => '--dragwyb-' . $prefix . '-bg-position: {{VALUE}};',
+			'xpos'              => '--dragwyb-' . $prefix . '-bg-xpos: {{VALUE}}{{UNIT}};',
+			'ypos'              => '--dragwyb-' . $prefix . '-bg-ypos: {{VALUE}}{{UNIT}};',
+			'attachment'        => '--dragwyb-' . $prefix . '-bg-attachment: {{VALUE}};',
+			'repeat'            => '--dragwyb-' . $prefix . '-bg-repeat: {{VALUE}};',
+			'size'              => '--dragwyb-' . $prefix . '-bg-size: {{VALUE}};',
+			'bg_width'          => '--dragwyb-' . $prefix . '-bg-width: {{VALUE}}{{UNIT}};',
 		);
 
 		$fields = array();
@@ -485,14 +507,19 @@ class Control_Background extends Group_Control_Base {
 				}
 			}
 
-			if ( isset( $selectors[ $key ] ) && is_array( $selectors[ $key ] ) ) {
-				$selector_style = '';
-				foreach ( $selectors[ $key ] as $selector_key => $selector_value ) {
-					$selector_style .= $selector_key . ':' . $selector_value . ';';
-				}
+			$control_args['selectors'] = array();
 
-				if ( ! empty( $selector_style ) && $selector ) {
-					$control_args['selectors'][ $selector ] = $selector_style;
+			// 1. Direct CSS properties applied to $selector (if provided)
+			if ( $selector && isset( $direct_selectors[ $key ] ) && ! empty( $direct_selectors[ $key ] ) ) {
+				$control_args['selectors'][ $selector ] = $direct_selectors[ $key ];
+			}
+
+			// 2. CSS variables applied to $variable_selector (default {{WRAPPER}})
+			if ( $variable_selector && isset( $var_selectors[ $key ] ) && ! empty( $var_selectors[ $key ] ) ) {
+				if ( isset( $control_args['selectors'][ $variable_selector ] ) ) {
+					$control_args['selectors'][ $variable_selector ] .= ' ' . $var_selectors[ $key ];
+				} else {
+					$control_args['selectors'][ $variable_selector ] = $var_selectors[ $key ];
 				}
 			}
 

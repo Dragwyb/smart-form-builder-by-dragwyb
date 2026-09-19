@@ -32,6 +32,7 @@ class Control_Box_Shadow extends Group_Control_Base {
 			'spread',
 			'position',
 			'selector',
+			'variable_selector',
 			'conditions',
 			'prefix',
 		);
@@ -41,7 +42,7 @@ class Control_Box_Shadow extends Group_Control_Base {
 		return $this->sanitize_control( $value );
 	}
 
-	protected function sanitize_control( $value, $settings ) {
+	protected function sanitize_control( $value, $settings = null ) {
 		if ( ! is_array( $value ) ) {
 			return array();
 		}
@@ -58,6 +59,10 @@ class Control_Box_Shadow extends Group_Control_Base {
 		// Added Selector Sanitization
 		if ( isset( $value['selector'] ) ) {
 			$sanitized['selector'] = sanitize_text_field( $value['selector'] );
+		}
+
+		if ( isset( $value['variable_selector'] ) ) {
+			$sanitized['variable_selector'] = sanitize_text_field( $value['variable_selector'] );
 		}
 
 		foreach ( array( 'horizontal', 'vertical', 'blur', 'spread' ) as $key ) {
@@ -86,6 +91,9 @@ class Control_Box_Shadow extends Group_Control_Base {
 		if ( isset( $this->data['selector'] ) && empty( $user_data['selector'] ) ) {
 			$user_data['selector'] = $this->data['selector'];
 		}
+		if ( isset( $this->data['variable_selector'] ) && empty( $user_data['variable_selector'] ) ) {
+			$user_data['variable_selector'] = $this->data['variable_selector'];
+		}
 
 		// Only valid keys from defaults
 		$valid_user_data = array();
@@ -104,10 +112,11 @@ class Control_Box_Shadow extends Group_Control_Base {
 	}
 
 	protected function register_group_controls(): void {
-		$settings = $this->get_display_settings();
-		$id       = $this->string_sanitize( $this->id );
-		$selector = isset( $settings['selector'] ) && ! empty( $settings['selector'] ) ? $settings['selector'] : false;
-		$prefix   = isset( $settings['prefix'] ) && ! empty( $settings['prefix'] ) ? $settings['prefix'] : 'form';
+		$settings          = $this->get_display_settings();
+		$id                = $this->string_sanitize( $this->id );
+		$selector          = isset( $settings['selector'] ) && ! empty( $settings['selector'] ) ? $settings['selector'] : false;
+		$variable_selector = isset( $settings['variable_selector'] ) && ! empty( $settings['variable_selector'] ) ? $settings['variable_selector'] : '{{WRAPPER}}';
+		$prefix            = isset( $settings['prefix'] ) && ! empty( $settings['prefix'] ) ? $settings['prefix'] : 'form';
 
 		$selectors = array(
 			'color'      => array( '--dragwyb-' . $prefix . '-box-shadow-color' => '{{VALUE}}' ),
@@ -117,6 +126,8 @@ class Control_Box_Shadow extends Group_Control_Base {
 			'spread'     => array( '--dragwyb-' . $prefix . '-box-shadow-spread' => '{{VALUE}}{{UNIT}}' ),
 			'position'   => array( '--dragwyb-' . $prefix . '-box-shadow-position' => '{{VALUE}}' ),
 		);
+
+		$box_shadow_rule = 'box-shadow: var(--dragwyb-' . $prefix . '-box-shadow-position, ) var(--dragwyb-' . $prefix . '-box-shadow-h, 0px) var(--dragwyb-' . $prefix . '-box-shadow-v, 0px) var(--dragwyb-' . $prefix . '-box-shadow-blur, 0px) var(--dragwyb-' . $prefix . '-box-shadow-spread, 0px) var(--dragwyb-' . $prefix . '-box-shadow-color, transparent);';
 
 		// 2. Control Map
 		$map = array(
@@ -212,14 +223,26 @@ class Control_Box_Shadow extends Group_Control_Base {
 				}
 			}
 
-			if ( isset( $selectors[ $key ] ) && is_array( $selectors[ $key ] ) ) {
+			$control_args['selectors'] = array();
+
+			// 1. Direct CSS properties applied to $selector (if provided)
+			if ( $selector && ! empty( $box_shadow_rule ) ) {
+				$control_args['selectors'][ $selector ] = $box_shadow_rule;
+			}
+
+			// 2. CSS variables applied to $variable_selector (default {{WRAPPER}})
+			if ( $variable_selector && isset( $selectors[ $key ] ) && is_array( $selectors[ $key ] ) ) {
 				$selector_style = '';
 				foreach ( $selectors[ $key ] as $selector_key => $selector_value ) {
 					$selector_style .= $selector_key . ':' . $selector_value . ';';
 				}
 
 				if ( ! empty( $selector_style ) ) {
-					$control_args['selectors'][ $selector ] = $selector_style;
+					if ( isset( $control_args['selectors'][ $variable_selector ] ) ) {
+						$control_args['selectors'][ $variable_selector ] .= ' ' . $selector_style;
+					} else {
+						$control_args['selectors'][ $variable_selector ] = $selector_style;
+					}
 				}
 			}
 

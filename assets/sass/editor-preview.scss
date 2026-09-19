@@ -68,9 +68,7 @@ html {
 .dragwyb-editor__main {
     flex: 1;
     padding: 20px;
-    background-color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
     height: unset;
-    background-image: radial-gradient(hsl(var(--dragwyb-card-foreground)/0.2) 1px, transparent 1px);
     background-size: 24px 24px;
     min-height: 100%;
 }
@@ -249,14 +247,14 @@ html {
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 
             button {
-                padding: 3px 5px;
-                border: none;
-                background: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
+                padding: 3px 5px !important;
+                border: none !important;
+                background: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1)) !important;
                 cursor: pointer;
-                color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1));
-                box-shadow: unset;
+                color: hsl(var(--dragwyb-background)/var(--dragwyb-bg-opacity, 1)) !important;
+                box-shadow: unset !important;
                 line-height: 1;
-                border-radius: 0;
+                border-radius: 0 !important;
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
@@ -282,6 +280,7 @@ html {
                 .dashicons {
                     width: auto !important;
                     height: auto !important;
+                    line-height: 0 !important;
 
                     &::before {
                         font-size: 15px;

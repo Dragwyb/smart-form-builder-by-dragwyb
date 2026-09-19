@@ -176,7 +176,10 @@ class Field_Radio extends Field_Base {
 			array(
 				'type'      => Controls::COLOR,
 				'label'     => __( 'Color', 'smart-form-builder-by-dragwyb' ),
-				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-label-color: {{VALUE}};' ),
+				'selectors' => array(
+					'{{WRAPPER}} .dragwyb-field-label' => 'color: {{VALUE}};',
+					'{{WRAPPER}}'                      => '--dragwyb-label-color: {{VALUE}};',
+				),
 			)
 		);
 
@@ -191,7 +194,10 @@ class Field_Radio extends Field_Base {
 						'max' => 50,
 					),
 				),
-				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-label-spacing: {{VALUE}}{{UNIT}};' ),
+				'selectors' => array(
+					'{{WRAPPER}} .dragwyb-field-label' => 'margin-bottom: {{VALUE}}{{UNIT}};',
+					'{{WRAPPER}}'                      => '--dragwyb-label-spacing: {{VALUE}}{{UNIT}};',
+				),
 			)
 		);
 
@@ -210,17 +216,21 @@ class Field_Radio extends Field_Base {
 			array(
 				'type'      => Controls::COLOR,
 				'label'     => __( 'Text Color', 'smart-form-builder-by-dragwyb' ),
-				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-option-color: {{VALUE}};' ),
+				'selectors' => array(
+					'{{WRAPPER}} .dragwyb-radio-label' => 'color: {{VALUE}};',
+					'{{WRAPPER}}'                      => '--dragwyb-option-color: {{VALUE}};',
+				),
 			)
 		);
 
 		$this->add_group_control(
 			'option_typography',
 			array(
-				'type'     => Controls::GROUP_TYPOGRAPHY,
-				'label'    => __( 'Typography', 'smart-form-builder-by-dragwyb' ),
-				'selector' => '{{WRAPPER}}',
-				'prefix'   => 'option',
+				'type'              => Controls::GROUP_TYPOGRAPHY,
+				'label'             => __( 'Typography', 'smart-form-builder-by-dragwyb' ),
+				'selector'          => '{{WRAPPER}} .dragwyb-radio-label',
+				'variable_selector' => '{{WRAPPER}}',
+				'prefix'            => 'option',
 			)
 		);
 
