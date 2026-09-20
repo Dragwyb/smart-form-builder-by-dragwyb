@@ -232,22 +232,25 @@
         // Sub-Variant 1: Float Inside
         // ==========================================
         &.dragwyb-float-inside {
+            .dragwyb-field-input {
+                border: none;
+                border-bottom: 2px solid var(--dragwyb-input-border-color, #d1d5db);
+                border-radius: 6px 6px 0 0;
+                width: 100% !important;
+                box-sizing: border-box !important;
+
+                &:focus {
+                    box-shadow: none;
+                    border-color: var(--dragwyb-float-active, var(--dragwyb-input-focus-border, #1d4ed8));
+                }
+            }
+
             .dragwyb-field-wrapper:not(.dragwyb-no-float) {
                 margin-bottom: 12px;
 
                 .dragwyb-field-input {
-                    background-color: var(--dragwyb-form-bg-filled, #f3f4f6);
-                    border: none;
-                    border-bottom: 2px solid var(--dragwyb-input-border-color, #d1d5db);
-                    border-radius: 6px 6px 0 0;
-                    width: 100% !important;
-                    box-sizing: border-box !important;
-
-                    &:focus {
-                        background-color: #e5e7eb;
-                        box-shadow: none;
-                        border-color: var(--dragwyb-float-active, var(--dragwyb-input-focus-border, #1d4ed8));
-                    }
+                    padding-top: calc(var(--dragwyb-input-pt, 16px) + var(--dragwyb-input-pb, 16px) * 0.25) !important;
+                    padding-bottom: calc(var(--dragwyb-input-pb, 16px) * 0.75) !important;
                 }
 
                 .dragwyb-field-label {
@@ -266,7 +269,7 @@
                 .dragwyb-field-wrapper:has(.dragwyb-has-value),
                 &.dragwyb-has-value {
                     .dragwyb-field-label {
-                        top: 6px !important;
+                        top: max(0px, calc(var(--dragwyb-input-pt, 12px)));
                         transform: translateY(0) scale(0.78) !important;
                         color: var(--dragwyb-float-active, var(--dragwyb-input-focus-border, #1d4ed8)) !important;
                     }
@@ -313,7 +316,7 @@
                     .dragwyb-field-label {
                         top: 0 !important;
                         transform: translateY(-50%) scale(0.8) !important;
-                        background-color: var(--dragwyb-float-bg, var(--dragwyb-input-bg, var(--dragwyb-row-bg-color, var(--dragwyb-form-bg-color, #ffffff)))) !important;
+                        background: linear-gradient(0deg, var(--dragwyb-input-bg, var(--dragwyb-row-bg-color, var(--dragwyb-form-bg-color, #ffffff))) 51%, transparent 51%);
                         padding: 0 5px !important;
                         border-radius: 2px !important;
                         font-weight: 600 !important;
@@ -325,7 +328,7 @@
                 .dragwyb-field-input:not(:placeholder-shown)~.dragwyb-field-label {
                     top: 0 !important;
                     transform: translateY(-50%) scale(0.8) !important;
-                    background-color: var(--dragwyb-float-bg, var(--dragwyb-input-bg, var(--dragwyb-row-bg-color, var(--dragwyb-form-bg-color, #ffffff)))) !important;
+                    background: linear-gradient(0deg, var(--dragwyb-input-bg, var(--dragwyb-row-bg-color, var(--dragwyb-form-bg-color, #ffffff))) 51%, transparent 51%);
                     padding: 0 5px !important;
                     border-radius: 2px !important;
                     font-weight: 600 !important;
@@ -396,6 +399,17 @@
 .dragwyb-form-wrapper {
     box-sizing: border-box;
     width: var(--dragwyb-form-width, 100%);
+
+    input[type="file"] {
+        border-width: 1px;
+        border-style: solid;
+        border-color: var(--ast-border-color, #d1d5db);
+        padding: 12px 16px;
+        border-radius: 2px;
+        background: #fafafa;
+        font-size: 16px;
+        line-height: 24px;
+    }
 
     &.dragwyb-bg-image {
         background-image: var(--dragwyb-form-bg-image, none);
