@@ -1,6 +1,13 @@
-// Variables & Mixins
+/* ==========================================================================
+   Dragwyb Form
+   ========================================================================== */
+
 .dragwyb-form-wrapper {
-    // Form Typography
+
+    /* ----------------------------------------------------------------------
+       Form Variables
+       ---------------------------------------------------------------------- */
+
     --dragwyb-form-typography-family: inherit;
     --dragwyb-form-typography-size: inherit;
     --dragwyb-form-typography-wt: inherit;
@@ -11,6 +18,7 @@
     --dragwyb-form-typography-ls: 0px;
     --dragwyb-form-typography-ws: 0px;
     --dragwyb-form-typography-align: left;
+
     --dragwyb-form-bg-color-stop: 0%;
     --dragwyb-form-bg-color-b-stop: 100%;
     --dragwyb-form-bg-gradient-angle: 180deg;
@@ -22,23 +30,28 @@
     --dragwyb-form-bg-xpos: 0px;
     --dragwyb-form-bg-ypos: 0px;
     --dragwyb-form-bg-width: 100%;
+
     --dragwyb-form-filter-blur: 0px;
     --dragwyb-form-filter-brightness: 100%;
     --dragwyb-form-filter-contrast: 100%;
     --dragwyb-form-filter-saturate: 100%;
     --dragwyb-form-filter-hue: 0deg;
+
     --dragwyb-form-width: 100%;
     --dragwyb-field-gap: 15px;
     --dragwyb-field-width: 100%;
+
     --dragwyb-float-active: #1d4ed8;
     --dragwyb-asterisk-color: #ef4444;
+
     --dragwyb-success-color: #15803d;
     --dragwyb-success-bg: #dcfce7;
     --dragwyb-error-color: #b91c1c;
     --dragwyb-error-bg: #fee2e2;
+
     --dragwyb-btn-hover-color: #ffffff;
 
-    // Label
+    /* Label */
     --dragwyb-label-typography-family: inherit;
     --dragwyb-label-typography-size: 14px;
     --dragwyb-label-typography-wt: 600;
@@ -52,7 +65,7 @@
     --dragwyb-label-spacing: 6px;
     --dragwyb-label-width: 120px;
 
-    // Help Text
+    /* Help Text */
     --dragwyb-help-text-typography-family: inherit;
     --dragwyb-help-text-typography-size: 14px;
     --dragwyb-help-text-typography-wt: 400;
@@ -64,7 +77,7 @@
     --dragwyb-help-text-typography-ws: 0px;
     --dragwyb-help-text-typography-align: left;
 
-    // Input
+    /* Input */
     --dragwyb-input-typography-family: inherit;
     --dragwyb-input-typography-size: 14px;
     --dragwyb-input-typography-wt: 400;
@@ -76,340 +89,27 @@
     --dragwyb-input-typography-ws: 0px;
     --dragwyb-input-typography-align: left;
 
-    // Button
+    /* Button */
     --dragwyb-btn-typography-family: inherit;
     --dragwyb-btn-width: 100%;
 
-    --dragwyb-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-
-    // Toggle (Checkbox & Radio)
+    /* Toggle */
     --dragwyb-toggle-size: 16px;
     --dragwyb-toggle-primary-color: #1d4ed8;
     --dragwyb-toggle-border-color: #d1d5db;
     --dragwyb-toggle-spacing: 8px;
-    // Theme-friendly by default. Set to "none" only when the custom select arrow is enabled.
+
+    /* Select */
     --dragwyb-select-appearance: auto;
-}
 
-.dragwyb-form {
-    &:not(.dragwyb-step-form) {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: var(--dragwyb-form-justify-content, left);
-    }
+    --dragwyb-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
-    box-sizing: border-box;
-    margin: 0;
-}
+    /* ----------------------------------------------------------------------
+       Form Wrapper
+       ---------------------------------------------------------------------- */
 
-.dragwyb-field-h-dragwyb {
-    display: none;
-}
-
-// Layout Styling
-.dragwyb-form-wrapper {
-
-    /* --- Default / Top --- */
-    &:not(.dragwyb-layout-left, .dragwyb-layout-floating) {
-        .dragwyb-field-wrapper:not(.dragwyb-no-float) {
-            .dragwyb-input-group {
-                display: flex;
-                flex-direction: column-reverse;
-            }
-        }
-    }
-
-    /* --- Left Layout --- */
-    &.dragwyb-layout-left {
-        .dragwyb-field-wrapper:not(.dragwyb-step-field, .dragwyb-html-field) {
-            display: grid;
-            grid-template-columns: minmax(var(--dragwyb-label-width, 120px), max-content) 1fr;
-            gap: 0.5em 1.5em;
-            align-items: center;
-
-            .dragwyb-input-group {
-                display: contents;
-            }
-
-            .dragwyb-field-label {
-                grid-column: 1;
-                margin-bottom: 0;
-                order: 0;
-            }
-
-            .dragwyb-field-input,
-            .dragwyb-options-container {
-                grid-column: 2;
-                order: 1;
-            }
-
-            .dragwyb-field-help {
-                grid-column: 2;
-                margin-top: 0;
-            }
-        }
-    }
-
-    /* --- Floating Layout (Material & Modern Modes) --- */
-    &.dragwyb-layout-floating {
-
-        // Country-code enabled phone field offset
-        &.dragwyb-float-inside,
-        &.dragwyb-float-outside,
-        &.dragwyb-float-outlined,
-        &.dragwyb-float-inside-hide {
-
-            .dragwyb-field-wrapper.country-code-enabled .dragwyb-field-label,
-            .dragwyb-input-group:has(.iti, .iti__flag-container, .iti__selected-country, .country-code-enabled) .dragwyb-field-label {
-                margin-left: 48px !important;
-            }
-        }
-
-        .dragwyb-field-wrapper:not(.dragwyb-no-float) {
-            .dragwyb-input-group {
-                position: relative !important;
-                display: block !important;
-            }
-
-            .dragwyb-field-input {
-                display: block !important;
-                width: 100% !important;
-                box-sizing: border-box !important;
-
-                &:not(:focus):placeholder-shown::placeholder {
-                    opacity: 0 !important;
-                    color: transparent !important;
-                }
-            }
-
-            .dragwyb-field-label {
-                position: absolute !important;
-                left: var(--dragwyb-input-pl, 14px) !important;
-                top: 50% !important;
-                transform: translateY(-50%) !important;
-                transform-origin: left center !important;
-                transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-                z-index: 2 !important;
-                line-height: 1 !important;
-                margin: 0 !important;
-                pointer-events: none !important;
-                background-color: transparent !important;
-                color: var(--dragwyb-input-placeholder-color, #9ca3af);
-            }
-
-            &:has(textarea) .dragwyb-field-label,
-            textarea.dragwyb-field-input~.dragwyb-field-label {
-                top: 20px !important;
-                transform: none !important;
-            }
-
-            // Generic Active / Focus-within state
-            .dragwyb-input-group:focus-within,
-            .dragwyb-input-group:has(input:not(:placeholder-shown)),
-            .dragwyb-input-group:has(textarea:not(:placeholder-shown)),
-            .dragwyb-input-group:has(.dragwyb-has-value),
-            .dragwyb-field-wrapper:focus-within,
-            .dragwyb-field-wrapper:has(input:not(:placeholder-shown)),
-            .dragwyb-field-wrapper:has(textarea:not(:placeholder-shown)),
-            .dragwyb-field-wrapper:has(.dragwyb-has-value),
-            &.dragwyb-has-value {
-                .dragwyb-field-label {
-                    top: 0 !important;
-                    transform: translateY(-50%) scale(0.8) !important;
-                    color: var(--dragwyb-float-active, var(--dragwyb-input-focus-border, #1d4ed8)) !important;
-                }
-            }
-
-            .dragwyb-field-input:focus~.dragwyb-field-label,
-            .dragwyb-field-input:not(:placeholder-shown)~.dragwyb-field-label {
-                top: 0 !important;
-                transform: translateY(-50%) scale(0.8) !important;
-                color: var(--dragwyb-float-active, var(--dragwyb-input-focus-border, #1d4ed8)) !important;
-            }
-        }
-
-        // ==========================================
-        // Sub-Variant 1: Float Inside
-        // ==========================================
-        &.dragwyb-float-inside {
-            .dragwyb-field-input {
-                border: none;
-                border-bottom: 2px solid var(--dragwyb-input-border-color, #d1d5db);
-                border-radius: 6px 6px 0 0;
-                width: 100% !important;
-                box-sizing: border-box !important;
-
-                &:focus {
-                    box-shadow: none;
-                    border-color: var(--dragwyb-float-active, var(--dragwyb-input-focus-border, #1d4ed8));
-                }
-            }
-
-            .dragwyb-field-wrapper:not(.dragwyb-no-float) {
-                margin-bottom: 12px;
-
-                .dragwyb-field-input {
-                    padding-top: calc(var(--dragwyb-input-pt, 16px) + var(--dragwyb-input-pb, 16px) * 0.25) !important;
-                    padding-bottom: calc(var(--dragwyb-input-pb, 16px) * 0.75) !important;
-                }
-
-                .dragwyb-field-label {
-                    left: var(--dragwyb-input-pl, 14px) !important;
-                    transform-origin: left top !important;
-                }
-
-                // Active inside state: moves to top: 6px, scale 0.78
-                .dragwyb-input-group:focus-within,
-                .dragwyb-input-group:has(input:not(:placeholder-shown)),
-                .dragwyb-input-group:has(textarea:not(:placeholder-shown)),
-                .dragwyb-input-group:has(.dragwyb-has-value),
-                .dragwyb-field-wrapper:focus-within,
-                .dragwyb-field-wrapper:has(input:not(:placeholder-shown)),
-                .dragwyb-field-wrapper:has(textarea:not(:placeholder-shown)),
-                .dragwyb-field-wrapper:has(.dragwyb-has-value),
-                &.dragwyb-has-value {
-                    .dragwyb-field-label {
-                        top: max(0px, calc(var(--dragwyb-input-pt, 12px)));
-                        transform: translateY(0) scale(0.78) !important;
-                        color: var(--dragwyb-float-active, var(--dragwyb-input-focus-border, #1d4ed8)) !important;
-                    }
-                }
-
-                .dragwyb-field-input:focus~.dragwyb-field-label,
-                .dragwyb-field-input:not(:placeholder-shown)~.dragwyb-field-label {
-                    top: 6px !important;
-                    transform: translateY(0) scale(0.78) !important;
-                    color: var(--dragwyb-float-active, var(--dragwyb-input-focus-border, #1d4ed8)) !important;
-                }
-            }
-        }
-
-        // ==========================================
-        // Sub-Variant 2: Float Outside / Outlined
-        // ==========================================
-        &.dragwyb-float-outlined,
-        &.dragwyb-float-outside {
-            .dragwyb-field-wrapper:not(.dragwyb-no-float) {
-                margin-top: 10px !important;
-                margin-bottom: 12px;
-
-                .dragwyb-input-group {
-                    margin-top: 10px !important;
-                }
-
-                .dragwyb-field-label {
-                    left: var(--dragwyb-input-pl, 12px) !important;
-                    transform-origin: left center !important;
-                    background-color: transparent !important;
-                }
-
-                // Active outside state: moves to top: 0, translateY(-50%), scale 0.8
-                .dragwyb-input-group:focus-within,
-                .dragwyb-input-group:has(input:not(:placeholder-shown)),
-                .dragwyb-input-group:has(textarea:not(:placeholder-shown)),
-                .dragwyb-input-group:has(.dragwyb-has-value),
-                .dragwyb-field-wrapper:focus-within,
-                .dragwyb-field-wrapper:has(input:not(:placeholder-shown)),
-                .dragwyb-field-wrapper:has(textarea:not(:placeholder-shown)),
-                .dragwyb-field-wrapper:has(.dragwyb-has-value),
-                &.dragwyb-has-value {
-                    .dragwyb-field-label {
-                        top: 0 !important;
-                        transform: translateY(-50%) scale(0.8) !important;
-                        background: linear-gradient(0deg, var(--dragwyb-input-bg, var(--dragwyb-row-bg-color, var(--dragwyb-form-bg-color, #ffffff))) 51%, transparent 51%);
-                        padding: 0 5px !important;
-                        border-radius: 2px !important;
-                        font-weight: 600 !important;
-                        color: var(--dragwyb-float-active, var(--dragwyb-input-focus-border, #1d4ed8)) !important;
-                    }
-                }
-
-                .dragwyb-field-input:focus~.dragwyb-field-label,
-                .dragwyb-field-input:not(:placeholder-shown)~.dragwyb-field-label {
-                    top: 0 !important;
-                    transform: translateY(-50%) scale(0.8) !important;
-                    background: linear-gradient(0deg, var(--dragwyb-input-focus-bg, var(--dragwyb-input-bg, var(--dragwyb-row-bg-color, var(--dragwyb-form-bg-color, #ffffff)))) 51%, transparent 51%);
-                    padding: 0 5px !important;
-                    border-radius: 2px !important;
-                    font-weight: 600 !important;
-                    color: var(--dragwyb-float-active, var(--dragwyb-input-focus-border, #1d4ed8)) !important;
-                }
-            }
-        }
-
-        // ==========================================
-        // Sub-Variant 3: Inside & Hide on Text
-        // ==========================================
-        &.dragwyb-float-inside-hide {
-            .dragwyb-field-wrapper:not(.dragwyb-no-float) {
-                margin-bottom: 12px;
-
-                .dragwyb-field-label {
-                    left: var(--dragwyb-input-pl, 14px) !important;
-                    top: 50% !important;
-                    transform: translateY(-50%) !important;
-                    pointer-events: none !important;
-                    transition: opacity 0.3s ease, visibility 0.3s ease !important;
-                    z-index: 2 !important;
-                    line-height: 1 !important;
-                }
-
-                .dragwyb-input-group:has(input:focus),
-                .dragwyb-input-group:has(textarea:focus),
-                .dragwyb-input-group:has(input:not(:placeholder-shown)),
-                .dragwyb-input-group:has(textarea:not(:placeholder-shown)),
-                .dragwyb-input-group:has(.dragwyb-has-value),
-                .dragwyb-field-wrapper:has(input:focus),
-                .dragwyb-field-wrapper:has(textarea:focus),
-                .dragwyb-field-wrapper:has(input:not(:placeholder-shown)),
-                .dragwyb-field-wrapper:has(textarea:not(:placeholder-shown)),
-                .dragwyb-field-wrapper:has(.dragwyb-has-value),
-                &.dragwyb-has-value {
-                    .dragwyb-field-label {
-                        opacity: 0 !important;
-                        visibility: hidden !important;
-                    }
-                }
-
-                .dragwyb-field-input:focus~.dragwyb-field-label,
-                .dragwyb-field-input:not(:placeholder-shown)~.dragwyb-field-label {
-                    opacity: 0 !important;
-                    visibility: hidden !important;
-                }
-            }
-        }
-    }
-
-    // ==========================================
-    // Hide Label Mode
-    // ==========================================
-    &.dragwyb-layout-hidden {
-        .dragwyb-field-label {
-            display: none !important;
-        }
-
-        .dragwyb-field-input::placeholder {
-            opacity: 1 !important;
-            color: var(--dragwyb-input-placeholder-color, #9ca3af) !important;
-        }
-    }
-}
-
-// Fields Element Styling
-.dragwyb-form-wrapper {
     box-sizing: border-box;
     width: var(--dragwyb-form-width, 100%);
-
-    input[type="file"] {
-        border-width: 1px;
-        border-style: solid;
-        border-color: var(--ast-border-color, #d1d5db);
-        padding: 12px 16px;
-        border-radius: 2px;
-        background: #fafafa;
-        font-size: 16px;
-        line-height: 24px;
-    }
 
     &.dragwyb-bg-image {
         background-image: var(--dragwyb-form-bg-image, none);
@@ -420,810 +120,1176 @@
     }
 
     &.dragwyb-bg-gradient {
-        background: linear-gradient(var(--dragwyb-form-bg-gradient-angle, 180deg), var(--dragwyb-form-bg-color, transparent) var(--dragwyb-form-bg-color-stop, 0%), var(--dragwyb-form-bg-color-b, transparent) var(--dragwyb-form-bg-color-b-stop, 100%));
+        background: linear-gradient(var(--dragwyb-form-bg-gradient-angle, 180deg),
+                var(--dragwyb-form-bg-color, transparent) var(--dragwyb-form-bg-color-stop, 0%),
+                var(--dragwyb-form-bg-color-b, transparent) var(--dragwyb-form-bg-color-b-stop, 100%));
     }
+}
 
-    /* Grid */
-    .dragwyb-row {
 
-        &:last-child,
-        &.dragwyb-last-row {
-            .dragwyb-field-wrapper {
-                margin-bottom: 0px !important;
-            }
-        }
+/* ==========================================================================
+   Form
+   ========================================================================== */
 
-        display: grid;
-        grid-template-columns: repeat(var(--dragwyb-row-columns, 1), 1fr);
-        grid-template-rows: repeat(var(--dragwyb-row-rows, 1), 1fr);
-        column-gap: var(--dragwyb-column-gap, 20px);
-        width: var(--dragwyb-row-width, 100%);
-        padding: var(--dragwyb-row-pt, 0) var(--dragwyb-row-pr, 0) var(--dragwyb-row-pb, 0) var(--dragwyb-row-pl, 0);
-        background: var(--dragwyb-row-bg-color, transparent);
-        border: 0px var(--dragwyb-row-border-style, solid) var(--dragwyb-row-border-color, transparent);
-        border-top-width: var(--dragwyb-row-border-top-width, 0);
-        border-bottom-width: var(--dragwyb-row-border-bottom-width, 0);
-        border-left-width: var(--dragwyb-row-border-left-width, 0);
-        border-right-width: var(--dragwyb-row-border-right-width, 0);
-        border-radius: var(--dragwyb-row-border-top-radius, 0) var(--dragwyb-row-border-right-radius, 0) var(--dragwyb-row-border-bottom-radius, 0) var(--dragwyb-row-border-left-radius, 0);
-    }
+.dragwyb-form {
+    box-sizing: border-box;
+    margin: 0;
 
-    .dragwyb-button-field {
-        text-align: var(--dragwyb-btn-align, var(--dragwyb-form-justify-content, left));
-    }
-
-    /* Field Container */
-    .dragwyb-field-wrapper {
-        position: relative;
-        box-sizing: border-box;
-        width: var(--dragwyb-field-width, 100%);
-        grid-column: span var(--dragwyb-column-span, 1);
-        margin-bottom: var(--dragwyb-field-row-gap, var(--dragwyb-field-gap, 15px));
-
-        &:last-child,
-        &.dragwyb-last-field {
-            margin-bottom: var(--dragwyb-field-gap, 15px);
-        }
-
-        &.dragwyb-field-label-icon-before {
-            .dragwyb-field-label {
-                svg {
-                    margin-right: var(--dragwyb-label-icon-spacing, 5px);
-                }
-            }
-        }
-
-        &.dragwyb-field-label-icon-after {
-            .dragwyb-field-label {
-                flex-direction: row-reverse;
-
-                svg {
-                    margin-left: var(--dragwyb-label-icon-spacing, 5px);
-                }
-            }
-        }
-    }
-
-    /* Field Label - Unnested for clean, low-specificity matching */
-    .dragwyb-field-label {
-        font-family: inherit;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        width: fit-content;
-        color: var(--dragwyb-label-color, inherit);
-        margin-bottom: var(--dragwyb-label-spacing, 6px);
-        cursor: pointer;
-        transition: var(--dragwyb-transition, all 0.2s ease);
-
-        span.dragwyb-field-label-text {
-            display: inline-flex;
-            align-items: center;
-            line-height: 1.4;
-        }
-
-        svg,
-        .dragwyb-label-icon {
-            fill: currentColor;
-            stroke: currentColor;
-            width: var(--dragwyb-label-icon-size, 1em);
-            height: var(--dragwyb-label-icon-size, 1em);
-            vertical-align: -0.125em;
-        }
-
-        .dragwyb-required {
-            color: var(--dragwyb-asterisk-color, #ef4444);
-            margin-left: 2px;
-        }
-    }
-
-    /* Help Text - Unnested */
-    .dragwyb-field-help {
-        font-size: 0.85em;
-        line-height: 1.4;
-        color: var(--dragwyb-help-color, inherit);
-        margin-top: 4px;
-        opacity: 0.85;
-    }
-
-    /* Core Inputs - Unnested, theme styles apply by default */
-    .dragwyb-field-input {
-        width: 100%;
-        max-width: 100%;
-        box-sizing: border-box;
-        transition: border-color 0.2s, box-shadow 0.2s;
-        height: unset;
-
-        &::placeholder {
-            color: var(--dragwyb-input-placeholder-color, #9ca3af);
-            opacity: 0.7;
-        }
-    }
-
-    textarea.dragwyb-field-input {
-        resize: vertical;
-        min-height: 100px;
-    }
-
-    select.dragwyb-field-input {
-        cursor: pointer;
-        appearance: var(--dragwyb-select-appearance, auto);
-    }
-
-    /* Checkbox & Radio - Unnested */
-    .dragwyb-options-container {
-        display: flex;
-        flex-direction: column;
-        gap: var(--dragwyb-toggle-spacing, 8px);
-        margin-top: 5px;
-
-        &.dragwyb-inline-options {
-            flex-direction: row;
-            flex-wrap: wrap;
-            gap: var(--dragwyb-toggle-spacing, 15px);
-        }
-
-        .dragwyb-option-item {
-            display: flex;
-            align-items: center;
-            gap: var(--dragwyb-toggle-label-spacing, var(--dragwyb-toggle-spacing, 8px));
-            cursor: pointer;
-
-            input[type="radio"],
-            input[type="checkbox"] {
-                appearance: none;
-                -webkit-appearance: none;
-                width: var(--dragwyb-toggle-size, 16px);
-                height: var(--dragwyb-toggle-size, 16px);
-                margin: 0;
-                background-color: var(--dragwyb-toggle-bg-color, #ffffff);
-                border: var(--dragwyb-toggle-border-width, 1px) solid var(--dragwyb-toggle-border-color, #d1d5db);
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                position: relative;
-                cursor: pointer;
-                transition: all 0.2s ease;
-                box-sizing: border-box;
-
-                &:checked {
-                    background-color: var(--dragwyb-toggle-primary-color, var(--dragwyb-btn-bg, #2563eb));
-                    border-color: var(--dragwyb-toggle-primary-color, var(--dragwyb-btn-bg, #2563eb));
-
-                    &::after {
-                        content: '';
-                        display: block;
-                        width: 40%;
-                        height: 40%;
-                        background-color: #ffffff;
-                    }
-                }
-            }
-
-            input[type="radio"] {
-                border-radius: 50%;
-
-                &::after {
-                    border-radius: 50%;
-                }
-            }
-
-            input[type="checkbox"] {
-                border-radius: 4px;
-
-                &::after {
-                    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
-                    width: 50%;
-                    height: 50%;
-                }
-            }
-
-            .dragwyb-radio-label {
-                font-family: var(--dragwyb-option-typography-family, inherit);
-                font-size: var(--dragwyb-option-typography-size, inherit);
-                font-weight: var(--dragwyb-option-typography-wt, inherit);
-                font-style: var(--dragwyb-option-typography-st, normal);
-                text-transform: var(--dragwyb-option-typography-ts, none);
-                text-decoration: var(--dragwyb-option-typography-dt, none);
-                line-height: var(--dragwyb-option-typography-lh, inherit);
-                letter-spacing: var(--dragwyb-option-typography-ls, normal);
-                word-spacing: var(--dragwyb-option-typography-ws, normal);
-                text-align: var(--dragwyb-option-typography-align, left);
-                color: var(--dragwyb-option-color, var(--dragwyb-input-color, inherit));
-                margin-left: 0;
-
-                a {
-                    color: var(--dragwyb-gdpr-link-color, var(--dragwyb-toggle-primary-color, #2563eb));
-                    text-decoration: underline;
-
-                    &:hover {
-                        opacity: 0.85;
-                    }
-                }
-            }
-        }
-
-        /* --- Radio Presets --- */
-
-        /* 1. Classic Circle: clean outline, inner dot accent when selected */
-        &.dragwyb-radio-style-outline .dragwyb-option-item input[type="radio"] {
-            background-color: var(--dragwyb-toggle-bg-color, #ffffff);
-            border-color: var(--dragwyb-toggle-border-color, #d1d5db);
-
-            &:hover {
-                border-color: var(--dragwyb-toggle-primary-color, #2563eb);
-            }
-
-            &:checked {
-                background-color: var(--dragwyb-toggle-bg-color, #ffffff);
-                border-color: var(--dragwyb-toggle-primary-color, #2563eb);
-
-                &::after {
-                    background-color: var(--dragwyb-toggle-primary-color, #2563eb);
-                    width: 48%;
-                    height: 48%;
-                    border-radius: 50%;
-                }
-            }
-        }
-
-        /* 2. Solid Accent Circle: primary fill circle with white center dot */
-        &.dragwyb-radio-style-solid_fill,
-        &.dragwyb-radio-style-filled {
-            .dragwyb-option-item input[type="radio"] {
-                background-color: var(--dragwyb-toggle-bg-color, #ffffff);
-                border-color: var(--dragwyb-toggle-border-color, #d1d5db);
-
-                &:hover {
-                    border-color: var(--dragwyb-toggle-primary-color, #2563eb);
-                }
-
-                &:checked {
-                    background-color: var(--dragwyb-toggle-primary-color, #2563eb);
-                    border-color: var(--dragwyb-toggle-primary-color, #2563eb);
-
-                    &::after {
-                        background-color: #ffffff;
-                        width: 38%;
-                        height: 38%;
-                        border-radius: 50%;
-                    }
-                }
-            }
-        }
-
-        /* 3. Bordered Box Cards: individual interactive choice cards */
-        &.dragwyb-radio-style-card {
-            gap: var(--dragwyb-toggle-spacing, 10px);
-
-            .dragwyb-option-item {
-                padding: 10px 16px;
-                border: var(--dragwyb-toggle-border-width, 1px) solid var(--dragwyb-toggle-border-color, #e5e7eb);
-                border-radius: 8px;
-                background-color: var(--dragwyb-toggle-bg-color, #ffffff);
-                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-                transition: all 0.2s ease;
-
-                &:hover {
-                    border-color: var(--dragwyb-toggle-primary-color, #2563eb);
-                    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-                }
-
-                &:has(input[type="radio"]:checked),
-                &.is-checked {
-                    border-color: var(--dragwyb-toggle-primary-color, #2563eb);
-                    background-color: color-mix(in srgb, var(--dragwyb-toggle-primary-color, #2563eb) 6%, #ffffff);
-                    box-shadow: 0 0 0 1px var(--dragwyb-toggle-primary-color, #2563eb), 0 2px 6px rgba(37, 99, 235, 0.1);
-
-                    .dragwyb-radio-label {
-                        font-weight: 500;
-                        color: var(--dragwyb-toggle-primary-color, #111827);
-                    }
-                }
-
-                input[type="radio"] {
-                    display: none;
-
-                    &:checked {
-                        background-color: var(--dragwyb-toggle-primary-color, #2563eb);
-                        border-color: var(--dragwyb-toggle-primary-color, #2563eb);
-
-                        &::after {
-                            background-color: #ffffff;
-                            width: 38%;
-                            height: 38%;
-                            border-radius: 50%;
-                        }
-                    }
-                }
-            }
-        }
-
-        /* 4. Segmented Button Group: cohesive pill/button selector */
-        &.dragwyb-radio-style-button {
-            gap: 6px;
-
-            &.dragwyb-inline-options {
-                display: inline-flex;
-                background-color: var(--dragwyb-toggle-bg-color, #f9fafb);
-                padding: 4px;
-                border-radius: 10px;
-                border: 1px solid var(--dragwyb-toggle-border-color, #e5e7eb);
-                gap: 4px;
-
-                .dragwyb-option-item {
-                    border-radius: 7px;
-                    border: none;
-                    background: transparent;
-                    box-shadow: none;
-                }
-            }
-
-            .dragwyb-option-item {
-                padding: 8px 16px;
-                border-radius: 8px;
-                border: 1px solid var(--dragwyb-toggle-border-color, #d1d5db);
-                background-color: var(--dragwyb-toggle-bg-color, #ffffff);
-                font-weight: 500;
-                justify-content: center;
-                transition: all 0.2s ease;
-
-                input[type="radio"] {
-                    display: none;
-                }
-
-                &:hover {
-                    border-color: var(--dragwyb-toggle-primary-color, #2563eb);
-                    color: var(--dragwyb-toggle-primary-color, #2563eb);
-                }
-
-                &:has(input[type="radio"]:checked),
-                &.is-checked {
-                    background-color: var(--dragwyb-toggle-primary-color, #2563eb);
-                    border-color: var(--dragwyb-toggle-primary-color, #2563eb);
-
-                    .dragwyb-radio-label {
-                        color: var(--dragwyb-option-color, var(--dragwyb-input-color, #ffffff));
-                        font-weight: 600;
-                    }
-                }
-            }
-        }
-
-        /* 5. Selection Pills / Chips: compact rounded chip options */
-        &.dragwyb-radio-style-chip {
-            gap: 8px;
-
-            .dragwyb-option-item {
-                padding: 6px 14px;
-                border-radius: 9999px;
-                border: 1.5px solid var(--dragwyb-toggle-border-color, #e5e7eb);
-                background-color: var(--dragwyb-toggle-bg-color, #f9fafb);
-                transition: all 0.2s ease;
-                font-size: 13px;
-
-                &:hover {
-                    border-color: var(--dragwyb-toggle-primary-color, #2563eb);
-                    background-color: #ffffff;
-                }
-
-                &:has(input[type="radio"]:checked),
-                &.is-checked {
-                    border-color: var(--dragwyb-toggle-primary-color, #2563eb);
-                    background-color: color-mix(in srgb, var(--dragwyb-toggle-primary-color, #2563eb) 10%, #ffffff);
-
-                    .dragwyb-radio-label {
-                        color: var(--dragwyb-toggle-primary-color, #2563eb);
-                        font-weight: 600;
-                    }
-                }
-
-                input[type="radio"] {
-                    display: none;
-
-                    &:checked {
-                        background-color: var(--dragwyb-toggle-primary-color, #2563eb);
-                        border-color: var(--dragwyb-toggle-primary-color, #2563eb);
-
-                        &::after {
-                            background-color: #ffffff;
-                            width: 36%;
-                            height: 36%;
-                        }
-                    }
-                }
-            }
-        }
-
-        /* Backward compatibility for soft_fill, ghost, double_ring */
-        &.dragwyb-radio-style-soft_fill,
-        &.dragwyb-radio-style-ghost,
-        &.dragwyb-radio-style-double_ring {
-            .dragwyb-option-item input[type="radio"] {
-                background-color: var(--dragwyb-toggle-bg-color, #ffffff);
-                border-color: var(--dragwyb-toggle-border-color, #d1d5db);
-
-                &:checked {
-                    background-color: var(--dragwyb-toggle-bg-color, #ffffff);
-                    border-color: var(--dragwyb-toggle-primary-color, #2563eb);
-
-                    &::after {
-                        background-color: var(--dragwyb-toggle-primary-color, #2563eb);
-                        width: 50%;
-                        height: 50%;
-                        border-radius: 50%;
-                    }
-                }
-            }
-        }
-    }
-
-    /* Buttons - Theme styles apply by default, builder styles override dynamically */
-    button {
-        cursor: pointer;
-        box-sizing: border-box;
-        transition: var(--dragwyb-transition, all 0.2s ease);
-
-        &.dragwyb-button-prev,
-        &.dragwyb-btn-prev {
-            cursor: pointer;
-        }
-
-        &.dragwyb-button-block,
-        &.dragwyb-btn-block {
-            width: 100%;
-            display: flex;
-        }
-
-        &.dragwyb-button-reset,
-        &.dragwyb-btn-reset {
-            background-color: transparent;
-            border: 1px solid var(--dragwyb-input-border-color, #d1d5db);
-            color: var(--dragwyb-label-color, inherit);
-
-            &:hover {
-                background-color: var(--dragwyb-form-bg-filled, #f3f4f6);
-                color: var(--dragwyb-input-color, inherit);
-            }
-        }
-    }
-
-    /* Messages & Validation */
-    .dragwyb-message {
-        padding: 12px 16px;
-        border-radius: 6px;
-        margin-bottom: 20px;
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-family: inherit;
-
-        &.dragwyb-success {
-            color: var(--dragwyb-success-color, #15803d);
-            background-color: var(--dragwyb-success-bg, #dcfce7);
-            border: 1px solid var(--dragwyb-success-color, #15803d);
-        }
-
-        &.dragwyb-error {
-            color: var(--dragwyb-error-color, #b91c1c);
-            background-color: var(--dragwyb-error-bg, #fee2e2);
-            border: 1px solid var(--dragwyb-error-color, #b91c1c);
-        }
-    }
-
-    .dragwyb-field-validation-error {
-        color: var(--dragwyb-error-color, #b91c1c);
-        font-size: 0.85em;
-        margin-top: 5px;
-        display: block;
-    }
-
-    /* Section Break Field */
-    .dragwyb-section-title {
-        color: var(--dragwyb-section-title-color, var(--dragwyb-label-color, inherit));
-        margin: var(--dragwyb-section-title-mt, 0) var(--dragwyb-section-title-mr, 0) var(--dragwyb-section-title-mb, 10px) var(--dragwyb-section-title-ml, 0);
-    }
-
-    .dragwyb-section-description {
-        color: var(--dragwyb-section-desc-color, var(--dragwyb-help-color, inherit));
-        margin: var(--dragwyb-section-desc-mt, 0) var(--dragwyb-section-desc-mr, 0) var(--dragwyb-section-desc-mb, 10px) var(--dragwyb-section-desc-ml, 0);
-    }
-
-    .dragwyb-section-divider {
-        background-color: var(--dragwyb-section-divider-color, var(--dragwyb-input-border-color, #e5e7eb));
-    }
-
-    /* HTML Field */
-    .dragwyb-html-content {
-        background-color: var(--dragwyb-html-bg-color, transparent);
-        color: var(--dragwyb-html-text-color, var(--dragwyb-input-color, inherit));
-        margin: var(--dragwyb-html-mt, 0) var(--dragwyb-html-mr, 0) var(--dragwyb-html-mb, 0) var(--dragwyb-html-ml, 0);
-        padding: var(--dragwyb-html-pt, 0) var(--dragwyb-html-pr, 0) var(--dragwyb-html-pb, 0) var(--dragwyb-html-pl, 0);
-
-        * {
-            color: var(--dragwyb-html-text-color, var(--dragwyb-input-color, inherit));
-        }
-    }
-
-    /* Captcha Field */
-    .dragwyb-captcha-container {
-        margin: var(--dragwyb-captcha-mt, 0) var(--dragwyb-captcha-mr, 0) var(--dragwyb-captcha-mb, 0) var(--dragwyb-captcha-ml, 0);
-        padding: var(--dragwyb-captcha-pt, 0) var(--dragwyb-captcha-pr, 0) var(--dragwyb-captcha-pb, 0) var(--dragwyb-captcha-pl, 0);
-    }
-
-    /* Step Divider Line styling (directly styled with border-top, no pseudo-selectors) */
-    .dragwyb-step-divider {
-        flex: 1;
-        height: 0;
-        border-top: var(--dragwyb-step-divider-thickness, 2px) var(--dragwyb-step-divider-style, solid) var(--dragwyb-step-line-color, #e5e7eb);
-        transition: border-color 0.3s ease;
-    }
-
-    .dragwyb-step-divider-text {
-        padding: 0 15px;
-        font-weight: var(--dragwyb-step-typography-wt, 600);
-        font-size: var(--dragwyb-step-typography-size, 16px);
-        font-family: var(--dragwyb-step-typography-family, inherit);
-        color: var(--dragwyb-step-text-color, #374151);
-        white-space: nowrap;
-    }
-
-    /* Frontend Step field (container wrapping inputs / editor placeholder layout) */
-    .dragwyb-field-wrapper.dragwyb-step-field {
-        border: 1px solid transparent;
-    }
-
-    .dragwyb-step-field {
+    &:not(.dragwyb-step-form) {
         display: flex;
         flex-wrap: wrap;
-        box-sizing: border-box;
         justify-content: var(--dragwyb-form-justify-content, left);
-        margin: 0;
-        width: 100%;
-
-        &_hidden {
-            display: none;
-        }
-
-        &[data-step-indicator="dots"] {
-            .dragwyb-editor-step-item {
-                .dragwyb-step-dot {
-                    width: 16px;
-                    height: 16px;
-                }
-            }
-        }
     }
+}
 
-    /* Step Indicator Container at top of form */
-    .dragwyb-step-indicator-container {
-        width: 100%;
-        margin-bottom: var(--dragwyb-step-bottom-spacing, var(--dragwyb-field-gap));
+.dragwyb-field-h-dragwyb {
+    display: none;
+}
 
-        &.step-has-title:not([data-step-indicator="progress"], [data-step-indicator="dots"]) {
-            margin-bottom: calc(var(--dragwyb-step-bottom-spacing, var(--dragwyb-field-gap)) + var(--dragwyb-step-typography-size, 14px) * 1.5);
-        }
-    }
 
-    /* Step Indicator - Numbers/Dots Style */
-    .dragwyb-step-indicator {
+/* ==========================================================================
+   Form Layout
+   ========================================================================== */
+
+/* Default / Top */
+
+.dragwyb-form-wrapper:not(.dragwyb-layout-left,
+    .dragwyb-layout-floating) {
+    .dragwyb-field-wrapper:not(.dragwyb-no-float) .dragwyb-input-group {
         display: flex;
-        justify-content: space-between;
+        flex-direction: column-reverse;
+    }
+}
+
+
+/* Left */
+
+.dragwyb-form-wrapper.dragwyb-layout-left {
+
+    .dragwyb-field-wrapper:not(.dragwyb-step-field,
+        .dragwyb-html-field) {
+        display: grid;
+        grid-template-columns:
+            minmax(var(--dragwyb-label-width, 120px), max-content) 1fr;
+        gap: 0.5em 1.5em;
         align-items: center;
-        position: relative;
-        width: 100%;
 
-        &::before {
-            display: none;
+        .dragwyb-input-group {
+            display: contents;
         }
 
-        .dragwyb-step-divider {
-            width: auto;
-            display: block;
+        .dragwyb-field-label {
+            grid-column: 1;
+            margin-bottom: 0;
         }
 
-        .dragwyb-step-item {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            z-index: 2;
-
-            .dragwyb-step-dot {
-                width: var(--dragwyb-step-dot-size, 40px);
-                height: var(--dragwyb-step-dot-size, 40px);
-                border-radius: 50%;
-                background-color: #ffffff;
-                border: var(--dragwyb-step-divider-thickness, 2px) solid var(--dragwyb-step-inactive-color, #9ca3af);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                transition: all 0.3s ease;
-                box-sizing: border-box;
-
-                .dragwyb-step-number {
-                    font-weight: 600;
-                    font-size: 14px;
-                    color: var(--dragwyb-step-inactive-color, #9ca3af);
-                }
-            }
-
-            .dragwyb-step-title {
-                position: absolute;
-                top: calc(var(--dragwyb-step-dot-size, 40px) + 8px);
-                left: 50%;
-                transform: translateX(-50%);
-                font-size: var(--dragwyb-step-typography-size, 14px);
-                font-weight: var(--dragwyb-step-typography-wt, 500);
-                font-family: var(--dragwyb-step-typography-family, inherit);
-                color: var(--dragwyb-step-inactive-color, #6b7280);
-                text-align: center;
-                white-space: nowrap;
-            }
-
-            /* Active State */
-            &.active {
-                .dragwyb-step-dot {
-                    border-color: var(--dragwyb-step-active-color, #1d4ed8);
-                    background-color: var(--dragwyb-step-active-color, #1d4ed8);
-
-                    .dragwyb-step-number {
-                        color: #ffffff;
-                    }
-                }
-
-                .dragwyb-step-title {
-                    color: var(--dragwyb-step-active-color, #1d4ed8);
-                    font-weight: 600;
-                }
-            }
-
-            /* Completed State */
-            &.completed {
-                .dragwyb-step-dot {
-                    border-color: var(--dragwyb-step-active-color, #1d4ed8);
-                    background-color: #ffffff;
-
-                    .dragwyb-step-number {
-                        color: var(--dragwyb-step-active-color, #1d4ed8);
-                    }
-                }
-
-                .dragwyb-step-title {
-                    color: var(--dragwyb-step-active-color, #1d4ed8);
-                }
-            }
+        :is(.dragwyb-field-input,
+            .dragwyb-options-container) {
+            grid-column: 2;
         }
 
-        .dragwyb-step-item.completed+.dragwyb-step-divider {
-            border-top-color: var(--dragwyb-step-active-color, #1d4ed8);
-        }
-    }
-
-    // editor step preview
-    .dragwyb-editor-preview {
-        &:not(&[data-step-indicator="none"]) {
-            display: block !important;
-        }
-
-        &[data-step-indicator="none"] {
-            display: none !important;
-        }
-
-        &[data-step-indicator="dots"],
-        &[data-step-indicator="numbers"] {
-            .dragwyb-step-progress-wrapper {
-                display: none !important;
-            }
-
-            .dragwyb-step-item {
-                display: flex !important;
-            }
-
-            .dragwyb-step-divider {
-                display: block !important;
-            }
-        }
-
-        &[data-step-indicator="progress"] {
-            .dragwyb-step-progress-wrapper {
-                display: block !important;
-            }
-
-            .dragwyb-step-item,
-            .dragwyb-step-divider {
-                display: none !important;
-            }
-        }
-    }
-
-    /* Dots Only Mode overrides */
-    &[data-step-indicator="dots"],
-    .dragwyb-editor-preview[data-step-indicator="dots"] {
-        .dragwyb-step-indicator {
-            padding-bottom: 0;
-
-            .dragwyb-step-item {
-                flex: 0 0 var(--dragwyb-step-dot-size, 16px);
-
-                .dragwyb-step-dot {
-                    width: var(--dragwyb-step-dot-size, 16px);
-                    height: var(--dragwyb-step-dot-size, 16px);
-
-                    .dragwyb-step-number {
-                        display: none;
-                    }
-                }
-
-                .dragwyb-step-title {
-                    display: none;
-                }
-            }
-        }
-    }
-
-    /* Progress Bar Style */
-    .dragwyb-step-progress-wrapper {
-        width: 100%;
-
-        .dragwyb-step-progress-bar {
-            width: 100%;
-            height: 8px;
-            background-color: var(--dragwyb-step-line-color, #e5e7eb);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: 8px;
-        }
-
-        .dragwyb-step-progress-fill {
-            height: 100%;
-            background-color: var(--dragwyb-step-active-color, #1d4ed8);
-            width: 0%;
-            transition: width 0.3s ease;
-            border-radius: 4px;
-        }
-
-        .dragwyb-step-progress-text {
-            font-size: 14px;
-            color: var(--dragwyb-step-text-color, #6b7280);
-            font-weight: 500;
-        }
-    }
-
-    /* Step Navigation Buttons */
-    .dragwyb-step-navigation {
-        display: flex;
-        gap: 15px;
-        width: 100%;
-        justify-content: space-between;
-
-        .dragwyb-button-field {
-            width: unset;
-        }
-
-        .dragwyb-step-next {
-            margin-left: auto;
+        .dragwyb-field-help {
+            grid-column: 2;
+            margin-top: 0;
         }
     }
 }
 
-/* Message Modal Component */
+
+/* ==========================================================================
+   Floating Layout - Common
+   ========================================================================== */
+
+.dragwyb-form-wrapper.dragwyb-layout-floating {
+
+    /* Country code offset */
+
+    &:is(.dragwyb-float-inside,
+        .dragwyb-float-outside,
+        .dragwyb-float-outlined,
+        .dragwyb-float-inside-hide) {
+
+        :is(.dragwyb-field-wrapper.country-code-enabled,
+            .dragwyb-input-group:has(.iti,
+                .iti__flag-container,
+                .iti__selected-country,
+                .country-code-enabled)) .dragwyb-field-label {
+            margin-left: 48px !important;
+        }
+    }
+
+    /* Floating field */
+
+    .dragwyb-field-wrapper:not(.dragwyb-no-float) {
+
+        .dragwyb-input-group {
+            position: relative !important;
+            display: block !important;
+        }
+
+        .dragwyb-field-input {
+            display: block !important;
+            width: 100% !important;
+            max-width: 100%;
+            box-sizing: border-box !important;
+
+            &:not(:focus):placeholder-shown::placeholder {
+                opacity: 0 !important;
+                color: transparent !important;
+            }
+        }
+
+        .dragwyb-field-label {
+            position: absolute !important;
+            left: var(--dragwyb-input-pl, 14px) !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            transform-origin: left center !important;
+            transition: var(--dragwyb-transition) !important;
+            z-index: 2 !important;
+            line-height: 1 !important;
+            margin: 0 !important;
+            pointer-events: none !important;
+            background-color: transparent !important;
+            color: var(--dragwyb-input-placeholder-color, #9ca3af);
+        }
+
+        &:has(textarea) .dragwyb-field-label,
+        textarea.dragwyb-field-input~.dragwyb-field-label {
+            top: 20px !important;
+            transform: none !important;
+        }
+    }
+
+    /* Common active floating label */
+
+    .dragwyb-field-input:not(:placeholder-shown)~.dragwyb-field-label,
+    .dragwyb-field-input:focus~.dragwyb-field-label {
+        top: 0 !important;
+        transform: translateY(-50%) scale(0.8) !important;
+        color: var(--dragwyb-float-active,
+                var(--dragwyb-input-focus-border, #1d4ed8)) !important;
+    }
+}
+
+
+/* ==========================================================================
+   Floating - Inside
+   ========================================================================== */
+
+.dragwyb-form-wrapper.dragwyb-layout-floating.dragwyb-float-inside {
+
+    .dragwyb-field-input {
+        border: 0;
+        border-bottom: 2px solid var(--dragwyb-input-border-color, #d1d5db);
+        border-radius: 6px 6px 0 0;
+
+        &:focus {
+            box-shadow: none;
+            border-color: var(--dragwyb-float-active,
+                    var(--dragwyb-input-focus-border, #1d4ed8));
+        }
+    }
+
+    .dragwyb-field-wrapper:not(.dragwyb-no-float) {
+        margin-bottom: 12px;
+
+        .dragwyb-field-input {
+            padding-top: calc(var(--dragwyb-input-pt, 16px) + var(--dragwyb-input-pb, 16px) * 0.25) !important;
+
+            padding-bottom: calc(var(--dragwyb-input-pb, 16px) * 0.75) !important;
+        }
+
+        .dragwyb-field-label {
+            left: var(--dragwyb-input-pl, 14px) !important;
+            transform-origin: left top !important;
+        }
+
+        .dragwyb-field-input:focus~.dragwyb-field-label,
+        .dragwyb-field-input:not(:placeholder-shown)~.dragwyb-field-label {
+            top: 6px !important;
+            transform: translateY(0) scale(0.78) !important;
+            color: var(--dragwyb-float-active,
+                    var(--dragwyb-input-focus-border, #1d4ed8)) !important;
+        }
+    }
+}
+
+
+/* ==========================================================================
+   Floating - Outlined / Outside
+   ========================================================================== */
+
+.dragwyb-form-wrapper.dragwyb-layout-floating:is(.dragwyb-float-outlined,
+    .dragwyb-float-outside) {
+    .dragwyb-field-wrapper:not(.dragwyb-no-float) {
+        margin-top: 10px !important;
+        margin-bottom: 12px;
+
+        .dragwyb-input-group {
+            margin-top: 10px !important;
+        }
+
+        .dragwyb-field-label {
+            left: var(--dragwyb-input-pl, 12px) !important;
+            transform-origin: left center !important;
+        }
+
+        .dragwyb-field-input:not(:placeholder-shown)~.dragwyb-field-label {
+            top: 0 !important;
+            transform: translateY(-50%) scale(0.8) !important;
+            background: linear-gradient(0deg,
+                    var(--dragwyb-input-bg,
+                        var(--dragwyb-row-bg-color,
+                            var(--dragwyb-form-bg-color, #fff))) 51%,
+                    transparent 51%);
+            border-radius: 2px !important;
+            font-weight: 600 !important;
+            color: var(--dragwyb-float-active,
+                    var(--dragwyb-input-focus-border, #1d4ed8)) !important;
+        }
+
+        .dragwyb-field-input:focus~.dragwyb-field-label {
+            background: linear-gradient(0deg,
+                    var(--dragwyb-input-focus-bg,
+                        var(--dragwyb-input-bg,
+                            var(--dragwyb-row-bg-color,
+                                var(--dragwyb-form-bg-color, #fff)))) 51%,
+                    transparent 51%);
+        }
+    }
+}
+
+
+/* ==========================================================================
+   Floating - Inside Hide
+   ========================================================================== */
+
+.dragwyb-form-wrapper.dragwyb-layout-floating.dragwyb-float-inside-hide {
+
+    .dragwyb-field-wrapper:not(.dragwyb-no-float) {
+        margin-bottom: 12px;
+
+        .dragwyb-field-label {
+            left: var(--dragwyb-input-pl, 14px) !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            transition:
+                opacity 0.3s ease,
+                visibility 0.3s ease !important;
+        }
+
+        .dragwyb-field-input:focus~.dragwyb-field-label,
+        .dragwyb-field-input:not(:placeholder-shown)~.dragwyb-field-label {
+            opacity: 0 !important;
+            visibility: hidden !important;
+        }
+    }
+}
+
+
+/* ==========================================================================
+   Hidden Label Layout
+   ========================================================================== */
+
+.dragwyb-form-wrapper.dragwyb-layout-hidden {
+    .dragwyb-field-label {
+        display: none !important;
+    }
+
+    .dragwyb-field-input::placeholder {
+        opacity: 1 !important;
+        color: var(--dragwyb-input-placeholder-color, #9ca3af) !important;
+    }
+}
+
+
+/* ==========================================================================
+   Rows
+   ========================================================================== */
+
+.dragwyb-form-wrapper .dragwyb-row {
+    display: grid;
+    grid-template-columns: repeat(var(--dragwyb-row-columns, 1),
+            1fr);
+    grid-template-rows: repeat(var(--dragwyb-row-rows, 1),
+            1fr);
+    column-gap: var(--dragwyb-column-gap, 20px);
+    width: var(--dragwyb-row-width, 100%);
+    padding:
+        var(--dragwyb-row-pt, 0) var(--dragwyb-row-pr, 0) var(--dragwyb-row-pb, 0) var(--dragwyb-row-pl, 0);
+    background: var(--dragwyb-row-bg-color, transparent);
+    border:
+        0 var(--dragwyb-row-border-style, solid) var(--dragwyb-row-border-color, transparent);
+    border-top-width: var(--dragwyb-row-border-top-width, 0);
+    border-right-width: var(--dragwyb-row-border-right-width, 0);
+    border-bottom-width: var(--dragwyb-row-border-bottom-width, 0);
+    border-left-width: var(--dragwyb-row-border-left-width, 0);
+    border-radius:
+        var(--dragwyb-row-border-top-radius, 0) var(--dragwyb-row-border-right-radius, 0) var(--dragwyb-row-border-bottom-radius, 0) var(--dragwyb-row-border-left-radius, 0);
+
+    &:is(:last-child, .dragwyb-last-row) .dragwyb-field-wrapper {
+        margin-bottom: 0 !important;
+    }
+}
+
+
+/* ==========================================================================
+   Field
+   ========================================================================== */
+
+.dragwyb-form-wrapper .dragwyb-field-wrapper {
+    position: relative;
+    box-sizing: border-box;
+    width: var(--dragwyb-field-width, 100%);
+    grid-column: span var(--dragwyb-column-span, 1);
+    margin-bottom: var(--dragwyb-field-row-gap,
+            var(--dragwyb-field-gap, 15px));
+
+    &:is(:last-child, .dragwyb-last-field) {
+        margin-bottom: var(--dragwyb-field-gap, 15px);
+    }
+
+    &.dragwyb-field-label-icon-before .dragwyb-field-label svg {
+        margin-right: var(--dragwyb-label-icon-spacing, 5px);
+    }
+
+    &.dragwyb-field-label-icon-after .dragwyb-field-label {
+        flex-direction: row-reverse;
+
+        svg {
+            margin-left: var(--dragwyb-label-icon-spacing, 5px);
+        }
+    }
+}
+
+
+/* ==========================================================================
+   Label
+   ========================================================================== */
+
+.dragwyb-form-wrapper .dragwyb-field-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: fit-content;
+    font-family: var(--dragwyb-label-typography-family,
+            inherit);
+    color: var(--dragwyb-label-color, inherit);
+    margin-bottom: var(--dragwyb-label-spacing, 6px);
+    cursor: pointer;
+    transition: var(--dragwyb-transition);
+
+    .dragwyb-field-label-text {
+        display: inline-flex;
+        align-items: center;
+        line-height: 1.4;
+    }
+
+    :is(svg, .dragwyb-label-icon) {
+        width: var(--dragwyb-label-icon-size, 1em);
+        height: var(--dragwyb-label-icon-size, 1em);
+        fill: currentColor;
+        stroke: currentColor;
+        vertical-align: -0.125em;
+    }
+
+    .dragwyb-required {
+        color: var(--dragwyb-asterisk-color, #ef4444);
+        margin-left: 2px;
+    }
+}
+
+
+/* ==========================================================================
+   Help Text
+   ========================================================================== */
+
+.dragwyb-form-wrapper .dragwyb-field-help {
+    font-size: var(--dragwyb-help-text-typography-size, 0.85em);
+    line-height: var(--dragwyb-help-text-typography-lh, 1.4);
+    color: var(--dragwyb-help-color, inherit);
+    margin-top: 4px;
+    opacity: 0.85;
+}
+
+
+/* ==========================================================================
+   Inputs
+   ========================================================================== */
+
+.dragwyb-form-wrapper .dragwyb-field-input {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: unset;
+    box-sizing: border-box;
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+
+    &::placeholder {
+        color: var(--dragwyb-input-placeholder-color, #9ca3af);
+        opacity: 0.7;
+    }
+}
+
+.dragwyb-form-wrapper textarea.dragwyb-field-input {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.dragwyb-form-wrapper select.dragwyb-field-input {
+    cursor: pointer;
+    appearance: var(--dragwyb-select-appearance, auto);
+}
+
+.dragwyb-form-wrapper input[type="file"] {
+    border: 1px solid var(--ast-border-color, #d1d5db);
+    padding: 12px 16px;
+    border-radius: 2px;
+    background: #fafafa;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+
+/* ==========================================================================
+   Checkbox / Radio
+   ========================================================================== */
+
+.dragwyb-form-wrapper .dragwyb-options-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dragwyb-toggle-spacing, 8px);
+    margin-top: 5px;
+
+    &.dragwyb-inline-options {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: var(--dragwyb-toggle-spacing, 15px);
+    }
+}
+
+.dragwyb-form-wrapper .dragwyb-option-item {
+    display: flex;
+    align-items: center;
+    gap: var(--dragwyb-toggle-label-spacing,
+            var(--dragwyb-toggle-spacing, 8px));
+    cursor: pointer;
+}
+
+.dragwyb-form-wrapper .dragwyb-option-item :is(input[type="radio"],
+    input[type="checkbox"]) {
+    appearance: none;
+    -webkit-appearance: none;
+    width: var(--dragwyb-toggle-size, 16px);
+    height: var(--dragwyb-toggle-size, 16px);
+    margin: 0;
+    padding: 0;
+    background-color: var(--dragwyb-toggle-bg-color, #fff);
+    border:
+        var(--dragwyb-toggle-border-width, 1px) solid var(--dragwyb-toggle-border-color, #d1d5db);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: var(--dragwyb-transition);
+}
+
+.dragwyb-form-wrapper .dragwyb-option-item :is(input[type="radio"],
+    input[type="checkbox"]):checked {
+    background-color: var(--dragwyb-toggle-primary-color,
+            var(--dragwyb-btn-bg, #2563eb));
+    border-color: var(--dragwyb-toggle-primary-color,
+            var(--dragwyb-btn-bg, #2563eb));
+}
+
+.dragwyb-form-wrapper .dragwyb-option-item :is(input[type="radio"],
+    input[type="checkbox"]):checked::after {
+    content: '';
+    display: block;
+    background-color: #fff;
+}
+
+.dragwyb-form-wrapper .dragwyb-option-item input[type="radio"] {
+    border-radius: 50%;
+}
+
+.dragwyb-form-wrapper .dragwyb-option-item input[type="radio"]::after {
+    width: 40%;
+    height: 40%;
+    border-radius: 50%;
+}
+
+.dragwyb-form-wrapper .dragwyb-option-item input[type="checkbox"] {
+    border-radius: 4px;
+}
+
+.dragwyb-form-wrapper .dragwyb-option-item input[type="checkbox"]::after {
+    width: 50%;
+    height: 50%;
+    clip-path: polygon(14% 44%,
+            0 65%,
+            50% 100%,
+            100% 16%,
+            80% 0%,
+            43% 62%);
+}
+
+
+/* ==========================================================================
+   Radio Label
+   ========================================================================== */
+
+.dragwyb-form-wrapper .dragwyb-radio-label {
+    font-family: var(--dragwyb-option-typography-family,
+            inherit);
+    font-size: var(--dragwyb-option-typography-size, inherit);
+    font-weight: var(--dragwyb-option-typography-wt, inherit);
+    font-style: var(--dragwyb-option-typography-st, normal);
+    text-transform: var(--dragwyb-option-typography-ts, none);
+    text-decoration: var(--dragwyb-option-typography-dt, none);
+    line-height: var(--dragwyb-option-typography-lh, inherit);
+    letter-spacing: var(--dragwyb-option-typography-ls, normal);
+    word-spacing: var(--dragwyb-option-typography-ws, normal);
+    text-align: var(--dragwyb-option-typography-align, left);
+    color: var(--dragwyb-option-color,
+            var(--dragwyb-input-color, inherit));
+
+    a {
+        color: var(--dragwyb-gdpr-link-color,
+                var(--dragwyb-toggle-primary-color, #2563eb));
+        text-decoration: underline;
+
+        &:hover {
+            opacity: 0.85;
+        }
+    }
+}
+
+
+/* ==========================================================================
+   Radio Presets - Shared
+   ========================================================================== */
+
+.dragwyb-form-wrapper .dragwyb-options-container :is(.dragwyb-option-item) input[type="radio"] {
+    &:hover {
+        border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+    }
+}
+
+
+/* Outline */
+
+.dragwyb-form-wrapper .dragwyb-options-container.dragwyb-radio-style-outline input[type="radio"]:checked {
+    background: var(--dragwyb-toggle-bg-color, #fff);
+    border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+
+    &::after {
+        width: 48%;
+        height: 48%;
+        border-radius: 50%;
+        background: var(--dragwyb-toggle-primary-color, #2563eb);
+    }
+}
+
+
+/* Filled */
+
+.dragwyb-form-wrapper .dragwyb-options-container:is(.dragwyb-radio-style-solid_fill,
+    .dragwyb-radio-style-filled) input[type="radio"]:checked {
+    background: var(--dragwyb-toggle-primary-color, #2563eb);
+    border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+
+    &::after {
+        width: 38%;
+        height: 38%;
+        border-radius: 50%;
+        background: #fff;
+    }
+}
+
+
+/* Legacy */
+
+.dragwyb-form-wrapper .dragwyb-options-container:is(.dragwyb-radio-style-soft_fill,
+    .dragwyb-radio-style-ghost,
+    .dragwyb-radio-style-double_ring) input[type="radio"]:checked {
+    background: var(--dragwyb-toggle-bg-color, #fff);
+    border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+
+    &::after {
+        width: 50%;
+        height: 50%;
+        border-radius: 50%;
+        background: var(--dragwyb-toggle-primary-color, #2563eb);
+    }
+}
+
+
+/* ==========================================================================
+   Radio - Card
+   ========================================================================== */
+
+.dragwyb-form-wrapper .dragwyb-options-container.dragwyb-radio-style-card {
+    gap: var(--dragwyb-toggle-spacing, 10px);
+
+    .dragwyb-option-item {
+        padding: 10px 16px;
+        border:
+            var(--dragwyb-toggle-border-width, 1px) solid var(--dragwyb-toggle-border-color, #e5e7eb);
+        border-radius: 8px;
+        background: var(--dragwyb-toggle-bg-color, #fff);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+        transition: var(--dragwyb-transition);
+
+        &:hover {
+            border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        &:is( :has(input[type="radio"]:checked),
+            .is-checked) {
+            border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+            background: color-mix(in srgb,
+                    var(--dragwyb-toggle-primary-color, #2563eb) 6%,
+                    #fff);
+            box-shadow:
+                0 0 0 1px var(--dragwyb-toggle-primary-color, #2563eb),
+                0 2px 6px rgba(37, 99, 235, 0.1);
+
+            .dragwyb-radio-label {
+                color: var(--dragwyb-toggle-primary-color, #111827);
+                font-weight: 500;
+            }
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+    }
+}
+
+
+/* ==========================================================================
+   Radio - Button
+   ========================================================================== */
+
+.dragwyb-form-wrapper .dragwyb-options-container.dragwyb-radio-style-button {
+    gap: 6px;
+
+    &.dragwyb-inline-options {
+        display: inline-flex;
+        gap: 4px;
+        padding: 4px;
+        background: var(--dragwyb-toggle-bg-color, #f9fafb);
+        border: 1px solid var(--dragwyb-toggle-border-color, #e5e7eb);
+        border-radius: 10px;
+
+        .dragwyb-option-item {
+            border: 0;
+            border-radius: 7px;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
+    .dragwyb-option-item {
+        padding: 8px 16px;
+        border:
+            1px solid var(--dragwyb-toggle-border-color, #d1d5db);
+        border-radius: 8px;
+        background: var(--dragwyb-toggle-bg-color, #fff);
+        font-weight: 500;
+        justify-content: center;
+        transition: var(--dragwyb-transition);
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        &:hover {
+            border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+            color: var(--dragwyb-toggle-primary-color, #2563eb);
+        }
+
+        &:is( :has(input[type="radio"]:checked),
+            .is-checked) {
+            background: var(--dragwyb-toggle-primary-color, #2563eb);
+            border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+
+            .dragwyb-radio-label {
+                color: var(--dragwyb-option-color,
+                        var(--dragwyb-input-color, #fff));
+                font-weight: 600;
+            }
+        }
+    }
+}
+
+
+/* ==========================================================================
+   Radio - Chip
+   ========================================================================== */
+
+.dragwyb-form-wrapper .dragwyb-options-container.dragwyb-radio-style-chip {
+    gap: 8px;
+
+    .dragwyb-option-item {
+        padding: 6px 14px;
+        border: 1.5px solid var(--dragwyb-toggle-border-color, #e5e7eb);
+        border-radius: 9999px;
+        background: var(--dragwyb-toggle-bg-color, #f9fafb);
+        font-size: 13px;
+        transition: var(--dragwyb-transition);
+
+        &:hover {
+            border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+            background: #fff;
+        }
+
+        &:is( :has(input[type="radio"]:checked),
+            .is-checked) {
+            border-color: var(--dragwyb-toggle-primary-color, #2563eb);
+            background: color-mix(in srgb,
+                    var(--dragwyb-toggle-primary-color, #2563eb) 10%,
+                    #fff);
+
+            .dragwyb-radio-label {
+                color: var(--dragwyb-toggle-primary-color, #2563eb);
+                font-weight: 600;
+            }
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+    }
+}
+
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+.dragwyb-form-wrapper button {
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: var(--dragwyb-transition);
+}
+
+.dragwyb-form-wrapper button:is(.dragwyb-button-prev,
+    .dragwyb-btn-prev) {
+    cursor: pointer;
+}
+
+.dragwyb-form-wrapper button:is(.dragwyb-button-block,
+    .dragwyb-btn-block) {
+    width: 100%;
+    display: flex;
+}
+
+.dragwyb-form-wrapper button:is(.dragwyb-button-reset,
+    .dragwyb-btn-reset) {
+    background: transparent;
+    border: 1px solid var(--dragwyb-input-border-color, #d1d5db);
+    color: var(--dragwyb-label-color, inherit);
+
+    &:hover {
+        background: var(--dragwyb-form-bg-filled, #f3f4f6);
+        color: var(--dragwyb-input-color, inherit);
+    }
+}
+
+.dragwyb-form-wrapper .dragwyb-button-field {
+    text-align: var(--dragwyb-btn-align,
+            var(--dragwyb-form-justify-content, left));
+}
+
+
+/* ==========================================================================
+   Validation / Messages
+   ========================================================================== */
+
+.dragwyb-form-wrapper .dragwyb-message {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-weight: 500;
+}
+
+.dragwyb-form-wrapper .dragwyb-message.dragwyb-success {
+    color: var(--dragwyb-success-color, #15803d);
+    background: var(--dragwyb-success-bg, #dcfce7);
+    border: 1px solid var(--dragwyb-success-color, #15803d);
+}
+
+.dragwyb-form-wrapper .dragwyb-message.dragwyb-error {
+    color: var(--dragwyb-error-color, #b91c1c);
+    background: var(--dragwyb-error-bg, #fee2e2);
+    border: 1px solid var(--dragwyb-error-color, #b91c1c);
+}
+
+.dragwyb-form-wrapper .dragwyb-field-validation-error {
+    display: block;
+    margin-top: 5px;
+    color: var(--dragwyb-error-color, #b91c1c);
+    font-size: 0.85em;
+}
+
+
+/* ==========================================================================
+   Section
+   ========================================================================== */
+
+.dragwyb-form-wrapper .dragwyb-section-title {
+    color: var(--dragwyb-section-title-color,
+            var(--dragwyb-label-color, inherit));
+    margin:
+        var(--dragwyb-section-title-mt, 0) var(--dragwyb-section-title-mr, 0) var(--dragwyb-section-title-mb, 10px) var(--dragwyb-section-title-ml, 0);
+}
+
+.dragwyb-form-wrapper .dragwyb-section-description {
+    color: var(--dragwyb-section-desc-color,
+            var(--dragwyb-help-color, inherit));
+    margin:
+        var(--dragwyb-section-desc-mt, 0) var(--dragwyb-section-desc-mr, 0) var(--dragwyb-section-desc-mb, 10px) var(--dragwyb-section-desc-ml, 0);
+}
+
+.dragwyb-form-wrapper .dragwyb-section-divider {
+    background: var(--dragwyb-section-divider-color,
+            var(--dragwyb-input-border-color, #e5e7eb));
+}
+
+
+/* ==========================================================================
+   HTML
+   ========================================================================== */
+
+.dragwyb-form-wrapper .dragwyb-html-content {
+    margin:
+        var(--dragwyb-html-mt, 0) var(--dragwyb-html-mr, 0) var(--dragwyb-html-mb, 0) var(--dragwyb-html-ml, 0);
+    padding:
+        var(--dragwyb-html-pt, 0) var(--dragwyb-html-pr, 0) var(--dragwyb-html-pb, 0) var(--dragwyb-html-pl, 0);
+    background: var(--dragwyb-html-bg-color, transparent);
+    color: var(--dragwyb-html-text-color,
+            var(--dragwyb-input-color, inherit));
+
+    * {
+        color: inherit;
+    }
+}
+
+
+/* ==========================================================================
+   Captcha
+   ========================================================================== */
+
+.dragwyb-form-wrapper .dragwyb-captcha-container {
+    margin:
+        var(--dragwyb-captcha-mt, 0) var(--dragwyb-captcha-mr, 0) var(--dragwyb-captcha-mb, 0) var(--dragwyb-captcha-ml, 0);
+    padding:
+        var(--dragwyb-captcha-pt, 0) var(--dragwyb-captcha-pr, 0) var(--dragwyb-captcha-pb, 0) var(--dragwyb-captcha-pl, 0);
+}
+
+
+/* ==========================================================================
+   Multi-Step Form
+   ========================================================================== */
+
+.dragwyb-form-wrapper .dragwyb-step-divider {
+    flex: 1;
+    width: auto;
+    height: 0;
+    border-top:
+        var(--dragwyb-step-divider-thickness, 2px) var(--dragwyb-step-divider-style, solid) var(--dragwyb-step-line-color, #e5e7eb);
+    transition: border-color 0.3s ease;
+}
+
+.dragwyb-form-wrapper .dragwyb-step-divider-text {
+    padding: 0 15px;
+    font-family: var(--dragwyb-step-typography-family, inherit);
+    font-size: var(--dragwyb-step-typography-size, 16px);
+    font-weight: var(--dragwyb-step-typography-wt, 600);
+    color: var(--dragwyb-step-text-color, #374151);
+    white-space: nowrap;
+}
+
+
+/* Step Field */
+
+.dragwyb-form-wrapper .dragwyb-step-field {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: var(--dragwyb-form-justify-content, left);
+    margin: 0;
+
+    &_hidden {
+        display: none;
+    }
+
+    &[data-step-indicator="dots"] .dragwyb-editor-step-item .dragwyb-step-dot {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+
+/* Step Indicator Container */
+
+.dragwyb-form-wrapper .dragwyb-step-indicator-container {
+    width: 100%;
+    margin-bottom: var(--dragwyb-step-bottom-spacing,
+            var(--dragwyb-field-gap));
+
+    &.step-has-title:not([data-step-indicator="progress"],
+        [data-step-indicator="dots"]) {
+        margin-bottom: calc(var(--dragwyb-step-bottom-spacing, var(--dragwyb-field-gap)) + var(--dragwyb-step-typography-size, 14px) * 1.5);
+    }
+}
+
+
+/* Step Indicator */
+
+.dragwyb-form-wrapper .dragwyb-step-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+
+    &::before {
+        display: none;
+    }
+}
+
+
+/* Step Item */
+
+.dragwyb-form-wrapper .dragwyb-step-item {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.dragwyb-form-wrapper .dragwyb-step-dot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--dragwyb-step-dot-size, 40px);
+    height: var(--dragwyb-step-dot-size, 40px);
+    box-sizing: border-box;
+    border:
+        var(--dragwyb-step-divider-thickness, 2px) solid var(--dragwyb-step-inactive-color, #9ca3af);
+    border-radius: 50%;
+    background: #fff;
+    transition: var(--dragwyb-transition);
+}
+
+.dragwyb-form-wrapper .dragwyb-step-number {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dragwyb-step-inactive-color, #9ca3af);
+}
+
+.dragwyb-form-wrapper .dragwyb-step-title {
+    position: absolute;
+    top: calc(var(--dragwyb-step-dot-size, 40px) + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--dragwyb-step-typography-family, inherit);
+    font-size: var(--dragwyb-step-typography-size, 14px);
+    font-weight: var(--dragwyb-step-typography-wt, 500);
+    color: var(--dragwyb-step-inactive-color, #6b7280);
+    text-align: center;
+    white-space: nowrap;
+}
+
+
+/* Active / Completed */
+
+.dragwyb-form-wrapper .dragwyb-step-item:is(.active, .completed) {
+    .dragwyb-step-dot {
+        border-color: var(--dragwyb-step-active-color, #1d4ed8);
+    }
+
+    .dragwyb-step-title {
+        color: var(--dragwyb-step-active-color, #1d4ed8);
+    }
+}
+
+.dragwyb-form-wrapper .dragwyb-step-item.active {
+    .dragwyb-step-dot {
+        background: var(--dragwyb-step-active-color, #1d4ed8);
+    }
+
+    .dragwyb-step-number {
+        color: #fff;
+    }
+
+    .dragwyb-step-title {
+        font-weight: 600;
+    }
+}
+
+.dragwyb-form-wrapper .dragwyb-step-item.completed {
+    .dragwyb-step-dot {
+        background: #fff;
+    }
+
+    .dragwyb-step-number {
+        color: var(--dragwyb-step-active-color, #1d4ed8);
+    }
+}
+
+.dragwyb-form-wrapper .dragwyb-step-item.completed+.dragwyb-step-divider {
+    border-top-color: var(--dragwyb-step-active-color, #1d4ed8);
+}
+
+
+/* Dots */
+
+.dragwyb-form-wrapper .dragwyb-step-indicator[data-step-indicator="dots"] {
+    padding-bottom: 0;
+
+    .dragwyb-step-item {
+        flex: 0 0 var(--dragwyb-step-dot-size, 16px);
+    }
+
+    .dragwyb-step-dot {
+        width: var(--dragwyb-step-dot-size, 16px);
+        height: var(--dragwyb-step-dot-size, 16px);
+    }
+
+    .dragwyb-step-number,
+    .dragwyb-step-title {
+        display: none;
+    }
+}
+
+
+/* ==========================================================================
+   Editor Step Preview
+   ========================================================================== */
+
+.dragwyb-form-wrapper .dragwyb-editor-preview {
+    &:not([data-step-indicator="none"]) {
+        display: block !important;
+    }
+
+    &[data-step-indicator="none"] {
+        display: none !important;
+    }
+
+    &[data-step-indicator="dots"],
+    &[data-step-indicator="numbers"] {
+        .dragwyb-step-progress-wrapper {
+            display: none !important;
+        }
+
+        .dragwyb-step-item {
+            display: flex !important;
+        }
+
+        .dragwyb-step-divider {
+            display: block !important;
+        }
+    }
+
+    &[data-step-indicator="progress"] {
+        .dragwyb-step-progress-wrapper {
+            display: block !important;
+        }
+
+        .dragwyb-step-item,
+        .dragwyb-step-divider {
+            display: none !important;
+        }
+    }
+}
+
+
+/* ==========================================================================
+   Progress
+   ========================================================================== */
+
+.dragwyb-form-wrapper .dragwyb-step-progress-wrapper {
+    width: 100%;
+}
+
+.dragwyb-form-wrapper .dragwyb-step-progress-bar {
+    width: 100%;
+    height: 8px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    border-radius: 4px;
+    background: var(--dragwyb-step-line-color, #e5e7eb);
+}
+
+.dragwyb-form-wrapper .dragwyb-step-progress-fill {
+    width: 0;
+    height: 100%;
+    border-radius: 4px;
+    background: var(--dragwyb-step-active-color, #1d4ed8);
+    transition: width 0.3s ease;
+}
+
+.dragwyb-form-wrapper .dragwyb-step-progress-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--dragwyb-step-text-color, #6b7280);
+}
+
+
+/* Navigation */
+
+.dragwyb-form-wrapper .dragwyb-step-navigation {
+    display: flex;
+    width: 100%;
+    gap: 15px;
+    justify-content: space-between;
+
+    .dragwyb-button-field {
+        width: unset;
+    }
+
+    .dragwyb-step-next {
+        margin-left: auto;
+    }
+}
+
+
+/* ==========================================================================
+   Message Modal
+   ========================================================================== */
+
 .dragwyb-message-modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
+    inset: 0;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(8px);
-    z-index: 999999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    transition:
+        opacity 0.3s ease,
+        visibility 0.3s ease;
 
     &.dragwyb-message-modal-show {
         opacity: 1;
@@ -1238,127 +1304,136 @@
 
 .dragwyb-message-modal {
     position: relative;
-    background: #ffffff;
     width: 90%;
     max-width: 450px;
     padding: 40px;
     border-radius: 16px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.05);
+    background: #fff;
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.15),
+        0 1px 3px rgba(0, 0, 0, 0.05);
     text-align: center;
     transform: scale(0.9);
     opacity: 0;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+    transition:
+        transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        opacity 0.3s ease;
+}
 
-    .dragwyb-message-modal-close {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        background: transparent;
-        border: none;
-        font-size: 24px;
-        line-height: 1;
-        color: #9ca3af;
-        cursor: pointer;
-        padding: 5px;
-        transition: color 0.2s ease;
+.dragwyb-message-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 5px;
+    border: 0;
+    background: transparent;
+    color: #9ca3af;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.2s ease;
 
-        &:hover {
-            color: #4b5563;
-        }
-    }
-
-    .dragwyb-message-modal-icon {
-        font-size: 64px;
-        color: inherit;
-        line-height: 1;
-
-        svg {
-            width: 64px;
-            height: 64px;
-            fill: currentColor
-        }
-    }
-
-    .dragwyb-message-modal-title {
-        font-size: 24px;
-        font-weight: 600;
-        margin: 0 0 15px 0;
-        font-family: inherit;
-        color: inherit;
-    }
-
-    .dragwyb-message-modal-text {
-        font-size: 16px;
-        line-height: 1.5;
-        color: inherit;
-        opacity: 0.9;
-        margin: 0;
-        font-family: inherit;
+    &:hover {
+        color: #4b5563;
     }
 }
 
-/* Inline Form Message Component (In Form Place / Form Bottom) */
+.dragwyb-message-modal-icon {
+    font-size: 64px;
+    line-height: 1;
+    color: inherit;
+
+    svg {
+        width: 64px;
+        height: 64px;
+        fill: currentColor;
+    }
+}
+
+.dragwyb-message-modal-title {
+    margin: 0 0 15px;
+    font-family: inherit;
+    font-size: 24px;
+    font-weight: 600;
+    color: inherit;
+}
+
+.dragwyb-message-modal-text {
+    margin: 0;
+    font-family: inherit;
+    font-size: 16px;
+    line-height: 1.5;
+    color: inherit;
+    opacity: 0.9;
+}
+
+
+/* ==========================================================================
+   Inline Message
+   ========================================================================== */
+
 .dragwyb-inline-message-box {
-    border-radius: 12px;
-    padding: 20px 24px;
     margin: 20px 0;
+    padding: 20px 24px;
+    border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
 
-    .dragwyb-inline-message-content {
-        display: flex;
-        align-items: flex-start;
-        gap: 16px;
-    }
+.dragwyb-inline-message-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
 
-    .dragwyb-inline-message-icon {
-        font-size: 32px;
-        line-height: 1;
-        flex-shrink: 0;
+.dragwyb-inline-message-icon {
+    flex-shrink: 0;
+    font-size: 32px;
+    line-height: 1;
 
-        svg {
-            width: 32px;
-            height: 32px;
-            fill: currentColor;
-        }
-    }
-
-    .dragwyb-inline-message-title {
-        margin: 0 0 6px 0;
-        font-size: 18px;
-        font-weight: 600;
-        font-family: inherit;
-    }
-
-    .dragwyb-inline-message-text {
-        font-size: 14px;
-        line-height: 1.5;
-        opacity: 0.9;
-        font-family: inherit;
+    svg {
+        width: 32px;
+        height: 32px;
+        fill: currentColor;
     }
 }
+
+.dragwyb-inline-message-title {
+    margin: 0 0 6px;
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.dragwyb-inline-message-text {
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.5;
+    opacity: 0.9;
+}
+
+
+/* ==========================================================================
+   Bottom Message
+   ========================================================================== */
 
 .dragwyb-bottom-message-box {
-    border: none !important;
-    box-shadow: none !important;
+    margin: 0;
+    padding: 14px 0 0;
+    border: 0 !important;
     border-radius: 8px;
-    padding: 14px 0px 0px;
-    margin: 0px;
+    box-shadow: none !important;
 
     .dragwyb-inline-message-content {
-        display: flex;
         align-items: center;
         gap: 12px;
     }
 
     .dragwyb-inline-message-icon {
         font-size: 20px;
-        line-height: 1;
-        flex-shrink: 0;
 
         svg {
             width: 20px;
             height: 20px;
-            fill: currentColor;
         }
     }
 
@@ -1367,9 +1442,9 @@
     }
 
     .dragwyb-inline-message-text {
+        margin: 0;
         font-size: 14px;
         font-weight: 500;
         line-height: 1.4;
-        margin: 0;
     }
 }
