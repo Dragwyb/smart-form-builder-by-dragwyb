@@ -52,7 +52,7 @@ class DragwybControlBase extends Component {
         const selectedSetting = this.selectedSetting && '' !== this.selectedSetting && this.selectedSetting !== this.selectorKey ? this.selectedSetting : false;
         const uniqueSelector = `${this.selectorKey}${selectedSetting ? '_' + selectedSetting : ''}_${this.id}`;
 
-        const styleSelectorsData = { key: uniqueSelector, value: this.state.value || this.settings.default, selectors: this.settings.selectors, placeholders: this.getStyleSelectorPlaceholder(this.state.value || this.settings.default, this.settings.selectors_placeholders), toolbarType: this.selectorKey, itemId: this.selectedSetting, initialRender: true };
+        const styleSelectorsData = { key: uniqueSelector, value: this.state.value || this.settings.default, selectors: this.settings.selectors, placeholders: this.getStyleSelectorPlaceholder(this.state.value || this.settings.default, this.settings.selectors_placeholders), toolbarType: this.selectorKey, itemId: this.selectedSetting, initialRender: this.initialRender };
 
         if (this.currentItemId) {
             styleSelectorsData.currentItemId = this.currentItemId;
@@ -260,6 +260,7 @@ class DragwybControlBase extends Component {
         this.selectorKey = props.toolbarId;
         this.fieldValue = props.fieldValue || {};
         this.currentItemId = props.currentItemId || false;
+        this.initialRender = props.initialRender !== undefined ? props.initialRender : true;
 
         if (this.settings.popover) {
             props?.resetControlEventLifting?.(this.resetControl.bind(this));

@@ -423,6 +423,7 @@ export const updateStyleSelectors = ({ state, dispatch, key, value, selectors, p
         });
 
         const existSelectors = state.styleSelectors;
+
         const formId = state.form.id;
 
         if (initialRender && existSelectors[key]) {

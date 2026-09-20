@@ -880,37 +880,18 @@ const PresetModal = ({ isOpen, onClose, Utils }) => {
             return;
         }
 
-        const storeStateCurrent = store.getState ? store.getState() : {};
-        const storeStyleSelectors = storeStateCurrent.styleSelectors || {};
-
         const mergedPresetStyle = {
             ...baseStyles,
             ...preset.styles,
         };
 
-        // 1. Remove existing style selectors for style toolbar only
-        const deleteStyleKeys = (selectorsObj, responsiveType = 'desktop') => {
-            if (!selectorsObj) return;
-            Object.keys(selectorsObj).forEach((key) => {
-                if (key.startsWith('style_')) {
-                    Utils.deleteStyleSelectors({ key, responsiveType });
-                }
-            });
-        };
-
-        deleteStyleKeys(storeStyleSelectors, 'desktop');
-        if (storeStyleSelectors.tablet) {
-            deleteStyleKeys(storeStyleSelectors.tablet, 'tablet');
-        }
-        if (storeStyleSelectors.mobile) {
-            deleteStyleKeys(storeStyleSelectors.mobile, 'mobile');
-        }
-
         // 2. Update Redux store for style toolbar
         Utils.updateToolbarSetting({ id: 'style', value: mergedPresetStyle });
 
+
         // 3. Apply style selectors for the new preset style controls
         const styleControls = DragwybEditor?.style?.controls || {};
+
         Object.keys(styleControls).forEach((controlKey) => {
             const controlConfig = styleControls[controlKey];
 
@@ -922,6 +903,7 @@ const PresetModal = ({ isOpen, onClose, Utils }) => {
             if (controlConfig?.type) {
                 try {
                     const Control = getControl(controlConfig.type, controlCache);
+
                     if (Control) {
                         new Control({
                             id: controlKey,
@@ -930,6 +912,7 @@ const PresetModal = ({ isOpen, onClose, Utils }) => {
                             settings: controlConfig,
                             value: val,
                             Utils: Utils,
+                            initialRender: false
                         }).renderStyleSelector();
                     }
                 } catch (err) {
