@@ -888,7 +888,6 @@ const PresetModal = ({ isOpen, onClose, Utils }) => {
         const mergedPresetStyle = {
             ...baseStyles,
             ...preset.styles,
-            preset_style: preset.key,
         };
 
         // 1. Remove existing style selectors for style toolbar only
@@ -916,6 +915,7 @@ const PresetModal = ({ isOpen, onClose, Utils }) => {
         const styleControls = DragwybEditor?.style?.controls || {};
         Object.keys(styleControls).forEach((controlKey) => {
             const controlConfig = styleControls[controlKey];
+
             const val = mergedPresetStyle[controlKey] !== undefined ? mergedPresetStyle[controlKey] : controlConfig?.default;
 
             if (val === undefined || val === null || val === '') return;
@@ -933,33 +933,10 @@ const PresetModal = ({ isOpen, onClose, Utils }) => {
                             value: val,
                             Utils: Utils,
                         }).renderStyleSelector();
-                        applied = true;
                     }
                 } catch (err) {
                     // Fallback to direct updateStyleSelectors
                 }
-            }
-
-            if (
-                !applied &&
-                controlConfig?.selectors &&
-                controlConfig?.selectors_placeholders
-            ) {
-                const uniqueSelector = `style_${controlKey}`;
-                const styleSelectorsData = {
-                    key: uniqueSelector,
-                    value: val,
-                    selectors: controlConfig.selectors,
-                    placeholders: controlConfig.selectors_placeholders,
-                    toolbarType: 'style',
-                    itemId: false,
-                };
-
-                if (controlConfig.responsive_control && controlConfig.responsive_type) {
-                    styleSelectorsData.responsiveType = controlConfig.responsive_type;
-                }
-
-                Utils.updateStyleSelectors(styleSelectorsData);
             }
         });
 

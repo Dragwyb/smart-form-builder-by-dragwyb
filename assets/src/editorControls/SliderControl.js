@@ -80,12 +80,6 @@ export default class SliderControl extends DragwybEditor.editor.extends.ControlB
 
     getStyleSelectorPlaceholder(value, placeholders) {
         placeholders = JSON.parse(JSON.stringify(placeholders));
-
-        if (value.size === '' || (!value.size && value.size !== 0)) {
-            console.log(this.id)
-            return {};
-        }
-
         return placeholders;
     }
 
