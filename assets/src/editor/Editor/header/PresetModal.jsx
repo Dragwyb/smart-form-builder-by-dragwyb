@@ -660,7 +660,7 @@ const SinglePresetLivePreview = React.memo(({ preset, formId, formState, styleSe
                 body {
                     scrollbar-width: thin;
                     scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
-                    padding: 16px !important;
+                    padding: 24px !important;
                     box-sizing: border-box !important;
                 }
                 body::-webkit-scrollbar {
@@ -672,7 +672,6 @@ const SinglePresetLivePreview = React.memo(({ preset, formId, formState, styleSe
                 }
                 .dragwyb-preset-scale-wrapper {
                     width: 100%;
-                    overflow: hidden;
                     position: relative;
                     box-sizing: border-box;
                 }
@@ -726,7 +725,7 @@ const SinglePresetLivePreview = React.memo(({ preset, formId, formState, styleSe
         }
     }, [compiledCss, mountNode, initIframe]);
 
-    const iframeHeight = scaledHeight ? `${scaledHeight + 36}px` : '460px';
+    const iframeHeight = scaledHeight ? `${scaledHeight + 50}px` : '460px';
 
     return (
         <div className="preset-preview-iframe-wrapper">
@@ -751,7 +750,6 @@ const SinglePresetLivePreview = React.memo(({ preset, formId, formState, styleSe
                     className="dragwyb-preset-scale-wrapper"
                     style={{
                         width: '100%',
-                        overflow: 'hidden',
                         position: 'relative',
                         height: scaledHeight ? `${scaledHeight}px` : 'auto',
                         boxSizing: 'border-box',
@@ -1094,11 +1092,6 @@ const PresetModal = ({ isOpen, onClose, Utils }) => {
                         <div className={`preset-preview-panel__stage preset-stage--${selectedPresetKey}`}>
                             <div
                                 className="preset-preview-container"
-                                style={{
-                                    width: stageWidth,
-                                    maxWidth: '100%',
-                                    transition: 'width 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-                                }}
                             >
                                 <SinglePresetLivePreview
                                     preset={selectedPreset}

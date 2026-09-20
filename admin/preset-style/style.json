@@ -522,10 +522,10 @@
           "linked": true
         },
         "input_padding": {
-          "top": 0,
-          "right": 12,
-          "bottom": 0,
-          "left": 12,
+          "top": 26,
+          "right": 16,
+          "bottom": 6,
+          "left": 16,
           "unit": "px",
           "linked": true
         },
@@ -634,10 +634,10 @@
           "linked": true
         },
         "input_padding": {
-          "top": 0,
-          "right": 12,
-          "bottom": 0,
-          "left": 12,
+          "top": 26,
+          "right": 16,
+          "bottom": 6,
+          "left": 16,
           "unit": "px",
           "linked": true
         },
@@ -1161,10 +1161,10 @@
           "linked": true
         },
         "input_padding": {
-          "top": 0,
-          "right": 12,
-          "bottom": 0,
-          "left": 12,
+          "top": 26,
+          "right": 16,
+          "bottom": 6,
+          "left": 16,
           "unit": "px",
           "linked": true
         },
@@ -1687,10 +1687,10 @@
         },
         "label_color": "#ffffff",
         "input_padding": {
-          "top": 0,
-          "right": 12,
-          "bottom": 0,
-          "left": 12,
+          "top": 26,
+          "right": 16,
+          "bottom": 6,
+          "left": 16,
           "unit": "px",
           "linked": true
         },
