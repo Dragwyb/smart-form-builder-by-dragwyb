@@ -328,7 +328,7 @@
                 .dragwyb-field-input:not(:placeholder-shown)~.dragwyb-field-label {
                     top: 0 !important;
                     transform: translateY(-50%) scale(0.8) !important;
-                    background: linear-gradient(0deg, var(--dragwyb-input-bg, var(--dragwyb-row-bg-color, var(--dragwyb-form-bg-color, #ffffff))) 51%, transparent 51%);
+                    background: linear-gradient(0deg, var(--dragwyb-input-focus-bg, var(--dragwyb-input-bg, var(--dragwyb-row-bg-color, var(--dragwyb-form-bg-color, #ffffff)))) 51%, transparent 51%);
                     padding: 0 5px !important;
                     border-radius: 2px !important;
                     font-weight: 600 !important;
