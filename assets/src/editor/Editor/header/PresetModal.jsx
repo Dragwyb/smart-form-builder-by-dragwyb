@@ -2,9 +2,10 @@ import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import { __ } from '@wordpress/i18n';
-import { FaSearch, FaTimes, FaCheck } from 'react-icons/fa';
+import { FaSearch, FaTimes, FaCheck, FaDesktop, FaTabletAlt, FaMobileAlt } from 'react-icons/fa';
 
 import DragwybControlBase from '../../controlBase';
+import * as Fields from '../Fields';
 
 /**
  * Cache for instantiated Control classes
@@ -242,12 +243,30 @@ const generateStyleForToolbar = (toolbarId, toolbarValues, formId, cache = contr
 /**
  * Retrieve compiled CSS for preset and cache to avoid recomputing
  */
-const getPresetCompiledCss = (presetKey, styles, formId) => {
-    if (presetCssCache[presetKey]) {
-        return presetCssCache[presetKey];
+const getPresetCompiledCss = (presetKey, styles, formId, existingFieldSelectors = {}) => {
+    const cacheKey = `${presetKey}_${formId}`;
+    if (presetCssCache[cacheKey]) {
+        return presetCssCache[cacheKey];
     }
 
     const cssCacheObject = generateStyleForToolbar('style', styles, formId, controlCache);
+
+    // Merge existing field-level selectors (column layouts, row grids, etc.)
+    if (existingFieldSelectors && typeof existingFieldSelectors === 'object') {
+        Object.keys(existingFieldSelectors).forEach((key) => {
+            if (key !== 'tablet' && key !== 'mobile' && !cssCacheObject[key]) {
+                cssCacheObject[key] = existingFieldSelectors[key];
+            }
+        });
+        if (existingFieldSelectors.tablet) {
+            if (!cssCacheObject.tablet) cssCacheObject.tablet = {};
+            Object.assign(cssCacheObject.tablet, existingFieldSelectors.tablet);
+        }
+        if (existingFieldSelectors.mobile) {
+            if (!cssCacheObject.mobile) cssCacheObject.mobile = {};
+            Object.assign(cssCacheObject.mobile, existingFieldSelectors.mobile);
+        }
+    }
 
     const tableStyleSelectors = cssCacheObject['tablet'] || {};
     const mobileStyleSelectors = cssCacheObject['mobile'] || {};
@@ -265,7 +284,7 @@ const getPresetCompiledCss = (presetKey, styles, formId) => {
         cssString += `@media (max-width: 480px) {\n${generateCssStrings(mobileStyleSelectors)}\n}`;
     }
 
-    presetCssCache[presetKey] = cssString;
+    presetCssCache[cacheKey] = cssString;
     return cssString;
 };
 
@@ -276,21 +295,290 @@ const PREVIEW_URL = window.DragwybEditor?.previewUrl || (typeof DragwybEditor !=
 const PREVIEW_IFRAME_URL = PREVIEW_URL ? `${PREVIEW_URL}&dragwyb_iframe_mode=true` : '';
 
 /**
- * Dynamic Preset Preview Component rendering real form HTML inside an isolated iframe
+ * Recursive Real Form Field Renderer (re-uses Fields.Preview without editor dnd handles)
  */
-const DynamicPresetPreview = React.memo(({ presetKey, styles, onApply }) => {
+const RealFormFieldItem = ({ fieldId, fields, iframeDoc }) => {
+    if (!fieldId || !fields || !iframeDoc) return null;
+    const field = fields[fieldId];
+    if (!field) return null;
+
+    const fieldSettings = window.DragwybEditor?.fields?.fields?.[field.type];
+    const allowedChildren = fieldSettings?.allow_child || false;
+    const isRootContainer = field?.is_root_container || false;
+    const childrens = field.children;
+
+    let wrapperClass = [];
+    let id = `dragwyb-row-${field._id}`;
+    if (field.type !== 'row') {
+        wrapperClass = ['dragwyb-field-wrapper', `dragwyb-${field.type}-field`];
+        id = `dragwyb-field-wrapper-${field._id}`;
+    }
+
+    if (field.css_classes) {
+        wrapperClass.push(field.css_classes);
+    }
+
+    if (allowedChildren === true || isRootContainer === true) {
+        wrapperClass.push(`dragwyb-${field.type}`, 'dragwyb-has-actions');
+        id = `dragwyb-${field.type}-${field._id}`;
+    }
+
+    if (['button', 'file', 'radio', 'checkbox', 'range', 'gdpr'].includes(field.type)) {
+        wrapperClass.push("dragwyb-no-float");
+    }
+
+    if (window.DragwybBuilder?.Hooks?.applyFilter) {
+        wrapperClass = window.DragwybBuilder.Hooks.applyFilter('Dragwyb/Field/WrapperClass', wrapperClass, fieldId, field.type, field.attributes, {});
+        wrapperClass = window.DragwybBuilder.Hooks.applyFilter(`Dragwyb/Field/WrapperClass/${field.type}`, wrapperClass, fieldId, field.type, field.attributes, {});
+    }
+
+    return (
+        <div className={wrapperClass.join(' ')} id={id}>
+            <Fields.Preview fields={[field]} values={{}} errors={[]} childrens={childrens} Utils={{}} perviewIFrame={iframeDoc}>
+                {childrens && childrens.length > 0 && (
+                    childrens.map((childId) => (
+                        <RealFormFieldItem
+                            key={childId}
+                            fieldId={childId}
+                            fields={fields}
+                            iframeDoc={iframeDoc}
+                        />
+                    ))
+                )}
+            </Fields.Preview>
+        </div>
+    );
+};
+
+/**
+ * Form Content Component rendered inside iframe portal with scale(0.7)
+ */
+const PresetFormContent = ({ hasRealFields, rootContainers, formFields, wrapperClasses, formId, stepIndicatorType, iframeDoc, onHeightChange }) => {
+    const contentRef = useRef(null);
+
+    useEffect(() => {
+        if (!contentRef.current) return;
+
+        const updateHeight = () => {
+            if (contentRef.current) {
+                const unscaledHeight = contentRef.current.offsetHeight || contentRef.current.scrollHeight;
+                if (unscaledHeight > 0 && onHeightChange) {
+                    onHeightChange(Math.ceil(unscaledHeight * 0.7));
+                }
+            }
+        };
+
+        updateHeight();
+
+        let observer;
+        if (typeof ResizeObserver !== 'undefined') {
+            observer = new ResizeObserver((entries) => {
+                for (let entry of entries) {
+                    const unscaledHeight = entry.borderBoxSize?.[0]?.blockSize || entry.contentRect?.height || contentRef.current?.offsetHeight;
+                    if (unscaledHeight > 0 && onHeightChange) {
+                        onHeightChange(Math.ceil(unscaledHeight * 0.7));
+                    }
+                }
+            });
+            observer.observe(contentRef.current);
+        }
+
+        return () => {
+            if (observer) observer.disconnect();
+        };
+    }, [onHeightChange, hasRealFields, rootContainers, formFields]);
+
+    const innerContent = hasRealFields ? (
+        <div
+            className={wrapperClasses}
+            id={`dragwyb-form-wrapper-${formId}`}
+            data-step-indicator={stepIndicatorType}
+        >
+            <div
+                className="dragwyb-form"
+                id={`dragwyb-form-${formId}`}
+                data-step-indicator={stepIndicatorType}
+            >
+                {rootContainers.map((containerId) => (
+                    <RealFormFieldItem
+                        key={containerId}
+                        fieldId={containerId}
+                        fields={formFields}
+                        iframeDoc={iframeDoc}
+                    />
+                ))}
+            </div>
+        </div>
+    ) : (
+        <div
+            className={wrapperClasses}
+            id={`dragwyb-form-wrapper-${formId}`}
+            data-step-indicator={stepIndicatorType}
+        >
+            <form
+                className="dragwyb-form"
+                id={`dragwyb-form-${formId}`}
+                data-step-indicator={stepIndicatorType}
+                onSubmit={(e) => e.preventDefault()}
+            >
+                <div id={`dragwyb-row-${formId}_name_row`} className="dragwyb-row">
+                    <div
+                        id={`dragwyb-field-wrapper-${formId}_name`}
+                        className="dragwyb-field-wrapper dragwyb-text-field dragwyb-last-field"
+                    >
+                        <div className="dragwyb-input-group">
+                            <input
+                                type="text"
+                                id={`field_${formId}_name`}
+                                name={`field_${formId}_name`}
+                                defaultValue=""
+                                placeholder=" "
+                                className="dragwyb-field-input"
+                                onClick={(e) => e.stopPropagation()}
+                            />
+                            <label
+                                htmlFor={`field_${formId}_name`}
+                                className="dragwyb-field-label"
+                            >
+                                {__('Your Name', 'smart-form-builder-by-dragwyb')}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id={`dragwyb-row-${formId}_email_row`} className="dragwyb-row">
+                    <div
+                        id={`dragwyb-field-wrapper-${formId}_email`}
+                        className="dragwyb-field-wrapper dragwyb-email-field dragwyb-last-field"
+                    >
+                        <div className="dragwyb-input-group">
+                            <input
+                                type="email"
+                                id={`field_${formId}_email`}
+                                name={`field_${formId}_email`}
+                                defaultValue=""
+                                placeholder=" "
+                                className="dragwyb-field-input"
+                                onClick={(e) => e.stopPropagation()}
+                            />
+                            <label
+                                htmlFor={`field_${formId}_email`}
+                                className="dragwyb-field-label"
+                            >
+                                {__('Your Email', 'smart-form-builder-by-dragwyb')}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id={`dragwyb-row-${formId}_message_row`} className="dragwyb-row">
+                    <div
+                        id={`dragwyb-field-wrapper-${formId}_message`}
+                        className="dragwyb-field-wrapper dragwyb-textarea-field dragwyb-last-field"
+                    >
+                        <div className="dragwyb-input-group">
+                            <textarea
+                                id={`field_${formId}_message`}
+                                name={`field_${formId}_message`}
+                                rows={3}
+                                placeholder=" "
+                                className="dragwyb-field-input dragwyb-field-textarea"
+                                onClick={(e) => e.stopPropagation()}
+                            />
+                            <label
+                                htmlFor={`field_${formId}_message`}
+                                className="dragwyb-field-label"
+                            >
+                                {__('Message', 'smart-form-builder-by-dragwyb')}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id={`dragwyb-row-${formId}_submit`} className="dragwyb-row dragwyb-last-row">
+                    <div
+                        id={`dragwyb-field-wrapper-${formId}_submit_btn`}
+                        className="dragwyb-field-wrapper dragwyb-button-field dragwyb-last-field business-submit dragwyb-no-float"
+                    >
+                        <button
+                            type="button"
+                            id={`btn_${formId}_submit`}
+                            className="dragwyb-btn dragwyb-btn-submit"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                            }}
+                        >
+                            {__('Submit', 'smart-form-builder-by-dragwyb')}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    );
+
+    return (
+        <div
+            className="dragwyb-preset-scale-content"
+            ref={contentRef}
+            style={{
+                width: '142.857143%',
+                transform: 'scale(0.7)',
+                transformOrigin: 'top left',
+                boxSizing: 'border-box',
+            }}
+        >
+            {innerContent}
+        </div>
+    );
+};
+
+/**
+ * Single High-Performance Live Preview Component
+ */
+const SinglePresetLivePreview = React.memo(({ preset, formId, formState, styleSelectors }) => {
     const iframeRef = useRef(null);
     const [mountNode, setMountNode] = useState(null);
-    const formId = `preset_${presetKey}`;
+    const [scaledHeight, setScaledHeight] = useState(null);
 
-    // Memoize the iframe source URL
-    const iframeSrc = useMemo(() => {
-        return PREVIEW_IFRAME_URL;
+    const handleHeightChange = useCallback((height) => {
+        setScaledHeight(height);
     }, []);
 
+    const presetKey = preset?.key || 'theme';
+    const styles = preset?.styles || {};
+
+    // Extract existing field-level selectors from store
+    const existingFieldSelectors = useMemo(() => {
+        if (!styleSelectors || typeof styleSelectors !== 'object') return {};
+        const fieldCss = {};
+        Object.keys(styleSelectors).forEach((key) => {
+            if (key.startsWith('fields_')) {
+                fieldCss[key] = styleSelectors[key];
+            }
+        });
+        if (styleSelectors.tablet) {
+            fieldCss.tablet = {};
+            Object.keys(styleSelectors.tablet).forEach((key) => {
+                if (key.startsWith('fields_')) {
+                    fieldCss.tablet[key] = styleSelectors.tablet[key];
+                }
+            });
+        }
+        if (styleSelectors.mobile) {
+            fieldCss.mobile = {};
+            Object.keys(styleSelectors.mobile).forEach((key) => {
+                if (key.startsWith('fields_')) {
+                    fieldCss.mobile[key] = styleSelectors.mobile[key];
+                }
+            });
+        }
+        return fieldCss;
+    }, [styleSelectors]);
+
     const compiledCss = useMemo(() => {
-        return getPresetCompiledCss(presetKey, styles, formId);
-    }, [presetKey, styles, formId]);
+        return getPresetCompiledCss(presetKey, styles, formId, existingFieldSelectors);
+    }, [presetKey, styles, formId, existingFieldSelectors]);
 
     const labelPosition = styles?.label_position || 'top';
     const floatingStyle = styles?.floating_style || 'outlined';
@@ -311,14 +599,18 @@ const DynamicPresetPreview = React.memo(({ presetKey, styles, onApply }) => {
         return classes.join(' ');
     }, [labelPosition, floatingStyle, formBgType]);
 
-    // Initialize iframe document and inject dynamic styles
+    // Check if the real form in editor has fields to render
+    const rootContainers = formState?.rootContainers || [];
+    const formFields = formState?.fields || {};
+    const hasRealFields = rootContainers.length > 0 && Object.keys(formFields).length > 0;
+
+    // Initialize iframe document and base styles
     const initIframe = useCallback((event) => {
-        const iframe = event.target || iframeRef.current;
+        const iframe = event?.target || iframeRef.current;
         if (!iframe || !iframe.contentWindow) return;
         const doc = iframe.contentWindow.document;
         if (!doc || !doc.body) return;
 
-        // Ensure transparent background for glass/gradient preset cards
         if (doc.documentElement) {
             doc.documentElement.style.background = 'transparent';
         }
@@ -331,24 +623,29 @@ const DynamicPresetPreview = React.memo(({ presetKey, styles, onApply }) => {
 
         // Localize DragwybEditor onto iframe window if needed
         const iframeWindow = doc.defaultView || iframe.contentWindow;
-        if (iframeWindow && window.DragwybEditor) {
+        if (iframeWindow) {
+            if (!iframeWindow.DragwybBuilder && window.DragwybBuilder) {
+                iframeWindow.DragwybBuilder = window.DragwybBuilder;
+            }
             if (!iframeWindow.hasOwnProperty('DragwybEditor')) {
                 iframeWindow.DragwybEditor = {};
             }
-            if (!iframeWindow.hasOwnProperty('faIconsList')) {
-                iframeWindow.DragwybEditor.faIconsList = window.DragwybEditor.faIconsList;
-            }
-            const editorToolBars = window.DragwybEditor?.EditorToolbars?.toolbars;
-            if (editorToolBars) {
-                Object.keys(editorToolBars).forEach((key) => {
-                    if (!iframeWindow.DragwybEditor.hasOwnProperty(key)) {
-                        iframeWindow.DragwybEditor[key] = window.DragwybEditor[key];
-                    }
-                });
+            if (window.DragwybEditor) {
+                if (!iframeWindow.hasOwnProperty('faIconsList')) {
+                    iframeWindow.DragwybEditor.faIconsList = window.DragwybEditor.faIconsList;
+                }
+                const editorToolBars = window.DragwybEditor?.EditorToolbars?.toolbars;
+                if (editorToolBars) {
+                    Object.keys(editorToolBars).forEach((key) => {
+                        if (!iframeWindow.DragwybEditor.hasOwnProperty(key)) {
+                            iframeWindow.DragwybEditor[key] = window.DragwybEditor[key];
+                        }
+                    });
+                }
             }
         }
 
-        // Base styling for iframe (transparent bg + sleek custom scrollbar)
+        // Base styling for iframe with scale wrapper support
         let baseStyleTag = doc.getElementById('dragwyb-preset-base-style');
         if (!baseStyleTag && doc.head) {
             baseStyleTag = doc.createElement('style');
@@ -357,23 +654,39 @@ const DynamicPresetPreview = React.memo(({ presetKey, styles, onApply }) => {
                 html, body {
                     background: transparent !important;
                     overflow-x: hidden !important;
+                    padding: 0 !important;
+                    margin: 0 !important;
                 }
                 body {
                     scrollbar-width: thin;
                     scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
+                    padding: 16px !important;
+                    box-sizing: border-box !important;
                 }
                 body::-webkit-scrollbar {
-                    width: 4px;
+                    width: 6px;
                 }
                 body::-webkit-scrollbar-thumb {
                     background-color: rgba(148, 163, 184, 0.4);
                     border-radius: 4px;
                 }
+                .dragwyb-preset-scale-wrapper {
+                    width: 100%;
+                    overflow: hidden;
+                    position: relative;
+                    box-sizing: border-box;
+                }
+                .dragwyb-preset-scale-content {
+                    width: 142.857143% !important;
+                    transform: scale(0.7) !important;
+                    transform-origin: top left !important;
+                    box-sizing: border-box !important;
+                }
             `;
             doc.head.appendChild(baseStyleTag);
         }
 
-        // Inject dynamic preset CSS into iframe head
+        // Inject dynamic preset CSS
         let styleTag = doc.getElementById('dragwyb-preset-dynamic-style');
         if (!styleTag && doc.head) {
             styleTag = doc.createElement('style');
@@ -389,11 +702,11 @@ const DynamicPresetPreview = React.memo(({ presetKey, styles, onApply }) => {
 
     // Keep dynamic styles in iframe head in sync without reloading the iframe
     useEffect(() => {
-        if (!mountNode && iframeRef.current && iframeRef.current.contentWindow) {
+        if (!mountNode && iframeRef.current) {
             try {
-                const doc = iframeRef.current.contentWindow.document;
+                const doc = iframeRef.current.contentDocument || iframeRef.current.contentWindow?.document;
                 if (doc && doc.body) {
-                    setMountNode(doc.body);
+                    initIframe({ target: iframeRef.current });
                 }
             } catch (e) {
                 // Cross-origin fallback safety
@@ -411,121 +724,55 @@ const DynamicPresetPreview = React.memo(({ presetKey, styles, onApply }) => {
                 styleTag.textContent = compiledCss;
             }
         }
-    }, [compiledCss, mountNode]);
+    }, [compiledCss, mountNode, initIframe]);
 
-    // Live form content rendered into the iframe body
-    const formContent = useMemo(() => {
-        return (
-            <div
-                className={wrapperClasses}
-                id={`dragwyb-form-wrapper-${formId}`}
-                data-step-indicator={stepIndicatorType}
-            >
-                <form
-                    className="dragwyb-form"
-                    id={`dragwyb-form-${formId}`}
-                    data-step-indicator={stepIndicatorType}
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                    }}
-                >
-                    <div id={`dragwyb-row-${formId}_header`} className="dragwyb-row">
-                        <div
-                            id={`dragwyb-field-wrapper-${formId}_name`}
-                            className="dragwyb-field-wrapper dragwyb-text-field dragwyb-last-field"
-                        >
-                            <div className="dragwyb-input-group">
-                                <input
-                                    type="text"
-                                    id={`field_${formId}_name`}
-                                    name={`field_${formId}_name`}
-                                    defaultValue=""
-                                    placeholder=" "
-                                    className="dragwyb-field-input"
-                                    onClick={(e) => e.stopPropagation()}
-                                />
-                                <label
-                                    htmlFor={`field_${formId}_name`}
-                                    className="dragwyb-field-label"
-                                >
-                                    {__('Your Name', 'smart-form-builder-by-dragwyb')}
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id={`dragwyb-row-${formId}_email_row`} className="dragwyb-row">
-                        <div
-                            id={`dragwyb-field-wrapper-${formId}_email`}
-                            className="dragwyb-field-wrapper dragwyb-email-field dragwyb-last-field"
-                        >
-                            <div className="dragwyb-input-group">
-                                <input
-                                    type="email"
-                                    id={`field_${formId}_email`}
-                                    name={`field_${formId}_email`}
-                                    defaultValue=""
-                                    placeholder=" "
-                                    className="dragwyb-field-input"
-                                    onClick={(e) => e.stopPropagation()}
-                                />
-                                <label
-                                    htmlFor={`field_${formId}_email`}
-                                    className="dragwyb-field-label"
-                                >
-                                    {__('Your Email', 'smart-form-builder-by-dragwyb')}
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id={`dragwyb-row-${formId}_submit`} className="dragwyb-row dragwyb-last-row">
-                        <div
-                            id={`dragwyb-field-wrapper-${formId}_submit_btn`}
-                            className="dragwyb-field-wrapper dragwyb-button-field dragwyb-last-field business-submit dragwyb-no-float"
-                        >
-                            <button
-                                type="button"
-                                id={`btn_${formId}_submit`}
-                                className="dragwyb-btn dragwyb-btn-submit"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    e.preventDefault();
-                                    onApply?.();
-                                }}
-                            >
-                                {__('Submit', 'smart-form-builder-by-dragwyb')}
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        );
-    }, [wrapperClasses, formId, stepIndicatorType, onApply]);
+    const iframeHeight = scaledHeight ? `${scaledHeight + 36}px` : '460px';
 
     return (
-        <div className="preset-card__preview-inner">
+        <div className="preset-preview-iframe-wrapper">
             <iframe
                 ref={iframeRef}
                 onLoad={initIframe}
-                src={iframeSrc}
-                title={`Preset Preview ${presetKey}`}
-                className="preset-card__iframe"
+                src={PREVIEW_IFRAME_URL}
+                title={`Preset Live Preview ${presetKey}`}
+                className="preset-preview-iframe"
                 style={{
                     width: '100%',
-                    height: '285px',
+                    height: iframeHeight,
+                    minHeight: '260px',
                     border: 'none',
                     backgroundColor: 'transparent',
                     display: 'block',
-                    overflow: 'hidden',
+                    transition: 'height 0.15s ease',
                 }}
             />
-            {mountNode && createPortal(formContent, mountNode)}
+            {mountNode && createPortal(
+                <div
+                    className="dragwyb-preset-scale-wrapper"
+                    style={{
+                        width: '100%',
+                        overflow: 'hidden',
+                        position: 'relative',
+                        height: scaledHeight ? `${scaledHeight}px` : 'auto',
+                        boxSizing: 'border-box',
+                    }}
+                >
+                    <PresetFormContent
+                        hasRealFields={hasRealFields}
+                        rootContainers={rootContainers}
+                        formFields={formFields}
+                        wrapperClasses={wrapperClasses}
+                        formId={formId}
+                        stepIndicatorType={stepIndicatorType}
+                        iframeDoc={mountNode.ownerDocument}
+                        onHeightChange={handleHeightChange}
+                    />
+                </div>,
+                mountNode
+            )}
         </div>
     );
 });
-
-const InteractivePresetPreview = DynamicPresetPreview;
 
 /**
  * Main Preset Modal Component
@@ -534,8 +781,8 @@ const PresetModal = ({ isOpen, onClose, Utils }) => {
     const dispatch = useDispatch();
     const store = useStore();
 
-    const [activeCategory, setActiveCategory] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
+    const [previewDevice, setPreviewDevice] = useState('desktop');
 
     // Read presetStyle data from DragwybEditor
     const presetData = useMemo(() => {
@@ -550,7 +797,13 @@ const PresetModal = ({ isOpen, onClose, Utils }) => {
     const storeState = store.getState ? store.getState() : {};
     const initialApplied = storeState?.toolbarSettings?.style?.preset_style || presetData.active_preset || 'theme';
     const [appliedPresetKey, setAppliedPresetKey] = useState(initialApplied);
+    const [selectedPresetKey, setSelectedPresetKey] = useState(initialApplied);
 
+    const formId = window.DragwybEditor?.formId || storeState?.form?.id || 'preview';
+    const formState = storeState?.form || {};
+    const styleSelectors = storeState?.styleSelectors || {};
+
+    // Build presets list in ordered format
     const presetsList = useMemo(() => {
         if (!presetData) return [];
 
@@ -588,37 +841,46 @@ const PresetModal = ({ isOpen, onClose, Utils }) => {
         return list.sort((a, b) => (a.number || 0) - (b.number || 0));
     }, [presetData, baseStyles]);
 
-    // Categories in fixed, exact order matching the screenshot
-    const categories = useMemo(() => {
-        const order = ['all', 'basic', 'minimal', 'popular', 'premium', 'creative'];
-        return order.map((catKey) => {
-            const count = catKey === 'all'
-                ? presetsList.length
-                : presetsList.filter((p) => p.category?.toLowerCase() === catKey).length;
-            const label = catKey === 'all' ? 'All' : catKey.charAt(0).toUpperCase() + catKey.slice(1);
-            return {
-                key: catKey,
-                label: `${label} (${count})`,
-                count,
-            };
-        });
-    }, [presetsList]);
-
-    // Filtered Presets
+    // Filtered Presets based on search
     const filteredPresets = useMemo(() => {
         return presetsList.filter((preset) => {
-            const matchesCategory = activeCategory === 'all' || preset.category?.toLowerCase() === activeCategory.toLowerCase();
             const matchesQuery = searchQuery.trim() === '' ||
-                preset.name.toLowerCase().includes(searchQuery.toLowerCase());
-            return matchesCategory && matchesQuery;
+                preset.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                (preset.description && preset.description.toLowerCase().includes(searchQuery.toLowerCase()));
+            return matchesQuery;
         });
-    }, [presetsList, activeCategory, searchQuery]);
+    }, [presetsList, searchQuery]);
+
+    // Active selected preset object
+    const selectedPreset = useMemo(() => {
+        const found = presetsList.find((p) => p.key === selectedPresetKey);
+        return found || presetsList[0] || null;
+    }, [presetsList, selectedPresetKey]);
+
+    // Ensure selected preset key remains valid when opening or filtering
+    useEffect(() => {
+        if (isOpen) {
+            const currentApplied = storeState?.toolbarSettings?.style?.preset_style || presetData.active_preset || 'theme';
+            setAppliedPresetKey(currentApplied);
+            setSelectedPresetKey(currentApplied);
+        }
+    }, [isOpen]);
 
     // Apply Preset Handler
     const handleApplyPreset = useCallback((preset) => {
+        if (!preset) return;
+
+        const confirmMessage = __('Do you want to apply preset style? It will overwrite or change your existing form style settings.', 'smart-form-builder-by-dragwyb');
+        if (!window.confirm(confirmMessage)) {
+            return;
+        }
+
         setAppliedPresetKey(preset.key);
 
-        if (!Utils) return;
+        if (!Utils) {
+            onClose();
+            return;
+        }
 
         const storeStateCurrent = store.getState ? store.getState() : {};
         const storeStyleSelectors = storeStateCurrent.styleSelectors || {};
@@ -711,22 +973,21 @@ const PresetModal = ({ isOpen, onClose, Utils }) => {
                 payload: { label: `Preset Style: ${preset.name}` },
             });
         }
-    }, [Utils, store, baseStyles, dispatch]);
 
-    // Handle Preset Card Click with confirmation alert
-    const handlePresetClick = useCallback((preset) => {
-        const confirmMessage = __('Do you want to apply preset style? It will overwrite or change your existing styles.', 'smart-form-builder-by-dragwyb');
-        if (!window.confirm(confirmMessage)) {
-            return;
-        }
-        handleApplyPreset(preset);
-    }, [handleApplyPreset]);
+        // Close modal after applying
+        onClose();
+    }, [Utils, store, baseStyles, dispatch, onClose]);
 
     if (!isOpen) return null;
 
+    const isCurrentSelectedApplied = appliedPresetKey === selectedPresetKey;
+
+    // Get preview stage responsive width based on device toggle
+    const stageWidth = previewDevice === 'mobile' ? '380px' : previewDevice === 'tablet' ? '720px' : '100%';
+
     return createPortal(
         <div className="dragwyb-preset-modal-overlay" onClick={onClose}>
-            <div className="dragwyb-preset-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="dragwyb-preset-modal dragwyb-preset-modal--master-detail" onClick={(e) => e.stopPropagation()}>
                 {/* Header */}
                 <div className="dragwyb-preset-modal__header">
                     <h2 className="modal-title">
@@ -754,85 +1015,157 @@ const PresetModal = ({ isOpen, onClose, Utils }) => {
                     </div>
                 </div>
 
-                {/* Category Filter Pills Row */}
-                <div className="dragwyb-preset-modal__categories">
-                    {categories.map((cat) => (
-                        <button
-                            key={cat.key}
-                            className={`category-pill ${activeCategory === cat.key ? 'active' : ''}`}
-                            onClick={() => setActiveCategory(cat.key)}
-                        >
-                            {cat.label}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Modal Body / Presets Grid */}
-                <div className="dragwyb-preset-modal__body">
-                    {filteredPresets.length === 0 ? (
-                        <div className="no-presets-message">
-                            <p>{__('No preset styles found matching your query.', 'smart-form-builder-by-dragwyb')}</p>
+                {/* Master-Detail Split Body */}
+                <div className="dragwyb-preset-modal__body-split">
+                    {/* Left Sidebar: Presets List */}
+                    <div className="preset-sidebar">
+                        <div className="preset-sidebar__header">
+                            <span className="preset-sidebar__title">
+                                {__('Presets', 'smart-form-builder-by-dragwyb')}
+                            </span>
+                            <span className="preset-sidebar__count">
+                                {filteredPresets.length}
+                            </span>
                         </div>
-                    ) : (
-                        <div className="presets-grid">
-                            {filteredPresets.map((preset, index) => {
-                                const isApplied = appliedPresetKey === preset.key;
 
-                                return (
-                                    <div
-                                        key={preset.key}
-                                        className={`preset-card preset-card--${preset.key} ${isApplied ? 'preset-card--applied' : ''}`}
-                                    >
-                                        {/* Card Top: 01 Name + Apply button */}
-                                        <div className="preset-card__top">
-                                            <div className="preset-card__title-wrap">
-                                                <span className="preset-card__num">
-                                                    {String(preset.number || index + 1).padStart(2, '0')}
-                                                </span>
-                                                <span className="preset-card__name">
-                                                    {preset.name}
-                                                </span>
-                                            </div>
-                                            <button
-                                                type="button"
-                                                className={`preset-card__apply-btn ${isApplied ? 'is-applied' : ''}`}
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handlePresetClick(preset);
-                                                }}
-                                                title={isApplied ? __('Currently Active', 'smart-form-builder-by-dragwyb') : __('Apply this preset', 'smart-form-builder-by-dragwyb')}
-                                            >
-                                                {isApplied ? (
-                                                    <>
-                                                        <FaCheck className="apply-icon" />
+                        <div className="preset-sidebar__list">
+                            {filteredPresets.length === 0 ? (
+                                <div className="preset-sidebar__empty">
+                                    {__('No presets found.', 'smart-form-builder-by-dragwyb')}
+                                </div>
+                            ) : (
+                                filteredPresets.map((preset) => {
+                                    const isSelected = selectedPresetKey === preset.key;
+                                    const isApplied = appliedPresetKey === preset.key;
+
+                                    return (
+                                        <button
+                                            key={preset.key}
+                                            type="button"
+                                            className={`preset-sidebar__item ${isSelected ? 'active' : ''} ${isApplied ? 'is-applied' : ''}`}
+                                            onClick={() => setSelectedPresetKey(preset.key)}
+                                        >
+                                            <span className="preset-item__name">
+                                                {preset.name}
+                                            </span>
+                                            <div className="preset-item__indicators">
+                                                {isApplied && (
+                                                    <span className="preset-item__applied-badge" title={__('Currently Applied', 'smart-form-builder-by-dragwyb')}>
+                                                        <FaCheck className="applied-check" />
                                                         <span>{__('Applied', 'smart-form-builder-by-dragwyb')}</span>
-                                                    </>
-                                                ) : (
-                                                    <span>{__('Apply', 'smart-form-builder-by-dragwyb')}</span>
+                                                    </span>
                                                 )}
-                                            </button>
-                                        </div>
-
-                                        {/* Live Interactive Form Preview */}
-                                        <div className="preset-card__preview-wrapper">
-                                            <InteractivePresetPreview
-                                                presetKey={preset.key}
-                                                styles={preset.styles}
-                                                onApply={() => handlePresetClick(preset)}
-                                            />
-                                        </div>
-                                    </div>
-                                );
-                            })}
+                                                {isSelected && (
+                                                    <span className="preset-item__arrow" aria-hidden="true">
+                                                        ←
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </button>
+                                    );
+                                })
+                            )}
                         </div>
-                    )}
+                    </div>
+
+                    {/* Right Panel: Live Preview */}
+                    <div className="preset-preview-panel">
+                        {/* Live Preview Top Bar */}
+                        <div className="preset-preview-panel__header">
+                            <div className="preview-header-left">
+                                <span className="preview-badge">
+                                    {__('LIVE PREVIEW', 'smart-form-builder-by-dragwyb')}
+                                </span>
+                                {selectedPreset && (
+                                    <span className="preview-preset-name">
+                                        {selectedPreset.name}
+                                    </span>
+                                )}
+                            </div>
+
+                            <div className="preview-header-right">
+                                <div className="preview-device-toggle">
+                                    <button
+                                        type="button"
+                                        className={`device-btn ${previewDevice === 'desktop' ? 'active' : ''}`}
+                                        onClick={() => setPreviewDevice('desktop')}
+                                        title={__('Desktop Preview', 'smart-form-builder-by-dragwyb')}
+                                    >
+                                        <FaDesktop />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className={`device-btn ${previewDevice === 'tablet' ? 'active' : ''}`}
+                                        onClick={() => setPreviewDevice('tablet')}
+                                        title={__('Tablet Preview (720px)', 'smart-form-builder-by-dragwyb')}
+                                    >
+                                        <FaTabletAlt />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className={`device-btn ${previewDevice === 'mobile' ? 'active' : ''}`}
+                                        onClick={() => setPreviewDevice('mobile')}
+                                        title={__('Mobile Preview (380px)', 'smart-form-builder-by-dragwyb')}
+                                    >
+                                        <FaMobileAlt />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Preview Stage Area */}
+                        <div className={`preset-preview-panel__stage preset-stage--${selectedPresetKey}`}>
+                            <div
+                                className="preset-preview-container"
+                                style={{
+                                    width: stageWidth,
+                                    maxWidth: '100%',
+                                    transition: 'width 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                                }}
+                            >
+                                <SinglePresetLivePreview
+                                    preset={selectedPreset}
+                                    formId={formId}
+                                    formState={formState}
+                                    styleSelectors={styleSelectors}
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                {/* Modal Footer */}
+                {/* Footer */}
                 <div className="dragwyb-preset-modal__footer">
-                    <button className="done-btn" onClick={onClose}>
-                        {__('Done', 'smart-form-builder-by-dragwyb')}
-                    </button>
+                    <div className="footer-status">
+                        <span className="footer-status__label">
+                            {__('Current:', 'smart-form-builder-by-dragwyb')}
+                        </span>
+                        <span className="footer-status__value">
+                            {selectedPreset?.name || selectedPresetKey}
+                        </span>
+                        {isCurrentSelectedApplied && (
+                            <span className="footer-status__badge">
+                                <FaCheck /> {__('Active', 'smart-form-builder-by-dragwyb')}
+                            </span>
+                        )}
+                    </div>
+
+                    <div className="footer-actions">
+                        <button
+                            type="button"
+                            className="preset-footer-btn preset-footer-btn--cancel"
+                            onClick={onClose}
+                        >
+                            {__('Cancel', 'smart-form-builder-by-dragwyb')}
+                        </button>
+                        <button
+                            type="button"
+                            className="preset-footer-btn preset-footer-btn--apply"
+                            onClick={() => handleApplyPreset(selectedPreset)}
+                        >
+                            {__('Apply Preset', 'smart-form-builder-by-dragwyb')}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>,
