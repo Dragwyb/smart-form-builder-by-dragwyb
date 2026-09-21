@@ -126,27 +126,28 @@ const Header = () => {
                     }}
                     title={__('View History', 'smart-form-builder-by-dragwyb')}
                 >
-                    <FaHistory color='#fff' />
+                    <FaHistory />
                 </div>
                 <div
                     className={`dragwyb-editor__presets-toggle${isPresetModalOpen ? ' active' : ''}`}
                     onClick={() => setIsPresetModalOpen(true)}
                     title={__('Preset Styles', 'smart-form-builder-by-dragwyb')}
                 >
-                    <FaPalette color='#fff' />
+                    <FaPalette />
                 </div>
                 <div
                     className={`dragwyb-editor__templates-toggle${isTemplateOpen ? ' active' : ''}`}
                     onClick={() => setIsTemplateOpen(!isTemplateOpen)}
                     title={__('Open Template Library', 'smart-form-builder-by-dragwyb')}
                 >
-                    <FaFolderPlus color='#fff' />
+                    <FaFolderPlus />
                 </div>
                 <div
                     className="dragwyb-editor__theme-toggle"
                     onClick={toggleTheme}
-                    title={themeMode === 'light' ? __('Switch to Dark Mode', 'smart-form-builder-by-dragwyb') : __('Switch to Light Mode', 'smart-form-builder-by-dragwyb')}                >
-                    {themeMode === 'light' ? <FaMoon color='#fff' /> : <FaSun color="#f39c12" />}
+                    title={themeMode === 'light' ? __('Switch to Dark Mode', 'smart-form-builder-by-dragwyb') : __('Switch to Light Mode', 'smart-form-builder-by-dragwyb')}
+                >
+                    {themeMode === 'light' ? <FaMoon /> : <FaSun color="#f39c12" />}
                 </div>
                 <a href={escUrl(DragwybEditor.previewUrl)} className='dragwyb-editor__preview-toggle' target="_blank" title={__('Frontend Preview', 'smart-form-builder-by-dragwyb')}>
                     <IconsManager icon='far fa-eye' title={__('Preview', 'smart-form-builder-by-dragwyb')} />

@@ -222,9 +222,14 @@ html {
             margin: 0 !important;
         }
 
+        &:hover:not(.selected):not(.dragging) {
+            outline: 1px dashed hsl(var(--dragwyb-primary) / 0.45);
+            outline-offset: -1px;
+        }
+
         &.selected {
-            border-color: hsl(var(--dragwyb-primary) / var(--dragwyb-border-opacity, 1));
-            box-shadow: 0 0 0 1px hsl(var(--dragwyb-primary) / var(--dragwyb-border-opacity, 1));
+            border-color: hsl(var(--dragwyb-primary));
+            box-shadow: 0 0 0 2px hsl(var(--dragwyb-primary) / 0.25);
         }
 
         &.dragging {
@@ -237,13 +242,13 @@ html {
             left: 50%;
             z-index: 9999;
             display: none;
-            transform: translate(-50%, -12px);
-            border-radius: 4px;
+            transform: translate(-50%, -14px);
+            border-radius: 6px;
             padding: 0;
             overflow: hidden;
-            height: 23px;
-            background: hsl(var(--dragwyb-primary)/var(--dragwyb-bg-opacity, 1));
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            height: 26px;
+            background: hsl(var(--dragwyb-primary));
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 
             button {
                 padding: 3px 5px !important;
