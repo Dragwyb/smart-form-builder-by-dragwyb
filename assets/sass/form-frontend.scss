@@ -41,7 +41,6 @@
     --dragwyb-field-gap: 15px;
     --dragwyb-field-width: 100%;
 
-    --dragwyb-float-active: #1d4ed8;
     --dragwyb-asterisk-color: #ef4444;
 
     --dragwyb-success-color: #15803d;
@@ -205,7 +204,6 @@
     /* Country code offset */
 
     &:is(.dragwyb-float-inside,
-        .dragwyb-float-outside,
         .dragwyb-float-outlined,
         .dragwyb-float-hide) {
 
@@ -260,16 +258,6 @@
             transform: none !important;
         }
     }
-
-    /* Common active floating label */
-
-    .dragwyb-field-input:not(:placeholder-shown)~.dragwyb-field-label,
-    .dragwyb-field-input:focus~.dragwyb-field-label {
-        top: 0 !important;
-        transform: translateY(-50%) scale(0.8) !important;
-        color: var(--dragwyb-float-active,
-                var(--dragwyb-input-focus-border, #1d4ed8)) !important;
-    }
 }
 
 
@@ -310,7 +298,7 @@
             top: 6px !important;
             transform: translateY(0) scale(0.78) !important;
             color: var(--dragwyb-float-active,
-                    var(--dragwyb-input-focus-border, #1d4ed8)) !important;
+                    var(--dragwyb-input-placeholder-color, #9ca3af)) !important;
         }
     }
 }
@@ -320,8 +308,7 @@
    Floating - Outlined / Outside
    ========================================================================== */
 
-.dragwyb-form-wrapper.dragwyb-layout-floating:is(.dragwyb-float-outlined,
-    .dragwyb-float-outside) {
+.dragwyb-form-wrapper.dragwyb-layout-floating.dragwyb-float-outlined {
     .dragwyb-field-wrapper:not(.dragwyb-no-float) {
         margin-top: 10px !important;
         margin-bottom: 12px;
@@ -331,22 +318,23 @@
         }
 
         .dragwyb-field-label {
-            left: var(--dragwyb-input-pl, 12px) !important;
+            left: calc(var(--dragwyb-input-pl, 12px) - 6px) !important;
+            padding-inline: 6px;
             transform-origin: left center !important;
         }
 
+        .dragwyb-field-input:focus~.dragwyb-field-label,
         .dragwyb-field-input:not(:placeholder-shown)~.dragwyb-field-label {
             top: 0 !important;
             transform: translateY(-50%) scale(0.8) !important;
+            border-radius: 2px !important;
+            font-weight: 600 !important;
+            color: var(--dragwyb-float-active, var(--dragwyb-input-focus-border, #046BD2)) !important;
             background: linear-gradient(0deg,
                     var(--dragwyb-input-bg,
                         var(--dragwyb-row-bg-color,
                             var(--dragwyb-form-bg-color, #fff))) 51%,
                     transparent 51%);
-            border-radius: 2px !important;
-            font-weight: 600 !important;
-            color: var(--dragwyb-float-active,
-                    var(--dragwyb-input-focus-border, #1d4ed8)) !important;
         }
 
         .dragwyb-field-input:focus~.dragwyb-field-label {

@@ -282,13 +282,12 @@ class Settings extends Register_Controls_Base {
 			array(
 				'type'       => Controls::COLOR,
 				'label'      => __( 'Focus Border Color', 'smart-form-builder-by-dragwyb' ),
-				'default'    => '#1d4ed8', // Default blue
 				'selectors'  => array(
 					'{{WRAPPER}}' => '--dragwyb-float-active: {{VALUE}};',
 				),
 				'conditions' => array(
-					'label_position' => 'floating',
-					'floating_style' => 'inside',
+					'label_position'  => 'floating',
+					'floating_style!' => 'hide',
 				),
 			)
 		);
