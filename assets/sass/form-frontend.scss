@@ -207,7 +207,7 @@
     &:is(.dragwyb-float-inside,
         .dragwyb-float-outside,
         .dragwyb-float-outlined,
-        .dragwyb-float-inside-hide) {
+        .dragwyb-float-hide) {
 
         :is(.dragwyb-field-wrapper.country-code-enabled,
             .dragwyb-input-group:has(.iti,
@@ -365,7 +365,7 @@
    Floating - Inside Hide
    ========================================================================== */
 
-.dragwyb-form-wrapper.dragwyb-layout-floating.dragwyb-float-inside-hide {
+.dragwyb-form-wrapper.dragwyb-layout-floating.dragwyb-float-hide {
 
     .dragwyb-field-wrapper:not(.dragwyb-no-float) {
         margin-bottom: 12px;
