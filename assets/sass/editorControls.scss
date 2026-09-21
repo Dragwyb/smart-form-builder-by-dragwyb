@@ -8,7 +8,7 @@
   }
 
   &~.dragwyb-panel__settings {
-    height: auto;
+    height: calc(100% - 106px);
     flex: 1;
     min-height: 0;
   }
@@ -68,7 +68,7 @@
       border-color: hsl(var(--dragwyb-primary));
       box-shadow: 0 0 0 3px hsl(var(--dragwyb-primary) / 0.12);
 
-      & ~ .dragwyb-settings-search-icon {
+      &~.dragwyb-settings-search-icon {
         color: hsl(var(--dragwyb-primary));
       }
     }

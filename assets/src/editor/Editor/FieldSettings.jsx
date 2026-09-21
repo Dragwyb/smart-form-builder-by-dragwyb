@@ -8,7 +8,7 @@ import RenderPopoverControls from './RenderPopoverControls';
 import { RiSearchLine, RiCloseLine, RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
 import { __, sprintf } from '@wordpress/i18n';
 
-const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingChange }) => {
+const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingChange, SettingQuickBar = null }) => {
     const dispatch = useDispatch();
     const store = useStore();
     const tabScope = selectedTab || 'fields';
@@ -251,34 +251,37 @@ const FieldSettings = ({ selectedTab, toolbarValue, toolbarSettings, onSettingCh
                                 </button>
                             </div>
                         ) : (
-                            controlKeysToRender.map(key => (
-                                <React.Fragment key={toolbarSettings.id + '_' + key}>
-                                    {key === 'header_controls' ? null
-                                        : toolbarSettings.controls[key].popover
-                                            ? <RenderPopoverControls
-                                                selectedToolbar={selectedTab}
-                                                selectedTab={toolbarSettings.id}
-                                                controlKey={key}
-                                                settings={toolbarSettings.controls[key]}
-                                                toolbarSettings={toolbarSettings}
-                                                fieldValue={toolbarValue}
-                                                handleChange={handleChange}
-                                                defautlActiveSection={defautlActiveSection}
-                                                defautlActiveTab={defautlActiveTab}
-                                            />
-                                            : <RenderControl
-                                                selectedToolbar={selectedTab}
-                                                selectedTab={toolbarSettings.id}
-                                                controlKey={key}
-                                                settings={toolbarSettings.controls[key]}
-                                                toolbarSettings={toolbarSettings}
-                                                fieldValue={toolbarValue}
-                                                handleChange={handleChange}
-                                                defautlActiveSection={defautlActiveSection}
-                                                defautlActiveTab={defautlActiveTab}
-                                            />}
-                                </React.Fragment>
-                            ))
+                            <>
+                                {SettingQuickBar}
+                                {controlKeysToRender.map(key => (
+                                    <React.Fragment key={toolbarSettings.id + '_' + key}>
+                                        {key === 'header_controls' ? null
+                                            : toolbarSettings.controls[key].popover
+                                                ? <RenderPopoverControls
+                                                    selectedToolbar={selectedTab}
+                                                    selectedTab={toolbarSettings.id}
+                                                    controlKey={key}
+                                                    settings={toolbarSettings.controls[key]}
+                                                    toolbarSettings={toolbarSettings}
+                                                    fieldValue={toolbarValue}
+                                                    handleChange={handleChange}
+                                                    defautlActiveSection={defautlActiveSection}
+                                                    defautlActiveTab={defautlActiveTab}
+                                                />
+                                                : <RenderControl
+                                                    selectedToolbar={selectedTab}
+                                                    selectedTab={toolbarSettings.id}
+                                                    controlKey={key}
+                                                    settings={toolbarSettings.controls[key]}
+                                                    toolbarSettings={toolbarSettings}
+                                                    fieldValue={toolbarValue}
+                                                    handleChange={handleChange}
+                                                    defautlActiveSection={defautlActiveSection}
+                                                    defautlActiveTab={defautlActiveTab}
+                                                />}
+                                    </React.Fragment>
+                                ))}
+                            </>
                         )}
                     </Scrollbar>
                 </div>

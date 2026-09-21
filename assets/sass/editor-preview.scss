@@ -222,7 +222,7 @@ html {
             margin: 0 !important;
         }
 
-        &:hover:not(.selected):not(.dragging) {
+        &:hover:not(.selected):not(.dragging):not(:has(.dragwyb-field-wrapper:hover)) {
             outline: 1px dashed hsl(var(--dragwyb-primary) / 0.45);
             outline-offset: -1px;
         }
