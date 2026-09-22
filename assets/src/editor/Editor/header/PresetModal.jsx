@@ -1074,7 +1074,7 @@ const PresetModal = ({ isOpen, onClose, Utils }) => {
                         {/* Preview Stage Area */}
                         <div className={`preset-preview-panel__stage preset-stage--${selectedPresetKey}`}>
                             <div
-                                className="preset-preview-container"
+                                className={`preset-preview-container device-${previewDevice}`}
                             >
                                 <SinglePresetLivePreview
                                     preset={selectedPreset}

@@ -3484,11 +3484,25 @@ a.dragwyb-editor__preview-toggle {
             }
 
             &.preset-stage--transparent_light {
-                background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+                background: radial-gradient(circle at 20% 20%, rgba(244, 114, 182, 0.25) 0%, transparent 40%),
+                    radial-gradient(circle at 80% 80%, rgba(96, 165, 250, 0.25) 0%, transparent 40%),
+                    linear-gradient(135deg, #fce7f3 0%, #ede9fe 50%, #e0f2fe 100%);
             }
 
             .preset-preview-container {
                 width: 100%;
+                margin: 0 auto;
+                transition: width 0.3s ease;
+
+                &.device-tablet {
+                    width: 720px;
+                    max-width: 100%;
+                }
+
+                &.device-mobile {
+                    width: 380px;
+                    max-width: 100%;
+                }
             }
 
             .preset-preview-iframe-wrapper {
