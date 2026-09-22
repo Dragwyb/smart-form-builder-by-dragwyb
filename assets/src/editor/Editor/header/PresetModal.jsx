@@ -1069,7 +1069,10 @@ const PresetModal = ({ isOpen, onClose, Utils }) => {
                                     </button>
                                 </div>
                             </div>
+                            {/* Preset Style Description */}
+                            <h4 style={{ width: "100%", margin: "0", marginTop: "5px" }}>{selectedPreset?.description}</h4>
                         </div>
+
 
                         {/* Preview Stage Area */}
                         <div className={`preset-preview-panel__stage preset-stage--${selectedPresetKey}`}>

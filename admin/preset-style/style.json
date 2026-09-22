@@ -845,7 +845,7 @@
     },
     "glass": {
       "name": "Glass (Dark Skin)",
-      "description": "Glassmorphism style with transparency and blur effect.",
+      "description": "Glassmorphism style with transparency and blur effect for dark backgrounds.",
       "category": "premium",
       "styles": {
         "label_position": "floating",
@@ -1779,7 +1779,7 @@
     },
     "transparent": {
       "name": "Transparent (Dark Skin)",
-      "description": "Transparent style to blend beautifully with any background.",
+      "description": "Transparent style to blend beautifully with any dark background.",
       "category": "basic",
       "styles": {
         "label_position": "floating",
