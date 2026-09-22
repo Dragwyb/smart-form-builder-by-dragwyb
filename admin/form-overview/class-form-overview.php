@@ -104,7 +104,16 @@ if ( ! class_exists( 'Form_Overview' ) ) {
 				$table_columns  = List_Table::get_instance()->get_columns();
 				$manage_columns = array();
 				foreach ( $table_columns as $key => $label ) {
-					$manage_columns[ $key ] = wp_strip_all_tags( (string) $label );
+					$clean_label = wp_strip_all_tags( (string) $label );
+					if ( empty( $clean_label ) ) {
+						if ( 0 === strpos( $key, 'language_' ) ) {
+							$lang_slug   = str_replace( 'language_', '', $key );
+							$clean_label = sprintf( __( 'Language: %s', 'smart-form-builder-by-dragwyb' ), strtoupper( $lang_slug ) );
+						} else {
+							$clean_label = ucfirst( $key );
+						}
+					}
+					$manage_columns[ $key ] = $clean_label;
 				}
 				return $manage_columns;
 			}
@@ -231,6 +240,12 @@ if ( ! class_exists( 'Form_Overview' ) ) {
 						if ( ! empty( $_GET['post_status'] ) ) :
 							?>
 							<input type="hidden" name="post_status" value="<?php echo esc_attr( sanitize_key( wp_unslash( $_GET['post_status'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>">
+						<?php endif; ?>
+						<?php
+						// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+						if ( ! empty( $_GET['lang'] ) ) :
+							?>
+							<input type="hidden" name="lang" value="<?php echo esc_attr( sanitize_text_field( wp_unslash( $_GET['lang'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>">
 						<?php endif; ?>
 						<?php
 						$form_table->search_box( 'search', 'search_id' );

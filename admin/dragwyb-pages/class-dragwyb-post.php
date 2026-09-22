@@ -25,23 +25,47 @@ class Dragwyb_Post {
 	 * Constructor
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'register_post_type' ) );
-		add_filter( 'manage_' . self::POST_TYPE . '_posts_columns', array( $this, 'set_custom_columns' ) );
-		add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', array( $this, 'render_custom_columns' ), 10, 2 );
+		add_action( 'init', array( $this, 'register_post_type' ), 1 );
 
 		add_action( 'init', array( $this, 'dragwyb_add_caps_to_admin' ) );
 
 		add_action( 'admin_init', array( $this, 'dragwyb_bulk_actions_handler' ) );
 
 		add_action( 'admin_notices', array( $this, 'bulk_action_notices' ) );
+
+		// Register post type for Polylang custom post types settings
+		add_filter( 'pll_get_post_types', array( $this, 'register_polylang_post_type' ), 99, 2 );
+
+		// Register post type for WPML custom post types settings
+		add_filter( 'wpml_get_translatable_types', array( $this, 'register_wpml_translatable_types' ) );
+		add_filter( 'wpml_translatable_element_types', array( $this, 'register_wpml_translatable_types' ) );
+		add_filter( 'wpml_get_post_types_for_translation', array( $this, 'register_wpml_post_types_for_translation' ) );
+		add_filter( 'wpml_post_types_for_translation_table', array( $this, 'register_wpml_post_types_for_translation' ) );
 	}
 
 	/**
 	 * Register the custom post type
 	 */
 	public function register_post_type(): void {
+		$labels = array(
+			'name'               => __( 'Smart Forms', 'smart-form-builder-by-dragwyb' ),
+			'singular_name'      => __( 'Smart Form', 'smart-form-builder-by-dragwyb' ),
+			'menu_name'          => __( 'Smart Forms', 'smart-form-builder-by-dragwyb' ),
+			'name_admin_bar'     => __( 'Smart Form', 'smart-form-builder-by-dragwyb' ),
+			'all_items'          => __( 'All Forms', 'smart-form-builder-by-dragwyb' ),
+			'add_new'            => __( 'Add New', 'smart-form-builder-by-dragwyb' ),
+			'add_new_item'       => __( 'Add New Form', 'smart-form-builder-by-dragwyb' ),
+			'edit_item'          => __( 'Edit Form', 'smart-form-builder-by-dragwyb' ),
+			'new_item'           => __( 'New Form', 'smart-form-builder-by-dragwyb' ),
+			'view_item'          => __( 'View Form', 'smart-form-builder-by-dragwyb' ),
+			'search_items'       => __( 'Search Forms', 'smart-form-builder-by-dragwyb' ),
+			'not_found'          => __( 'No forms found', 'smart-form-builder-by-dragwyb' ),
+			'not_found_in_trash' => __( 'No forms found in Trash', 'smart-form-builder-by-dragwyb' ),
+		);
+
 		$args = array(
-			'label'               => 'Smart Forms',
+			'label'               => __( 'Smart Forms', 'smart-form-builder-by-dragwyb' ),
+			'labels'              => $labels,
 			'public'              => false,
 			'exclude_from_search' => true,
 			'show_ui'             => false,
@@ -219,5 +243,63 @@ class Dragwyb_Post {
 				sprintf( esc_html__( '%s form restored from Trash.', 'smart-form-builder-by-dragwyb' ), absint( $count ) )
 			);
 		}
+	}
+
+	/**
+	 * Register post type in Polylang translatable post types settings.
+	 *
+	 * When $is_settings is true, adds dragwyb-forms so it displays in Polylang's
+	 * "Custom post types and Taxonomies" settings screen for users to enable/disable.
+	 *
+	 * @param array $post_types Array of post type names.
+	 * @param bool  $is_settings True when displaying the settings page.
+	 * @return array
+	 */
+	public function register_polylang_post_type( $post_types, $is_settings = false ) {
+		if ( ! is_array( $post_types ) ) {
+			$post_types = array();
+		}
+
+		// When rendering the settings page, always include so administrator can toggle it.
+		if ( $is_settings ) {
+			$post_types[ self::POST_TYPE ] = self::POST_TYPE;
+			return $post_types;
+		}
+
+		// Runtime: If admin saved settings in Polylang, include if enabled.
+		$pll_options = get_option( 'polylang' );
+		if ( is_array( $pll_options ) && isset( $pll_options['post_types'] ) && is_array( $pll_options['post_types'] ) ) {
+			if ( in_array( self::POST_TYPE, $pll_options['post_types'], true ) ) {
+				$post_types[ self::POST_TYPE ] = self::POST_TYPE;
+			}
+		}
+
+		return $post_types;
+	}
+
+	/**
+	 * Register post type in WPML translatable types.
+	 *
+	 * @param array $types Array of types.
+	 * @return array
+	 */
+	public function register_wpml_translatable_types( $types ) {
+		if ( is_array( $types ) ) {
+			$types[ self::POST_TYPE ] = self::POST_TYPE;
+		}
+		return $types;
+	}
+
+	/**
+	 * Register post type in WPML post types for translation settings table.
+	 *
+	 * @param array $types Array of post type names.
+	 * @return array
+	 */
+	public function register_wpml_post_types_for_translation( $types ) {
+		if ( is_array( $types ) && ! in_array( self::POST_TYPE, $types, true ) ) {
+			$types[] = self::POST_TYPE;
+		}
+		return $types;
 	}
 }

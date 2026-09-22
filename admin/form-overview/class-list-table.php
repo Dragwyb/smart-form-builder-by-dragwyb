@@ -9,6 +9,7 @@ use WP_Post;
 use WP_Screen;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
 use Dragwyb\Form_Builder\Includes\Frontend\Form_Preview;
+use Dragwyb\Form_Builder\Includes\Helper\Helper;
 
 /**
  * Generate the table on the plugin overview page.
@@ -86,8 +87,27 @@ class List_Table extends WP_List_Table {
 			'views'           => __( 'Views', 'smart-form-builder-by-dragwyb' ) . ' <span class="dragwyb-info-icon" title="' . esc_attr__( 'Form preview count', 'smart-form-builder-by-dragwyb' ) . '">ⓘ</span>',
 			'submissions'     => __( 'Submissions', 'smart-form-builder-by-dragwyb' ) . ' <span class="dragwyb-info-icon" title="' . esc_attr__( 'Form submission count', 'smart-form-builder-by-dragwyb' ) . '">ⓘ</span>',
 			'conversion_rate' => __( 'Conversion Rate', 'smart-form-builder-by-dragwyb' ) . ' <span class="dragwyb-info-icon" title="' . esc_attr__( 'Submission / View ratio', 'smart-form-builder-by-dragwyb' ) . '">ⓘ</span>',
-			'date'            => __( 'Date', 'smart-form-builder-by-dragwyb' ),
 		);
+
+		$columns['date'] = __( 'Date', 'smart-form-builder-by-dragwyb' );
+
+		// Dynamic columns added by translation plugins (Polylang, WPML, TranslatePress, Linguator, etc.)
+		$columns = apply_filters( 'manage_edit-' . Dragwyb_Post::POST_TYPE . '_columns', $columns );
+		$columns = apply_filters( 'manage_posts_columns', $columns, Dragwyb_Post::POST_TYPE );
+
+		// If Polylang is active and columns filter hasn't run yet, apply Polylang's native column filter
+		if ( isset( $GLOBALS['polylang']->filters_columns ) && method_exists( $GLOBALS['polylang']->filters_columns, 'add_post_column' ) ) {
+			$has_lang_col = false;
+			foreach ( array_keys( $columns ) as $col_key ) {
+				if ( 0 === strpos( (string) $col_key, 'language_' ) ) {
+					$has_lang_col = true;
+					break;
+				}
+			}
+			if ( ! $has_lang_col ) {
+				$columns = $GLOBALS['polylang']->filters_columns->add_post_column( $columns );
+			}
+		}
 
 		// Modify columns via a filter
 		$columns = apply_filters( 'dragwyb_form_overview_columns', $columns );
@@ -199,7 +219,24 @@ class List_Table extends WP_List_Table {
 				break;
 
 			default:
-				$value = '';
+				// Dynamic column rendering handled by translation plugins (Polylang, WPML, TranslatePress, Linguator, etc.)
+				// and custom extensions via standard WordPress actions
+				ob_start();
+				do_action( 'manage_' . Dragwyb_Post::POST_TYPE . '_posts_custom_column', $column_name, $form->ID );
+				do_action( 'manage_posts_custom_column', $column_name, $form->ID );
+				$action_output = ob_get_clean();
+
+				if ( ! empty( $action_output ) ) {
+					$value = $action_output;
+				} elseif ( 0 === strpos( (string) $column_name, 'language_' ) && isset( $GLOBALS['polylang']->filters_columns ) && method_exists( $GLOBALS['polylang']->filters_columns, 'post_column' ) ) {
+					// Fallback to Polylang's native post column renderer
+					ob_start();
+					$GLOBALS['polylang']->filters_columns->post_column( $column_name, $form->ID );
+					$value = ob_get_clean();
+				} else {
+					$value = '';
+				}
+				break;
 		}
 
 		return apply_filters( 'dragwyb_form_overview_column_value', $value, $form, $column_name );
@@ -367,6 +404,17 @@ class List_Table extends WP_List_Table {
 	}
 
 
+	/**
+	 * Extra controls to be displayed between bulk actions and pagination.
+	 *
+	 * @param string $which Location: 'top' or 'bottom'.
+	 */
+	protected function extra_tablenav( $which ) {
+		if ( 'top' === $which ) {
+			do_action( 'restrict_manage_posts', Dragwyb_Post::POST_TYPE, $which );
+		}
+	}
+
 	public function get_views() {
 		$statuses = array(
 			'all'     => array( 'label' => 'All' ),
@@ -392,6 +440,11 @@ class List_Table extends WP_List_Table {
 				$count = $post_counts->{$key} ?? 0;
 				$url   = add_query_arg( 'post_status', $key );
 				$url   = remove_query_arg( array( 'paged', 's' ), $url );
+			}
+
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( ! empty( $_GET['lang'] ) ) {
+				$url = add_query_arg( 'lang', sanitize_text_field( wp_unslash( $_GET['lang'] ) ), $url );
 			}
 
 			if ( $count > 0 ) {
@@ -470,6 +523,35 @@ class List_Table extends WP_List_Table {
 
 		if ( ! empty( $search_query ) ) {
 			$args['s'] = $search_query;
+		}
+
+		// 5. Setup language filter for WP_Query
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$current_lang = isset( $_GET['lang'] ) ? sanitize_text_field( wp_unslash( $_GET['lang'] ) ) : '';
+
+		if ( empty( $current_lang ) && Helper::get_active_translation_plugin() === 'polylang' && ! isset( $_GET['lang'] ) ) {
+			if ( function_exists( 'pll_current_language' ) ) {
+				$pll_lang = pll_current_language( 'slug' );
+				if ( ! empty( $pll_lang ) ) {
+					$current_lang = $pll_lang;
+				}
+			}
+		}
+
+		if ( ! empty( $current_lang ) && 'all' !== $current_lang ) {
+			$args['lang'] = $current_lang;
+			if ( 'polylang' === Helper::get_active_translation_plugin() && taxonomy_exists( 'language' ) ) {
+				$args['tax_query'] = array(
+					array(
+						'taxonomy' => 'language',
+						'field'    => 'slug',
+						'terms'    => $current_lang,
+					),
+				);
+			}
+		} else {
+			// Explicitly allow all languages
+			$args['lang'] = '';
 		}
 
 		$query       = new \WP_Query( $args );

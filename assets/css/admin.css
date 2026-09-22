@@ -662,3 +662,16 @@ body:not(.smart-forms_page_dragwyb-entries, .smart-forms_page_dragwyb-error-log)
     min-height: 0;
     overflow: hidden;
 }
+
+/* ==========================================================================
+   Translation Plugin Columns (Polylang, WPML, TranslatePress, Linguator, etc.)
+   ========================================================================== */
+.wp-list-table th[class*="column-language_"],
+.wp-list-table td[class*="column-language_"],
+.wp-list-table th.column-icl_translations,
+.wp-list-table td.column-icl_translations {
+    width: 44px;
+    max-width: 55px;
+    text-align: center;
+    vertical-align: middle;
+}
