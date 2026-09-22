@@ -176,7 +176,7 @@ class Save_Submissions_Action extends Action_Base {
 	}
 
 	public function process_submission( $form_id, $form_data, $form_config, Form_Submission_Handler $form_submission ) {
-		$nonce  = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ) : '';
+		$nonce  = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 		$action = Frontend_Render::get_submission_key( $form_id );
 
 		if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $action ) ) {
