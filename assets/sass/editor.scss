@@ -76,16 +76,14 @@
 
     --cubic-transition: all cubic-bezier(0.4, 0, 0.2, 1) 150ms;
 
-    .dark {
+    .dark & {
         // Variables
-        --primary-color: #4f46e5;
-        --primary-light-color: #e0e7ff;
-        // --primary-hover-color: #4338ca;
-        --secondary-hover-color: #374151;
-        // --primary-color: #2271b1;
-        --border-color: #e1e7ef;
-        --success-color: #00a32a;
-        --error-color: #d63638;
+        --primary-color: #f4256a;
+        --primary-light-color: rgba(244, 37, 106, 0.15);
+        --secondary-hover-color: #1e293b;
+        --border-color: #243044;
+        --success-color: #10b981;
+        --error-color: #ef4444;
     }
 }
 
@@ -1309,6 +1307,28 @@ body {
                 color: hsl(var(--dragwyb-card-foreground)/var(--dragwyb-text-opacity, 1));
                 border-radius: 4px;
 
+                .dark & {
+                    background-color: hsl(var(--dragwyb-card));
+                    border-color: hsl(var(--dragwyb-border));
+                    color: hsl(var(--dragwyb-foreground));
+                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+
+                    &:hover {
+                        background-color: hsl(var(--dragwyb-secondary));
+                        border-color: hsl(var(--dragwyb-primary));
+                        color: hsl(var(--dragwyb-primary));
+                        box-shadow: 0 4px 14px rgba(244, 37, 106, 0.2);
+
+                        svg {
+                            fill: hsl(var(--dragwyb-primary));
+                        }
+                    }
+
+                    svg {
+                        fill: hsl(var(--dragwyb-foreground));
+                    }
+                }
+
                 &:hover {
                     transform: scale(1.03);
                     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
@@ -1368,6 +1388,14 @@ body {
             cursor: pointer;
             font-size: 20px;
             color: #666;
+
+            .dark & {
+                color: hsl(var(--dragwyb-muted-foreground));
+
+                &:hover {
+                    color: hsl(var(--dragwyb-foreground));
+                }
+            }
 
             &:hover {
                 color: var(--error-color);
@@ -3558,6 +3586,7 @@ a.dragwyb-editor__preview-toggle {
                 0% {
                     transform: rotate(0deg);
                 }
+
                 100% {
                     transform: rotate(360deg);
                 }

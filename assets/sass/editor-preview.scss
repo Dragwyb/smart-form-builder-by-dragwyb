@@ -72,6 +72,15 @@ html {
     min-height: 100%;
 }
 
+body.dark {
+    background-color: hsl(var(--dragwyb-sidebar) / var(--dragwyb-bg-opacity, 1));
+    color: hsl(var(--dragwyb-foreground) / var(--dragwyb-text-opacity, 1));
+
+    .dragwyb-editor__main {
+        background-color: hsl(var(--dragwyb-sidebar) / var(--dragwyb-bg-opacity, 1));
+    }
+}
+
 .dragwyb-canvas {
     display: flex;
     justify-content: center;

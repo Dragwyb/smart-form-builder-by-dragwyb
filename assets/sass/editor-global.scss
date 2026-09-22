@@ -104,51 +104,81 @@
     --dragwyb-destructive-border: hsl(from hsl(var(--dragwyb-destructive)) h s calc(l + var(--dragwyb-opaque-button-border-intensity)) / alpha);
 }
 
-.dark {
-    --dragwyb-button-outline: rgba(255, 255, 255, .10);
-    --dragwyb-badge-outline: rgba(255, 255, 255, .05);
+.dark,
+body.dark {
+    --dragwyb-button-outline: rgba(255, 255, 255, .12);
+    --dragwyb-badge-outline: rgba(255, 255, 255, .08);
 
     --dragwyb-opaque-button-border-intensity: 9;
 
-    --dragwyb-elevate-1: rgba(255, 255, 255, .04);
-    --dragwyb-elevate-2: rgba(255, 255, 255, .09);
+    --dragwyb-elevate-1: rgba(255, 255, 255, .05);
+    --dragwyb-elevate-2: rgba(255, 255, 255, .10);
 
-    --dragwyb-background: 103 17% 8%;
-    --dragwyb-foreground: 103 17% 90%;
+    /* Deep, modern Obsidian Slate theme (high contrast & crisp visibility) */
+    --dragwyb-background: 222 47% 10%;
+    /* #0e1726 - deep, sleek obsidian sidebar bg */
+    --dragwyb-foreground: 210 40% 98%;
+    /* #f8fafc - radiant, crisp white-slate text */
 
-    --dragwyb-border: 106 18% 19%;
+    --dragwyb-border: 217 33% 18%;
+    /* #1e293b - crisp, elegant section borders */
 
-    --dragwyb-card: 103 17% 12%;
-    --dragwyb-card-foreground: 0 0% 100%;
-    --dragwyb-card-border: 103 17% 20%;
+    --dragwyb-card: 222 47% 13%;
+    /* #131d2e - elevated panel & header surface */
+    --dragwyb-card-foreground: 210 40% 98%;
+    /* #f8fafc - high-contrast text on cards */
+    --dragwyb-card-border: 217 33% 22%;
+    /* #253347 - refined card border */
 
-    --dragwyb-sidebar: 107 16% 11%;
-    --dragwyb-sidebar-foreground: 103 17% 90%;
-    --dragwyb-sidebar-border: 103 17% 16%;
-    --dragwyb-sidebar-primary: 220 100% 45%;
-    --dragwyb-sidebar-primary-foreground: 220 20% 98%;
-    --dragwyb-sidebar-accent: 106 18% 19%;
-    --dragwyb-sidebar-accent-foreground: 210 5% 85%;
-    --dragwyb-sidebar-ring: 220 100% 45%;
+    --dragwyb-sidebar: 224 71% 6%;
+    /* #080c14 - deep grounding tone for outer toolbar & canvas */
+    --dragwyb-sidebar-foreground: 210 40% 96%;
+    /* #f1f5f9 - clear sidebar text */
+    --dragwyb-sidebar-border: 217 33% 16%;
+    /* #1b2536 - subtle sidebar boundary */
+    --dragwyb-sidebar-primary: 340 85% 58%;
+    /* #f4256a - brand magenta active indicator */
+    --dragwyb-sidebar-primary-foreground: 0 0% 100%;
+    --dragwyb-sidebar-accent: 217 33% 16%;
+    /* #1b2536 - sleek hover state */
+    --dragwyb-sidebar-accent-foreground: 210 40% 98%;
+    --dragwyb-sidebar-ring: 340 85% 58%;
 
-    --dragwyb-popover: 103 17% 14%;
-    --dragwyb-popover-foreground: 103 17% 90%;
-    --dragwyb-popover-border: 103 17% 22%;
+    --dragwyb-popover: 222 47% 14%;
+    /* #141f31 - elevated dropdown background */
+    --dragwyb-popover-foreground: 210 40% 98%;
+    --dragwyb-popover-border: 217 33% 24%;
+    /* #29384e */
 
-    --dragwyb-secondary: 103 17% 20%;
-    --dragwyb-secondary-foreground: 103 17% 85%;
+    --dragwyb-primary: 340 85% 58%;
+    /* #f4256a - vibrant eye-catching brand magenta */
+    --dragwyb-primary-foreground: 0 0% 100%;
+    --dragwyb-primary-hover: 340 90% 64%;
+    /* #ff3b7d - luminous hover */
+    --dragwyb-primary-hover-foreground: 0 0% 100%;
 
-    --dragwyb-muted: 103 17% 16%;
-    --dragwyb-muted-foreground: 103 17% 65%;
+    --dragwyb-secondary: 217 33% 18%;
+    /* #1e293b - crisp secondary button/chip */
+    --dragwyb-secondary-foreground: 210 40% 92%;
+    /* #e2e8f0 - readable secondary label */
+
+    --dragwyb-muted: 217 33% 15%;
+    /* #182234 - subtle muted badge/container */
+    --dragwyb-muted-foreground: 215 20% 72%;
+    /* #94a3b8 - readable slate secondary text */
 
     --dragwyb-accent: 260 85% 65%;
-    --dragwyb-accent-foreground: 260 20% 95%;
+    /* #8b5cf6 - royal violet accent */
+    --dragwyb-accent-foreground: 260 20% 98%;
 
     --dragwyb-destructive: 0 84% 60%;
-    --dragwyb-destructive-foreground: 0 20% 98%;
+    /* #ef4444 - vibrant clear red */
+    --dragwyb-destructive-foreground: 0 0% 100%;
 
-    --dragwyb-input: 103 17% 30%;
-    --dragwyb-ring: 220 100% 45%;
+    --dragwyb-input: 217 33% 25%;
+    /* #2c3c54 - clearly visible input borders */
+    --dragwyb-ring: 340 85% 58%;
+    /* #f4256a - glowing brand focus ring */
 
     --dragwyb-chart-1: 220 100% 65%;
     --dragwyb-chart-2: 25 85% 65%;
@@ -156,12 +186,12 @@
     --dragwyb-chart-4: 260 85% 75%;
     --dragwyb-chart-5: 200 90% 70%;
 
-    --dragwyb-shadow-2xs: 0px 1px 2px 0px hsl(103 17% 2% / 0.3);
-    --dragwyb-shadow-xs: 0px 1px 3px 0px hsl(103 17% 2% / 0.4);
-    --dragwyb-shadow-sm: 0px 1px 2px 0px hsl(103 17% 2% / 0.3), 0px 2px 4px -1px hsl(103 17% 2% / 0.4);
-    --dragwyb-shadow: 0px 1px 3px 0px hsl(103 17% 2% / 0.4), 0px 1px 2px -1px hsl(103 17% 2% / 0.4);
-    --dragwyb-shadow-md: 0px 4px 6px -1px hsl(103 17% 2% / 0.4), 0px 2px 4px -2px hsl(103 17% 2% / 0.4);
-    --dragwyb-shadow-lg: 0px 10px 15px -3px hsl(103 17% 2% / 0.4), 0px 4px 6px -4px hsl(103 17% 2% / 0.4);
-    --dragwyb-shadow-xl: 0px 20px 25px -5px hsl(103 17% 2% / 0.4), 0px 8px 10px -6px hsl(103 17% 2% / 0.4);
-    --dragwyb-shadow-2xl: 0px 25px 50px -12px hsl(103 17% 2% / 0.5);
+    --dragwyb-shadow-2xs: 0px 1px 2px 0px hsl(224 71% 2% / 0.35);
+    --dragwyb-shadow-xs: 0px 1px 3px 0px hsl(224 71% 2% / 0.45);
+    --dragwyb-shadow-sm: 0px 1px 2px 0px hsl(224 71% 2% / 0.35), 0px 2px 4px -1px hsl(224 71% 2% / 0.45);
+    --dragwyb-shadow: 0px 1px 3px 0px hsl(224 71% 2% / 0.45), 0px 1px 2px -1px hsl(224 71% 2% / 0.45);
+    --dragwyb-shadow-md: 0px 4px 6px -1px hsl(224 71% 2% / 0.45), 0px 2px 4px -2px hsl(224 71% 2% / 0.45);
+    --dragwyb-shadow-lg: 0px 10px 15px -3px hsl(224 71% 2% / 0.45), 0px 4px 6px -4px hsl(224 71% 2% / 0.45);
+    --dragwyb-shadow-xl: 0px 20px 25px -5px hsl(224 71% 2% / 0.45), 0px 8px 10px -6px hsl(224 71% 2% / 0.45);
+    --dragwyb-shadow-2xl: 0px 25px 50px -12px hsl(224 71% 2% / 0.6);
 }
