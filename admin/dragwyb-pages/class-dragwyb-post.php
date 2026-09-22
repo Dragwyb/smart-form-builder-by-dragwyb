@@ -41,6 +41,18 @@ class Dragwyb_Post {
 		add_filter( 'wpml_translatable_element_types', array( $this, 'register_wpml_translatable_types' ) );
 		add_filter( 'wpml_get_post_types_for_translation', array( $this, 'register_wpml_post_types_for_translation' ) );
 		add_filter( 'wpml_post_types_for_translation_table', array( $this, 'register_wpml_post_types_for_translation' ) );
+
+		// Hook redirect to custom editor if core post.php or post-new.php is accessed
+		add_action( 'admin_init', array( $this, 'redirect_to_custom_editor' ) );
+
+		// Dynamically ensure administrators with manage_options have all form capabilities
+		add_filter( 'user_has_cap', array( $this, 'filter_user_has_cap' ) );
+
+		// Filter Polylang new translation link so + button points to Dragwyb Form Builder
+		add_filter( 'pll_get_new_post_translation_link', array( $this, 'filter_polylang_new_translation_link' ), 10, 3 );
+
+		// Filter edit post link so it points to Dragwyb Form Builder
+		add_filter( 'get_edit_post_link', array( $this, 'filter_form_edit_post_link' ), 10, 2 );
 	}
 
 	/**
@@ -83,10 +95,28 @@ class Dragwyb_Post {
 	}
 
 	public function capabilties() {
-		$caps = array(
-			'delete_post'            => 'delete_' . sanitize_text_field( DRAGWYB_PREFIX ) . '_form',
-			'delete_posts'           => 'delete_' . sanitize_text_field( DRAGWYB_PREFIX ) . '_forms',
-			'delete_published_posts' => 'delete_published_' . sanitize_text_field( DRAGWYB_PREFIX ) . '_forms',
+		$prefix = sanitize_text_field( DRAGWYB_PREFIX );
+		$caps   = array(
+			// Meta capabilities
+			'edit_post'              => "edit_{$prefix}_form",
+			'read_post'              => "read_{$prefix}_form",
+			'delete_post'            => "delete_{$prefix}_form",
+
+			// Primitive capabilities used outside of map_meta_cap
+			'edit_posts'             => "edit_{$prefix}_forms",
+			'edit_others_posts'      => "edit_others_{$prefix}_forms",
+			'publish_posts'          => "publish_{$prefix}_forms",
+			'read_private_posts'     => "read_private_{$prefix}_forms",
+
+			// Primitive capabilities used inside of map_meta_cap
+			'read'                   => 'read',
+			'delete_posts'           => "delete_{$prefix}_forms",
+			'delete_private_posts'   => "delete_private_{$prefix}_forms",
+			'delete_published_posts' => "delete_published_{$prefix}_forms",
+			'delete_others_posts'    => "delete_others_{$prefix}_forms",
+			'edit_private_posts'     => "edit_private_{$prefix}_forms",
+			'edit_published_posts'   => "edit_published_{$prefix}_forms",
+			'create_posts'           => "edit_{$prefix}_forms",
 		);
 
 		$caps = apply_filters( 'Dragwyb/Forms/Capablitlies', $caps );
@@ -112,32 +142,143 @@ class Dragwyb_Post {
 		}
 	}
 
+	/**
+	 * Dynamically grant form capabilities to users who can manage options.
+	 *
+	 * @param array $allcaps All capabilities of the user.
+	 * @return array
+	 */
+	public function filter_user_has_cap( $allcaps ) {
+		if ( ! empty( $allcaps['manage_options'] ) ) {
+			$caps = $this->capabilties();
+			if ( is_array( $caps ) ) {
+				foreach ( $caps as $cap ) {
+					$allcaps[ $cap ] = true;
+				}
+			}
+		}
+		return $allcaps;
+	}
 
 	/**
-	 * Redirect to custom editor
+	 * Redirect to custom editor if core post.php or post-new.php is accessed.
 	 */
 	public function redirect_to_custom_editor(): void {
-		global $post_type;
+		global $pagenow;
+
+		// Require logged-in user
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$post_type = isset( $_GET['post_type'] ) ? sanitize_text_field( wp_unslash( $_GET['post_type'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$post_id   = isset( $_GET['post'] ) ? absint( $_GET['post'] ) : 0;
+
+		if ( $post_id && ! $post_type ) {
+			$post_type = get_post_type( $post_id );
+		}
 
 		if ( $post_type !== self::POST_TYPE ) {
 			return;
 		}
 
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for admin dashboard pages check
-		$form_id = isset( $_GET['post'] ) ? absint( $_GET['post'] ) : 0;
+		if ( 'post-new.php' === $pagenow ) {
+			// Require permission to create/manage forms
+			if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'edit_dragwyb_forms' ) ) {
+				return;
+			}
 
-		if ( $form_id ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$from_post = isset( $_GET['from_post'] ) ? absint( $_GET['from_post'] ) : 0;
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$new_lang  = isset( $_GET['new_lang'] ) ? sanitize_text_field( wp_unslash( $_GET['new_lang'] ) ) : '';
+
+			$args = array(
+				'page' => DRAGWYB_PREFIX . '-form-builder',
+			);
+			if ( $from_post ) {
+				$args['from_post'] = $from_post;
+			}
+			if ( ! empty( $new_lang ) ) {
+				$args['new_lang'] = $new_lang;
+			}
+
+			wp_safe_redirect( add_query_arg( $args, admin_url( 'admin.php' ) ) );
+			exit;
+		}
+
+		if ( 'post.php' === $pagenow && $post_id ) {
+			// Require permission to edit this specific form
+			if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'edit_post', $post_id ) ) {
+				return;
+			}
+
 			wp_safe_redirect(
 				add_query_arg(
 					array(
-						'page'    => DRAGWYB_PREFIX . '-form-overview',
-						'form_id' => $form_id,
+						'page'    => DRAGWYB_PREFIX . '-form-builder',
+						'form_id' => $post_id,
 					),
 					admin_url( 'admin.php' )
 				)
 			);
 			exit;
 		}
+	}
+
+	/**
+	 * Filter Polylang new translation link so + button opens the Dragwyb Form Builder.
+	 *
+	 * @param string            $link     The new post translation link.
+	 * @param object|array|null $language The language object.
+	 * @param int               $post_id  The source post ID.
+	 * @return string
+	 */
+	public function filter_polylang_new_translation_link( $link, $language, $post_id ) {
+		if ( get_post_type( $post_id ) === self::POST_TYPE ) {
+			// Block unauthenticated users or users without permission to create/manage forms
+			if ( ! is_user_logged_in() || ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'edit_dragwyb_forms' ) ) ) {
+				return '';
+			}
+
+			$lang_slug = is_object( $language ) && isset( $language->slug ) ? $language->slug : (string) $language;
+			return add_query_arg(
+				array(
+					'page'      => DRAGWYB_PREFIX . '-form-builder',
+					'from_post' => (int) $post_id,
+					'new_lang'  => sanitize_text_field( $lang_slug ),
+				),
+				admin_url( 'admin.php' )
+			);
+		}
+		return $link;
+	}
+
+	/**
+	 * Filter edit post link for forms so it points to the Dragwyb Form Builder.
+	 *
+	 * @param string $link    The edit link.
+	 * @param int    $post_id Post ID.
+	 * @return string
+	 */
+	public function filter_form_edit_post_link( $link, $post_id ) {
+		if ( get_post_type( $post_id ) === self::POST_TYPE ) {
+			// Block unauthenticated users or users without permission to edit this form
+			if ( ! is_user_logged_in() || ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'edit_post', $post_id ) ) ) {
+				return '';
+			}
+
+			return add_query_arg(
+				array(
+					'page'    => DRAGWYB_PREFIX . '-form-builder',
+					'form_id' => (int) $post_id,
+				),
+				admin_url( 'admin.php' )
+			);
+		}
+		return $link;
 	}
 
 	/**

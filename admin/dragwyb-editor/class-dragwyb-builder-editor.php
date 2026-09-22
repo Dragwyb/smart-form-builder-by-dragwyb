@@ -63,6 +63,11 @@ if ( ! class_exists( 'Dragwyb_Builder_Editor' ) ) {
 
 		public function render_editor( $screen ) {
 			if ( gettype( $screen ) === 'object' && $screen( self::Current_Page ) ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for form id check
+				$form_id = isset( $_GET['form_id'] ) ? absint( wp_unslash( $_GET['form_id'] ) ) : 0;
+				if ( ! is_user_logged_in() || ( ! current_user_can( 'manage_options' ) && ( $form_id ? ! current_user_can( 'edit_post', $form_id ) : ! current_user_can( 'edit_dragwyb_forms' ) ) ) ) {
+					wp_die( esc_html__( 'Sorry, you are not allowed to access this page.', 'smart-form-builder-by-dragwyb' ) );
+				}
 				$this->builder_output();
 			}
 		}
@@ -116,6 +121,10 @@ if ( ! class_exists( 'Dragwyb_Builder_Editor' ) ) {
 
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for form id check
 			$form_id = isset( $_GET['form_id'] ) ? absint( wp_unslash( $_GET['form_id'] ) ) : 0;
+
+			if ( ! is_user_logged_in() || ( ! current_user_can( 'manage_options' ) && ( $form_id ? ! current_user_can( 'edit_post', $form_id ) : ! current_user_can( 'edit_dragwyb_forms' ) ) ) ) {
+				return;
+			}
 
 			$post_type = Dragwyb_Post::POST_TYPE;
 
