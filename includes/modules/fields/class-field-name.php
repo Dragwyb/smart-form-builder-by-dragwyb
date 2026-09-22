@@ -73,16 +73,6 @@ class Field_Name extends Field_Base {
 			)
 		);
 
-		$this->end_section();
-
-		$this->start_section(
-			'section_content_validation',
-			array(
-				'label' => __( 'Validation Rules', 'smart-form-builder-by-dragwyb' ),
-				'tab'   => self::ContentTab,
-			)
-		);
-
 		$this->add_control(
 			'required',
 			array(

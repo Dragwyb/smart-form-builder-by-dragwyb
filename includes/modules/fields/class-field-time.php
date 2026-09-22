@@ -119,6 +119,16 @@ class Field_Time extends Field_Base {
 			)
 		);
 
+		$this->add_control(
+			'required',
+			array(
+				'type'         => Controls::SWITCHER,
+				'label'        => __( 'Is Required?', 'smart-form-builder-by-dragwyb' ),
+				'return_value' => 'yes',
+				'default'      => 'no',
+			)
+		);
+
 		$this->end_section();
 
 		$this->start_section(
@@ -159,26 +169,6 @@ class Field_Time extends Field_Base {
 				'picker'      => 'time',
 				'date_format' => 'H:i',
 				'description' => __( 'Latest selectable time.', 'smart-form-builder-by-dragwyb' ),
-			)
-		);
-
-		$this->end_section();
-
-		$this->start_section(
-			'section_content_validation',
-			array(
-				'label' => __( 'Validation Rules', 'smart-form-builder-by-dragwyb' ),
-				'tab'   => self::ContentTab,
-			)
-		);
-
-		$this->add_control(
-			'required',
-			array(
-				'type'         => Controls::SWITCHER,
-				'label'        => __( 'Is Required?', 'smart-form-builder-by-dragwyb' ),
-				'return_value' => 'yes',
-				'default'      => 'no',
 			)
 		);
 

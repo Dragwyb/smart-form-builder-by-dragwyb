@@ -85,26 +85,6 @@ class Field_Range extends Field_Base {
 			)
 		);
 
-		$this->end_section();
-
-		$this->start_section(
-			'section_content_validation',
-			array(
-				'label' => __( 'Validation Rules', 'smart-form-builder-by-dragwyb' ),
-				'tab'   => self::ContentTab,
-			)
-		);
-
-		$this->add_control(
-			'required',
-			array(
-				'type'         => Controls::SWITCHER,
-				'label'        => __( 'Is Required?', 'smart-form-builder-by-dragwyb' ),
-				'return_value' => 'yes',
-				'default'      => 'no',
-			)
-		);
-
 		$this->add_control(
 			'min_val',
 			array(
@@ -130,6 +110,16 @@ class Field_Range extends Field_Base {
 				'label'   => __( 'Step Size', 'smart-form-builder-by-dragwyb' ),
 				'default' => 1,
 				'min'     => 1,
+			)
+		);
+
+		$this->add_control(
+			'required',
+			array(
+				'type'         => Controls::SWITCHER,
+				'label'        => __( 'Is Required?', 'smart-form-builder-by-dragwyb' ),
+				'return_value' => 'yes',
+				'default'      => 'no',
 			)
 		);
 

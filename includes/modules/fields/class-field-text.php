@@ -78,26 +78,6 @@ class Field_Text extends Field_Base {
 			)
 		);
 
-		$this->end_section();
-
-		$this->start_section(
-			'section_content_validation',
-			array(
-				'label' => __( 'Validation Rules', 'smart-form-builder-by-dragwyb' ),
-				'tab'   => self::ContentTab,
-			)
-		);
-
-		$this->add_control(
-			'required',
-			array(
-				'type'         => Controls::SWITCHER,
-				'label'        => __( 'Is Required?', 'smart-form-builder-by-dragwyb' ),
-				'return_value' => 'yes',
-				'default'      => 'no',
-			)
-		);
-
 		$this->add_control(
 			'min_length',
 			array(
@@ -113,6 +93,16 @@ class Field_Text extends Field_Base {
 				'type'  => Controls::NUMBER,
 				'label' => __( 'Maximum Length', 'smart-form-builder-by-dragwyb' ),
 				'min'   => 1,
+			)
+		);
+
+		$this->add_control(
+			'required',
+			array(
+				'type'         => Controls::SWITCHER,
+				'label'        => __( 'Is Required?', 'smart-form-builder-by-dragwyb' ),
+				'return_value' => 'yes',
+				'default'      => 'no',
 			)
 		);
 
