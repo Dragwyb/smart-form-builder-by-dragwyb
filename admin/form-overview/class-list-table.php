@@ -109,6 +109,19 @@ class List_Table extends WP_List_Table {
 			}
 		}
 
+		// If WPML is active and form post type is translatable, apply WPML's native column filter
+		if ( ! isset( $columns['icl_translations'] ) && class_exists( 'WPML_Custom_Columns' ) && isset( $GLOBALS['sitepress'] ) ) {
+			$sitepress     = $GLOBALS['sitepress'];
+			$is_translated = $sitepress->is_translated_post_type( Dragwyb_Post::POST_TYPE )
+				|| array_key_exists( Dragwyb_Post::POST_TYPE, (array) $sitepress->get_translatable_documents() )
+				|| ( function_exists( 'apply_filters' ) && apply_filters( 'wpml_is_translated_post_type', false, Dragwyb_Post::POST_TYPE ) );
+
+			if ( $is_translated ) {
+				$wpml_columns = new \WPML_Custom_Columns( $sitepress );
+				$columns      = $wpml_columns->add_posts_management_column( $columns );
+			}
+		}
+
 		// Modify columns via a filter
 		$columns = apply_filters( 'dragwyb_form_overview_columns', $columns );
 
@@ -228,6 +241,12 @@ class List_Table extends WP_List_Table {
 
 				if ( ! empty( $action_output ) ) {
 					$value = $action_output;
+				} elseif ( 'icl_translations' === $column_name && class_exists( 'WPML_Custom_Columns' ) && isset( $GLOBALS['sitepress'] ) ) {
+					// Fallback to WPML's native post column renderer
+					ob_start();
+					$wpml_columns = new \WPML_Custom_Columns( $GLOBALS['sitepress'] );
+					$wpml_columns->add_content_for_posts_management_column( $column_name, $form->ID );
+					$value = ob_get_clean();
 				} elseif ( 0 === strpos( (string) $column_name, 'language_' ) && isset( $GLOBALS['polylang']->filters_columns ) && method_exists( $GLOBALS['polylang']->filters_columns, 'post_column' ) ) {
 					// Fallback to Polylang's native post column renderer
 					ob_start();

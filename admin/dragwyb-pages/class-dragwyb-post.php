@@ -51,6 +51,9 @@ class Dragwyb_Post {
 		// Filter Polylang new translation link so + button points to Dragwyb Form Builder
 		add_filter( 'pll_get_new_post_translation_link', array( $this, 'filter_polylang_new_translation_link' ), 10, 3 );
 
+		// Filter WPML translation link so + and edit buttons point to Dragwyb Form Builder
+		add_filter( 'wpml_link_to_translation', array( $this, 'filter_wpml_link_to_translation' ), 10, 5 );
+
 		// Filter edit post link so it points to Dragwyb Form Builder
 		add_filter( 'get_edit_post_link', array( $this, 'filter_form_edit_post_link' ), 10, 2 );
 	}
@@ -109,7 +112,6 @@ class Dragwyb_Post {
 			'read_private_posts'     => "read_private_{$prefix}_forms",
 
 			// Primitive capabilities used inside of map_meta_cap
-			'read'                   => 'read',
 			'delete_posts'           => "delete_{$prefix}_forms",
 			'delete_private_posts'   => "delete_private_{$prefix}_forms",
 			'delete_published_posts' => "delete_published_{$prefix}_forms",
@@ -137,7 +139,9 @@ class Dragwyb_Post {
 			$caps = array_unique( array_values( $caps ) );
 
 			foreach ( $caps as $cap ) {
-				$role->add_cap( $cap );
+				if ( ! $role->has_cap( $cap ) ) {
+					$role->add_cap( $cap );
+				}
 			}
 		}
 	}
@@ -149,7 +153,7 @@ class Dragwyb_Post {
 	 * @return array
 	 */
 	public function filter_user_has_cap( $allcaps ) {
-		if ( ! empty( $allcaps['manage_options'] ) ) {
+		if ( is_array( $allcaps ) && ! empty( $allcaps['manage_options'] ) ) {
 			$caps = $this->capabilties();
 			if ( is_array( $caps ) ) {
 				foreach ( $caps as $cap ) {
@@ -195,6 +199,25 @@ class Dragwyb_Post {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$new_lang  = isset( $_GET['new_lang'] ) ? sanitize_text_field( wp_unslash( $_GET['new_lang'] ) ) : '';
 
+			// Support WPML parameters if from_post/new_lang not set directly
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( empty( $new_lang ) && isset( $_GET['lang'] ) ) {
+				$new_lang = sanitize_text_field( wp_unslash( $_GET['lang'] ) );
+			}
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$trid = isset( $_GET['trid'] ) ? absint( $_GET['trid'] ) : 0;
+			if ( empty( $from_post ) && $trid && function_exists( 'apply_filters' ) ) {
+				$translations = apply_filters( 'wpml_get_element_translations', null, $trid, 'post_' . self::POST_TYPE );
+				if ( is_array( $translations ) ) {
+					foreach ( $translations as $trans ) {
+						if ( ! empty( $trans->original ) && ! empty( $trans->element_id ) ) {
+							$from_post = (int) $trans->element_id;
+							break;
+						}
+					}
+				}
+			}
+
 			$args = array(
 				'page' => DRAGWYB_PREFIX . '-form-builder',
 			);
@@ -203,6 +226,9 @@ class Dragwyb_Post {
 			}
 			if ( ! empty( $new_lang ) ) {
 				$args['new_lang'] = $new_lang;
+			}
+			if ( $trid ) {
+				$args['trid'] = $trid;
 			}
 
 			wp_safe_redirect( add_query_arg( $args, admin_url( 'admin.php' ) ) );
@@ -257,6 +283,50 @@ class Dragwyb_Post {
 	}
 
 	/**
+	 * Filter WPML translation link so + and edit buttons point to Dragwyb Form Builder.
+	 *
+	 * @param string      $link      Existing link.
+	 * @param int         $post_id   Post ID.
+	 * @param string      $lang      Language code.
+	 * @param int         $trid      Translation group ID.
+	 * @param string|null $css_class CSS class of the icon.
+	 * @return string
+	 */
+	public function filter_wpml_link_to_translation( $link, $post_id, $lang, $trid, $css_class = null ) {
+		if ( get_post_type( $post_id ) === self::POST_TYPE ) {
+			if ( ! is_user_logged_in() || ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'edit_dragwyb_forms' ) ) ) {
+				return '';
+			}
+
+			// Adding a new translation in WPML
+			if ( strpos( (string) $css_class, 'otgs-ico-add' ) !== false || strpos( (string) $link, 'post-new.php' ) !== false ) {
+				return add_query_arg(
+					array(
+						'page'      => DRAGWYB_PREFIX . '-form-builder',
+						'from_post' => (int) $post_id,
+						'new_lang'  => sanitize_text_field( $lang ),
+						'trid'      => (int) $trid,
+					),
+					admin_url( 'admin.php' )
+				);
+			}
+
+			// Editing an existing translation in WPML
+			if ( preg_match( '/[?&]post=([0-9]+)/', (string) $link, $matches ) ) {
+				return add_query_arg(
+					array(
+						'page'    => DRAGWYB_PREFIX . '-form-builder',
+						'form_id' => (int) $matches[1],
+					),
+					admin_url( 'admin.php' )
+				);
+			}
+		}
+
+		return $link;
+	}
+
+	/**
 	 * Filter edit post link for forms so it points to the Dragwyb Form Builder.
 	 *
 	 * @param string $link    The edit link.
@@ -265,11 +335,6 @@ class Dragwyb_Post {
 	 */
 	public function filter_form_edit_post_link( $link, $post_id ) {
 		if ( get_post_type( $post_id ) === self::POST_TYPE ) {
-			// Block unauthenticated users or users without permission to edit this form
-			if ( ! is_user_logged_in() || ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'edit_post', $post_id ) ) ) {
-				return '';
-			}
-
 			return add_query_arg(
 				array(
 					'page'    => DRAGWYB_PREFIX . '-form-builder',

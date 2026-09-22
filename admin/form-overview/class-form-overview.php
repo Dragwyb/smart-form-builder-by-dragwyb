@@ -109,6 +109,8 @@ if ( ! class_exists( 'Form_Overview' ) ) {
 						if ( 0 === strpos( $key, 'language_' ) ) {
 							$lang_slug   = str_replace( 'language_', '', $key );
 							$clean_label = sprintf( __( 'Language: %s', 'smart-form-builder-by-dragwyb' ), strtoupper( $lang_slug ) );
+						} elseif ( 'icl_translations' === $key ) {
+							$clean_label = __( 'Languages (WPML)', 'smart-form-builder-by-dragwyb' );
 						} else {
 							$clean_label = ucfirst( $key );
 						}
@@ -158,6 +160,15 @@ if ( ! class_exists( 'Form_Overview' ) ) {
 
 		private function enqueue_admin_assets(): void {
 			wp_enqueue_style( 'dashicons' );
+
+			// Enqueue WPML icon styles if WPML is active
+			if ( wp_style_is( 'otgs-icons', 'registered' ) ) {
+				wp_enqueue_style( 'otgs-icons' );
+			}
+			if ( wp_style_is( 'wpml-post-edit-terms', 'registered' ) ) {
+				wp_enqueue_style( 'wpml-post-edit-terms' );
+			}
+
 			wp_enqueue_script( DRAGWYB_PREFIX . '-overview-assets', esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/js/dragwyb-overview-assets.js' ), array( 'jquery' ), esc_attr( DRAGWYB_FORM_BUILDER_VERSION ), true );
 
 			wp_localize_script(
