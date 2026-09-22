@@ -611,6 +611,7 @@ body {
             fill: hsl(var(--dragwyb-muted-foreground)) !important;
             stroke: hsl(var(--dragwyb-muted-foreground)) !important;
         }
+
         .dragwyb-editor__responsive-devices button:hover:not(.active) svg {
             fill: hsl(var(--dragwyb-foreground)) !important;
             stroke: hsl(var(--dragwyb-foreground)) !important;
@@ -3456,10 +3457,15 @@ a.dragwyb-editor__preview-toggle {
 
             // Adaptive backdrops for special presets
             &.preset-stage--glass {
+                background: linear-gradient(135deg, #09090b 0%, #171717 50%, #262626 100%);
+            }
+
+            &.preset-stage--glass_light {
                 background: radial-gradient(circle at 20% 20%, rgba(244, 114, 182, 0.25) 0%, transparent 40%),
                     radial-gradient(circle at 80% 80%, rgba(96, 165, 250, 0.25) 0%, transparent 40%),
                     linear-gradient(135deg, #fce7f3 0%, #ede9fe 50%, #e0f2fe 100%);
             }
+
 
             &.preset-stage--gradient {
                 background: linear-gradient(180deg, #f0fdf4 0%, #ecfeff 50%, #eff6ff 100%);
@@ -3469,12 +3475,16 @@ a.dragwyb-editor__preview-toggle {
                 background: #090d16;
             }
 
-            &.preset-stage--transparent {
-                background: repeating-conic-gradient(#e2e8f0 0% 25%, #f8fafc 0% 50%) 50% / 20px 20px;
+            &.preset-stage--light {
+                background: #f1f5f9;
+            }
 
-                .dark & {
-                    background: repeating-conic-gradient(#1e293b 0% 25%, #0f172a 0% 50%) 50% / 20px 20px;
-                }
+            &.preset-stage--transparent {
+                background: linear-gradient(135deg, #000000, #0f055c);
+            }
+
+            &.preset-stage--transparent_light {
+                background: linear-gradient(135deg, #f8fafc, #e2e8f0);
             }
 
             .preset-preview-container {

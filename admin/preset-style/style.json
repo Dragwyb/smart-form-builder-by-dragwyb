@@ -74,7 +74,6 @@
   },
   "presets": {
     "theme": {
-      "number": 1,
       "name": "Theme Default",
       "recommended": true,
       "description": "Uses your theme's default styling for a seamless look and feel.",
@@ -214,7 +213,6 @@
       }
     },
     "clean": {
-      "number": 2,
       "name": "Clean",
       "description": "Minimal and modern design with subtle borders and spacing.",
       "category": "minimal",
@@ -317,7 +315,6 @@
       }
     },
     "card": {
-      "number": 3,
       "name": "Card",
       "description": "Elegant card style with background, padding and soft shadow.",
       "category": "popular",
@@ -421,7 +418,6 @@
       }
     },
     "modern": {
-      "number": 4,
       "name": "Modern",
       "description": "Modern and sleek design with rounded inputs and smooth colors.",
       "category": "popular",
@@ -533,7 +529,6 @@
       }
     },
     "soft": {
-      "number": 5,
       "name": "Soft",
       "description": "Soft and friendly style with rounded borders and light background.",
       "category": "popular",
@@ -645,7 +640,6 @@
       }
     },
     "outline": {
-      "number": 6,
       "name": "Outline",
       "description": "Clean outline style with clear borders and minimal background.",
       "category": "minimal",
@@ -748,7 +742,6 @@
       }
     },
     "filled": {
-      "number": 7,
       "name": "Filled",
       "description": "Filled inputs with subtle background for a modern look.",
       "category": "minimal",
@@ -851,8 +844,7 @@
       }
     },
     "glass": {
-      "number": 8,
-      "name": "Glass",
+      "name": "Glass (Dark Skin)",
       "description": "Glassmorphism style with transparency and blur effect.",
       "category": "premium",
       "styles": {
@@ -955,8 +947,111 @@
         "floating_style": "outlined"
       }
     },
+    "glass_light": {
+      "name": "Glass (Light Skin)",
+      "description": "Glassmorphism style with transparency and blur effect for light backgrounds.",
+      "category": "premium",
+      "styles": {
+        "label_position": "floating",
+        "form_container_bg_background": "classic",
+        "form_container_bg_color": "rgba(255, 255, 255, 0.4)",
+        "form_css_filter_blur": {
+          "size": 16,
+          "unit": "px"
+        },
+        "form_padding": {
+          "top": 28,
+          "right": 28,
+          "bottom": 28,
+          "left": 28,
+          "unit": "px",
+          "linked": true
+        },
+        "form_border_style": "solid",
+        "form_border_width": {
+          "top": 1,
+          "right": 1,
+          "bottom": 1,
+          "left": 1,
+          "unit": "px",
+          "linked": true
+        },
+        "form_border_color": "rgba(0, 0, 0, 0.1)",
+        "form_border_radius": {
+          "top": 16,
+          "right": 16,
+          "bottom": 16,
+          "left": 16,
+          "unit": "px",
+          "linked": true
+        },
+        "form_box_shadow_horizontal": {
+          "size": 0,
+          "unit": "px"
+        },
+        "form_box_shadow_vertical": {
+          "size": 8,
+          "unit": "px"
+        },
+        "form_box_shadow_blur": {
+          "size": 32,
+          "unit": "px"
+        },
+        "form_box_shadow_spread": {
+          "size": 0,
+          "unit": "px"
+        },
+        "form_box_shadow_color": "rgba(0,0,0,0.1)",
+        "input_bg_color": "rgba(255,255,255,0.4)",
+        "input_text_color": "#111827",
+        "input_placeholder_color": "#6b7280",
+        "input_border_style": "solid",
+        "input_border_width": {
+          "top": 1,
+          "right": 1,
+          "bottom": 1,
+          "left": 1,
+          "unit": "px",
+          "linked": true
+        },
+        "input_border_color": "rgba(0,0,0,0.1)",
+        "input_focus_border_color": "#f4256a",
+        "input_focus_bg_color": "rgba(255,255,255,0.6)",
+        "input_border_radius": {
+          "top": 6,
+          "right": 6,
+          "bottom": 6,
+          "left": 6,
+          "unit": "px",
+          "linked": true
+        },
+        "button_bg_color": "#f4256a",
+        "button_text_color": "#ffffff",
+        "button_hover_bg_color": "#d91b5c",
+        "button_hover_text_color": "#ffffff",
+        "button_border_style": "none",
+        "button_border_width": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0,
+          "unit": "px",
+          "linked": true
+        },
+        "button_border_color": "",
+        "button_border_radius": {
+          "top": 6,
+          "right": 6,
+          "bottom": 6,
+          "left": 6,
+          "unit": "px",
+          "linked": true
+        },
+        "label_color": "#111827",
+        "floating_style": "outlined"
+      }
+    },
     "dark": {
-      "number": 9,
       "name": "Dark",
       "description": "Clean dark style perfect for modern websites and landing pages.",
       "category": "premium",
@@ -1059,8 +1154,110 @@
         "label_color": "#f9fafb"
       }
     },
+    "light": {
+      "name": "Light",
+      "description": "Clean light style perfect for modern websites and landing pages.",
+      "category": "premium",
+      "styles": {
+        "label_position": "top",
+        "form_container_bg_background": "classic",
+        "form_container_bg_color": "#ffffff",
+        "form_css_filter_blur": {
+          "size": 0,
+          "unit": "px"
+        },
+        "form_padding": {
+          "top": 28,
+          "right": 28,
+          "bottom": 28,
+          "left": 28,
+          "unit": "px",
+          "linked": true
+        },
+        "form_border_style": "solid",
+        "form_border_width": {
+          "top": 1,
+          "right": 1,
+          "bottom": 1,
+          "left": 1,
+          "unit": "px",
+          "linked": true
+        },
+        "form_border_color": "#e5e7eb",
+        "form_border_radius": {
+          "top": 16,
+          "right": 16,
+          "bottom": 16,
+          "left": 16,
+          "unit": "px",
+          "linked": true
+        },
+        "form_box_shadow_horizontal": {
+          "size": 0,
+          "unit": "px"
+        },
+        "form_box_shadow_vertical": {
+          "size": 10,
+          "unit": "px"
+        },
+        "form_box_shadow_blur": {
+          "size": 25,
+          "unit": "px"
+        },
+        "form_box_shadow_spread": {
+          "size": -5,
+          "unit": "px"
+        },
+        "form_box_shadow_color": "rgba(0,0,0,0.1)",
+        "input_bg_color": "#f9fafb",
+        "input_text_color": "#111827",
+        "input_placeholder_color": "#9ca3af",
+        "input_border_style": "solid",
+        "input_border_width": {
+          "top": 1,
+          "right": 1,
+          "bottom": 1,
+          "left": 1,
+          "unit": "px",
+          "linked": true
+        },
+        "input_border_color": "#d1d5db",
+        "input_focus_border_color": "#f4256a",
+        "input_focus_bg_color": "#ffffff",
+        "input_border_radius": {
+          "top": 6,
+          "right": 6,
+          "bottom": 6,
+          "left": 6,
+          "unit": "px",
+          "linked": true
+        },
+        "button_bg_color": "#f4256a",
+        "button_text_color": "#ffffff",
+        "button_hover_bg_color": "#d91b5c",
+        "button_hover_text_color": "#ffffff",
+        "button_border_style": "none",
+        "button_border_width": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0,
+          "unit": "px",
+          "linked": true
+        },
+        "button_border_color": "",
+        "button_border_radius": {
+          "top": 6,
+          "right": 6,
+          "bottom": 6,
+          "left": 6,
+          "unit": "px",
+          "linked": true
+        },
+        "label_color": "#111827"
+      }
+    },
     "gradient": {
-      "number": 10,
       "name": "Gradient",
       "description": "Beautiful gradient background with clean form design.",
       "category": "creative",
@@ -1172,7 +1369,6 @@
       }
     },
     "minimal": {
-      "number": 11,
       "name": "Minimal",
       "description": "Ultra minimal style with underline fields.",
       "category": "minimal",
@@ -1275,7 +1471,6 @@
       }
     },
     "elevated": {
-      "number": 12,
       "name": "Elevated",
       "description": "Premium elevated style with strong shadow and elegant spacing.",
       "category": "premium",
@@ -1378,7 +1573,6 @@
       }
     },
     "side_border": {
-      "number": 13,
       "name": "Side Border",
       "description": "Modern style with accent side border for a unique look.",
       "category": "creative",
@@ -1481,7 +1675,6 @@
       }
     },
     "top_accent": {
-      "number": 14,
       "name": "Top Accent",
       "description": "Clean style with top accent color and subtle shadow.",
       "category": "creative",
@@ -1585,8 +1778,7 @@
       }
     },
     "transparent": {
-      "number": 15,
-      "name": "Transparent",
+      "name": "Transparent (Dark Skin)",
       "description": "Transparent style to blend beautifully with any background.",
       "category": "basic",
       "styles": {
@@ -1690,6 +1882,118 @@
           "top": 12,
           "right": 12,
           "bottom":12,
+          "left": 12,
+          "unit": "px",
+          "linked": true
+        },
+        "floating_style": "inside"
+      }
+    },
+    "transparent_light": {
+      "name": "Transparent (Light Skin)",
+      "description": "Transparent style to blend beautifully with any light background.",
+      "category": "basic",
+      "styles": {
+        "label_position": "floating",
+        "form_container_bg_background": "classic",
+        "form_container_bg_color": "rgba(0, 0, 0, 0.05)",
+        "form_css_filter_blur": {
+          "size": 0,
+          "unit": "px"
+        },
+        "form_padding": {
+          "top": 28,
+          "right": 28,
+          "bottom": 28,
+          "left": 28,
+          "unit": "px",
+          "linked": true
+        },
+        "form_border_style": "solid",
+        "form_border_width": {
+          "top": 1,
+          "right": 1,
+          "bottom": 1,
+          "left": 1,
+          "unit": "px",
+          "linked": true
+        },
+        "form_border_color": "rgba(0, 0, 0, 0.15)",
+        "form_border_radius": {
+          "top": 14,
+          "right": 14,
+          "bottom": 14,
+          "left": 14,
+          "unit": "px",
+          "linked": true
+        },
+        "form_box_shadow_horizontal": {
+          "size": 0,
+          "unit": "px"
+        },
+        "form_box_shadow_vertical": {
+          "size": 8,
+          "unit": "px"
+        },
+        "form_box_shadow_blur": {
+          "size": 24,
+          "unit": "px"
+        },
+        "form_box_shadow_spread": {
+          "size": 0,
+          "unit": "px"
+        },
+        "form_box_shadow_color": "rgba(0,0,0,0.1)",
+        "input_bg_color": "rgba(0, 0, 0, 0.05)",
+        "input_text_color": "#111827",
+        "input_placeholder_color": "#64748b",
+        "input_border_style": "solid",
+        "input_border_width": {
+          "top": 1,
+          "right": 1,
+          "bottom": 1,
+          "left": 1,
+          "unit": "px",
+          "linked": true
+        },
+        "input_border_color": "rgba(0,0,0,0.2)",
+        "input_focus_border_color": "#f4256a",
+        "input_focus_bg_color": "rgba(0, 0, 0, 0.08)",
+        "input_border_radius": {
+          "top": 6,
+          "right": 6,
+          "bottom": 6,
+          "left": 6,
+          "unit": "px",
+          "linked": true
+        },
+        "button_bg_color": "#f4256a",
+        "button_text_color": "#ffffff",
+        "button_hover_bg_color": "#d91b5c",
+        "button_hover_text_color": "#ffffff",
+        "button_border_style": "none",
+        "button_border_width": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0,
+          "unit": "px",
+          "linked": true
+        },
+        "button_border_color": "",
+        "button_border_radius": {
+          "top": 6,
+          "right": 6,
+          "bottom": 6,
+          "left": 6,
+          "unit": "px",
+          "linked": true
+        },
+        "label_color": "#111827",
+        "input_padding": {
+          "top": 12,
+          "right": 12,
+          "bottom": 12,
           "left": 12,
           "unit": "px",
           "linked": true
