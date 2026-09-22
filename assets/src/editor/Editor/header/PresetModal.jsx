@@ -2,7 +2,7 @@ import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import { __ } from '@wordpress/i18n';
-import { FaSearch, FaTimes, FaCheck, FaDesktop, FaTabletAlt, FaMobileAlt } from 'react-icons/fa';
+import { FaSearch, FaTimes, FaCheck, FaDesktop, FaTabletAlt, FaMobileAlt, FaSpinner } from 'react-icons/fa';
 
 import DragwybControlBase from '../../controlBase';
 import * as Fields from '../Fields';
@@ -539,6 +539,7 @@ const PresetFormContent = ({ hasRealFields, rootContainers, formFields, wrapperC
 const SinglePresetLivePreview = React.memo(({ preset, formId, formState, styleSelectors }) => {
     const iframeRef = useRef(null);
     const [mountNode, setMountNode] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     const [scaledHeight, setScaledHeight] = useState(null);
 
     const handleHeightChange = useCallback((height) => {
@@ -604,10 +605,80 @@ const SinglePresetLivePreview = React.memo(({ preset, formId, formState, styleSe
     const formFields = formState?.fields || {};
     const hasRealFields = rootContainers.length > 0 && Object.keys(formFields).length > 0;
 
+    // Helper to ensure DragwybBuilder and DragwybEditor are fully wired in iframe
+    const setupIframeDragwyb = useCallback((iframeWindow) => {
+        if (!iframeWindow) return false;
+
+        const mainPreviewWindow = document.getElementById('dragwyb-preview-iframe')?.contentWindow;
+
+        // Check if iframeWindow or mainPreviewWindow has field render filters
+        const iframeHasHooks = !!(iframeWindow.DragwybBuilder?.Hooks?.hasFilter?.('Dragwyb/Editor/FieldRender/row'));
+        const mainHasHooks = !!(mainPreviewWindow?.DragwybBuilder?.Hooks?.hasFilter?.('Dragwyb/Editor/FieldRender/row'));
+
+        if (!iframeHasHooks) {
+            if (mainHasHooks) {
+                // Borrow the ready DragwybBuilder from the main editor preview iframe
+                iframeWindow.DragwybBuilder = mainPreviewWindow.DragwybBuilder;
+            } else if (!iframeWindow.DragwybBuilder && window.DragwybBuilder) {
+                iframeWindow.DragwybBuilder = window.DragwybBuilder;
+            }
+        }
+
+        // Trigger Dragwyb:init and Dragwyb:editorAppLoaded inside iframe if jQuery exists
+        if (iframeWindow.jQuery) {
+            try {
+                iframeWindow.jQuery(iframeWindow.document).trigger('Dragwyb:init');
+                iframeWindow.jQuery(iframeWindow.document).trigger('Dragwyb:editorAppLoaded');
+            } catch (e) {}
+        }
+
+        // Setup DragwybEditor on iframe window
+        if (!iframeWindow.hasOwnProperty('DragwybEditor')) {
+            iframeWindow.DragwybEditor = {};
+        }
+        if (window.DragwybEditor) {
+            if (!iframeWindow.hasOwnProperty('faIconsList')) {
+                iframeWindow.DragwybEditor.faIconsList = window.DragwybEditor.faIconsList;
+            }
+            if (window.DragwybEditor.fields && !iframeWindow.DragwybEditor.fields) {
+                iframeWindow.DragwybEditor.fields = window.DragwybEditor.fields;
+            }
+            if (window.DragwybEditor.editor && !iframeWindow.DragwybEditor.editor) {
+                iframeWindow.DragwybEditor.editor = window.DragwybEditor.editor;
+            }
+            if (window.DragwybEditor.EditorToolbars) {
+                iframeWindow.DragwybEditor.EditorToolbars = window.DragwybEditor.EditorToolbars;
+            }
+            const editorToolBars = window.DragwybEditor?.EditorToolbars?.toolbars;
+            if (editorToolBars) {
+                Object.keys(editorToolBars).forEach((key) => {
+                    if (!iframeWindow.DragwybEditor.hasOwnProperty(key)) {
+                        iframeWindow.DragwybEditor[key] = window.DragwybEditor[key];
+                    }
+                });
+            }
+        }
+
+        return !!(iframeWindow.DragwybBuilder?.Hooks?.hasFilter?.('Dragwyb/Editor/FieldRender/row'));
+    }, []);
+
     // Initialize iframe document and base styles
     const initIframe = useCallback((event) => {
         const iframe = event?.target || iframeRef.current;
         if (!iframe || !iframe.contentWindow) return;
+
+        // Prevent premature initialization on about:blank before PREVIEW_IFRAME_URL loads
+        if (PREVIEW_IFRAME_URL) {
+            try {
+                const loc = iframe.contentWindow.location?.href;
+                if (!loc || loc === 'about:blank') {
+                    return;
+                }
+            } catch (e) {
+                // Cross-origin fallback safety
+            }
+        }
+
         const doc = iframe.contentWindow.document;
         if (!doc || !doc.body) return;
 
@@ -621,29 +692,7 @@ const SinglePresetLivePreview = React.memo(({ preset, formId, formState, styleSe
             doc.body.style.overflowX = 'hidden';
         }
 
-        // Localize DragwybEditor onto iframe window if needed
         const iframeWindow = doc.defaultView || iframe.contentWindow;
-        if (iframeWindow) {
-            if (!iframeWindow.DragwybBuilder && window.DragwybBuilder) {
-                iframeWindow.DragwybBuilder = window.DragwybBuilder;
-            }
-            if (!iframeWindow.hasOwnProperty('DragwybEditor')) {
-                iframeWindow.DragwybEditor = {};
-            }
-            if (window.DragwybEditor) {
-                if (!iframeWindow.hasOwnProperty('faIconsList')) {
-                    iframeWindow.DragwybEditor.faIconsList = window.DragwybEditor.faIconsList;
-                }
-                const editorToolBars = window.DragwybEditor?.EditorToolbars?.toolbars;
-                if (editorToolBars) {
-                    Object.keys(editorToolBars).forEach((key) => {
-                        if (!iframeWindow.DragwybEditor.hasOwnProperty(key)) {
-                            iframeWindow.DragwybEditor[key] = window.DragwybEditor[key];
-                        }
-                    });
-                }
-            }
-        }
 
         // Base styling for iframe with scale wrapper support
         let baseStyleTag = doc.getElementById('dragwyb-preset-base-style');
@@ -696,15 +745,30 @@ const SinglePresetLivePreview = React.memo(({ preset, formId, formState, styleSe
             styleTag.textContent = compiledCss;
         }
 
-        setMountNode(doc.body);
-    }, [compiledCss]);
+        // Setup DragwybBuilder and DragwybEditor.
+        // Wait until hooks are ready before finalizing mount and hiding spinner.
+        let checkCount = 0;
+        const finalize = () => {
+            checkCount++;
+            const isReady = setupIframeDragwyb(iframeWindow);
+            if (isReady || checkCount >= 20) {
+                setMountNode(doc.body);
+                setIsLoading(false);
+            } else {
+                setTimeout(finalize, 50);
+            }
+        };
+
+        finalize();
+    }, [compiledCss, setupIframeDragwyb]);
 
     // Keep dynamic styles in iframe head in sync without reloading the iframe
     useEffect(() => {
         if (!mountNode && iframeRef.current) {
             try {
                 const doc = iframeRef.current.contentDocument || iframeRef.current.contentWindow?.document;
-                if (doc && doc.body) {
+                const loc = iframeRef.current.contentWindow?.location?.href;
+                if (doc && doc.body && (!PREVIEW_IFRAME_URL || (loc && loc !== 'about:blank'))) {
                     initIframe({ target: iframeRef.current });
                 }
             } catch (e) {
@@ -728,7 +792,32 @@ const SinglePresetLivePreview = React.memo(({ preset, formId, formState, styleSe
     const iframeHeight = scaledHeight ? `${scaledHeight + 50}px` : '460px';
 
     return (
-        <div className="preset-preview-iframe-wrapper">
+        <div className="preset-preview-iframe-wrapper" style={{ position: 'relative', minHeight: '300px' }}>
+            {isLoading && (
+                <div
+                    className="dragwyb-preset-preview-loader"
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 10,
+                        minHeight: '260px',
+                    }}
+                >
+                    <div className="dragwyb-preset-spinner">
+                        <FaSpinner className="dragwyb-preset-spinner-icon" />
+                    </div>
+                    <span className="dragwyb-preset-loader-text">
+                        {__('Loading preview...', 'smart-form-builder-by-dragwyb')}
+                    </span>
+                </div>
+            )}
             <iframe
                 ref={iframeRef}
                 onLoad={initIframe}
@@ -742,10 +831,12 @@ const SinglePresetLivePreview = React.memo(({ preset, formId, formState, styleSe
                     border: 'none',
                     backgroundColor: 'transparent',
                     display: 'block',
-                    transition: 'height 0.15s ease',
+                    opacity: isLoading ? 0 : 1,
+                    pointerEvents: isLoading ? 'none' : 'auto',
+                    transition: 'opacity 0.2s ease, height 0.15s ease',
                 }}
             />
-            {mountNode && createPortal(
+            {!isLoading && mountNode && createPortal(
                 <div
                     className="dragwyb-preset-scale-wrapper"
                     style={{

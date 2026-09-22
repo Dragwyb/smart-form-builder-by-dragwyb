@@ -3508,10 +3508,58 @@ a.dragwyb-editor__preview-toggle {
 
             .preset-preview-iframe-wrapper {
                 width: 100%;
+                position: relative;
+                min-height: 260px;
 
                 .dark & {
                     border-color: rgba(30, 41, 59, 0.8);
                     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+                }
+
+                .dragwyb-preset-preview-loader {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    min-height: 300px;
+                    width: 100%;
+                    padding: 50px 20px;
+                    gap: 12px;
+                    box-sizing: border-box;
+
+                    .dragwyb-preset-spinner {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        .dragwyb-preset-spinner-icon {
+                            font-size: 30px;
+                            color: #ff007a;
+                            animation: dragwyb-preset-spin 0.9s linear infinite;
+                        }
+                    }
+
+                    .dragwyb-preset-loader-text {
+                        font-size: 14px;
+                        font-weight: 500;
+                        color: #64748b;
+                        letter-spacing: 0.2px;
+                    }
+
+                    .dark & {
+                        .dragwyb-preset-loader-text {
+                            color: #94a3b8;
+                        }
+                    }
+                }
+            }
+
+            @keyframes dragwyb-preset-spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
                 }
             }
         }
