@@ -112,49 +112,6 @@ class Dragwyb_Post {
 		}
 	}
 
-	/**
-	 * Set custom columns for the forms list
-	 */
-	public function set_custom_columns( $columns ): array {
-		$new_columns = array(
-			'cb'        => $columns['cb'],
-			'title'     => __( 'Form Name', 'smart-form-builder-by-dragwyb' ),
-			'type'      => __( 'Form Type', 'smart-form-builder-by-dragwyb' ),
-			'shortcode' => __( 'Shortcode', 'smart-form-builder-by-dragwyb' ),
-			'entries'   => __( 'Entries', 'smart-form-builder-by-dragwyb' ),
-			'date'      => $columns['date'],
-		);
-		return $new_columns;
-	}
-
-	/**
-	 * Render custom column content
-	 */
-	public function render_custom_columns( $column, $post_id ): void {
-		switch ( $column ) {
-			case 'type':
-				$form_type = get_post_meta( $post_id, '_Dragwyb_Page_type', true );
-				echo esc_html( ucfirst( $form_type ?: 'Standard' ) );
-				break;
-
-			case 'shortcode':
-				echo '<input type="text" readonly class="regular-text code" value="[Dragwyb_Page id=&quot;' . esc_attr( $post_id ) . '&quot;]" onclick="this.select()">';
-				break;
-
-			case 'entries':
-				$entries_count = $this->get_form_entries_count( $post_id );
-				echo esc_html( $entries_count );
-				break;
-		}
-	}
-
-	/**
-	 * Get form entries count
-	 */
-	private function get_form_entries_count( $form_id ): int {
-		// This will be implemented when we add form submissions functionality
-		return 0;
-	}
 
 	/**
 	 * Redirect to custom editor
