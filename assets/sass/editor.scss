@@ -36,7 +36,7 @@
         bottom: 0;
         width: 8px;
         background: hsl(var(--dragwyb-sidebar)/var(--dragwyb-bg-opacity, 1));
-        z-index: 100;
+        z-index: 1;
         border-radius: 4px;
 
         &:hover {

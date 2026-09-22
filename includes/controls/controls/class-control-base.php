@@ -197,6 +197,14 @@ abstract class Control_Base {
 		return (bool) $value;
 	}
 
+	protected function array_setting_sanitize( array $value ) {
+		if ( ! is_array( $value ) ) {
+			return array();
+		}
+
+		return array_map( 'sanitize_text_field', $value );
+	}
+
 	protected function number_sanitize( $value ) {
 		return $this->number_setting_sanitize( $value );
 	}
