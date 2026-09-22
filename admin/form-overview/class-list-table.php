@@ -96,6 +96,17 @@ class List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Gets the name of the primary column.
+	 *
+	 * @since 1.8.6
+	 *
+	 * @return string
+	 */
+	protected function get_primary_column_name() {
+		return 'name';
+	}
+
+	/**
 	 * Render the checkbox column.
 	 *
 	 * @since 1.8.6
@@ -403,6 +414,11 @@ class List_Table extends WP_List_Table {
 	 * @since 1.8.6
 	 */
 	public function prepare_items() {
+		// Ensure screen is set before fetching hidden columns
+		if ( empty( $this->screen ) && function_exists( 'get_current_screen' ) ) {
+			$this->screen = get_current_screen();
+		}
+
 		// 1. Setup columns
 		$columns               = $this->get_columns();
 		$hidden                = get_hidden_columns( $this->screen );

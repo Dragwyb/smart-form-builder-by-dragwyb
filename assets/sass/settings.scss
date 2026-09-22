@@ -4,7 +4,7 @@ body.smart-forms_page_dragwyb-settings .dragwyb-dashboard-header {
 }
 
 .dragwyb-settings-dashboard {
-    margin: 15px calc(1rem + 20px) 20px 1rem;
+    margin: var(--dragwyb-admin-container-margin);
     background: #f8fafc;
     border-radius: 12px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
