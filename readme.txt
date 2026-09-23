@@ -356,13 +356,16 @@ Website administrators are responsible for configuring forms, consent, retention
 
 == Screenshots ==
 
-1. Drag-and-drop form builder with field settings and live form preview.
-2. Form management screen with forms, statuses, and submission counts.
-3. Template library with ready-to-use form templates.
-4. Form preset styles with live previews and one-click style application.
-5. Form analytics with views, submissions, conversions, and campaign data.
-6. Entry management with filtering, export, and bulk actions.
-7. Plugin settings for SMTP, privacy, integrations, and performance.
+1. Drag-and-drop form builder with field settings panel and live form preview.
+2. Form preset styles panel with 18 built-in style presets and live previews.
+3. Conditional logic rules — show or hide fields based on visitor selections.
+4. Multi-step form with step fields and progress indicator.
+5. Template library with ready-to-use form templates and category filters.
+6. Form management screen with forms, statuses, shortcodes, and submission counts.
+7. Form analytics with views, submissions, conversions, and campaign data.
+8. Entry management with filtering, bulk actions, and export.
+9. Plugin settings for SMTP, API keys, performance, and privacy.
+10. Plugin dashboard with submission overview and unread entries.
 
 == Changelog ==
 
