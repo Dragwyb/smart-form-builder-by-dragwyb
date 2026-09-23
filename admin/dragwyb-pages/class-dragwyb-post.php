@@ -358,17 +358,21 @@ class Dragwyb_Post {
 
 	public function dragwyb_bulk_actions_handler() {
 		if ( isset( $_GET['_wpnonce'] ) ) {
+			// Only handle bulk actions that originate from the form overview page.
+			// Checking the referer BEFORE nonce verification prevents WordPress from
+			// interpreting a mismatched nonce (from core pages like "All Pages") as a
+			// security failure, which would force a session logout.
+			if ( function_exists( 'wp_get_referer' ) ) {
+				$referal_url = wp_get_referer();
+				if ( ! $referal_url || strpos( $referal_url, 'page=dragwyb-form-overview' ) === false ) {
+					return;
+				}
+			}
+
 			$current_post_type = sanitize_text_field( self::POST_TYPE );
 			$nonce             = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
 			if ( ! empty( $nonce ) && wp_verify_nonce( $nonce, 'bulk-' . $current_post_type ) ) {
-
-				if ( function_exists( 'wp_get_referer' ) ) {
-					$referal_url = wp_get_referer();
-
-					if ( strpos( $referal_url, 'page=dragwyb-form-overview' ) !== false ) {
-						Form_Bulk_Actions_Handler::instance( $current_post_type );
-					}
-				}
+				Form_Bulk_Actions_Handler::instance( $current_post_type );
 			}
 		}
 	}
