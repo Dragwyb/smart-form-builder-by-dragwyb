@@ -73,11 +73,20 @@ class Form_Preview {
 				'wp_enqueue_scripts',
 				array(
 					'wp_enqueue_global_styles',
-					'wp_enqueue_classic_theme_styles',
 					'wp_common_block_scripts_and_styles',
 					'wp_enqueue_block_template_skip_link',
 				)
 			);
+
+			if ( function_exists( 'wp_enqueue_classic_theme_styles' ) ) {
+				$this->filter_theme_hook_callbacks(
+					'wp_enqueue_scripts',
+					array(
+						'wp_enqueue_classic_theme_styles',
+					)
+				);
+			}
+
 			$this->filter_theme_hook_callbacks(
 				'wp_footer',
 				array(
