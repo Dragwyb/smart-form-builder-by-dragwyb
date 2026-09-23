@@ -83,7 +83,6 @@ class Form_Preview {
 				array(
 					'wp_print_footer_scripts',
 					'wp_auth_check_html',
-					'wp_global_styles_render_svg_filters',
 				)
 			);
 
@@ -113,9 +112,6 @@ class Form_Preview {
 			}
 			if ( ! has_action( 'wp_footer', 'wp_auth_check_html' ) ) {
 				add_action( 'wp_footer', 'wp_auth_check_html', 30 );
-			}
-			if ( function_exists( 'wp_global_styles_render_svg_filters' ) && ! has_action( 'wp_footer', 'wp_global_styles_render_svg_filters' ) ) {
-				add_action( 'wp_footer', 'wp_global_styles_render_svg_filters' );
 			}
 
 			// Also remove all scripts hooked into after_wp_tiny_mce.
@@ -148,10 +144,10 @@ class Form_Preview {
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<?php wp_head(); ?>
+			<?php wp_head(); ?>
 </head>
 <body <?php body_class( 'dragwyb-editor-preview-iframe-body' ); ?>>
-	<?php wp_footer(); ?>
+			<?php wp_footer(); ?>
 </body>
 </html>
 			<?php
