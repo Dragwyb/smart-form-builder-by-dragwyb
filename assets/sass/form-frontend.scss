@@ -145,6 +145,10 @@
     display: none;
 }
 
+.dragwyb-field-input.iti__tel-input {
+    padding-left: var(--iti-selected-country-arrow-padding) !important;
+}
+
 
 /* ==========================================================================
    Form Layout
