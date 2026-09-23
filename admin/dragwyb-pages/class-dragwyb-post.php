@@ -236,6 +236,16 @@ class Dragwyb_Post {
 		}
 
 		if ( 'post.php' === $pagenow && $post_id ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$action = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : '';
+
+			// Allow WordPress core to handle trash, delete, untrash, and restore actions.
+			// Only intercept 'edit' (or no action) to redirect to the custom form editor.
+			$core_actions = array( 'trash', 'untrash', 'delete', 'restore' );
+			if ( in_array( $action, $core_actions, true ) ) {
+				return;
+			}
+
 			// Require permission to edit this specific form
 			if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'edit_post', $post_id ) ) {
 				return;
