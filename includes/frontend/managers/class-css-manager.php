@@ -13,12 +13,12 @@ use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
 
 class CSS_Manager {
 
+	public const ASSETS_VERSION = 'v1';
+
 	private string $upload_dir;
 	private string $upload_url;
 	private Frontend_Render $frontend;
-	private static $instance           = null;
-	private static $google_fonts_cache = array();
-	private static $unique_id          = array();
+	private static $instance = null;
 
 	public static function instance(): self {
 		if ( self::$instance === null ) {
@@ -65,7 +65,13 @@ class CSS_Manager {
 			return;
 		}
 
-		$unique_id = get_post_meta( $form_id, '_dragwyb_form_assets_id', true );
+		$unique_id      = get_post_meta( $form_id, '_dragwyb_form_assets_id', true );
+		$assets_version = get_post_meta( $form_id, '_dragwyb_form_assets_version', true );
+
+		if ( $assets_version !== self::ASSETS_VERSION ) {
+			$this->delete_cache_file( $form_id );
+			$unique_id = '';
+		}
 
 		$file_name      = 'form-' . $form_id . '-' . $unique_id . '.css';
 		$file_path      = $this->upload_dir . $file_name;
@@ -73,24 +79,22 @@ class CSS_Manager {
 		$this->frontend = $frontend;
 
 		// 1. Check if file exists
-		if ( ! file_exists( $file_path ) || ! isset( $unique_id ) || $unique_id === '' ) {
+		if ( ! file_exists( $file_path ) || empty( $unique_id ) ) {
 			// 2. If missing, generate it
 			$style_content = $this->generate_css_content();
 			$google_fonts  = $style_content['google_fonts'];
 			$css_content   = $style_content['css'];
 
 			// Generate uniqueid based on current time & date.
-			$unique_id = time();
-
-			// Convert uniqueid to string.
-			$unique_id = (string) $unique_id;
+			$unique_id = (string) time();
 
 			$file_name = 'form-' . $form_id . '-' . $unique_id . '.css';
 			$file_path = $this->upload_dir . $file_name;
 			$file_url  = $this->upload_url . $file_name;
 
-			// Update uniqueid in post meta.
+			// Update uniqueid and assets version in post meta.
 			update_post_meta( $form_id, '_dragwyb_form_assets_id', $unique_id );
+			update_post_meta( $form_id, '_dragwyb_form_assets_version', self::ASSETS_VERSION );
 
 			if ( $css_content && ! empty( $css_content ) ) {
 				$this->write_file( $file_path, $css_content );
@@ -139,7 +143,14 @@ class CSS_Manager {
 	 * Retrieve the generated CSS string for a form (from cached file or dynamically generated).
 	 */
 	public function get_form_css( int $form_id, ?Frontend_Render $frontend = null ): string {
-		$unique_id = get_post_meta( $form_id, '_dragwyb_form_assets_id', true );
+		$unique_id      = get_post_meta( $form_id, '_dragwyb_form_assets_id', true );
+		$assets_version = get_post_meta( $form_id, '_dragwyb_form_assets_version', true );
+
+		if ( $assets_version !== self::ASSETS_VERSION ) {
+			$this->delete_cache_file( $form_id );
+			$unique_id = '';
+		}
+
 		$file_name = 'form-' . $form_id . '-' . $unique_id . '.css';
 		$file_path = $this->upload_dir . $file_name;
 
@@ -221,6 +232,8 @@ class CSS_Manager {
 		}
 
 		delete_post_meta( $id, 'dragwyb_form_google_fonts' );
+		delete_post_meta( $id, '_dragwyb_form_assets_id' );
+		delete_post_meta( $id, '_dragwyb_form_assets_version' );
 
 		return $id;
 	}

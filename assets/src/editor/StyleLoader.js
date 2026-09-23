@@ -14,20 +14,41 @@ const StyleLoader = () => {
         const cssCache = {};
         let cssString = "";
 
+        if (!cssSelectors || typeof cssSelectors !== 'object') {
+            return cssString;
+        }
+
         Object.keys(cssSelectors).forEach(key => {
             const entry = cssSelectors[key];
-            const selector = Object.keys(entry)[0];
-            let rule = Object.values(entry)[0].trim();
-            rule = rule.endsWith(';') ? rule : rule + ';';
+            if (!entry || typeof entry !== 'object') return;
 
-            if (!cssCache[selector]) {
-                cssCache[selector] = [];
-            }
-            cssCache[selector].push(rule);
+            Object.keys(entry).forEach(selector => {
+                const rawRule = entry[selector];
+
+                if (!selector) return;
+
+                if (typeof rawRule === 'object' && rawRule !== null) {
+                    if (Object.keys(rawRule).length > 0) {
+                        cssString += generateCssStrings({ [selector]: rawRule });
+                    }
+                    return;
+                }
+
+                if (typeof rawRule === 'string') {
+                    let rule = rawRule.trim();
+                    if (!rule) return;
+                    rule = rule.endsWith(';') ? rule : rule + ';';
+
+                    if (!cssCache[selector]) {
+                        cssCache[selector] = [];
+                    }
+                    cssCache[selector].push(rule);
+                }
+            });
         });
 
         for (const selector in cssCache) {
-            if (cssCache.hasOwnProperty(selector)) {
+            if (Object.prototype.hasOwnProperty.call(cssCache, selector)) {
                 const rules = cssCache[selector].join(' ');
                 cssString += `${selector} { ${rules} }\n`;
             }

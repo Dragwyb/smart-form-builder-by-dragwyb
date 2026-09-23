@@ -90,34 +90,41 @@ const generateCssStrings = (cssSelectors) => {
     const cssCache = {};
     let cssString = "";
 
+    if (!cssSelectors || typeof cssSelectors !== 'object') {
+        return cssString;
+    }
+
     Object.keys(cssSelectors).forEach(key => {
         const entry = cssSelectors[key];
-        const selector = Object.keys(entry)[0];
+        if (!entry || typeof entry !== 'object') return;
 
-        if (!selector) return;
+        Object.keys(entry).forEach(selector => {
+            const rawRule = entry[selector];
 
-        if (typeof entry[selector] === 'object') {
-            if (Object.keys(entry[selector]).length > 0) {
-                cssString += generateCssStrings(entry);
+            if (!selector) return;
+
+            if (typeof rawRule === 'object' && rawRule !== null) {
+                if (Object.keys(rawRule).length > 0) {
+                    cssString += generateCssStrings({ [selector]: rawRule });
+                }
+                return;
             }
-            return;
-        }
 
-        let rule = Object.values(entry)[0];
+            if (typeof rawRule === 'string') {
+                let rule = rawRule.trim();
+                if (!rule) return;
+                rule = rule.endsWith(';') ? rule : rule + ';';
 
-        if (!rule) return;
-
-        rule = rule.trim();
-        rule = rule.endsWith(';') ? rule : rule + ';';
-
-        if (!cssCache[selector]) {
-            cssCache[selector] = [];
-        }
-        cssCache[selector].push(rule);
+                if (!cssCache[selector]) {
+                    cssCache[selector] = [];
+                }
+                cssCache[selector].push(rule);
+            }
+        });
     });
 
     for (const selector in cssCache) {
-        if (cssCache.hasOwnProperty(selector)) {
+        if (Object.prototype.hasOwnProperty.call(cssCache, selector)) {
             const rules = cssCache[selector].join(' ');
             cssString += `${selector} { ${rules} }\n`;
         }
@@ -159,39 +166,39 @@ const extractCSS = ({ key, value, selectors, placeholders, toolbarType, itemId, 
                 tempCssCache[targetSelector] = tempCssCache[targetSelector].replaceAll("{{" + placeholder + "}}", value[placeholders[placeholder]]);
             }
         });
+    });
 
-        // Remove any remaining placeholders and their surrounding text until space or special characters
-        Object.keys(tempCssCache).forEach((selector) => {
-            if (tempCssCache[selector].includes('{{') && tempCssCache[selector].includes('}}')) {
-                let cleanSelectors = tempCssCache[selector].replace(/[^\s:;"'#,()]*\{\{[A-Z0-9_]+\}\}[^\s:;"'#,()]*/g, '');
+    // Remove any remaining placeholders and their surrounding text until space or special characters
+    Object.keys(tempCssCache).forEach((cacheKey) => {
+        if (tempCssCache[cacheKey].includes('{{') && tempCssCache[cacheKey].includes('}}')) {
+            let cleanSelectors = tempCssCache[cacheKey].replace(/[^\s:;"'#,()]*\{\{[A-Z0-9_]+\}\}[^\s:;"'#,()]*/g, '');
 
-                cleanSelectors = cleanSelectors.split(';');
+            cleanSelectors = cleanSelectors.split(';');
 
-                let newCleanSelectors = [];
+            let newCleanSelectors = [];
 
-                cleanSelectors.forEach((cleanSelector) => {
-                    const splitValue = cleanSelector.split(':');
-                    let valueExist = false;
+            cleanSelectors.forEach((cleanSelector) => {
+                const splitValue = cleanSelector.split(':');
+                let valueExist = false;
 
-                    if (splitValue && splitValue[1]) {
-                        if (splitValue[1].trim() !== '') {
-                            valueExist = splitValue.join(':');
-                        } else {
-                            valueExist = false;
-                        }
+                if (splitValue && splitValue[1]) {
+                    if (splitValue[1].trim() !== '') {
+                        valueExist = splitValue.join(':');
+                    } else {
+                        valueExist = false;
                     }
-                    if (valueExist && valueExist.trim() !== '') {
-                        newCleanSelectors.push(valueExist);
-                    }
-                });
-
-                if (newCleanSelectors.length > 0) {
-                    tempCssCache[selector] = newCleanSelectors.join(';');
-                } else {
-                    delete tempCssCache[selector];
                 }
+                if (valueExist && valueExist.trim() !== '') {
+                    newCleanSelectors.push(valueExist);
+                }
+            });
+
+            if (newCleanSelectors.length > 0) {
+                tempCssCache[cacheKey] = newCleanSelectors.join(';') + ';';
+            } else {
+                delete tempCssCache[cacheKey];
             }
-        });
+        }
     });
 
     if (tempCssCache && Object.keys(tempCssCache).length > 0) {

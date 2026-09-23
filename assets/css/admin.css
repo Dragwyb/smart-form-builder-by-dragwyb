@@ -1,4 +1,8 @@
-li#toplevel_page_dragwyb-form-overview .wp-menu-image img {
+:root{
+    --dragwyb-admin-container-margin: 1.3rem calc(1rem + 5px) 1rem 0;
+}
+
+li#toplevel_page_dragwyb-dashboard .wp-menu-image img {
     padding-top: 5px;
 }
 
@@ -7,13 +11,17 @@ body:where(.toplevel_page_dragwyb-dashboard,.smart-forms_page_dragwyb-form-overv
 	display: none;
 }
 
+body.smart-forms_page_dragwyb-form-overview .dragwyb-dashboard-header{
+    margin-top: 45px;
+}
+
 /* ==========================================================================
    Smart Form Builder - Overview Page UI Redesign
    ========================================================================== */
 
 .dragwyb-overview-wrap {
     max-width: 100%;
-    margin: 15px calc(1rem  + 20px) 20px 1rem;
+    margin: 1rem calc(1rem  + 5px) 1rem 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
 
@@ -26,7 +34,7 @@ body:where(.toplevel_page_dragwyb-dashboard,.smart-forms_page_dragwyb-form-overv
     padding: 20px 28px;
     background: #fff;
     border-bottom: 1px solid #e2e8f0;
-    margin: 1rem calc(1rem + 20px) 1rem 1rem;
+    margin: var(--dragwyb-admin-container-margin);
 }
 
 .dragwyb-db-brand {
@@ -168,6 +176,11 @@ body:where(.toplevel_page_dragwyb-dashboard,.smart-forms_page_dragwyb-form-overv
     box-sizing: border-box !important;
 }
 
+.wp-list-table.dragwyb-forms th.hidden,
+.wp-list-table.dragwyb-forms td.hidden {
+    display: none !important;
+}
+
 .wp-list-table.dragwyb-forms thead :where(th, td) {
     border-bottom: 2px solid #f1f5f9 !important;
     background: transparent !important;
@@ -262,12 +275,49 @@ body:where(.toplevel_page_dragwyb-dashboard,.smart-forms_page_dragwyb-form-overv
     border-radius: 8px;
     padding: 8px 14px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
 
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+.dragwyb-shortcode-box::after {
+    content: "Copied!";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: #15803d;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    pointer-events: none;
+    font-weight: 500;
+    white-space: nowrap;
+    margin-bottom: 6px;
+}
+
+.dragwyb-shortcode-box::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    border-width: 5px;
+    border-style: solid;
+    border-color: #15803d transparent transparent transparent;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    margin-bottom: -4px;
 }
 
 .dragwyb-shortcode-box::selection,
@@ -284,6 +334,14 @@ body:where(.toplevel_page_dragwyb-dashboard,.smart-forms_page_dragwyb-form-overv
 .dragwyb-shortcode-box.copied {
     background: #dcfce7 !important;
     border-color: #86efac !important;
+    transform: scale(0.95);
+}
+
+.dragwyb-shortcode-box.copied::after,
+.dragwyb-shortcode-box.copied::before {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
 }
 
 .dragwyb-shortcode-box.copied .dragwyb-shortcode-text,
@@ -441,7 +499,7 @@ body:where(.toplevel_page_dragwyb-dashboard,.smart-forms_page_dragwyb-form-overv
 }
 
 body:not(.smart-forms_page_dragwyb-entries, .smart-forms_page_dragwyb-error-log) .dragwyb-tracking-notice{
-    margin: 15px calc(1rem + 20px) 15px 1rem !important;
+    margin: var(--dragwyb-admin-container-margin) !important;
 }
 
 /* Left Accent Gradient Strip */
@@ -604,3 +662,36 @@ body:not(.smart-forms_page_dragwyb-entries, .smart-forms_page_dragwyb-error-log)
     min-height: 0;
     overflow: hidden;
 }
+
+/* ==========================================================================
+   Translation Plugin Columns (Polylang, WPML, TranslatePress, Linguator, etc.)
+   ========================================================================== */
+.wp-list-table th[class*="column-language_"],
+.wp-list-table td[class*="column-language_"] {
+    width: 44px;
+    max-width: 55px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.wp-list-table th.column-icl_translations,
+.wp-list-table td.column-icl_translations {
+    width: auto;
+    min-width: 70px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.wp-list-table td.column-icl_translations a {
+    display: inline-block;
+    margin: 0 4px;
+    text-decoration: none;
+    vertical-align: middle;
+}
+
+.wp-list-table td.column-icl_translations i {
+    font-size: 16px;
+    line-height: 1;
+    vertical-align: middle;
+}

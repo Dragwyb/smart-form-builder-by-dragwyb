@@ -113,7 +113,10 @@ class Field_Button extends Field_Base {
 			array(
 				'type'      => Controls::COLOR,
 				'label'     => __( 'Background Color', 'smart-form-builder-by-dragwyb' ),
-				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-btn-bg: {{VALUE}};' ),
+				'selectors' => array(
+					'{{WRAPPER}} button' => 'background: {{VALUE}};',
+					'{{WRAPPER}}'        => '--dragwyb-btn-bg: {{VALUE}};',
+				),
 			)
 		);
 
@@ -122,17 +125,21 @@ class Field_Button extends Field_Base {
 			array(
 				'type'      => Controls::COLOR,
 				'label'     => __( 'Text Color', 'smart-form-builder-by-dragwyb' ),
-				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-btn-color: {{VALUE}};' ),
+				'selectors' => array(
+					'{{WRAPPER}} button' => 'color: {{VALUE}};',
+					'{{WRAPPER}}'        => '--dragwyb-btn-color: {{VALUE}};',
+				),
 			)
 		);
 
 		$this->add_group_control(
 			'border',
 			array(
-				'type'     => Controls::GROUP_BORDER,
-				'label'    => __( 'Border', 'smart-form-builder-by-dragwyb' ),
-				'selector' => '{{WRAPPER}}',
-				'prefix'   => 'btn',
+				'type'              => Controls::GROUP_BORDER,
+				'label'             => __( 'Border', 'smart-form-builder-by-dragwyb' ),
+				'selector'          => '{{WRAPPER}} button',
+				'variable_selector' => '{{WRAPPER}}',
+				'prefix'            => 'btn',
 			)
 		);
 
@@ -146,7 +153,10 @@ class Field_Button extends Field_Base {
 			array(
 				'type'      => Controls::COLOR,
 				'label'     => __( 'Background Color', 'smart-form-builder-by-dragwyb' ),
-				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-btn-hover-bg: {{VALUE}};' ),
+				'selectors' => array(
+					'{{WRAPPER}} button:hover' => 'background: {{VALUE}};',
+					'{{WRAPPER}}'              => '--dragwyb-btn-hover-bg: {{VALUE}};',
+				),
 			)
 		);
 
@@ -155,7 +165,10 @@ class Field_Button extends Field_Base {
 			array(
 				'type'      => Controls::COLOR,
 				'label'     => __( 'Text Color', 'smart-form-builder-by-dragwyb' ),
-				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-btn-hover-color: {{VALUE}};' ),
+				'selectors' => array(
+					'{{WRAPPER}} button:hover' => 'color: {{VALUE}};',
+					'{{WRAPPER}}'              => '--dragwyb-btn-hover-color: {{VALUE}};',
+				),
 			)
 		);
 
@@ -164,7 +177,10 @@ class Field_Button extends Field_Base {
 			array(
 				'type'      => Controls::COLOR,
 				'label'     => __( 'Border Color', 'smart-form-builder-by-dragwyb' ),
-				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-btn-hover-border-color: {{VALUE}};' ),
+				'selectors' => array(
+					'{{WRAPPER}} button:hover' => 'border-color: {{VALUE}};',
+					'{{WRAPPER}}'              => '--dragwyb-btn-hover-border-color: {{VALUE}};',
+				),
 			)
 		);
 
@@ -178,7 +194,10 @@ class Field_Button extends Field_Base {
 				'type'       => Controls::DIMENSIONS,
 				'label'      => __( 'Padding', 'smart-form-builder-by-dragwyb' ),
 				'size_units' => array( 'px', 'em', '%' ),
-				'selectors'  => array( '{{WRAPPER}}' => '--dragwyb-btn-pt: {{TOP}}{{UNIT}}; --dragwyb-btn-pr: {{RIGHT}}{{UNIT}}; --dragwyb-btn-pb: {{BOTTOM}}{{UNIT}}; --dragwyb-btn-pl: {{LEFT}}{{UNIT}};' ),
+				'selectors'  => array(
+					'{{WRAPPER}} button' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}}'        => '--dragwyb-btn-pt: {{TOP}}{{UNIT}}; --dragwyb-btn-pr: {{RIGHT}}{{UNIT}}; --dragwyb-btn-pb: {{BOTTOM}}{{UNIT}}; --dragwyb-btn-pl: {{LEFT}}{{UNIT}};',
+				),
 				'separator'  => 'before',
 			)
 		);
@@ -186,10 +205,11 @@ class Field_Button extends Field_Base {
 		$this->add_group_control(
 			'typography',
 			array(
-				'type'     => Controls::GROUP_TYPOGRAPHY,
-				'label'    => __( 'Typography', 'smart-form-builder-by-dragwyb' ),
-				'selector' => '{{WRAPPER}}',
-				'prefix'   => 'btn',
+				'type'              => Controls::GROUP_TYPOGRAPHY,
+				'label'             => __( 'Typography', 'smart-form-builder-by-dragwyb' ),
+				'selector'          => '{{WRAPPER}} button',
+				'variable_selector' => '{{WRAPPER}}',
+				'prefix'            => 'btn',
 			)
 		);
 
@@ -218,7 +238,8 @@ class Field_Button extends Field_Base {
 					),
 				),
 				'selectors' => array(
-					'{{WRAPPER}}' => '--dragwyb-btn-width: {{VALUE}}{{UNIT}};',
+					'{{WRAPPER}} button' => 'width: {{VALUE}}{{UNIT}};',
+					'{{WRAPPER}}'        => '--dragwyb-btn-width: {{VALUE}}{{UNIT}};',
 				),
 			)
 		);

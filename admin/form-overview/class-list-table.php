@@ -9,6 +9,7 @@ use WP_Post;
 use WP_Screen;
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
 use Dragwyb\Form_Builder\Includes\Frontend\Form_Preview;
+use Dragwyb\Form_Builder\Includes\Helper\Helper;
 
 /**
  * Generate the table on the plugin overview page.
@@ -86,13 +87,56 @@ class List_Table extends WP_List_Table {
 			'views'           => __( 'Views', 'smart-form-builder-by-dragwyb' ) . ' <span class="dragwyb-info-icon" title="' . esc_attr__( 'Form preview count', 'smart-form-builder-by-dragwyb' ) . '">ⓘ</span>',
 			'submissions'     => __( 'Submissions', 'smart-form-builder-by-dragwyb' ) . ' <span class="dragwyb-info-icon" title="' . esc_attr__( 'Form submission count', 'smart-form-builder-by-dragwyb' ) . '">ⓘ</span>',
 			'conversion_rate' => __( 'Conversion Rate', 'smart-form-builder-by-dragwyb' ) . ' <span class="dragwyb-info-icon" title="' . esc_attr__( 'Submission / View ratio', 'smart-form-builder-by-dragwyb' ) . '">ⓘ</span>',
-			'date'            => __( 'Date', 'smart-form-builder-by-dragwyb' ),
 		);
+
+		$columns['date'] = __( 'Date', 'smart-form-builder-by-dragwyb' );
+
+		// Dynamic columns added by translation plugins (Polylang, WPML, TranslatePress, Linguator, etc.)
+		$columns = apply_filters( 'manage_edit-' . Dragwyb_Post::POST_TYPE . '_columns', $columns );
+		$columns = apply_filters( 'manage_posts_columns', $columns, Dragwyb_Post::POST_TYPE );
+
+		// If Polylang is active and columns filter hasn't run yet, apply Polylang's native column filter
+		if ( isset( $GLOBALS['polylang']->filters_columns ) && method_exists( $GLOBALS['polylang']->filters_columns, 'add_post_column' ) ) {
+			$has_lang_col = false;
+			foreach ( array_keys( $columns ) as $col_key ) {
+				if ( 0 === strpos( (string) $col_key, 'language_' ) ) {
+					$has_lang_col = true;
+					break;
+				}
+			}
+			if ( ! $has_lang_col ) {
+				$columns = $GLOBALS['polylang']->filters_columns->add_post_column( $columns );
+			}
+		}
+
+		// If WPML is active and form post type is translatable, apply WPML's native column filter
+		if ( ! isset( $columns['icl_translations'] ) && class_exists( 'WPML_Custom_Columns' ) && isset( $GLOBALS['sitepress'] ) ) {
+			$sitepress     = $GLOBALS['sitepress'];
+			$is_translated = $sitepress->is_translated_post_type( Dragwyb_Post::POST_TYPE )
+				|| array_key_exists( Dragwyb_Post::POST_TYPE, (array) $sitepress->get_translatable_documents() )
+				|| ( function_exists( 'apply_filters' ) && apply_filters( 'wpml_is_translated_post_type', false, Dragwyb_Post::POST_TYPE ) );
+
+			if ( $is_translated ) {
+				$wpml_columns = new \WPML_Custom_Columns( $sitepress );
+				$columns      = $wpml_columns->add_posts_management_column( $columns );
+			}
+		}
 
 		// Modify columns via a filter
 		$columns = apply_filters( 'dragwyb_form_overview_columns', $columns );
 
 		return $columns;
+	}
+
+	/**
+	 * Gets the name of the primary column.
+	 *
+	 * @since 1.8.6
+	 *
+	 * @return string
+	 */
+	protected function get_primary_column_name() {
+		return 'name';
 	}
 
 	/**
@@ -188,7 +232,30 @@ class List_Table extends WP_List_Table {
 				break;
 
 			default:
-				$value = '';
+				// Dynamic column rendering handled by translation plugins (Polylang, WPML, TranslatePress, Linguator, etc.)
+				// and custom extensions via standard WordPress actions
+				ob_start();
+				do_action( 'manage_' . Dragwyb_Post::POST_TYPE . '_posts_custom_column', $column_name, $form->ID );
+				do_action( 'manage_posts_custom_column', $column_name, $form->ID );
+				$action_output = ob_get_clean();
+
+				if ( ! empty( $action_output ) ) {
+					$value = $action_output;
+				} elseif ( 'icl_translations' === $column_name && class_exists( 'WPML_Custom_Columns' ) && isset( $GLOBALS['sitepress'] ) ) {
+					// Fallback to WPML's native post column renderer
+					ob_start();
+					$wpml_columns = new \WPML_Custom_Columns( $GLOBALS['sitepress'] );
+					$wpml_columns->add_content_for_posts_management_column( $column_name, $form->ID );
+					$value = ob_get_clean();
+				} elseif ( 0 === strpos( (string) $column_name, 'language_' ) && isset( $GLOBALS['polylang']->filters_columns ) && method_exists( $GLOBALS['polylang']->filters_columns, 'post_column' ) ) {
+					// Fallback to Polylang's native post column renderer
+					ob_start();
+					$GLOBALS['polylang']->filters_columns->post_column( $column_name, $form->ID );
+					$value = ob_get_clean();
+				} else {
+					$value = '';
+				}
+				break;
 		}
 
 		return apply_filters( 'dragwyb_form_overview_column_value', $value, $form, $column_name );
@@ -356,6 +423,17 @@ class List_Table extends WP_List_Table {
 	}
 
 
+	/**
+	 * Extra controls to be displayed between bulk actions and pagination.
+	 *
+	 * @param string $which Location: 'top' or 'bottom'.
+	 */
+	protected function extra_tablenav( $which ) {
+		if ( 'top' === $which ) {
+			do_action( 'restrict_manage_posts', Dragwyb_Post::POST_TYPE, $which );
+		}
+	}
+
 	public function get_views() {
 		$statuses = array(
 			'all'     => array( 'label' => 'All' ),
@@ -383,6 +461,11 @@ class List_Table extends WP_List_Table {
 				$url   = remove_query_arg( array( 'paged', 's' ), $url );
 			}
 
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( ! empty( $_GET['lang'] ) ) {
+				$url = add_query_arg( 'lang', sanitize_text_field( wp_unslash( $_GET['lang'] ) ), $url );
+			}
+
 			if ( $count > 0 ) {
 				$views[ $key ] = sprintf(
 					'<a href="%s"%s>%s <span class="count">(%d)</span></a>',
@@ -403,6 +486,11 @@ class List_Table extends WP_List_Table {
 	 * @since 1.8.6
 	 */
 	public function prepare_items() {
+		// Ensure screen is set before fetching hidden columns
+		if ( empty( $this->screen ) && function_exists( 'get_current_screen' ) ) {
+			$this->screen = get_current_screen();
+		}
+
 		// 1. Setup columns
 		$columns               = $this->get_columns();
 		$hidden                = get_hidden_columns( $this->screen );
@@ -454,6 +542,35 @@ class List_Table extends WP_List_Table {
 
 		if ( ! empty( $search_query ) ) {
 			$args['s'] = $search_query;
+		}
+
+		// 5. Setup language filter for WP_Query
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$current_lang = isset( $_GET['lang'] ) ? sanitize_text_field( wp_unslash( $_GET['lang'] ) ) : '';
+
+		if ( empty( $current_lang ) && Helper::get_active_translation_plugin() === 'polylang' && ! isset( $_GET['lang'] ) ) {
+			if ( function_exists( 'pll_current_language' ) ) {
+				$pll_lang = pll_current_language( 'slug' );
+				if ( ! empty( $pll_lang ) ) {
+					$current_lang = $pll_lang;
+				}
+			}
+		}
+
+		if ( ! empty( $current_lang ) && 'all' !== $current_lang ) {
+			$args['lang'] = $current_lang;
+			if ( 'polylang' === Helper::get_active_translation_plugin() && taxonomy_exists( 'language' ) ) {
+				$args['tax_query'] = array(
+					array(
+						'taxonomy' => 'language',
+						'field'    => 'slug',
+						'terms'    => $current_lang,
+					),
+				);
+			}
+		} else {
+			// Explicitly allow all languages
+			$args['lang'] = '';
 		}
 
 		$query       = new \WP_Query( $args );

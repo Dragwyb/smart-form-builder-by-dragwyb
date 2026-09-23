@@ -31,8 +31,10 @@ class Control_Css_Filter extends Group_Control_Base {
 			'saturate',
 			'hue',
 			'selector',
+			'variable_selector',
 			'conditions',
 			'prefix',
+			'backdrop',
 		);
 	}
 
@@ -40,7 +42,7 @@ class Control_Css_Filter extends Group_Control_Base {
 		return $this->sanitize_control( $value );
 	}
 
-	protected function sanitize_control( $value, $settings ) {
+	protected function sanitize_control( $value, $settings = null ) {
 		if ( ! is_array( $value ) ) {
 			return array();
 		}
@@ -48,6 +50,10 @@ class Control_Css_Filter extends Group_Control_Base {
 
 		if ( isset( $value['selector'] ) ) {
 			$sanitized['selector'] = sanitize_text_field( $value['selector'] );
+		}
+
+		if ( isset( $value['variable_selector'] ) ) {
+			$sanitized['variable_selector'] = sanitize_text_field( $value['variable_selector'] );
 		}
 
 		foreach ( array( 'blur', 'brightness', 'contrast', 'saturate', 'hue' ) as $key ) {
@@ -75,6 +81,9 @@ class Control_Css_Filter extends Group_Control_Base {
 		if ( isset( $this->data['selector'] ) && empty( $user_data['selector'] ) ) {
 			$user_data['selector'] = $this->data['selector'];
 		}
+		if ( isset( $this->data['variable_selector'] ) && empty( $user_data['variable_selector'] ) ) {
+			$user_data['variable_selector'] = $this->data['variable_selector'];
+		}
 
 		$valid_user_data = array();
 
@@ -92,10 +101,12 @@ class Control_Css_Filter extends Group_Control_Base {
 	}
 
 	protected function register_group_controls(): void {
-		$settings = $this->get_display_settings();
-		$id       = $this->string_sanitize( $this->id );
-		$selector = isset( $settings['selector'] ) && ! empty( $settings['selector'] ) ? $settings['selector'] : false;
-		$prefix   = isset( $settings['prefix'] ) && ! empty( $settings['prefix'] ) ? $settings['prefix'] : 'form';
+		$settings          = $this->get_display_settings();
+		$id                = $this->string_sanitize( $this->id );
+		$selector          = isset( $settings['selector'] ) && ! empty( $settings['selector'] ) ? $settings['selector'] : false;
+		$variable_selector = isset( $settings['variable_selector'] ) && ! empty( $settings['variable_selector'] ) ? $settings['variable_selector'] : '{{WRAPPER}}';
+		$prefix            = isset( $settings['prefix'] ) && ! empty( $settings['prefix'] ) ? $settings['prefix'] : 'form';
+		$filter_property   = isset( $settings['backdrop'] ) && true === $settings['backdrop'] ? 'backdrop-filter' : 'filter';
 
 		$selectors = array(
 			'blur'       => array( '--dragwyb-' . $prefix . '-filter-blur' => '{{VALUE}}{{UNIT}}' ),
@@ -104,6 +115,8 @@ class Control_Css_Filter extends Group_Control_Base {
 			'saturate'   => array( '--dragwyb-' . $prefix . '-filter-saturate' => '{{VALUE}}%' ),
 			'hue'        => array( '--dragwyb-' . $prefix . '-filter-hue' => '{{VALUE}}deg' ),
 		);
+
+		$filter_rule = $filter_property . ': brightness(var(--dragwyb-' . $prefix . '-filter-brightness, 100%)) contrast(var(--dragwyb-' . $prefix . '-filter-contrast, 100%)) saturate(var(--dragwyb-' . $prefix . '-filter-saturate, 100%)) blur(var(--dragwyb-' . $prefix . '-filter-blur, 0px)) hue-rotate(var(--dragwyb-' . $prefix . '-filter-hue, 0deg));';
 
 		$map = array(
 			'blur'       => array(
@@ -197,14 +210,26 @@ class Control_Css_Filter extends Group_Control_Base {
 				}
 			}
 
-			if ( isset( $selectors[ $key ] ) && is_array( $selectors[ $key ] ) ) {
+			$control_args['selectors'] = array();
+
+			// 1. Direct CSS properties applied to $selector (if provided)
+			if ( $selector && ! empty( $filter_rule ) ) {
+				$control_args['selectors'][ $selector ] = $filter_rule;
+			}
+
+			// 2. CSS variables applied to $variable_selector (default {{WRAPPER}})
+			if ( $variable_selector && isset( $selectors[ $key ] ) && is_array( $selectors[ $key ] ) ) {
 				$selector_style = '';
 				foreach ( $selectors[ $key ] as $selector_key => $selector_value ) {
 					$selector_style .= $selector_key . ':' . $selector_value . ';';
 				}
 
-				if ( ! empty( $selector_style ) && $selector ) {
-					$control_args['selectors'][ $selector ] = $selector_style;
+				if ( ! empty( $selector_style ) ) {
+					if ( isset( $control_args['selectors'][ $variable_selector ] ) ) {
+						$control_args['selectors'][ $variable_selector ] .= ' ' . $selector_style;
+					} else {
+						$control_args['selectors'][ $variable_selector ] = $selector_style;
+					}
 				}
 			}
 

@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Dragwyb\Form_Builder\Admin\Dragwyb_Pages\Dragwyb_Post;
 use Dragwyb\Form_Builder\Includes\Frontend\Frontend_Render;
 use Dragwyb\Form_Builder\Includes\Frontend\Managers\CSS_Manager;
+use Dragwyb\Form_Builder\Includes\Helper\Helper;
 
 class Shortcode_Handler {
 
@@ -51,6 +52,9 @@ class Shortcode_Handler {
 		if ( ! $form_id || get_post_type( $form_id ) !== Dragwyb_Post::POST_TYPE ) {
 			return '<p>' . esc_html__( 'Form not found or invalid.', 'smart-form-builder-by-dragwyb' ) . '</p>';
 		}
+
+		// Resolve translated form if Polylang or WPML is active.
+		$form_id = Helper::get_translated_form_id( $form_id );
 
 		$form_status = get_post_status( $form_id );
 

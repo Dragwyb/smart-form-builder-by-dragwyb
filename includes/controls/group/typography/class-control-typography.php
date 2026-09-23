@@ -194,7 +194,8 @@ class Control_Typography extends Group_Control_Base {
 				),
 				'default' => '',
 			),
-			'selector'       => '',
+			'selector'          => '',
+			'variable_selector' => '',
 		);
 	}
 
@@ -211,6 +212,7 @@ class Control_Typography extends Group_Control_Base {
 			'word_spacing',
 			'alignment',
 			'selector',
+			'variable_selector',
 			'conditions',
 			'prefix',
 		);
@@ -223,12 +225,20 @@ class Control_Typography extends Group_Control_Base {
 		return $this->sanitize_control( $value );
 	}
 
-	protected function sanitize_control( $value, $settings ) {
+	protected function sanitize_control( $value, $settings = null ) {
 		if ( ! is_array( $value ) ) {
 			return array();
 		}
 
 		$sanitized = array();
+
+		if ( isset( $value['selector'] ) ) {
+			$sanitized['selector'] = sanitize_text_field( $value['selector'] );
+		}
+
+		if ( isset( $value['variable_selector'] ) ) {
+			$sanitized['variable_selector'] = sanitize_text_field( $value['variable_selector'] );
+		}
 
 		// 1. Responsive Sliders (Size, Line Height, Spacing)
 		$slider_keys = array( 'size', 'line_height', 'letter_spacing', 'word_spacing' );
@@ -387,6 +397,13 @@ class Control_Typography extends Group_Control_Base {
 			? $this->data['settings']
 			: $this->data;
 
+		if ( isset( $this->data['selector'] ) && empty( $user_data['selector'] ) ) {
+			$user_data['selector'] = $this->data['selector'];
+		}
+		if ( isset( $this->data['variable_selector'] ) && empty( $user_data['variable_selector'] ) ) {
+			$user_data['variable_selector'] = $this->data['variable_selector'];
+		}
+
 		// 2. Security: Only allow keys that exist in our defaults
 		foreach ( $valid_settings as $key ) {
 			if ( ! array_key_exists( $key, $user_data ) ) {
@@ -418,23 +435,36 @@ class Control_Typography extends Group_Control_Base {
 	}
 
 	protected function register_group_controls(): void {
-		$settings = $this->get_display_settings();
+		$settings          = $this->get_display_settings();
+		$id                = $this->string_sanitize( $this->id );
+		$selector          = isset( $settings['selector'] ) && ! empty( $settings['selector'] ) ? $settings['selector'] : false;
+		$variable_selector = isset( $settings['variable_selector'] ) && ! empty( $settings['variable_selector'] ) ? $settings['variable_selector'] : '{{WRAPPER}}';
+		$prefix            = isset( $settings['prefix'] ) && ! empty( $settings['prefix'] ) ? $settings['prefix'] : 'form';
 
-		$id       = $this->string_sanitize( $this->id );
-		$selector = isset( $settings['selector'] ) && ! empty( $settings['selector'] ) ? $settings['selector'] : false;
-		$prefix   = isset( $settings['prefix'] ) && ! empty( $settings['prefix'] ) ? $settings['prefix'] : 'form';
+		$direct_selectors = array(
+			'family'         => 'font-family: {{VALUE}};',
+			'size'           => 'font-size: {{VALUE}}{{UNIT}};',
+			'weight'         => 'font-weight: {{VALUE}};',
+			'transform'      => 'text-transform: {{VALUE}};',
+			'style'          => 'font-style: {{VALUE}};',
+			'decoration'     => 'text-decoration: {{VALUE}};',
+			'line_height'    => 'line-height: {{VALUE}}{{UNIT}};',
+			'letter_spacing' => 'letter-spacing: {{VALUE}}{{UNIT}};',
+			'word_spacing'   => 'word-spacing: {{VALUE}}{{UNIT}};',
+			'alignment'      => 'text-align: {{VALUE}};',
+		);
 
-		$selectors = array(
-			'family'         => array( '--dragwyb-' . $prefix . '-typography-family' => '{{VALUE}}' ),
-			'size'           => array( '--dragwyb-' . $prefix . '-typography-size' => '{{VALUE}}{{UNIT}}' ),
-			'weight'         => array( '--dragwyb-' . $prefix . '-typography-wt' => '{{VALUE}}' ),
-			'transform'      => array( '--dragwyb-' . $prefix . '-typography-ts' => '{{VALUE}}' ),
-			'style'          => array( '--dragwyb-' . $prefix . '-typography-st' => '{{VALUE}}' ),
-			'decoration'     => array( '--dragwyb-' . $prefix . '-typography-dt' => '{{VALUE}}' ),
-			'line_height'    => array( '--dragwyb-' . $prefix . '-typography-lh' => '{{VALUE}}{{UNIT}}' ),
-			'letter_spacing' => array( '--dragwyb-' . $prefix . '-typography-ls' => '{{VALUE}}{{UNIT}}' ),
-			'word_spacing'   => array( '--dragwyb-' . $prefix . '-typography-ws' => '{{VALUE}}{{UNIT}}' ),
-			'alignment'      => array( '--dragwyb-' . $prefix . '-typography-align' => '{{VALUE}}' ),
+		$var_selectors = array(
+			'family'         => '--dragwyb-' . $prefix . '-typography-family: {{VALUE}};',
+			'size'           => '--dragwyb-' . $prefix . '-typography-size: {{VALUE}}{{UNIT}};',
+			'weight'         => '--dragwyb-' . $prefix . '-typography-wt: {{VALUE}};',
+			'transform'      => '--dragwyb-' . $prefix . '-typography-ts: {{VALUE}};',
+			'style'          => '--dragwyb-' . $prefix . '-typography-st: {{VALUE}};',
+			'decoration'     => '--dragwyb-' . $prefix . '-typography-dt: {{VALUE}};',
+			'line_height'    => '--dragwyb-' . $prefix . '-typography-lh: {{VALUE}}{{UNIT}};',
+			'letter_spacing' => '--dragwyb-' . $prefix . '-typography-ls: {{VALUE}}{{UNIT}};',
+			'word_spacing'   => '--dragwyb-' . $prefix . '-typography-ws: {{VALUE}}{{UNIT}};',
+			'alignment'      => '--dragwyb-' . $prefix . '-typography-align: {{VALUE}};',
 		);
 
 		// 2. Control Map
@@ -567,14 +597,19 @@ class Control_Typography extends Group_Control_Base {
 				}
 			}
 
-			if ( isset( $selectors[ $key ] ) && is_array( $selectors[ $key ] ) ) {
-				$selector_style = '';
-				foreach ( $selectors[ $key ] as $selector_key => $selector_value ) {
-					$selector_style .= $selector_key . ':' . $selector_value . ';';
-				}
+			$control_args['selectors'] = array();
 
-				if ( ! empty( $selector_style ) ) {
-					$control_args['selectors'][ $selector ] = $selector_style;
+			// 1. Direct CSS properties applied to $selector (if provided)
+			if ( $selector && isset( $direct_selectors[ $key ] ) && ! empty( $direct_selectors[ $key ] ) ) {
+				$control_args['selectors'][ $selector ] = $direct_selectors[ $key ];
+			}
+
+			// 2. CSS variables applied to $variable_selector (default {{WRAPPER}})
+			if ( $variable_selector && isset( $var_selectors[ $key ] ) && ! empty( $var_selectors[ $key ] ) ) {
+				if ( isset( $control_args['selectors'][ $variable_selector ] ) ) {
+					$control_args['selectors'][ $variable_selector ] .= ' ' . $var_selectors[ $key ];
+				} else {
+					$control_args['selectors'][ $variable_selector ] = $var_selectors[ $key ];
 				}
 			}
 

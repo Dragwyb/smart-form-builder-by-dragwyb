@@ -63,6 +63,11 @@ if ( ! class_exists( 'Dragwyb_Builder_Editor' ) ) {
 
 		public function render_editor( $screen ) {
 			if ( gettype( $screen ) === 'object' && $screen( self::Current_Page ) ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for form id check
+				$form_id = isset( $_GET['form_id'] ) ? absint( wp_unslash( $_GET['form_id'] ) ) : 0;
+				if ( ! is_user_logged_in() || ( ! current_user_can( 'manage_options' ) && ( $form_id ? ! current_user_can( 'edit_post', $form_id ) : ! current_user_can( 'edit_dragwyb_forms' ) ) ) ) {
+					wp_die( esc_html__( 'Sorry, you are not allowed to access this page.', 'smart-form-builder-by-dragwyb' ) );
+				}
 				$this->builder_output();
 			}
 		}
@@ -117,6 +122,10 @@ if ( ! class_exists( 'Dragwyb_Builder_Editor' ) ) {
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce is required for form id check
 			$form_id = isset( $_GET['form_id'] ) ? absint( wp_unslash( $_GET['form_id'] ) ) : 0;
 
+			if ( ! is_user_logged_in() || ( ! current_user_can( 'manage_options' ) && ( $form_id ? ! current_user_can( 'edit_post', $form_id ) : ! current_user_can( 'edit_dragwyb_forms' ) ) ) ) {
+				return;
+			}
+
 			$post_type = Dragwyb_Post::POST_TYPE;
 
 			if ( ! isset( $form_id ) || ! $form_id ) {
@@ -131,10 +140,67 @@ if ( ! class_exists( 'Dragwyb_Builder_Editor' ) ) {
 				self::$initial_load = true;
 				self::$form_id      = $post_id;
 
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$from_post_id = isset( $_GET['from_post'] ) ? absint( wp_unslash( $_GET['from_post'] ) ) : 0;
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$new_lang = isset( $_GET['new_lang'] ) ? sanitize_text_field( wp_unslash( $_GET['new_lang'] ) ) : '';
+
+				$form_title = 'Form #' . $post_id;
+
+				if ( ! empty( $from_post_id ) ) {
+					$from_post = get_post( $from_post_id );
+					if ( $from_post && $from_post->post_type === $post_type ) {
+						$source_title = ! empty( $from_post->post_title ) ? $from_post->post_title : 'Form #' . $from_post_id;
+						$form_title   = ! empty( $new_lang ) ? sprintf( '%s (%s)', $source_title, strtoupper( $new_lang ) ) : $source_title;
+
+						// Copy form data from source form
+						$from_data = get_post_meta( $from_post_id, '_dragwyb_form_data', true );
+						if ( ! empty( $from_data ) ) {
+							update_post_meta( $post_id, '_dragwyb_form_data', $from_data );
+						}
+
+						// Link translations in Polylang
+						if ( function_exists( 'pll_set_post_language' ) && ! empty( $new_lang ) ) {
+							pll_set_post_language( $post_id, $new_lang );
+							if ( function_exists( 'pll_get_post_translations' ) && function_exists( 'pll_save_post_translations' ) ) {
+								$translations = pll_get_post_translations( $from_post_id );
+								if ( ! is_array( $translations ) ) {
+									$translations = array();
+								}
+								$from_lang = function_exists( 'pll_get_post_language' ) ? pll_get_post_language( $from_post_id, 'slug' ) : '';
+								if ( ! empty( $from_lang ) && empty( $translations[ $from_lang ] ) ) {
+									$translations[ $from_lang ] = $from_post_id;
+								}
+								$translations[ $new_lang ] = $post_id;
+								pll_save_post_translations( $translations );
+							}
+						}
+
+						// Link translations in WPML
+						if ( has_action( 'wpml_set_element_language_details' ) && ! empty( $new_lang ) ) {
+							$trid = apply_filters( 'wpml_element_trid', null, $from_post_id, 'post_' . $post_type );
+							do_action(
+								'wpml_set_element_language_details',
+								array(
+									'element_id'           => $post_id,
+									'element_type'         => 'post_' . $post_type,
+									'trid'                 => $trid,
+									'language_code'        => $new_lang,
+									'source_language_code' => apply_filters( 'wpml_element_language_code', null, array( 'element_id' => $from_post_id, 'element_type' => $post_type ) ),
+								)
+							);
+						}
+					}
+				} elseif ( ! empty( $new_lang ) ) {
+					if ( function_exists( 'pll_set_post_language' ) ) {
+						pll_set_post_language( $post_id, $new_lang );
+					}
+				}
+
 				wp_update_post(
 					array(
 						'ID'         => $post_id,
-						'post_title' => 'Form #' . $post_id,
+						'post_title' => $form_title,
 					)
 				);
 

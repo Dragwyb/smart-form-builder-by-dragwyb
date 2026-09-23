@@ -64,7 +64,7 @@ class Dragwyb_Pages {
 		);
 
 		// Add submenu page for Form List (All Forms)
-		add_submenu_page(
+		$overview_page = add_submenu_page(
 			DRAGWYB_PREFIX . '-dashboard',
 			__( 'Forms', 'smart-form-builder-by-dragwyb' ),
 			__( 'Forms', 'smart-form-builder-by-dragwyb' ),
@@ -72,6 +72,10 @@ class Dragwyb_Pages {
 			DRAGWYB_PREFIX . '-form-overview',
 			array( $this, 'dragwyb_render_page' )
 		);
+
+		if ( ! empty( $overview_page ) ) {
+			add_action( "load-{$overview_page}", array( Form_Overview::instance(), 'add_screen_options' ) );
+		}
 
 		// Add submenu page for adding a form
 		add_submenu_page(

@@ -119,6 +119,16 @@ class Field_Time extends Field_Base {
 			)
 		);
 
+		$this->add_control(
+			'required',
+			array(
+				'type'         => Controls::SWITCHER,
+				'label'        => __( 'Is Required?', 'smart-form-builder-by-dragwyb' ),
+				'return_value' => 'yes',
+				'default'      => 'no',
+			)
+		);
+
 		$this->end_section();
 
 		$this->start_section(
@@ -164,26 +174,6 @@ class Field_Time extends Field_Base {
 
 		$this->end_section();
 
-		$this->start_section(
-			'section_content_validation',
-			array(
-				'label' => __( 'Validation Rules', 'smart-form-builder-by-dragwyb' ),
-				'tab'   => self::ContentTab,
-			)
-		);
-
-		$this->add_control(
-			'required',
-			array(
-				'type'         => Controls::SWITCHER,
-				'label'        => __( 'Is Required?', 'smart-form-builder-by-dragwyb' ),
-				'return_value' => 'yes',
-				'default'      => 'no',
-			)
-		);
-
-		$this->end_section();
-
 		// Label Style
 		$this->start_section(
 			'section_style_label',
@@ -198,7 +188,10 @@ class Field_Time extends Field_Base {
 			array(
 				'type'      => Controls::COLOR,
 				'label'     => __( 'Color', 'smart-form-builder-by-dragwyb' ),
-				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-label-color: {{VALUE}};' ),
+				'selectors' => array(
+					'{{WRAPPER}} .dragwyb-field-label' => 'color: {{VALUE}};',
+					'{{WRAPPER}}'                      => '--dragwyb-label-color: {{VALUE}};',
+				),
 			)
 		);
 
@@ -213,7 +206,10 @@ class Field_Time extends Field_Base {
 						'max' => 50,
 					),
 				),
-				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-label-spacing: {{VALUE}}{{UNIT}};' ),
+				'selectors' => array(
+					'{{WRAPPER}} .dragwyb-field-label' => 'margin-bottom: {{VALUE}}{{UNIT}};',
+					'{{WRAPPER}}'                      => '--dragwyb-label-spacing: {{VALUE}}{{UNIT}};',
+				),
 			)
 		);
 
@@ -236,7 +232,10 @@ class Field_Time extends Field_Base {
 			array(
 				'type'      => Controls::COLOR,
 				'label'     => __( 'Background Color', 'smart-form-builder-by-dragwyb' ),
-				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-input-bg: {{VALUE}};' ),
+				'selectors' => array(
+					'{{WRAPPER}} .dragwyb-field-input' => 'background: {{VALUE}};',
+					'{{WRAPPER}}'                      => '--dragwyb-input-bg: {{VALUE}};',
+				),
 			)
 		);
 
@@ -245,7 +244,10 @@ class Field_Time extends Field_Base {
 			array(
 				'type'      => Controls::COLOR,
 				'label'     => __( 'Placeholder Color', 'smart-form-builder-by-dragwyb' ),
-				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-input-placeholder-color: {{VALUE}};' ),
+				'selectors' => array(
+					'{{WRAPPER}} .dragwyb-field-input::placeholder' => 'color: {{VALUE}};',
+					'{{WRAPPER}}' => '--dragwyb-input-placeholder-color: {{VALUE}};',
+				),
 			)
 		);
 
@@ -254,16 +256,20 @@ class Field_Time extends Field_Base {
 			array(
 				'type'      => Controls::COLOR,
 				'label'     => __( 'Text Color', 'smart-form-builder-by-dragwyb' ),
-				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-input-color: {{VALUE}};' ),
+				'selectors' => array(
+					'{{WRAPPER}} .dragwyb-field-input' => 'color: {{VALUE}};',
+					'{{WRAPPER}}'                      => '--dragwyb-input-color: {{VALUE}};',
+				),
 			)
 		);
 
 		$this->add_group_control(
 			'input_border',
 			array(
-				'type'     => Controls::GROUP_BORDER,
-				'selector' => '{{WRAPPER}}',
-				'prefix'   => 'input',
+				'type'              => Controls::GROUP_BORDER,
+				'selector'          => '{{WRAPPER}} .dragwyb-field-input',
+				'variable_selector' => '{{WRAPPER}}',
+				'prefix'            => 'input',
 			)
 		);
 
@@ -276,7 +282,10 @@ class Field_Time extends Field_Base {
 			array(
 				'type'      => Controls::COLOR,
 				'label'     => __( 'Active Border Color', 'smart-form-builder-by-dragwyb' ),
-				'selectors' => array( '{{WRAPPER}}' => '--dragwyb-input-focus-border: {{VALUE}};' ),
+				'selectors' => array(
+					'{{WRAPPER}} .dragwyb-field-input:focus' => 'border-color: {{VALUE}};',
+					'{{WRAPPER}}' => '--dragwyb-input-focus-border: {{VALUE}};',
+				),
 			)
 		);
 
@@ -290,7 +299,10 @@ class Field_Time extends Field_Base {
 				'type'       => Controls::DIMENSIONS,
 				'label'      => __( 'Inner Padding', 'smart-form-builder-by-dragwyb' ),
 				'size_units' => array( 'px', 'em', '%' ),
-				'selectors'  => array( '{{WRAPPER}}' => '--dragwyb-input-pt: {{TOP}}{{UNIT}}; --dragwyb-input-pr: {{RIGHT}}{{UNIT}}; --dragwyb-input-pb: {{BOTTOM}}{{UNIT}}; --dragwyb-input-pl: {{LEFT}}{{UNIT}};' ),
+				'selectors'  => array(
+					'{{WRAPPER}} .dragwyb-field-input' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}}'                      => '--dragwyb-input-pt: {{TOP}}{{UNIT}}; --dragwyb-input-pr: {{RIGHT}}{{UNIT}}; --dragwyb-input-pb: {{BOTTOM}}{{UNIT}}; --dragwyb-input-pl: {{LEFT}}{{UNIT}};',
+				),
 				'separator'  => 'before',
 			)
 		);

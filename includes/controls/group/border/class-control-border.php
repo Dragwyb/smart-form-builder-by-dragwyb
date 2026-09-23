@@ -49,6 +49,7 @@ class Control_Border extends Group_Control_Base {
 			'selector',
 			'conditions',
 			'prefix',
+			'variable_selector',
 		);
 	}
 
@@ -58,7 +59,7 @@ class Control_Border extends Group_Control_Base {
 		return $this->sanitize_control( $value );
 	}
 
-	protected function sanitize_control( $value, $settings ) {
+	protected function sanitize_control( $value, $settings = null ) {
 		if ( ! is_array( $value ) ) {
 			return array();
 		}
@@ -93,6 +94,10 @@ class Control_Border extends Group_Control_Base {
 			$sanitized['selector'] = sanitize_text_field( $value['selector'] );
 		}
 
+		if ( isset( $value['variable_selector'] ) ) {
+			$sanitized['variable_selector'] = sanitize_text_field( $value['variable_selector'] );
+		}
+
 		return $sanitized;
 	}
 
@@ -111,6 +116,9 @@ class Control_Border extends Group_Control_Base {
 		// Ensure we handle the root selector if passed directly in data (common pattern)
 		if ( isset( $this->data['selector'] ) && empty( $user_data['selector'] ) ) {
 			$user_data['selector'] = $this->data['selector'];
+		}
+		if ( isset( $this->data['variable_selector'] ) && empty( $user_data['variable_selector'] ) ) {
+			$user_data['variable_selector'] = $this->data['variable_selector'];
 		}
 
 		$user_data = array_replace_recursive( $defaults, $user_data );
@@ -132,28 +140,26 @@ class Control_Border extends Group_Control_Base {
 	}
 
 	protected function register_group_controls(): void {
-		$settings = $this->get_display_settings();
-		$id       = $this->string_sanitize( $this->id );
-		$selector = isset( $settings['selector'] ) && ! empty( $settings['selector'] ) ? $settings['selector'] : false;
-		$prefix   = isset( $settings['prefix'] ) && ! empty( $settings['prefix'] ) ? $settings['prefix'] : 'form';
+		$settings          = $this->get_display_settings();
+		$id                = $this->string_sanitize( $this->id );
+		$selector          = isset( $settings['selector'] ) && ! empty( $settings['selector'] ) ? $settings['selector'] : false;
+		$variable_selector = isset( $settings['variable_selector'] ) && ! empty( $settings['variable_selector'] ) ? $settings['variable_selector'] : '{{WRAPPER}}';
+		$prefix            = isset( $settings['prefix'] ) && ! empty( $settings['prefix'] ) ? $settings['prefix'] : 'form';
 
-		// Definition of selectors map
-		// Note: Dimensions (width/radius) use specific placeholders {{TOP}}, {{RIGHT}}, etc.
-		$selectors = array(
-			'style'  => array( '--dragwyb-' . $prefix . '-border-style' => '{{VALUE}}' ),
-			'color'  => array( '--dragwyb-' . $prefix . '-border-color' => '{{VALUE}}' ),
-			'width'  => array(
-				'--dragwyb-' . $prefix . '-border-top-width'   => '{{TOP}}{{UNIT}}',
-				'--dragwyb-' . $prefix . '-border-bottom-width' => '{{BOTTOM}}{{UNIT}}',
-				'--dragwyb-' . $prefix . '-border-right-width' => '{{RIGHT}}{{UNIT}}',
-				'--dragwyb-' . $prefix . '-border-left-width'  => '{{LEFT}}{{UNIT}}',
-			),
-			'radius' => array(
-				'--dragwyb-' . $prefix . '-border-top-radius'  => '{{TOP}}{{UNIT}}',
-				'--dragwyb-' . $prefix . '-border-bottom-radius' => '{{BOTTOM}}{{UNIT}}',
-				'--dragwyb-' . $prefix . '-border-right-radius' => '{{RIGHT}}{{UNIT}}',
-				'--dragwyb-' . $prefix . '-border-left-radius' => '{{LEFT}}{{UNIT}}',
-			),
+		// Direct CSS property declarations for $selector
+		$direct_selectors = array(
+			'style'  => 'border-style: {{VALUE}};',
+			'color'  => 'border-color: {{VALUE}};',
+			'width'  => 'border-top-width: {{TOP}}{{UNIT}}; border-right-width: {{RIGHT}}{{UNIT}}; border-bottom-width: {{BOTTOM}}{{UNIT}}; border-left-width: {{LEFT}}{{UNIT}};',
+			'radius' => 'border-top-left-radius: {{TOP}}{{UNIT}}; border-top-right-radius: {{RIGHT}}{{UNIT}}; border-bottom-right-radius: {{BOTTOM}}{{UNIT}}; border-bottom-left-radius: {{LEFT}}{{UNIT}};',
+		);
+
+		// Variable definitions for $variable_selector
+		$var_selectors = array(
+			'style'  => '--dragwyb-' . $prefix . '-border-style: {{VALUE}};',
+			'color'  => '--dragwyb-' . $prefix . '-border-color: {{VALUE}};',
+			'width'  => '--dragwyb-' . $prefix . '-border-top-width: {{TOP}}{{UNIT}}; --dragwyb-' . $prefix . '-border-right-width: {{RIGHT}}{{UNIT}}; --dragwyb-' . $prefix . '-border-bottom-width: {{BOTTOM}}{{UNIT}}; --dragwyb-' . $prefix . '-border-left-width: {{LEFT}}{{UNIT}};',
+			'radius' => '--dragwyb-' . $prefix . '-border-top-radius: {{TOP}}{{UNIT}}; --dragwyb-' . $prefix . '-border-right-radius: {{RIGHT}}{{UNIT}}; --dragwyb-' . $prefix . '-border-bottom-radius: {{BOTTOM}}{{UNIT}}; --dragwyb-' . $prefix . '-border-left-radius: {{LEFT}}{{UNIT}};',
 		);
 
 		// 2. Control Map
@@ -232,14 +238,19 @@ class Control_Border extends Group_Control_Base {
 				}
 			}
 
-			if ( isset( $selectors[ $key ] ) && is_array( $selectors[ $key ] ) ) {
-				$selector_style = '';
-				foreach ( $selectors[ $key ] as $selector_key => $selector_value ) {
-					$selector_style .= $selector_key . ':' . $selector_value . ';';
-				}
+			$control_args['selectors'] = array();
 
-				if ( ! empty( $selector_style ) ) {
-					$control_args['selectors'][ $selector ] = $selector_style;
+			// 1. Direct CSS properties applied to $selector (if provided)
+			if ( $selector && isset( $direct_selectors[ $key ] ) && ! empty( $direct_selectors[ $key ] ) ) {
+				$control_args['selectors'][ $selector ] = $direct_selectors[ $key ];
+			}
+
+			// 2. CSS variables applied to $variable_selector (default {{WRAPPER}})
+			if ( $variable_selector && isset( $var_selectors[ $key ] ) && ! empty( $var_selectors[ $key ] ) ) {
+				if ( isset( $control_args['selectors'][ $variable_selector ] ) ) {
+					$control_args['selectors'][ $variable_selector ] .= ' ' . $var_selectors[ $key ];
+				} else {
+					$control_args['selectors'][ $variable_selector ] = $var_selectors[ $key ];
 				}
 			}
 

@@ -19,6 +19,13 @@ if ( ! class_exists( 'Form_Overview' ) ) {
 		 */
 		private static $instance = null;
 
+		/**
+		 * Flag to prevent adding screen options multiple times.
+		 *
+		 * @var bool
+		 */
+		private $screen_options_added = false;
+
 		public static function instance(): self {
 			if ( null === self::$instance ) {
 				self::$instance = new self();
@@ -26,8 +33,118 @@ if ( ! class_exists( 'Form_Overview' ) ) {
 
 			return self::$instance;
 		}
+
 		public function __construct() {
 			add_action( 'Dragwyb_Menu_Page', array( $this, 'render_entries' ), 1 );
+			add_action( 'current_screen', array( $this, 'handle_current_screen' ) );
+			add_filter( 'set-screen-option', array( $this, 'set_screen_option' ), 10, 3 );
+			add_filter( 'set_screen_option_dragwyb_forms_per_page', array( $this, 'set_screen_option' ), 10, 3 );
+		}
+
+		/**
+		 * Handle current screen event to initialize screen options.
+		 *
+		 * @param \WP_Screen|null $screen Current WP_Screen object.
+		 */
+		public function handle_current_screen( $screen ): void {
+			if ( ! $screen || ! isset( $screen->id ) ) {
+				return;
+			}
+
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+
+			if ( false !== strpos( $screen->id, 'dragwyb-form-overview' ) || DRAGWYB_PREFIX . '-form-overview' === $page || 'dragwyb-form-overview' === $page ) {
+				$this->add_screen_options();
+			}
+		}
+
+		/**
+		 * Add Screen Options for columns visibility and pagination.
+		 */
+		public function add_screen_options(): void {
+			if ( $this->screen_options_added ) {
+				return;
+			}
+
+			$screen = get_current_screen();
+			if ( ! $screen || ! isset( $screen->id ) ) {
+				return;
+			}
+
+			$this->screen_options_added = true;
+
+			// Register columns filter for this screen so Screen Options displays column checkboxes.
+			add_filter( "manage_{$screen->id}_columns", array( $this, 'get_manage_columns' ) );
+
+			// Register columns directly in $_wp_column_headers.
+			if ( function_exists( 'register_column_headers' ) ) {
+				register_column_headers( $screen, $this->get_manage_columns() );
+			}
+
+			// Add per page pagination screen option.
+			add_screen_option(
+				'per_page',
+				array(
+					'label'   => __( 'Number of forms per page', 'smart-form-builder-by-dragwyb' ),
+					'default' => 20,
+					'option'  => 'dragwyb_forms_per_page',
+				)
+			);
+		}
+
+		/**
+		 * Get clean column headers for Screen Options.
+		 *
+		 * @param array $columns Existing columns.
+		 * @return array
+		 */
+		public function get_manage_columns( $columns = array() ): array {
+			if ( class_exists( List_Table::class ) ) {
+				$table_columns  = List_Table::get_instance()->get_columns();
+				$manage_columns = array();
+				foreach ( $table_columns as $key => $label ) {
+					$clean_label = wp_strip_all_tags( (string) $label );
+					if ( empty( $clean_label ) ) {
+						if ( 0 === strpos( $key, 'language_' ) ) {
+							$lang_slug   = str_replace( 'language_', '', $key );
+							$clean_label = sprintf( __( 'Language: %s', 'smart-form-builder-by-dragwyb' ), strtoupper( $lang_slug ) );
+						} elseif ( 'icl_translations' === $key ) {
+							$clean_label = __( 'Languages (WPML)', 'smart-form-builder-by-dragwyb' );
+						} else {
+							$clean_label = ucfirst( $key );
+						}
+					}
+					$manage_columns[ $key ] = $clean_label;
+				}
+				return $manage_columns;
+			}
+
+			return array(
+				'cb'              => '<input type="checkbox" />',
+				'name'            => __( 'Name', 'smart-form-builder-by-dragwyb' ),
+				'shortcode'       => __( 'Shortcode', 'smart-form-builder-by-dragwyb' ),
+				'views'           => __( 'Views', 'smart-form-builder-by-dragwyb' ),
+				'submissions'     => __( 'Submissions', 'smart-form-builder-by-dragwyb' ),
+				'conversion_rate' => __( 'Conversion Rate', 'smart-form-builder-by-dragwyb' ),
+				'date'            => __( 'Date', 'smart-form-builder-by-dragwyb' ),
+			);
+		}
+
+		/**
+		 * Save screen options like per_page value.
+		 *
+		 * @param mixed  $status Screen option status.
+		 * @param string $option Option name.
+		 * @param mixed  $value  Option value.
+		 * @return mixed
+		 */
+		public function set_screen_option( $status, $option, $value ) {
+			if ( 'dragwyb_forms_per_page' === $option ) {
+				return (int) $value;
+			}
+
+			return $status;
 		}
 
 		public function render_entries( $screen ) {
@@ -43,6 +160,15 @@ if ( ! class_exists( 'Form_Overview' ) ) {
 
 		private function enqueue_admin_assets(): void {
 			wp_enqueue_style( 'dashicons' );
+
+			// Enqueue WPML icon styles if WPML is active
+			if ( wp_style_is( 'otgs-icons', 'registered' ) ) {
+				wp_enqueue_style( 'otgs-icons' );
+			}
+			if ( wp_style_is( 'wpml-post-edit-terms', 'registered' ) ) {
+				wp_enqueue_style( 'wpml-post-edit-terms' );
+			}
+
 			wp_enqueue_script( DRAGWYB_PREFIX . '-overview-assets', esc_url( DRAGWYB_FORM_BUILDER_URL . 'assets/js/dragwyb-overview-assets.js' ), array( 'jquery' ), esc_attr( DRAGWYB_FORM_BUILDER_VERSION ), true );
 
 			wp_localize_script(
@@ -125,6 +251,12 @@ if ( ! class_exists( 'Form_Overview' ) ) {
 						if ( ! empty( $_GET['post_status'] ) ) :
 							?>
 							<input type="hidden" name="post_status" value="<?php echo esc_attr( sanitize_key( wp_unslash( $_GET['post_status'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>">
+						<?php endif; ?>
+						<?php
+						// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+						if ( ! empty( $_GET['lang'] ) ) :
+							?>
+							<input type="hidden" name="lang" value="<?php echo esc_attr( sanitize_text_field( wp_unslash( $_GET['lang'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>">
 						<?php endif; ?>
 						<?php
 						$form_table->search_box( 'search', 'search_id' );

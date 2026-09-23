@@ -1,12 +1,13 @@
 import { __, sprintf } from "@wordpress/i18n";
-import React, { useEffect, useRef, useMemo, useCallback } from "react";
+import React, { useEffect, useRef, useMemo, useCallback, useState } from "react";
 import { useStore, useDispatch, useSelector } from 'react-redux';
-import { FaXmark } from "react-icons/fa6";
+import { FaXmark, FaCopy, FaCheck, FaArrowUp, FaArrowDown, FaRegClone } from "react-icons/fa6";
 import FieldSettings from "./FieldSettings";
 import DragwybToolbarBase from "../controlBase/../toolbarBase";
 import { Utils as Helper } from '../components/Utils';
 import { useDraggable, useDroppable } from "../components/Common";
-import { resetSectionSettings } from "../store/actions";
+import { resetSectionSettings, addField, updateField } from "../store/actions";
+import FieldQuickBar from './fieldQuickBar';
 
 const FieldSettingsSidebar = ({ onFieldSelect }) => {
   const selectedFieldId = useSelector(state => state.selectedSettingId);
@@ -118,6 +119,17 @@ const FieldSettingsSidebar = ({ onFieldSelect }) => {
     }, 400);
   }, [dispatch]);
 
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyId = useCallback((e) => {
+    e.stopPropagation();
+    if (selectedFieldId) {
+      navigator.clipboard.writeText(selectedFieldId);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    }
+  }, [selectedFieldId]);
+
   // Don't render if no field is selected or selectedSettingId is a toolbar name instead of a field
   if (!selectedFieldId || !selectedField || selectedFieldId === 'fields' || selectedFieldId === 'history') {
     return null;
@@ -170,12 +182,30 @@ const FieldSettingsSidebar = ({ onFieldSelect }) => {
             </span>
           )}
           <div className="dragwyb-editor__field-sidebar-meta">
-            <h3 className="dragwyb-editor__field-sidebar-title" title={displayLabel}>
-              {displayLabel}
-            </h3>
-            <span className="dragwyb-editor__field-sidebar-badge">
-              {fieldTypeLabel}
-            </span>
+            <div className="dragwyb-editor__field-sidebar-title-row">
+              <h3 className="dragwyb-editor__field-sidebar-title" title={displayLabel}>
+                {displayLabel}
+              </h3>
+              <span className="dragwyb-editor__field-sidebar-badge">
+                {fieldTypeLabel}
+              </span>
+            </div>
+            <div className="dragwyb-editor__field-sidebar-subrow">
+              <button
+                type="button"
+                className={`dragwyb-editor__field-id-pill ${copied ? 'is-copied' : ''}`}
+                onClick={handleCopyId}
+                title={copied ? __('Copied to clipboard!', 'smart-form-builder-by-dragwyb') : __('Click to copy Field ID', 'smart-form-builder-by-dragwyb')}
+              >
+                <span className="dragwyb-editor__field-id-prefix">#</span>
+                <span className="dragwyb-editor__field-id-text">{selectedFieldId}</span>
+                {copied ? (
+                  <FaCheck size={10} className="dragwyb-editor__field-id-icon is-success" />
+                ) : (
+                  <FaCopy size={10} className="dragwyb-editor__field-id-icon" />
+                )}
+              </button>
+            </div>
           </div>
         </div>
         <button
@@ -197,6 +227,16 @@ const FieldSettingsSidebar = ({ onFieldSelect }) => {
               toolbarValue={toolbarValues}
               toolbarSettings={settings}
               onSettingChange={onSettingChangeHandler}
+              SettingQuickBar={<FieldQuickBar
+                selectedField={selectedField}
+                selectedFieldId={selectedFieldId}
+                formData={formData}
+                fields={fields}
+                Utils={Utils}
+                onFieldSelect={onFieldSelect}
+                store={store}
+                onSettingChangeHandler={onSettingChangeHandler}
+              />}
             />
           </div>
         )}

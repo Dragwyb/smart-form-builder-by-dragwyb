@@ -16,7 +16,7 @@ class Register_Controls {
 
 	private array $group_controls = array();
 
-	private array $default_controls = array( Controls::CHOOSE, Controls::COLOR, Controls::DIMENSIONS, Controls::FONTS, Controls::GALLERY, Controls::IMAGE, Controls::HEADING, Controls::ICON, Controls::NUMBER, Controls::RADIO, Controls::RAW_HTML, Controls::REPEATER, Controls::SECTION, Controls::SELECT, Controls::MULTISELECT, Controls::SLIDER, Controls::SWITCHER, Controls::TABS, Controls::TAB, Controls::TEXT, Controls::TEXTAREA, Controls::WYSIWYG, Controls::POPOVER_TOGGLE, Controls::URL, Controls::DATE, Controls::PRESET_STYLE );
+	private array $default_controls = array( Controls::CHOOSE, Controls::COLOR, Controls::DIMENSIONS, Controls::FONTS, Controls::GALLERY, Controls::IMAGE, Controls::HEADING, Controls::ICON, Controls::NUMBER, Controls::RADIO, Controls::RAW_HTML, Controls::REPEATER, Controls::SECTION, Controls::SELECT, Controls::MULTISELECT, Controls::SLIDER, Controls::SWITCHER, Controls::TABS, Controls::TAB, Controls::TEXT, Controls::TEXTAREA, Controls::WYSIWYG, Controls::POPOVER_TOGGLE, Controls::URL, Controls::DATE );
 
 	private array $default_group_controls = array( Controls::GROUP_TYPOGRAPHY, Controls::GROUP_BORDER, Controls::GROUP_BOX_SHADOW, Controls::GROUP_TEXT_SHADOW, Controls::GROUP_CSS_FILTER, Controls::GROUP_BACKGROUND );
 

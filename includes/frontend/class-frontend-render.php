@@ -632,7 +632,7 @@ class Frontend_Render {
 		foreach ( $controls as $control_id => $control_settings ) {
 			// 1. Validate: Ensure control definition and 'selectors' exist
 			if (
-				! isset( $control_settings['type'] )
+			! isset( $control_settings['type'] )
 			) {
 				continue;
 			}
@@ -701,9 +701,9 @@ class Frontend_Render {
 				}
 				continue;
 			} elseif (
-				! isset( $control_settings['selectors'] ) ||
-				! is_array( $control_settings['selectors'] ) &&
-				count( $control_settings['selectors'] ) < 1
+			! isset( $control_settings['selectors'] ) ||
+			! is_array( $control_settings['selectors'] ) &&
+			count( $control_settings['selectors'] ) < 1
 			) {
 				continue;
 			}
@@ -822,9 +822,24 @@ class Frontend_Render {
 
 			$css_array[ $unique_key ][ $selector ] = $property;
 		} elseif ( ! isset( $css_array[ $selector ] ) ) {
-				$css_array[ $selector ] = $property;
-		} else {
-			$css_array[ $selector ] = $css_array[ $selector ] . $property;
+			$css_array[ $selector ] = $property;
+		} elseif ( strpos( $css_array[ $selector ], $property ) === false ) {
+			if ( strpos( $property, ';' ) === false ) {
+				$css_array[ $selector ] .= $property;
+				return;
+			}
+
+			$properties = explode( ';', $property );
+
+			$final_selector = '';
+
+			foreach ( $properties as $propertie ) {
+				$propertie = trim( $propertie );
+				if ( strpos( $css_array[ $selector ], $propertie ) === false ) {
+					$final_selector .= $propertie . ';';
+				}
+			}
+			$css_array[ $selector ] .= $final_selector;
 		}
 	}
 

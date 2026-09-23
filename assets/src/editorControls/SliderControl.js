@@ -78,6 +78,11 @@ export default class SliderControl extends DragwybEditor.editor.extends.ControlB
         );
     }
 
+    getStyleSelectorPlaceholder(value, placeholders) {
+        placeholders = JSON.parse(JSON.stringify(placeholders));
+        return placeholders;
+    }
+
     valueChanged() {
         const { default: defaultValue = {} } = this.settings;
         const { value = {} } = this.state;

@@ -9,11 +9,13 @@ import ResponsiveDevices from '../../components/Common/ResponsiveDevices';
 import IconsManager from '../../components/IconsManager';
 
 // Import the icons you requested
-import { FaSun, FaMoon, FaHistory, FaFolderPlus } from 'react-icons/fa';
+import { FaSun, FaMoon, FaHistory, FaFolderPlus, FaPalette } from 'react-icons/fa';
 import TemplateLibrary from './TemplateLibrary';
+import PresetModal from './PresetModal';
 
 const Header = () => {
     const [isTemplateOpen, setIsTemplateOpen] = useState(DragwybEditor?.formData?.rootContainers?.length > 0 ? false : true);
+    const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
     // Existing Selectors
     const activeToolbar = useSelector(state => state?.activeToolbar);
     const formStatus = useSelector(state => state?.form?.advance?.form_status || DragwybEditor.formData.status);
@@ -124,20 +126,28 @@ const Header = () => {
                     }}
                     title={__('View History', 'smart-form-builder-by-dragwyb')}
                 >
-                    <FaHistory color='#fff' />
+                    <FaHistory />
+                </div>
+                <div
+                    className={`dragwyb-editor__presets-toggle${isPresetModalOpen ? ' active' : ''}`}
+                    onClick={() => setIsPresetModalOpen(true)}
+                    title={__('Preset Styles', 'smart-form-builder-by-dragwyb')}
+                >
+                    <FaPalette />
                 </div>
                 <div
                     className={`dragwyb-editor__templates-toggle${isTemplateOpen ? ' active' : ''}`}
                     onClick={() => setIsTemplateOpen(!isTemplateOpen)}
                     title={__('Open Template Library', 'smart-form-builder-by-dragwyb')}
                 >
-                    <FaFolderPlus color='#fff' />
+                    <FaFolderPlus />
                 </div>
                 <div
                     className="dragwyb-editor__theme-toggle"
                     onClick={toggleTheme}
-                    title={themeMode === 'light' ? __('Switch to Dark Mode', 'smart-form-builder-by-dragwyb') : __('Switch to Light Mode', 'smart-form-builder-by-dragwyb')}                >
-                    {themeMode === 'light' ? <FaMoon color='#fff' /> : <FaSun color="#f39c12" />}
+                    title={themeMode === 'light' ? __('Switch to Dark Mode', 'smart-form-builder-by-dragwyb') : __('Switch to Light Mode', 'smart-form-builder-by-dragwyb')}
+                >
+                    {themeMode === 'light' ? <FaMoon /> : <FaSun color="#f39c12" />}
                 </div>
                 <a href={escUrl(DragwybEditor.previewUrl)} className='dragwyb-editor__preview-toggle' target="_blank" title={__('Frontend Preview', 'smart-form-builder-by-dragwyb')}>
                     <IconsManager icon='far fa-eye' title={__('Preview', 'smart-form-builder-by-dragwyb')} />
@@ -148,12 +158,19 @@ const Header = () => {
                 </a>
                 <SaveBtn />
             </div>
-            {iframeEle &&
-                <TemplateLibrary
-                    isOpen={isTemplateOpen}
-                    onClose={() => setIsTemplateOpen(false)}
-                />
-            }
+            {iframeEle && (
+                <>
+                    <TemplateLibrary
+                        isOpen={isTemplateOpen}
+                        onClose={() => setIsTemplateOpen(false)}
+                    />
+                    <PresetModal
+                        isOpen={isPresetModalOpen}
+                        onClose={() => setIsPresetModalOpen(false)}
+                        Utils={Utils}
+                    />
+                </>
+            )}
         </div>
     );
 }

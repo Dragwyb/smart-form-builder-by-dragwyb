@@ -29,7 +29,9 @@ export default class SectionControl extends DragwybEditor.editor.extends.Control
         return (
             <div className={sectionCls} data-control="section" id={`control-${id}`} onClick={() => { this.updateControlHandler(id, !(id === value)) }}>
                 <span className="dragwyb-section__title">{settings.label}</span>
-                <RiArrowDownSLine />
+                <span className="dragwyb-section__chevron-wrap">
+                    <RiArrowDownSLine />
+                </span>
             </div>
         );
     }

@@ -10,7 +10,7 @@ class Control_Multiselect extends Control_Base {
 		return array(
 			'name'    => 'string',
 			'label'   => 'string',
-			'default' => 'custom',
+			'default' => 'array',
 			'options' => 'custom',
 		);
 	}
