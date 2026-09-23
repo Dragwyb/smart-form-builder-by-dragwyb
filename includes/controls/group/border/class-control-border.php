@@ -35,7 +35,6 @@ class Control_Border extends Group_Control_Base {
 					'dashed' => __( 'Dashed', 'smart-form-builder-by-dragwyb' ),
 					'groove' => __( 'Groove', 'smart-form-builder-by-dragwyb' ),
 				),
-				'default' => 'solid',
 			),
 		);
 	}
