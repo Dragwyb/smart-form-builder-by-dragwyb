@@ -78,15 +78,6 @@ class Form_Preview {
 				)
 			);
 
-			if ( function_exists( 'wp_enqueue_classic_theme_styles' ) ) {
-				$this->filter_theme_hook_callbacks(
-					'wp_enqueue_scripts',
-					array(
-						'wp_enqueue_classic_theme_styles',
-					)
-				);
-			}
-
 			$this->filter_theme_hook_callbacks(
 				'wp_footer',
 				array(
@@ -333,9 +324,6 @@ class Form_Preview {
 		if ( function_exists( 'wp_enqueue_global_styles' ) ) {
 			wp_enqueue_global_styles();
 		}
-		if ( function_exists( 'wp_enqueue_classic_theme_styles' ) ) {
-			wp_enqueue_classic_theme_styles();
-		}
 		if ( function_exists( 'wp_common_block_scripts_and_styles' ) ) {
 			wp_common_block_scripts_and_styles();
 		}
@@ -357,8 +345,6 @@ class Form_Preview {
 				wp_add_inline_style( 'dragwyb-editor-preview', $custom_css );
 			}
 		}
-
-		do_action( 'Dragwyb/Editor/Preview/Enqueue_Theme_Assets' );
 	}
 
 	/**
