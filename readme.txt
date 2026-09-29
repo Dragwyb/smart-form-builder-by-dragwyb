@@ -6,7 +6,7 @@ Author URI: https://dragwyb.com/?utm_source=wpplugin&utm_medium=author_uri&utm_c
 Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.3.5
+Stable tag: 1.3.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -169,6 +169,11 @@ Website administrators are responsible for configuring forms, consent, retention
 10. Plugin dashboard with submission overview and unread entries.
 
 == Changelog ==
+
+= 1.3.6 =
+* Fixed: Deactivation notice not appear in plugins page.
+* Fixed: PCP issue and removed unused hook & code.
+* Tweak: Renamed plugin name.
 
 = 1.3.5 =
 * Added: WPML and Polylang compatibility.
