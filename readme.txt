@@ -1,4 +1,4 @@
-=== Dragwyb Forms – Contact Form & Form Builder ===
+=== Smart Form Builder – Contact Form & Drag Drop Builder by Dragwyb ===
 Contributors: dragwyb
 Tags: contact form, form builder, conditional logic, lead generation, multi step forms
 Plugin URI: https://dragwyb.com/product/form/?utm_source=wpplugin&utm_medium=plugin_uri&utm_campaign=form_builder
