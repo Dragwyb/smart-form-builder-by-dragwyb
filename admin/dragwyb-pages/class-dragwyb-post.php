@@ -178,7 +178,7 @@ class Dragwyb_Post {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$post_type = isset( $_GET['post_type'] ) ? sanitize_text_field( wp_unslash( $_GET['post_type'] ) ) : '';
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$post_id   = isset( $_GET['post'] ) ? absint( $_GET['post'] ) : 0;
+		$post_id = isset( $_GET['post'] ) ? absint( $_GET['post'] ) : 0;
 
 		if ( $post_id && ! $post_type ) {
 			$post_type = get_post_type( $post_id );
@@ -197,11 +197,12 @@ class Dragwyb_Post {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$from_post = isset( $_GET['from_post'] ) ? absint( $_GET['from_post'] ) : 0;
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$new_lang  = isset( $_GET['new_lang'] ) ? sanitize_text_field( wp_unslash( $_GET['new_lang'] ) ) : '';
+			$new_lang = isset( $_GET['new_lang'] ) ? sanitize_text_field( wp_unslash( $_GET['new_lang'] ) ) : '';
 
 			// Support WPML parameters if from_post/new_lang not set directly
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( empty( $new_lang ) && isset( $_GET['lang'] ) ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				$new_lang = sanitize_text_field( wp_unslash( $_GET['lang'] ) );
 			}
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended

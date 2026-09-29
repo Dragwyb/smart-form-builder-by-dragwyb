@@ -107,7 +107,8 @@ if ( ! class_exists( 'Form_Overview' ) ) {
 					$clean_label = wp_strip_all_tags( (string) $label );
 					if ( empty( $clean_label ) ) {
 						if ( 0 === strpos( $key, 'language_' ) ) {
-							$lang_slug   = str_replace( 'language_', '', $key );
+							$lang_slug = str_replace( 'language_', '', $key );
+							// translators: %s is the language slug.
 							$clean_label = sprintf( __( 'Language: %s', 'smart-form-builder-by-dragwyb' ), strtoupper( $lang_slug ) );
 						} elseif ( 'icl_translations' === $key ) {
 							$clean_label = __( 'Languages (WPML)', 'smart-form-builder-by-dragwyb' );

@@ -422,18 +422,6 @@ class List_Table extends WP_List_Table {
 		);
 	}
 
-
-	/**
-	 * Extra controls to be displayed between bulk actions and pagination.
-	 *
-	 * @param string $which Location: 'top' or 'bottom'.
-	 */
-	protected function extra_tablenav( $which ) {
-		if ( 'top' === $which ) {
-			do_action( 'restrict_manage_posts', Dragwyb_Post::POST_TYPE, $which );
-		}
-	}
-
 	public function get_views() {
 		$statuses = array(
 			'all'     => array( 'label' => 'All' ),
@@ -463,6 +451,7 @@ class List_Table extends WP_List_Table {
 
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( ! empty( $_GET['lang'] ) ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				$url = add_query_arg( 'lang', sanitize_text_field( wp_unslash( $_GET['lang'] ) ), $url );
 			}
 
@@ -548,6 +537,7 @@ class List_Table extends WP_List_Table {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$current_lang = isset( $_GET['lang'] ) ? sanitize_text_field( wp_unslash( $_GET['lang'] ) ) : '';
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( empty( $current_lang ) && Helper::get_active_translation_plugin() === 'polylang' && ! isset( $_GET['lang'] ) ) {
 			if ( function_exists( 'pll_current_language' ) ) {
 				$pll_lang = pll_current_language( 'slug' );
@@ -560,6 +550,7 @@ class List_Table extends WP_List_Table {
 		if ( ! empty( $current_lang ) && 'all' !== $current_lang ) {
 			$args['lang'] = $current_lang;
 			if ( 'polylang' === Helper::get_active_translation_plugin() && taxonomy_exists( 'language' ) ) {
+				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query tax_query need for fetch active language forms.
 				$args['tax_query'] = array(
 					array(
 						'taxonomy' => 'language',
