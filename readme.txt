@@ -1,6 +1,6 @@
 === Smart Form Builder – Contact Form & Drag Drop Builder by Dragwyb ===
 Contributors: dragwyb
-Tags: contact form, form builder, conditional logic, lead generation, multi step forms
+Tags: contact form, form builder, conditional logic, multi step forms, lead generation
 Plugin URI: https://dragwyb.com/product/form/?utm_source=wpplugin&utm_medium=plugin_uri&utm_campaign=form_builder
 Author URI: https://dragwyb.com/?utm_source=wpplugin&utm_medium=author_uri&utm_campaign=form_builder
 Requires at least: 5.9
@@ -10,220 +10,221 @@ Stable tag: 1.3.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Contact forms, lead generation, conditional logic, multi-step forms, analytics, SMTP, multilingual support, and more.
+Drag & drop contact form builder with conditional logic, multi-step forms, built-in SMTP, country code, input masking, and lead generation.
 
 == Description ==
 
-**Dragwyb Forms** is a free drag-and-drop WordPress form builder for creating professional forms without coding.
+**Smart Form Builder** is a fast, lightweight, drag-and-drop WordPress form builder plugin designed to create high-converting **contact forms**, **lead generation forms**, **multi-step forms**, and **surveys** without writing any code.
 
-Create contact forms, lead generation forms, surveys, quote requests, applications, registrations, multi-step forms, conditional forms, and custom forms with a visual editor.
+Equipped with a visual React-powered editor, native **Gutenberg block**, and dedicated **Elementor widget**, Dragwyb Forms provides advanced features like **conditional logic**, **built-in SMTP**, **phone number country codes**, **input masking**, and **reCAPTCHA spam protection**—completely free without restrictive submission limits.
 
-[Explore the Dragwyb Forms live demo](https://dragwyb.com/demo/form/?utm_source=wpplugin&utm_medium=readme&utm_campaign=dragwyb_form)
+Whether you need a simple feedback contact form, an advanced conditional quote calculator, or an interactive multi-step registration form with progress bars, Smart Form Builder delivers maximum speed, clean database storage, and high conversion rates.
 
-== Features ==
+[Explore the Live Demo](https://dragwyb.com/demo/form/?utm_source=wpplugin&utm_medium=readme&utm_campaign=dragwyb_form)
 
-* **Drag-and-Drop Form Builder** – Build forms visually without coding.
-* **Unlimited Forms & Submissions** – Create and manage forms without limits.
-* **Conditional Logic** – Show or hide fields based on visitor answers.
-* **Multi-Step Forms** – Create multi-step forms with navigation and progress indicators.
-* **18 Form Style Presets** – Apply ready-made styles with live previews.
-* **Multilingual Forms** – WPML and Polylang compatibility.
-* **Built-in SMTP** – Configure SMTP for form notification emails.
-* **Form Analytics** – Track views, submissions, conversions, devices, and campaign data.
-* **UTM Tracking** – Capture source, medium, campaign, term, and content.
-* **Form Templates** – Start quickly with ready-to-use templates.
-* **Elementor Integration** – Add forms with the dedicated Elementor widget.
-* **Gutenberg Integration** – Add forms with the dedicated Gutenberg block.
-* **Spam Protection** – Honeypot, Google reCAPTCHA v2/v3, and hCaptcha.
-* **File Uploads** – Collect files through form submissions.
-* **Input Masking** – Format structured field values.
-* **GDPR Consent** – Add a dedicated consent field.
-* **Entry Management** – View, filter, bulk delete, and export submissions.
-* **Error Logs** – View and export form error logs.
-* **Responsive Styling** – Configure desktop, tablet, and mobile layouts.
-* **Custom CSS** – Add custom CSS and use CSS variables.
-* **Optimized Frontend** – Optimized assets for frontend performance.
+---
 
-== Available Fields ==
+### Why Choose Smart Form Builder?
 
-* **Basic** – Text, Email, Number, Textarea, URL
-* **Choice** – Select, Checkbox, Radio
-* **Personal Information** – Name, Address, Phone
-* **Date & Time** – Date, Time
-* **Advanced** – Hidden, HTML, Step, Range Slider
-* **Security** – Captcha
-* **File & Data** – File Upload, Input Mask
-* **Privacy** – GDPR Consent
+* **Visual Drag & Drop Builder:** Create clean, mobile-responsive contact forms in seconds with live real-time editing.
+* **Smart Conditional Fields:** Show or hide fields dynamically based on visitor selections to keep forms compact and relevant.
+* **Multi-Step Form Layouts:** Increase completion rates by breaking complex questionnaires into engaging steps with visual progress indicators.
+* **Built-in SMTP Configuration:** Fix WordPress email deliverability issues; send notification and autoresponder emails reliably without extra plugins.
+* **Lead Generation & Analytics:** Track impressions, submissions, conversion rates, and full UTM parameters (source, medium, campaign).
+* **Zero Database Bloat:** Modular asset loading ensures fast page load times and 100% compliance with Google Core Web Vitals.
+* **Unlimited Forms & Submissions:** No paywalls, entry caps, or locked essential fields.
 
-=== Lead Generation & Tracking ===
+---
 
-* **UTM Source, Medium, Campaign, Term & Content**
-* **Form Views & Submission Tracking**
-* **Conversion Tracking**
-* **Visitor Device Information**
-* **Campaign Data**
+### Top Features
 
-=== Integrations ===
+=== Conditional Logic & Dynamic Fields ===
+Create interactive, smart forms by defining custom rules. Show or hide text fields, dropdowns, file uploads, or entire sections based on previous user input (e.g., reveal a budget slider only if "Custom Project" is selected).
 
-* **Elementor Widget**
-* **Gutenberg Block**
-* **WPML Compatibility**
-* **Polylang Compatibility**
+=== Multi-Step Forms & Conversational UX ===
+Reduce form abandonment with seamless multi-step forms. Add Step Break fields, customizable Next/Previous navigation buttons, and responsive progress bars or step count indicators.
 
-=== Email, Security & Validation ===
+=== Built-in SMTP & Reliable Email Delivery ===
+Never miss a lead submission. Set up your custom SMTP host, port, authentication, and encryption directly within the form settings. Easily test email delivery with one click to ensure notifications land in your inbox, not spam.
 
-* **Built-in SMTP**
-* **Notification & Autoresponder Emails**
-* **Honeypot**
-* **Google reCAPTCHA v2 & v3**
-* **hCaptcha**
-* **Field Validation**
-* **Required Fields**
-* **Input Masking**
+=== Phone Field with Country Code & Flags ===
+Capture international phone numbers accurately with automatic country code selection, dropdown flag pickers, and live validation.
+
+=== Custom Input Masking ===
+Ensure clean, structured data formatting for phone numbers, dates, zip codes, tax IDs, and custom numeric patterns using real-time field input masks.
+
+=== Spam Protection: reCAPTCHA, hCaptcha & Honeypot ===
+Block spam bots silently and securely. Choose between invisible Honeypot traps, Google reCAPTCHA v2 (checkbox), Google reCAPTCHA v3 (invisible score), or privacy-first hCaptcha.
+
+=== Form Submission & Entry Management ===
+Manage, search, filter, and review all form submissions directly from your WordPress dashboard. Export leads and entry records to CSV for seamless CRM and email marketing import.
+
+=== 18 Pre-Designed Form Style Presets ===
+Style your contact forms instantly without touching CSS. Choose from 18 modern design presets with custom button styles, floating labels, input borders, and responsive layouts.
+
+---
+
+### Included Field Types
+
+* **Standard Form Fields:** Single Line Text, Email Address, Number, Textarea (Multi-line message), Website URL
+* **Choice & Selection:** Dropdown Select, Multiple Checkboxes, Radio Buttons
+* **Contact & User Details:** Full Name, Complete Address, Phone Number with Country Code & Flag Selector
+* **Formatting & Validation:** Custom Input Masking, Field Character Limits, Required Field Validation
+* **Date & Scheduling:** Interactive Date Picker, Time Picker (Powered by Flatpickr)
+* **Advanced Structure:** Multi-Step Break, Hidden Field, Custom HTML Block, Interactive Range Slider
+* **Spam & Privacy:** Google reCAPTCHA v2/v3, hCaptcha, Honeypot, GDPR Consent Checkbox
+* **File Attachments:** Secure File Upload (Images, PDFs, Documents, Spreadsheets)
+
+---
+
+### Ready-to-Use Form Templates
+
+* Simple Contact Form & Feedback Form
+* High-Converting Lead Generation & Quote Request Form
+* Multi-Step Job Application Form with Resume/File Upload
+* Interactive Customer Satisfaction & Net Promoter Score (NPS) Survey
+* Event, Workshop & Webinar Registration Form
+* Newsletter Signup & Lead Capture Form
 
 == Installation ==
 
-1. Go to **Plugins → Add New** in your WordPress dashboard.
-2. Search for **Dragwyb Forms**.
-3. Click **Install Now** and **Activate**.
-4. Open **Dragwyb Forms** and create your form.
-5. Publish the form using Elementor, Gutenberg, or your preferred integration.
+### Automatic Installation (Fastest)
 
-For manual installation, upload the Dragwyb Forms ZIP from **Plugins → Add New → Upload Plugin**, install it, and activate the plugin.
+1. Go to **Plugins → Add New** inside your WordPress Admin Dashboard.
+2. Search for **Smart Form Builder Dragwyb** or **Dragwyb Forms**.
+3. Click **Install Now**, then click **Activate**.
+4. Open the **Smart Forms** menu in your sidebar and click **Add New Form**.
+5. Customize your fields, configure email notifications, and publish!
+
+### Manual Installation via ZIP
+
+1. Download the plugin ZIP archive from WordPress.org.
+2. In your WordPress admin, navigate to **Plugins → Add New → Upload Plugin**.
+3. Select the downloaded ZIP file and click **Install Now**.
+4. Activate the plugin.
+
+### Embedding Your Forms
+
+* **Gutenberg Editor:** Insert the dedicated **Smart Form** block and select your form from the dropdown list.
+* **Elementor Page Builder:** Drag and drop the **Smart Form** widget directly into your column or section.
+* **Shortcode:** Paste the generated shortcode (e.g., `[dragwyb_form id="123"]`) into any post, page, header, footer, or sidebar widget.
 
 == Frequently Asked Questions ==
 
-= Is Dragwyb Forms free? =
+= Is Smart Form Builder completely free? =
 
-Yes. The core plugin includes unlimited forms and submissions.
+Yes. Smart Form Builder provides unlimited contact forms, unlimited form fields, and unlimited submissions with zero artificial paywalls.
 
-= Can I create forms without coding? =
+= How does the conditional logic feature work? =
 
-Yes. The visual drag-and-drop editor lets you build and customize forms without coding.
+You can apply conditional rules to any field inside the drag-and-drop editor. Simply toggle "Enable Conditional Logic" on a field and set rules like: *Show this field if "Service Type" equals "Web Development"*.
 
-= What types of forms can I create? =
+= Can I create multi-step forms with progress bars? =
 
-Contact, lead generation, survey, quote request, application, registration, multi-step, conditional, and custom forms.
+Yes. Insert the "Step" element into your form layout. You can configure individual step names, display interactive progress bars, and customize Next/Previous button labels.
 
-= Does Dragwyb Forms support conditional logic? =
+= Does the plugin include built-in SMTP? =
 
-Yes. Fields can be shown or hidden based on visitor selections or previous answers.
+Yes. Built-in SMTP is included so you can route transactional form emails through your own mail server (or providers like Gmail, SendGrid, Amazon SES) without needing a separate SMTP plugin.
 
-= Does it support multi-step forms? =
+= Does the phone field support international country codes? =
 
-Yes. Use Step fields, navigation controls, progress indicators, and progress bars.
+Yes. The phone field includes a country code selector with country flags and input masks to validate international numbers accurately.
 
-= Does it support multilingual websites? =
+= How does spam protection work? =
 
-Yes. Dragwyb Forms is compatible with WPML and Polylang.
+The plugin provides a silent, invisible Honeypot trap by default. You can also connect Google reCAPTCHA v2, Google reCAPTCHA v3, or hCaptcha by adding your site and secret keys in the plugin settings.
 
-= Does it include SMTP and spam protection? =
+= Can I export form submissions to CSV? =
 
-Yes. Built-in SMTP is available, along with Honeypot, Google reCAPTCHA v2/v3, and hCaptcha.
+Yes. Go to the Entries dashboard to view, filter, sort, search, and export all submission data into standard CSV files.
 
-= Does it support analytics and UTM tracking? =
+= Does Smart Form Builder slow down my site? =
 
-Yes. Analytics and UTM tracking can capture form and campaign data.
-
-= Does it work with Elementor and Gutenberg? =
-
-Yes. Dedicated Elementor and Gutenberg integrations are included.
-
-= Can I manage form submissions? =
-
-Yes. Entries can be viewed, filtered, bulk deleted, and exported from the WordPress dashboard.
-
-= Does it support GDPR consent? =
-
-Yes. A GDPR Consent field and privacy-related options are available.
+No. Assets are strictly modular and load only when an active form shortcode, Gutenberg block, or Elementor widget is present on the page.
 
 == External Services ==
 
-Dragwyb Forms bundles these local open-source libraries:
+Dragwyb Forms bundles and connects with these open-source libraries and services:
 
-* **Pickr**: Used for color picker functionality [Source](https://github.com/Simonwep/pickr)
-* **Flatpickr**: Used for Date and Time field functionality [Source](https://github.com/flatpickr/flatpickr)
-* **Font Awesome Free**: Used for icons in the editor and forms [Source](https://fontawesome.com/license/free)
-* **Chart.js**: Used for analytics charts and data visualization [Source](https://www.chartjs.org/)
-* **Dragwyb Feedback API**: Used to submit feedback and diagnostic reports from the WordPress admin dashboard [Service](https://feedback.dragwyb.com) and [Privacy Policy](https://dragwyb.com/privacy-policy/)
+* **Pickr:** Used for color picker styling within the form design editor. [Pickr Source](https://github.com/Simonwep/pickr)
+* **Flatpickr:** Powers the responsive interactive Date and Time fields. [Flatpickr Source](https://github.com/flatpickr/flatpickr)
+* **Font Awesome Free:** Provides icons used throughout the form interface and builder. [Font Awesome License](https://fontawesome.com/license/free)
+* **Chart.js:** Renders conversion rates and performance visual graphs in the analytics dashboard. [Chart.js Source](https://www.chartjs.org/)
+* **Dragwyb Feedback API:** Allows voluntary submission of feedback, diagnostic reports, and error telemetry from the admin dashboard to improve plugin quality. [Service Endpoint](https://feedback.dragwyb.com) | [Privacy Policy](https://dragwyb.com/privacy-policy/)
 
 == Privacy ==
 
-Dragwyb Forms may store form submissions and related form data in the WordPress database.
+Smart Form Builder stores submitted form data in your local WordPress MySQL database. Depending on your configuration, submissions may contain personally identifiable information (PII) entered by your visitors.
 
-Depending on the configured fields, submissions may contain information provided by website visitors.
-
-Website administrators are responsible for configuring forms, consent, retention, and privacy settings according to applicable laws and requirements.
+Site administrators maintain complete ownership of their data and are responsible for configuring GDPR consent fields, data retention, and privacy policies in accordance with applicable regional laws.
 
 == Screenshots ==
 
-1. Drag-and-drop form builder with field settings and live form preview.
-2. Form preset styles with live previews.
-3. Conditional logic rules for dynamic fields.
-4. Multi-step form with progress indicator.
-5. Template library with ready-to-use templates.
-6. Form management screen with statuses, shortcodes, and submission counts.
-7. Form analytics with views, submissions, conversions, and campaign data.
-8. Entry management with filtering, bulk actions, and export.
-9. Plugin settings for SMTP, API keys, performance, and privacy.
-10. Plugin dashboard with submission overview and unread entries.
+1. Drag-and-drop visual form builder with real-time preview and field settings.
+2. Intuitive conditional logic rule builder for dynamic fields.
+3. Multi-step form builder with interactive progress indicators.
+4. Phone field with international country code and flag selector.
+5. Ready-to-use template library for contact forms, surveys, and lead generation.
+6. Form submission management screen with filtering, status toggles, and CSV export.
+7. Built-in SMTP configuration and email notification settings.
+8. Real-time form analytics tracking impressions, submissions, conversion rates, and UTM tags.
+9. 18 pre-designed responsive styling presets with live preview.
+10. Gutenberg block and Elementor widget integration screens.
 
 == Changelog ==
 
 = 1.3.6 =
-* Fixed: Deactivation notice not appear in plugins page.
-* Fixed: PCP issue and removed unused hook & code.
-* Tweak: Renamed plugin name.
+* Fixed: Deactivation notice visibility issue on the main plugins screen.
+* Fixed: Plugin Check (PCP) warnings and removed unused hooks and legacy code.
+* Tweak: Optimized display title and SEO metadata.
 
 = 1.3.5 =
-* Added: WPML and Polylang compatibility.
-* Added: 18 form preset styles with live previews.
-* Added: Preset Style button in the editor.
-* Added: Quick field width and field move controls.
-* Added: Screen Options for the Forms overview.
-* Added: Floating label option to hide labels after entering a value.
-* Added: Compatibility with supported default WordPress theme styles.
-* Fixed: Business template preview issue.
-* Fixed: Form submission issues.
-* Improved: Form styling, editor UI, validation settings, and frontend performance.
+* Added: Full multilingual compatibility with WPML and Polylang.
+* Added: 18 responsive form preset styles with instant live preview.
+* Added: Quick preset style switcher button directly in the visual editor.
+* Added: Field width shortcuts and rapid repositioning controls.
+* Added: Screen Options toggle for the main Forms list view.
+* Added: Modern floating label support.
+* Added: Out-of-the-box style inheritance for default WordPress core themes.
+* Fixed: Form template preview modal glitch on business presets.
+* Fixed: Edge-case submission handler validation issues.
+* Improved: Form editor UI, field validation settings, and frontend asset delivery.
 
 = 1.3.4 =
-* Fixed: JavaScript editor errors that could cause a blank editor.
-* Improved: Visitor tracking defaults, form loading performance, and editor usability.
-* Tweak: Updated readme text.
+* Fixed: JavaScript editor exception that could cause a blank canvas on older browsers.
+* Improved: Visitor tracking defaults, form asset caching, and builder responsiveness.
+* Tweak: Updated readme documentation and search keywords.
 
 = 1.3.3 =
-* Fixed: PHP error when deleting a form.
+* Fixed: PHP error when deleting a draft form.
 
 = 1.3.2 =
-* Added: Smart Form Gutenberg Block.
-* Added: Smart Form Elementor Widget.
-* Fixed: Row root container selection issue.
-* Improved: Fields category structure.
+* Added: Dedicated Smart Form Gutenberg Block.
+* Added: Dedicated Smart Form Elementor Widget.
+* Fixed: Root container row selection in the visual canvas.
+* Improved: Categorization and organization of the field picker.
 
 = 1.3.1 =
-* Fixed: Business template creation during onboarding.
-* Fixed: Radio field validation message issue.
-* Fixed: Export form dropdown modal issue.
-* Improved: Form editor field settings.
-* Improved: Field drag-and-drop experience.
-* Tweak: Updated plugin name to Dragwyb Forms.
-* Tweak: Updated form demo link.
+* Fixed: Onboarding business template generation issue.
+* Fixed: Radio field validation messaging.
+* Fixed: Form export dropdown modal UI bug.
+* Improved: Form builder settings panel and drag-and-drop smoothness.
 
 == Upgrade Notice ==
 
-= 1.3.5 =
-Adds multilingual compatibility, 18 form preset styles, editor improvements, styling improvements, performance optimizations, and submission fixes.
+= 1.3.6 =
+Recommended update: includes PCP code cleanup, display title improvements, and stability fixes.
 
 == Other Plugins by Dragwyb ==
 
-* **[Flipbox Addon for Elementor](https://wordpress.org/plugins/ultimate-flipbox-addon-for-elementor/)** – Create interactive 3D flip boxes for Elementor.
-* **[Click To Chat](https://wordpress.org/plugins/dragwyb-click-to-chat/)** – Add AI chatbot and floating social chat widgets to WordPress.
+* 🎛️ **[Flipbox Addon for Elementor](https://wordpress.org/plugins/ultimate-flipbox-addon-for-elementor/)** – Create interactive, conversion-focused 3D flip boxes in Elementor.
+* 💬 **[Click To Chat](https://wordpress.org/plugins/dragwyb-click-to-chat/)** – Connect with your website visitors instantly through WhatsApp, Telegram, and social channels.
+* 🤖 **[AI Agent Workflows](https://wordpress.org/plugins/dragwyb-ai-agent-workflows)** – Build visual automation workflows in WordPress using webhooks, form triggers, WooCommerce events, and AI agent actions.
 
 == Contribute ==
 
-Dragwyb Forms is open-source and contributions are welcome.
+Smart Form Builder by Dragwyb is open-source software. Community contributions, feature suggestions, and pull requests are warmly welcomed.
 
-[Github](https://github.com/Dragwyb/smart-form-builder-by-dragwyb) and [Bug Reports & Feature Requests](https://github.com/Dragwyb/smart-form-builder-by-dragwyb/issues)
-
-Pull requests are welcome.
+* [GitHub Repository](https://github.com/Dragwyb/smart-form-builder-by-dragwyb)
+* [Submit Bug Reports & Feature Requests](https://github.com/Dragwyb/smart-form-builder-by-dragwyb/issues)
