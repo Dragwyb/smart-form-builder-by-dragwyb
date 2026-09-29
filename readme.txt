@@ -211,6 +211,92 @@ Site administrators maintain complete ownership of their data and are responsibl
 * Fixed: Form export dropdown modal UI bug.
 * Improved: Form builder settings panel and drag-and-drop smoothness.
 
+= 1.3.0 =
+* Added: Input Mask field for automatically formatting user input such as phone numbers or ZIP codes.
+* Added: GDPR field and Privacy Policy settings.
+* Added: Built-in SMTP email settings.
+* Added: Analytics Dashboard for tracking form views, submissions, and conversions.
+* Added: Main dashboard page with quick statistics and recent form entries.
+* Added: Detailed analytics page with data filtering.
+* Added: New success and error message display options.
+* Added: Automatic storage of visitor device information and UTM tracking data.
+* Added: Quick setup screen after plugin activation.
+* Added: Dashboard and Settings shortcut links from the WordPress Plugins screen.
+* Fixed: Form submissions not saving correctly when forms were created using templates.
+* Fixed: Form builder editor issues.
+* Fixed: Form status not updating correctly after the first save.
+* Fixed: Form list search issue.
+* Improved: Template Library, Settings, and Form List interfaces.
+* Improved: Default submit button styling.
+* Tweak: Automatic cache cleanup when deleting forms.
+* Tweak: Hide unrelated admin notices on plugin pages.
+* Tweak: Renamed plugin to Dragwyb Forms.
+* Tested up to: WordPress 7.1.
+
+= 1.2.1 =
+* Tweak: Updated plugin URL in the plugin header.
+
+= 1.2.0 =
+* Added: History with undo and redo functionality.
+* Added: Keyboard shortcuts for Ctrl+Z and Ctrl+Y.
+* Added: Template library with 12 pre-built form templates.
+* Added: Multiple preset form styles.
+* Added: Country code selection for the Phone field.
+* Added: Flatpickr integration for Date and Time fields.
+* Added: CSS variable and Custom CSS options.
+* Added: Radio field styling options.
+* Added: Default values for Select, Radio, and Checkbox fields.
+* Added: Background color setting for the HTML field.
+* Fixed: HTML field rendering issues.
+* Fixed: Step and HTML field styling issues.
+* Fixed: Conditional hidden field whitespace issue.
+* Fixed: Minor PHP warnings and errors.
+* Fixed: Form display issues for draft and trash statuses.
+* Improved: Form editor header layout and UI.
+
+= 1.1.1 =
+* Added: Entry and error log export.
+* Added: Bulk delete actions for entries and error logs.
+* Added: Quick-access editor button from the form preview admin bar.
+* Improved: Step field preview accuracy.
+
+= 1.1.0 =
+* Added: Conditional logic field settings.
+* Added: Dynamic tags in supported controls.
+* Added: Step field for creating multi-step forms.
+* Added: Granular step indicator styling.
+* Added: Progress bar styling controls.
+* Added: Previous and next button styling options.
+* Improved: Frontend asset loading.
+* Improved: Dropdown control styling and layout.
+
+= 1.0.6 =
+* Fixed: Form Editor styling issue where dashboard menus overlapped.
+* Fixed: Feedback notice functionality.
+
+= 1.0.5 =
+* Added: Expanded compatibility for older PHP versions.
+* Fixed: Form editor preview issue with the Captcha field.
+* Tweak: Improved plugin short description.
+* Tweak: Updated form menu label.
+
+= 1.0.4 =
+* Public release.
+
+= 1.0.3 =
+* Updated distribution files to production-optimized builds.
+* Documented external asset libraries in readme.txt.
+* Added source code repository information.
+
+= 1.0.2 =
+* Improved internal sanitization, validation, and security checks.
+
+= 1.0.1 =
+* Refactored internal plugin naming conventions and plugin slug.
+
+= 1.0.0 =
+* Initial core release.
+
 == Upgrade Notice ==
 
 = 1.3.6 =
