@@ -50,7 +50,9 @@ class Dragwyb_Init {
 			new Dragwyb_Pages();
 			new Dragwyb_Form_Builder_Ajax();
 			Frontend_Render::instance();
-			SMFBD_Feedback_Form::get_instance();
+			if ( class_exists( SMFBD_Feedback_Form::class ) ) {
+				SMFBD_Feedback_Form::get_instance();
+			}
 
 			$this->review_notice();
 		}
